@@ -6,6 +6,12 @@
 
 **测试者从这里开始：** [中文使用说明](docs/TTO测试者使用说明.md) · [第一次测试操作卡](docs/TTO第一次测试操作卡.md) · [测试记录模板](docs/TTO测试记录模板.md)。
 
+## 项目路线图与技术决策
+
+[主路线图 Issue](https://github.com/massif-01/Tianshan-thermal-observer/issues/1) · [热建模、持续校准与跨 Jetson 适应路线图](docs/roadmap/TTO-roadmap.md)
+
+当前先使用 v1 取得可信真实数据；Ridge 保留为参照，低阶灰箱为下一阶段重点，在线学习与跨硬件适应按证据推进。具体状态与决策记录见上述入口。
+
 ## 安装与离线检查
 
 便捷安装包解压后，在包目录执行 `sh install.sh`。默认安装到 `~/TTO`，复用出厂Conda创建独立Python 3.10环境、安装锁定依赖和0.1.2 wheel、核对身份并做离线doctor；设备地址可以稍后填写。安装后入口为 `~/TTO/tto`。重复安装保留配置、模型和数据；详见[便捷安装](docs/便捷安装.md)。
