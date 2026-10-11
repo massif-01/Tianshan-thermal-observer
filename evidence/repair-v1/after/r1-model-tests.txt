@@ -1,0 +1,33 @@
+.F...................                                                    [100%]
+=================================== FAILURES ===================================
+_____ test_adjacent_same_group_allowed_and_hand_changed_partition_rejected _____
+
+grouped_runs = (PosixPath('/private/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/pytest-of-massif/pytest-18/r10'), [PosixPath('/pr.../88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/pytest-of-massif/pytest-18/r10/runs/run-2026-10-10T160113.652756_0000-d84fe8ee')])
+tmp_path = PosixPath('/private/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/pytest-of-massif/pytest-18/test_adjacent_same_group_allow0')
+
+    def test_adjacent_same_group_allowed_and_hand_changed_partition_rejected(grouped_runs, tmp_path):
+        import shutil
+        _, original = grouped_runs
+        runs = []
+        for i, src in enumerate(original):
+            dst = tmp_path / str(i); shutil.copytree(src, dst); runs.append(dst)
+        set_groups(runs, 'AABCDE')
+        frozen = freeze_split(runs[::-1], tmp_path / 'frozen')
+        d, s = load_dataset(frozen / 'dataset.json'), read_json(frozen / 'split.json')
+        check_split(d, s)
+        assert s['episodes_order'] == list('ABCDE')
+>       assert {r['run_id'] for r in d['rows'] if r['id'] in s['partitions']['train'] and r['episode']=='A'} == {d['runs'][0]['observer_run_id'],d['runs'][1]['observer_run_id']}
+E       AssertionError: assert {'3119a364-aa...a0bf8b0c30a1'} == {'d5836308-a0...4cafa1f3e928'}
+E         
+E         Extra items in the left set:
+E         'fa829365-8b90-40ad-931b-a0bf8b0c30a1'
+E         '3119a364-aa50-40e6-bc58-c7172085b518'
+E         Extra items in the right set:
+E         'd84fe8ee-54a2-4aec-86ff-4cafa1f3e928'
+E         'd5836308-a0d3-4f35-bda1-ec74c3267006'
+E         Use -v to get more diff
+
+tests/test_repair_r1.py:61: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_repair_r1.py::test_adjacent_same_group_allowed_and_hand_changed_partition_rejected
+1 failed, 20 passed in 9.22s

@@ -1,0 +1,8 @@
+Downloading cpython-3.10.18-macos-aarch64-none (download) (17.5MiB)
+ Downloading cpython-3.10.18-macos-aarch64-none (download)
+Installed Python 3.10.18 in 7.07s
+ + cpython-3.10.18-macos-aarch64-none
+warning: `/Users/massif/.local/bin` is not on your PATH. To use installed Python executables, run `export PATH="/Users/massif/.local/bin:$PATH"` or `uv python update-shell`.
+warning: Failed to install executable for cpython-3.10.18-macos-aarch64-none
+  Caused by: Failed to create Python executable link at /Users/massif/.local/bin/python3.10 from /private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/bin/python3.10
+  Caused by: failed to symlink file from /private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/bin/python3.10 to /Users/massif/.local/bin/python3.10: Operation not permitted (os error 1)
