@@ -9,7 +9,7 @@ import time
 from pathlib import Path
 from urllib.parse import urlsplit
 from .config import headers, require_live
-from .engine import Engine
+from .engine import engine_for
 from .storage import InstanceLock, Journal, LimitReached
 from .util import canonical, utc_now
 
@@ -149,8 +149,8 @@ async def collect(config, duration, model=None, data_root=None, episode=None, de
     require_live(config, duration)
     # No networking is constructed until this explicitly live function is called.
     with InstanceLock():
-        journal = Journal(config, data_root, episode=episode, deployment=deployment, run_type=run_type or ('shadow' if model else 'collect'), model_sha256=model['sha256'] if model else None)
-        engine = Engine(config, model)
+        journal = Journal(config, data_root, episode=episode, deployment=deployment, run_type=run_type or ('shadow' if model else 'collect'), model_sha256=model['sha256'] if model else None, record_schema=2)
+        engine = engine_for(config, model, record_schema=2)
         q = BoundedQueue(config['storage']['queue_max_items'], config['storage']['queue_max_bytes'])
         stop = asyncio.Event()
         stats = {'stop_reason': 'duration', 'poll_missed': 0, 'poll_count': 0, 'connection_attempts': 0, 'payload_oversize': 0, 'orin_event_count': 0, 'business_payload_bytes_sum': 0, 'business_payload_bytes_max': 0, 'poll_rtt_ms': [], 'prediction_ms': [], 'rss_mib': [], 'cpu_pct_single_core': []}
@@ -173,14 +173,9 @@ async def collect(config, duration, model=None, data_root=None, episode=None, de
             r = journal.observation(row)
             before = time.perf_counter()
             out = engine.process(r)
-            if out['quality']:
-                journal.append('events', dict(ref=r['ref'], mono_s=r['mono_s'], **out['quality']))
+            journal.processing_output(r, out)
             if out['prediction']:
-                # Write predictions now, before the worker can consume any future observation.
-                journal.append('predictions', out['prediction'])
                 stats['prediction_ms'].append((time.perf_counter() - before) * 1000)
-            for score in out['scores']:
-                journal.append('scores', score)
 
         async def writer():
             while not stop.is_set() or not q.queue.empty():

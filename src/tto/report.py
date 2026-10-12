@@ -2,7 +2,7 @@
 import html
 import json
 from pathlib import Path
-from .dataset import replay
+from .dataset import replay, RecordContractError
 from .evaluation import percentile
 from .util import read_json, write_json
 from .recorded import recorded_results
@@ -19,7 +19,57 @@ def table(headers, rows):
     return '<table><thead><tr>' + ''.join('<th>' + escape(x) + '</th>' for x in headers) + '</tr></thead><tbody>' + ''.join('<tr>' + ''.join('<td>' + escape(x) + '</td>' for x in row) + '</tr>' for row in rows) + '</tbody></table>'
 
 
-def summarize(run):
+def input_status_rows(d):
+    declaration = d['platform_declaration'] or {}
+    platform = declaration.get('platform') or {}
+    binding = d['last_temperature_binding'] or {}
+    gpu = d['gpu_latest'] or {}
+    labels = {'control_temperature_invalid': '控制温度状态无效', 'active_temperature_source_untrusted': '实际温度来源尚未可信',
+              'temperature_binding_unconfirmed': '实际来源绑定未确认', 'manual_temperature': '人工温度模式',
+              'fan_missing_or_stale': '风扇状态缺失或过期', 'temperature_status_missing_or_stale': '温度状态缺失或过期',
+              'fan_not_enabled': '风扇未启用', 'fan_fault': '风扇故障', 'guard_active': '保护生效',
+              'control_temperature_stale': '控制温度过期', 'successful_duty_unavailable': '成功PWM不可用', 'unsupported_control_scope': '模式不在AUTO/CURVE范围',
+              'configured_source_period_conflict': '实际源周期与人工配置冲突', 'source_period_missing_or_invalid': '新版源周期缺失或非法', 'legacy_source_period_unknown': '旧合同源周期未确认'}
+    blocked = '；'.join(labels.get(k, k)+f'（{n}个起点）' for k, n in d['control_ineligible_reasons'].items()) or '控制条件已观察到；仍需冻结模型与完整过程证据'
+    return [('计算模块声明', platform.get('family', 'unknown')+' / '+str(declaration.get('evidence_status', '尚无有效声明'))),
+            ('实际模式/计划起点', ', '.join(f'{k}: {v}' for k,v in d['control_scopes'].items()) or '暂无起点'),
+            ('GPU来源封存状态', gpu.get('source_status', '不可用')),
+            ('观察器当前GPU有效', '是' if gpu.get('observer_current_valid') else '否'),
+            ('源周期ms / 依据', str((d.get('source_period_evidence') or {}).get('period_ms'))+' / '+str((d.get('source_period_evidence') or {}).get('basis'))),
+            ('有效控制温度状态/收到状态', str(d['counts'].get('valid_temperature_status_records', 0))+'/'+str(d['counts'].get('temperature_status_records', 0))),
+            ('配置温度来源 / 实际温度来源', str(binding.get('preferred_source'))+' / '+str(binding.get('active_source'))),
+            ('配置绑定', binding.get('bound_variable') or '未确认'), ('控制资格缺项', blocked),
+            ('建模准备', d['model_readiness']), ('完整过程证据', '仍需任务起止、回落与过程分组')]
+
+
+def operator_evidence(run, run_id):
+    from .util import file_hash
+    path = Path(run)/'operator-records.jsonl'
+    if not path.is_file():
+        return {'present': False, 'records': [], 'note': '未登记人工任务起止；不自动推断独立过程。'}
+    records, issues = [], []
+    with path.open() as f:
+        for n, line in enumerate(f, 1):
+            try:
+                if len(line.encode()) > 100000:
+                    raise ValueError('oversized operator record')
+                row = json.loads(line)
+                if not isinstance(row, dict) or row.get('observer_run_id') != run_id:
+                    issues.append({'record_ref': f'operator-records.jsonl:{n}', 'reason': 'operator_run_identity_unconfirmed'})
+                else:
+                    records.append({'record_ref': f'operator-records.jsonl:{n}', 'raw': row})
+            except ValueError:
+                issues.append({'record_ref': f'operator-records.jsonl:{n}', 'reason': 'invalid_operator_record'})
+    index_path=Path(run)/'files.json'
+    index=read_json(index_path) if index_path.is_file() else {}
+    actual_hash=file_hash(path)
+    declared_hash=index.get(path.name)
+    return {'present': True, 'sha256': actual_hash, 'declared_index_sha256': declared_hash,
+            'index_matches': declared_hash==actual_hash, 'records': records, 'issues': issues,
+            'note': '保留关联人工原文、来源、近似事件时刻与写入时刻；任务结束不代表回落采集应停止，也不自动授予过程独立性。'}
+
+
+def summarize(run, diagnostic_input_v2=False):
     run = Path(run)
     result = replay(run)
     m = result['manifest']
@@ -38,6 +88,8 @@ def summarize(run):
     conclusion = '模拟演示：软件贯通，不代表实机连接或预测收益。' if m['simulated'] else ('软件可用，预测效果待验证。' if source_usable else '数据暂不可用，预测已暂停；核对端点、身份和新鲜度。')
     report = {'schema_version': 1, 'simulated': m['simulated'], 'conclusion': conclusion, 'deployment_status': m['deployment_status'], 'connection_reliable': 'simulation_only' if m['simulated'] else ('needs_review' if any(q.get(k, 0) for k in ('identity_conflict', 'sequence_regression', 'unsupported_schema', 'stale_or_missing_tj')) or summary.get('dropped') else ('observed_samples_only' if source_usable else 'unavailable')), 'quality': q, 'new_samples': q.get('new_samples', 0), 'duplicate_received': q.get('duplicate', 0), 'origin_count': len(rows), 'normal_auto_origins': normal, 'warm_origins': sum(r['history_ready'] for r in rows), 'label_counts': {str(h): sum(str(h) in r['labels'] for r in rows) for h in (15, 45, 90)}, 'episode': m['episode'], 'episode_evidence': m.get('episode_evidence'), 'independent_episode_count': 'unknown_until_operator_groups_complete_processes', 'availability': availability, 'resource': resource, 'host_scope': 'current_host_only_not_N305', 'poll_missed': summary.get('poll_missed'), 'dropped': summary.get('dropped'), 'observation_rate_hz': summary.get('observations', 0) / summary['elapsed_s'] if summary.get('elapsed_s') else None, 'orin_event_rate_hz': summary.get('orin_event_count', 0) / summary['elapsed_s'] if summary.get('elapsed_s') else None, 'business_payload_bytes': {'maximum': summary.get('business_payload_bytes_max'), 'mean': summary.get('business_payload_bytes_sum', 0) / summary['orin_event_count'] if summary.get('orin_event_count') else None}, 'asynchronous_control_temperature_differences': {'count': len(differences), 'max_absolute_c': max(abs(x['tj_minus_control_c']) for x in differences) if differences else None, 'first': differences[0] if differences else None, 'last': differences[-1] if differences else None, 'note': '异步量化与绑定路径有差别；不据此自动判错误或改绑。'}, 'source_status': result['processing'], 'stop_reason': summary.get('stop_reason'), 'next_step': '由用户填写本机端点并运行180秒只读doctor；确认最终部署身份后，记录正常完整热过程。', 'time_axis_note': '接收时间近似；源年龄是下界，不含未测网络在途时间。'}
     recorded, _ = recorded_results(run, m, result['quality_eligibility'])
+    if m['record_schema'] == 2 and (q.get('lifecycle_contract_change') or q.get('configured_source_period_conflict')):
+        report['connection_reliable'] = 'simulation_only' if m['simulated'] else 'needs_review'
     shadow = m.get('report_type') == 'shadow' or m.get('model_sha256') is not None or any(v['model_sha256'] is not None for v in recorded['models'].values())
     report['report_type'] = 'shadow' if shadow else 'collect'
     report['recorded_results'] = recorded
@@ -74,6 +126,27 @@ def summarize(run):
             report['next_step'] = '保留记录并找回缺失日志；质量回放不代表历史预测已经完整。'
         elif source_usable:
             report['next_step'] = '按完整使用过程确认分组，在新路径冻结合法切分并做离线时间留出评估。'
+    if m['record_schema'] == 2 or diagnostic_input_v2:
+        from .diagnostics import input_diagnostics
+        diag = input_diagnostics(run, m['config'])
+        report['input_diagnostics'] = diag
+        report['platform_state'] = result['platform_state']
+        report['diagnostic_replay'] = m['record_schema'] == 1
+        report['operator_evidence'] = operator_evidence(run, m['observer_run_id'])
+        report['observer_host'] = m.get('observer_host', {'scope': 'historic_host_identity_not_recorded'})
+        report['host_scope'] = report['observer_host']['scope']
+        report['control_eligible_origins'] = diag['counts'].get('eligible_origins', 0)
+        report['normal_curve_origins'] = diag['counts'].get('normal_curve_origins', 0)
+        if not report['control_eligible_origins']:
+            report['conclusion'] += ' 已收到TJ也不代表可建模：平台身份或实际控制温度/来源尚未满足资格。'
+            report['next_step'] = '先核对平台声明、GPU缺项和控制温度实际有效性；保留CURVE原状，现场来源核对另行安排。'
+        issues = (result['platform_state'] or {}).get('evidence_issues', [])
+        report['missing_required_metadata'] = [x for x in issues if x != 'platform_unconfirmed']
+        if report['missing_required_metadata']:
+            report['conclusion'] += ' 输入profile证据缺失或身份不一致，评分拒绝；预测/评分日志是否齐全另见日志统计。'
+        if (result['platform_state'] or {}).get('mixed_profiles'):
+            report['conclusion'] += ' 本轮存在不兼容输入合同或控制范围，正式建库拒绝；历史已发记录和恢复段有效评分仍保留。'
+            report['next_step'] = '保留本轮合同变化、隔离及恢复证据；不将混合run直接冻结为正式数据集。'
     return report
 
 
@@ -86,13 +159,26 @@ def shadow_table_rows(recorded):
                     continue
                 pooled = counts['metrics']['time_pooled']
                 val = lambda field: f"{pooled[field]:.4f}" if field in pooled else '未能评分'
-                rows.append([key[:12]+'…' if group['model_sha256'] else '无模型基线', h, method, data['issued_origins'], counts['issued'], counts['historical_scored'] if counts['historical_scored'] is not None else '缺评分日志', counts['quality_excluded'] if counts['quality_excluded'] is not None else '未知', counts['scored'] if counts['scored'] is not None else '缺评分日志', f"{counts['coverage_fraction']:.1%}" if counts['coverage_fraction'] is not None else '缺评分证据', val('mae'),val('rmse'),val('abs_error_p95'),val('bias_mean'),val('under_p95'),val('under_max'),val('over_p95'),val('over_max')])
+                rows.append([key[:12]+'…' if group['model_sha256'] else '无模型基线', h, method, data['issued_origins'], counts['issued'], counts['historical_scored'] if counts['historical_scored'] is not None else '缺评分日志', counts['quality_excluded'] if counts['quality_excluded'] is not None else '未知', counts['evidence_excluded'], counts['scored'] if counts['scored'] is not None else '缺评分日志', f"{counts['coverage_fraction']:.1%}" if counts['coverage_fraction'] is not None else '缺评分证据', val('mae'),val('rmse'),val('abs_error_p95'),val('bias_mean'),val('under_p95'),val('under_max'),val('over_p95'),val('over_max')])
     return rows
 
 
-def run_report(run, output):
+def run_report(run, output, diagnostic_input_v2=False):
     out = Path(output); out.mkdir(parents=True, exist_ok=False)
-    r = summarize(run); write_json(out/'report.json',r)
+    try:
+        r = summarize(run, diagnostic_input_v2)
+    except RecordContractError as error:
+        from .util import file_hash
+        r = {'schema_version': 2, 'report_type': 'diagnostic_evidence_refused', 'conclusion': '记录合同缺失或版本冲突，拒绝评分：'+str(error),
+             'next_step': '保留原始文件并核对合同声明；不退回旧规则，不重算冒充历史预测。',
+             'missing_required_logs': [], 'recorded_results': {'issued_prediction_origins': None},
+             'error_metrics': None, 'contract_error': str(error),
+             'source_files_sha256': {p.name: file_hash(p) for p in sorted(Path(run).iterdir()) if p.is_file() and (p.name in ('manifest.json','predictions.jsonl','scores.jsonl','input-profile.json') or p.name.startswith('observations-'))}}
+        write_json(out/'report.json', r)
+        (out/'report.md').write_text('# TTO记录合同诊断\n\n'+r['conclusion']+'\n\n'+r['next_step']+'\n', encoding='utf-8')
+        (out/'report.html').write_text(html_page('TTO记录合同诊断', '<p class="notice">'+html.escape(r['conclusion'])+'</p><p>'+html.escape(r['next_step'])+'</p>'), encoding='utf-8')
+        return r
+    write_json(out/'report.json',r)
     shadow = r['report_type']=='shadow'
     title = ('TTO 模拟旁路运行报告' if r['simulated'] else 'TTO 实际旁路运行报告') if shadow else ('TTO 模拟采集报告' if r['simulated'] else 'TTO 采集质量报告')
     md = '# '+title+'\n\n'+r['conclusion']+'\n\n下一步：'+r['next_step']+'\n\n'+r['time_axis_note']+'\n\n'
@@ -100,10 +186,22 @@ def run_report(run, output):
     connection_labels = {'simulation_only':'仅模拟，未连接设备','needs_review':'有质量缺口，请查看明细','observed_samples_only':'已收到新测量，完整可靠性仍需核对','unavailable':'暂无有效测量'}
     deployment_labels = {'deployment_unverified':'现场部署未核对','user_recorded_not_independently_verified':'用户已登记，尚未独立核对'}
     quality_rows = [('连接',connection_labels.get(r['connection_reliable'],'状态待核对，见明细')),('部署核对',deployment_labels.get(r['deployment_status'],'状态待核对，见明细')),('有效新测量',r['new_samples']),('重复缓存',r['duplicate_received']),('正常AUTO起点',r['normal_auto_origins'])]
+    if 'input_diagnostics' in r:
+        quality_rows += [('正常CURVE起点', r['normal_curve_origins']), ('合格且平台已确认起点', r['control_eligible_origins']), ('GPU有效新样本/新TJ样本', str(r['input_diagnostics']['gpu_coverage']['numerator'])+'/'+str(r['input_diagnostics']['gpu_coverage']['denominator']))]
     body += '<h2>采集质量</h2>'+table(['项目','结果'],quality_rows)
     md += '## 采集质量\n\n'+markdown_table(['项目','结果'],quality_rows)+'\n'
+    if 'input_diagnostics' in r:
+        d = r['input_diagnostics']
+        message = d['note']
+        status_rows = input_status_rows(d)
+        coverage_rows = [[field, value['numerator'], value['denominator'], f"{value['fraction']:.1%}" if value['fraction'] is not None else '不可计算'] for field,value in d['named_input_coverage'].items()]
+        body += '<h2>输入与控制资格</h2><p>'+html.escape(message)+'</p>'+table(['检查','结果'], status_rows)+'<h2>原始具名输入覆盖</h2>'+table(['实际字段/单位','有效新样本','新TJ样本','覆盖率'],coverage_rows)+'<details><summary>输入证据与原因</summary><pre>'+html.escape(json.dumps(d, ensure_ascii=False, indent=2))+'</pre></details>'
+        md += '## 输入与控制资格\n\n'+message+'\n\n'+markdown_table(['检查','结果'], status_rows)+'\n\n## 原始具名输入覆盖\n\n'+markdown_table(['实际字段/单位','有效新样本','新TJ样本','覆盖率'],coverage_rows)+'\n\n```json\n'+json.dumps(d, ensure_ascii=False, indent=2)+'\n```\n'
+        operator = r['operator_evidence']
+        body += '<details><summary>关联人工记录</summary><p>'+html.escape(operator['note'])+'</p><pre>'+html.escape(json.dumps(operator, ensure_ascii=False, indent=2))+'</pre></details>'
+        md += '## 关联人工记录\n\n'+operator['note']+'\n\n```json\n'+json.dumps(operator, ensure_ascii=False, indent=2)+'\n```\n'
     if shadow:
-        headers = ['当时模型SHA/基线','时距s','实际输出方法','计划起点','已发','历史评分','质量排除','当前有效','有效/计划起点','MAE C','RMSE C','绝对误差P95 C','偏差 C','欠预测P95 C','欠预测最大 C','过预测P95 C','过预测最大 C']
+        headers = ['当时模型SHA/基线','时距s','实际输出方法','计划起点','已发','历史评分','质量排除','输入证据排除','当前有效','有效/计划起点','MAE C','RMSE C','绝对误差P95 C','偏差 C','欠预测P95 C','欠预测最大 C','过预测P95 C','过预测最大 C']
         rows = shadow_table_rows(r['recorded_results'])
         message = '数值来自本run的predictions.jsonl与scores.jsonl，按预测身份/时距/方法/模型关联；未加载当前模型重算。每方法覆盖单列，不拿不同集合的MAE判断优劣。有效评分使用生产质量回放的既有段隔离；覆盖率分子为当前有效评分，分母为当时计划起点（包含隔离段），已发预测分母另见JSON。'
         body += '<h2>当时实际发出的预测与评分</h2><p>'+html.escape(message)+'</p>'+table(headers,rows)

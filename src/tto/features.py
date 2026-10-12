@@ -15,11 +15,13 @@ assert len(ALL_COLUMNS) <= 64
 
 
 class Features:
-    def __init__(self, period_s):
+    def __init__(self, period_s, profile=None, independent_gpu=False):
         self.period = period_s
         self.tolerance = min(5, max(2, 2 * period_s)) if period_s else 2
         self.gap = max(5, 3 * period_s) if period_s else 5
         self.history = deque()
+        self.profile = profile
+        self.independent_gpu = independent_gpu
 
     def clear(self):
         self.history.clear()
@@ -56,6 +58,8 @@ class Features:
         for a, b in zip(rows, rows[1:]):
             if b['t'] - a['t'] > self.gap or not finite(a['values'].get(field)):
                 return None
+            if (self.profile or self.independent_gpu) and field == 'gpu_busy' and (a.get('gpu_valid_until') is None or a['gpu_valid_until'] < b['t']):
+                return None
             acc += a['values'][field] * (b['t'] - max(start, a['t']))
         if not finite(h[-1]['values'].get(field)):
             return None
@@ -81,12 +85,14 @@ class Features:
             m = self.mean('tj', sec)
             out[f'tj_mean_{sec}'] = m - tj if m is not None else None
             out[f'tj_slope_{sec}'] = self.slope(sec)
-        out['duty'], out['gain'] = v.get('duty'), v.get('gain')
+        out['duty'] = v.get('duty')
+        if not self.profile or 'gain' in self.profile['required']:
+            out['gain'] = v.get('gain')
         for sec in (30, 120):
             out[f'duty_mean_{sec}'] = self.mean('duty', sec)
         s = self.asof(t - 30)
         out['duty_change_30'] = v['duty'] - s['values']['duty'] if s and finite(v.get('duty')) and finite(s['values'].get('duty')) else None
-        for field in OPTIONAL:
+        for field in self.profile['optional'] if self.profile else OPTIONAL:
             if field.startswith('temp_'):
                 # Independently measured chip sensors, expressed relative to TJ.
                 out[field] = v[field] - tj if finite(v.get(field)) else None

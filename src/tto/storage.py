@@ -38,7 +38,7 @@ class InstanceLock:
 
 
 class Journal:
-    def __init__(self, config, root=None, simulated=False, episode=None, deployment=None, run_type='collect', model_sha256=None):
+    def __init__(self, config, root=None, simulated=False, episode=None, deployment=None, run_type='collect', model_sha256=None, record_schema=1):
         self.c = config
         base = Path(root or config['storage']['data_root'] or Path.home() / '.local/share/tianshan-thermal-observer').expanduser()
         base.mkdir(parents=True, exist_ok=True, mode=0o700)
@@ -55,11 +55,42 @@ class Journal:
         self.manifest = {'record_schema': 1, 'report_type': run_type, 'model_sha256': model_sha256, 'version': __version__, 'source_identity': source_identity(), 'config': public_config(config), 'config_sha256': digest(public_config(config)), 'observer_run_id': self.run_id, 'episode': self.episode, 'episode_evidence': 'operator_named_process' if episode else None, 'simulated': simulated, 'started_at_utc': utc_now(), 'time_axis': 'observer_receive', 'feature_schema': 1, 'model_schema': 1, 'input_schema': 1, 'units': {'temperature': 'C', 'raw_power': 'mW', 'features_power': 'W', 'duty': 'logical_percent', 'cpu_freq': 'MHz', 'gpu_gr3d_freq': 'busy_percent'}, 'fan_id': 0, 'deployment_status': 'deployment_unverified', 'ws_final_package_sha256': None, 'firmware_identity': None, 'source_period_ms': config['orin']['source_sample_interval_ms'], 'source_period_evidence': config['orin']['source_interval_evidence'], 'network_authorization': {'kind': 'offline_simulation' if simulated else 'explicit_bounded_cli', 'endpoints': [] if simulated else [config[s]['base_url'] for s in ('orin', 'tianshan')], 'business_writes': False}, 'operator_environment': 'unknown', 'control_elapsed_time_available': False}
         if deployment:
             self.manifest.update(deployment)
+        if record_schema not in (1, 2):
+            raise ValueError('unsupported record contract')
+        if record_schema == 2:
+            from .profiles import CONTRACT
+            self.manifest.update(record_schema=2, input_schema=2, feature_schema=2, model_schema=2,
+                                 processing_contract=CONTRACT, observer_host=host_identity())
         manifest_bytes = len((json.dumps(self.manifest, ensure_ascii=False, indent=2, allow_nan=False) + '\n').encode())
         if manifest_bytes > config['storage']['run_max_bytes'] - self.reserve:
             raise LimitReached('manifest_exceeds_run_budget')
         write_json(self.path / 'manifest.json', self.manifest)
         self.total = self.initial_metadata_bytes = manifest_bytes
+
+    def processing_output(self, record, output):
+        """Seal profile evidence before predictions; all writers use this path."""
+        if output.get('input_profile') is not None:
+            self.metadata('input-profile.json', output['input_profile'])
+        for event in output.get('events', []):
+            self.append('events', event)
+        if output['quality']:
+            self.append('events', dict(ref=record['ref'], mono_s=record['mono_s'], **output['quality']))
+        if output['prediction']:
+            self.append('predictions', output['prediction'])
+        for score in output['scores']:
+            self.append('scores', score)
+
+    def metadata(self, name, row):
+        if name != 'input-profile.json':
+            raise ValueError('unsupported processing metadata')
+        size = len((json.dumps(row, ensure_ascii=False, indent=2, allow_nan=False)+'\n').encode())
+        s = self.c['storage']
+        if self.total+size > s['run_max_bytes']-self.reserve:
+            raise LimitReached('run_max_bytes')
+        if shutil.disk_usage(self.path).free < s['min_free_bytes']+size:
+            raise LimitReached('min_free_bytes')
+        write_json(self.path/name, row)
+        self.total += size
 
     def append(self, name, row):
         raw = canonical(row) + b'\n'
@@ -119,3 +150,16 @@ class Journal:
 def source_identity():
     files = {p.name: file_hash(p) for p in sorted(Path(__file__).parent.glob('*.py'))}
     return {'kind': 'package_source_hashes', 'sha256': digest(files), 'files': files, 'git_head': None, 'dirty': None, 'git_state': 'not_checked_in_installed_runtime'}
+
+
+def host_identity():
+    u = os.uname()
+    model = None
+    cpu = Path('/proc/cpuinfo')
+    if u.sysname == 'Linux' and cpu.is_file():
+        for line in cpu.read_text().splitlines():
+            if line.startswith('model name'):
+                model = line.partition(':')[2].strip()
+                break
+    return {'system': u.sysname, 'machine': u.machine, 'processor': model,
+            'processor_source': 'proc_cpuinfo' if model else 'unavailable', 'scope': 'recorded_observer_host_only'}

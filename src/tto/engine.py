@@ -6,6 +6,18 @@ from .quality import Quality, fan_data, temp_data
 from .util import finite
 
 
+def engine_for(config, model=None, record_schema=1):
+    """Explicit dispatch: historic fixtures stay frozen; new collection is v2."""
+    if record_schema == 1:
+        if model and model.get('schema_version') != 1:
+            raise ValueError('legacy replay requires a schema1 model')
+        return Engine(config, model)
+    if record_schema == 2:
+        from .platform_engine import PlatformEngine
+        return PlatformEngine(config, model)
+    raise ValueError('unsupported record contract')
+
+
 class Engine:
     def __init__(self, config, model=None):
         self.c = config
