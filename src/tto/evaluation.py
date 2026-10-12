@@ -2,7 +2,7 @@ import math
 from collections import Counter
 from pathlib import Path
 from .dataset import check_split, load_dataset
-from .model import HORIZONS, infer, load_model
+from .model import HORIZONS, infer, load_model, eligible_scope, model_dataset_match
 from .util import finite, read_json, seal, write_json
 
 METHODS = ('persist', 'trend30', 'ridge_tj', 'ridge_full')
@@ -111,6 +111,8 @@ def evaluate(dataset_path, split_path, model_path, output):
     d, s = load_dataset(dataset_path), read_json(split_path)
     byid = check_split(d, s)
     model = load_model(model_path) if model_path else None
+    if model:
+        model_dataset_match(model, d)
     if model and (model['split_sha256'] != s['sha256'] or model['dataset_sha256'] != d['sha256']):
         raise ValueError('model provenance differs from frozen split/dataset')
     out = Path(output)
@@ -128,7 +130,12 @@ def evaluate(dataset_path, split_path, model_path, output):
         values = dict(r['baseline_values'])
         reasons = {}
         for name in ('ridge_tj', 'ridge_full'):
-            if model and r['normal_auto']:
+            if model and eligible_scope(r):
+                if d['schema_version'] == 2:
+                    from .profiles import compatible_contract
+                    if not compatible_contract(model['input_contract'], r.get('input_contract'), 'gpu_busy' in model['methods'][name]['columns']):
+                        reasons[name] = 'model_input_contract_mismatch'
+                        continue
                 p, reason, outside = infer(model, name, r['features'])
                 if p:
                     values[name] = p
@@ -141,19 +148,21 @@ def evaluate(dataset_path, split_path, model_path, output):
         for h in HORIZONS:
             k = str(h)
             label = r['labels'].get(k)
-            common = label is not None and r['normal_auto'] and all(m in values for m in METHODS)
+            common = label is not None and eligible_scope(r) and all(m in values for m in METHODS)
             if common:
                 intersection[k].append(r['id'])
             for name in METHODS:
                 c = coverage[k][name]
                 c['input_available'] += int(r['features'].get('tj') is not None)
                 c['normal_auto'] += int(r['normal_auto'])
+                if d['schema_version'] == 2:
+                    c['control_eligible'] += int(eligible_scope(r))
                 c['warming_up'] += int(name.startswith('ridge') and not r['history_ready'])
                 c['output'] += int(name in values)
                 c['fallback'] += int(name.startswith('ridge') and name not in values and bool(values))
                 c['no_future_label'] += int(not label)
                 c['cross_segment'] += int(r['label_status'].get(k) == 'cross_segment')
-                if name in values and label and r['normal_auto']:
+                if name in values and label and eligible_scope(r):
                     c['scorable'] += 1
                     error = values[name][k] - label['value']
                     p = {'id': r['id'], 'episode': r['episode'], 'run_id': r['run_id'], 'segment': r['segment'], 'origin_t': r['t'], 'target_t': r['t'] + h, 'label_t': label['t'], 'label_ref': label['ref'], 'origin_ref': r['ref'], 'raw_refs': r['raw_refs'], 'horizon_s': h, 'method': name, 'prediction': values[name][k], 'truth': label['value'], 'error': error, 'common': common, 'phase': r['phase'], 'high_temperature': r['high_temperature'], 'time_weight_s': 5}
@@ -175,7 +184,7 @@ def evaluate(dataset_path, split_path, model_path, output):
     def subset_coverage(subset, h, method):
         k = str(h)
         available = lambda r: method in availability_by_origin[r['id']]
-        return {'planned': len(subset), 'input_available': sum(r['features'].get('tj') is not None for r in subset), 'normal_auto': sum(r['normal_auto'] for r in subset), 'warming_up': sum(method.startswith('ridge') and not r['history_ready'] for r in subset), 'output': sum(available(r) for r in subset), 'fallback': sum(method.startswith('ridge') and not available(r) for r in subset), 'no_future_label': sum(k not in r['labels'] for r in subset), 'cross_segment': sum(r['label_status'].get(k) == 'cross_segment' for r in subset), 'scorable': sum(available(r) and k in r['labels'] and r['normal_auto'] for r in subset)}
+        return {'planned': len(subset), 'input_available': sum(r['features'].get('tj') is not None for r in subset), 'normal_auto': sum(eligible_scope(r) for r in subset), 'warming_up': sum(method.startswith('ridge') and not r['history_ready'] for r in subset), 'output': sum(available(r) for r in subset), 'fallback': sum(method.startswith('ridge') and not available(r) for r in subset), 'no_future_label': sum(k not in r['labels'] for r in subset), 'cross_segment': sum(r['label_status'].get(k) == 'cross_segment' for r in subset), 'scorable': sum(available(r) and k in r['labels'] and eligible_scope(r) for r in subset)}
     time_coverage = {}
     for h in HORIZONS:
         k = str(h)
@@ -188,7 +197,7 @@ def evaluate(dataset_path, split_path, model_path, output):
     comparisons = comparison_layers(rows, points)
     judgements = layer_judgements(d, s, rows, comparisons)
     conclusion = value_conclusion(d, s, rows, comparisons)
-    result = seal({'schema_version': 1, 'report_type': 'holdout_evaluation', 'comparison_contract': 'TTO-REPAIR-v1.0-layered-v1', 'comparisons': comparisons, 'comparison_judgements': judgements, 'unavailable_methods': unavailable, 'simulated': d['simulated'], 'conclusion': conclusion, 'time_axis_note': '接收时间近似，不是硬件采样时刻；未测网络延迟不解释为热滞后。', 'dataset_sha256': d['sha256'], 'split_sha256': s['sha256'], 'model_sha256': model['sha256'] if model else None, 'coverage': {k: {m: dict(v) for m, v in group.items()} for k, group in coverage.items()}, 'episode_coverage': episode_coverage, 'time_coverage': time_coverage, 'all_available_metrics': tables, 'same_origin_intersection_count': {k: len(v) for k, v in intersection.items()}, 'same_origin_metrics': common_tables, 'phase_diagnostics': phases, 'time_bin_diagnostics': time_groups, 'success_examples': ranked[:3], 'worst_examples': ranked[-3:], 'abnormal_origins': sum(not r['normal_auto'] for r in rows), 'firmware_trend_note': '45秒固件趋势仅作诊断，不作训练标签，不判断可减少PWM。', 'firmware_45s_diagnostics': [{'id': r['id'], 'origin_ref': r['ref'], 'prediction': r['firmware_45s_diagnostic'], 'truth': r['labels']['45']['value'], 'error': r['firmware_45s_diagnostic'] - r['labels']['45']['value']} for r in rows if r['normal_auto'] and finite(r['firmware_45s_diagnostic']) and '45' in r['labels']], 'deployment_provenance': d['runs'], 'no_confidence_percentage': True})
+    result = seal({'schema_version': d['schema_version'], 'feature_profile_id': d.get('feature_profile_id'), 'control_scope': d.get('control_scope'), 'report_type': 'holdout_evaluation', 'comparison_contract': 'TTO-REPAIR-v1.0-layered-v1', 'comparisons': comparisons, 'comparison_judgements': judgements, 'unavailable_methods': unavailable, 'simulated': d['simulated'], 'conclusion': conclusion, 'time_axis_note': '接收时间近似，不是硬件采样时刻；未测网络延迟不解释为热滞后。', 'dataset_sha256': d['sha256'], 'split_sha256': s['sha256'], 'model_sha256': model['sha256'] if model else None, 'coverage': {k: {m: dict(v) for m, v in group.items()} for k, group in coverage.items()}, 'episode_coverage': episode_coverage, 'time_coverage': time_coverage, 'all_available_metrics': tables, 'same_origin_intersection_count': {k: len(v) for k, v in intersection.items()}, 'same_origin_metrics': common_tables, 'phase_diagnostics': phases, 'time_bin_diagnostics': time_groups, 'success_examples': ranked[:3], 'worst_examples': ranked[-3:], 'abnormal_origins': sum(not eligible_scope(r) for r in rows), 'firmware_trend_note': '45秒固件趋势仅作诊断，不作训练标签，不判断可减少PWM。', 'firmware_45s_diagnostics': [{'id': r['id'], 'origin_ref': r['ref'], 'prediction': r['firmware_45s_diagnostic'], 'truth': r['labels']['45']['value'], 'error': r['firmware_45s_diagnostic'] - r['labels']['45']['value']} for r in rows if eligible_scope(r) and finite(r['firmware_45s_diagnostic']) and '45' in r['labels']], 'deployment_provenance': d['runs'], 'no_confidence_percentage': True})
     write_json(out / 'evaluation.json', result)
     with (out / 'predictions.jsonl').open('x') as f:
         from .util import canonical

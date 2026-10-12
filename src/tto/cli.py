@@ -69,7 +69,7 @@ def parser():
         if name == 'shadow':
             q.add_argument('--model', required=True)
     q = sub.add_parser('summarize'); q.add_argument('--run', required=True)
-    q = sub.add_parser('report'); q.add_argument('--run', required=True); q.add_argument('--output', required=True)
+    q = sub.add_parser('report'); q.add_argument('--run', required=True); q.add_argument('--output', required=True); q.add_argument('--diagnostic-input-v2', action='store_true', help='旧run另做新版输入诊断；不替换历史预测/评分')
     q = sub.add_parser('split'); q.add_argument('--runs', nargs='+', required=True); q.add_argument('--output', required=True); q.add_argument('--exploratory', action='store_true')
     q = sub.add_parser('train'); q.add_argument('--dataset', required=True); q.add_argument('--split', required=True); q.add_argument('--output', required=True)
     q = sub.add_parser('evaluate'); q.add_argument('--dataset', required=True); q.add_argument('--split', required=True); q.add_argument('--models'); q.add_argument('--output', required=True)
@@ -97,7 +97,7 @@ def run(args):
                 raise ValueError('模拟模型不能连接真实端点作为旁路候选。')
         duration = args.duration or (c['run']['doctor_duration_s'] if args.command == 'doctor' else c['run']['default_duration_s'])
         if args.command == 'doctor' and not args.live:
-            return {'status': 'offline_config_valid', 'connected': False, 'deployment_status': deployment['deployment_status'], 'config_sha256': digest(public_config(c)), 'source_period_confirmed': c['orin']['source_sample_interval_ms'] is not None, 'model': 'valid' if model else ('unavailable' if model_error else 'not_requested'), 'message': model_error or '离线检查完成；尚未连接设备。'}
+            return {'status': 'offline_config_valid', 'connected': False, 'deployment_status': deployment['deployment_status'], 'config_sha256': digest(public_config(c)), 'source_period_confirmed': c['orin']['source_sample_interval_ms'] is not None, 'model': ('legacy_offline_only_new_run_incompatible' if model and model['schema_version']==1 else 'valid') if model else ('unavailable' if model_error else 'not_requested'), 'input_selection': 'automatic_remote_platform_declaration', 'message': model_error or '离线检查完成；尚未连接设备，平台和控制资格将在记录中检查。'}
         require_live(c, duration)
         if args.episode is not None and (len(args.episode) > 80 or not args.episode or any(x in args.episode for x in ('\n', '\r', '<', '>'))):
             raise ValueError('episode must be a short scene word, not task text')
@@ -120,7 +120,7 @@ def run(args):
         return result
     if args.command == 'report':
         from .report import run_report
-        result = run_report(args.run, args.output)
+        result = run_report(args.run, args.output, args.diagnostic_input_v2)
         return {'output': args.output, 'report_type': result['report_type'], 'conclusion': result['conclusion'], 'next_step': result['next_step'], 'missing_required_logs': result['missing_required_logs'], 'recorded_origins': result['recorded_results']['issued_prediction_origins']}
     if args.command == 'split':
         from .dataset import freeze_split

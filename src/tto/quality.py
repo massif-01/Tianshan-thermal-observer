@@ -83,6 +83,16 @@ class Quality:
         self.last_t = None
         self.counts['boundary_' + reason] += 1
 
+    def measurement_fingerprint(self, payload):
+        return digest({k: payload.get(k) for k in ('temperature', 'cpu', 'gpu', 'power', 'memory')})
+
+    def extract_values(self, payload):
+        return numbers(payload)
+
+    def observe_identity(self, record):
+        """Optional contract observation after current stream/sequence checks."""
+        pass
+
     def accept(self, record):
         t = record['mono_s']
         epoch = record.get('connection_epoch', 0)
@@ -132,8 +142,10 @@ class Quality:
         key = [self.c['orin']['source_id'], stream, seq]
         # Only measurements are compared. Sender timestamp and age may legitimately differ.
         try:
-            fp = digest({k: p.get(k) for k in ('temperature', 'cpu', 'gpu', 'power', 'memory')})
-            v = numbers(p)
+            if key != self.key:
+                self.observe_identity(record)
+            fp = self.measurement_fingerprint(p)
+            v = self.extract_values(p)
         except (ValueError, TypeError, AttributeError):
             return self.invalid('invalid_numeric_contract')
         if key == self.key:

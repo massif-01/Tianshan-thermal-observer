@@ -17,6 +17,7 @@ def recorded_results(run, manifest, eligibility):
     isolated = {}
     for event in eligibility['isolations']:
         isolated.setdefault((event['run_id'], event['segment']), []).append(event)
+    contract_issues = eligibility.get('contract_issues', [])
     def read_log(name):
         path = run / name
         logs[name] = {'present': path.is_file(), 'sha256': file_hash(path) if path.is_file() else None, 'record_count': None}
@@ -58,7 +59,7 @@ def recorded_results(run, manifest, eligibility):
             issues.append({'record_ref': ref, 'reason': 'duplicate_terminal_score'})
             continue
         scores[key] = (ref, score)
-    models, points, excluded, origins = {}, [], [], {}
+    models, points, excluded, evidence_excluded, origins = {}, [], [], [], {}
     for id_, (prediction_ref, p) in predictions.items():
         model = p.get('model_sha256')
         key = model or 'baseline_no_model'
@@ -101,7 +102,10 @@ def recorded_results(run, manifest, eligibility):
                     continue
                 mc['historical_scored'] += 1; historical_methods += 1
                 point = {'id':id_,'episode':origin['episode'],'run_id':origin['run_id'],'segment':origin['segment'],'origin_t':origin['t'],'target_t':origin['t']+h,'label_t':score['label_t'],'label_ref':score['label_ref'],'origin_ref':origin['ref'],'prediction_record_ref':prediction_ref,'score_record_ref':score_ref,'horizon_s':h,'method':method,'actual_method':p.get('actual_method'),'model_sha256':model,'prediction':predicted,'truth':score['truth'],'error':error,'phase':origin['phase'],'high_temperature':origin['high_temperature'],'raw_refs':origin.get('raw_refs',[])}
-                if isolation:
+                if contract_issues:
+                    mc['evidence_excluded'] = mc.get('evidence_excluded', 0) + 1
+                    evidence_excluded.append(dict(point, evidence_exclusion=contract_issues))
+                elif isolation:
                     mc['quality_excluded'] += 1
                     for reason in {event['reason'] for event in isolation}:
                         mc['quality_exclusion_reasons'][reason] += 1
@@ -118,6 +122,7 @@ def recorded_results(run, manifest, eligibility):
     for key, group in models.items():
         for h, counts in group['horizons'].items():
             for method, mc in counts['methods'].items():
+                mc.setdefault('evidence_excluded', 0)
                 matching = [p for p in points if (p['model_sha256'] or 'baseline_no_model')==key and p['horizon_s']==int(h) and p['method']==method]
                 mc['coverage_numerator'] = mc['scored']
                 mc['coverage_denominator'] = counts['issued_origins']
@@ -127,9 +132,9 @@ def recorded_results(run, manifest, eligibility):
                 mc['score_fraction_of_issued'] = mc['scored']/mc['issued'] if mc['issued'] else None
                 mc['metrics'] = group_metrics(matching)
                 if not logs['scores.jsonl']['present']:
-                    mc['scored'] = mc['historical_scored'] = mc['quality_excluded'] = mc['coverage_numerator'] = mc['coverage_fraction'] = mc['score_fraction_of_issued'] = None
+                    mc['scored'] = mc['historical_scored'] = mc['quality_excluded'] = mc['evidence_excluded'] = mc['coverage_numerator'] = mc['coverage_fraction'] = mc['score_fraction_of_issued'] = None
                     mc['metrics'] = {'time_pooled': {'n': None, 'status': 'evidence_missing'}, 'episode_equal_macro': {'status': 'evidence_missing'}, 'episodes': {}, 'time_weighted': {'status': 'evidence_missing'}}
             if not logs['scores.jsonl']['present']:
                 counts['scored_origins'] = counts['historical_scored_origins'] = None
     missing = [name for name,details in logs.items() if not details['present']]
-    return {'source':'persisted_predictions_and_scores','logs':logs,'missing_logs':missing,'log_evidence_complete':not missing and not issues,'issues':issues,'models':models,'issued_prediction_origins':len(predictions) if logs['predictions.jsonl']['present'] else None,'terminal_score_records':logs['scores.jsonl']['record_count'],'matched_terminal_score_records':len(scores),'scored_method_horizon_records':len(points) if all(v['present'] for v in logs.values()) else None,'historical_scored_method_horizon_records':len(points)+len(excluded) if not missing else None,'quality_excluded_method_horizon_records':len(excluded) if not missing else None,'quality_isolations':eligibility['isolations'],'evaluation_eligibility_source':'production_replay_existing_segment_isolation','coverage_note':'scored/issued_origins = 当前有效评分 / 当时计划起点；score_fraction_of_issued = 当前有效评分 / 当时该方法已发预测；历史分母包含质量隔离段。','prediction_references':origins,'scored_records':points,'quality_excluded_records':excluded}, points
+    return {'source':'persisted_predictions_and_scores','logs':logs,'missing_logs':missing,'log_evidence_complete':not missing and not issues,'issues':issues,'models':models,'issued_prediction_origins':len(predictions) if logs['predictions.jsonl']['present'] else None,'terminal_score_records':logs['scores.jsonl']['record_count'],'matched_terminal_score_records':len(scores),'scored_method_horizon_records':len(points) if all(v['present'] for v in logs.values()) else None,'historical_scored_method_horizon_records':len(points)+len(excluded)+len(evidence_excluded) if not missing else None,'quality_excluded_method_horizon_records':len(excluded) if not missing else None,'evidence_excluded_method_horizon_records':len(evidence_excluded) if not missing else None,'required_input_evidence_issues':contract_issues,'quality_isolations':eligibility['isolations'],'evaluation_eligibility_source':'production_replay_existing_segment_isolation_and_declared_input_evidence','coverage_note':'scored/issued_origins = 当前有效评分 / 当时计划起点；score_fraction_of_issued = 当前有效评分 / 当时该方法已发预测；历史分母包含质量隔离段与缺输入证据的记录。','prediction_references':origins,'scored_records':points,'quality_excluded_records':excluded,'evidence_excluded_records':evidence_excluded}, points

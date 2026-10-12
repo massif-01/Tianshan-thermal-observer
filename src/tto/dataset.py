@@ -2,14 +2,25 @@
 from pathlib import Path
 from datetime import datetime, timezone
 from .config import load_config
-from .engine import Engine
+from .engine import engine_for
 from .util import file_hash, read_json, seal, verify_seal, write_json
 import json
+
+
+class RecordContractError(ValueError):
+    pass
 
 
 def replay(run, model=None):
     run = Path(run)
     manifest = read_json(run / 'manifest.json')
+    version = manifest.get('record_schema')
+    if type(version) is not int or version not in (1, 2) or any(type(manifest.get(k)) is not int or manifest[k] != version for k in ('input_schema', 'feature_schema', 'model_schema')):
+        raise RecordContractError('unsupported or conflicting record contract; scoring refused')
+    if version == 2:
+        from .profiles import CONTRACT
+        if manifest.get('processing_contract') != CONTRACT:
+            raise RecordContractError('schema2 processing contract missing; scoring refused')
     c = load_config(environ={})
     # Public manifests intentionally replace credential paths; they are not executable configs.
     saved = manifest['config']
@@ -19,7 +30,7 @@ def replay(run, model=None):
     from .config import merge, validate
     merge(c, saved)
     validate(c)
-    engine = Engine(c, model)
+    engine = engine_for(c, model, version)
     engine.retain_origins = True
     scores, accepted, times = [], [], []
     invalid_segments = set()
@@ -67,7 +78,9 @@ def replay(run, model=None):
         row['label_status'] = {}
         if row['segment'] in invalid_segments:
             row['normal_auto'] = False
-            row['invalid_segment_reason'] = 'identity_conflict_or_sequence_regression'
+            if version == 2:
+                row['control_eligible'] = False
+            row['invalid_segment_reason'] = 'identity_conflict_or_sequence_regression' if version == 1 else ','.join(sorted({event['reason'] for event in isolations if event['segment'] == row['segment']}))
         for h in (15, 45, 90):
             s = lookup.get((p['id'], str(h)), {})
             row['label_status'][str(h)] = s.get('status', 'no_future_label')
@@ -82,35 +95,103 @@ def replay(run, model=None):
         origin = p['origin']
         quality_origins[p['id']] = {'run_id': origin['run_id'], 'segment': origin['segment'], 'origin_ref': origin['ref'], 'raw_refs': origin['raw_refs'], 'label_refs': {str(h): lookup.get((p['id'], str(h)), {}).get('label_ref') for h in (15,45,90)}}
     eligibility = {'run_id': manifest['observer_run_id'], 'isolations': isolations, 'origins': quality_origins}
-    return {'manifest': manifest, 'time_evidence': time_evidence, 'rows': rows, 'quality': dict(engine.q.counts), 'processing': dict(engine.counts), 'source_files': sources, 'accepted_refs': accepted, 'quality_eligibility': eligibility}
+    platform_state = None
+    if version == 2:
+        issues = sorted(engine.input_conflicts)
+        profile_path = run/'input-profile.json'
+        if engine.first_profile is None:
+            issues.append('platform_unconfirmed')
+        elif not profile_path.is_file():
+            issues.append('input_profile_missing')
+        else:
+            profile = read_json(profile_path)
+            index = read_json(run/'files.json') if (run/'files.json').is_file() else {}
+            if profile != engine.first_profile or index.get('input-profile.json') != file_hash(profile_path):
+                issues.append('input_profile_identity_or_index_mismatch')
+            sources['input-profile.json'] = file_hash(profile_path)
+        platform_state = {'first_profile': engine.first_profile, 'mixed_profiles': engine.mixed_profiles,
+                          'known_scopes': sorted(engine.known_scopes), 'known_contracts': engine.known_contracts,
+                          'evidence_issues': issues}
+        eligibility['contract_issues'] = [x for x in issues if x != 'platform_unconfirmed']
+    return {'manifest': manifest, 'time_evidence': time_evidence, 'rows': rows, 'quality': dict(engine.q.counts), 'processing': dict(engine.counts), 'source_files': sources, 'accepted_refs': accepted, 'quality_eligibility': eligibility, 'platform_state': platform_state}
 
 
 def build_dataset(runs):
     all_rows, sources, manifests = [], {}, []
-    periods = set()
+    periods, versions, identities = set(), set(), []
     for run in runs:
         result = replay(run)
         m = result['manifest']
+        versions.add(m['record_schema'])
+        if m['record_schema'] == 2:
+            state = result['platform_state']
+            if state['mixed_profiles'] or state['evidence_issues']:
+                raise ValueError('formal dataset refused: '+', '.join(state['evidence_issues']+(['mixed_profiles'] if state['mixed_profiles'] else [])))
+            known = [r for r in result['rows'] if r.get('feature_profile_id')]
+            if not known:
+                raise ValueError('formal dataset refused: supported control scope unconfirmed')
+            identities.extend({k: r[k] for k in ('feature_profile_id', 'control_scope', 'input_contract', 'input_contract_sha256')} for r in known)
         if m['observer_run_id'] in sources:
             raise ValueError('duplicate run')
         sources[m['observer_run_id']] = result['source_files']
-        manifests.append(dict({k: m.get(k) for k in ('observer_run_id', 'episode', 'episode_evidence', 'simulated', 'started_at_utc', 'deployment_status', 'source_period_ms')}, time_evidence=result['time_evidence']))
-        periods.add(m['source_period_ms'])
+        period = m['source_period_ms'] if m['record_schema'] == 1 else result['platform_state']['first_profile']['input_contract']['source_period_ms']
+        entry = dict({k: m.get(k) for k in ('observer_run_id', 'episode', 'episode_evidence', 'simulated', 'started_at_utc', 'deployment_status', 'source_period_ms')}, time_evidence=result['time_evidence'])
+        if m['record_schema'] == 2:
+            entry.update(modeling_source_period_ms=period, modeling_source_period_basis='wire_telemetry_meta')
+        manifests.append(entry)
+        periods.add(period)
         all_rows.extend(result['rows'])
     if len(periods) != 1 or None in periods:
         raise ValueError('one evidenced source period is required for modeling')
-    return seal({'schema_version': 1, 'feature_schema': 1, 'time_axis': 'observer_receive', 'source_period_s': periods.pop() / 1000, 'horizons_s': [15, 45, 90], 'simulated': any(m['simulated'] for m in manifests), 'sources': sources, 'runs': manifests, 'rows': all_rows})
+    if len(versions) != 1:
+        raise ValueError('record schemas cannot be mixed in a frozen dataset')
+    version = versions.pop()
+    body = {'schema_version': version, 'feature_schema': version, 'time_axis': 'observer_receive', 'source_period_s': periods.pop() / 1000, 'horizons_s': [15, 45, 90], 'simulated': any(m['simulated'] for m in manifests), 'sources': sources, 'runs': manifests, 'rows': all_rows}
+    if version == 2:
+        from .profiles import compatible_contract
+        # Cadence confirmation can complete initial missing evidence; two known
+        # incompatible cadences remain forbidden, even after A -> B -> A.
+        identity = max(identities, key=lambda x: x['input_contract'].get('gpu_period_ms') is not None)
+        if any(x['feature_profile_id'] != identity['feature_profile_id'] or not compatible_contract(x['input_contract'], identity['input_contract'], False) or (x['input_contract']['gpu_period_ms'] and identity['input_contract']['gpu_period_ms'] and x['input_contract']['gpu_period_ms'] != identity['input_contract']['gpu_period_ms']) for x in identities):
+            raise ValueError('incompatible platform/control profiles in dataset')
+        body.update(identity, mixed_profiles=False)
+        validate_dataset_profile(body)
+    return seal(body)
+
+
+def validate_dataset_profile(d):
+    if d.get('schema_version') != 2:
+        return
+    from .profiles import validate_profile, compatible_contract
+    validate_profile(d)
+    if d.get('source_period_s') is None or d['source_period_s']*1000 != d['input_contract']['source_period_ms']:
+        raise ValueError('dataset source period differs from input contract')
+    if d.get('mixed_profiles') is not False:
+        raise ValueError('mixed_profiles dataset refused')
+    for row in d['rows']:
+        if type(row.get('feature_schema')) is not int or row['feature_schema'] != 2:
+            raise ValueError('row feature schema differs from dataset')
+        if row.get('feature_profile_id'):
+            validate_profile(row)
+            if row['feature_profile_id'] != d['feature_profile_id'] or not compatible_contract(row['input_contract'], d['input_contract'], False):
+                raise ValueError('row platform/control identity differs from dataset')
+            a, b = row['input_contract']['gpu_period_ms'], d['input_contract']['gpu_period_ms']
+            if a and b and a != b:
+                raise ValueError('row GPU cadence differs from dataset')
+        elif row.get('control_eligible') and row.get('input_contract'):
+            raise ValueError('eligible row missing confirmed profile')
 
 
 def load_dataset(path):
     d = verify_seal(read_json(path))
-    if d.get('schema_version') != 1 or d.get('feature_schema') != 1 or d.get('time_axis') != 'observer_receive' or d.get('horizons_s') != [15, 45, 90]:
+    if type(d.get('schema_version')) is not int or d.get('schema_version') not in (1, 2) or type(d.get('feature_schema')) is not int or d['feature_schema'] != d['schema_version'] or d.get('time_axis') != 'observer_receive' or d.get('horizons_s') != [15, 45, 90]:
         raise ValueError('unsupported dataset contract')
     if len({r['id'] for r in d['rows']}) != len(d['rows']):
         raise ValueError('duplicate origin identity')
     for r in d['rows']:
         if r['available_at'] != r['t'] or r['support_start'] > r['t'] or r['support_end'] < r['t'] + 90:
             raise ValueError('invalid causal support')
+    validate_dataset_profile(d)
     return d
 
 
@@ -212,6 +293,7 @@ def freeze_split(runs, output, exploratory=False):
 
 
 def check_split(d, s):
+    validate_dataset_profile(d)
     verify_seal(s)
     if s.get('schema_version') != 1 or s.get('dataset_sha256') != d['sha256'] or s.get('sources') != d['sources']:
         raise ValueError('split/dataset/source hash mismatch')
