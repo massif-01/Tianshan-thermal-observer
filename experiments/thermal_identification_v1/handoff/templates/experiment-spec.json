@@ -1,0 +1,363 @@
+{
+  "execution_id": "TTO-GREYBOX-ID-v1.0",
+  "status": "planned_not_executed",
+  "model_artifact_schema": "TTO-GREYBOX-EXPERIMENT-v1",
+  "deployable": false,
+  "reference_repository": "massif-01/Tianshan-thermal-observer",
+  "reference_commit": "52f571acb128af44f4b06bbba049148e00fd97fb",
+  "runs": {
+    "L": "929742d7-6f4d-4d80-b53e-4436d45ac12c",
+    "S": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02"
+  },
+  "data": {
+    "source": "complete_accepted_series_plus_existing_quality_isolation",
+    "record_schema": 2,
+    "time_axis": "per_run_observer_monotonic_receive",
+    "target": "values.tj",
+    "target_unit": "C",
+    "primary_rails_W": [
+      "values.vdd_gpu",
+      "values.vdd_cpu_soc_mss"
+    ],
+    "duty": "values.duty / 100",
+    "diagnostics_only": [
+      "values.vin_sys_5v0",
+      "values.gain",
+      "values.gpu_busy",
+      "other_chip_temperatures"
+    ],
+    "origin_schedule": "each_accepted_new_sample",
+    "gap_policy": "inherit_validity_and_segment_boundaries_no_fabricated_hold",
+    "label_policy": "first_valid_same_segment_sample_at_or_after_nominal_target_with_original_tolerance",
+    "independent_labels_per_horizon": true
+  },
+  "experiments": [
+    {
+      "id": "F-LS",
+      "fit": [
+        "L"
+      ],
+      "score": [
+        "S"
+      ],
+      "interpretation": "development_cross_workload_transfer_with_past_prefix_calibration"
+    },
+    {
+      "id": "F-SL",
+      "fit": [
+        "S"
+      ],
+      "score": [
+        "L"
+      ],
+      "interpretation": "reverse_time_development_stress_diagnostic_not_future_validation"
+    },
+    {
+      "id": "F-POOL",
+      "fit": [
+        "L",
+        "S"
+      ],
+      "score": [
+        "L",
+        "S"
+      ],
+      "interpretation": "in_sample_expressive_capacity_only"
+    }
+  ],
+  "models": {
+    "G1": {
+      "equation": "dT/dt=-(k0+k1*u)*(T-E_r)+b_g*P_g+b_c*P_c",
+      "dynamic_parameters": [
+        "k0",
+        "k1",
+        "b_g",
+        "b_c"
+      ],
+      "bounds": {
+        "k0": [
+          1e-06,
+          4
+        ],
+        "k1": [
+          0,
+          4
+        ],
+        "b_g": [
+          0,
+          5
+        ],
+        "b_c": [
+          0,
+          5
+        ]
+      }
+    },
+    "G2": {
+      "equations": [
+        "dT_f/dt=-a*(T_f-T_s)+b_g*P_g+b_c*P_c",
+        "dT_s/dt=c*(T_f-T_s)-(d0+d1*u)*(T_s-E_r)"
+      ],
+      "output": "T_f approximately reported TJ, not measured TTP",
+      "dynamic_parameters": [
+        "a",
+        "c",
+        "d0",
+        "d1",
+        "b_g",
+        "b_c"
+      ],
+      "bounds": {
+        "a": [
+          0.0001,
+          4
+        ],
+        "c": [
+          1e-06,
+          1
+        ],
+        "d0": [
+          1e-06,
+          1
+        ],
+        "d1": [
+          0,
+          1
+        ],
+        "b_g": [
+          0,
+          5
+        ],
+        "b_c": [
+          0,
+          5
+        ]
+      }
+    }
+  },
+  "nuisance": {
+    "E_r_bounds_C": [
+      -10,
+      60
+    ],
+    "slow_initial_bounds_C": [
+      -20,
+      120
+    ],
+    "E_r_initial": "clip(first_run_TJ-15,-10,60)",
+    "slow_initial": "clip(first_segment_TJ-2,-20,120)",
+    "meaning": "effective_boundary_and_latent_state_not_measured_ambient_or_heat_capacity",
+    "evaluation_boundary": "one_causal_prefix_calibration_per_run_then_fixed",
+    "weak_prefix_singular_ratio": 1e-06,
+    "weak_prefix_fallback": "fix_E_to_fit_run_median_then_estimate_slow_state"
+  },
+  "initializations": [
+    {
+      "id": "N1",
+      "G1": {
+        "k0": 0.5,
+        "k1": 0.5,
+        "b_g": 0.08,
+        "b_c": 0.04
+      },
+      "G2": {
+        "a": 1,
+        "c": 0.02,
+        "d0": 0.01,
+        "d1": 0.02,
+        "b_g": 0.08,
+        "b_c": 0.04
+      }
+    },
+    {
+      "id": "N2",
+      "G1": {
+        "k0": 0.1,
+        "k1": 0.1,
+        "b_g": 0.04,
+        "b_c": 0.02
+      },
+      "G2": {
+        "a": 0.33,
+        "c": 0.005,
+        "d0": 0.003,
+        "d1": 0.006,
+        "b_g": 0.04,
+        "b_c": 0.02
+      }
+    },
+    {
+      "id": "N3",
+      "G1": {
+        "k0": 0.02,
+        "k1": 0.02,
+        "b_g": 0.02,
+        "b_c": 0.01
+      },
+      "G2": {
+        "a": 0.1,
+        "c": 0.002,
+        "d0": 0.001,
+        "d1": 0.002,
+        "b_g": 0.02,
+        "b_c": 0.01
+      }
+    },
+    {
+      "id": "N4",
+      "G1": {
+        "k0": 0.005,
+        "k1": 0.005,
+        "b_g": 0.01,
+        "b_c": 0.005
+      },
+      "G2": {
+        "a": 0.033,
+        "c": 0.001,
+        "d0": 0.0003,
+        "d1": 0.0006,
+        "b_g": 0.01,
+        "b_c": 0.005
+      }
+    },
+    {
+      "id": "N5",
+      "G1": {
+        "k0": 0.001,
+        "k1": 0.003,
+        "b_g": 0.03,
+        "b_c": 0.015
+      },
+      "G2": {
+        "a": 1,
+        "c": 0.001,
+        "d0": 0.001,
+        "d1": 0.006,
+        "b_g": 0.03,
+        "b_c": 0.015
+      }
+    },
+    {
+      "id": "N6",
+      "G1": {
+        "k0": 0.0002,
+        "k1": 0.001,
+        "b_g": 0.015,
+        "b_c": 0.0075
+      },
+      "G2": {
+        "a": 0.1,
+        "c": 0.0003,
+        "d0": 0.0001,
+        "d1": 0.001,
+        "b_g": 0.015,
+        "b_c": 0.0075
+      }
+    }
+  ],
+  "fit": {
+    "solver": "scipy.optimize.least_squares",
+    "method": "trf",
+    "x_scale": "jac",
+    "float": "float64",
+    "loss": "time_weighted_huber_on_unweighted_C_residual",
+    "huber_transition_C": 0.3,
+    "weights": "equal_run_then_equal_present_macroregime_then_effective_time",
+    "macroregime_order": [
+      "work_or_short_event_to_end_plus_30s_capped_at_next_submit",
+      "labelled_recovery_not_in_work",
+      "remaining_background"
+    ],
+    "seed_selection": "minimum_finite_converged_training_objective_only",
+    "max_nfev": 300,
+    "max_actual_residual_calls_per_seed": 1500,
+    "main_fits_max": 36,
+    "BLAS_threads": 1,
+    "rss_target_MiB": 2048,
+    "total_soft_budget_s": 7200
+  },
+  "initialization": {
+    "causal_prefix_s": 60,
+    "rolling_state_window_s": 60,
+    "fixed_sensitivity_window_s": 180,
+    "fit_initial_states": "joint_per_segment",
+    "score_initial_states": "past_only_fixed_dynamic_parameters",
+    "keep_boundary_fixed_after_prefix": true,
+    "free_run_after_prefix": "no_target_TJ_assimilation"
+  },
+  "evaluation": {
+    "horizons_s": [
+      15,
+      45,
+      90
+    ],
+    "primary_horizon_s": 45,
+    "modes": [
+      "A-long-free-response-known-inputs",
+      "A-roll-known-future-inputs",
+      "B-HOLD-past-only",
+      "B-RELAX30-past-only"
+    ],
+    "RELAX30": {
+      "tau_s": 30,
+      "floor": "per_rail_min(current,fit_only_P10)",
+      "PWM": "hold_current",
+      "use_future_task_end": false
+    },
+    "no_oracle_choice_between_scenarios": true,
+    "no_claim_of_unseen_research_test": true
+  },
+  "ridge": {
+    "TJ_lags_s": [
+      5,
+      15,
+      30,
+      60
+    ],
+    "TJ_means_s": [
+      10,
+      30
+    ],
+    "TJ_slopes_s": [
+      10,
+      30
+    ],
+    "R_TJ_n_columns": 9,
+    "R_IO_added_groups": [
+      "u_current_and_mean30",
+      "P_g_current_and_mean30",
+      "P_c_current_and_mean30"
+    ],
+    "R_IO_n_columns": 15,
+    "lambda_grid": [
+      0.01,
+      0.1,
+      1,
+      10
+    ],
+    "CV": "fit_side_only_whole_valid_segment_groups_up_to_3_folds",
+    "CV_fallback_lambda": 1,
+    "near_tie_C": 0.01,
+    "label_eligibility": "separate_per_horizon",
+    "alpha_mapping": "lambda * sum_sample_weights",
+    "target": "delta_T"
+  },
+  "diagnostics": {
+    "near_optimal_training_relative_loss": 0.05,
+    "nested_d1_zero": "G2_F_POOL_one_refit_from_frozen_best_training_seed",
+    "primary_parameters_not_updated_on_score": true
+  },
+  "prohibitions": [
+    "production_source_edits",
+    "device_connection",
+    "new_workload",
+    "fan_write",
+    "service_restart",
+    "deployment",
+    "online_parameter_learning",
+    "git_commit_push_pr",
+    "overwriting_old_data_models_test_used",
+    "future_measurements_in_B"
+  ],
+  "authoritative_text": "01-首轮灰箱实际辨识与对照实验方案.md"
+}

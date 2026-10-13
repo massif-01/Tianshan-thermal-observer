@@ -1,0 +1,9 @@
+Matplotlib is building the font cache; this may take a moment.
+Traceback (most recent call last):
+  File "/Users/massif/Tianshan-thermal-observer/experiments/thermal_identification_v1/plot_results.py", line 101, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/Users/massif/Tianshan-thermal-observer/experiments/thermal_identification_v1/plot_results.py", line 29, in main
+    ax[2,col].plot(t,[r['values']['duty'] if r['values']['duty'] is not None else np.nan for r in rows],color='#794999',lw=.8,label='Successful PWM')
+                                             ~~~~~~~~~~~^^^^^^^^
+KeyError: 'duty'

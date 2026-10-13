@@ -1,0 +1,14 @@
+# Only the sealed research snapshot belongs to this branch.
+__pycache__/
+.pytest_cache/
+.matplotlib/
+test-tmp*/
+*.so
+input-cache/
+inputs/
+preflight/
+!runs/
+runs/*
+!runs/main/
+runs/main/input-cache/
+handoff/inputs/*.zip

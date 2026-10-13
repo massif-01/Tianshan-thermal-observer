@@ -1,0 +1,27 @@
+{
+  "verdict": "可以推送",
+  "base_commit": "a27ddb6f41c887fd9f08d4120f98d97eed31f4d0",
+  "branch": "research/greybox-id-v1",
+  "scope": "only experiments/thermal_identification_v1",
+  "sealed_files_sha256_verified": 222,
+  "evidence_zip_sha256": "d2039aafbc778a35ad223a7f6f9cac378e570a1ed67f8e9cf4962da8385ef546",
+  "research_tests": "12 passed in isolated publication checkout",
+  "saved_results_readback": "1766 augmented-expm cases and all cohort/label/frozen model checks passed",
+  "original_worktree_status_and_head": "unchanged",
+  "diff_check": {
+    "authored_code_and_other_files": "passed",
+    "preserved_format_findings": [
+      "Five original Matplotlib SVGs retain trailing whitespace",
+      "Preserved tto-reference/platform_engine.py retains original final blank line"
+    ],
+    "reason": "Retain the delivered snapshot bytes and source hashes; no behavior or test change"
+  },
+  "limitations": [
+    "development/exploratory data only",
+    "no independent target validation",
+    "no control/deployment authorization",
+    "not a new numerical fit"
+  ],
+  "publication_authority": "subsequent user request to create/publish a separate GitHub branch",
+  "pr_created": false
+}
