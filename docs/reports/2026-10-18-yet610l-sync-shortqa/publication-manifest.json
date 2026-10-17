@@ -1,0 +1,119 @@
+{
+  "run_id": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece",
+  "contract": "TTO-YET-FROZEN-COMPARE-v1.0",
+  "publication_scope": "New report directory plus docs/reports/README.md only; private worktree, old models/results and production code preserved.",
+  "private_input_archive": {
+    "bytes": 18020171,
+    "sha256": "c0c3e1895ca9893d90a27559a491093aa4de1209ab1ae317494adc5ef3c94273",
+    "verified_members": 255
+  },
+  "private_complete_research_archive": {
+    "bytes": 20145199,
+    "sha256": "5e5efe9c578c9eca4197ebe2ef48ddebae0451929325076a1e229323262ea975"
+  },
+  "public_input_archive": {
+    "sha256": "1ed37c0bbeb1d94562e46958e85920a7f49f80ef3f58fcc4d134d97b124298d2",
+    "verified_members": 55,
+    "retained_original_members": 54,
+    "unchanged_original_members": 45,
+    "omitted_original_members": 201
+  },
+  "public_research_archive": {
+    "bytes": 4270493,
+    "sha256": "e2d778010442a5e9726b8b7a833614c7d7e87efb798950a56d7475f5d6dd4ecf",
+    "verified_members": 89
+  },
+  "raw_CSV_unchanged": true,
+  "raw_observations_unchanged": true,
+  "models_and_spec_unchanged": true,
+  "model_parameter_updates": 0,
+  "scientific_results": {
+    "accepted_TJ": 1843,
+    "surface_samples": 2027,
+    "strict_segments": 352,
+    "legal_model_states": {
+      "primary": 0,
+      "old_LS": 0,
+      "A24": 0
+    },
+    "strict_clock_pairs": 0,
+    "ranking_valid": false,
+    "byte_exact_scientific_files": 15,
+    "native_data_byte_exact": true
+  },
+  "privacy": "Infrastructure strings redacted; photos, live tooling, duplicate service snapshots and nonessential inference bodies omitted with original SHA ledger. No temperature/time/flags/reference rewrites.",
+  "normalization": "Outer SVG line-end whitespace normalized; PNG bytes unchanged. Report image links made relative; historical no-Git boundary marked as original research phase.",
+  "validation": {
+    "final_archive_replay": "analysis/final-archive-replay.json",
+    "tests": "8 passed, no skips",
+    "network_attempts": 0,
+    "research_patch_check": "pass",
+    "only_offline_research_and_publication": true
+  },
+  "files": {
+    "analysis/actual-CSV-mapping-verification.json": {
+      "bytes": 789,
+      "sha256": "66e21d1e87f75e77aed9942643d979c0a6a1651bc528f2c58a758a98bfd5fd05"
+    },
+    "analysis/comparison-summary.json": {
+      "bytes": 2108,
+      "sha256": "bfc1d1e5cdd71353509ce8448b78c05d7a7406c9733bab156e00887dc6174354"
+    },
+    "analysis/final-archive-replay.json": {
+      "bytes": 2334,
+      "sha256": "fa3d1241bb42845377a42ab358ce8c48ee30d650843ed77055584979a56eb25b"
+    },
+    "analysis/fixed-reference.json": {
+      "bytes": 532,
+      "sha256": "c6f6c2795d9456b8a25f524117665026f7e7904443e41a0ff9e8b496d537d627"
+    },
+    "analysis/model-coverage.json": {
+      "bytes": 1236,
+      "sha256": "70d12a6894c8aeeaaecd9d38503ee15cb56ea25bf21a8417edbc7abb9d917f74"
+    },
+    "analysis/publication-replay.json": {
+      "bytes": 5956,
+      "sha256": "96621495205acaad45a3dd8a0e973dc661dbfeb568981bd55cd3e5d6803ad75a"
+    },
+    "analysis/request-summary.csv": {
+      "bytes": 3539,
+      "sha256": "3d5fd7bc4f3fd5ca3be0805d4743244007c2e8349cd924acd0f96325d2fb3cd2"
+    },
+    "analysis/surface-phase-sensitivity.json": {
+      "bytes": 11292,
+      "sha256": "e2c2ef9280c09a664bd50f089f89f985da8f0ef7eb38fc6e9bc2d2382dbdb2b4"
+    },
+    "analysis/图1-真实温度与输入.png": {
+      "bytes": 265784,
+      "sha256": "778d5ddcc9750d7003002b8ef54144d68b9894781e949cbf777b022bbf70c1a4"
+    },
+    "analysis/图1-真实温度与输入.svg": {
+      "bytes": 192956,
+      "sha256": "82deac9927d21f10a24a84d433564d7f0100ed17e71977e54b06b472536a52e8"
+    },
+    "analysis/图2-原生资格与初始化覆盖.png": {
+      "bytes": 140774,
+      "sha256": "3253f38153d5786e05be9a3d2a9cf6ccd0c6b0d987c00b03a5faace9ab270568"
+    },
+    "analysis/图2-原生资格与初始化覆盖.svg": {
+      "bytes": 141622,
+      "sha256": "bb3f743b63d947fafe4deb8b3d53d7fbadd8fdd19d2e6b6b57e510811d8fc975"
+    },
+    "analysis/图3-时间敏感性与比较边界.png": {
+      "bytes": 124439,
+      "sha256": "01778574e8332319555ab45735933171199f761fcf73ae7a7ed7d4277b3e6576"
+    },
+    "analysis/图3-时间敏感性与比较边界.svg": {
+      "bytes": 122865,
+      "sha256": "07d5ddc628337b3f643fc1b306c3908e864494262485ac30edb3939de125e513"
+    },
+    "analysis-report.md": {
+      "bytes": 10803,
+      "sha256": "ad825dac60f796c4518a6e04ed2330e14559542e8b2709443acb2aa4f3d9b31d"
+    },
+    "evidence.zip": {
+      "bytes": 4270493,
+      "sha256": "e2d778010442a5e9726b8b7a833614c7d7e87efb798950a56d7475f5d6dd4ecf"
+    }
+  }
+}
