@@ -8,7 +8,7 @@
 
 ## 项目路线图与技术决策
 
-[主路线图 Issue](https://github.com/massif-01/Tianshan-thermal-observer/issues/1) · [热建模、持续校准与跨 Jetson 适应路线图](docs/roadmap/TTO-roadmap.md)
+[产品 Roadmap：阶段、状态与验收](docs/roadmap/PRODUCT-ROADMAP.md) · [总路线 Issue #1](https://github.com/massif-01/Tianshan-thermal-observer/issues/1) · [技术路线与决策备忘](docs/roadmap/TTO-roadmap.md)
 
 当前已完成同机G1/G2辨识及快慢状态对照，Ridge与简单滤波继续保留；状态估计不等于参数在线学习，后者及跨硬件适应仍待验证。[研究状态与证据索引](docs/research/TTO-research-status-20261014.md)区分已交研究、当前本地测温记录工具与未完成能力。外部局部表面测温是条件性研发支线，不是软件/建模的全局前置；没有型号或新读数仍可完成软件，物理对应保持未验证。
 
