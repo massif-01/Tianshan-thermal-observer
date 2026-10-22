@@ -1,0 +1,17 @@
+[Unit]
+Description=TTO read-only thermal Web UI 59009
+After=network.target
+[Service]
+Type=simple
+ExecStart="/private/tmp/tto-web-install-reviewed-final/tto-web" serve --config "/private/tmp/tto-web-install-reviewed-final/web.json"
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=10
+UMask=0077
+NoNewPrivileges=true
+StandardOutput=null
+StandardError=journal
+LogRateLimitIntervalSec=60
+LogRateLimitBurst=10
+[Install]
+WantedBy=default.target

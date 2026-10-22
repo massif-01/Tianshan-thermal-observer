@@ -1,0 +1,26 @@
+### Result
+{"ranges":[5,60,10],"eventDetail":true,"actualTimes":true,"errors":[]}
+### Ran Playwright code
+```js
+await (async (page) => {
+ const errors=[];page.on('pageerror',e=>errors.push(String(e)));
+ await page.getByLabel('时间范围').selectOption('5');await page.waitForTimeout(1500);
+ await page.getByLabel('时间范围').selectOption('60');await page.waitForTimeout(1500);
+ await page.getByLabel('时间范围').selectOption('10');await page.waitForTimeout(1500);
+ const b=await page.locator('#eventTimeline').boundingBox();
+ const v=await page.evaluate(async()=>({s:await(await fetch('/api/v1/snapshot')).json(),e:await(await fetch('/api/v1/events?limit=1000')).json()}));
+ const e=v.e.events.filter(e=>e.elapsed_ms!==null).at(-1);
+ await page.mouse.click(b.x+65+(b.width-95)*e.elapsed_ms/v.s.run_elapsed_ms,b.y+b.height/2);
+ await page.waitForTimeout(200);
+ const eventDetail=await page.locator('#eventSelection').evaluate(e=>!e.hidden&&e.textContent.includes('Web首次到达'));
+ const box=await page.locator('#temperature').boundingBox();
+ await page.mouse.move(box.x+box.width*.7,box.y+box.height*.5);await page.waitForTimeout(300);
+ const tooltip=await page.locator('#temperature').innerText();
+ const actualTimes=tooltip.includes('接收')||tooltip.includes('样本');
+ await page.mouse.wheel(-500,0);await page.waitForTimeout(300);
+ await page.getByRole('button',{name:'重置缩放',exact:true}).click();
+ if(!eventDetail||!actualTimes||errors.length)throw Error(JSON.stringify({eventDetail,actualTimes,errors,tooltip}));
+ return {ranges:[5,60,10],eventDetail,actualTimes,errors};
+}
+)(page);
+```

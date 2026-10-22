@@ -1,0 +1,38 @@
+--- resource-tested/tto_web/cli.py
++++ final/tto_web/cli.py
+@@ -34,6 +34,7 @@
+             # Reserve the port before startup can create an observe transport.
+             family=socket.AF_INET6 if ':' in c['web']['bind'] else socket.AF_INET
+             sock=socket.socket(family,socket.SOCK_STREAM)
++            sock.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
+             try:
+                 sock.bind((c['web']['bind'],59009));sock.listen(128);sock.setblocking(False)
+                 web.run_app(app_for(c),sock=sock,access_log=None,print=None,shutdown_timeout=5.)
+--- resource-tested/tto_web/server.py
++++ final/tto_web/server.py
+@@ -8,6 +8,7 @@
+ import json
+ import logging
+ import math
++import os
+ import psutil
+ import secrets
+ import time
+@@ -75,7 +76,7 @@
+     app['state']=state;app['sse_clients']=sse_clients;app['stop']=stop
+ 
+     def response(obj):return web.json_response(obj,dumps=lambda o:json.dumps(o,ensure_ascii=False,allow_nan=False))
+-    async def health(r):return response({'web':'running','version':__version__,'device_health_is_separate':True})
++    async def health(r):return response({'web':'running','version':__version__,'pid':os.getpid(),'device_health_is_separate':True})
+     async def bootstrap(r):
+         s=state.snapshot()
+         return response(dict(version=__version__,schema_version=s['schema_version'],service_epoch=state.epoch,clock_domain_id=s['clock_domain_id'],run_id=s['run_id'],source_mode=config['source']['mode'],timezone=config['web'].get('timezone','Asia/Shanghai'),capabilities=dict(read_only=True,g2_hold=True,task_metadata=s['context']['task_metadata_available'],rpm_verified=False,demand_provider=False,advisory_provider='CURVE-REFERENCE-v1' if state.curve else None),available_fields=[dict(id=m['id'],label=m['label'],unit=m['unit']) for m in s['metrics']]))
+@@ -117,7 +118,7 @@
+         return response(dict(metrics=rows[offset:offset+limit],total=len(rows)))
+     async def context(r):
+         s=state.snapshot()
+-        return response(dict(**s['context'],observation_status=state.source_status,mode=s['mode'],run_id=s['run_id'],source_epoch=s['source_epoch'],run_elapsed_ms=s['run_elapsed_ms'],thermal_model=s['model']['model_id'],platform=(state.packet or {}).get('platform'),task_model=(state.packet or {}).get('task',{}).get('context',{}).get('task_model'),client_slots=(state.packet or {}).get('task',{}).get('context',{}).get('client_slots'),planned_slots=(state.packet or {}).get('task',{}).get('context',{}).get('planned_slots'),task_phase=(state.packet or {}).get('task',{}).get('context',{}).get('phase'),server_running=None,server_queued=None,source_health=(state.packet or {}).get('source_health',{}),display_resync_count=state.dropped,task_reason='未接入任务记录；客户端完成不代表服务端停止',source_instances_owned=int(config['source']['mode']=='observe' and state.source_connected)))
++        return response(dict(**s['context'],observation_status=state.source_status,mode=s['mode'],run_id=s['run_id'],source_epoch=s['source_epoch'],run_elapsed_ms=s['run_elapsed_ms'],thermal_model=s['model']['model_id'],platform=(state.packet or {}).get('platform'),task_model=(state.packet or {}).get('task',{}).get('context',{}).get('task_model'),client_slots=(state.packet or {}).get('task',{}).get('context',{}).get('client_slots'),planned_slots=(state.packet or {}).get('task',{}).get('context',{}).get('planned_slots'),task_phase=(state.packet or {}).get('task',{}).get('context',{}).get('phase'),server_running=None,server_queued=None,source_health=(state.packet or {}).get('source_health',{}),display_resync_count=state.dropped,task_reason=('任务信息来自runner登记' if s['context']['task_metadata_available'] else '未接入任务记录')+'；客户端完成不代表服务端停止',source_instances_owned=int(config['source']['mode']=='observe' and state.source_connected)))
+     async def session(r):
+         if r.method=='DELETE':
+             sessions.pop(r.cookies.get('tto_session'),None);resp=response({'logged_in':False});resp.del_cookie('tto_session');return resp

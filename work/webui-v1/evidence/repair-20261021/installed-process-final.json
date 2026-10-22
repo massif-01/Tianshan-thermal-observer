@@ -1,0 +1,214 @@
+{
+  "health": {
+    "web": "running",
+    "version": "1.0.0rc2",
+    "pid": 78165,
+    "device_health_is_separate": true
+  },
+  "release": "/private/tmp/tto-web-rc2-final/releases/1.0.0rc2-b28b105d",
+  "wheel_sha256": "d035bd24da55450f28f37bd8bc40d50c00b401e3e425632f5d67ced9f518ca70",
+  "mode": "waiting",
+  "snapshot": {
+    "schema_version": "TTO-WEB-SNAPSHOT-v1",
+    "snapshot_seq": 3,
+    "service_epoch": "f31e18d6-1c5a-450f-b172-a88b555550c2",
+    "run_id": null,
+    "source_epoch": null,
+    "mode": "waiting",
+    "server_time_utc": "2026-10-21T04:42:43.662668+00:00",
+    "clock_domain_id": null,
+    "run_elapsed_ms": null,
+    "metrics": [
+      {
+        "id": "host.cpu",
+        "label": "Web进程单核等效CPU",
+        "kind": "observed",
+        "unit": "%",
+        "value": 95.5,
+        "status": "valid",
+        "reason_code": null,
+        "source_id": "tto-web-process",
+        "source_ref": "process:f31e18d6-1c5a-450f-b172-a88b555550c2",
+        "sample_id": "999350.672460333",
+        "received_at_utc": "2026-10-21T04:42:43.385350+00:00",
+        "source_time_utc": null,
+        "as_of_elapsed_ms": null,
+        "age_lower_bound_ms": 277.3313750512898,
+        "remaining_valid_ms": 1722.6686249487102,
+        "time_quality": "same_clock",
+        "last_observation": null
+      },
+      {
+        "id": "host.rss",
+        "label": "Web进程RSS",
+        "kind": "observed",
+        "unit": "MiB",
+        "value": 35.921875,
+        "status": "valid",
+        "reason_code": null,
+        "source_id": "tto-web-process",
+        "source_ref": "process:f31e18d6-1c5a-450f-b172-a88b555550c2",
+        "sample_id": "999350.672460333",
+        "received_at_utc": "2026-10-21T04:42:43.385350+00:00",
+        "source_time_utc": null,
+        "as_of_elapsed_ms": null,
+        "age_lower_bound_ms": 277.3313750512898,
+        "remaining_valid_ms": 1722.6686249487102,
+        "time_quality": "same_clock",
+        "last_observation": null
+      }
+    ],
+    "model": {
+      "model_id": null,
+      "spec_id": null,
+      "phase": "not_loaded",
+      "remaining_valid_ms": 0.0,
+      "Tf_C": null,
+      "Ts_C": null,
+      "E_C": null,
+      "calibrated_confidence": null,
+      "nodes": [
+        {
+          "id": "pg",
+          "label": "GPU功率",
+          "role": "input",
+          "metric_id": "power.gpu"
+        },
+        {
+          "id": "pc",
+          "label": "CPU·SoC·MSS功率",
+          "role": "input",
+          "metric_id": "power.cpu_soc_mss"
+        },
+        {
+          "id": "u",
+          "label": "当前PWM",
+          "role": "input",
+          "metric_id": "fan.pwm.actual"
+        },
+        {
+          "id": "tj",
+          "label": "TJ观测",
+          "role": "measurement",
+          "metric_id": "temperature.tj"
+        },
+        {
+          "id": "tf",
+          "label": "快热状态 Tf",
+          "role": "estimate",
+          "state_path": "Tf_C"
+        },
+        {
+          "id": "ts",
+          "label": "慢热状态 Ts",
+          "role": "estimate",
+          "state_path": "Ts_C",
+          "note": "模型内部慢态，不是结构传感器温度"
+        },
+        {
+          "id": "forecast",
+          "label": "TJ预测参考",
+          "role": "forecast",
+          "note": "冻结G2-HOLD：15/45/90秒"
+        },
+        {
+          "id": "demand",
+          "label": "平稳需求（研究）",
+          "role": "advisory",
+          "note": "需当前合法provider；index不是PWM"
+        },
+        {
+          "id": "pwmref",
+          "label": "PWM观察建议",
+          "role": "advisory",
+          "note": "独立参考映射；无设备写权限"
+        },
+        {
+          "id": "risk",
+          "label": "当前保护反馈",
+          "role": "observed",
+          "note": "主板明确flags，不是预测过热概率"
+        }
+      ],
+      "edges": [
+        {
+          "from": "pg",
+          "to": "tf",
+          "relation": "power_input"
+        },
+        {
+          "from": "pc",
+          "to": "tf",
+          "relation": "power_input"
+        },
+        {
+          "from": "tj",
+          "to": "tf",
+          "relation": "measurement_correction",
+          "line_style": "dashed"
+        },
+        {
+          "from": "tf",
+          "to": "ts",
+          "relation": "coupling"
+        },
+        {
+          "from": "ts",
+          "to": "tf",
+          "relation": "coupling"
+        },
+        {
+          "from": "u",
+          "to": "ts",
+          "relation": "cooling_input"
+        },
+        {
+          "from": "tf",
+          "to": "forecast",
+          "relation": "prediction_input"
+        },
+        {
+          "from": "ts",
+          "to": "forecast",
+          "relation": "prediction_input"
+        },
+        {
+          "from": "ts",
+          "to": "demand",
+          "relation": "research_transform",
+          "enabled_only_when": "demand_provider_valid"
+        },
+        {
+          "from": "forecast",
+          "to": "pwmref",
+          "relation": "reference_mapping",
+          "enabled_only_when": "advisory_curve_verified"
+        }
+      ]
+    },
+    "predictions": [],
+    "advisory": {
+      "status": "not_configured",
+      "remaining_valid_ms": 0.0,
+      "provider_id": null,
+      "value_percent": null,
+      "reason": "暂无可用建议映射",
+      "device_write_permitted": false
+    },
+    "context": {
+      "observed_device": null,
+      "tto_host": "Massif-MacBook-Pro.local",
+      "task_metadata_available": false,
+      "active_requests": null,
+      "control_owner": "TianshanOS",
+      "tto_role": "read_only"
+    },
+    "health": {
+      "web_connected": true,
+      "measurement_status": "waiting",
+      "protection_status": "unknown",
+      "protection_remaining_valid_ms": 0.0
+    },
+    "event_cursor": null
+  }
+}

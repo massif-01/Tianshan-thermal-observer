@@ -1,0 +1,11 @@
+### Result
+{"mode":"等待数据","model":"未加载热模型","metrics":10,"nodes":10,"cde":true,"context":"未接入任务记录；客户端完成不代表GPU停止。RAM用量不用于推断模型驻留。"}
+### Ran Playwright code
+```js
+await (async (page) => {
+ await page.waitForFunction(async()=>{const s=await(await fetch('/api/v1/snapshot')).json();return s.mode==='waiting'&&s.model.phase==='not_loaded'&&s.metrics.filter(m=>!m.id.startsWith('host.')).length===0;});
+ await page.waitForTimeout(700);await page.screenshot({path:'output/playwright/waiting-final.png',fullPage:true});
+ return {mode:await page.locator('#mode').innerText(),model:await page.locator('#modelPhase').innerText(),metrics:await page.locator('#metrics .metric').count(),nodes:await page.locator('#topology g.node').count(),cde:await page.locator('#model').isVisible()&&await page.locator('#compare').isVisible()&&await page.locator('#context').isVisible(),context:await page.locator('#contextNote').innerText()};
+}
+)(page);
+```

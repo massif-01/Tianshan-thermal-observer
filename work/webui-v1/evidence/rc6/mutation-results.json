@@ -1,0 +1,26 @@
+[
+  {
+    "mutation": "barrier",
+    "test": "test_disconnect_advances_barrier_beyond_coalesced_expiry_gap",
+    "returncode": 1,
+    "loaded_module": "/private/tmp/tto-rc6-mutant-nr91foxp/tto_web/state.py",
+    "expected_assertion": "assert list(s.model_history)==before",
+    "original_sha256": "78b7dfe734ece4c737ef64846d5c7f84f1b8ba3183804c1ee0c56913dccb035d",
+    "mutant_sha256": "e8352ff670e0c8ee0be9a63130611c496db7e975106a068f0bbca4d8f4fd963e",
+    "removed": "        if t<=self.model_gap_t:\n            return\n",
+    "replacement": "",
+    "isolated_copy": true
+  },
+  {
+    "mutation": "posterior",
+    "test": "test_real_observer_history_is_posterior_of_same_tj",
+    "returncode": 1,
+    "loaded_module": "/private/tmp/tto-rc6-mutant-h6qsk2vm/tto_web/state.py",
+    "expected_assertion": "assert tf!=tj",
+    "original_sha256": "78b7dfe734ece4c737ef64846d5c7f84f1b8ba3183804c1ee0c56913dccb035d",
+    "mutant_sha256": "ccbd8daca075d1f4558e727d7f89024bb0d666d0e38ba6ecfb7f483607dda7f0",
+    "removed": "(tj['value'],o['Tf_C'],o['Ts_C'],o['E_C'])",
+    "replacement": "(tj['value'],tj['value'],o['Ts_C'],o['E_C'])",
+    "isolated_copy": true
+  }
+]

@@ -1,0 +1,589 @@
+--- rc5/src/tto_web/web-candidate-files.json
++++ rc6/src/tto_web/web-candidate-files.json
+@@ -1,12 +1,12 @@
+ {
+-  "version": "1.0.0rc5",
++  "version": "1.0.0rc6",
+   "baseline": "0.2.4+closeout.2; historical identity retained separately",
+   "frozen_model_sha256": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
+   "frontend": "sealed rc3 static assets; Sonnet redesign not included",
+   "files": {
+     "tto_web/server.py": "41afd059e5f91e19c60913b44c9f8e69625d68b14b4e5d4431bb82a7d1807861",
+     "tto_web/adapter.py": "c0040f321d2fab408580883cfc1109d3ef50b3821a42b4e5bf38f97e4040cce8",
+-    "tto_web/__init__.py": "92521f93af40ea7fca1a48c1b3d2fea5dcb2f9fddd4827d9679edeea1ba50fed",
++    "tto_web/__init__.py": "3a83c936fdbdab8846987bbd349233df3c2715da44a13fbdd53e5995077b1682",
+     "tto_web/display.py": "6abec7aa6f80740395b053b4969abb3fa673f64ef3eb906554290ba92a82b0a2",
+     "tto_web/context.py": "e271998ba8b93e3140c3534ec1a3b6f7c638ccd1dd6f0b4011619c8170aee795",
+     "tto_web/cli.py": "67efba0cc1e32005dfa4c1da48d51453110cb6c4e338867f1e92d21d833ac435",
+@@ -21,9 +21,9 @@
+     "tto_web/contracts/example-waiting.json": "d32ecbc8f6e17b556e30d52661ae656daad895fc614c66ff8caa7e3d0cb962b8",
+     "tto_web/contracts/series-example-new-epoch.json": "517de8562a21cb2c78b36604a527020642f85879452d749b88435943aaec8003",
+     "tto_web/contracts/model-topology.json": "93efc78ac8548028ed4b298b61aacc4d959ed7c239b8b25dc1d6e7b36ac499fa",
+-    "tto_web/contracts/series.schema.json": "cfcad2ef84841b448691d894bc6b44e9b3c6be0583d0b0e37356fcf2fbbd09f3",
++    "tto_web/contracts/series.schema.json": "86fe58d7339e31ab2701314af76447dfeb747017b9b0df7996b0ae073970c9ec",
+     "tto_web/contracts/series-example-tracking.json": "743af2be78f511dc8f74bce967e07a94048f7b91f02e604d4c9c7403fe230510",
+-    "tto_web/contracts/model-history-contract.md": "f1774f97d3d32a0627583090aa792a9a3cad5ba7716ede5325459c0576aea681",
++    "tto_web/contracts/model-history-contract.md": "fb19f5b09b3ff0940df382380f16f6afeaeef3f580b67fd90e4215ce92ccb3e6",
+     "tto_web/contracts/example-degraded.json": "be29d8efa2dbca95fbe3f94088143bb6b71944b2c71e135a05eefff451e379b4",
+     "tto_web/static/index.html": "33efa855dcdbbb5621b5f0ce58191adf7ecb66cb858568305eeff90062792296",
+     "tto_web/static/assets/index--dJAhGlH.js": "6e89496588a9df87f44304d2010f062eb476ee1e9a5fdc881d68715b81fa13a2",
+--- rc5/src/tto_web/__init__.py
++++ rc6/src/tto_web/__init__.py
+@@ -1,2 +1,2 @@
+ """TTO read-only Web candidate. No controller or workload API."""
+-__version__ = '1.0.0rc5'
++__version__ = '1.0.0rc6'
+--- rc5/src/tto_web/contracts/series.schema.json
++++ rc6/src/tto_web/contracts/series.schema.json
+@@ -180,7 +180,25 @@
+                   ]
+                 }
+               },
+-              "additionalProperties": false
++              "additionalProperties": false,
++              "allOf": [
++                {
++                  "if": {
++                    "properties": {
++                      "value": {
++                        "type": "number"
++                      }
++                    }
++                  },
++                  "then": {
++                    "properties": {
++                      "sample_id": {
++                        "type": "string"
++                      }
++                    }
++                  }
++                }
++              ]
+             }
+           }
+         },
+@@ -306,6 +324,29 @@
+                 }
+               }
+             }
++          },
++          {
++            "if": {
++              "required": [
++                "alignment_group",
++                "id"
++              ],
++              "properties": {
++                "id": {
++                  "const": "temperature.tj"
++                }
++              }
++            },
++            "then": {
++              "properties": {
++                "kind": {
++                  "const": "observed"
++                },
++                "estimate_stage": {
++                  "type": "null"
++                }
++              }
++            }
+           }
+         ]
+       }
+--- rc5/src/tto_web/contracts/model-history-contract.md
++++ rc6/src/tto_web/contracts/model-history-contract.md
+@@ -5,9 +5,13 @@
+ TJ−Tf 为校正后残差；E、Ts−E、Tf−Ts 为带符号温度状态分解，不能解释为热量占比。
+ 
+ 显式请求任一新模型 id，启用 tj_model 共同抽样；同请求中的 temperature.tj 为模型采样锚点视图。
++联合 temperature.tj 只在模型数值有效时有值；冷启动 provisional、unavailable 期间，
++即使 TJ 本身有效，联合行的 TJ 也为 null（reason_code=phase_unavailable）。
++前端画实测线须单独请求 temperature.tj；联合 TJ 只用于与模型状态对齐计算校正后残差。
+ 独立 temperature.tj 与默认 ids 保持原指标历史。没有插值、补零或平滑。三个模型状态始终共同取点，
+ 并保留 TJ、Tf、Ts、E 和三种差值的桶内极值、全部显式缺口及相邻段边界；只请求部分模型时索引仍一致。
+ max_points 是软预算，断点密集时可超额；original_points/returned_points/soft_budget_exceeded 明示实际情况。
++sampling 不是 actual_samples 时，返回点是选点结果，不能据此精确计算 MAE/P95 等统计量。
+ 每个联合组最多 18002 行，按既有时间裁剪一小时；高于容量的源速率可能不足一小时。
+ 
+ 数值资格：新且未重复的 TJ、TJ 有效且未到期、tracking/degraded、三个有限状态、
+--- rc5/tests/test_model_history.py
++++ rc6/tests/test_model_history.py
+@@ -55,6 +55,25 @@
+     assert series[1]['kind']=='estimate' and series[1]['estimate_stage']=='posterior'
+     assert series[1]['points'][-1]['source_ref']=='synthetic:0.2'
+     assert [r.t for r in s.model_history]==[0,200]
++
++
++def test_real_observer_history_is_posterior_of_same_tj():
++    producer=Producer(time.monotonic()-90.)
++    s=State(web_config());checked=0
++    for seconds in range(91):
++        packet=producer.step(seconds,tj=44.3+3.*math.sin(seconds/8.))
++        s.accept(packet,now=producer.start+seconds+.01)
++        row=s.model_history[-1]
++        if row.reason is not None:continue
++        assert row.sample_id==packet['tj_sample_id']
++        assert row.t==pytest.approx(seconds*1000.,abs=.001)
++        tj,tf,_,_=row.values
++        innovation=packet['model']['latest_innovation_C']
++        assert tf!=tj
++        assert (tj-tf)*innovation>0
++        assert 0<=(tj-tf)/innovation<=1
++        checked+=1
++    assert checked>=60
+ 
+ 
+ @pytest.mark.parametrize('case,reason',[
+@@ -102,6 +121,20 @@
+ def test_expiry_before_replacing_packet_not_lost(factory):
+     s=State(web_config());put(s,factory(0));put(s,factory(3),1003.01)
+     assert [r.reason for r in s.model_history]==[None,'model_expired',None]
++
++
++def test_disconnect_advances_barrier_beyond_coalesced_expiry_gap(factory,monkeypatch):
++    s=State(web_config());put(s,factory(0));s.refresh(1002.6)
++    assert s.model_history[-1].t==2500 and s.model_history[-1].reason=='model_expired'
++    monkeypatch.setattr(state_module.time,'monotonic',lambda:1004.)
++    s.disconnect()
++    assert s.model_gap_t==4000
++    before=list(s.model_history)
++    assert len(before)==2 and before[-1].t==2500
++    delayed=factory(3)
++    assert delayed['input_mono_s']<1004.01<delayed['consumable_until_mono_s']
++    put(s,delayed,1004.01)
++    assert list(s.model_history)==before
+ 
+ 
+ def test_gap_same_time_wins_and_disconnect_recovery(factory,monkeypatch):
+@@ -216,6 +249,15 @@
+         elif case=='wrong_unit':row['unit']='W'
+         else:row['points'][-1].pop('phase_at_sample')
+         with pytest.raises(jsonschema.ValidationError):jsonschema.validate(invalid,schema)
++    # Actual rc5 schema extracted from the sealed wheel, not reconstructed from rc6.
++    old_schema=json.loads((Path(__file__).parent/'fixtures/series-rc5.schema.json').read_text())
++    for case in ('joint_tj_kind','joint_tj_stage','numeric_sample_id'):
++        invalid=copy.deepcopy(example)
++        if case=='joint_tj_kind':invalid['series'][0]['kind']='estimate'
++        elif case=='joint_tj_stage':invalid['series'][0]['estimate_stage']='posterior'
++        else:invalid['series'][1]['points'][-1]['sample_id']=None
++        jsonschema.validate(invalid,old_schema)
++        with pytest.raises(jsonschema.ValidationError):jsonschema.validate(invalid,schema)
+ 
+ 
+ async def test_waiting_series_schema_and_unknown_fields_rejected():
+--- rc5/tools/build_history_candidate.py
++++ rc6/tools/build_history_candidate.py
+@@ -2,8 +2,8 @@
+ import hashlib,json,shutil,subprocess,sys,zipfile
+ from pathlib import Path
+ ROOT=Path(__file__).resolve().parents[1]
+-VERSION='1.0.0rc5'
+-STAGE=ROOT/'candidate-rc5'
++VERSION='1.0.0rc6'
++STAGE=ROOT/'candidate-rc6'
+ ACTIVE_TOOLS=('build_history_candidate.py','install.py','verify_final_archive.py',
+     'history_source.py','history_service.py','history_view.html','history_view.js',
+     'history_allocation.py','history_resource_monitor.py','audit_history_equivalence.py',
+@@ -31,7 +31,7 @@
+     for name in ('src','vendor','config','tests','requirements'):
+         shutil.copytree(ROOT/name,STAGE/name,ignore=shutil.ignore_patterns('__pycache__'))
+     # Ship active reproduction/installation tools; historical rc1/rc2/rc3 tools
+-    # remain in their sealed releases rather than becoming alternate rc5 entrypoints.
++    # remain in their sealed releases rather than becoming alternate rc6 entrypoints.
+     (STAGE/'tools').mkdir()
+     for name in ACTIVE_TOOLS:shutil.copy2(ROOT/'tools'/name,STAGE/'tools'/name)
+     for name in ('pyproject.toml','requirements.runtime.lock','baseline-identities.json','TTO-WebUI-模型状态历史序列-实施与验收方案-v1.0.md'):
+@@ -44,6 +44,6 @@
+     for name in ('pyproject.toml','requirements.runtime.lock','baseline-identities.json'):identities[name]=sha(STAGE/name)
+     (STAGE/'candidate-identities.json').write_text(json.dumps(identities,indent=2)+'\n')
+     receipt=dict(version=VERSION,wheel=wheel.name,wheel_bytes=wheel.stat().st_size,wheel_sha256=sha(wheel),package_files=len(packages),installer_files=len(identities),static_from_rc3=True,no_frontend_build=True,offline=True)
+-    (ROOT/'evidence/self-review-rc5/build-receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
++    (ROOT/'evidence/self-review-rc6/build-receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
+     print(json.dumps(receipt))
+ if __name__=='__main__':main()
+--- rc5/tools/verify_final_archive.py
++++ rc6/tools/verify_final_archive.py
+@@ -5,15 +5,15 @@
+ ROOT=Path(__file__).resolve().parents[1]
+ def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+ def main():
+-    archive=ROOT/'TTO-WebUI-v1-rc5-Claude-Sonnet-5.5-审查交接包.zip'
+-    dest=Path('/private/tmp/tto-web-rc5-zip-readback');dest.mkdir(exist_ok=False)
++    archive=ROOT/'TTO-WebUI-v1-rc6-Claude-Sonnet-5.5-审查交接包.zip'
++    dest=Path('/private/tmp/tto-web-rc6-zip-readback');dest.mkdir(exist_ok=False)
+     with zipfile.ZipFile(archive) as z:
+         z.extractall(dest);members=len(z.namelist())
+-    bundle=dest/'TTO-WebUI-v1.0-rc5'
++    bundle=dest/'TTO-WebUI-v1.0-rc6'
+     payload=json.loads((bundle/'PAYLOAD-MANIFEST.json').read_text())
+     for name,digest in payload.items():assert sha(bundle/name)==digest,name
+     rootfiles=[n for n in payload if n.startswith(('src/','vendor/','tools/','tests/')) or n in ('pyproject.toml','candidate-identities.json')]
+-    for n in rootfiles:assert (bundle/n).read_bytes()==(ROOT/'candidate-rc5'/n).read_bytes(),n
++    for n in rootfiles:assert (bundle/n).read_bytes()==(ROOT/'candidate-rc6'/n).read_bytes(),n
+     wheel=next((bundle/'wheelhouse').glob('tto_web_ui-*.whl'))
+     assert sha(wheel)==sha(ROOT/'dist'/wheel.name)
+     with zipfile.ZipFile(wheel) as z:
+@@ -22,12 +22,12 @@
+             source=bundle/('src' if name.startswith('tto_web/') else 'vendor')/name
+             assert source.read_bytes()==z.read(name),name
+             assert hashlib.sha256(z.read(name)).hexdigest()==digest
+-    prefix=Path('/private/tmp/tto-web-rc5-from-final-zip')
++    prefix=Path('/private/tmp/tto-web-rc6-from-final-zip')
+     install=subprocess.run([sys.executable,str(bundle/'tools/install.py'),'--prefix',str(prefix),'--service','none','--python','/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12'],capture_output=True,text=True)
+-    (ROOT/'evidence/self-review-rc5/zip-offline-install.log').write_text(install.stdout+install.stderr);assert install.returncode==0
++    (ROOT/'evidence/self-review-rc6/zip-offline-install.log').write_text(install.stdout+install.stderr);assert install.returncode==0
+     py=prefix/'current/env/bin/python'
+     identity=json.loads(subprocess.check_output([str(py),'-c','import json,tto_web;from tto_web.identity import verify;print(json.dumps(dict(module=tto_web.__file__,identity=verify())))'],text=True))
+-    env=dict(os.environ,TTO_WEB_TEST_BOOT_ID='rc5-final-zip')
++    env=dict(os.environ,TTO_WEB_TEST_BOOT_ID='rc6-final-zip')
+     cli=subprocess.Popen([str(prefix/'tto-web'),'serve','--config',str(prefix/'web.json')],stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True,env=env)
+     opener=build_opener(ProxyHandler({}))
+     try:
+@@ -40,13 +40,13 @@
+             except OSError:pass
+             assert time.monotonic()<end
+             time.sleep(.1)
+-        assert h['version']=='1.0.0rc5'
++        assert h['version']=='1.0.0rc6'
+         snapshot=json.load(opener.open('http://127.0.0.1:59009/api/v1/snapshot'))
+         result=json.load(opener.open('http://127.0.0.1:59009/api/v1/series?ids=temperature.tj,model.Tf_C,model.Ts_C,model.E_C'))
+         assert snapshot['mode']=='waiting' and all(not s['points'] for s in result['series'])
+     finally:
+         cli.send_signal(signal.SIGTERM);stdout,stderr=cli.communicate(timeout=15)
+     assert cli.returncode==0
+-    receipt=dict(version='1.0.0rc5',archive=archive.name,archive_bytes=archive.stat().st_size,archive_sha256=sha(archive),wheel=wheel.name,wheel_bytes=wheel.stat().st_size,wheel_sha256=sha(wheel),zip_members=members,payload_files_checked=len(payload),source_files_byte_equal=len(rootfiles),wheel_source_files_byte_equal=len(sealed['files']),offline_install_from_exact_zip=True,installed=identity,cli_health=h,cli_exit_code=cli.returncode,waiting_mode=snapshot['mode'],empty_model_history=True,service_none=True,no_device=True)
+-    (ROOT/'TTO-WebUI-v1-rc5-交付核验回执.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n');print(json.dumps(receipt))
++    receipt=dict(version='1.0.0rc6',archive=archive.name,archive_bytes=archive.stat().st_size,archive_sha256=sha(archive),wheel=wheel.name,wheel_bytes=wheel.stat().st_size,wheel_sha256=sha(wheel),zip_members=members,payload_files_checked=len(payload),source_files_byte_equal=len(rootfiles),wheel_source_files_byte_equal=len(sealed['files']),offline_install_from_exact_zip=True,installed=identity,cli_health=h,cli_exit_code=cli.returncode,waiting_mode=snapshot['mode'],empty_model_history=True,service_none=True,no_device=True)
++    (ROOT/'TTO-WebUI-v1-rc6-交付核验回执.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n');print(json.dumps(receipt))
+ if __name__=='__main__':main()
+--- rc5/pyproject.toml
++++ rc6/pyproject.toml
+@@ -3,7 +3,7 @@
+ build-backend = "setuptools.build_meta"
+ [project]
+ name = "tto-web-ui"
+-version = "1.0.0rc5"
++version = "1.0.0rc6"
+ requires-python = ">=3.10"
+ dependencies = ["aiohttp==3.11.18", "python-socketio==5.13.0", "psutil==7.0.0", "numpy==2.2.6", "scipy>=1.14.1,<1.16"]
+ [project.scripts]
+--- /dev/null
++++ rc6/tests/fixtures/series-rc5.schema.json
+@@ -0,0 +1,315 @@
++{
++  "$schema": "https://json-schema.org/draft/2020-12/schema",
++  "$id": "TTO-WEB-SERIES-v1",
++  "type": "object",
++  "required": [
++    "snapshot_seq",
++    "service_epoch",
++    "run_id",
++    "source_epoch",
++    "model_id",
++    "spec_id",
++    "series"
++  ],
++  "properties": {
++    "snapshot_seq": {
++      "type": "integer",
++      "minimum": 0
++    },
++    "service_epoch": {
++      "type": "string"
++    },
++    "run_id": {
++      "type": [
++        "string",
++        "null"
++      ]
++    },
++    "source_epoch": {
++      "type": [
++        "integer",
++        "null"
++      ],
++      "minimum": 0
++    },
++    "model_id": {
++      "type": [
++        "string",
++        "null"
++      ]
++    },
++    "spec_id": {
++      "type": [
++        "string",
++        "null"
++      ]
++    },
++    "series": {
++      "type": "array",
++      "maxItems": 32,
++      "items": {
++        "type": "object",
++        "required": [
++          "id",
++          "label",
++          "unit",
++          "sampling",
++          "points"
++        ],
++        "properties": {
++          "id": {
++            "type": "string"
++          },
++          "label": {
++            "type": "string"
++          },
++          "unit": {
++            "type": [
++              "string",
++              "null"
++            ]
++          },
++          "kind": {
++            "enum": [
++              "observed",
++              "estimate"
++            ]
++          },
++          "sampling": {
++            "enum": [
++              "actual_samples",
++              "bucket_first_last_min_max_and_gaps",
++              "joint_bucket_extrema_and_gaps"
++            ]
++          },
++          "alignment_group": {
++            "const": "tj_model"
++          },
++          "time_basis": {
++            "const": "tj_sample"
++          },
++          "anchor_metric_id": {
++            "const": "temperature.tj"
++          },
++          "estimate_stage": {
++            "enum": [
++              "posterior",
++              null
++            ]
++          },
++          "original_points": {
++            "type": "integer",
++            "minimum": 0
++          },
++          "returned_points": {
++            "type": "integer",
++            "minimum": 0
++          },
++          "soft_budget_exceeded": {
++            "type": "boolean"
++          },
++          "points": {
++            "type": "array",
++            "maxItems": 18002,
++            "items": {
++              "type": "object",
++              "required": [
++                "t",
++                "value",
++                "status",
++                "sample_id",
++                "received_at_utc",
++                "source_ref"
++              ],
++              "properties": {
++                "t": {
++                  "type": "number",
++                  "minimum": 0
++                },
++                "value": {
++                  "type": [
++                    "number",
++                    "null"
++                  ]
++                },
++                "status": {
++                  "enum": [
++                    "valid",
++                    "unknown",
++                    "invalid",
++                    "stale",
++                    "unverified"
++                  ]
++                },
++                "sample_id": {
++                  "type": [
++                    "string",
++                    "null"
++                  ]
++                },
++                "received_at_utc": {
++                  "type": [
++                    "string",
++                    "null"
++                  ]
++                },
++                "source_ref": {
++                  "type": [
++                    "string",
++                    "null"
++                  ]
++                },
++                "phase_at_sample": {
++                  "enum": [
++                    "tracking",
++                    "degraded",
++                    null
++                  ]
++                },
++                "reason_code": {
++                  "enum": [
++                    null,
++                    "source_disconnected",
++                    "source_ended",
++                    "publication_gap",
++                    "model_expired",
++                    "tj_invalid",
++                    "phase_unavailable",
++                    "nonfinite_state",
++                    "alignment_mismatch"
++                  ]
++                }
++              },
++              "additionalProperties": false
++            }
++          }
++        },
++        "additionalProperties": false,
++        "allOf": [
++          {
++            "if": {
++              "properties": {
++                "id": {
++                  "enum": [
++                    "model.Tf_C",
++                    "model.Ts_C",
++                    "model.E_C"
++                  ]
++                }
++              },
++              "required": [
++                "id"
++              ]
++            },
++            "then": {
++              "required": [
++                "alignment_group"
++              ],
++              "properties": {
++                "kind": {
++                  "const": "estimate"
++                },
++                "unit": {
++                  "const": "°C"
++                },
++                "estimate_stage": {
++                  "const": "posterior"
++                }
++              }
++            }
++          },
++          {
++            "if": {
++              "required": [
++                "alignment_group"
++              ]
++            },
++            "then": {
++              "required": [
++                "kind",
++                "alignment_group",
++                "time_basis",
++                "anchor_metric_id",
++                "estimate_stage",
++                "original_points",
++                "returned_points",
++                "soft_budget_exceeded"
++              ],
++              "properties": {
++                "id": {
++                  "enum": [
++                    "temperature.tj",
++                    "model.Tf_C",
++                    "model.Ts_C",
++                    "model.E_C"
++                  ]
++                },
++                "unit": {
++                  "const": "°C"
++                },
++                "points": {
++                  "items": {
++                    "required": [
++                      "phase_at_sample",
++                      "reason_code"
++                    ],
++                    "allOf": [
++                      {
++                        "if": {
++                          "properties": {
++                            "value": {
++                              "type": "null"
++                            }
++                          }
++                        },
++                        "then": {
++                          "properties": {
++                            "status": {
++                              "const": "unknown"
++                            },
++                            "phase_at_sample": {
++                              "type": "null"
++                            },
++                            "reason_code": {
++                              "type": "string"
++                            },
++                            "sample_id": {
++                              "type": "null"
++                            },
++                            "received_at_utc": {
++                              "type": "null"
++                            },
++                            "source_ref": {
++                              "type": "null"
++                            }
++                          }
++                        },
++                        "else": {
++                          "properties": {
++                            "status": {
++                              "const": "valid"
++                            },
++                            "phase_at_sample": {
++                              "enum": [
++                                "tracking",
++                                "degraded"
++                              ]
++                            },
++                            "reason_code": {
++                              "type": "null"
++                            }
++                          }
++                        }
++                      }
++                    ]
++                  }
++                }
++              }
++            }
++          }
++        ]
++      }
++    }
++  },
++  "additionalProperties": false
++}

@@ -1,0 +1,80 @@
+..............F...                                                       [100%]
+=================================== FAILURES ===================================
+__________ test_follow_registration_and_lifecycle_never_owns_producer __________
+
+tmp_path = PosixPath('/private/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/pytest-of-massif/pytest-591/test_follow_registration_and_l0')
+
+    @pytest.mark.asyncio
+    async def test_follow_registration_and_lifecycle_never_owns_producer(tmp_path):
+        config=web_config();descriptor=tmp_path/'active.json';config['source']['active_descriptor']=str(descriptor)
+        state=State(config);stop=asyncio.Event();p=Producer();
+>       async with Publication(descriptor) as publication:
+
+work/webui-v1/tests/test_service.py:74: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+work/webui-v1/src/tto_web/source.py:38: in __aenter__
+    self.server=await asyncio.start_unix_server(self.client,path=str(self.socket),limit=512*1024)
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/streams.py:113: in start_unix_server
+    return await loop.create_unix_server(factory, path, **kwds)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <_UnixSelectorEventLoop running=False closed=False debug=False>
+protocol_factory = <function start_unix_server.<locals>.factory at 0x1150d7d80>
+path = '/private/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/pytest-of-massif/pytest-591/test_follow_registration_and_l0/publication.sock'
+
+    async def create_unix_server(
+            self, protocol_factory, path=None, *,
+            sock=None, backlog=100, ssl=None,
+            ssl_handshake_timeout=None,
+            ssl_shutdown_timeout=None,
+            start_serving=True):
+        if isinstance(ssl, bool):
+            raise TypeError('ssl argument must be an SSLContext or None')
+    
+        if ssl_handshake_timeout is not None and not ssl:
+            raise ValueError(
+                'ssl_handshake_timeout is only meaningful with ssl')
+    
+        if ssl_shutdown_timeout is not None and not ssl:
+            raise ValueError(
+                'ssl_shutdown_timeout is only meaningful with ssl')
+    
+        if path is not None:
+            if sock is not None:
+                raise ValueError(
+                    'path and sock can not be specified at the same time')
+    
+            path = os.fspath(path)
+            sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+    
+            # Check for abstract socket. `str` and `bytes` paths are supported.
+            if path[0] not in (0, '\x00'):
+                try:
+                    if stat.S_ISSOCK(os.stat(path).st_mode):
+                        os.remove(path)
+                except FileNotFoundError:
+                    pass
+                except OSError as err:
+                    # Directory may have permissions only to create socket.
+                    logger.error('Unable to check or remove stale UNIX socket '
+                                 '%r: %r', path, err)
+    
+            try:
+>               sock.bind(path)
+E               OSError: AF_UNIX path too long
+
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/unix_events.py:319: OSError
+=============================== warnings summary ===============================
+tests/test_service.py::test_actual_observe_collector_quality_observer_http_sse_four_clients
+tests/test_service.py::test_sse_resync_no_ttl_renewal_and_get_only_routes
+tests/test_service.py::test_waiting_api_and_lan_session_access_and_logout
+  /Users/massif/Tianshan-thermal-observer/work/webui-v1/src/tto_web/server.py:72: NotAppKeyWarning: It is recommended to use web.AppKey instances for keys.
+  https://docs.aiohttp.org/en/stable/web_advanced.html#application-s-config
+    app['state']=state;app['sse_clients']=sse_clients;app['stop']=stop
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED work/webui-v1/tests/test_service.py::test_follow_registration_and_lifecycle_never_owns_producer
+1 failed, 17 passed, 3 warnings in 44.12s
+Task was destroyed but it is pending!
+task: <Task pending name='Task-22' coro=<AsyncSocket._send_ping() running at /Users/massif/Tianshan-thermal-observer/work/webui-v1/.venv/lib/python3.12/site-packages/engineio/async_socket.py:137> wait_for=<Future pending cb=[Task.task_wakeup()]>>

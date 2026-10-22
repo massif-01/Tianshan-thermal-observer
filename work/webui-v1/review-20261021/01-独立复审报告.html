@@ -1,0 +1,140 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TTO Web UI v1 独立复审 · 2026-10-21</title><style>html{font-size:16px;background:#eef2f5;color:#1d2a35}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans CJK SC","Microsoft YaHei",sans-serif;line-height:1.8}main{max-width:1020px;margin:36px auto;padding:44px 52px;background:white;border:1px solid #dde5eb;border-radius:14px}header{border-bottom:3px solid #236277;padding-bottom:24px;margin-bottom:28px}h1{line-height:1.4;font-size:32px;margin:10px 0}h2{font-size:23px;line-height:1.5;margin:40px 0 16px;color:#194c60}h3{font-size:17px;margin:22px 0 8px}p{margin:10px 0}.eyebrow,.meta{color:#657585;font-size:13px}.verdict{font-weight:700;font-size:21px;color:#7c431a;background:#fff6e9;padding:18px 22px;border-left:4px solid #bd8445}.impact{background:#edf5f8;padding:12px 16px}.boundary{color:#526373;border-left:3px solid #cbd9e1;padding-left:14px}.ref{font-size:13px;color:#5e6c7a;overflow-wrap:anywhere}section{border-top:1px solid #dde5eb;padding-top:4px}table{width:100%;border-collapse:collapse;font-size:14px;margin:18px 0;line-height:1.7}th{text-align:left;background:#edf3f6}td,th{border:1px solid #dce4eb;padding:11px 13px;vertical-align:top}code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.9em;background:#f3f6f8;padding:2px 4px;overflow-wrap:anywhere}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;background:#f3f6f8;padding:20px;border-radius:8px}li{margin:12px 0}details{margin-top:24px}summary{cursor:pointer;color:#194c60;font-weight:600}a{color:#1d617d}nav{display:flex;flex-wrap:wrap;gap:8px}nav a{background:#f0f5f8;padding:4px 12px;text-decoration:none;border-radius:5px}footer{border-top:1px solid #dae4ea;margin-top:35px;padding-top:20px;font-size:13px;color:#657585}@media(max-width:700px){main{padding:25px 18px;margin:0;border:0;border-radius:0}h1{font-size:26px}table{font-size:12px}td,th{padding:7px}nav{font-size:13px}}@media print{html{background:white}main{border:0;margin:0;padding:0;max-width:none}h2,h3{break-after:avoid}tr{break-inside:avoid}details{display:none}}</style></head><body><main><header><div class="eyebrow">TTO WEB UI · INDEPENDENT REVIEW</div><h1>TTO Web UI v1 独立复审</h1><div class="meta">2026 年 10 月 21 日（Asia/Shanghai） · 候选 1.0.0rc1 · 只读监看旁路</div></header><nav><a href="#r1">R1</a><a href="#r2">R2</a><a href="#r3">R3</a><a href="#r4">R4</a><a href="#r5">R5</a><a href="#r6">R6</a></nav><h2>结论</h2>
+<p class="verdict">保留软件主体；完成 6 项有限修正后，再进入 N305 安装与现场监看验证。</p>
+<p>本轮独立核验确认这是一份包含真实运行链、冻结模型、前端资源和离线安装器的候选。主要产品结构已经落实，C／D／E 没有被缩减成静态占位。需要修正的是展示旁路的异常隔离、资格撤销、时间与过程归属，以及持续来源恢复。应优先处理 R1，它会影响原采集链。</p>
+<p>本报告没有修改候选代码，没有连接设备，没有启动真实推理、训练或现场服务，也没有推送/创建 PR。问题均来自本轮新增路径，有可核对的反例。原有历史缺陷和单纯美学偏好未纳入本轮。</p>
+<h2>已成立并建议保留的部分</h2>
+<table><thead><tr><th>部分</th><th>复审判断</th></tr></thead><tbody>
+<tr><td>页面与产品结构</td><td>10 个紧凑指标，温度/功率/PWM 三主趋势，默认折叠来源与事件详情，C 小节点、D 预测对照、E 当前运行信息均有实际实现。提交截图与源码基本一致。</td></tr>
+<tr><td>冻结模型与预测数学</td><td>相对包内 accepted 基线，observer、spec、模型文件字节不变。三时距调用冻结传播，Tf 锚定合格 TJ，Ts/E 来自原因果状态。未来值与已成熟误差分开；R5 修结算，不重做数学。</td></tr>
+<tr><td>真实含义</td><td>RPM 未确认不冒充停转；Ts/E 不冒充结构/环境实测；缺合法曲线不伪造建议 PWM；没有 runner 时不猜任务或服务端并发。</td></tr>
+<tr><td>服务与安装</td><td>独立 prefix、离线依赖、先占 59009 再启动来源、follow 不拥有外部生产者、observe 使用原共享锁、只读业务 API 与显式 LAN 访问保护均有实现。</td></tr>
+<tr><td>范围与资源披露</td><td>作者保留了早期失败和不同构建轮次，明确区分本机 follow 成本、观察器成本、浏览器成本及 N305 待验。该表述可保留。</td></tr>
+</tbody></table><section id="r1"><h2>R1 · 可选展示字段的异常会传回原实验链</h2>
+<p class="impact"><strong>用户影响：</strong>原本可以继续的采集/实验，因为一个附加展示字段而停止。</p>
+<h3>已确认的反例</h3><p>同一条其余字段有效的记录，只将 memory 设为 null。native TJ 仍 accepted；不启用 Web hook 时回调完成，计数 29→30；启用 hook 后抛 field_projection_failed:AttributeError。原 writer 捕获 ValueError 后设置 stop。</p>
+<h3>最小修正</h3><p>对允许缺失的字段明确归一为不可用，并把新增编码/发布从原质量、模型与证据提交的失败边界中隔离。显示故障应撤销显示资格并留下有界错误，原处理链继续按原规则运行。</p>
+<p class="boundary"><strong>判断边界：</strong>已直接复现到 field 回调异常；采集停止由真实 writer 的捕获分支得到。没有让真实设备或实验中断。fan.data=null 在有无 Web 时都失败，作为旧行为排除。</p>
+<p class="ref"><strong>源码位置：</strong><code>adapter.py 117–120；vendor/tto_field/runtime.py 114–126；vendor/tto/collector.py 216–233</code><br><strong>本包证据：</strong><code>optional-source-fields-root-py310.json</code>；对应探针在 probes/，源码摘录在 evidence/source-excerpts.txt。</p></section><section id="r2"><h2>R2 · GPU 利用率漏算外层源龄，旧数据重新被视为有效</h2>
+<p class="impact"><strong>用户影响：</strong>GPU 当前指标及数据健康状态可能继续显示原生质量层已经撤销的旧数值。</p>
+<h3>已确认的反例</h3><p>NVML 自身年龄 2s、外层源龄 4s、期限 5s：原生结果为 gpu_effective_stale/value=null；Web 却显示 value=0、valid，并给近 3s 剩余资格。另一个只剩 0.5s 的样本，0.6s 后 Web 仍显示 valid、剩余 2.4s。</p>
+<h3>最小修正</h3><p>直接复用 quality.gpu 的有效值、原因、年龄和截止；保留同 sample 期限只能缩短、明确 invalid 立即撤销。两 rail、CPU、RAM 同时传入已存在的源龄，修正年龄显示从 0 重算。</p>
+<p class="boundary"><strong>判断边界：</strong>GPU 利用率不进入本版 G2 方程。该发现不能解释成热模型错误或风扇被错误控制。</p>
+<p class="ref"><strong>源码位置：</strong><code>adapter.py 125–137；vendor/tto/profiles.py 148–151；platform_quality.py 101–114</code><br><strong>本包证据：</strong><code>gpu-age-root-py310.json</code>；对应探针在 probes/，源码摘录在 evidence/source-excerpts.txt。</p></section><section id="r3"><h2>R3 · 断流和本地到期未同步撤销全部当前显示</h2>
+<p class="impact"><strong>用户影响：</strong>指标已经撤值，D 的“现在发出的未来参考”仍可显示旧数字；快照停更时 C 也可继续表示有效与流动。</p>
+<h3>已确认的反例</h3><p>执行交付 TypeScript 的真实函数：触发 SSE.onerror 后内部 predictions 已空、C 的 Tf 为 null、顶栏写“当前值已撤下”，但 D 仍显示三个 44.3℃。保留原快照的全部期限，推进本地时钟到 10s 后，TJ 已撤值，C 仍为 tracking/Tf=44.30004、8 条关系仍流动，D 仍保留数字。</p>
+<h3>最小修正</h3><p>统一“当前显示”的撤销入口；断流/到期同步更新指标、模型数值与节点/动效、当前未来参考、建议及健康文案。必要时由后端提供派生状态的剩余有效期。历史已成熟配对可以保留。</p>
+<p class="boundary"><strong>判断边界：</strong>探针使用 Node 24 的 TypeScript 擦除及 DOM/ECharts I/O 替身，不是独立真实浏览器验收。复现没有改动原候选，也没有改原快照的 TTL。</p>
+<p class="ref"><strong>源码位置：</strong><code>frontend/src/main.ts 123–124、172、183</code><br><strong>本包证据：</strong><code>frontend-probe-results.json</code>；对应探针在 probes/，源码摘录在 evidence/source-excerpts.txt。</p></section><section id="r4"><h2>R4 · 没有过程身份的旧事件会画入新过程时间轴</h2>
+<p class="impact"><strong>用户影响：</strong>用户可能把上一轮任务或告警当作本轮温度/PWM 变化的原因，破坏事件带的解释价值。</p>
+<h3>已确认的反例</h3><p>用实际 State 在 old-run-A 的 20s 写入任务事件，再切到已运行 30s 的 new-run-B。事件没有 run_id/source_epoch，仍留在结果中；再交给实际前端 renderEventTimeline，旧事件被画到新过程的 20s。</p>
+<h3>最小修正</h3><p>事件带上所属过程身份并在正确轴上筛选；V1 只保留当前过程时，也可明确清理旧事件。同步处理去重、已选详情与 Web 全局事件的归属。</p>
+<p class="boundary"><strong>判断边界：</strong>不要求新增历史播放器。该问题与曲线缓存清理是否已正确是两回事：曲线已重置，事件仍可串入。</p>
+<p class="ref"><strong>源码位置：</strong><code>state.py 71–78、93–97；server.py 108–113；frontend/src/main.ts 147–151、169</code><br><strong>本包证据：</strong><code>events-probe-results.json / frontend-probe-results.json</code>；对应探针在 probes/，源码摘录在 evidence/source-excerpts.txt。</p></section><section id="r5"><h2>R5 · 预测首标签可能被 Web 当前时钟提前判成永久缺失</h2>
+<p class="impact"><strong>用户影响：</strong>合格配对被遗漏、缺标签数偏高，参与误差统计的样本受本地发布延迟影响。</p>
+<h3>已确认的反例</h3><p>真实计算出的预测 origin=9s、horizon=15s，target=24s。首个合格 TJ 的源时刻为 25s，属于 [24,26] 窗口；包延迟 1.2s，于 Web 26.2s 到达。Web 定时器已在 26.1s 永久记为 missing_label，之后不再匹配。该序列无断线、无 gap、同 epoch，包仍有有效期。</p>
+<h3>最小修正</h3><p>以已消费的有序源流进度或等价可证明规则完成缺标签结算。Web 时钟可以提示等待，但不能提前永久封口。保持 +2s 源窗口、首个有效样本及跨 gap 不可比的规则。</p>
+<p class="boundary"><strong>判断边界：</strong>这是保守漏统计，不是生成了错误预测或虚假的 matched 误差。不延长标签窗口，不重训模型。</p>
+<p class="ref"><strong>源码位置：</strong><code>state.py 115–120、232–233；接口合同 §7</code><br><strong>本包证据：</strong><code>label-deadline-root-py310.json</code>；对应探针在 probes/，源码摘录在 evidence/source-excerpts.txt。</p></section><section id="r6"><h2>R6 · 持续 observe 用完重连预算后不会恢复，终态也可能不准确</h2>
+<p class="impact"><strong>用户影响：</strong>开机时来源启动较慢，或长期运行中累计断线后，网页还在但监看停止；来源恢复也不再连接，部分序列仍显示“正在观察”。</p>
+<h3>已确认的反例</h3><p>使用真实 collect/observe/server，保留原 10 次尝试预算，仅用惰性设备传输/锁并缩短测试退避。开机不可达、以及 10 次成功连接后各自断开两种场景中，来源恢复后 connect_calls 都停在 10，source_run 活跃任务为 0，Web healthz 仍为 200。后一场景 source_connected 还为 true。</p>
+<h3>最小修正</h3><p>在新增 Web observe 层分开服务停止与单轮采集停止信号；始终读取已完成任务的终态。对可恢复网络结束做可取消的退避恢复，收完自己的旧实例后重取原共享锁、建立唯一新 run。</p>
+<p class="boundary"><strong>判断边界：</strong>没有执行 systemd 或现场联网。Web 不退出所以不会因该原因触发 Restart=on-failure，是代码推论。后端字段 TTL 仍会撤值；不能说旧数值永远有效。原有限实验的退出规则无需改变。</p>
+<p class="ref"><strong>源码位置：</strong><code>vendor/tto/collector.py 241–293；source.py 124–139；server.py 196–206；tools/install.py 的 Restart=on-failure</code><br><strong>本包证据：</strong><code>observe_recovery_result.json</code>；对应探针在 probes/，源码摘录在 evidence/source-excerpts.txt。</p></section><h2>独立验证范围与结果</h2>
+<table><thead><tr><th>核验</th><th>结果及准确含义</th></tr></thead><tbody>
+<tr><td>完整交付</td><td>ZIP 共 275 个成员；外层清单覆盖 274 个载荷文件。逐项字节数与 SHA256 相符，未发现额外载荷或缺失。</td></tr>
+<tr><td>安装候选</td><td>116 项安装身份、61 项运行身份一致；wheel 中 62 个包成员（含身份清单）与源码一致，RECORD 摘要正确，dist 与 wheelhouse 的候选 wheel 相同。</td></tr>
+<tr><td>相对包内原 wheel</td><td>43 项基线文件中 40 项字节不变。3 项差异为 collector.py、tto_field/runtime.py 和 field 版本文件；冻结 observer/spec/model 未变。没有另外联网验证作者工作区 Git HEAD。</td></tr>
+<tr><td>目标依赖的实际安装</td><td>隔离 Linux x86_64 / CPython 3.10.22，使用原 tools/install.py、原 wheelhouse、原 runtime lock，--service none 离线安装成功；加载后的身份 verify 返回 61 项通过。NumPy 2.2.6、SciPy 1.15.3、aiohttp 3.11.18。</td></tr>
+<tr><td>原 34 项测试</td><td>在具备本机回环与正常进程信息的环境中原样运行：33 passed，1 failed，6 warnings，18.13s。唯一失败为安装器 mock 把 getuid 设为 501，同时没有提供模拟用户名；该 Linux 无 UID 501 且运行环境未提供登录用户名变量，getpass 查询失败。这个夹具前提不构成生产安装器缺陷。没有把它改写成“独立 34 项全过”。</td></tr>
+<tr><td>更早的受限尝试</td><td>受限运行层禁止 socket，另有 PID/procfs 视图限制；先得到 24 passed / 10 failed。原日志保留。允许仅本机回环后，上述 9 项环境相关失败消失，不列为产品缺陷。</td></tr>
+<tr><td>独立反例</td><td>R1/R2/R5 在同一 Python 3.10 与锁定依赖中复现；R4 使用已安装 State 生成两过程结果，再由交付 TS 绘制；R3 直接执行交付 TS；R6 使用真实生命周期代码和本机 HTTP，设备传输/锁为受控替身。</td></tr>
+<tr><td>systemd</td><td>对本次生成的 tto-web.service 执行 systemd-analyze verify，返回 0、无诊断。仅为生成 unit 的静态语法/引用核验；没有安装、enable、restart 系统 unit，也没有真实开机/登出恢复验证。</td></tr>
+<tr><td>浏览器</td><td>查看交付截图，审查源码与作者交互证据；独立前端探针使用 DOM/ECharts 替身。没有独立真实浏览器端到端验收，后续应只补 R3/R4 对应浏览器场景。</td></tr>
+</tbody></table>
+
+<h2>30 分钟资源数字如何解读</h2>
+<p>作者的完成轮次记录 <strong>1800.85s、1779 次采样、0 错误、CPU 均值 3.4339% 单核、RSS 峰值 97.5 MiB</strong>。主审复算了样本数、RSS 峰值和时间跨度，并核对计量代码的 CPU 口径；CPU 起止计数未逐样本保存，因此 CPU 均值仍属于作者计量文件结果，主审没有另做一轮 30 分钟测试。</p>
+<table><thead><tr><th>轮次</th><th>时长</th><th>CPU 单核均值</th><th>RSS 峰值</th><th>说明</th></tr></thead><tbody>
+<tr><td>首次负结果</td><td>1057.16s</td><td>5.4954%</td><td>180.91 MiB</td><td>未满 30 分钟且 CPU 超预算；保持失败记录。</td></tr>
+<tr><td>下一次中间结果</td><td>778.52s</td><td>4.6259%</td><td>97.03 MiB</td><td>未满 30 分钟；不等于完整通过。</td></tr>
+<tr><td>完成轮次</td><td>1800.85s</td><td>3.4339%</td><td>97.50 MiB</td><td>macOS ARM64 上新增 follow 进程，不含 Chrome/原生观察器，不是 N305 成绩。</td></tr>
+<tr><td>后续短复验</td><td>120.20s</td><td>2.2423%</td><td>82.06 MiB</td><td>独立轮次，不能与上轮合并声称最终 wheel 连跑 30 分钟。</td></tr>
+</tbody></table>
+<p>30 分钟轮次之后的候选差异已披露。独立哈希比较支持 adapter/state/source/context 等主要数据路径文件未变；差异集中在 CLI、server 的文案/healthz、前端构建内容。最终轮次另有启动复用选项。该说明足以保留其开发阶段资源依据，但新修正版和实际 N305 仍要按各自身份报告。当前 30 分钟样本的 RSS 从约 44.2 MiB 增至 97.5 MiB；不能据此单独证明无限期运行的资源稳定性。</p>
+
+<h2>修正顺序与放行条件</h2>
+<ol><li><strong>先处理 R1/R6：</strong>显示故障与原执行链隔离；持续观察能准确结束并在临时网络恢复后继续，停止和拥有权边界保持清楚。</li>
+<li><strong>再处理 R2/R3：</strong>后端不延长原资格；前端所有当前展示一起撤销。</li>
+<li><strong>处理 R4/R5：</strong>事件属于正确过程；首标签结算沿用源时间轴。</li>
+<li><strong>最终候选有限复验：</strong>原测试、这 6 项反例对应的必要断言、最终 wheel 离线安装/身份/短启动，以及 R3/R4 的实际浏览器场景。测试夹具的 UID 假设可局部修正，无需改变生产权限逻辑。</li>
+<li><strong>交回新候选：</strong>版本、身份、patch、报告和操作卡同步更新，保留旧负结果及构建轮次。未触及或未暴露资源风险时，不要求再做多轮长时间本机测试。</li></ol>
+<p>上述有限复审通过后，下一阶段才是经用户安排的 N305 安装与只读监看：实际服务启动/开机恢复、已有采集时 follow、无其他拥有者时 observe、一次有针对性的断源恢复与资源检查。该阶段不自动包含真实推理负载、CPU 补测、重新训练或天山 OS 控制修改。</p>
+
+<h2>本轮明确没有要求补齐的数字</h2>
+<p>没有可靠测速证据时 RPM 保持“未确认”；没有核实曲线时 PWM 建议保持不可用；没有当前需求 provider/参考时平稳需求保持“本轮未计算”；没有 runner 时任务/服务端状态保持未知；不增加结构测温。它们符合原 PRD 的缺项分支，不能为让页面显得完整而编造数值。</p>
+
+<h2>交付与复现索引</h2>
+<p>报告、开发指令、复现说明、6 个探针脚本以及 JSON/测试日志/源码摘录均在同一交接包。复现脚本只面向已有本地候选；报告内附的观察结果是旧候选的缺陷证据，不是新版本修复成绩。</p>
+<p class="ref">主要依据：用户提供的实施报告、操作卡及 ZIP 内 requirements/00–05、源码、冻结基线与 evidence。事实引用分别列在每项问题下；总体校验见 evidence/identity-verification.json，资源复核见 evidence/resource-evidence-review.json，目标安装见 evidence/linux-offline-install.log。</p><details><summary>完整可复制的有限修正指令</summary><pre>给原 TTO Web UI 开发对话：只完成这次有限修正
+
+主审结论：软件主体、页面结构、冻结 G2 数学和独立安装方案保留；当前 1.0.0rc1 需修正后再交复审。不要重做 PRD，不扩成模型研究、全面重构、历史故障清理或新的控制功能。
+
+先读本包 01-独立复审报告.html。对照原候选 SHA256：
+ZIP：53502eea9ba618db117b939f6e533e2996f1e475defd771216658b4eaf70046c
+wheel：1fb1ba0ea6bbe3adcf25b0de4e039f495d45eb4553e0493ad7759521a0f1e0d1
+本包 probes 是能在旧候选上成功证明缺陷的反例，修复后应按期望行为改写断言；不要把“仍能复现旧缺陷”当成修复通过。
+
+执行顺序
+一、先处理 R1 和 R6 的执行边界，再处理 R2/R3 的有效性，最后处理 R4/R5 的时间与过程归属。可以在同一有限收尾版本完成，不拆成新的研究方向。
+
+R1｜隔离 Web 展示异常，原 field 处理保持自己的失败规则。
+- 已复现：同一 native accepted TJ 包，仅 memory=null，无 Web hook 的 Pipeline 正常；有 hook 时 adapter 的 .get 抛 AttributeError，被包装成 ValueError，原 collector writer 设置 stop。
+- 对合同允许缺失/null 的附加字段作明确的缺失/invalid 映射；不要缺失补 0。
+- 新增显示编码/发布必须有独立异常边界。显示失败应撤销自己的有效资格、记录有界且脱敏的错误/gap；不得影响已经正确完成的 quality/observer/原证据/latest 提交。
+- 原处理链的真实异常仍保留原有停止行为。禁止用大范围 except: pass 把原安全或数据错误吞掉。
+- 只验证 memory=null 的无/有 hook 对照和显示故障隔离即可。探针中的 fan.data=null 在有无 Web 时都失败，是旧行为，排除本轮。
+
+R2｜沿用原生 GPU 质量结果，补齐同源年龄映射。
+- 原生 quality.gpu 已计算 NVML base age + telemetry outer age。Web 不得仅用 base age 和 contract_valid 重建更宽松资格。
+- 使用原质量结果的 value、reason、age_lower_bound_ms 和 valid_until；同一个 sample 的截止只能缩短，新 invalid 必须撤销。
+- 验证 base=2s、outer=4s、TTL=5s 时仍为无效；base=2s、outer=2.5s 时只剩 0.5s，0.6s 后必须过期。
+- 顺手给两 rail、CPU、RAM 等同源指标传入实际源龄，避免“几秒前”从 0 重新计算。其源 TTL 不变。
+- GPU 利用率不是本版 G2 输入，不改热模型。
+
+R3｜前端同步撤销所有“当前”显示。
+- SSE 断流时，指标、模型数值/phase/节点/动效、当前未来参考、当前建议及数据健康文案同步更新。
+- 没有新 SSE 快照时，前端仍按后端提供的剩余资格到期；必要时补派生状态的截止字段，不由前端猜 TTL 或重算模型。
+- D 的“现在发出的未来参考”不能依赖另一次 HTTP 请求成功才刷新。历史已成熟配对可保留，和当前未来值分开。
+- 补真实浏览器中断流、连接未关闭但快照停更后超期两个场景。保留暂停只冻结画面及明确暂停语义。
+
+R4｜事件不能串到另一个 run/epoch。
+- 为事件保留所属 run/source_epoch（如需 service 身份也一并明确），API/前端按所属时间轴筛选。
+- V1 若只保留当前过程，切换时清理旧过程事件也可以；同步处理事件去重和已选详情。
+- Web 全局事件不要凭相同 elapsed_ms 塞进设备过程轴。不要新增历史播放器。
+- 验证旧过程 20s 的任务事件，在新过程进行到 30s 时不会画到新过程 20s；同 run 的源 epoch 切换也核对。
+
+R5｜用源事件时间完成首标签结算。
+- target=24s，允许首标签源时刻在 [24,26]；源时刻 25s 的首个合格 TJ 因发布延迟于 Web 26.2s 到达，当前代码已在 Web 26.1s 永久记 missing，导致漏配对。
+- 缺标签的最终结算应依据已消费的有序源流进度，或等价的可证明规则。页面时钟可以提示等待，但不能抢在合法源事件之前永久封口。
+- 保持 +2s 源标签窗、同 run/epoch/model/spec、首条有效样本、丢帧不可比等规则；不要放宽窗口、补最近邻、跨 gap 配对或改写已发布预测值。
+- 此问题是合格配对被漏掉，不是已出现错误预测或虚假的 matched。修后同时核对 records 与 summary 分母。
+
+R6｜新增 Web observe 需要恢复与准确终态。
+- 真实 collect/observe/server 的短退避反例保留原 10 次尝试：开机暂不可达或累计 10 次连接后断线，来源恢复也不会再连；Web 进程仍运行，状态有时仍写“正在观察”。
+- 分开 Web 关闭信号和本轮 collector 停止信号；无论哪个先结束，都在 await 完本轮后读取结果、准确撤销来源状态。
+- 仅针对可恢复的临时网络结束，在 Web observe 拥有者层做可取消、有退避的恢复。先收完自己旧 collector，再重新取得原共享锁，创建唯一新 run/epoch。
+- 用户 STOP、配置/授权失败、拥有权冲突与临时断网分开；不能自动抢占、kill 他人或在 STOP 后复活。
+- 原有限 collect/field 默认行为、每轮连接预算、采样周期、TTL、模型与设备权限不变。follow 仍不拥有外部 producer。
+- 验证来源稍晚恢复及累计断线恢复；同时确认停止无复活、锁冲突无第二采集器。测试等待可缩短，报告写清不是现场时长实验。
+
+验证和交回
+1. 先用反例确认旧候选行为，再对修正后的最终代码运行必要断言；复用原测试，不新增与本轮风险无关的测试矩阵。
+2. 原 34 项中，主审 Linux/Python3.10 原样运行 33 项通过；唯一失败是 installer 测试把 getuid 模拟成 501，却没有同时给出模拟用户名，当前 Linux 无该用户。若处理，只修测试夹具的用户假设，不为此改生产安装权限逻辑。
+3. 用最终 wheel 做独立 prefix 离线安装、静态资源身份和短运行检查；前端只补上述真实浏览器场景。涉及时间窗和恢复的联合验证使用实际发布/接收入口或相应可核对的受控替身，写清边界。
+4. 更新版本、候选身份清单、accepted patch、实施报告及操作卡，保留失败证据和不同构建轮次。旧 30 分钟资源结果属于旧身份；不要直接说成新最终 wheel 的 30 分钟成绩。除非本次改动或短测暴露新的资源风险，不必再重复多轮长跑。
+5. 交回一个新的可安装候选和上述有限验证证据，然后停止等待复审。
+
+本轮边界
+仍只做本地实现、自建服务、离线安装和浏览器验证。不连接 N305/Thor/ESP32，不部署现场，不发真实推理或 CPU 补测，不重训，不修改天山 OS 风扇/曲线/gain/保护/采样/TTL，不推送、不创建 PR。
+RPM 无有效测速证据、PWM 建议无合法曲线、需求没有当前 provider、没有 runner 任务登记时，保留真实的不可用说明；不要为补数字发明算法或新增设备采集。
+</pre></details><footer>复审对象：用户提交的原始候选；本包只提供评审与修正交接，不包含已修好的新软件。</footer></main></body></html>

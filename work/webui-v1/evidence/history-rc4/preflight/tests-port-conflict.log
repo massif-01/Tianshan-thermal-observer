@@ -1,0 +1,37 @@
+........F............................................................... [100%]
+=================================== FAILURES ===================================
+__ test_real_cli_rapid_restart_preserves_port_conflict_and_waiting_semantics ___
+
+tmp_path = PosixPath('/private/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/pytest-of-massif/pytest-741/test_real_cli_rapid_restart_pr0')
+
+    def test_real_cli_rapid_restart_preserves_port_conflict_and_waiting_semantics(tmp_path):
+        root=Path(__file__).parents[1];config=tmp_path/'web.json';config.write_bytes((root/'config/web.json').read_bytes())
+        env=dict(os.environ) if os.environ.get('TTO_WEB_TEST_INSTALLED') else dict(os.environ,PYTHONPATH=os.pathsep.join([str(root/'src'),str(root/'vendor')]))
+        opener=build_opener(ProxyHandler({}))
+        for iteration in range(2):
+            child=subprocess.Popen([sys.executable,'-m','tto_web.cli','serve','--config',str(config)],env=env,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
+            connection=None
+            try:
+                deadline=time.monotonic()+10
+                while True:
+>                   if child.poll() is not None:raise AssertionError(child.stderr.read())
+E                   AssertionError: Web启动失败：59009端口或本地资源不可用；未停止其他进程。
+
+tests/test_cli.py:22: AssertionError
+=============================== warnings summary ===============================
+tests/test_boundaries.py::test_slow_display_queue_resync_is_bounded_without_source_backpressure
+tests/test_model_history.py::test_actual_publication_follow_http_contract_and_silent_expiry
+tests/test_model_history.py::test_waiting_series_schema_and_unknown_fields_rejected
+tests/test_service.py::test_actual_observe_collector_quality_observer_http_sse_four_clients
+tests/test_service.py::test_sse_resync_no_ttl_renewal_and_get_only_routes
+tests/test_service.py::test_waiting_api_and_lan_session_access_and_logout
+tests/test_service.py::test_quiet_source_expiry_is_prompt_without_rebuilding_every_timer_tick
+tests/test_service.py::test_registered_task_context_api_does_not_claim_missing_metadata_or_server_completion
+  /private/tmp/tto-web-rc4-final/releases/1.0.0rc4-bfa7464a/env/lib/python3.12/site-packages/tto_web/server.py:76: NotAppKeyWarning: It is recommended to use web.AppKey instances for keys.
+  https://docs.aiohttp.org/en/stable/web_advanced.html#application-s-config
+    app['state']=state;app['sse_clients']=sse_clients;app['stop']=stop
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_cli.py::test_real_cli_rapid_restart_preserves_port_conflict_and_waiting_semantics
+1 failed, 71 passed, 8 warnings in 19.82s

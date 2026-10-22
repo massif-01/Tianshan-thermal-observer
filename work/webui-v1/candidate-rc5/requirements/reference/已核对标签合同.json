@@ -1,0 +1,29 @@
+{
+  "source_archive": "TTO-CPU增量活动信息-离线分析与冻结方案-证据包.zip",
+  "member": "analysis-spec.json",
+  "member_sha256": "df26198dd631a45564d88c10b7b30433ab8b272cb4cf5d3726d7be6eacbab716",
+  "temperature_evaluation": {
+    "origins": "unchanged original accepted approximately 1s sequence, original source_valid; no high-frequency origins",
+    "horizons_s": [
+      15,
+      45,
+      90
+    ],
+    "labels": "reuse original first valid accepted TJ at/after h within +2s; same source epoch; each horizon independent",
+    "references": [
+      "B0",
+      "original G2-HOLD",
+      "B1"
+    ],
+    "common": "same ref/horizon/label across all 3 candidates and references; preserve original common cohort additionally and own coverage separately",
+    "tails": [
+      "P95 absolute",
+      "P95 underprediction",
+      "max underprediction",
+      "fraction under >2C (descriptive only)"
+    ],
+    "strata": "posthoc actual submit/protocol_DONE and first arrived BASE high observation: pre-submit within 90s; submitted-not-yet-observed; observed-startup first15s; sustained; after-DONE first90s; background; short inter-request gaps retained. Never candidate features",
+    "sensitivity": "separate new tables for original origin normal/abnormal and for origins/labels whose prediction interval intersects explicit stale4682 to recovery4685; old totals remain untouched"
+  },
+  "usage": "Only label/time/identity semantics reused. Activity candidate not enabled in Web UI."
+}

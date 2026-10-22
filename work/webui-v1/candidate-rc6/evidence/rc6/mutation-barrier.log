@@ -1,0 +1,28 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_________ test_disconnect_advances_barrier_beyond_coalesced_expiry_gap _________
+
+factory = <function factory.<locals>.make at 0x1074abf60>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x108071fa0>
+
+    def test_disconnect_advances_barrier_beyond_coalesced_expiry_gap(factory,monkeypatch):
+        s=State(web_config());put(s,factory(0));s.refresh(1002.6)
+        assert s.model_history[-1].t==2500 and s.model_history[-1].reason=='model_expired'
+        monkeypatch.setattr(state_module.time,'monotonic',lambda:1004.)
+        s.disconnect()
+        assert s.model_gap_t==4000
+        before=list(s.model_history)
+        assert len(before)==2 and before[-1].t==2500
+        delayed=factory(3)
+        assert delayed['input_mono_s']<1004.01<delayed['consumable_until_mono_s']
+        put(s,delayed,1004.01)
+>       assert list(s.model_history)==before
+E       AssertionError: assert [ModelRow(t=0... reason=None)] == [ModelRow(t=0...del_expired')]
+E         
+E         Left contains one more item: ModelRow(t=3000, values=(44.0, 43.0, 41.0, 32.0), sample_id='3', received_at_utc='2026-10-22T00:26:37.421490+00:00', source_ref='synthetic:3', phase='tracking', reason=None)
+E         Use -v to get more diff
+
+tests/test_model_history.py:137: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_model_history.py::test_disconnect_advances_barrier_beyond_coalesced_expiry_gap
+1 failed in 0.27s

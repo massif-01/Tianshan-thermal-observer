@@ -1,0 +1,227 @@
+- generic [ref=f1e2]:
+  - banner [ref=f1e3]:
+    - link "T TTO 热观察台 只读观察" [ref=f1e4] [cursor=pointer]:
+      - /url: "#trends"
+      - generic [ref=f1e5]: T
+      - generic [ref=f1e6]: TTO 热观察台
+      - generic [ref=f1e7]: 只读观察
+    - navigation [ref=f1e8]:
+      - link "趋势" [ref=f1e9] [cursor=pointer]:
+        - /url: "#trends"
+      - link "热模型" [ref=f1e10] [cursor=pointer]:
+        - /url: "#model"
+      - link "预测对照" [ref=f1e11] [cursor=pointer]:
+        - /url: "#compare"
+      - link "运行信息" [ref=f1e12] [cursor=pointer]:
+        - /url: "#context"
+    - generic [ref=f1e13]:
+      - generic [ref=f1e14]: Web已连接
+      - button "暂停画面" [ref=f1e15] [cursor=pointer]
+      - button "全屏" [ref=f1e16] [cursor=pointer]
+  - main [ref=f1e17]:
+    - generic [ref=f1e18]:
+      - generic [ref=f1e19]:
+        - text: THERMAL OBSERVATORY · V1.0
+        - heading "看清当前，也核对预测。" [level=1] [ref=f1e20]
+        - paragraph [ref=f1e21]: 观察对象：SYNTHETIC-THOR ｜ TTO主机：Massif-MacBook-Pro.local
+      - generic [ref=f1e22]:
+        - generic [ref=f1e23]: 本地回放样例（非实时设备）
+        - generic [ref=f1e24]: 当前无法估计
+        - generic [ref=f1e25]: Asia/Shanghai
+    - status [ref=f1e26]: 设备数据不可用或已过期；Web连接不代表设备读数有效。
+    - generic [ref=f1e27]:
+      - 'generic "TJ温度 原始精度: — source_expired 来源 e888acbcc366bc38:55a5dc7a304c1adf 接收 10/21 19:47:23 上次 44.3" [ref=f1e28]':
+        - generic [ref=f1e29]: TJ温度
+        - text: —°C
+        - emphasis [ref=f1e30]: 到期
+      - 'generic "CPU温度 原始精度: — source_expired 来源 e888acbcc366bc38:55a5dc7a304c1adf 接收 10/21 19:47:23 上次 43.75" [ref=f1e31]':
+        - generic [ref=f1e32]: CPU温度
+        - text: —°C
+        - emphasis [ref=f1e33]: 到期
+      - 'generic "GPU温度 原始精度: — source_expired 来源 e888acbcc366bc38:55a5dc7a304c1adf 接收 10/21 19:47:23 上次 44.3" [ref=f1e34]':
+        - generic [ref=f1e35]: GPU温度
+        - text: —°C
+        - emphasis [ref=f1e36]: 到期
+      - 'generic "成功PWM 原始精度: — source_expired 来源 e888acbcc366bc38:b95b9bfcc85b06d0 接收 10/21 19:47:23 上次 17" [ref=f1e37]':
+        - generic [ref=f1e38]: 成功PWM
+        - text: —%
+        - emphasis [ref=f1e39]: 到期
+      - 'generic "风扇RPM 原始精度: — tachometer_validity_not_confirmed 来源 e888acbcc366bc38:b95b9bfcc85b06d0 接收 10/21 19:47:23 上次 0" [ref=f1e40]':
+        - generic [ref=f1e41]: 风扇RPM
+        - text: —RPM
+        - emphasis [ref=f1e42]: 测速有效性未确认 · 原报0
+      - 'generic "VDD_GPU 瞬时 原始精度: — source_expired 来源 e888acbcc366bc38:55a5dc7a304c1adf 接收 10/21 19:47:23 上次 1.984" [ref=f1e43]':
+        - generic [ref=f1e44]: GPU功率
+        - text: —W
+        - emphasis [ref=f1e45]: 到期
+      - 'generic "VDD_CPU_SOC_MSS 瞬时 原始精度: — source_expired 来源 e888acbcc366bc38:55a5dc7a304c1adf 接收 10/21 19:47:23 上次 5.952" [ref=f1e46]':
+        - generic [ref=f1e47]: CPU·SoC·MSS
+        - text: —W
+        - emphasis [ref=f1e48]: 到期
+      - 'generic "GPU利用率（NVML独立期限） 原始精度: — source_expired 来源 e888acbcc366bc38:55a5dc7a304c1adf 接收 10/21 19:47:23 上次 0" [ref=f1e49]':
+        - generic [ref=f1e50]: GPU利用率
+        - text: —%
+        - emphasis [ref=f1e51]: 到期
+      - 'generic "Jetson CPU均值 原始精度: — source_expired 来源 e888acbcc366bc38:55a5dc7a304c1adf 接收 10/21 19:47:23 上次 0.3333333333333333" [ref=f1e52]':
+        - generic [ref=f1e53]: CPU平均利用率
+        - text: —%
+        - emphasis [ref=f1e54]: 到期
+      - 'generic "RAM used 原始精度: — source_expired 来源 e888acbcc366bc38:55a5dc7a304c1adf 接收 10/21 19:47:23 上次 53554" [ref=f1e55]':
+        - generic [ref=f1e56]: Jetson RAM
+        - text: —MB
+        - emphasis [ref=f1e57]: 到期
+    - generic [ref=f1e58]:
+      - generic [ref=f1e59]:
+        - generic [ref=f1e60]:
+          - generic [ref=f1e61]: "01"
+          - heading "实时趋势" [level=2] [ref=f1e62]
+          - generic [ref=f1e63]: 原始采样 · 缺口保留
+        - generic [ref=f1e64]:
+          - generic [ref=f1e65]:
+            - text: 时间范围
+            - combobox "时间范围" [ref=f1e66] [cursor=pointer]:
+              - option "最近5分钟"
+              - option "最近10分钟" [selected]
+              - option "最近30分钟"
+              - option "最近60分钟"
+          - group [ref=f1e67]:
+            - generic "＋显示设置" [ref=f1e68] [cursor=pointer]
+          - button "重置缩放" [ref=f1e69] [cursor=pointer]
+      - generic [ref=f1e71]:
+        - heading "温度" [level=3] [ref=f1e72]
+        - generic [ref=f1e73]: °C · 实测
+      - generic [ref=f1e77]:
+        - heading "功率" [level=3] [ref=f1e78]
+        - generic [ref=f1e79]: W · 独立rail，非整机总功耗
+      - generic [ref=f1e83]:
+        - heading "风扇输出" [level=3] [ref=f1e84]
+        - generic [ref=f1e85]: "% · 天山OS执行"
+      - generic [ref=f1e88]:
+        - generic [ref=f1e89]: A · 事件
+        - generic: 等待有来源的事件
+      - generic [ref=f1e92]: 三图与事件共用时间范围、缩放和光标。每条读数的实际接收时间在提示中列出；不跨缺口连线。
+    - generic [ref=f1e93]:
+      - generic [ref=f1e94]:
+        - generic [ref=f1e95]:
+          - generic [ref=f1e96]:
+            - generic [ref=f1e97]: C
+            - heading "热模型路径" [level=2] [ref=f1e98]
+          - generic [ref=f1e99]: 当前无法估计
+        - img "G2热模型依赖图" [ref=f1e101]:
+          - button "GPU功率" [ref=f1e111] [cursor=pointer]:
+            - generic [ref=f1e114]: 暂无有效读数
+          - button "CPU·SoC·MSS功率" [ref=f1e115] [cursor=pointer]:
+            - generic [ref=f1e118]: 暂无有效读数
+          - button "当前PWM" [ref=f1e119] [cursor=pointer]:
+            - generic [ref=f1e122]: 暂无有效读数
+          - button "TJ观测" [ref=f1e123] [cursor=pointer]:
+            - generic [ref=f1e126]: 暂无有效读数
+          - button "快热状态 Tf" [ref=f1e127] [cursor=pointer]:
+            - generic [ref=f1e130]: — °C · 估计
+          - button "慢热状态 Ts" [ref=f1e131] [cursor=pointer]:
+            - generic [ref=f1e134]: — °C · 估计
+          - button "TJ预测参考" [ref=f1e135] [cursor=pointer]:
+            - generic [ref=f1e138]: 等待可用预测
+          - button "平稳需求（研究）" [ref=f1e139] [cursor=pointer]:
+            - generic [ref=f1e142]: 本轮未计算
+          - button "PWM观察建议" [ref=f1e143] [cursor=pointer]:
+            - generic [ref=f1e146]: 暂无可用映射
+          - button "当前保护反馈" [ref=f1e147] [cursor=pointer]:
+            - generic [ref=f1e150]: 保护上下文未知
+        - generic [ref=f1e151]:
+          - generic [ref=f1e152]: 实线：模型输入 / 耦合
+          - generic [ref=f1e153]: 虚线：TJ测量校正
+          - generic [ref=f1e154]: 流动点：有效数据关系示意
+        - paragraph [ref=f1e155]: Ts是模型内部慢态，E是等效边界，均非结构或环境测温。RPM、CPU/GPU利用率和RAM属于运行观测。
+        - group [ref=f1e156]:
+          - generic "＋节点与模型详情" [ref=f1e157] [cursor=pointer]
+        - generic [ref=f1e158]:
+          - generic [ref=f1e159]:
+            - generic [ref=f1e160]: 平稳需求（研究）
+            - generic [ref=f1e161]: 本轮未计算
+            - generic [ref=f1e162]: 没有当前合法provider和固定参考；index不是PWM。
+          - generic [ref=f1e163]:
+            - generic [ref=f1e164]: PWM观察建议
+            - generic [ref=f1e165]: 暂无可用建议映射
+            - generic [ref=f1e166]: 数据/模式/保护上下文不满足；天山OS继续负责保护；天山OS继续负责保护。
+      - generic [ref=f1e167]:
+        - generic [ref=f1e168]:
+          - generic [ref=f1e169]:
+            - generic [ref=f1e170]:
+              - generic [ref=f1e171]: D
+              - heading "预测与实测" [level=2] [ref=f1e172]
+            - combobox "预测时距" [ref=f1e173] [cursor=pointer]:
+              - option "+15秒"
+              - option "+45秒" [selected]
+              - option "+90秒"
+          - paragraph [ref=f1e174]: 当前无法估计 · 同run/epoch/model/HOLD · +45秒 · 样本较少
+          - generic [ref=f1e178]:
+            - generic [ref=f1e179]:
+              - generic [ref=f1e180]: MAE
+              - generic [ref=f1e181]: — °C
+            - generic [ref=f1e182]:
+              - generic [ref=f1e183]: 绝对误差P95
+              - generic [ref=f1e184]: — °C
+            - generic [ref=f1e185]:
+              - generic [ref=f1e186]: 最大低估
+              - generic [ref=f1e187]: — °C
+            - generic [ref=f1e188]:
+              - generic [ref=f1e189]: 匹配 / 应到期
+              - generic [ref=f1e190]: 0 / 0
+          - generic [ref=f1e191]: 等待这条预测对应的实测温度 · 缺标签 0 · 未到期 0
+          - generic [ref=f1e192]:
+            - text: 现在发出的未来参考 · G2-HOLD
+            - generic [ref=f1e193]:
+              - generic "没有当前已发布预测" [ref=f1e194]:
+                - generic [ref=f1e195]: +15秒
+                - generic [ref=f1e196]: —
+              - generic "没有当前已发布预测" [ref=f1e197]:
+                - generic [ref=f1e198]: +45秒
+                - generic [ref=f1e199]: —
+              - generic "没有当前已发布预测" [ref=f1e200]:
+                - generic [ref=f1e201]: +90秒
+                - generic [ref=f1e202]: —
+            - paragraph [ref=f1e203]: 保持当时两rail与已声明PWM情景；三点分别实算，不代表连续未来轨迹。
+        - generic [ref=f1e204]:
+          - generic [ref=f1e205]:
+            - generic [ref=f1e206]:
+              - generic [ref=f1e207]: E
+              - heading "当前运行信息" [level=2] [ref=f1e208]
+            - generic [ref=f1e209]: 天山OS控制
+          - paragraph [ref=f1e210]: 未接入任务记录；客户端完成不代表GPU停止。RAM用量不用于推断模型驻留。
+    - group [ref=f1e211]:
+      - generic "＋ B · 数据源详细状态 2项有效 / 1项待确认" [ref=f1e212] [cursor=pointer]:
+        - text: ＋
+        - generic [ref=f1e213]: B · 数据源详细状态
+        - generic [ref=f1e214]: 2项有效 / 1项待确认
+    - group [ref=f1e215]:
+      - generic "＋ 事件与告警 0条" [ref=f1e216] [cursor=pointer]:
+        - text: ＋
+        - generic [ref=f1e217]: 事件与告警
+        - generic [ref=f1e218]: 0条
+      - option "全部来源" [selected]
+      - option "source"
+      - option "observer"
+      - option "board"
+      - option "runner"
+      - option "web-source"
+      - option "全部级别" [selected]
+      - option "重要异常"
+      - option "信息"
+    - group [ref=f1e219]:
+      - generic "＋ 全部已接字段 67项" [ref=f1e220] [cursor=pointer]:
+        - text: ＋
+        - generic [ref=f1e221]: 全部已接字段
+        - generic [ref=f1e222]: 67项
+      - option "全部分类" [selected]
+      - option "温度"
+      - option "逐核CPU"
+      - option "利用率"
+      - option "内存"
+      - option "功率"
+      - option "风扇"
+      - option "主板温源"
+      - option "Web主机进程"
+    - generic [ref=f1e223]:
+      - generic [ref=f1e224]: TTO Web UI 1.0 · 固定参数，只读观察
+      - generic [ref=f1e225]: 研究状态与条件预测不构成风扇控制指令

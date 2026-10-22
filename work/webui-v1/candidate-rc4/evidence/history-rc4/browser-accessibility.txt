@@ -1,0 +1,47 @@
+### Page
+- Page URL: http://127.0.0.1:59009/__history
+- Page Title: 模型历史接口验证
+### Snapshot
+```yaml
+- generic [active] [ref=f7e1]:
+  - heading "模型历史接口验证（合成来源）" [level=1] [ref=f7e2]
+  - paragraph [ref=f7e3]: 后端接入验证页；不代表 Sonnet 新首页验收。TJ−Tf 为校正后残差；状态差值允许为负。
+  - button "刷新历史" [ref=f7e4]
+  - status [ref=f7e5]: 已加载，同采样对齐；缺口不连线
+  - paragraph [ref=f7e6]: 8d9e04e5-6100-48a9-9517-bffb5ca899b6|80b9fb363493d9cb|1|dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0|2080adcf20773650299def2bb0f3ebdb9f87d8f85281d5b87a99d8b406c83c6b
+  - img "TJ与三条估计历史，缺口分段" [ref=f7e7]
+  - img "校正后残差" [ref=f7e8]
+  - table "历史序列检查" [ref=f7e9]:
+    - rowgroup [ref=f7e10]:
+      - row [ref=f7e11]:
+        - columnheader "序列" [ref=f7e12]
+        - columnheader "行数" [ref=f7e13]
+        - columnheader "缺口" [ref=f7e14]
+        - columnheader "有效段" [ref=f7e15]
+        - columnheader "末值" [ref=f7e16]
+    - rowgroup [ref=f7e21]:
+      - row [ref=f7e22]:
+        - cell "temperature.tj" [ref=f7e23]
+        - cell "251" [ref=f7e24]
+        - cell "0" [ref=f7e25]
+        - cell "1" [ref=f7e26]
+        - cell "44.3" [ref=f7e27]
+      - row [ref=f7e28]:
+        - cell "model.Tf_C" [ref=f7e29]
+        - cell "251" [ref=f7e30]
+        - cell "0" [ref=f7e31]
+        - cell "1" [ref=f7e32]
+        - cell "44.30102109417117" [ref=f7e33]
+      - row [ref=f7e34]:
+        - cell "model.Ts_C" [ref=f7e35]
+        - cell "251" [ref=f7e36]
+        - cell "0" [ref=f7e37]
+        - cell "1" [ref=f7e38]
+        - cell "40.76479629864694" [ref=f7e39]
+      - row [ref=f7e40]:
+        - cell "model.E_C" [ref=f7e41]
+        - cell "251" [ref=f7e42]
+        - cell "0" [ref=f7e43]
+        - cell "1" [ref=f7e44]
+        - cell "33.746017141605186" [ref=f7e45]
+```

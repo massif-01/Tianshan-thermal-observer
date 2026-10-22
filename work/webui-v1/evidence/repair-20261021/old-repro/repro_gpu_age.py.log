@@ -1,0 +1,63 @@
+{
+  "python": "3.12.3 (v3.12.3:f6650f9ad7, Apr  9 2024, 08:18:47) [Clang 13.0.0 (clang-1300.0.29.30)]",
+  "cases": [
+    {
+      "nvml_base_age_ms": 2000,
+      "outer_source_age_ms": 4000,
+      "timeout_ms": 5000,
+      "native_accepted_TJ": true,
+      "native_gpu": {
+        "value": null,
+        "reason": "gpu_effective_stale",
+        "source_status": "valid",
+        "age_lower_bound_ms": 6000,
+        "timeout_ms": 5000,
+        "sample_interval_ms": 1000,
+        "device_uuid": "SYNTHETIC-GPU",
+        "valid_until": null,
+        "contract_valid": true
+      },
+      "web_after_10ms": {
+        "value": 0,
+        "status": "valid",
+        "age_lower_bound_ms": 2010.0000000093132,
+        "remaining_valid_ms": 2989.999999990687
+      },
+      "web_after_600ms": {
+        "value": 0,
+        "status": "valid",
+        "age_lower_bound_ms": 2599.999999976717,
+        "remaining_valid_ms": 2400.000000023283
+      }
+    },
+    {
+      "nvml_base_age_ms": 2000,
+      "outer_source_age_ms": 2500,
+      "timeout_ms": 5000,
+      "native_accepted_TJ": true,
+      "native_gpu": {
+        "value": 0,
+        "reason": null,
+        "source_status": "valid",
+        "age_lower_bound_ms": 4500,
+        "timeout_ms": 5000,
+        "sample_interval_ms": 1000,
+        "device_uuid": "SYNTHETIC-GPU",
+        "valid_until": 998513.122519041,
+        "contract_valid": true
+      },
+      "web_after_10ms": {
+        "value": 0,
+        "status": "valid",
+        "age_lower_bound_ms": 2010.0000000093132,
+        "remaining_valid_ms": 2989.999999990687
+      },
+      "web_after_600ms": {
+        "value": 0,
+        "status": "valid",
+        "age_lower_bound_ms": 2599.999999976717,
+        "remaining_valid_ms": 2400.000000023283
+      }
+    }
+  ]
+}

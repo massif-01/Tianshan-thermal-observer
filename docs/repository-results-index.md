@@ -9,7 +9,7 @@
 | 主线观察与推理运行候选 | experiments/mainline_*、experiments/autoworkday_*；保留各版本，不自动替换设备运行环境 |
 | 原始观察、实验与验证证据 | evidence/、investigations/；保留原始数据、失败记录、重复输入副本及来源身份 |
 | 安装候选、交付 ZIP 与报告 | deliverables/、wheels/；历史版本原样保留，不把所有包称为当前可用版本 |
-| Web UI | 后续单独提交 work/webui-v1；rc6 的入口为 DELIVERY-rc6.json，Sonnet 前端源文件和历史候选一并保留 |
+| Web UI | 独立项目 work/webui-v1；rc6 的入口为 work/webui-v1/DELIVERY-rc6.json，Sonnet 前端源文件和历史候选一并保留 |
 
 首轮灰箱研究曾单独推送至 research/greybox-id-v1；该分支继续保留。本次补齐本地后续成果，不改写该分支历史。
 已存在的远端 main 文档/路线图保留；本地旧 README 原件保存在 evidence/repository-sync-20261022/README-before-sync.md。

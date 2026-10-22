@@ -1,0 +1,130 @@
+--- a/vendor/tto/collector.py
++++ b/vendor/tto/collector.py
+@@ -166,7 +166,7 @@
+ 
+ 
+ async def collect(config, duration, model=None, data_root=None, episode=None, deployment=None, run_type=None,
+-                  stop_event=None, on_record=None):
++                  stop_event=None, on_record=None, journal_factory=None, continuous=False, manage_signals=True):
+     require_live(config, duration)
+     # No networking is constructed until this explicitly live function is called.
+     with InstanceLock():
+@@ -176,7 +176,7 @@
+             'fan_interval_s': config['tianshan']['fan_poll_interval_s'],
+             'temp_interval_s': config['tianshan']['temp_poll_interval_s'],
+             'legacy_config_max_inflight_esp32': config['network']['max_inflight_esp32']}
+-        journal = Journal(config, data_root, episode=episode, deployment=recorded_deployment, run_type=run_type or ('shadow' if model else 'collect'), model_sha256=model['sha256'] if model else None, record_schema=2)
++        journal = (journal_factory or Journal)(config, data_root, episode=episode, deployment=recorded_deployment, run_type=run_type or ('shadow' if model else 'collect'), model_sha256=model['sha256'] if model else None, record_schema=2)
+         engine = engine_for(config, model, record_schema=2)
+         q = BoundedQueue(config['storage']['queue_max_items'], config['storage']['queue_max_bytes'])
+         stop = stop_event if stop_event is not None else asyncio.Event()
+@@ -185,11 +185,18 @@
+         polls = {key: {'sent': [], 'received': [], 'rtt_ms': [], 'http_ok': 0, 'errors': 0,
+                        'skipped': 0, 'cancelled': 0, 'inflight': 0, 'peak_inflight': 0}
+                  for key in ('fan', 'temp')}
++        if continuous:
++            from collections import deque
++            for key in ('poll_rtt_ms', 'prediction_ms', 'rss_mib', 'cpu_pct_single_core'):
++                stats[key] = deque(maxlen=4096)
++            for detail in polls.values():
++                for key in ('sent', 'received', 'rtt_ms'):
++                    detail[key] = deque(maxlen=4096)
+         esp_inflight = 0
+         esp_peak = 0
+         loop = asyncio.get_running_loop()
+         signals = []
+-        for sig in (signal.SIGINT, signal.SIGTERM):
++        for sig in ((signal.SIGINT, signal.SIGTERM) if manage_signals else ()):
+             try:
+                 loop.add_signal_handler(sig, lambda s=sig: (stats.update(stop_reason=s.name), stop.set()))
+                 signals.append(sig)
+@@ -398,7 +405,7 @@
+         for task in tasks:
+             task.add_done_callback(task_done)
+         try:
+-            await asyncio.wait_for(stop.wait(), duration)
++            await stop.wait() if continuous else await asyncio.wait_for(stop.wait(), duration)
+             if stop_event is not None and stats['stop_reason'] == 'duration':
+                 stats['stop_reason'] = 'external_stop'
+         except asyncio.TimeoutError:
+@@ -438,8 +445,8 @@
+                     'http_ok': p['http_ok'], 'errors': p['errors'], 'skipped': p['skipped'],
+                     'cancelled': p['cancelled'], 'peak_inflight': p['peak_inflight'],
+                     'rtt_ms': summary(p['rtt_ms']),
+-                    'send_interval_s': summary([b-a for a,b in zip(p['sent'],p['sent'][1:])]),
+-                    'return_interval_s': summary([b-a for a,b in zip(p['received'],p['received'][1:])])}
++                    'send_interval_s': summary([b-a for a,b in zip(p['sent'],list(p['sent'])[1:])]),
++                    'return_interval_s': summary([b-a for a,b in zip(p['received'],list(p['received'])[1:])])}
+                     for key,p in polls.items()}}
+             journal.close(stats)
+         print('本轮TTO已停止；现有风扇控制未被修改。', flush=True)
+--- a/vendor/tto_field/__init__.py
++++ b/vendor/tto_field/__init__.py
+@@ -1 +1 @@
+-__version__ = "0.2.4+closeout.2"
++__version__ = "0.2.4+web.2"
+--- a/vendor/tto_field/runtime.py
++++ b/vendor/tto_field/runtime.py
+@@ -65,7 +65,13 @@
+ 
+ class Pipeline:
+     """Called only from the native collector's single writer thread, after native processing."""
+-    def __init__(self,out,config,binding,mode,clock,evidence):
++    def __init__(self,out,config,binding,mode,clock,evidence,public_sink=None):
++        self.public_sink=public_sink;self.web_adapter=None;self.web_context=None
++        if public_sink is not None:
++            from tto_web.context import TaskContext
++            self.web_context=TaskContext(binding,mode,clock)
++            from tto_web.display import DisplayPublisher
++            self.web_publisher=DisplayPublisher(public_sink)
+         self.out=out;self.config=config;self.binding=binding;self.mode=mode;self.clock=clock;self.evidence=evidence
+         self.projection=self.observer=self.communication=None;self.latest=None;self.lock=threading.Lock();self.engine_id=None;self.callbacks=0;self.run_id=None;self.fan_success_times=[]
+     def on_record(self,raw,processed,engine):
+@@ -113,11 +119,22 @@
+         except Exception as exc:
+             # Native writer already handles ValueError, preserving its raw journal on a projection failure.
+             raise ValueError('field_projection_failed:'+type(exc).__name__) from exc
++        # The original state/evidence/latest transaction has completed. Only the
++        # optional display work is isolated; native failures above still stop normally.
++        if self.public_sink is not None:
++            def encode_display():
++                if self.web_adapter is None:
++                    from tto_web.adapter import Adapter
++                    self.web_adapter=Adapter(self.projection.manifest,engine,owner=self,test_replay=bool(self.binding.get("synthetic_loopback_only")))
++                packet=self.web_adapter.encode(raw,processed,frame,comm,s)
++                packet["task"]=self.web_context.snapshot()
++                return packet
++            self.web_publisher.publish(encode_display)
+     def get(self):
+         with self.lock:return self.latest
+ 
+ 
+-async def run(config,binding,mode,out,duration=300,probe_profile=None):
++async def run(config,binding,mode,out,duration=300,probe_profile=None,public_sink=None):
+     from tto.collector import collect
+     from tto.storage import InstanceLock,source_identity
+     from tto.config import public_config
+@@ -141,13 +158,14 @@
+         from .scheduler import Registry
+         Registry(out.parent/'.tto-command-ledger').claim(binding['command_id'],binding['command_id'])
+         out.mkdir(mode=0o700)
+-        ev=Evidence(out);pipeline=Pipeline(out,config,binding,mode,clock,ev)
++        ev=Evidence(out);pipeline=Pipeline(out,config,binding,mode,clock,ev,public_sink=public_sink)
+         stopped_reason=None;scheduler_event_cursor=0;clock_reminder_sent=False;totals={k:0. for k in ['observed_s','measurement_usable_s','model_usable_s','context_ready_s','joint_ready_s','work_paused_s','tj_usable_s','rail_usable_s','PWM_usable_s','temp_context_usable_s']}
+         phase_seconds={};resource_prev=None
+         previous=None;previous_gate=None;previous_work=False;last_resources=0.;protocol_records=[]
+         def emit(name,**details):
+             row=dict(event=name,mono_s=clock.now(),at_utc=utc(),command_id=binding['command_id'],native_run_id=pipeline.run_id,**details)
+             ev.append('protocol.jsonl',row)
++            if pipeline.web_context is not None:pipeline.web_context.record(row)
+             if name=='request_end':protocol_records.append(row)
+         write(out/'launch.json',dict(version=__version__,mode=mode,command_id=binding['command_id'],authorization=binding['authorization'],
+               clock_start=clock.bracket(),config=public_config(config),config_sha256=digest(public_config(config)),
+@@ -209,6 +227,7 @@
+                                 task=tasks.pop(ident);task.cancel();await asyncio.gather(task,return_exceptions=True)
+                         for event in scheduler.events[scheduler_event_cursor:]:
+                             ev.append('scheduler-events.jsonl',dict(event,recorded_at_utc=utc()))
++                            if pipeline.web_context is not None:pipeline.web_context.record(event)
+                         scheduler_event_cursor=len(scheduler.events)
+                         if 0<=scheduler.index<len(scheduler.profile['stages']) and scheduler.profile['stages'][scheduler.index]['kind']=='final_recovery' and not clock_reminder_sent and now>=scheduler.window_end-120:
+                             emit('instrument_clock_end_reminder',remaining_s=max(0.,scheduler.window_end-now))

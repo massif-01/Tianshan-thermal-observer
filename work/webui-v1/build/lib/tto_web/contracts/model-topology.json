@@ -1,0 +1,129 @@
+{
+  "schema": "TTO-WEB-TOPOLOGY-v1",
+  "nodes": [
+    {
+      "id": "pg",
+      "label": "GPU功率",
+      "role": "input",
+      "metric_id": "power.gpu"
+    },
+    {
+      "id": "pc",
+      "label": "CPU·SoC·MSS功率",
+      "role": "input",
+      "metric_id": "power.cpu_soc_mss"
+    },
+    {
+      "id": "u",
+      "label": "当前PWM",
+      "role": "input",
+      "metric_id": "fan.pwm.actual"
+    },
+    {
+      "id": "tj",
+      "label": "TJ观测",
+      "role": "measurement",
+      "metric_id": "temperature.tj"
+    },
+    {
+      "id": "tf",
+      "label": "快热状态 Tf",
+      "role": "estimate",
+      "state_path": "Tf_C"
+    },
+    {
+      "id": "ts",
+      "label": "慢热状态 Ts",
+      "role": "estimate",
+      "state_path": "Ts_C",
+      "note": "模型内部慢态，不是结构传感器温度"
+    },
+    {
+      "id": "forecast",
+      "label": "TJ预测参考",
+      "role": "forecast",
+      "note": "冻结G2-HOLD：15/45/90秒"
+    },
+    {
+      "id": "demand",
+      "label": "平稳需求（研究）",
+      "role": "advisory",
+      "note": "需当前合法provider；index不是PWM"
+    },
+    {
+      "id": "pwmref",
+      "label": "PWM观察建议",
+      "role": "advisory",
+      "note": "独立参考映射；无设备写权限"
+    },
+    {
+      "id": "risk",
+      "label": "当前保护反馈",
+      "role": "observed",
+      "note": "主板明确flags，不是预测过热概率"
+    }
+  ],
+  "edges": [
+    {
+      "from": "pg",
+      "to": "tf",
+      "relation": "power_input"
+    },
+    {
+      "from": "pc",
+      "to": "tf",
+      "relation": "power_input"
+    },
+    {
+      "from": "tj",
+      "to": "tf",
+      "relation": "measurement_correction",
+      "line_style": "dashed"
+    },
+    {
+      "from": "tf",
+      "to": "ts",
+      "relation": "coupling"
+    },
+    {
+      "from": "ts",
+      "to": "tf",
+      "relation": "coupling"
+    },
+    {
+      "from": "u",
+      "to": "ts",
+      "relation": "cooling_input"
+    },
+    {
+      "from": "tf",
+      "to": "forecast",
+      "relation": "prediction_input"
+    },
+    {
+      "from": "ts",
+      "to": "forecast",
+      "relation": "prediction_input"
+    },
+    {
+      "from": "ts",
+      "to": "demand",
+      "relation": "research_transform",
+      "enabled_only_when": "demand_provider_valid"
+    },
+    {
+      "from": "forecast",
+      "to": "pwmref",
+      "relation": "reference_mapping",
+      "enabled_only_when": "advisory_curve_verified"
+    }
+  ],
+  "animation_meaning": "有效数据关系示意，不是实测热流/传热速度",
+  "non_model_inputs": [
+    "fan.rpm",
+    "usage.cpu.mean",
+    "usage.cpu.max",
+    "usage.gpu",
+    "memory.ram"
+  ]
+}

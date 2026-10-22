@@ -1,0 +1,1163 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TTO Web UI — PRD与开发交接</title><style>
+:root{--ink:#172331;--muted:#566473;--line:#d9e1e8;--paper:#fff;--bg:#f3f5f7;--accent:#265bb5}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans CJK SC","Microsoft YaHei",sans-serif;line-height:1.75;color:var(--ink);background:var(--bg)}
+header{background:#fff;border-bottom:1px solid var(--line);padding:25px 5vw 20px}header .eyebrow{font-size:12px;font-weight:600;letter-spacing:1.5px;color:var(--muted)}header h1{font-size:29px;margin:5px 0}header p{margin:5px 0;color:var(--muted)}
+nav{display:flex;gap:10px;flex-wrap:wrap;position:sticky;top:0;background:#f8fafcf2;backdrop-filter:blur(8px);z-index:2;padding:12px 5vw;border-bottom:1px solid var(--line)}nav a{font-size:13px;border:1px solid var(--line);border-radius:6px;padding:5px 12px;text-decoration:none;background:#fff;color:var(--ink)}
+main{max-width:1240px;margin:28px auto;padding:0 24px}section{background:#fff;border:1px solid var(--line);border-radius:10px;margin:0 0 30px;padding:30px 36px;scroll-margin-top:85px}section>h1{font-size:25px;margin:0 0 18px;padding-bottom:14px;border-bottom:2px solid var(--ink)}h2{font-size:21px;margin-top:36px}h3{font-size:17px;margin-top:24px}p{margin:12px 0}table{width:100%;border-collapse:collapse;font-size:13px;display:table;margin:18px 0;line-height:1.65}th,td{border:1px solid var(--line);text-align:left;vertical-align:top;padding:10px 11px;overflow-wrap:anywhere}th{background:#eef2f6;font-weight:650}tr:nth-child(even) td{background:#fbfcfd}code{font-family:"SFMono-Regular",Consolas,monospace;font-size:.88em;background:#edf1f5;border-radius:3px;padding:1px 4px;overflow-wrap:anywhere}pre{background:#182330;color:#edf3fa;padding:18px;border-radius:7px;overflow:auto;line-height:1.6;font-size:12px}pre code{color:inherit;background:none;padding:0;overflow-wrap:normal}a{color:var(--accent)}li{margin:5px 0}blockquote{margin:16px 0;padding:8px 18px;border-left:3px solid #8191a7;background:#f6f8fa}footer{max-width:1240px;margin:20px auto 50px;padding:0 24px;color:var(--muted);font-size:12px}.badge{display:inline-block;background:#eef2f6;border-radius:4px;padding:3px 9px;font-size:12px}
+@media(max-width:760px){main{padding:0 10px}section{padding:22px 16px}table{display:block;overflow-x:auto}nav{position:static}header h1{font-size:24px}}
+@media print{nav{position:static}body{background:#fff}header,section{border:none}main{max-width:none;margin:0;padding:0}section{padding:0;break-before:page}pre{white-space:pre-wrap}h2,h3{break-after:avoid}tr{break-inside:avoid}a{color:inherit}}
+</style></head><body><header><div class="eyebrow">TTO / PRODUCT REQUIREMENTS</div><h1>热观察台 · Web UI</h1><p>59009 · 只读监看 · 小指标与三大趋势 · 热模型 / 预测对照 / 运行上下文</p><span class="badge">PRD v1.0 · 2026-10-20 · 文档交付，非已开发软件</span></header><nav><a href="#summary">决策摘要</a><a href="#prd">完整PRD</a><a href="#api">接口与计算</a><a href="#fields">字段来源</a><a href="#accept">验收清单</a><a href="#codex">Codex指令</a></nav><main><section id="summary"><h1>本轮冻结决定</h1>
+<ol>
+<li>只做59009上的只读热观察Web UI；原TianshanOS继续控制。</li>
+<li>小指标条、温度/功率/PWM主趋势；A事件带/B折叠健康；C模型小节点、D成熟预测对照、E当前运行语义全部是V1。</li>
+<li>排除结构温度传感器、YET、摄像头、回放/录像/诊断操作页面；保留Ts但叫“模型内部慢态”，不叫结构测温。</li>
+<li>所有数值来自已拉取数据或明确的新版本只读计算。没有实时来源的任务状态、RPM有效性、概率和建议映射不猜。</li>
+<li>未来TJ用冻结G2-HOLD15/45/90，新增真实发布和成熟标签评分，独立于A类好成绩。默认45秒、同epoch目标以后≤2秒首个有效TJ。</li>
+<li>观察建议允许显示但不等于控制：真实provider优先；可验证已有曲线映射为后备新计算；无映射给原因。不得index×100、target_duty冒充G2建议、默认安全温限或曲线搜索。</li>
+<li>安装后Web服务启动和开机自启属于本轮目标；follow/observe必须有真实入口和单实例保护。本轮开发不实际部署N305。</li>
+<li>默认中文，单页锚点；不再生成一张图替代PRD或指令。本包不是另一次模型研究或现场执行授权。</li>
+<li>本包为新的“<strong>TTO Web UI</strong>”独立Codex对话使用。原模型、通讯、CPU补测工作不重开；若需配合仅取得已接受源/发布接口。</li>
+</ol>
+</section>
+<section id="prd"><h1>TTO Web UI 产品需求文档</h1>
+<p><strong>版本：TTO-WEB-PRD-v1.0｜2026-10-20｜状态：供独立Web UI任务实施与复审</strong></p>
+<p>产品名：<strong>TTO 热观察台</strong>。部署目标：N305／16GB／Linux，沿用项目支持的Python环境。服务端口：<strong>59009</strong>。本文定义产品、页面与交互；<code>03-接口与计算合同.md</code>定义前后端数据；<code>02-给Codex的开发指令.md</code>定义执行任务。本文是需求交付，不代表Web UI已经开发或部署。</p>
+<h2>0. 一页决策</h2>
+<p>本次做一张专业、紧凑、可长期打开的<strong>只读监看页面</strong>。首要内容是温度、功率和PWM趋势；热模型小节点、预测与观测对照、当前运行语义必须真实实现，不能只画静态占位。支持后端字段整理、因果计算和版本化观察建议，但不新增未知设备数据。</p>
+<ul>
+<li><strong>保留并默认展开：</strong>紧凑指标条、三个纵向趋势图、A事件标记带、C热模型节点图、D预测与实测对照、E当前运行上下文。</li>
+<li><strong>保留但默认折叠：</strong>B数据源详细健康、完整事件/告警、所有已接入字段。</li>
+<li><strong>不做：</strong>摄像头／红外画面、结构温度传感器及YET接入、录制管理、历史run播放器、诊断操作页、训练按钮、负载控制、风扇写入、功耗模式修改、源采样设置。</li>
+<li>当前风扇仍由<strong>TianshanOS</strong>执行。页面上的目标、参考和估计都不构成设备指令。</li>
+<li>不沿用旧示意图中的假日期、3200 RPM、72%建议、0.78置信度、5分钟预测或“过热概率”。PRD和数据合同优先于所有旧效果图。</li>
+</ul>
+<h2>1. 产品目标与使用场景</h2>
+<h3>1.1 核心目标</h3>
+<p>用户在同一屏里回答：<strong>现在测到什么；最近怎样变化；模型怎样理解它；之前的预测与后来实测差多少；机器和TTO此刻分别在做什么。</strong> 无需去日志里对齐每份JSON，也不需要理解内部字段名才知道读数是否过期。</p>
+<h3>1.2 三个主要场景</h3>
+<table>
+<thead>
+<tr>
+  <th>场景</th>
+  <th>用户动作</th>
+  <th>预期结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>日常监看</td>
+  <td>打开59009页面</td>
+  <td>有当前生产者就展示其真实数据；配置为独立观察时只有一个只读采集源；未配置时明确等待，不显示演示数字</td>
+</tr>
+<tr>
+  <td>实验旁观</td>
+  <td>已有测试进程在运行，另开网页</td>
+  <td>只订阅同一run，不启动第二采集器、不发新请求；曲线与阶段标记能对上</td>
+</tr>
+<tr>
+  <td>产品展示与解释</td>
+  <td>打开热模型和预测对照，暂停画面/放大区域</td>
+  <td>小节点表明真实输入—状态—输出；说明实验性边界，暂停只影响画面不影响采集</td>
+</tr>
+</tbody>
+</table>
+<h3>1.3 成功标准</h3>
+<p>三大趋势可同时阅读；C/D/E不是未来待办；已取得字段可在主面板或字段抽屉找到；数据到期、断连、模型暂不可用的表达真实；安装候选具备自动服务启动能力，浏览器数量不增加设备轮询或热模型计算次数。源采样、TTL、控制行为不改变。</p>
+<h2>2. 已知能力、缺口与本次新增</h2>
+<p>以下是本轮读取既有交付和原始记录得到的边界，不拿公开main或效果图替代实际运行版本。详见<code>reference/数据核对摘要.json</code>及<code>04-字段来源与能力矩阵.md</code>。</p>
+<table>
+<thead>
+<tr>
+  <th>项目</th>
+  <th>既有事实</th>
+  <th>本次怎么做</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>TJ、CPU/GPU/SoC温度、逐核CPU、RAM/SWAP、rail</td>
+  <td>原始WS记录有对应字段；Thor GPU利用率带独立NVML年龄</td>
+  <td>按现有质量结果映射，保留每项单位/来源/时间；不新增源查询</td>
+</tr>
+<tr>
+  <td>PWM、模式、gain、主板预测/斜率、故障/失温</td>
+  <td>来自主板fan/status和temp/status，不来自tegrastats本身</td>
+  <td>区分成功输出、主板目标和主板预测；不改原接口</td>
+</tr>
+<tr>
+  <td>RPM</td>
+  <td>核对的fixed-anchors原包2710份成功fan记录均原报rpm=0且running=true；无独立测速有效性字段</td>
+  <td>UI保留RPM能力和原值，但默认显示“测速有效性未确认（原报0）”，不写“已停转”，不从PWM换算RPM</td>
+</tr>
+<tr>
+  <td>Tf、Ts、E和模型状态</td>
+  <td>现有冻结顺序估计器输出，包含协方差但明确未校准</td>
+  <td>可实时映射；Ts称“慢热状态（估计）”，不称结构测温；不造0—1置信度</td>
+</tr>
+<tr>
+  <td>G2未来TJ</td>
+  <td>已有离线B-HOLD评价数学与冻结θ，现场状态不等于已经生成全部未来预测</td>
+  <td>新增轻量只读因果预测发布与到期评分；不是重训、不是使用未来真实输入</td>
+</tr>
+<tr>
+  <td>平稳需求</td>
+  <td>已有离线增量指数/塑形；不是PWM百分比</td>
+  <td>有有效版本化provider时显示原单位与参考；未接入时保留“本轮未计算”状态，不把指数×100变PWM</td>
+</tr>
+<tr>
+  <td>建议PWM</td>
+  <td>当前没有已验证的G2→最佳PWM控制器</td>
+  <td>V1保留“PWM观察建议”区域；接真实建议provider或按本PRD的已核对曲线映射，不能伪造完整控制优化器</td>
+</tr>
+<tr>
+  <td>任务/并发/推理模型</td>
+  <td>测试runner有日志；普通tegrastats/WS不能知道用户提交了什么</td>
+  <td>有已接run事件就展示；无则“未接入任务记录”，不能从GPU高占用猜4并发</td>
+</tr>
+<tr>
+  <td>结构温度、环境测温、摄像头</td>
+  <td>当前UI不接入</td>
+  <td>不设置卡片、曲线、节点或配置页；E是内部边界不是环境温度</td>
+</tr>
+</tbody>
+</table>
+<p><strong>术语处理：</strong>用户口述“Tiger Test”在现有资料未找到同名接口；本需求使用已经存在的遥测链（tegrastats/NVML经WS、TTO、本机已保存的TianshanOS状态和任务事件）。不建立新同名系统，也不假定tegrastats独自提供风扇、任务和模型状态。确实没有来源的字段，不生成数值。</p>
+<h2>3. 信息架构与页面布局</h2>
+<h3>3.1 一页为主，不做控制台式多级菜单</h3>
+<p>主路由<code>/</code>。顶部页内锚点：<strong>趋势｜热模型｜预测对照｜运行信息</strong>。不保留侧边“录制”“回放”“诊断”“设置”页面。右上角只有时间范围、显示设置、暂停画面、全屏；显示设置仅影响浏览器本地偏好。</p>
+<p>布局从上到下：</p>
+<table>
+<thead>
+<tr>
+  <th>区块</th>
+  <th>默认状态</th>
+  <th>桌面参考尺寸/关系</th>
+  <th>主要内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>H 顶栏</td>
+  <td>展开</td>
+  <td>高约52px</td>
+  <td>名称、只读标识、被观察设备/TTO主机、服务/数据/模型状态、数据时区</td>
+</tr>
+<tr>
+  <td>K 紧凑指标条</td>
+  <td>展开</td>
+  <td>单格高约56–64px；宽约120–150px；大屏一行，窄屏两行</td>
+  <td>TJ、CPU温度、GPU温度、成功PWM、RPM、两rail、CPU/GPU利用率、RAM；可横向溢出，不放大撑满</td>
+</tr>
+<tr>
+  <td>T1 温度趋势</td>
+  <td>展开</td>
+  <td>宽100%，图高约200–220px</td>
+  <td>默认TJ/CPU/GPU；已接SoC及主板控制温度可勾选</td>
+</tr>
+<tr>
+  <td>T2 功率趋势</td>
+  <td>展开</td>
+  <td>与T1同宽，图高约180–200px</td>
+  <td>两条独立主rail；其他已有rail可选</td>
+</tr>
+<tr>
+  <td>T3 PWM趋势</td>
+  <td>展开</td>
+  <td>与T1同宽，图高约180–200px</td>
+  <td>成功PWM主线；主板目标和有效RPM可选；RPM用独立右轴</td>
+</tr>
+<tr>
+  <td>A 事件带</td>
+  <td>展开</td>
+  <td>28–40px，同一时间轴</td>
+  <td>开始/结束、并发、暂停恢复、失温、模型阶段等有来源事件</td>
+</tr>
+<tr>
+  <td>C 热模型节点图</td>
+  <td>展开</td>
+  <td>下区左约58%；最小宽620px、高340–420px</td>
+  <td>小节点与连线；实时输入、内部状态、预测及独立观察输出</td>
+</tr>
+<tr>
+  <td>D 预测与观测对照</td>
+  <td>展开</td>
+  <td>下区右约42%；高约260–300px</td>
+  <td>15/45/90秒选择，已经到期预测与实测，误差/样本数</td>
+</tr>
+<tr>
+  <td>E 当前运行信息</td>
+  <td>展开</td>
+  <td>D下方，或窄屏独占一行</td>
+  <td>被观察模型/任务、TTO模型、控制归属、数据模式、run和观察时长</td>
+</tr>
+<tr>
+  <td>B 数据源详细状态</td>
+  <td>折叠</td>
+  <td>单行摘要，展开表格</td>
+  <td>每项源年龄、连接、最近成功、错误、实际间隔</td>
+</tr>
+<tr>
+  <td>事件/告警明细</td>
+  <td>折叠</td>
+  <td>单行计数，展开列表</td>
+  <td>事件发生时间、来源和直白解释</td>
+</tr>
+<tr>
+  <td>全部字段</td>
+  <td>折叠</td>
+  <td>分类表，默认分页/搜索</td>
+  <td>当前已取得字段、单位、质量、来源；无敏感原文</td>
+</tr>
+</tbody>
+</table>
+<p>本页允许自然纵向滚动，不以“全部塞进一屏”压成无法阅读的字。1920/1440宽度三张趋势全宽，C/D并排；≤1100宽度C、D、E依次纵排；手机允许单列，节点图可水平拖动但不能把C/D/E隐藏。不得恢复大圆盘或大号卡片。</p>
+<h3>3.2 页面内默认关注顺序</h3>
+<p>趋势是主视区；C/D/E是第一版不可裁剪内容。指标只作速读，不取代趋势。B/详细事件/字段抽屉节约空间，但持续存在的“来源失温”“数据断开”等重要状态必须在顶栏保留提示，不要求用户先展开才能发现。</p>
+<h2>4. H与K：顶栏、关键指标和真实状态</h2>
+<h3>4.1 顶栏</h3>
+<p>左侧“TTO 热观察台 / 只读观察”，不叫“风扇控制台”。设备名和主机明确分开，例如“观察对象：RM-01 Thor｜TTO主机：N305”。右侧分开显示：Web服务可访问、设备数据最近更新、模型阶段。网页连上不能等同设备在线。</p>
+<p>显示TTO版本、热模型版本短名和run短ID可放详情，不在顶栏铺一串SHA。展开信息时可复制完整非敏感身份。时间轴默认用N305配置时区，页内注明；浏览器在其他时区不能静默转换同一屏的部分时刻。</p>
+<h3>4.2 指标条</h3>
+<p>默认顺序：TJ / CPU温度 / GPU温度 / 当前PWM / RPM / GPU功率 / CPU·SoC·MSS功率 / GPU利用率 / CPU平均利用率 / RAM。</p>
+<p>数值建议温度1位小数、功率2位、PWM整数、利用率0–1位，原始精度在tooltip可看；不声称显示精度等于传感器精度。RAM同时显示来源单位及used/total，不把来源MB私自叫GiB。可在显示设置收起低关注项，C/D/E不可作为默认裁剪项。</p>
+<p>卡片包含小标题、数值、单位、微型状态标识；sparkline可有但不超过卡片下沿20px。任何含最后一次值的卡片都可查“几秒前取得”。零是真实数值时保留；缺失用“—”而不是0。</p>
+<table>
+<thead>
+<tr>
+  <th>状态</th>
+  <th>主显示</th>
+  <th>简短解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>正常有效</td>
+  <td>当前值</td>
+  <td>最近更新0.8秒前</td>
+</tr>
+<tr>
+  <td>到期</td>
+  <td>—；次级灰字上次值</td>
+  <td>暂无新读数，上次68.2°C（6秒前）</td>
+</tr>
+<tr>
+  <td>明确失效</td>
+  <td>—</td>
+  <td>温度来源已报告失效</td>
+</tr>
+<tr>
+  <td>不支持/无字段</td>
+  <td>—</td>
+  <td>当前设备未提供</td>
+</tr>
+<tr>
+  <td>仅测速语义未确认</td>
+  <td>—；详情原报rpm</td>
+  <td>暂无可信转速（原报0）</td>
+</tr>
+<tr>
+  <td>模型暂定</td>
+  <td>值+“初始化参考”</td>
+  <td>正在积累状态，不代表准确度已验证</td>
+</tr>
+</tbody>
+</table>
+<p>不把RPM=0、running=true直接推导成故障或停转；也不隐藏原报0。确认设备有可靠测速定义后，零转速才可作为该测速量展示，仍不自动推出故障。</p>
+<h2>5. T1/T2/T3：三个核心趋势图</h2>
+<h3>5.1 公共交互</h3>
+<p>统一选择最近5/10/30/60分钟，默认10分钟；三图共用时间范围、缩放和光标。悬停同一时刻时，各系列显示自己的最近有效样本时间与年龄，不能把不同采样时刻拼成一份同步测量而不说明。</p>
+<p>“暂停画面”只固定当前窗口并显示暂停起点；后台和其他用户继续观察。恢复后跳至实时，不补造缺失点。“全屏”或“放大此图”是显示功能，不改变源频率。</p>
+<p>趋势按时间排序；相同值的新采样保留，重复缓存不新增样本。到期、断连、run/epoch切换绘制缺口或边界，不跨缺口平滑连接。前端可以动画滚动，数值曲线不能启用会抹掉尖峰的样条平滑。长窗下采样必须保留桶内极值、首末、缺口与事件；tooltip明确“区间最小/最大”，不能冒称每个渲染点都是真实采样。</p>
+<h3>5.2 温度</h3>
+<p>默认实线为实测TJ、CPU、GPU，单位°C。同名传感器只能按源语义，不把TJ叫CPU温度。主板控制温度是另一份状态量，可选虚线且注明主板来源；不是新增结构温度。</p>
+<p>可选叠加“已经到期的TTO +45秒预测”时，预测点放在<strong>目标时刻</strong>；默认不开未来扇形覆盖主图，以免挤压真实温度。模型Tf/Ts在C及详情显示，非默认实测曲线。绝不画“实测结构温度”“出风空气温度”“室温”。</p>
+<h3>5.3 功率</h3>
+<p>两主线完整标签：<code>VDD_GPU</code>、<code>VDD_CPU_SOC_MSS</code>，单位W；从源mW除1000。<code>VIN_SYS_5V0</code>等确已拉取的其他rail可在图例追加，默认不挤占主线。current与average保留不同语义，平均窗未知要说明。没有合法汇总定义不画“整机总功率”，不把rail名称VDD误当电压V。</p>
+<h3>5.4 PWM/RPM</h3>
+<p>成功PWM为主线，0–100%左轴；主板<code>target_duty</code>可选，名称“天山OS目标PWM”，不能称G2建议。RPM可选右轴且独立单位；测速未确认时不绘伪转速线。建议PWM可选细虚线，来源/算法/version必须显式标注，不能叠成已执行曲线。</p>
+<p>主要趋势不作“越低越好”的排序。慢退可能是既有策略或热历史，UI不将慢退本身判成告警。</p>
+<h2>6. A：事件标记与时间轴</h2>
+<p>主图下方始终保留简洁事件带，与三图共用光标。来源包括已接runner/scheduler/protocol、TTO质量/模型状态、主板明确flag，以及Web显示链自己的断连。不得从GPU波动自动构造“用户提交”“4并发”“模型切换”。</p>
+<p>事件类型：run开始/结束；工作块开始/结束；已知并发槽位变化；有来源的请求开始/协议完成；任务暂停/恢复；主板失温/恢复；采集断开/恢复；模型初始化/降级/恢复；Web数据重同步；可选已存在人工备注。没有来源的类型不触发。</p>
+<p>密集请求可聚合为“此处12条请求事件”，放大后看单条；默认每个视口不超过8个文字标签，标记本身保留。点击显示发生时刻、记录/到达时刻、事件来源与含义。协议完成不说GPU已空闲；停止调度不说所有服务端任务已退出。</p>
+<p>完整事件表默认折叠，按时间倒序，可按来源/级别筛选。连续重复错误显示首次/末次/次数，恢复另记一条，不每秒弹Toast。不提供“清除设备告警”“删除历史事件”按钮。</p>
+<h2>7. C：热模型小节点图（核心必做）</h2>
+<h3>7.1 图的语义</h3>
+<p>采用小型矩形节点、细连线，不用3D散热器、芯片照片或巨大卡片。节点宽约112–156px、高44–64px，最多两行文本和一个主值。节点布局固定、数值更新不跳位置。</p>
+<p><strong>核心G2路径：</strong></p>
+<ul>
+<li>GPU功率节点、CPU·SoC·MSS功率节点进入“快热状态Tf”。</li>
+<li>Tf与“慢热状态Ts”按真实等效耦合关系连线；PWM作用于慢态的散热项。</li>
+<li>TJ以<strong>测量校正</strong>虚线进入状态估计模块，不画成另一条发热功率。</li>
+<li>E是“等效边界（模型内部）”，默认放慢态详情；不是环境传感器节点。</li>
+<li>当前状态+冻结θ+明确输入情景进入“TJ预测参考”，输出+15/+45/+90秒。</li>
+<li>RPM、CPU利用率、GPU利用率、RAM放“运行观测”一侧，不擅自连成当前G2动力学输入；失败的CPU活动候选不自动启用。</li>
+</ul>
+<p><strong>观察支路：</strong>真实保护状态卡独立读取主板flags；平稳需求、PWM观察建议使用各自provider。没有provider时节点仍在，显示原因；没有真实依赖的边不动画，不能画成G2已给出可靠风扇闭环。</p>
+<h3>7.2 节点清单</h3>
+<table>
+<thead>
+<tr>
+  <th>节点</th>
+  <th>主显示</th>
+  <th>点击详情</th>
+  <th>失效处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>GPU功率</td>
+  <td>当前W</td>
+  <td>rail原名、单位转换、源ref/时间</td>
+  <td>—并停止对应连线脉冲</td>
+</tr>
+<tr>
+  <td>CPU·SoC·MSS功率</td>
+  <td>当前W</td>
+  <td>非纯CPU说明、ref/时间</td>
+  <td>同上</td>
+</tr>
+<tr>
+  <td>当前PWM</td>
+  <td>成功百分比</td>
+  <td>原duty/target、原始有效性、年龄</td>
+  <td>上次值仅灰字；条件保持不是测量</td>
+</tr>
+<tr>
+  <td>TJ观测</td>
+  <td>当前°C</td>
+  <td>温区/来源、测量校正含义</td>
+  <td>不用Tf填补为实测</td>
+</tr>
+<tr>
+  <td>快热状态Tf</td>
+  <td>估计°C、phase</td>
+  <td>当前观测残差、已用信息截止</td>
+  <td>暂定/降级有标识；不可用显示原因</td>
+</tr>
+<tr>
+  <td>慢热状态Ts</td>
+  <td>估计°C、phase</td>
+  <td>“模型内部慢变量，不是结构传感器读数”；内部不确定性可展开</td>
+  <td>保留状态历史与当前资格分开</td>
+</tr>
+<tr>
+  <td>预测参考</td>
+  <td>重点+45秒，附15/90</td>
+  <td>起点/目标、情景HOLD、数据截止、model hash</td>
+  <td>无模型时明确未启用，不用B0假装G2</td>
+</tr>
+<tr>
+  <td>当前保护反馈</td>
+  <td>未报告保护/保护中/未知</td>
+  <td>guard/fault/stale各自三态</td>
+  <td>不把unknown显示正常、不造风险概率</td>
+</tr>
+<tr>
+  <td>平稳需求（研究）</td>
+  <td>原单位index或相对量</td>
+  <td>算法、固定参考、输出含义、重置/缺口</td>
+  <td>无可信provider就“本轮未计算”</td>
+</tr>
+<tr>
+  <td>PWM观察建议</td>
+  <td>有来源的参考百分比或未就绪原因</td>
+  <td>见§10，非设备指令</td>
+  <td>原因文本，不填假百分比</td>
+</tr>
+</tbody>
+</table>
+<h3>7.3 动效</h3>
+<p>沿线轻微流动点只代表数据传递/计算关系，不代表瓦数、热流方向实测或传热速度。仅对当前有效依赖动画；降级使用虚线/暂停脉冲，未知显示静态线。支持prefers-reduced-motion、后台页和暂停画面时停止动效。不能为了动画每帧请求后端或重算模型。</p>
+<h2>8. D：模型与观测对照（核心必做）</h2>
+<h3>8.1 一个清楚的主问题</h3>
+<p>默认选+45秒：<strong>过去发出的45秒预测，到了目标时刻，实际TJ是多少？</strong> 主图实线为实际TJ、虚线为该时距的已发布预测；以目标时刻对齐。15/45/90切换后图和指标同时切换，不能混时距。</p>
+<p>右上角未来参考显示“现在发出的+15/+45/+90秒预测”，与已经到期的验证图分开。点数只有3个时，不绘假装已计算的5分钟连续预测。可用折线连接3点须标明“仅连接参考点”。</p>
+<h3>8.2 时间与误差规则</h3>
+<p>每条预测保存<code>prediction_id、run、epoch、model/spec、scenario、origin、issued_at、target、horizon、input_cutoff、value</code>。预测的“45秒”从观测截止origin计算，另显示实际发布时刻，不能把计算延迟藏进提前量。实际发布晚于target不得进入实时预测验证。</p>
+<p>标签使用已核对的冻结合同：同source epoch、目标时刻之后（含目标）的第一条有效accepted TJ，允许延后最多2秒；15/45/90秒各自匹配。适配实际代码时核对这一合同，不得临时扩大匹配窗凑样本。新页面分数只取Web观察过程中真正已经发布的预测及随后到达的有效TJ。历史文件事后计算出来的预测不得冒称当时已发布。</p>
+<p>误差定义固定为<strong>预测−实测</strong>：正数“预测偏高”，负数“预测偏低”。没有到期答案显示“等待实测”；到期但没有合格标签显示“缺少对应实测”；模型/run切换、身份或时钟不可比时不强配。答案未到时绝不拿当前TJ减未来预测。</p>
+<h3>8.3 指标</h3>
+<p>紧凑摘要：当前时距、最近匹配时刻、预测值、实测值、带方向误差、当前窗口MAE、绝对误差P95、最大低估、匹配样本数/应到期数。指标按同run/epoch/model/scenario/horizon分组；样本不足用数字+“样本较少”，不用凭空的准确率百分比。</p>
+<p>“Tf当前观测残差”另在模型详情中展示，不和未来预测误差混算。A类使用实际未来功率的优秀成绩不出现在实时预测主面板。未校准协方差只可显示“模型内部不确定性”，不得画成保证95%覆盖的置信带。</p>
+<p>无模型、初始45秒未满、降级、只有遥测四种状态都保留D区，不留空白错误页，也不删掉该功能。</p>
+<h2>9. E：当前运行语义（核心必做）</h2>
+<p>用一块紧凑信息面板，不与热模型概念混用。</p>
+<table>
+<thead>
+<tr>
+  <th>字段</th>
+  <th>展示依据与文案</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>被观察设备</td>
+  <td>WS平台family/SoC/设备配置，N305主机另列</td>
+</tr>
+<tr>
+  <td>观察状态</td>
+  <td>等待数据 / 正在观察 / 数据暂断 / 已结束；浏览器暂停只写“画面暂停”</td>
+</tr>
+<tr>
+  <td>工作阶段</td>
+  <td>已注册runner阶段：背景、单路工作、双路工作、四路工作、回落、结束；无事件源写“未接入任务记录”</td>
+</tr>
+<tr>
+  <td>任务/并发</td>
+  <td>客户端在途数、计划槽位分别显示；服务端执行/排队仅有实证字段才显示</td>
+</tr>
+<tr>
+  <td>推理模型</td>
+  <td>运行manifest/明确本地元数据；标“任务登记：…”，配置不是已实时核实驻留；无则未知</td>
+</tr>
+<tr>
+  <td>热模型</td>
+  <td>G2+冻结模型短ID；固定参数/只读状态估计，不写成LLM模型名或“已在线自学”</td>
+</tr>
+<tr>
+  <td>风扇控制</td>
+  <td>来自主板当前mode/auto_state；“天山OS：AUTO；TTO：只读建议”，不是“AI已经接管”</td>
+</tr>
+<tr>
+  <td>观察信息</td>
+  <td>run短ID、数据覆盖起止、model phase、新鲜度；boot/run切换留边界</td>
+</tr>
+<tr>
+  <td>软件开销</td>
+  <td>TTO进程CPU/RSS，明确N305单核等效口径，不和Jetson CPU百分比混同</td>
+</tr>
+<tr>
+  <td>内存/驻留上下文</td>
+  <td>Jetson RAM使用，配置模型名仅作登记；不能以RAM&gt;50GB推断具体模型驻留</td>
+</tr>
+</tbody>
+</table>
+<p>若没有runner仍可完整监看三大图及模型，不能因缺任务事件阻塞页面。若后续有活动分类provider，必须标“活动估计”和方法，不能替换真实任务状态。</p>
+<h2>10. PWM观察建议与平稳需求：必须有区域，数值必须有依据</h2>
+<h3>10.1 三个不同东西分开</h3>
+<p><strong>当前PWM</strong>是已成功执行值；<strong>天山OS目标PWM</strong>来自主板<code>target_duty</code>；<strong>TTO PWM观察建议</strong>是新增或已接provider的计算参考。三者不混名，不因为两者恰好相等就只留一条“建议”。</p>
+<h3>10.2 V1的可实现数值路径</h3>
+<p>采用轻量<code>advisory provider</code>接口，按以下顺序启用，不自动搜索“最佳PWM”：</p>
+<ol>
+<li>若当前工程已有明确版本、输入截止和输出语义的只读建议provider，复用并展示真实身份，不复制另一个算法。</li>
+<li>否则，可新增<strong>CURVE-REFERENCE-v1</strong>：仅在已有本地记录/配置里取得并核实与当前设备一致的温度→PWM基础曲线时，用真实当前TJ与+45秒HOLD预测取较高值作为<code>T_ref</code>，按该曲线原有插值/限值计算<code>u_ref=f_curve(T_ref)</code>。这个新计算是“依据现有曲线与条件预测的参考”，不是复刻含gain/保护/延迟的天山OS完整控制器，也不是G2逆向优化。</li>
+<li>没有经过核对的曲线或真实provider时，仍显示建议区域，明确“暂无可用建议映射”；不添加默认75°C目标、不套旧错误曲线、不新拉设备配置来伪称已取得、不令需求指数×100或用当前PWM冒充建议。</li>
+</ol>
+<p>使用CURVE-REFERENCE时，曲线ID/hash/设备及温度绑定匹配、预测ID/时距/HOLD假设、T_ref、取值域均随值交付。曲线域外、数据到期、模式改变、明确stale/guard/fault或保护未知时撤下数字；说明“暂停建议，天山OS继续负责保护”。不对缺少45秒预测静默改成只看当前温度；要有独立且明确命名的provider才显示不同路径。</p>
+<p><strong>该映射是本次新增的展示计算规格，不是已经验证的控制算法。</strong> 即使显示比当前输出低，也不出现“风扇过转”“应立即降速”等建议。能计算参考，不等于改变风量以后能保持原温度。没有批准的新算法不由Codex临场发明。</p>
+<h3>10.3 平稳需求</h3>
+<p>已有需求provider可按原index、原参考和更新规则实时化，但必须保留来源、参考建立时刻及失效重置。只有离线研究指数而无当前有效状态/参考时不能持续播放旧曲线；显示“本轮未计算”。慢退不默认判失败，零相对增量不等于基础散热需求为零。</p>
+<p>首版整体交付不因缺少建议映射全局停工。C/D/E要完成真实分支和明确不可用分支；<strong>没依据的百分比不属于“后端包装一下”就能补出的事实。</strong></p>
+<h2>11. B、事件告警与全部字段抽屉</h2>
+<p>B折叠摘要显示“数据源：2路正常 / 1项待确认”等真实计数；展开为来源、最近接收、实际更新依据、年龄/到期、连接、错误类型、run/epoch。WS在线、HTTP成功、温度有效、模型可用四者分开。</p>
+<p>告警只传播现有明确设备事件或展示链事件；不新增跨Jetson统一90°C报警阈值。设备提供合法阈值才可画其阈值线，注明来源。未知保护不写“系统安全”。</p>
+<p>字段抽屉按温度、CPU、GPU、内存、功率、风扇、模型、主机/通信分组，保留所有当前已拉取且可公开的数值/状态；支持名称搜索。高频逐核旁录只在现有旁录已就绪时消费，不借Web UI开启SSH/jtop或改变200ms/1s源设置。默认使用原WS逐核数据，不能以一块空图强制开启旁录。</p>
+<p>原始数据展示须allowlist；不发送认证header、授权聊天、推理prompt/回复、私有绝对路径、模型权重路径、SSH参数或整个binding。调试源引用可用脱敏run/ref，详细设备信息只显示用户配置的名称。</p>
+<h2>12. 服务与采集生命周期</h2>
+<h3>12.1 安装以后是什么样</h3>
+<p>安装候选包含后端、编译后静态资源、配置模板、服务文件和独立卸载/回退。<strong>正式获准安装以后</strong>启动<code>tto-web.service</code>并开机自启，监听59009；没有数据也能打开页面并显示准确等待原因，不能将“装了包但端口没起来”算完成。运行不依赖Node、CDN或外网。</p>
+<h3>12.2 数据来源模式（一次配置，不在网页里启动实验）</h3>
+<ul>
+<li><strong>follow（实验/现有采集首选）：</strong>消费当前明确注册的本地active-run描述及只读发布流。已有测试进程拥有唯一collector/observer，Web只追踪它。源未注册/已结束就显示等待/结束，不扫描最新mtime文件并认作现场。</li>
+<li><strong>observe（日常持续监看）：</strong>安装时显式配置只读观察进程，复用现有collector和冻结observer，不构造Requester，不执行测试计划。只有确认公共采集锁及端点配置后可启动；已有活跃生产者时不争抢、不重复读取。不能仅改一个诊断duration为无穷而产生无限原始日志。</li>
+</ul>
+<p>默认follow避免打断既有实验；安装器必须说明怎样选择observe来实现无人值守日常监看，并给实际可运行入口。两种路径都需要实施/本地验证，不以“后续再接”代替。若安装时缺设备配置，仅起Web壳并明确“尚未配置观察来源”。</p>
+<p>不自动杀或接管其他进程。observe与实验的切换在主机CLI/明确操作卡中完成，原实验关闭/开启有原权限边界；网页没有停止collector或启动负载的按钮。若旧入口未参与共享锁，必须接入最小统一拥有权或要求安装配置显式follow；不能在无法确认单实例时自动开observe。</p>
+<h3>12.3 展示不反向影响观察</h3>
+<p>生产者每个更新只做一次非阻塞只读发布；慢浏览器/后端队列溢出允许显示侧丢帧并标注，不反压采集和状态估计，不改原始证据。Web重启不让外部实验停掉；观察进程重启导致数据epoch变化，曲线明确断开。只清理自己的资源。</p>
+<h2>13. 后端和接口原则</h2>
+<p>优先沿用现有aiohttp依赖提供HTTP+SSE，前端TypeScript+Vite+ECharts，节点使用SVG/CSS。不是强制升级底层依赖；如现有前端工程已用等价栈，记录差异后复用，避免并行两套框架。</p>
+<p>后端负责字段单位、来源/质量、时间轴、模型只读预测、成熟配对和建议provider。前端只格式化、交互、画图，不自己训练、不重建质量规则。SSE单向推送，心跳只证明UI链路，不给设备字段续龄。</p>
+<p>完整接口见<code>03-接口与计算合同.md</code>与<code>contracts/dashboard.schema.json</code>：boot/capabilities、snapshot、series、model、predictions、events、context均由一个版本化公开快照派生，接口不返回原始敏感对象。</p>
+<h2>14. 性能、可用性和边界</h2>
+<p>默认UI更新1Hz；已有200ms数据可以缓存保留，由显示侧按预算合并，不能驱动源提频。SSE心跳5秒，快照与质量到期按自身事件发布；前端依据后端给的剩余有效期本地撤销数字，UI网络断开时立即标断开，不必等最后一条device数据再次到达。</p>
+<p>展示缓冲默认最近60分钟，限定系列/事件/客户端队列；不新增全量录制数据库。observe监看模式采用有界显示缓存和小型限额诊断日志，不按实验原始每秒大JSON永远写盘。滚动保留策略只作用新Web目录，不删既有run。成熟预测表可维持当前60分钟加最大90秒待匹配，不按浏览器开启次数重复计算。</p>
+<p>研发目标（待测，不是假现场成绩）：1浏览器持续30分钟，Web附加RSS≤192MiB、均值CPU≤5%单核等效；4客户端时原生请求并发/频率与无UI一致，源回调非阻塞。达不到先报告热点与真实数值，不能降低源频率/放宽TTL凑通过。前端首屏本地静态资源≤3MiB压缩、关键趋势可操作，不要求追求没意义的极限包体。</p>
+<h2>15. 访问与只读安全</h2>
+<p>默认本机<code>127.0.0.1:59009</code>；安装器提供显式LAN模式，设置N305监听地址/允许访问来源及只读口令。要从另一台电脑看时使用N305地址，不把那台电脑的localhost写成设备地址。不自动改防火墙、UPnP或暴露公网。</p>
+<p>LAN访问使用一次本地生成的只读访问凭据和会话cookie；不要把令牌放URL/SSE query或日志。HTTP只适用于可信本地网络，不声称加密；已有TLS反代可复用，但不为首版建设账户平台。无凭据时不能启动匿名对外监听；无权限部署systemd如实交service候选和安装命令，不假称已自启。</p>
+<p>除登录/退出会话外，业务API均只读。没有PUT风扇、执行Shell、代理任意URL、启动任务、改配置/阈值/模型的接口。页面偏好存在浏览器，不改变设备。恶意源字符串当文本显示，不插HTML。</p>
+<h2>16. 状态与文案清单</h2>
+<table>
+<thead>
+<tr>
+  <th>情况</th>
+  <th>用户看到的文字</th>
+  <th>不应出现</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>无数据生产者</td>
+  <td>页面已启动，正在等待TTO数据</td>
+  <td>系统正常+全零卡片</td>
+</tr>
+<tr>
+  <td>模型初始化</td>
+  <td>模型正在积累状态，稍后显示预测参考</td>
+  <td>模型失败/准确度0%</td>
+</tr>
+<tr>
+  <td>tracking</td>
+  <td>模型状态跟踪中</td>
+  <td>预测可信100%</td>
+</tr>
+<tr>
+  <td>degraded</td>
+  <td>部分输入缺失，当前为条件估计</td>
+  <td>正常/放心降速</td>
+</tr>
+<tr>
+  <td>当前源失温</td>
+  <td>主板报告温度来源过期；观察建议已暂停</td>
+  <td>温度已降到0°C</td>
+</tr>
+<tr>
+  <td>预测等待45秒实测</td>
+  <td>等待这条预测对应的实测温度</td>
+  <td>当前差值=预测误差</td>
+</tr>
+<tr>
+  <td>task metadata缺少</td>
+  <td>未接入任务记录；仍可监看热数据</td>
+  <td>当前空载/单路推理</td>
+</tr>
+<tr>
+  <td>推理结束不明</td>
+  <td>客户端已结束，服务端状态未确认</td>
+  <td>GPU已停止</td>
+</tr>
+<tr>
+  <td>曲线未核对</td>
+  <td>暂无可用建议映射</td>
+  <td>建议72%</td>
+</tr>
+<tr>
+  <td>历史记录测试</td>
+  <td>本地回放样例（非实时设备）</td>
+  <td>LIVE绿色状态</td>
+</tr>
+<tr>
+  <td>页面暂停</td>
+  <td>画面已暂停，后台观察继续</td>
+  <td>采集已停止</td>
+</tr>
+<tr>
+  <td>不同run</td>
+  <td>已切换观察过程，曲线从新过程开始</td>
+  <td>自动拼接无边界</td>
+</tr>
+</tbody>
+</table>
+<h2>17. 验收与交付</h2>
+<p>详见<code>05-验收与测试清单.md</code>。首轮必须交实际源数据映射表、源码/patch、前端构建、独立安装候选、服务模板、按实际文件数量统计的身份清单、离线/loopback报告、浏览器截图和一页操作卡。不能只交HTML假数据页或一个永远拒绝运行的正式命令。</p>
+<p>开发阶段仅本地与自建服务测试，不能因附件包含历史许可就安装N305或发新负载。软件交回复审后，再由用户安排真实安装与监看；没有执行的systemd开机测试、N305资源或现场链路核查写待验。</p>
+<h3>文档优先级</h3>
+<p>用户本次确定的只读/页面目标 → 本PRD与接口合同 → 当前经核对源码与数据语义 → 旧效果图。若旧图画了本PRD明确排除的结构温度、概率、摄像头或控制按钮，直接不实现。长期热模型研究、CPU先导与通讯任务不因此重做。</p>
+<h2>18. 依据</h2>
+<p>内部依据为当前对话提供的0.2.4 closeout、CPU准备/模型分析报告及fixed-anchors原包；参见<code>reference/依据与读取范围.md</code>。其中部分运行状态已真实验证，部分最新CPU候选仍在有限收尾，不能把所有代码一律认作已现场部署。</p>
+<p>外部接口背景仅用于实现参考：NVIDIA tegrastats文档说明内存、CPU/GPU、温区与rail的输出语义；MDN说明SSE id/retry及重连；aiohttp官方文档说明HTTP服务及清理生命周期；systemd文档说明服务restart策略。官方新版本不是本机版本验收，不升级已有锁定依赖来迎合网页。</p>
+</section>
+<section id="api"><h1>TTO Web UI 接口与只读计算合同</h1>
+<p><strong>TTO-WEB-API-v1.0｜配套PRD v1.0。</strong> 下列是本次新公开DTO设计，不是上游现有字段名。<code>04-字段来源与能力矩阵.md</code>给已核对输入路径。数据适配只做来源/单位/有效性映射；所有新增计算带method_id和版本。</p>
+<h2>1. 原则与来源等级</h2>
+<p>统一<code>kind</code>：<code>observed</code>（设备原报）、<code>derived</code>（确定性聚合）、<code>estimate</code>（模型状态）、<code>forecast</code>（未来条件预测）、<code>advisory</code>（观察参考）、<code>configured</code>（本地登记）。配置里的模型名、静态方案不能冒充当前现场查询结果。能力与当前值分开：<code>supported:false</code>不是零，<code>supported:true</code>但数据过期也没有当前数值。</p>
+<p>Metric公开结构：</p>
+<pre><code class="language-json">{
+  &quot;id&quot;:&quot;power.gpu&quot;, &quot;label&quot;:&quot;GPU功率&quot;, &quot;kind&quot;:&quot;observed&quot;, &quot;unit&quot;:&quot;W&quot;,
+  &quot;value&quot;:26.532, &quot;status&quot;:&quot;valid&quot;, &quot;reason_code&quot;:null,
+  &quot;source_ref&quot;:&quot;run-alias/observation:42&quot;, &quot;source_id&quot;:&quot;jetson-ws&quot;, &quot;sample_id&quot;:&quot;epoch-2:123&quot;,
+  &quot;source_time_utc&quot;:null, &quot;received_at_utc&quot;:&quot;2026-10-20T10:00:00Z&quot;,
+  &quot;as_of_elapsed_ms&quot;:120000, &quot;age_lower_bound_ms&quot;:150, &quot;remaining_valid_ms&quot;:4850,
+  &quot;time_quality&quot;:&quot;receive_approximation&quot;, &quot;last_observation&quot;:null
+}
+</code></pre>
+<p>这是格式样例，不是当前设备数据。所有同一数值也保留合法新sample_id；无新sample的UI快照不重置age。到期时<code>value:null,status:stale</code>，上次值转<code>last_observation</code>并带原时刻。明确invalid/disconnected事件先撤旧值，不能“先过滤无效再找有效”。epoch/binding模式变更不跨历史续用。</p>
+<p>API不暴露原SSH、完整binding、私有路径、授权文本、prompt/输出；ref采用当前公开run别名或可审计的不敏感ID。</p>
+<h2>2. 只读HTTP路由</h2>
+<table>
+<thead>
+<tr>
+  <th>路由</th>
+  <th>内容/约束</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>GET /</code></td>
+  <td>编译后的静态页面，运行离线可用</td>
+</tr>
+<tr>
+  <td><code>GET /api/v1/bootstrap</code></td>
+  <td>schema版本、服务epoch/时钟、当前source_mode、可用字段、profile、当前run、功能能力；不读设备/模型列表</td>
+</tr>
+<tr>
+  <td><code>GET /api/v1/snapshot</code></td>
+  <td>原子快照的K/C/D/E/B摘要；同snapshot_seq</td>
+</tr>
+<tr>
+  <td><code>GET /api/v1/stream</code></td>
+  <td>SSE snapshot/quality/event/run_changed/resync/heartbeat；每连接一个有界队列</td>
+</tr>
+<tr>
+  <td><code>GET /api/v1/series?ids=...&amp;from=...&amp;to=...&amp;max_points=...</code></td>
+  <td>仅当前会话/最近60分钟，时间范围有上限；每条series自带单位/抽样/缺口</td>
+</tr>
+<tr>
+  <td><code>GET /api/v1/model</code></td>
+  <td>model/spec身份、phase、Tf/Ts/E、真实依赖图及provider状态</td>
+</tr>
+<tr>
+  <td><code>GET /api/v1/predictions?horizon_s=45&amp;from=...&amp;to=...</code></td>
+  <td>当前会话已发/待到期/已匹配/缺标签，符合条件的汇总；不从未来答案重算</td>
+</tr>
+<tr>
+  <td><code>GET /api/v1/events?after=...&amp;limit=...</code></td>
+  <td>按事件ID分页，带首次/末次/次数；来源明确</td>
+</tr>
+<tr>
+  <td><code>GET /api/v1/metrics</code></td>
+  <td>allowlist的已接字段，搜索/分组/分页，不返回原敏感JSON</td>
+</tr>
+<tr>
+  <td><code>GET /healthz</code></td>
+  <td>Web进程状态；200不等同设备温度正常或模型通过</td>
+</tr>
+<tr>
+  <td><code>POST /api/v1/session</code>、<code>DELETE /api/v1/session</code></td>
+  <td>仅LAN只读登录/退出，不含任何设备动作</td>
+</tr>
+</tbody>
+</table>
+<p>其他写操作返回405；不存在通用proxy、shell、start-test、set-pwm、train、upload-config接口。没有后台外部遥测/分析请求。</p>
+<h2>3. 服务与时间信封</h2>
+<p>快照外层：<code>schema_version, snapshot_seq, service_epoch, run_id, source_epoch, mode(live/waiting/ended/test_replay), server_time_utc, clock_domain_id, run_elapsed_ms, metrics, model, predictions, advisory, context, health, event_cursor</code>。</p>
+<p>同一run中的series统一使用N305生产者单调时刻/明确映射后的elapsed_ms；墙钟仅显示，系统时间跳变产生clock事件，不影响已发45秒的真实长度。Web进程不得假设自己的启动原点等于生产者原点；同机boot与clock定义要核对。跨主机数据仅使用已存在到达/映射证据，不能直接相减两台monotonic。</p>
+<p>从存量<code>TTO-FIELD-CONSUMABLE-STATE-v1</code>消费时用<strong>外层clock</strong>的实际生成/输入截止/消费期限；内部保留的<code>offline_virtual_observer_clock</code>字面量不是现场时钟证明。UI显示流只派生状态，不覆盖原数据/旧模型。</p>
+<p>SSE快照默认最大1Hz；关键invalid/guard/disconnect事件允许立即发质量变更。<code>id=service_epoch:seq</code>，断连重连验证Last-Event-ID，已出缓冲则resync全快照；心跳不改任何metric的样本时间。浏览器丢链时更新页面连接状态并冻结实时新鲜标记。慢客户端丢弃过期显示快照、发resync计数，不阻塞生产者。</p>
+<h2>4. 存量输入适配与单实例</h2>
+<p>标准新增本地发布面为一个有限只读描述文件+Unix socket或等价有界消息通道；选择已有发布机制优先，不能两种都做成维护面。生产者钩子仅复制公共字段入有界队列，不在collector回调里HTTP/SSE写网络。</p>
+<p>follow读取生产者manifest/epoch/消息，0设备读取。observe由指定主机程序获取与现有采集一致的排他锁，复用原只读collector、quality、I-02、observer；0 Requester，不读推理API、不启动CPU旁录。现有采集运行时observe只能退出采集职责或等待，不接管、重启、复制轮询。锁的实际路径/机制在本次实现基线报告登记，不能只写进程数常量当验证。</p>
+<p>无统一旧入口锁支持时，先完成follow，并用离线候选补最小共享锁/发布钩子；部署前不允许盲目同时启动两种采集。source_mode是本机安装配置，不由网页动态切换。</p>
+<h2>5. 热模型节点与phase</h2>
+<p>phase原值与用户文案一一对应：uninitialized=等待模型初始化；provisional=初始化参考；tracking=状态跟踪中；degraded=部分输入缺失，条件估计；unavailable=当前无法估计。跟踪中不是准确率。</p>
+<p><code>model.nodes[]</code>携带node_id、role、metric_id/state_path、status、description；<code>edges[]</code>携带from/to、relation(power_input/measurement_correction/coupling/cooling_input/prediction_input/reference_mapping)、animate_allowed。前端只绘制服务端实际模型定义的依赖；RPM不接入G2热方程。</p>
+<p>Tf/Ts/E复用被冻结估计器的结果；若当前数据模式只有raw无状态，可在<strong>同一个观察拥有者</strong>内执行已验证observer而不新增collector。不能在每浏览器各做一遍。内部不确定性原字段可展开，不渲染0.78之类主观分数。状态不同步/不可消费时允许展示“上次估计”，但不用于当前预测。</p>
+<h2>6. 新增G2-HOLD实时预测发布</h2>
+<p>若生产者已发同model/spec/scenario的合法预测，直接消费；否则由后端唯一prediction provider在新有效TJ/状态起点最多1Hz计算。必须复用已有冻结G2传播实现或其等价独立已验证函数，不重新拟合。</p>
+<p>基于本项目已有比较合同：动态θ固定；预测快温度起点锚定当前有效TJ，慢态Ts/E取当时已到达的因果状态；保持当时可用的两rail和PWM情景，使用真实秒长精确/稳定离散传播。是否采用条件保持PWM必须遵守当前observer合同并随预测明确列出，不能在UI侧擅自将过期PWM改有效。</p>
+<p>若实际最新比较代码的锚定/初始化规则与此不同，先在baseline.md具体指出，以已接受合同校对实现；不默认把Tf与实测TJ互换。预测产生时间为真实完成时刻，原点是输入截止。公开支持15/45/90秒；不额外做5分钟、新θ、CPU活动增强、自动HOLD/RELAX挑优。</p>
+<p>预测记录不可原地改值。每条带<code>origin_elapsed_ms, issued_elapsed_ms, target_elapsed_ms, horizon_s, value_C, model_id, spec_id, scenario, input_cutoff, assumption_codes, phase_at_origin, evidence_mode=issued_online</code>。开发回放样例用<code>test_replay</code>，不能显示LIVE。</p>
+<h2>7. 未来标签和当前观察误差</h2>
+<p>本次核对的冻结analysis-spec规定：同source epoch，目标时刻之后（含目标）的第一条有效accepted TJ，延后最多2秒。以此实现并在adapter-baseline.md记录源函数/版本；若最新已接受版本有明确变更，先报告差异再对齐，不能静默借旧生产Ridge另一套容差。成熟匹配只使用新到达的真实有效TJ和同run身份。前端的最近点悬停与科学标签匹配不是同一逻辑。</p>
+<p><code>error_C=forecast_C-observed_C</code>，<code>underprediction_C=max(observed_C-forecast_C,0)</code>。对比表按horizon、model/spec、scenario、run/epoch分组，MAE/P95及count用同一matched集合。保留issued_count、due_count、matched_count、missing_label_count、unmatched_future_count；未到期不进误差分母。</p>
+<p>观察窗口跨run/模型切换停止合并。即使模型后续失效，也不能改写已经发布的预测；随到期答案追加质量层和失效/恢复备注，不能因为预测错就删除。没有匹配标签不得用后续任意最近点填补。</p>
+<h2>8. 观察建议provider</h2>
+<p>公开<code>advisory</code>对象：<code>status, provider_id, provider_version, value_percent, basis, issued/expiry, input_refs, model_ref, curve_ref, scope_note, unavailable_reason, device_write_permitted=false</code>。</p>
+<p>优先真实已定义provider；否则CURVE-REFERENCE-v1只消费经过核对的已有本地温度-PWM曲线，使用<code>T_ref=max(TJ_now, forecast45_hold)</code>并执行原曲线查表/限值语义。需要曲线与当前控制设备绑定证据。没有则status=not_configured、数值null。target_duty只作为主板目标，不冒充advisory。</p>
+<p>保护/控制上下文未知或显式异常时status=withheld；曲线范围外status=out_of_domain，禁止外推。输出过期立即撤数字。PRD允许显示这个实验参考，但不允许接入任何控制写口或声称已验证减少噪音。</p>
+<p>平稳需求独立<code>demand</code>对象，单位默认<code>index</code>，带reference_id/raw_value/shaped_value/validity；provider没接上就是not_available。原离线算法未迁移/未满足参考不能填0或拿历史曲线循环播放。</p>
+<h2>9. 运行上下文</h2>
+<p><code>context</code>分被观察设备、TTO主机、热模型、任务模型四类身份。实际任务来自同run事件，<code>task_metadata_available=false</code>时并发/任务数均null，不默认为0；只有能证实当前0在途才显示0。</p>
+<p>客户端槽位capacity与active_requests分别显示；server_running/server_queued只有实际来源才有值。memory保持“使用量”，不能由一个阈值推断驻留模型。普通自主observe没有runner字段仍能给完整C/D与E中的只读状态。</p>
+<h2>10. 部署与资源配置（新配置，不改变旧源设置）</h2>
+<pre><code class="language-yaml">web:
+  port: 59009
+  bind: 127.0.0.1
+  access_mode: local
+  public_update_hz: 1
+  heartbeat_seconds: 5
+  history_seconds: 3600
+  max_clients: 4
+  client_queue_depth: 8
+  max_events: 1000
+  max_series_points: 2000
+source:
+  mode: follow
+  active_descriptor: null  # 安装时填允许目录内的当前生产者注册入口
+  observation_config: null # observe才填，私有本地配置不返回浏览器
+model:
+  provider: frozen_g2_hold
+  horizons_s: [15, 45, 90]
+  model_manifest: null
+advisory:
+  provider: null           # 接口和不可用状态必做，不能填假曲线
+  curve_manifest: null
+</code></pre>
+<p>生产配置缺项：Web仍启动，只有对应功能不可用；不能套演示host/model/curve。常驻记录的磁盘上限、rotate策略在实现中固定并测试，不改旧原始run。安装只增Web候选和服务，不升级Conda base或替换CPU专项正在验证的安装。</p>
+<h2>11. 非目标</h2>
+<p>没有设备发现、动态修改WS间隔、jtop启动、CPU高频读取、新传感器、GPU推理请求、训练/在线参数更新、实际控制、全局PID/MPC、录像或历史播放。新增view偏好不扩成服务器配置后台。</p>
+</section>
+<section id="fields"><h1>已核对字段与UI能力矩阵</h1>
+<p><strong>证据层：真实fixed-anchors归档的字段形态；不是当前在线设备访问。</strong> 当最新本地代码/合同有变化，执行方先核对身份再适配，不能照旧字段名猜值。</p>
+<p>数据简称：O=同run <code>observations-0001.jsonl</code>，S=<code>states.jsonl</code>外层现场信封，Q=原quality/I-02，J=已接scheduler/protocol/request元数据。O的<code>kind=orin</code>是历史事件名，不意味着硬件仍是Orin；该包platform.family=jetson_thor。</p>
+<table>
+<thead>
+<tr>
+  <th>UI ID</th>
+  <th>输入路径/证据</th>
+  <th>转换/语义</th>
+  <th>无效或缺失</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>temperature.tj</td>
+  <td>O.orin.payload.temperature.tj / S.state.measurement.tj</td>
+  <td>°C；原TJ身份</td>
+  <td>遵Q与期限，不用模型填实测</td>
+</tr>
+<tr>
+  <td>temperature.cpu/gpu</td>
+  <td>O.orin.payload.temperature.cpu/gpu</td>
+  <td>°C；不是TJ别名</td>
+  <td>无字段不造</td>
+</tr>
+<tr>
+  <td>temperature.soc.*</td>
+  <td>payload.temperature.soc012/soc345等实际key</td>
+  <td>按设备原温区命名，可选曲线</td>
+  <td>不硬编码所有设备都有同温区</td>
+</tr>
+<tr>
+  <td>control.temperature</td>
+  <td>O.fan.payload.data.fans[id].control_temperature 或O.temp.data.temperature_c</td>
+  <td>两来源具体注明，不能随意混用</td>
+  <td>主板源失温与WS TJ分别展示</td>
+</tr>
+<tr>
+  <td>fan.pwm.actual</td>
+  <td>fans[id].duty 经duty_valid/原successful_duty</td>
+  <td>%，已成功执行</td>
+  <td>到期留上次值但value=null</td>
+</tr>
+<tr>
+  <td>fan.pwm.target</td>
+  <td>fans[id].target_duty</td>
+  <td>%，主板目标/已限速语义按当前源码</td>
+  <td>不是G2推荐，也不猜未限速需求</td>
+</tr>
+<tr>
+  <td>fan.rpm</td>
+  <td>fans[id].rpm</td>
+  <td>原报转速；当前样本全0、running=true，无独立rpm_valid</td>
+  <td>缺能力证据显示未确认，不推导停转</td>
+</tr>
+<tr>
+  <td>fan.mode/status</td>
+  <td>mode/enabled/running/auto_state</td>
+  <td>原主板事实</td>
+  <td>null不映射false</td>
+</tr>
+<tr>
+  <td>fan.gain</td>
+  <td>controller_gain</td>
+  <td>无量纲学习增益，详情字段</td>
+  <td>不叫热阻或TTO自学习参数</td>
+</tr>
+<tr>
+  <td>fan.slope</td>
+  <td>slope_c_per_min</td>
+  <td>主板计算°C/min</td>
+  <td>不冒充新高频TJ导数</td>
+</tr>
+<tr>
+  <td>fan.forecast</td>
+  <td>predicted_temperature</td>
+  <td>主板预测诊断，已有源码称45s需核当前合同</td>
+  <td>不和G2预测混在一条线</td>
+</tr>
+<tr>
+  <td>fan.cooling_response</td>
+  <td>cooling_response</td>
+  <td>语义/单位须按实际固件，当前记录有12</td>
+  <td>不直接叫热系统τ=12秒</td>
+</tr>
+<tr>
+  <td>power.gpu</td>
+  <td>O.orin.payload.power.vdd_gpu.current</td>
+  <td>mW/1000→W</td>
+  <td>独立rail</td>
+</tr>
+<tr>
+  <td>power.cpu_soc_mss</td>
+  <td>payload.power.vdd_cpu_soc_mss.current</td>
+  <td>mW/1000→W</td>
+  <td>非纯CPU</td>
+</tr>
+<tr>
+  <td>power.other.*</td>
+  <td>实际payload.power其他key，如vin_sys_5v0</td>
+  <td>同原unit规范；average分列</td>
+  <td>不合成整机总功耗</td>
+</tr>
+<tr>
+  <td>usage.gpu</td>
+  <td>payload.gpu.utilization_pct（Thor）</td>
+  <td>%；独立NVML status/age/freshness_timeout</td>
+  <td>WS新包不能给旧GPU buffer续龄</td>
+</tr>
+<tr>
+  <td>cpu.cores.*.usage/frequency</td>
+  <td>payload.cpu.cores[{id,usage,freq}]</td>
+  <td>原usage%；freq原单位核对，当前源码MHz</td>
+  <td>offline/null不补0</td>
+</tr>
+<tr>
+  <td>usage.cpu.mean</td>
+  <td>当前在线且有效cores算术平均，原native cpu_usage有对应</td>
+  <td>derived%；分母核心数可查</td>
+  <td>不混N305资源进程CPU</td>
+</tr>
+<tr>
+  <td>usage.cpu.max</td>
+  <td>同窗有效cores最大值</td>
+  <td>derived；只是运行观测，不启CPU先导候选</td>
+  <td>缺核则提示覆盖不完整</td>
+</tr>
+<tr>
+  <td>memory.ram/swap</td>
+  <td>payload.memory.ram/swap.{used,total,unit,cached}</td>
+  <td>原MB标签保留，比例可派生</td>
+  <td>高占用不确定模型身份</td>
+</tr>
+<tr>
+  <td>platform.*</td>
+  <td>payload.platform.family/soc/gpu_backend</td>
+  <td>被观察设备身份</td>
+  <td>配置/历史与live分开</td>
+</tr>
+<tr>
+  <td>state.Tf/Ts/E</td>
+  <td>S.state.observer.Tf_C/Ts_C/E_C</td>
+  <td>estimate；E内部边界、Ts非结构测温</td>
+  <td>phase/消费截止同步</td>
+</tr>
+<tr>
+  <td>state.phase</td>
+  <td>S.state.observer.phase</td>
+  <td>枚举中文映射</td>
+  <td>tracking非准确率</td>
+</tr>
+<tr>
+  <td>state.uncertainty</td>
+  <td>S.state.observer.uncertainty</td>
+  <td>内部std/cov，calibrated=false</td>
+  <td>不转0–1 confidence，不声称95%</td>
+</tr>
+<tr>
+  <td>protection.*</td>
+  <td>S.state.safety 与fan/temp新鲜flags</td>
+  <td>guard/fault/stale/manual/confirmed等逐项</td>
+  <td>不能因旧flag正常推新状态</td>
+</tr>
+<tr>
+  <td>task.*</td>
+  <td>J同run阶段/提交/完成/slot/metadata</td>
+  <td>客户端事实；模型登记来源显示</td>
+  <td>无J显示未接入，不从tegra猜</td>
+</tr>
+<tr>
+  <td>host.cpu/rss</td>
+  <td>resources.jsonl cpu_pct_single_core/rss_bytes</td>
+  <td>N305 TTO进程，字节→MiB明确</td>
+  <td>不是整机总CPU/RAM</td>
+</tr>
+<tr>
+  <td>source.health</td>
+  <td>Q、I-02、poll_diagnostics等</td>
+  <td>映射状态/年龄/错误阶段</td>
+  <td>HTTP成功不等source valid</td>
+</tr>
+<tr>
+  <td>forecast.tj.*</td>
+  <td>本次只读G2-HOLD provider</td>
+  <td>新计算15/45/90s，真实发布/截止和成熟标签</td>
+  <td>provider未接不可冒充完成</td>
+</tr>
+<tr>
+  <td>advisory.pwm</td>
+  <td>合法既有provider或CURVE-REFERENCE-v1</td>
+  <td>新计算，实验观察值</td>
+  <td>无曲线/保护未知给具体原因</td>
+</tr>
+<tr>
+  <td>demand.index</td>
+  <td>当前可用的研究provider</td>
+  <td>原index/reference和独立版本</td>
+  <td>不映射成PWM，不称已测热量</td>
+</tr>
+</tbody>
+</table>
+<h2>前端不展示的字段</h2>
+<p>外部结构温度/YET、出风空气温度、没有来源的环境传感器、摄像头、硬件未提供的传感器读数、虚构过热概率/置信度/风扇寿命/安全PWM、模型原始prompt/回复/完整路径/凭据。不为这些建设空菜单。</p>
+<h2>源资料到实现的约束</h2>
+<ol>
+<li>当前UI概念中的“所有数据”是<strong>所有已拉取、可解释且可公开的遥测</strong>，不是每份原始控制/授权JSON。</li>
+<li>已知field路径不代表该台硬件的值有物理有效性；RPM=0正是此区别。</li>
+<li>curve本身不在核对的fan/status字段内；CURVE-REFERENCE只在已存在且匹配的本地配置可用时启用，不默默加设备配置轮询。</li>
+<li>G2运行输入是两rail、PWM与测量校正，CPU使用率/RPM/RAM不因被画成节点就变成模型输入。</li>
+</ol>
+</section>
+<section id="accept"><h1>TTO Web UI：验收与针对性测试清单</h1>
+<p>本清单以用户价值和真实调用链为单位，不要求重跑整个TTO历史测试，不修改模型成绩。UI V1仍是新增软件候选，验收通过不代表热预测普遍准确或风扇控制有效。</p>
+<h2>一、产品与交互（U）</h2>
+<table>
+<thead>
+<tr>
+  <th>ID</th>
+  <th>必测事项</th>
+  <th>通过标准</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>U01</td>
+  <td>1440/1920/窄屏布局</td>
+  <td>小指标、三个主图默认展开；C/D/E始终存在；不恢复图片/录像/诊断页</td>
+</tr>
+<tr>
+  <td>U02</td>
+  <td>卡片与单位</td>
+  <td>温度/W/%/RPM/MB各自正确；卡片不撑成大仪表盘；可读原精度</td>
+</tr>
+<tr>
+  <td>U03</td>
+  <td>时间联动</td>
+  <td>三图与事件带同范围/光标；tooltip列出各系列真实样本时间，不假同步</td>
+</tr>
+<tr>
+  <td>U04</td>
+  <td>暂停/全屏/图例</td>
+  <td>仅改变显示；多浏览器互不停止观察，刷新不重新初始化模型</td>
+</tr>
+<tr>
+  <td>U05</td>
+  <td>节点关系与动效</td>
+  <td>仅实际G2依赖；TJ校正不是热功率；无效边不流动，减少动效设置有效</td>
+</tr>
+<tr>
+  <td>U06</td>
+  <td>C/D/E缺项分支</td>
+  <td>无模型/初始化/降级/无任务/无建议映射都有准确文案，不缩减模块或套demo</td>
+</tr>
+<tr>
+  <td>U07</td>
+  <td>数据源/事件折叠</td>
+  <td>默认收起；重大明确异常在顶栏可见；恢复/重复计数不刷屏</td>
+</tr>
+<tr>
+  <td>U08</td>
+  <td>所有已接字段</td>
+  <td>分类抽屉覆盖allowlist，逐核CPU/内存/其他rail可查，不泄漏raw binding</td>
+</tr>
+</tbody>
+</table>
+<h2>二、数据语义与模型（D）</h2>
+<table>
+<thead>
+<tr>
+  <th>ID</th>
+  <th>必测事项</th>
+  <th>通过标准</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>D01</td>
+  <td>mW到W及GPU年龄</td>
+  <td>current/average不混，GPU独立有效期不被WS新消息延长；不合成总功耗</td>
+</tr>
+<tr>
+  <td>D02</td>
+  <td>有效零/缺失/失效</td>
+  <td>普通零保留；missing不补0；新invalid撤旧valid，不回退到旧帧冒充当前</td>
+</tr>
+<tr>
+  <td>D03</td>
+  <td>RPM反例</td>
+  <td>rpm=0+running=true无测速证据显示未确认；不写停转、不按PWM算RPM</td>
+</tr>
+<tr>
+  <td>D04</td>
+  <td>同值新采样与缓存重复</td>
+  <td>新ID相同值保留；旧缓存重复不续TTL/动画新样本/累计确认</td>
+</tr>
+<tr>
+  <td>D05</td>
+  <td>断连/恢复/epoch</td>
+  <td>页面可继续开着但撤旧当前值；新合法源恢复；跨run不拼曲线/误差</td>
+</tr>
+<tr>
+  <td>D06</td>
+  <td>模型身份与时钟</td>
+  <td>使用真实外层clock；内部offline字面量不被当live；单实例冻结θ相同</td>
+</tr>
+<tr>
+  <td>D07</td>
+  <td>G2-HOLD数值与因果</td>
+  <td>小样本对照既有传播；未来功率/温度扰动不改变之前已发预测；15/45/90均有实算</td>
+</tr>
+<tr>
+  <td>D08</td>
+  <td>成熟标签与正负误差</td>
+  <td>第一个同epoch目标以后≤2s有效TJ；待到期/缺标签单列；error=predicted-actual</td>
+</tr>
+<tr>
+  <td>D09</td>
+  <td>指标分母与切换</td>
+  <td>horizon/model/scenario/run不混排；MAE/P95/max低估/count来自同集合，不把tracking当准确率</td>
+</tr>
+<tr>
+  <td>D10</td>
+  <td>发布延迟/历史回放</td>
+  <td>origin/issued/target不同概念；晚于target不算未来预测；回放不可显示LIVE</td>
+</tr>
+<tr>
+  <td>D11</td>
+  <td>建议provider真实范围</td>
+  <td>valid provider或匹配曲线才给数值；缺映射/域外/保护未知null原因；target_duty独立</td>
+</tr>
+<tr>
+  <td>D12</td>
+  <td>平稳需求/置信度</td>
+  <td>index非PWM；Ts非结构测温；E非室温；未校准cov不冒称95%/0–1信心</td>
+</tr>
+<tr>
+  <td>D13</td>
+  <td>工作语义</td>
+  <td>无runner不猜空载/并发；客户端DONE不等GPU停止；RAM不推模型驻留</td>
+</tr>
+</tbody>
+</table>
+<h2>三、服务/集成/安全（S）</h2>
+<table>
+<thead>
+<tr>
+  <th>ID</th>
+  <th>必测事项</th>
+  <th>通过标准</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>S01</td>
+  <td>实际端到端</td>
+  <td>同一真实本地producer→quality/observer→API→SSE→浏览器链，来源一致</td>
+</tr>
+<tr>
+  <td>S02</td>
+  <td>follow单实例</td>
+  <td>多浏览器0新增设备轮询；Web启停不结束外部采集或请求</td>
+</tr>
+<tr>
+  <td>S03</td>
+  <td>observe与互斥</td>
+  <td>获共享锁后唯一collector/observer，0Requester；冲突不启动第二实例、不kill别人的进程</td>
+</tr>
+<tr>
+  <td>S04</td>
+  <td>超时与背压</td>
+  <td>慢客户端/断开只损失显示侧，collector不等待浏览器；队列有上限，超界resync</td>
+</tr>
+<tr>
+  <td>S05</td>
+  <td>安装与服务</td>
+  <td>临时prefix实际加载新文件、静态资源完整；unit语法/启动候选验证；59009冲突明确报错，不杀占用程序</td>
+</tr>
+<tr>
+  <td>S06</td>
+  <td>默认只读/访问</td>
+  <td>本机/LAN显式配置；无业务写API；拒绝跨源/任意proxy/秘密泄漏，源文本不执行脚本</td>
+</tr>
+<tr>
+  <td>S07</td>
+  <td>常驻资源与磁盘</td>
+  <td>使用真实计量列附加CPU/RSS/流量；有限缓存/日志只清Web目录，超过预算不改源频率</td>
+</tr>
+<tr>
+  <td>S08</td>
+  <td>SSE恢复与质量过期</td>
+  <td>Last-Event-ID可续或resync；心跳不续源样本；无新消息也按期限撤值</td>
+</tr>
+<tr>
+  <td>S09</td>
+  <td>时钟/源码差异</td>
+  <td>墙钟跳变不破坏单调时长；未知域不乱配；最新候选有变更如实写，不改identity清单掩盖</td>
+</tr>
+<tr>
+  <td>S10</td>
+  <td>无现场授权</td>
+  <td>开发日志中无真实设备调用、无推理POST、无N305安装/上游重启，文档实际可运行但未越界执行</td>
+</tr>
+</tbody>
+</table>
+<h2>四、阶段性放行</h2>
+<ul>
+<li><strong>开发交付可接受：</strong>真实代码/安装候选、核心U/D/S测试及明示未执行项；建议provider缺合法曲线可准确不可用，不为补数字临时创造控制算法。</li>
+<li><strong>正式部署可安排：</strong>独立审查通过后，用户批准N305安装/启动只读服务与数据配置；不自动附带推理/仪表补测。</li>
+<li><strong>实际能力接受：</strong>现场能看到数据、单实例、延迟/资源/失效正确；预测有误差是模型研究事实，不以UI“图贴得好看”作验收。</li>
+</ul>
+<p>新功能没有实际测试不能宣称全部通过；测试数量按实际运行记，不把此处条目数当完成数。</p>
+</section>
+<section id="codex"><h1>给新Codex对话：实施TTO只读Web UI</h1>
+<p><strong>任务：TTO-WEB-v1.0。</strong> 这是独立Web UI旁路任务，不是让你接管已有CPU补测、热模型研究、通讯修复或现场测试。目标仓库为<code>massif-01/Tianshan-thermal-observer</code>；目标安装主机为N305；端口固定59009。</p>
+<h2>1. 先读什么</h2>
+<p>完整阅读README、01 PRD、03接口与计算合同、04能力矩阵、05验收清单及contracts。reference只作已核对的字段依据；当前本地源码和已接受候选身份要真实确认，不将public main、closeout.2、cpu.1和未完成小修视作同一版本。</p>
+<p>请实际开发可安装、可运行的第一版，不只交设计方案或假数据静态页。用户已经确定的页面、模块和只读范围不再重新询问。包中所有样例均为明确标记的合成合同数据，不能在真实数据缺失时自动启用。</p>
+<h2>2. 第一轮必须交付的产品</h2>
+<ul>
+<li>新增自动运行于59009的Web服务候选和安装集成；正式安装后服务可打开，即使还没有源配置也显示准确等待页面。</li>
+<li>一页紧凑监看：小指标条，温度、功率、PWM纵向全宽三图，统一时间轴/缩放/光标；A事件标记带，B默认折叠的数据健康。</li>
+<li><strong>C热模型小节点、D预测与实测对照、E运行语义必须完整开发</strong>，包括正常、初始化、条件降级、缺少provider和未接任务数据各分支，不以“先出三张曲线”裁掉它们。</li>
+<li>C连线依据实际G2依赖，小节点动效只代表数据流。Ts是模型内部慢态，不是结构传感器；RPM/CPU用量/RAM不冒充当前G2功率输入。</li>
+<li>D新增或复用唯一的实时G2-HOLD预测发布，15/45/90秒；后到有效TJ按冻结+2秒标签窗进行成熟配对。预测−实测误差方向固定，不能拿现在实测减未来预测。</li>
+<li>E区分Jetson与N305、推理模型与热模型、客户端并发与服务器状态；数据缺少则明确未接入，不能从利用率猜任务。</li>
+<li>PWM观察建议区域必须保留。按PRD优先真实provider、其次经过核对的现有曲线参考映射；没有合法来源就显示原因，不伪造数字。真实天山OS目标另列，不把target_duty或平稳指数偷换成TTO建议。</li>
+<li>数据健康/事件/全部已接字段默认折叠，重要异常仍在顶栏提示。无结构温度/摄像头/录制回放/诊断操作页/训练控制页。</li>
+</ul>
+<h2>3. 基线核对：做一次具体核对，不扩成新规划项目</h2>
+<p>在独立分支/工作树完成，保留原工作树、历史结果和模型SHA。先输出<code>adapter-baseline.md</code>：实际代码/发行版本、入口、配置、collector拥有者/锁、quality/observer/预测函数、run发布方式、原始字段到DTO映射和未提供项。</p>
+<p>重点处理：</p>
+<ol>
+<li>核对原成功PWM与RPM语义。本包所审2710份fan记录全rpm=0/running=true，无独立测速valid；不能用demo的3200RPM或PWM换算值填进真实界面。</li>
+<li>用外层现场clock，不用内部遗留offline_virtual文字当现场时钟证明；I-02的显式失效撤销优先。</li>
+<li>Thor GPU%有独立NVML更新/期限；CPU新包不能让旧GPU值续龄。源平均窗未知就说明未知。</li>
+<li>当前已有热模型状态不等于已实时发布B预测；请补真正的只读预测provider，但不训练θ、不启用未胜出的CPU活动先验。</li>
+<li>当前图里的结构温度、风险概率、0.78置信度、安全温限、PWM72%全部不是实施事实。</li>
+</ol>
+<p>有必要本地修改最小发布钩子/只读adapter/安装器；不改源采样、TTL、数学参数、温控或原请求调度。发现无法不改变原语义就接入时，只隔离该项并给具体证据，继续独立可做工作，不把全部项目停在“缺字段”。</p>
+<h2>4. 推荐结构与先后</h2>
+<p>优先现有aiohttp提供同源静态资源+只读JSON+SSE；前端TypeScript/Vite/ECharts，节点SVG。本地构建后打包静态文件，N305运行无需Node/CDN。已存在等价项目栈则复用，不平行再建设一套。</p>
+<p>按下列顺序实际实施：</p>
+<ol>
+<li>基线/DTO/source registry，完成直接字段、独立有效期及脱敏。</li>
+<li>follow发布消费链；observe复用唯一collector/observer的持续只读模式及拥有权，不生成第二轮询器。</li>
+<li>原子快照、SSE有界队列/重连/过期；有限历史缓存，不无限写日志。</li>
+<li>固定模型预测发布、到期标签匹配、建议provider接口/必要曲线映射；规则按文档，无新阈值搜索。</li>
+<li>三大趋势及C/D/E、A/B和字段抽屉；中文状态文案和低动态模式。</li>
+<li>安装候选、systemd服务、独立prefix及回退；保护原TTO和CPU专项环境。</li>
+<li>针对真实风险的测试、浏览器核查和交付。</li>
+</ol>
+<p>不必先交一份新方案再等批准；本次即授权上述实现和本地测试。需要新增无法从已有数据/配置定义的控制策略，才是超出当前任务，不能顺手补成“AI建议”。</p>
+<h2>5. 常驻服务与不影响实验</h2>
+<p>Web service长期运行是本次新功能，旧研究里“不建常驻服务”不再用来拒绝Web部署候选。<strong>但常驻UI不等于授权常驻推理或重新接管设备。</strong></p>
+<p>follow只读已有注册活动流；observe是明确安装配置后的单一只读观察者，不构造Requester、不查询推理模型列表、不触发CPU SSH旁录。以实际共享锁/拥有权验证单实例，多开网页不多采集。Web退出不停止外部试验；只停止自己创建的observe进程。</p>
+<p>源未配置/被其他入口占用时，59009页面仍启动并明确状态，不能静默换成假数据或另扫网段。包装有限数据缓存/日志转动，不沿用高体积实验日志无限写盘。</p>
+<p>安装器实际包含自动启用服务的代码，并提供清楚的本机/LAN选择；没有现场安装授权时只在容器/临时prefix/临时unit验证。不能交一个永远raise“只允许预览”的正式serve入口。</p>
+<h2>6. 保留安全与真实含义</h2>
+<p>业务API无设备/风扇/训练/负载写操作；仅登录会话可POST/DELETE。不得返回secret、header、完整binding、任务prompt/回复或私有路径。LAN必须显式配置访问保护，不能默认匿名对外；不自动更改系统防火墙。</p>
+<p>异常、断连、失效、到期、身份切换均真实显示；不把只读建议接到天山OS写API，不对研究模型的deployed/permission字段作偷偷放权。图形动效和绘图插值不能伪造新测量。</p>
+<h2>7. 测试与交回</h2>
+<p>按05清单执行实际链测试：真实producer代码生成本地fixture→一次quality/observer→adapter→HTTP/SSE→浏览器，不用两边各造一套互不兼容JSON就说联调通过。</p>
+<p>资源目标是待测试的预算，不是现成成绩。尽量做已有记录加速回放与自建端点；可以在浏览器测页面，可用合成或脱敏历史数据，必须显示“非实时设备”。不连接N305/Thor/ESP32、不发真实推理、不安装服务到现场、不刷机、不调PWM/功耗/采样/TTL、不重启上游、不重训。</p>
+<p>允许本地提交/patch以保存工作；本轮不推送、不创建PR、不合并main、不修改其他对话的Issue/Projects。主审完成后由用户另行决定发布和部署。</p>
+<p>最终交回：</p>
+<ul>
+<li>《TTO-WebUI-v1-实施与验证报告.md》：首屏写哪些已真实实现、哪些有数据/依赖限制、哪些现场未验。</li>
+<li>《TTO-WebUI-v1-证据与安装候选.zip》：源码/patch、构建后前端、wheel/依赖身份、服务/安装回退、实际DTO/schema、测试/截图/源代码基线。</li>
+<li>《TTO-WebUI-v1-一页安装与监看操作卡.md》：真实可用命令、59009访问方式、follow/observe选择、等待/冲突解释、停止/回退；不是本轮现场执行许可。</li>
+</ul>
+<p>报告必须单列：真实RPM能力、预测provider实际发布情况、建议PWM来源及是否产生可信范围内的数字、结构传感器已排除、C/D/E验收情况、源请求次数未随浏览器增长。没有执行的测试如实标注。完成后停止交回复审。</p>
+</section></main><footer>本页仅为可离线阅读的产品需求文档，不连接设备、不运行模型、不展示实时数据。完整机器可读样例与来源摘要在ZIP中。</footer></body></html>

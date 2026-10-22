@@ -1,0 +1,157 @@
+--- a/src/tto_web/source.py
++++ b/src/tto_web/source.py
+@@ -11,7 +11,7 @@
+ from pathlib import Path
+ from tto.collector import collect
+ from tto.storage import InstanceLock, source_identity
+-from tto.config import public_config, load_config
++from tto.config import public_config, load_config, headers, require_live
+ from tto.util import digest
+ from .adapter import Adapter
+ from .display import DisplayPublisher
+@@ -109,9 +109,23 @@
+ 
+ 
+ async def observe(config, state, stop, publication=None):
+-    native=load_config(config['source']['observation_config'],environ={})
++    try:
++        native=load_config(config['source']['observation_config'],environ={})
++        require_live(native,native['run']['max_duration_s'])
++    except (ValueError,OSError):
++        state.disconnect('观察配置无效；修正本地配置后重新启动观察')
++        return
+     delay=OBSERVE_RETRY_INITIAL_S
+     while not stop.is_set():
++        # Native connect retries classify transport failures broadly. Validate
++        # local credential files before each round so malformed/private-file
++        # errors cannot be mistaken for another recoverable network budget.
++        try:
++            for section in ('orin','tianshan'):
++                headers(native,section)
++        except (ValueError,OSError):
++            state.disconnect('观察凭据配置无效；修正本地文件后重新启动观察')
++            return
+         journal=None;adapter=None
+         queue=deque(maxlen=8);lock=threading.Lock()
+         def factory(*args,**kwargs):
+--- a/frontend/src/main.ts
++++ b/frontend/src/main.ts
+@@ -30,6 +30,7 @@
+ let current:Snapshot|null=null, latest:Snapshot|null=null, connected=false,paused=false,range=Number(localStorage.getItem('tto-range')||10),horizon=45,received=performance.now(),tz='Asia/Shanghai',originUtc=0,busy=false,lastRun='',events:any[]=[],seriesData:Series[]=[],extra=localStorage.getItem('tto-extra')==='true';
+ let latestReceived=received,lastContext:any=null;
+ let seriesGroup='',lastSeriesFetch:number|null=null,seriesCache=new Map<string,Series>();
++let comparisonGeneration=0,predictionRequest=0;
+ let predictionGroup='',lastPredictionFetch:number|null=null,predictionCache=new Map<string,Prediction>(),predictionLabels:Record<string,any>={};
+ const motion=localStorage.getItem('tto-motion')==='true'||matchMedia('(prefers-reduced-motion: reduce)').matches;
+ $('motion').toggleAttribute('checked',motion);$('extra').toggleAttribute('checked',extra);($('range') as HTMLSelectElement).value=String(range);
+@@ -103,13 +104,20 @@
+  text('advice',current.advisory.value_percent==null?'暂无可用建议映射':fmt(current.advisory.value_percent)+'% · 观察参考');text('adviceReason',current.advisory.reason+'；天山OS继续负责保护。');
+ }
+ 
++function comparisonKey(){return current?[current.service_epoch,current.run_id,current.source_epoch,current.model.model_id,current.model.spec_id,horizon,range].join(':'):'';}
++function invalidateComparison(){
++ comparisonGeneration++;predictionRequest++;predictionGroup=comparisonKey();
++ predictionCache.clear();predictionLabels={};lastPredictionFetch=null;
++ charts[3].clear();clean($('score'));text('latestMatch','等待当前过程的成熟预测配对');
++}
+ async function renderComparison(){
+- if(!current)return;
+- const end=current.run_elapsed_ms||0,from=Math.max(0,end-range*60000),run=current.run_id;
+- const group=[current.service_epoch,current.run_id,current.source_epoch,current.model.model_id,horizon,range].join(':');
+- if(group!==predictionGroup){predictionCache.clear();predictionLabels={};lastPredictionFetch=null;predictionGroup=group;}
++ if(!current||paused)return;
++ const end=current.run_elapsed_ms||0,from=Math.max(0,end-range*60000),group=comparisonKey();
++ if(group!==predictionGroup)invalidateComparison();
++ const generation=comparisonGeneration,request=++predictionRequest;
+  const delta=lastPredictionFetch===null?'':`&records_after=${lastPredictionFetch}`;
+- const data=await api(`predictions?horizon_s=${horizon}&from=${from}&to=${end}${delta}`);if(run!==current?.run_id||paused||predictionGroup!==group)return;
++ const data=await api(`predictions?horizon_s=${horizon}&from=${from}&to=${end}${delta}`);
++ if(paused||generation!==comparisonGeneration||request!==predictionRequest||group!==comparisonKey())return;
+  for(const p of data.records as Prediction[])predictionCache.set(p.prediction_id,p);
+  Object.assign(predictionLabels,data.labels||{});
+  for(const [id,p] of predictionCache)if(p.origin_elapsed_ms<from){predictionCache.delete(id);delete predictionLabels[id];}
+@@ -165,11 +173,11 @@
+ 
+ async function refreshData(){
+  if(!current||paused||busy)return;busy=true;
+- try{const end=current.run_elapsed_ms||0,from=Math.max(0,end-range*60000);let ids=current.metrics.filter(m=>m.id.startsWith('temperature.')||m.id.startsWith('power.')&&!m.id.endsWith('.average')||m.id.startsWith('fan.pwm.')||m.id==='fan.rpm').map(m=>m.id).slice(0,32);const run=current.run_id;
++ try{const end=current.run_elapsed_ms||0,from=Math.max(0,end-range*60000);let ids=current.metrics.filter(m=>m.id.startsWith('temperature.')||m.id.startsWith('power.')&&!m.id.endsWith('.average')||m.id.startsWith('fan.pwm.')||m.id==='fan.rpm').map(m=>m.id).slice(0,32);const source=[current.service_epoch,current.run_id,current.source_epoch].join(':');
+  const group=[current.service_epoch,current.run_id,current.source_epoch,range,ids.join(',')].join(':');
+  if(group!==seriesGroup){seriesCache.clear();lastSeriesFetch=null;seriesGroup=group;}
+  const deltaFrom=Math.max(from,lastSeriesFetch??from);
+- const [s,e]=await Promise.all([api(`series?ids=${encodeURIComponent(ids.join(','))}&from=${deltaFrom}&to=${end}&max_points=2000`),api('events?limit=1000')]);if(run!==current?.run_id||paused||seriesGroup!==group)return;
++ const [s,e]=await Promise.all([api(`series?ids=${encodeURIComponent(ids.join(','))}&from=${deltaFrom}&to=${end}&max_points=2000`),api('events?limit=1000')]);if(source!==[current?.service_epoch,current?.run_id,current?.source_epoch].join(':')||paused||seriesGroup!==group)return;
+  for(const incoming of s.series as Series[]){const prior=seriesCache.get(incoming.id);const points=new Map<string,any>();for(const p of [...(prior?.points||[]),...incoming.points])if(p.t>=from)points.set([p.t,p.sample_id,p.status].join(':'),p);seriesCache.set(incoming.id,{...incoming,sampling:prior?.sampling==='bucket_first_last_min_max_and_gaps'?prior.sampling:incoming.sampling,points:[...points.values()].sort((a,b)=>a.t-b.t).slice(-18002)});}
+  lastSeriesFetch=end;seriesData=[...seriesCache.values()];events=e.events.filter((v:any)=>v.service_epoch===current?.service_epoch&&(v.run_id===null||v.run_id===current?.run_id&&v.source_epoch===current?.source_epoch));renderCharts();renderEvents();await Promise.all([renderComparison(),renderContext()]);
+  }catch{/* HTTP/API failure never creates measurements. SSE owns connection state. */}finally{busy=false;}
+@@ -209,7 +217,8 @@
+ function accept(s:Snapshot,at=performance.now()){
+  latest=s;latestReceived=at;if(paused)return;received=at;current=structuredClone(s);
+  const run=[s.service_epoch,s.run_id,s.source_epoch].join(':');if(lastRun!==run){charts.forEach(c=>c.dispatchAction({type:'dataZoom',start:0,end:100}));seriesData=[];events=[];lastContext=null;clean($('contextRows'));$('eventSelection').hidden=true;renderEventTimeline();renderEvents();lastRun=run;originUtc=Date.parse(s.server_time_utc)-(s.run_elapsed_ms||0);}
+- expireCurrent(!connected);renderCurrent();void refreshData();
++ const comparisonChanged=predictionGroup!==comparisonKey();if(comparisonChanged)invalidateComparison();
++ expireCurrent(!connected);renderCurrent();if(comparisonChanged)void renderComparison().catch(()=>{});void refreshData();
+ }
+ function connect(){const stream=new EventSource('/api/v1/stream');['snapshot','quality','resync','run_changed'].forEach(name=>stream.addEventListener(name,e=>{connected=true;accept(JSON.parse((e as MessageEvent).data));}));stream.addEventListener('heartbeat',()=>{connected=true;renderHeader();});stream.onerror=()=>{connected=false;if(!paused){expireCurrent(true);renderCurrent();}else renderHeader();};}
+ $('pause').onclick=()=>{paused=!paused;text('pause',paused?'恢复实时':'暂停画面');document.body.classList.toggle('paused',paused);if(!paused&&latest)accept(latest,latestReceived);renderHeader();renderModel();};
+--- a/src/tto_web/__init__.py
++++ b/src/tto_web/__init__.py
+@@ -1,2 +1,2 @@
+ """TTO read-only Web candidate. No controller or workload API."""
+-__version__ = '1.0.0rc2'
++__version__ = '1.0.0rc3'
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -3,7 +3,7 @@
+ build-backend = "setuptools.build_meta"
+ [project]
+ name = "tto-web-ui"
+-version = "1.0.0rc2"
++version = "1.0.0rc3"
+ requires-python = ">=3.10"
+ dependencies = ["aiohttp==3.11.18", "python-socketio==5.13.0", "psutil==7.0.0", "numpy==2.2.6", "scipy>=1.14.1,<1.16"]
+ [project.scripts]
+--- a/tools/install.py
++++ b/tools/install.py
+@@ -85,7 +85,7 @@
+     if args.service=='system' and os.getuid()==0:p.error('run as the same non-root user as existing TTO; sudo is used only for the service unit')
+     if args.service=='system' and sys.platform!='linux':p.error('system service requires Linux; use --service none for local tests')
+     prefix.mkdir(parents=True,exist_ok=True,mode=0o700)
+-    release=prefix/'releases'/('1.0.0rc2-'+uuid.uuid4().hex[:8]);release.mkdir(parents=True,mode=0o700)
++    release=prefix/'releases'/('1.0.0rc3-'+uuid.uuid4().hex[:8]);release.mkdir(parents=True,mode=0o700)
+     # Every candidate file is hashed; verify before installing. No base-environment mutation.
+     identities=json.loads((ROOT/'candidate-identities.json').read_text())
+     for name,digest in identities.items():
+--- a/tools/build_candidate.py
++++ b/tools/build_candidate.py
+@@ -19,7 +19,7 @@
+             if p.is_file() and '__pycache__' not in p.parts and p.suffix in ('.py','.json','.js','.css','.html') and p.name!='web-candidate-files.json':
+                 packages[str(p.relative_to(base))]=sha(p)
+     model=ROOT/'vendor/tto_field/research/models/primary.json'
+-    identity=dict(version='1.0.0rc2',baseline='0.2.4+closeout.2; historical identity retained separately',frozen_model_sha256=sha(model),files=packages)
++    identity=dict(version='1.0.0rc3',baseline='0.2.4+closeout.2; historical identity retained separately',frozen_model_sha256=sha(model),files=packages)
+     (ROOT/'src/tto_web/web-candidate-files.json').write_text(json.dumps(identity,indent=2)+'\n')
+     # Setuptools otherwise retains assets from earlier local frontend builds.
+     if (ROOT/'build').exists():shutil.rmtree(ROOT/'build')
+--- a/frontend/package.json
++++ b/frontend/package.json
+@@ -1 +1 @@
+-{"name":"tto-web-ui","version":"1.0.0-rc.2","private":true,"type":"module","scripts":{"build":"tsc --noEmit && vite build"},"dependencies":{"echarts":"5.6.0"},"devDependencies":{"vite":"6.1.0","typescript":"5.7.3"}}
++{"name":"tto-web-ui","version":"1.0.0-rc.3","private":true,"type":"module","scripts":{"build":"tsc --noEmit && vite build"},"dependencies":{"echarts":"5.6.0"},"devDependencies":{"vite":"6.1.0","typescript":"5.7.3"}}
+--- a/frontend/package-lock.json
++++ b/frontend/package-lock.json
+@@ -1,12 +1,12 @@
+ {
+   "name": "tto-web-ui",
+-  "version": "1.0.0-rc.2",
++  "version": "1.0.0-rc.3",
+   "lockfileVersion": 3,
+   "requires": true,
+   "packages": {
+     "": {
+       "name": "tto-web-ui",
+-      "version": "1.0.0-rc.2",
++      "version": "1.0.0-rc.3",
+       "dependencies": {
+         "echarts": "5.6.0"
+       },

@@ -1,0 +1,32 @@
+.......................F..                                               [100%]
+=================================== FAILURES ===================================
+________________ test_installed_selection_loads_sealed_runtime _________________
+
+    def test_installed_selection_loads_sealed_runtime():
+        import os,tto_web
+        from tto_web.identity import verify
+>       manifest=verify();assert manifest['version']==tto_web.__version__
+
+tests/test_model_history.py:232: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify():
+        root=Path(__file__).resolve().parent
+        manifest=json.loads((root/'web-candidate-files.json').read_text())
+        for name,expected in manifest['files'].items():
+            actual=hashlib.sha256((root.parent/name).read_bytes()).hexdigest()
+>           if actual!=expected:raise ValueError('Web candidate source identity mismatch')
+E           ValueError: Web candidate source identity mismatch
+
+src/tto_web/identity.py:12: ValueError
+=============================== warnings summary ===============================
+tests/test_model_history.py::test_actual_publication_follow_http_contract_and_silent_expiry
+tests/test_model_history.py::test_waiting_series_schema_and_unknown_fields_rejected
+  /Users/massif/Tianshan-thermal-observer/work/webui-v1/src/tto_web/server.py:76: NotAppKeyWarning: It is recommended to use web.AppKey instances for keys.
+  https://docs.aiohttp.org/en/stable/web_advanced.html#application-s-config
+    app['state']=state;app['sse_clients']=sse_clients;app['stop']=stop
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_model_history.py::test_installed_selection_loads_sealed_runtime
+1 failed, 25 passed, 2 warnings in 3.82s
