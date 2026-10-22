@@ -1,16 +1,16 @@
 # Tianshan Thermal Observer · 天山热观察器
 
-软件可用，预测效果待真实数据验证。TTO 在 CPU 上记录现有系统的温度、负载、功耗和成功 PWM，提供未来 15/45/90 秒 TJ 参考及事后评估。没有风扇、温度绑定、源频率、服务或设备写操作；退出只停止观察。
+软件可用，已有L/S/M同机真实开发资料与灰箱对照，适用边界见研究索引；尚无跨硬件或实际控制收益结论。TTO 在 CPU 上记录现有系统的温度、负载、功耗和成功 PWM，提供未来 15/45/90 秒 TJ 参考及事后评估。没有风扇、温度绑定、源频率、服务或设备写操作；退出只停止观察。
 
-目标环境：Intel N305 / 16GB / Ubuntu 22.04，出厂已预装Conda；TTO使用独立Conda环境中的Python 3.10。当前交付的主机验证为 macOS ARM64，目标机资源及真实连接尚待验证。只有一个风扇，预测目标是 Jetson TJ。
+目标环境：Intel N305 / 16GB / Ubuntu 22.04，出厂已预装Conda；TTO使用独立Conda环境中的Python 3.10。历史0.2.2主机离线验证与后续0.2.4同机Thor实测分别登记，不能将公开main、现场候选与本地研究视作同一身份。只有一个风扇，预测目标是 Jetson TJ；目标主机资源和其他来源字段按各轮证据单列。
 
 **测试者从这里开始：** [中文使用说明](docs/TTO测试者使用说明.md) · [第一次测试操作卡](docs/TTO第一次测试操作卡.md) · [测试记录模板](docs/TTO测试记录模板.md)。
 
 ## 项目路线图与技术决策
 
-[主路线图 Issue](https://github.com/massif-01/Tianshan-thermal-observer/issues/1) · [热建模、持续校准与跨 Jetson 适应路线图](docs/roadmap/TTO-roadmap.md)
+[产品 Roadmap：阶段、状态与验收](docs/roadmap/PRODUCT-ROADMAP.md) · [总路线 Issue #1](https://github.com/massif-01/Tianshan-thermal-observer/issues/1) · [技术路线与决策备忘](docs/roadmap/TTO-roadmap.md)
 
-当前先使用 v1 取得可信真实数据；Ridge 保留为参照，低阶灰箱为下一阶段重点，在线学习与跨硬件适应按证据推进。具体状态与决策记录见上述入口。
+当前已完成同机G1/G2辨识及快慢状态对照，Ridge与简单滤波继续保留；状态估计不等于参数在线学习，后者及跨硬件适应仍待验证。[研究状态与证据索引](docs/research/TTO-research-status-20261014.md)区分已交研究、当前本地测温记录工具与未完成能力。外部局部表面测温是条件性研发支线，不是软件/建模的全局前置；没有型号或新读数仍可完成软件，物理对应保持未验证。
 
 ## 安装与离线检查
 
@@ -99,3 +99,13 @@ R3b旁路报告区分历史保存评分与当前有效成绩，应用生产质�
 - Conda 安装包 SHA-256：`f555287011e00ab41f960ae2c5ac79e59f4857ce35abf378cea326171d5d90d1`。
 
 封包时源码与干净非editable安装各189项回归通过，Conda安装器10项通过；验证环境为macOS ARM64 / Python 3.10，协议测试仅使用loopback。N305/Linux现场安装、真实连接及预测效果未验证。仓库说明更新不改变上述已验证安装包与证据包的SHA。
+
+## 实机采集报告
+
+见[实机采集报告目录](docs/reports/README.md)：包含工况分析、温度/功耗/GPU/PWM时间线和原始数据与操作记录。
+
+ADD1主参照已确定为YET-610L/K型探头固定表面接触连续CSV，人工/红外为备用；通用软件已离线验证，真实CSV映射待1～2分钟样例，现场测温未执行。已购买不等于物理对应已验证。
+
+## 代码、实验数据与交付归档
+
+三个会话的实验代码、原始数据、模型、失败记录、报告和交付物已按原路径归档；详见[成果与身份索引](docs/repository-results-index.md)。归档不代表所有实验候选均已通过，也不改变设备运行环境或默认后端。同步前原件哈希清单位于 `evidence/repository-sync-20261022/`。
