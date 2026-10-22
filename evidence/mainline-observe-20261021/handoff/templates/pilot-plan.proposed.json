@@ -1,0 +1,65 @@
+{
+  "schema": "TTO-MAINLINE-PILOT-PLAN-v1",
+  "status": "proposal_not_authorized",
+  "current_action": "offline_implementation_and_packaging",
+  "roles": {
+    "model": "灰箱辨识与对照实验",
+    "integration": "实际安装与测试",
+    "workload_events": "模型推理监控"
+  },
+  "paused": [
+    "cpu_200ms_lead_sidecar",
+    "cpu_capability_60s_loop",
+    "cpu_12_request_pilot",
+    "cpu_activity_high_power_mapping"
+  ],
+  "default_mode": "observe_only",
+  "proposed_max_devices": 3,
+  "devices": [],
+  "first_device_checkpoint_seconds": 7200,
+  "max_observe_seconds_per_device": 86400,
+  "checkpoint_is_within_same_window": true,
+  "require_separate_permission_every_step": false,
+  "reference_machine_required_before_fleet": true,
+  "same_hardware_priority": true,
+  "different_hardware_grouped": true,
+  "requirements": {
+    "new_reviewed_observer_release": true,
+    "explicit_device_list_and_window": true,
+    "CPU_lead_success": false,
+    "YET": false,
+    "jtop_video": false,
+    "web_ui_complete": false,
+    "calibration_generator_complete": false,
+    "model_tracking_before_raw_recording": false
+  },
+  "permissions": {
+    "connect_devices_now": false,
+    "deploy_now": false,
+    "inference_now": false,
+    "fan_writes": false,
+    "change_TTL": false,
+    "change_source_sampling": false,
+    "push_or_PR": false
+  },
+  "future_permissions": {
+    "observe_scoped_after_user_approval": true,
+    "active_workload_separately_approved": true,
+    "fan_control_separately_approved": true
+  },
+  "stop_and_preserve": [
+    "user_stop",
+    "approved_duration_reached",
+    "own_process_resource_limit",
+    "storage_no_safe_capacity",
+    "unrecoverable_raw_write_failure",
+    "identity_cross_device_mix"
+  ],
+  "continue_recording_but_degrade": [
+    "fan_raw_TTL_expired",
+    "model_temporarily_unavailable",
+    "nonessential_event_source_absent"
+  ],
+  "online_model_auto_replace": false,
+  "automatic_retry_for_green_receipt": false
+}

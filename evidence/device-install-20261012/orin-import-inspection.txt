@@ -1,0 +1,22 @@
+ENV .venvs/tegrastats-api
+{
+  "python": "/home/rm01/.venvs/tegrastats-api/bin/python",
+  "version": "1.0.1",
+  "module": "/home/rm01/.venvs/tegrastats-api/lib/python3.12/site-packages/tegrastats_api/__init__.py",
+  "server": "/home/rm01/.venvs/tegrastats-api/lib/python3.12/site-packages/tegrastats_api/server.py",
+  "parser": "/home/rm01/.venvs/tegrastats-api/lib/python3.12/site-packages/tegrastats_api/parser.py",
+  "has_telemetry_meta": false,
+  "has_sample_seq": false
+}
+ 
+ENV miniconda3/envs/tegrastats-api
+Traceback (most recent call last):
+  File "<stdin>", line 10, in <module>
+  File "/usr/lib/python3.12/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/usr/lib/python3.12/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/home/rm01/miniconda3/envs/tegrastats-api/bin/python'

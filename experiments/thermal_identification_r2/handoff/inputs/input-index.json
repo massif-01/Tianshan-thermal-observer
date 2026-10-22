@@ -1,0 +1,61 @@
+{
+  "execution_id": "TTO-ID-R2-v1.0",
+  "archives": [
+    {
+      "path": "inputs/L-seven-conditions-original.zip",
+      "original_attachment_name": "TTO-第二轮七工况数据与分析-20261013-929742d7.zip",
+      "bytes": 4584649,
+      "sha256": "0acc23fb82f6b7a4d9c898c903c69a491d38e740790309b19bb32048420a5a88",
+      "purpose": "L：七工况完整原始分享归档",
+      "zip_members": 43,
+      "zip_crc_checked_on_packaging": true
+    },
+    {
+      "path": "inputs/S-shortqa-original-complete.zip",
+      "original_attachment_name": "TTO-短问答实测证据包-20261013-d2a7593a(1).zip",
+      "bytes": 2390128,
+      "sha256": "a560d8c03331ebb0d32f6ebefaf406efa6b951a35fddb62811aec355050bae6f",
+      "purpose": "S：完整短问答分享归档，已含此前补交60项",
+      "zip_members": 100,
+      "zip_crc_checked_on_packaging": true
+    },
+    {
+      "path": "inputs/previous-exploration-evidence.zip",
+      "original_attachment_name": "TTO-短问答后续核对证据包.zip",
+      "bytes": 1959868,
+      "sha256": "4daaa7b6c27fa47bb2f687e2d3a9e26601fbe885111267334cc6dc0c7e08680b",
+      "purpose": "旧派生序列、固定0.2.2源码、历史Ridge与证据",
+      "zip_members": 121,
+      "zip_crc_checked_on_packaging": true
+    },
+    {
+      "path": "inputs/greybox-v1-evidence.zip",
+      "original_attachment_name": "TTO-首轮灰箱实际辨识与对照实验证据包.zip",
+      "bytes": 9389124,
+      "sha256": "d2039aafbc778a35ad223a7f6f9cac378e570a1ed67f8e9cf4962da8385ef546",
+      "purpose": "已接受的首轮研究代码、冻结模型、全部拟合与原评价",
+      "zip_members": 223,
+      "zip_crc_checked_on_packaging": true
+    },
+    {
+      "path": "inputs/M-midload-original.zip",
+      "original_attachment_name": "TTO-0.2.4中等负载-完整实测证据.zip",
+      "bytes": 1227635,
+      "sha256": "afdacbd4495cbbeb6cd00179a582d44bcd650779737df7b6dc6bd29db06096fb",
+      "purpose": "M：完整实测归档，含内层trial-result.zip及任务准入覆盖记录",
+      "zip_members": 43,
+      "zip_crc_checked_on_packaging": true
+    },
+    {
+      "path": "inputs/M-independent-review.zip",
+      "original_attachment_name": "TTO-0.2.4中等负载实测-独立复核证据.zip",
+      "bytes": 252931,
+      "sha256": "c7a1853bd8836cbe426454f9106223e287468dbe556df85b8ddb7d45930d206c",
+      "purpose": "M独立核对脚本、结果及与实测记录对应的0.2.4处理源码",
+      "zip_members": 38,
+      "zip_crc_checked_on_packaging": true
+    }
+  ],
+  "root_rule": "All paths are relative to the handoff root.",
+  "status": "source_materials_only_not_new_experiment_results"
+}

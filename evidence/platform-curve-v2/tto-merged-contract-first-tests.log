@@ -1,0 +1,61 @@
+.......F........................................................FF.      [100%]
+=================================== FAILURES ===================================
+____________ test_new_gpu_never_falls_back[error-gpu_source_error] _____________
+
+config = {'features': {'fan_max_age_s': 2.5, 'history_s': 180, 'max_feature_columns': 64, 'missing_optional_policy': 'fallback_...ct_timeout_s': 5.0, 'follow_redirects': False, 'max_business_payload_bytes': 65536, 'max_inflight_esp32': 1, ...}, ...}
+mutation = 'error', reason = 'gpu_source_error'
+
+    @pytest.mark.parametrize('mutation,reason', [
+        ('missing_schema','gpu_contract_missing_or_invalid'), ('schema','gpu_contract_missing_or_invalid'),
+        ('missing_age','gpu_contract_missing_or_invalid'), ('error','gpu_source_error'),
+        ('nan','gpu_value_invalid'), ('same_source','gpu_same_source_value_conflict')])
+    def test_new_gpu_never_falls_back(config, mutation, reason):
+        p = new_packet(1, 'jetson_orin'); g = p['gpu']
+        if mutation == 'missing_schema': g.pop('schema_version')
+        elif mutation == 'schema': g['schema_version'] = 99
+        elif mutation == 'missing_age': g.pop('age_at_telemetry_receive_ms')
+        elif mutation == 'error': g.update(status='error', utilization_pct=None, age_at_telemetry_receive_ms=None)
+        elif mutation == 'nan': g['utilization_pct'] = float('nan')
+        else: g['utilization_pct'] = 1
+        d = uniform_gpu(p, 'jetson_orin', 0)
+>       assert d['value'] is None and d['reason'] == reason
+E       AssertionError: assert (None is None and 'gpu_state_fi..._inconsistent' == 'gpu_source_error'
+E         
+E         - gpu_source_error
+E         + gpu_state_fields_inconsistent)
+
+tests/test_platform_curve.py:82: AssertionError
+____________ test_monitor_production_fixture_consumed_by_tto[orin] _____________
+
+config = {'features': {'fan_max_age_s': 2.5, 'history_s': 180, 'max_feature_columns': 64, 'missing_optional_policy': 'fallback_...ct_timeout_s': 5.0, 'follow_redirects': False, 'max_business_payload_bytes': 65536, 'max_inflight_esp32': 1, ...}, ...}
+family = 'orin'
+
+    @pytest.mark.parametrize('family', ['orin','thor'])
+    def test_monitor_production_fixture_consumed_by_tto(config,family):
+        payload=read_json(Path(__file__).parent/'fixtures/platform-v2'/f'{family}-contract.json')
+        q=PlatformQuality(config);r=row(1,0);r['payload']=payload
+        out=q.accept(r)
+>       assert out['accepted'] and out['input_contract']['family']=='jetson_'+family
+E       TypeError: 'NoneType' object is not subscriptable
+
+tests/test_platform_curve.py:318: TypeError
+____________ test_monitor_production_fixture_consumed_by_tto[thor] _____________
+
+config = {'features': {'fan_max_age_s': 2.5, 'history_s': 180, 'max_feature_columns': 64, 'missing_optional_policy': 'fallback_...ct_timeout_s': 5.0, 'follow_redirects': False, 'max_business_payload_bytes': 65536, 'max_inflight_esp32': 1, ...}, ...}
+family = 'thor'
+
+    @pytest.mark.parametrize('family', ['orin','thor'])
+    def test_monitor_production_fixture_consumed_by_tto(config,family):
+        payload=read_json(Path(__file__).parent/'fixtures/platform-v2'/f'{family}-contract.json')
+        q=PlatformQuality(config);r=row(1,0);r['payload']=payload
+        out=q.accept(r)
+>       assert out['accepted'] and out['input_contract']['family']=='jetson_'+family
+E       TypeError: 'NoneType' object is not subscriptable
+
+tests/test_platform_curve.py:318: TypeError
+- generated xml file: /Users/massif/Tianshan-thermal-observer/evidence/platform-curve-v2/tto-merged-contract-first-junit.xml -
+=========================== short test summary info ============================
+FAILED tests/test_platform_curve.py::test_new_gpu_never_falls_back[error-gpu_source_error]
+FAILED tests/test_platform_curve.py::test_monitor_production_fixture_consumed_by_tto[orin]
+FAILED tests/test_platform_curve.py::test_monitor_production_fixture_consumed_by_tto[thor]
+3 failed, 64 passed in 12.90s

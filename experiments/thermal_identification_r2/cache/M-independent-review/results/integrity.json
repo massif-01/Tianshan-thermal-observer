@@ -1,0 +1,604 @@
+{
+  "outer": {
+    "files": 42,
+    "all_match": true,
+    "checks": [
+      {
+        "file": "archive-verification.json",
+        "sha_matches": true,
+        "bytes": 305,
+        "size_matches": true
+      },
+      {
+        "file": "configuration/site-local-midload.json",
+        "sha_matches": true,
+        "bytes": 531,
+        "size_matches": true
+      },
+      {
+        "file": "configuration/tto-local.json",
+        "sha_matches": true,
+        "bytes": 2762,
+        "size_matches": true
+      },
+      {
+        "file": "copy-hashes.json",
+        "sha_matches": true,
+        "bytes": 750,
+        "size_matches": true
+      },
+      {
+        "file": "dry-run.json",
+        "sha_matches": true,
+        "bytes": 4090,
+        "size_matches": true
+      },
+      {
+        "file": "execution-copy/thermal_trials/README.md",
+        "sha_matches": true,
+        "bytes": 1735,
+        "size_matches": true
+      },
+      {
+        "file": "execution-copy/thermal_trials/ambient.example.json",
+        "sha_matches": true,
+        "bytes": 344,
+        "size_matches": true
+      },
+      {
+        "file": "execution-copy/thermal_trials/health.py",
+        "sha_matches": true,
+        "bytes": 9078,
+        "size_matches": true
+      },
+      {
+        "file": "execution-copy/thermal_trials/health_native.py",
+        "sha_matches": true,
+        "bytes": 7477,
+        "size_matches": true
+      },
+      {
+        "file": "execution-copy/thermal_trials/plan.example.json",
+        "sha_matches": true,
+        "bytes": 509,
+        "size_matches": true
+      },
+      {
+        "file": "execution-copy/thermal_trials/requester.py",
+        "sha_matches": true,
+        "bytes": 7642,
+        "size_matches": true
+      },
+      {
+        "file": "execution-copy/thermal_trials/requests.example.json",
+        "sha_matches": true,
+        "bytes": 363,
+        "size_matches": true
+      },
+      {
+        "file": "execution-copy/thermal_trials/run_midload.py",
+        "sha_matches": true,
+        "bytes": 10880,
+        "size_matches": true
+      },
+      {
+        "file": "execution-copy/thermal_trials/trial.py",
+        "sha_matches": true,
+        "bytes": 5491,
+        "size_matches": true
+      },
+      {
+        "file": "execution-copy/tto-midload",
+        "sha_matches": true,
+        "bytes": 303,
+        "size_matches": true
+      },
+      {
+        "file": "execution-facts.json",
+        "sha_matches": true,
+        "bytes": 5640,
+        "size_matches": true
+      },
+      {
+        "file": "independent-archive-verification.json",
+        "sha_matches": true,
+        "bytes": 45064,
+        "size_matches": true
+      },
+      {
+        "file": "latest-status.json",
+        "sha_matches": true,
+        "bytes": 31441,
+        "size_matches": true
+      },
+      {
+        "file": "launch.json",
+        "sha_matches": true,
+        "bytes": 1404,
+        "size_matches": true
+      },
+      {
+        "file": "marker-window.json",
+        "sha_matches": true,
+        "bytes": 773,
+        "size_matches": true
+      },
+      {
+        "file": "offline-checks.json",
+        "sha_matches": true,
+        "bytes": 2535,
+        "size_matches": true
+      },
+      {
+        "file": "operator-final.json",
+        "sha_matches": true,
+        "bytes": 2598,
+        "size_matches": true
+      },
+      {
+        "file": "operator-progress.jsonl",
+        "sha_matches": true,
+        "bytes": 110263,
+        "size_matches": true
+      },
+      {
+        "file": "original/health.py",
+        "sha_matches": true,
+        "bytes": 7477,
+        "size_matches": true
+      },
+      {
+        "file": "original/requester.py",
+        "sha_matches": true,
+        "bytes": 7642,
+        "size_matches": true
+      },
+      {
+        "file": "original/run_midload.py",
+        "sha_matches": true,
+        "bytes": 10396,
+        "size_matches": true
+      },
+      {
+        "file": "original/trial.py",
+        "sha_matches": true,
+        "bytes": 5491,
+        "size_matches": true
+      },
+      {
+        "file": "original/tto-midload",
+        "sha_matches": true,
+        "bytes": 287,
+        "size_matches": true
+      },
+      {
+        "file": "original-integrity.json",
+        "sha_matches": true,
+        "bytes": 294,
+        "size_matches": true
+      },
+      {
+        "file": "override-policy.json",
+        "sha_matches": true,
+        "bytes": 1753,
+        "size_matches": true
+      },
+      {
+        "file": "override.diff",
+        "sha_matches": true,
+        "bytes": 9087,
+        "size_matches": true
+      },
+      {
+        "file": "plan.json",
+        "sha_matches": true,
+        "bytes": 4090,
+        "size_matches": true
+      },
+      {
+        "file": "prestart-conflicts.json",
+        "sha_matches": true,
+        "bytes": 150,
+        "size_matches": true
+      },
+      {
+        "file": "previous-run-preserved.json",
+        "sha_matches": true,
+        "bytes": 333,
+        "size_matches": true
+      },
+      {
+        "file": "runner-events.jsonl",
+        "sha_matches": true,
+        "bytes": 143102,
+        "size_matches": true
+      },
+      {
+        "file": "runner-frozen-plan.json",
+        "sha_matches": true,
+        "bytes": 4123,
+        "size_matches": true
+      },
+      {
+        "file": "runner-identity.json",
+        "sha_matches": true,
+        "bytes": 6185,
+        "size_matches": true
+      },
+      {
+        "file": "runner-input-health.json",
+        "sha_matches": true,
+        "bytes": 7461,
+        "size_matches": true
+      },
+      {
+        "file": "runner-requests.jsonl",
+        "sha_matches": true,
+        "bytes": 17079,
+        "size_matches": true
+      },
+      {
+        "file": "runner-summary.json",
+        "sha_matches": true,
+        "bytes": 25606,
+        "size_matches": true
+      },
+      {
+        "file": "trial-result.zip",
+        "sha_matches": true,
+        "bytes": 1234664,
+        "size_matches": true
+      },
+      {
+        "file": "verify_trial_archive.py",
+        "sha_matches": true,
+        "bytes": 3834,
+        "size_matches": true
+      }
+    ]
+  },
+  "inner": {
+    "files": 32,
+    "all_match": true,
+    "checks": [
+      {
+        "file": "collection/run-2026-10-13T173747.320817_0000-637f114b/events.jsonl",
+        "sha_matches": true,
+        "bytes": 3141151,
+        "size_matches": true
+      },
+      {
+        "file": "collection/run-2026-10-13T173747.320817_0000-637f114b/files.json",
+        "sha_matches": true,
+        "bytes": 628,
+        "size_matches": true
+      },
+      {
+        "file": "collection/run-2026-10-13T173747.320817_0000-637f114b/input-profile.json",
+        "sha_matches": true,
+        "bytes": 1239,
+        "size_matches": true
+      },
+      {
+        "file": "collection/run-2026-10-13T173747.320817_0000-637f114b/manifest.json",
+        "sha_matches": true,
+        "bytes": 7020,
+        "size_matches": true
+      },
+      {
+        "file": "collection/run-2026-10-13T173747.320817_0000-637f114b/observations-0001.jsonl",
+        "sha_matches": true,
+        "bytes": 8047738,
+        "size_matches": true
+      },
+      {
+        "file": "collection/run-2026-10-13T173747.320817_0000-637f114b/predictions.jsonl",
+        "sha_matches": true,
+        "bytes": 12018445,
+        "size_matches": true
+      },
+      {
+        "file": "collection/run-2026-10-13T173747.320817_0000-637f114b/scores.jsonl",
+        "sha_matches": true,
+        "bytes": 496832,
+        "size_matches": true
+      },
+      {
+        "file": "collection/run-2026-10-13T173747.320817_0000-637f114b/summary.json",
+        "sha_matches": true,
+        "bytes": 184932,
+        "size_matches": true
+      },
+      {
+        "file": "events.jsonl",
+        "sha_matches": true,
+        "bytes": 143102,
+        "size_matches": true
+      },
+      {
+        "file": "frozen-plan.json",
+        "sha_matches": true,
+        "bytes": 4123,
+        "size_matches": true
+      },
+      {
+        "file": "identity.json",
+        "sha_matches": true,
+        "bytes": 6185,
+        "size_matches": true
+      },
+      {
+        "file": "input-health.json",
+        "sha_matches": true,
+        "bytes": 7461,
+        "size_matches": true
+      },
+      {
+        "file": "requests.jsonl",
+        "sha_matches": true,
+        "bytes": 17079,
+        "size_matches": true
+      },
+      {
+        "file": "responses/M180-007.response",
+        "sha_matches": true,
+        "bytes": 32994,
+        "size_matches": true
+      },
+      {
+        "file": "responses/M180-008.response",
+        "sha_matches": true,
+        "bytes": 28620,
+        "size_matches": true
+      },
+      {
+        "file": "responses/M180-009.response",
+        "sha_matches": true,
+        "bytes": 29505,
+        "size_matches": true
+      },
+      {
+        "file": "responses/M180-010.response",
+        "sha_matches": true,
+        "bytes": 28889,
+        "size_matches": true
+      },
+      {
+        "file": "responses/M180-011.response",
+        "sha_matches": true,
+        "bytes": 31228,
+        "size_matches": true
+      },
+      {
+        "file": "responses/M180-012.response",
+        "sha_matches": true,
+        "bytes": 26695,
+        "size_matches": true
+      },
+      {
+        "file": "responses/M180-013.response",
+        "sha_matches": true,
+        "bytes": 29079,
+        "size_matches": true
+      },
+      {
+        "file": "responses/M180-014.response",
+        "sha_matches": true,
+        "bytes": 31035,
+        "size_matches": true
+      },
+      {
+        "file": "responses/M180-015.response",
+        "sha_matches": true,
+        "bytes": 31713,
+        "size_matches": true
+      },
+      {
+        "file": "responses/M180-016.response",
+        "sha_matches": true,
+        "bytes": 30647,
+        "size_matches": true
+      },
+      {
+        "file": "responses/M180-017.response",
+        "sha_matches": true,
+        "bytes": 29356,
+        "size_matches": true
+      },
+      {
+        "file": "responses/M180-018.response",
+        "sha_matches": true,
+        "bytes": 27560,
+        "size_matches": true
+      },
+      {
+        "file": "responses/M20-001.response",
+        "sha_matches": true,
+        "bytes": 28220,
+        "size_matches": true
+      },
+      {
+        "file": "responses/M20-002.response",
+        "sha_matches": true,
+        "bytes": 30215,
+        "size_matches": true
+      },
+      {
+        "file": "responses/M60-003.response",
+        "sha_matches": true,
+        "bytes": 29762,
+        "size_matches": true
+      },
+      {
+        "file": "responses/M60-004.response",
+        "sha_matches": true,
+        "bytes": 29564,
+        "size_matches": true
+      },
+      {
+        "file": "responses/M60-005.response",
+        "sha_matches": true,
+        "bytes": 29261,
+        "size_matches": true
+      },
+      {
+        "file": "responses/M60-006.response",
+        "sha_matches": true,
+        "bytes": 29236,
+        "size_matches": true
+      },
+      {
+        "file": "summary.json",
+        "sha_matches": true,
+        "bytes": 25606,
+        "size_matches": true
+      }
+    ]
+  },
+  "run": {
+    "files": 7,
+    "all_match": true,
+    "checks": [
+      {
+        "file": "events.jsonl",
+        "sha_matches": true,
+        "bytes": 3141151,
+        "size_matches": true
+      },
+      {
+        "file": "input-profile.json",
+        "sha_matches": true,
+        "bytes": 1239,
+        "size_matches": true
+      },
+      {
+        "file": "manifest.json",
+        "sha_matches": true,
+        "bytes": 7020,
+        "size_matches": true
+      },
+      {
+        "file": "observations-0001.jsonl",
+        "sha_matches": true,
+        "bytes": 8047738,
+        "size_matches": true
+      },
+      {
+        "file": "predictions.jsonl",
+        "sha_matches": true,
+        "bytes": 12018445,
+        "size_matches": true
+      },
+      {
+        "file": "scores.jsonl",
+        "sha_matches": true,
+        "bytes": 496832,
+        "size_matches": true
+      },
+      {
+        "file": "summary.json",
+        "sha_matches": true,
+        "bytes": 184932,
+        "size_matches": true
+      }
+    ]
+  },
+  "standalone_summary_matches_nested": true,
+  "zip_sha256": "afdacbd4495cbbeb6cd00179a582d44bcd650779737df7b6dc6bd29db06096fb",
+  "trial_zip_sha256": "979d9a4f547d4d2b4506772248606f45c700ee2b44315575be5bf9fc42cd2a5d",
+  "source_modules_against_reviewed_024": {
+    "files": 22,
+    "all_match": true,
+    "checks": [
+      {
+        "file": "__init__.py",
+        "sha_matches": true
+      },
+      {
+        "file": "__main__.py",
+        "sha_matches": true
+      },
+      {
+        "file": "cli.py",
+        "sha_matches": true
+      },
+      {
+        "file": "collector.py",
+        "sha_matches": true
+      },
+      {
+        "file": "config.py",
+        "sha_matches": true
+      },
+      {
+        "file": "dataset.py",
+        "sha_matches": true
+      },
+      {
+        "file": "demo.py",
+        "sha_matches": true
+      },
+      {
+        "file": "deployment.py",
+        "sha_matches": true
+      },
+      {
+        "file": "diagnostics.py",
+        "sha_matches": true
+      },
+      {
+        "file": "engine.py",
+        "sha_matches": true
+      },
+      {
+        "file": "evaluation.py",
+        "sha_matches": true
+      },
+      {
+        "file": "features.py",
+        "sha_matches": true
+      },
+      {
+        "file": "model.py",
+        "sha_matches": true
+      },
+      {
+        "file": "platform_engine.py",
+        "sha_matches": true
+      },
+      {
+        "file": "platform_quality.py",
+        "sha_matches": true
+      },
+      {
+        "file": "profiles.py",
+        "sha_matches": true
+      },
+      {
+        "file": "quality.py",
+        "sha_matches": true
+      },
+      {
+        "file": "recorded.py",
+        "sha_matches": true
+      },
+      {
+        "file": "report.py",
+        "sha_matches": true
+      },
+      {
+        "file": "storage.py",
+        "sha_matches": true
+      },
+      {
+        "file": "training.py",
+        "sha_matches": true
+      },
+      {
+        "file": "util.py",
+        "sha_matches": true
+      }
+    ]
+  },
+  "runner_original_native_matches_supplied": true
+}

@@ -1,0 +1,204 @@
+{
+  "scenario": "diagnose",
+  "summary": {
+    "mode": "diagnose",
+    "command_id": "LOOPBACK-diagnose",
+    "native_run_id": "2042a673-ff68-4c87-82de-b90961c48b00",
+    "reason": "diagnostic_duration",
+    "elapsed_s": 9.031176105999975,
+    "time_coverage": {
+      "observed_s": 8.98382169499996,
+      "measurement_usable_s": 7.936560865999809,
+      "model_usable_s": 0.0,
+      "context_ready_s": 3.930932198999926,
+      "joint_ready_s": 0.0,
+      "work_paused_s": 0.0,
+      "tj_usable_s": 7.936560865999809,
+      "rail_usable_s": 7.936560865999809,
+      "PWM_usable_s": 8.879778715999919,
+      "temp_context_usable_s": 8.879778715999919
+    },
+    "phase_seconds": {
+      "uninitialized": 1.0472608290001517,
+      "provisional": 7.936560865999809
+    },
+    "fan_success_intervals": {
+      "count": 8,
+      "max_s": 1.0063849119999304,
+      "over_original_2_5s": 0
+    },
+    "protocol_requests": 0,
+    "successful_requests": 0,
+    "server_completion_unknown": false,
+    "schedule_completed": false,
+    "workload_intent": "evaluate_actual_protocol_GPU_rails_not_client_slots",
+    "collector_task_identity": 140737292933904,
+    "collector_engine_instance_id": 140737293190096,
+    "observer_instances_created": 1,
+    "native_callbacks": 29,
+    "native_run_directories": 1,
+    "I02_shared_engine_instance_id": 140737293190096,
+    "I02_preprocessed_views": 29,
+    "requester_sessions_all_closed": true,
+    "requester_instances_created": 0,
+    "request_executor_instances_created": 0,
+    "own_async_tasks_remaining": 0,
+    "collector_summary": {
+      "stop_reason": "external_stop",
+      "poll_missed": 0,
+      "poll_count": 11,
+      "connection_attempts": 1,
+      "payload_oversize": 0,
+      "orin_event_count": 8,
+      "business_payload_bytes_sum": 12640,
+      "business_payload_bytes_max": 1580,
+      "poll_rtt_ms": [
+        15.292818000034458,
+        14.9640269999054,
+        8.408283000107986,
+        8.060159000024214,
+        6.738200999961919,
+        1.4165809998303303,
+        5.316536000009364,
+        1.8396230000234937,
+        4.782704000035665,
+        5.043204000003243,
+        5.006827999977759
+      ],
+      "prediction_ms": [
+        10.846948000107659,
+        2.6122480001049553
+      ],
+      "rss_mib": [
+        91.08984375,
+        92.88671875,
+        92.99609375,
+        93.078125,
+        93.09375,
+        93.109375,
+        93.1484375,
+        93.15234375
+      ],
+      "cpu_pct_single_core": [
+        4.9792849397886405,
+        5.985949486055011,
+        4.97405946909694,
+        3.9887737677474946,
+        3.997040191738448,
+        4.97540080246634,
+        3.9768619727907795,
+        4.975846222388546
+      ],
+      "elapsed_s": 8.997063681999862,
+      "queue_peak_items": 2,
+      "queue_peak_bytes": 2736,
+      "dropped": 0,
+      "quality": {
+        "boundary_socketio_connecting": 1,
+        "boundary_control_context_change": 1,
+        "boundary_stream": 1,
+        "new_samples": 8,
+        "boundary_input_boundary": 1,
+        "boundary_input_profile_change": 1,
+        "boundary_socketio_disconnected": 1,
+        "boundary_run_end": 1
+      },
+      "processing": {
+        "fan_ok": 9,
+        "temp_ok": 2,
+        "origins": 2
+      },
+      "target_host_verified": false,
+      "polling_health": {
+        "contract": "TTO-POLL-INDEPENDENT-v1",
+        "max_inflight_per_endpoint": 1,
+        "max_total_inflight_limit": 2,
+        "max_total_inflight_observed": 2,
+        "end_inflight": 0,
+        "legacy_config_max_inflight_esp32": 1,
+        "endpoints": {
+          "fan": {
+            "sent": 9,
+            "returned": 9,
+            "http_ok": 9,
+            "errors": 0,
+            "skipped": 0,
+            "cancelled": 0,
+            "peak_inflight": 1,
+            "rtt_ms": {
+              "n": 9,
+              "p50": 5.043204000003243,
+              "p95": 12.539004000063866,
+              "min": 1.4165809998303303,
+              "max": 15.292818000034458
+            },
+            "send_interval_s": {
+              "n": 8,
+              "p50": 1.0036622474999604,
+              "p95": 1.0051722424001128,
+              "min": 1.002446665999969,
+              "max": 1.0055071630001748
+            },
+            "return_interval_s": {
+              "n": 8,
+              "p50": 1.0039526645000478,
+              "p95": 1.0058364729999085,
+              "min": 0.9968406709999726,
+              "max": 1.006388786999878
+            }
+          },
+          "temp": {
+            "sent": 2,
+            "returned": 2,
+            "http_ok": 2,
+            "errors": 0,
+            "skipped": 0,
+            "cancelled": 0,
+            "peak_inflight": 1,
+            "rtt_ms": {
+              "n": 2,
+              "p50": 10.140281499957382,
+              "p95": 14.481652449910598,
+              "min": 5.316536000009364,
+              "max": 14.9640269999054
+            },
+            "send_interval_s": {
+              "n": 1,
+              "p50": 5.006571875999953,
+              "p95": 5.006571875999953,
+              "min": 5.006571875999953,
+              "max": 5.006571875999953
+            },
+            "return_interval_s": {
+              "n": 1,
+              "p50": 4.996924385000057,
+              "p95": 4.996924385000057,
+              "min": 4.996924385000057,
+              "max": 4.996924385000057
+            }
+          }
+        }
+      }
+    },
+    "clock_end": {
+      "domain": "b952afb500f6:21:ad7e63cb-9e65-45d4-9efd-533002fe8783",
+      "mono_before_s": 1536.99693497,
+      "utc": "2026-10-19T07:58:47.587330+00:00",
+      "mono_after_s": 1536.996968637,
+      "utc_clock_accuracy_s": null,
+      "host": "b952afb500f6",
+      "platform": "Linux-7.0.11-orbstack-00360-gc9bc4d96ac70-x86_64-with-glibc2.35",
+      "pid": 21
+    },
+    "control_changes": false,
+    "field_proven": false,
+    "synthetic_loopback_only": true
+  },
+  "server_posts": 0,
+  "server_peak_handler_count": 0,
+  "actual_collector_engine_ids": [
+    140737293190096
+  ],
+  "native_refs_all_same_run": true,
+  "diagnostic_fields_all_fan": true
+}

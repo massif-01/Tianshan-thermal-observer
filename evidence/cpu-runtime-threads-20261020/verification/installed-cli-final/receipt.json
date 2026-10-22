@@ -1,0 +1,100 @@
+[
+  {
+    "scenario": "clean",
+    "returncode": 0,
+    "pid": 51406,
+    "verified": true,
+    "pools": [
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "num_threads": 1,
+        "prefix": "libscipy_openblas",
+        "filepath": "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/numpy/.dylibs/libscipy_openblas64_.dylib",
+        "version": "0.3.29",
+        "threading_layer": "pthreads",
+        "architecture": "neoversen1"
+      },
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "num_threads": 1,
+        "prefix": "libscipy_openblas",
+        "filepath": "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/scipy/.dylibs/libscipy_openblas.dylib",
+        "version": "0.3.28",
+        "threading_layer": "pthreads",
+        "architecture": "neoversen1"
+      }
+    ]
+  },
+  {
+    "scenario": "inherited8",
+    "returncode": 0,
+    "pid": 51444,
+    "verified": true,
+    "pools": [
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "num_threads": 1,
+        "prefix": "libscipy_openblas",
+        "filepath": "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/numpy/.dylibs/libscipy_openblas64_.dylib",
+        "version": "0.3.29",
+        "threading_layer": "pthreads",
+        "architecture": "neoversen1"
+      },
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "num_threads": 1,
+        "prefix": "libscipy_openblas",
+        "filepath": "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/scipy/.dylibs/libscipy_openblas.dylib",
+        "version": "0.3.28",
+        "threading_layer": "pthreads",
+        "architecture": "neoversen1"
+      }
+    ]
+  },
+  {
+    "scenario": "shared-field-entry",
+    "returncode": 0,
+    "pid": 51448,
+    "verified": true,
+    "pools": [
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "num_threads": 1,
+        "prefix": "libscipy_openblas",
+        "filepath": "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/numpy/.dylibs/libscipy_openblas64_.dylib",
+        "version": "0.3.29",
+        "threading_layer": "pthreads",
+        "architecture": "neoversen1"
+      },
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "num_threads": 1,
+        "prefix": "libscipy_openblas",
+        "filepath": "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/scipy/.dylibs/libscipy_openblas.dylib",
+        "version": "0.3.28",
+        "threading_layer": "pthreads",
+        "architecture": "neoversen1"
+      }
+    ]
+  },
+  {
+    "scenario": "preloaded_numpy",
+    "returncode": 1,
+    "verified": false,
+    "network_attempts": 0,
+    "recorded_pid": 51453
+  },
+  {
+    "scenario": "unverifiable_pool",
+    "returncode": 1,
+    "verified": false,
+    "run_created": false,
+    "pid": 51459
+  }
+]

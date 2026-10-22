@@ -1,0 +1,36 @@
+{
+  "current_baseline": "G2-FROZEN-RM01-v1",
+  "role": "seen_development; not blind or independent confirmation",
+  "candidates": {
+    "G2-GEN-L-20261021-v1": {
+      "decision": "not_better_on_development",
+      "comparison_cohort": "77673c781f12d3417fd2f4d7dd10c408942a68f77031b6613f5353ae848c7a5a",
+      "same_points": 1184,
+      "baseline_point_MAE": 0.5743125836361699,
+      "candidate_point_MAE": 0.6715250693120499,
+      "max_under_delta": -0.17886996667989763,
+      "p95_abs_delta": 0.12334863427561338,
+      "future_confirmation_available": false,
+      "recommended_for_automatic_activation": false,
+      "requires_manual_observation_decision": true,
+      "automatic_activation": false,
+      "control_permission": false
+    },
+    "G2-CAL-M-20261021-v1": {
+      "decision": "not_better_on_development",
+      "comparison_cohort": "77673c781f12d3417fd2f4d7dd10c408942a68f77031b6613f5353ae848c7a5a",
+      "same_points": 1184,
+      "baseline_point_MAE": 0.5743125836361699,
+      "candidate_point_MAE": 0.7861064961142474,
+      "max_under_delta": 1.0428630148036149,
+      "p95_abs_delta": 0.5021368434302524,
+      "future_confirmation_available": false,
+      "recommended_for_automatic_activation": false,
+      "requires_manual_observation_decision": true,
+      "automatic_activation": false,
+      "control_permission": false
+    }
+  },
+  "old_official_scores_unchanged": true,
+  "all_scenarios_reported": true
+}

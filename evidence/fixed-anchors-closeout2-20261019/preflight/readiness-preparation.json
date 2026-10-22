@@ -1,0 +1,74 @@
+{
+  "recorded_at_utc": "2026-10-19T09:29:25.832281+00:00",
+  "meaning": "preparation snapshots, not a run and not enduring readiness",
+  "model": {
+    "id": "RM-01 VLM",
+    "object": "model",
+    "created": 1792401935,
+    "owned_by": "vllm",
+    "root": "/home/rm01/models/dev/llm/Qwen3.8-27B-NVFP4/",
+    "parent": null,
+    "max_model_len": 262144,
+    "permission": [
+      {
+        "id": "modelperm-94504aea46f7e2f3",
+        "object": "model_permission",
+        "created": 1792401935,
+        "allow_create_engine": false,
+        "allow_sampling": true,
+        "allow_logprobs": true,
+        "allow_search_indices": false,
+        "allow_view": true,
+        "allow_fine_tuning": false,
+        "organization": "*",
+        "group": null,
+        "is_blocking": false
+      }
+    ]
+  },
+  "request_counts": {
+    "vllm:num_requests_running": [
+      0.0
+    ],
+    "vllm:num_requests_waiting": [
+      0.0
+    ]
+  },
+  "server_capacity_basis": {
+    "configured_max_num_seqs": 4,
+    "configured_max_num_batched_tokens": 2048,
+    "source": "current Thor process argv",
+    "not_a_claim": "not proof of 4 simultaneous GPU kernels, measured throughput, or thermal exposure"
+  },
+  "engine_version": "0.21.1rc1.dev104+g301d98647",
+  "effective_settings": {
+    "enable_prefix_caching": true,
+    "enable_chunked_prefill": true,
+    "enable_thinking": false,
+    "tool_call_parser": "qwen3_coder",
+    "reasoning_parser": "qwen3",
+    "attention_backend": "FLASHINFER",
+    "tensor_parallel_size": 1,
+    "gpu_memory_utilization": 0.4,
+    "speculative_config": {
+      "method": "mtp",
+      "num_speculative_tokens": 3
+    }
+  },
+  "dense_architecture_metadata": {
+    "model_type": "qwen3_5_text",
+    "num_hidden_layers": 64,
+    "num_experts": null,
+    "num_experts_per_tok": null,
+    "hidden_size": 5120,
+    "intermediate_size": 17408
+  },
+  "controller_snapshot_AUTO_valid": true,
+  "payload_matches_frozen": true,
+  "native_run_id": null,
+  "load_authorized": false,
+  "clock_start_pending": true,
+  "probe_and_recording_confirmation_pending": true,
+  "indoor_ambient_C": null,
+  "original_weight_sha256": "unknown; no full weight hashing or changes"
+}

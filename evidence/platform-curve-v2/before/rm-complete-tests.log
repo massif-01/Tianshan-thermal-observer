@@ -1,0 +1,441 @@
+.....................................FFFFFFFFFFFFFFF.................... [ 65%]
+......................................                                   [100%]
+=================================== FAILURES ===================================
+_______________ test_invalid_selected_env_no_side_effects[host-] _______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1074d4400>
+field = 'host', value = ''
+
+    @pytest.mark.parametrize('field,value', [('host',''),('port','0'),('port','65536'),
+        ('debug','typo'),('update_interval','0'),('update_interval','-1'),
+        ('update_interval','nan'),('update_interval','inf'),('max_connections','0'),
+        ('tegrastats_interval','bad'),('tegrastats_interval',''),('log_level','TRACE'),
+        ('cors_origins',''),('log_file',''),('allow_unsafe_werkzeug','typo')])
+    def test_invalid_selected_env_no_side_effects(monkeypatch, field, value):
+        primary, legacy=ENV_FIELDS[field]
+        monkeypatch.setenv(primary,value)
+        monkeypatch.setenv(legacy,str(Config().to_dict()[field]))
+        result=invoke('interval')
+        assert result['exit_code']==1 and not result['commands'] and not result['captured']
+        assert field in result['output'] and primary in result['output']
+        preview=CliRunner().invoke(cli,['config'])
+        assert preview.exit_code==1 and primary in preview.output
+        for args in (['--help'],['run','--help'],['config','--help'],['--version']):
+>           assert CliRunner().invoke(cli,args).exit_code==0
+E           assert 1 == 0
+E            +  where 1 = <Result RuntimeError("'tegrastats_api' is not installed. Try passing 'package_name' instead.")>.exit_code
+E            +    where <Result RuntimeError("'tegrastats_api' is not installed. Try passing 'package_name' instead.")> = invoke(cli, ['--version'])
+E            +      where invoke = <click.testing.CliRunner object at 0x1074d4b50>.invoke
+E            +        where <click.testing.CliRunner object at 0x1074d4b50> = CliRunner()
+
+../rm01OrinStatus/tests/offline/test_closeout.py:204: AssertionError
+______________ test_invalid_selected_env_no_side_effects[port-0] _______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1077a3490>
+field = 'port', value = '0'
+
+    @pytest.mark.parametrize('field,value', [('host',''),('port','0'),('port','65536'),
+        ('debug','typo'),('update_interval','0'),('update_interval','-1'),
+        ('update_interval','nan'),('update_interval','inf'),('max_connections','0'),
+        ('tegrastats_interval','bad'),('tegrastats_interval',''),('log_level','TRACE'),
+        ('cors_origins',''),('log_file',''),('allow_unsafe_werkzeug','typo')])
+    def test_invalid_selected_env_no_side_effects(monkeypatch, field, value):
+        primary, legacy=ENV_FIELDS[field]
+        monkeypatch.setenv(primary,value)
+        monkeypatch.setenv(legacy,str(Config().to_dict()[field]))
+        result=invoke('interval')
+        assert result['exit_code']==1 and not result['commands'] and not result['captured']
+        assert field in result['output'] and primary in result['output']
+        preview=CliRunner().invoke(cli,['config'])
+        assert preview.exit_code==1 and primary in preview.output
+        for args in (['--help'],['run','--help'],['config','--help'],['--version']):
+>           assert CliRunner().invoke(cli,args).exit_code==0
+E           assert 1 == 0
+E            +  where 1 = <Result RuntimeError("'tegrastats_api' is not installed. Try passing 'package_name' instead.")>.exit_code
+E            +    where <Result RuntimeError("'tegrastats_api' is not installed. Try passing 'package_name' instead.")> = invoke(cli, ['--version'])
+E            +      where invoke = <click.testing.CliRunner object at 0x1077a3a30>.invoke
+E            +        where <click.testing.CliRunner object at 0x1077a3a30> = CliRunner()
+
+../rm01OrinStatus/tests/offline/test_closeout.py:204: AssertionError
+____________ test_invalid_selected_env_no_side_effects[port-65536] _____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1074d96f0>
+field = 'port', value = '65536'
+
+    @pytest.mark.parametrize('field,value', [('host',''),('port','0'),('port','65536'),
+        ('debug','typo'),('update_interval','0'),('update_interval','-1'),
+        ('update_interval','nan'),('update_interval','inf'),('max_connections','0'),
+        ('tegrastats_interval','bad'),('tegrastats_interval',''),('log_level','TRACE'),
+        ('cors_origins',''),('log_file',''),('allow_unsafe_werkzeug','typo')])
+    def test_invalid_selected_env_no_side_effects(monkeypatch, field, value):
+        primary, legacy=ENV_FIELDS[field]
+        monkeypatch.setenv(primary,value)
+        monkeypatch.setenv(legacy,str(Config().to_dict()[field]))
+        result=invoke('interval')
+        assert result['exit_code']==1 and not result['commands'] and not result['captured']
+        assert field in result['output'] and primary in result['output']
+        preview=CliRunner().invoke(cli,['config'])
+        assert preview.exit_code==1 and primary in preview.output
+        for args in (['--help'],['run','--help'],['config','--help'],['--version']):
+>           assert CliRunner().invoke(cli,args).exit_code==0
+E           assert 1 == 0
+E            +  where 1 = <Result RuntimeError("'tegrastats_api' is not installed. Try passing 'package_name' instead.")>.exit_code
+E            +    where <Result RuntimeError("'tegrastats_api' is not installed. Try passing 'package_name' instead.")> = invoke(cli, ['--version'])
+E            +      where invoke = <click.testing.CliRunner object at 0x1074da0e0>.invoke
+E            +        where <click.testing.CliRunner object at 0x1074da0e0> = CliRunner()
+
+../rm01OrinStatus/tests/offline/test_closeout.py:204: AssertionError
+____________ test_invalid_selected_env_no_side_effects[debug-typo] _____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10749af50>
+field = 'debug', value = 'typo'
+
+    @pytest.mark.parametrize('field,value', [('host',''),('port','0'),('port','65536'),
+        ('debug','typo'),('update_interval','0'),('update_interval','-1'),
+        ('update_interval','nan'),('update_interval','inf'),('max_connections','0'),
+        ('tegrastats_interval','bad'),('tegrastats_interval',''),('log_level','TRACE'),
+        ('cors_origins',''),('log_file',''),('allow_unsafe_werkzeug','typo')])
+    def test_invalid_selected_env_no_side_effects(monkeypatch, field, value):
+        primary, legacy=ENV_FIELDS[field]
+        monkeypatch.setenv(primary,value)
+        monkeypatch.setenv(legacy,str(Config().to_dict()[field]))
+        result=invoke('interval')
+        assert result['exit_code']==1 and not result['commands'] and not result['captured']
+        assert field in result['output'] and primary in result['output']
+        preview=CliRunner().invoke(cli,['config'])
+        assert preview.exit_code==1 and primary in preview.output
+        for args in (['--help'],['run','--help'],['config','--help'],['--version']):
+>           assert CliRunner().invoke(cli,args).exit_code==0
+E           assert 1 == 0
+E            +  where 1 = <Result RuntimeError("'tegrastats_api' is not installed. Try passing 'package_name' instead.")>.exit_code
+E            +    where <Result RuntimeError("'tegrastats_api' is not installed. Try passing 'package_name' instead.")> = invoke(cli, ['--version'])
+E            +      where invoke = <click.testing.CliRunner object at 0x10749b6d0>.invoke
+E            +        where <click.testing.CliRunner object at 0x10749b6d0> = CliRunner()
+
+../rm01OrinStatus/tests/offline/test_closeout.py:204: AssertionError
+_________ test_invalid_selected_env_no_side_effects[update_interval-0] _________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1074db610>
+field = 'update_interval', value = '0'
+
+    @pytest.mark.parametrize('field,value', [('host',''),('port','0'),('port','65536'),
+        ('debug','typo'),('update_interval','0'),('update_interval','-1'),
+        ('update_interval','nan'),('update_interval','inf'),('max_connections','0'),
+        ('tegrastats_interval','bad'),('tegrastats_interval',''),('log_level','TRACE'),
+        ('cors_origins',''),('log_file',''),('allow_unsafe_werkzeug','typo')])
+    def test_invalid_selected_env_no_side_effects(monkeypatch, field, value):
+        primary, legacy=ENV_FIELDS[field]
+        monkeypatch.setenv(primary,value)
+        monkeypatch.setenv(legacy,str(Config().to_dict()[field]))
+        result=invoke('interval')
+        assert result['exit_code']==1 and not result['commands'] and not result['captured']
+        assert field in result['output'] and primary in result['output']
+        preview=CliRunner().invoke(cli,['config'])
+        assert preview.exit_code==1 and primary in preview.output
+        for args in (['--help'],['run','--help'],['config','--help'],['--version']):
+>           assert CliRunner().invoke(cli,args).exit_code==0
+E           assert 1 == 0
+E            +  where 1 = <Result RuntimeError("'tegrastats_api' is not installed. Try passing 'package_name' instead.")>.exit_code
+E            +    where <Result RuntimeError("'tegrastats_api' is not installed. Try passing 'package_name' instead.")> = invoke(cli, ['--version'])
+E            +      where invoke = <click.testing.CliRunner object at 0x1074d8e20>.invoke
+E            +        where <click.testing.CliRunner object at 0x1074d8e20> = CliRunner()
+
+../rm01OrinStatus/tests/offline/test_closeout.py:204: AssertionError
+________ test_invalid_selected_env_no_side_effects[update_interval--1] _________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10749a320>
+field = 'update_interval', value = '-1'
+
+    @pytest.mark.parametrize('field,value', [('host',''),('port','0'),('port','65536'),
+        ('debug','typo'),('update_interval','0'),('update_interval','-1'),
+        ('update_interval','nan'),('update_interval','inf'),('max_connections','0'),
+        ('tegrastats_interval','bad'),('tegrastats_interval',''),('log_level','TRACE'),
+        ('cors_origins',''),('log_file',''),('allow_unsafe_werkzeug','typo')])
+    def test_invalid_selected_env_no_side_effects(monkeypatch, field, value):
+        primary, legacy=ENV_FIELDS[field]
+        monkeypatch.setenv(primary,value)
+        monkeypatch.setenv(legacy,str(Config().to_dict()[field]))
+        result=invoke('interval')
+        assert result['exit_code']==1 and not result['commands'] and not result['captured']
+        assert field in result['output'] and primary in result['output']
+        preview=CliRunner().invoke(cli,['config'])
+        assert preview.exit_code==1 and primary in preview.output
+        for args in (['--help'],['run','--help'],['config','--help'],['--version']):
+>           assert CliRunner().invoke(cli,args).exit_code==0
+E           assert 1 == 0
+E            +  where 1 = <Result RuntimeError("'tegrastats_api' is not installed. Try passing 'package_name' instead.")>.exit_code
+E            +    where <Result RuntimeError("'tegrastats_api' is not installed. Try passing 'package_name' instead.")> = invoke(cli, ['--version'])
+E            +      where invoke = <click.testing.CliRunner object at 0x107499ba0>.invoke
+E            +        where <click.testing.CliRunner object at 0x107499ba0> = CliRunner()
+
+../rm01OrinStatus/tests/offline/test_closeout.py:204: AssertionError
+________ test_invalid_selected_env_no_side_effects[update_interval-nan] ________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10780ef80>
+field = 'update_interval', value = 'nan'
+
+    @pytest.mark.parametrize('field,value', [('host',''),('port','0'),('port','65536'),
+        ('debug','typo'),('update_interval','0'),('update_interval','-1'),
+        ('update_interval','nan'),('update_interval','inf'),('max_connections','0'),
+        ('tegrastats_interval','bad'),('tegrastats_interval',''),('log_level','TRACE'),
+        ('cors_origins',''),('log_file',''),('allow_unsafe_werkzeug','typo')])
+    def test_invalid_selected_env_no_side_effects(monkeypatch, field, value):
+        primary, legacy=ENV_FIELDS[field]
+        monkeypatch.setenv(primary,value)
+        monkeypatch.setenv(legacy,str(Config().to_dict()[field]))
+        result=invoke('interval')
+        assert result['exit_code']==1 and not result['commands'] and not result['captured']
+        assert field in result['output'] and primary in result['output']
+        preview=CliRunner().invoke(cli,['config'])
+        assert preview.exit_code==1 and primary in preview.output
+        for args in (['--help'],['run','--help'],['config','--help'],['--version']):
+>           assert CliRunner().invoke(cli,args).exit_code==0
+E           assert 1 == 0
+E            +  where 1 = <Result RuntimeError("'tegrastats_api' is not installed. Try passing 'package_name' instead.")>.exit_code
+E            +    where <Result RuntimeError("'tegrastats_api' is not installed. Try passing 'package_name' instead.")> = invoke(cli, ['--version'])
+E            +      where invoke = <click.testing.CliRunner object at 0x10780de70>.invoke
+E            +        where <click.testing.CliRunner object at 0x10780de70> = CliRunner()
+
+../rm01OrinStatus/tests/offline/test_closeout.py:204: AssertionError
+________ test_invalid_selected_env_no_side_effects[update_interval-inf] ________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1074988b0>
+field = 'update_interval', value = 'inf'
+
+    @pytest.mark.parametrize('field,value', [('host',''),('port','0'),('port','65536'),
+        ('debug','typo'),('update_interval','0'),('update_interval','-1'),
+        ('update_interval','nan'),('update_interval','inf'),('max_connections','0'),
+        ('tegrastats_interval','bad'),('tegrastats_interval',''),('log_level','TRACE'),
+        ('cors_origins',''),('log_file',''),('allow_unsafe_werkzeug','typo')])
+    def test_invalid_selected_env_no_side_effects(monkeypatch, field, value):
+        primary, legacy=ENV_FIELDS[field]
+        monkeypatch.setenv(primary,value)
+        monkeypatch.setenv(legacy,str(Config().to_dict()[field]))
+        result=invoke('interval')
+        assert result['exit_code']==1 and not result['commands'] and not result['captured']
+        assert field in result['output'] and primary in result['output']
+        preview=CliRunner().invoke(cli,['config'])
+        assert preview.exit_code==1 and primary in preview.output
+        for args in (['--help'],['run','--help'],['config','--help'],['--version']):
+>           assert CliRunner().invoke(cli,args).exit_code==0
+E           assert 1 == 0
+E            +  where 1 = <Result RuntimeError("'tegrastats_api' is not installed. Try passing 'package_name' instead.")>.exit_code
+E            +    where <Result RuntimeError("'tegrastats_api' is not installed. Try passing 'package_name' instead.")> = invoke(cli, ['--version'])
+E            +      where invoke = <click.testing.CliRunner object at 0x10749be20>.invoke
+E            +        where <click.testing.CliRunner object at 0x10749be20> = CliRunner()
+
+../rm01OrinStatus/tests/offline/test_closeout.py:204: AssertionError
+_________ test_invalid_selected_env_no_side_effects[max_connections-0] _________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x107841a80>
+field = 'max_connections', value = '0'
+
+    @pytest.mark.parametrize('field,value', [('host',''),('port','0'),('port','65536'),
+        ('debug','typo'),('update_interval','0'),('update_interval','-1'),
+        ('update_interval','nan'),('update_interval','inf'),('max_connections','0'),
+        ('tegrastats_interval','bad'),('tegrastats_interval',''),('log_level','TRACE'),
+        ('cors_origins',''),('log_file',''),('allow_unsafe_werkzeug','typo')])
+    def test_invalid_selected_env_no_side_effects(monkeypatch, field, value):
+        primary, legacy=ENV_FIELDS[field]
+        monkeypatch.setenv(primary,value)
+        monkeypatch.setenv(legacy,str(Config().to_dict()[field]))
+        result=invoke('interval')
+        assert result['exit_code']==1 and not result['commands'] and not result['captured']
+        assert field in result['output'] and primary in result['output']
+        preview=CliRunner().invoke(cli,['config'])
+        assert preview.exit_code==1 and primary in preview.output
+        for args in (['--help'],['run','--help'],['config','--help'],['--version']):
+>           assert CliRunner().invoke(cli,args).exit_code==0
+E           assert 1 == 0
+E            +  where 1 = <Result RuntimeError("'tegrastats_api' is not installed. Try passing 'package_name' instead.")>.exit_code
+E            +    where <Result RuntimeError("'tegrastats_api' is not installed. Try passing 'package_name' instead.")> = invoke(cli, ['--version'])
+E            +      where invoke = <click.testing.CliRunner object at 0x106839120>.invoke
+E            +        where <click.testing.CliRunner object at 0x106839120> = CliRunner()
+
+../rm01OrinStatus/tests/offline/test_closeout.py:204: AssertionError
+______ test_invalid_selected_env_no_side_effects[tegrastats_interval-bad] ______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10780dc00>
+field = 'tegrastats_interval', value = 'bad'
+
+    @pytest.mark.parametrize('field,value', [('host',''),('port','0'),('port','65536'),
+        ('debug','typo'),('update_interval','0'),('update_interval','-1'),
+        ('update_interval','nan'),('update_interval','inf'),('max_connections','0'),
+        ('tegrastats_interval','bad'),('tegrastats_interval',''),('log_level','TRACE'),
+        ('cors_origins',''),('log_file',''),('allow_unsafe_werkzeug','typo')])
+    def test_invalid_selected_env_no_side_effects(monkeypatch, field, value):
+        primary, legacy=ENV_FIELDS[field]
+        monkeypatch.setenv(primary,value)
+        monkeypatch.setenv(legacy,str(Config().to_dict()[field]))
+        result=invoke('interval')
+        assert result['exit_code']==1 and not result['commands'] and not result['captured']
+        assert field in result['output'] and primary in result['output']
+        preview=CliRunner().invoke(cli,['config'])
+        assert preview.exit_code==1 and primary in preview.output
+        for args in (['--help'],['run','--help'],['config','--help'],['--version']):
+>           assert CliRunner().invoke(cli,args).exit_code==0
+E           assert 1 == 0
+E            +  where 1 = <Result RuntimeError("'tegrastats_api' is not installed. Try passing 'package_name' instead.")>.exit_code
+E            +    where <Result RuntimeError("'tegrastats_api' is not installed. Try passing 'package_name' instead.")> = invoke(cli, ['--version'])
+E            +      where invoke = <click.testing.CliRunner object at 0x1067931f0>.invoke
+E            +        where <click.testing.CliRunner object at 0x1067931f0> = CliRunner()
+
+../rm01OrinStatus/tests/offline/test_closeout.py:204: AssertionError
+_______ test_invalid_selected_env_no_side_effects[tegrastats_interval-] ________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1074beb00>
+field = 'tegrastats_interval', value = ''
+
+    @pytest.mark.parametrize('field,value', [('host',''),('port','0'),('port','65536'),
+        ('debug','typo'),('update_interval','0'),('update_interval','-1'),
+        ('update_interval','nan'),('update_interval','inf'),('max_connections','0'),
+        ('tegrastats_interval','bad'),('tegrastats_interval',''),('log_level','TRACE'),
+        ('cors_origins',''),('log_file',''),('allow_unsafe_werkzeug','typo')])
+    def test_invalid_selected_env_no_side_effects(monkeypatch, field, value):
+        primary, legacy=ENV_FIELDS[field]
+        monkeypatch.setenv(primary,value)
+        monkeypatch.setenv(legacy,str(Config().to_dict()[field]))
+        result=invoke('interval')
+        assert result['exit_code']==1 and not result['commands'] and not result['captured']
+        assert field in result['output'] and primary in result['output']
+        preview=CliRunner().invoke(cli,['config'])
+        assert preview.exit_code==1 and primary in preview.output
+        for args in (['--help'],['run','--help'],['config','--help'],['--version']):
+>           assert CliRunner().invoke(cli,args).exit_code==0
+E           assert 1 == 0
+E            +  where 1 = <Result RuntimeError("'tegrastats_api' is not installed. Try passing 'package_name' instead.")>.exit_code
+E            +    where <Result RuntimeError("'tegrastats_api' is not installed. Try passing 'package_name' instead.")> = invoke(cli, ['--version'])
+E            +      where invoke = <click.testing.CliRunner object at 0x1074bc5e0>.invoke
+E            +        where <click.testing.CliRunner object at 0x1074bc5e0> = CliRunner()
+
+../rm01OrinStatus/tests/offline/test_closeout.py:204: AssertionError
+__________ test_invalid_selected_env_no_side_effects[log_level-TRACE] __________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x107842d40>
+field = 'log_level', value = 'TRACE'
+
+    @pytest.mark.parametrize('field,value', [('host',''),('port','0'),('port','65536'),
+        ('debug','typo'),('update_interval','0'),('update_interval','-1'),
+        ('update_interval','nan'),('update_interval','inf'),('max_connections','0'),
+        ('tegrastats_interval','bad'),('tegrastats_interval',''),('log_level','TRACE'),
+        ('cors_origins',''),('log_file',''),('allow_unsafe_werkzeug','typo')])
+    def test_invalid_selected_env_no_side_effects(monkeypatch, field, value):
+        primary, legacy=ENV_FIELDS[field]
+        monkeypatch.setenv(primary,value)
+        monkeypatch.setenv(legacy,str(Config().to_dict()[field]))
+        result=invoke('interval')
+        assert result['exit_code']==1 and not result['commands'] and not result['captured']
+        assert field in result['output'] and primary in result['output']
+        preview=CliRunner().invoke(cli,['config'])
+        assert preview.exit_code==1 and primary in preview.output
+        for args in (['--help'],['run','--help'],['config','--help'],['--version']):
+>           assert CliRunner().invoke(cli,args).exit_code==0
+E           assert 1 == 0
+E            +  where 1 = <Result RuntimeError("'tegrastats_api' is not installed. Try passing 'package_name' instead.")>.exit_code
+E            +    where <Result RuntimeError("'tegrastats_api' is not installed. Try passing 'package_name' instead.")> = invoke(cli, ['--version'])
+E            +      where invoke = <click.testing.CliRunner object at 0x1077a3c10>.invoke
+E            +        where <click.testing.CliRunner object at 0x1077a3c10> = CliRunner()
+
+../rm01OrinStatus/tests/offline/test_closeout.py:204: AssertionError
+___________ test_invalid_selected_env_no_side_effects[cors_origins-] ___________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1074bde40>
+field = 'cors_origins', value = ''
+
+    @pytest.mark.parametrize('field,value', [('host',''),('port','0'),('port','65536'),
+        ('debug','typo'),('update_interval','0'),('update_interval','-1'),
+        ('update_interval','nan'),('update_interval','inf'),('max_connections','0'),
+        ('tegrastats_interval','bad'),('tegrastats_interval',''),('log_level','TRACE'),
+        ('cors_origins',''),('log_file',''),('allow_unsafe_werkzeug','typo')])
+    def test_invalid_selected_env_no_side_effects(monkeypatch, field, value):
+        primary, legacy=ENV_FIELDS[field]
+        monkeypatch.setenv(primary,value)
+        monkeypatch.setenv(legacy,str(Config().to_dict()[field]))
+        result=invoke('interval')
+        assert result['exit_code']==1 and not result['commands'] and not result['captured']
+        assert field in result['output'] and primary in result['output']
+        preview=CliRunner().invoke(cli,['config'])
+        assert preview.exit_code==1 and primary in preview.output
+        for args in (['--help'],['run','--help'],['config','--help'],['--version']):
+>           assert CliRunner().invoke(cli,args).exit_code==0
+E           assert 1 == 0
+E            +  where 1 = <Result RuntimeError("'tegrastats_api' is not installed. Try passing 'package_name' instead.")>.exit_code
+E            +    where <Result RuntimeError("'tegrastats_api' is not installed. Try passing 'package_name' instead.")> = invoke(cli, ['--version'])
+E            +      where invoke = <click.testing.CliRunner object at 0x1074bc3d0>.invoke
+E            +        where <click.testing.CliRunner object at 0x1074bc3d0> = CliRunner()
+
+../rm01OrinStatus/tests/offline/test_closeout.py:204: AssertionError
+_____________ test_invalid_selected_env_no_side_effects[log_file-] _____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1074be020>
+field = 'log_file', value = ''
+
+    @pytest.mark.parametrize('field,value', [('host',''),('port','0'),('port','65536'),
+        ('debug','typo'),('update_interval','0'),('update_interval','-1'),
+        ('update_interval','nan'),('update_interval','inf'),('max_connections','0'),
+        ('tegrastats_interval','bad'),('tegrastats_interval',''),('log_level','TRACE'),
+        ('cors_origins',''),('log_file',''),('allow_unsafe_werkzeug','typo')])
+    def test_invalid_selected_env_no_side_effects(monkeypatch, field, value):
+        primary, legacy=ENV_FIELDS[field]
+        monkeypatch.setenv(primary,value)
+        monkeypatch.setenv(legacy,str(Config().to_dict()[field]))
+        result=invoke('interval')
+        assert result['exit_code']==1 and not result['commands'] and not result['captured']
+        assert field in result['output'] and primary in result['output']
+        preview=CliRunner().invoke(cli,['config'])
+        assert preview.exit_code==1 and primary in preview.output
+        for args in (['--help'],['run','--help'],['config','--help'],['--version']):
+>           assert CliRunner().invoke(cli,args).exit_code==0
+E           assert 1 == 0
+E            +  where 1 = <Result RuntimeError("'tegrastats_api' is not installed. Try passing 'package_name' instead.")>.exit_code
+E            +    where <Result RuntimeError("'tegrastats_api' is not installed. Try passing 'package_name' instead.")> = invoke(cli, ['--version'])
+E            +      where invoke = <click.testing.CliRunner object at 0x1074be170>.invoke
+E            +        where <click.testing.CliRunner object at 0x1074be170> = CliRunner()
+
+../rm01OrinStatus/tests/offline/test_closeout.py:204: AssertionError
+____ test_invalid_selected_env_no_side_effects[allow_unsafe_werkzeug-typo] _____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1074ba560>
+field = 'allow_unsafe_werkzeug', value = 'typo'
+
+    @pytest.mark.parametrize('field,value', [('host',''),('port','0'),('port','65536'),
+        ('debug','typo'),('update_interval','0'),('update_interval','-1'),
+        ('update_interval','nan'),('update_interval','inf'),('max_connections','0'),
+        ('tegrastats_interval','bad'),('tegrastats_interval',''),('log_level','TRACE'),
+        ('cors_origins',''),('log_file',''),('allow_unsafe_werkzeug','typo')])
+    def test_invalid_selected_env_no_side_effects(monkeypatch, field, value):
+        primary, legacy=ENV_FIELDS[field]
+        monkeypatch.setenv(primary,value)
+        monkeypatch.setenv(legacy,str(Config().to_dict()[field]))
+        result=invoke('interval')
+        assert result['exit_code']==1 and not result['commands'] and not result['captured']
+        assert field in result['output'] and primary in result['output']
+        preview=CliRunner().invoke(cli,['config'])
+        assert preview.exit_code==1 and primary in preview.output
+        for args in (['--help'],['run','--help'],['config','--help'],['--version']):
+>           assert CliRunner().invoke(cli,args).exit_code==0
+E           assert 1 == 0
+E            +  where 1 = <Result RuntimeError("'tegrastats_api' is not installed. Try passing 'package_name' instead.")>.exit_code
+E            +    where <Result RuntimeError("'tegrastats_api' is not installed. Try passing 'package_name' instead.")> = invoke(cli, ['--version'])
+E            +      where invoke = <click.testing.CliRunner object at 0x1074badd0>.invoke
+E            +        where <click.testing.CliRunner object at 0x1074badd0> = CliRunner()
+
+../rm01OrinStatus/tests/offline/test_closeout.py:204: AssertionError
+- generated xml file: /Users/massif/Tianshan-thermal-observer/evidence/platform-curve-v2/before/rm-complete-junit.xml -
+=========================== short test summary info ============================
+FAILED ../rm01OrinStatus/tests/offline/test_closeout.py::test_invalid_selected_env_no_side_effects[host-]
+FAILED ../rm01OrinStatus/tests/offline/test_closeout.py::test_invalid_selected_env_no_side_effects[port-0]
+FAILED ../rm01OrinStatus/tests/offline/test_closeout.py::test_invalid_selected_env_no_side_effects[port-65536]
+FAILED ../rm01OrinStatus/tests/offline/test_closeout.py::test_invalid_selected_env_no_side_effects[debug-typo]
+FAILED ../rm01OrinStatus/tests/offline/test_closeout.py::test_invalid_selected_env_no_side_effects[update_interval-0]
+FAILED ../rm01OrinStatus/tests/offline/test_closeout.py::test_invalid_selected_env_no_side_effects[update_interval--1]
+FAILED ../rm01OrinStatus/tests/offline/test_closeout.py::test_invalid_selected_env_no_side_effects[update_interval-nan]
+FAILED ../rm01OrinStatus/tests/offline/test_closeout.py::test_invalid_selected_env_no_side_effects[update_interval-inf]
+FAILED ../rm01OrinStatus/tests/offline/test_closeout.py::test_invalid_selected_env_no_side_effects[max_connections-0]
+FAILED ../rm01OrinStatus/tests/offline/test_closeout.py::test_invalid_selected_env_no_side_effects[tegrastats_interval-bad]
+FAILED ../rm01OrinStatus/tests/offline/test_closeout.py::test_invalid_selected_env_no_side_effects[tegrastats_interval-]
+FAILED ../rm01OrinStatus/tests/offline/test_closeout.py::test_invalid_selected_env_no_side_effects[log_level-TRACE]
+FAILED ../rm01OrinStatus/tests/offline/test_closeout.py::test_invalid_selected_env_no_side_effects[cors_origins-]
+FAILED ../rm01OrinStatus/tests/offline/test_closeout.py::test_invalid_selected_env_no_side_effects[log_file-]
+FAILED ../rm01OrinStatus/tests/offline/test_closeout.py::test_invalid_selected_env_no_side_effects[allow_unsafe_werkzeug-typo]
+15 failed, 95 passed in 12.23s

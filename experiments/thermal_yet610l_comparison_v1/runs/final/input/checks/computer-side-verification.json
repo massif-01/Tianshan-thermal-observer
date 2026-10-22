@@ -1,0 +1,161 @@
+{
+  "status": "verified",
+  "run_id": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece",
+  "indexed_run_files_verified": 7,
+  "download_bytes": 2709187,
+  "download_sha256": "a9a3b535b953dca4cc1837e84b00739b8a6f17a0f3abd82246c07b9697dc649a",
+  "request_count": 18,
+  "all_protocol_done_finish_reason_usage": true,
+  "no_overlap": true,
+  "all_payloads_match_prior_frozen_actuals": true,
+  "phases": [
+    {
+      "name": "resident-baseline",
+      "start_utc": "2026-10-17T16:31:33.517872+00:00",
+      "start_mono_s": 202564.813759928,
+      "planned_s": 300,
+      "end_utc": "2026-10-17T16:36:33.520175+00:00",
+      "actual_s": 300.00234257700504
+    },
+    {
+      "name": "sparse",
+      "start_utc": "2026-10-17T16:36:33.523165+00:00",
+      "start_mono_s": 202864.81909427,
+      "planned_s": null,
+      "end_utc": "2026-10-17T16:44:19.592402+00:00",
+      "actual_s": 466.0692066339834
+    },
+    {
+      "name": "between-groups",
+      "start_utc": "2026-10-17T16:44:19.594509+00:00",
+      "start_mono_s": 203330.890402386,
+      "planned_s": 300,
+      "end_utc": "2026-10-17T16:49:19.597216+00:00",
+      "actual_s": 300.0027417090023
+    },
+    {
+      "name": "continuous",
+      "start_utc": "2026-10-17T16:49:19.600322+00:00",
+      "start_mono_s": 203630.896253586,
+      "planned_s": null,
+      "end_utc": "2026-10-17T16:51:42.645831+00:00",
+      "actual_s": 143.04547741101123
+    },
+    {
+      "name": "final-cooldown",
+      "start_utc": "2026-10-17T16:51:42.647618+00:00",
+      "start_mono_s": 203773.943515206,
+      "planned_s": 600,
+      "end_utc": "2026-10-17T17:01:42.650513+00:00",
+      "actual_s": 600.0029242910095
+    }
+  ],
+  "request_gaps": [
+    {
+      "after": "S01",
+      "before": "S02",
+      "actual_s": 90.02805545998854,
+      "minimum_s": 90
+    },
+    {
+      "after": "S02",
+      "before": "S03",
+      "actual_s": 90.79208505802671,
+      "minimum_s": 90
+    },
+    {
+      "after": "S03",
+      "before": "S04",
+      "actual_s": 90.02845831101877,
+      "minimum_s": 90
+    },
+    {
+      "after": "S04",
+      "before": "S05",
+      "actual_s": 91.29803061299026,
+      "minimum_s": 90
+    },
+    {
+      "after": "S05",
+      "before": "S06",
+      "actual_s": 90.0337901369785,
+      "minimum_s": 90
+    },
+    {
+      "after": "D01",
+      "before": "D02",
+      "actual_s": 10.02222621999681,
+      "minimum_s": 10
+    },
+    {
+      "after": "D02",
+      "before": "D03",
+      "actual_s": 11.284115735994419,
+      "minimum_s": 10
+    },
+    {
+      "after": "D03",
+      "before": "D04",
+      "actual_s": 10.02756183600286,
+      "minimum_s": 10
+    },
+    {
+      "after": "D04",
+      "before": "D05",
+      "actual_s": 10.535404990980169,
+      "minimum_s": 10
+    },
+    {
+      "after": "D05",
+      "before": "D06",
+      "actual_s": 10.022396716987714,
+      "minimum_s": 10
+    },
+    {
+      "after": "D06",
+      "before": "D07",
+      "actual_s": 10.535268931998871,
+      "minimum_s": 10
+    },
+    {
+      "after": "D07",
+      "before": "D08",
+      "actual_s": 10.020914763998007,
+      "minimum_s": 10
+    },
+    {
+      "after": "D08",
+      "before": "D09",
+      "actual_s": 11.542226280987961,
+      "minimum_s": 10
+    },
+    {
+      "after": "D09",
+      "before": "D10",
+      "actual_s": 10.020270670007449,
+      "minimum_s": 10
+    },
+    {
+      "after": "D10",
+      "before": "D11",
+      "actual_s": 10.538426047976827,
+      "minimum_s": 10
+    },
+    {
+      "after": "D11",
+      "before": "D12",
+      "actual_s": 11.8002824060095,
+      "minimum_s": 10
+    }
+  ],
+  "request_duration_s": {
+    "min": 1.6879428510146681,
+    "max": 2.8944650680059567,
+    "mean": 2.1795262640031674
+  },
+  "policy_id": "YET-SYNC-TRANSIENT-TEMP-CONTINUE-v1",
+  "raw_native_abnormal_retained": true,
+  "formal_model_validation": "not_performed",
+  "instrument_csv": "pending",
+  "end_clock_photo": "pending"
+}

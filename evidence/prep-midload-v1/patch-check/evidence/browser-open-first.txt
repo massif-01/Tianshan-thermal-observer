@@ -1,0 +1,16 @@
+node:internal/fs/promises:861
+  return await PromisePrototypeThen(
+         ^
+
+Error: EPERM: operation not permitted, mkdir '/Users/massif/Library/Caches/ms-playwright/daemon/97e2e0554607c03b'
+    at async Object.mkdir (node:internal/fs/promises:861:10)
+    at async Session.startDaemon (/private/tmp/tto-npm-cache/_npx/31e32ef8478fbf80/node_modules/playwright-core/lib/tools/cli-client/session.js:122:5)
+    at async startSession (/private/tmp/tto-npm-cache/_npx/31e32ef8478fbf80/node_modules/playwright-core/lib/tools/cli-client/program.js:263:10)
+    at async program (/private/tmp/tto-npm-cache/_npx/31e32ef8478fbf80/node_modules/playwright-core/lib/tools/cli-client/program.js:130:23) {
+  errno: -1,
+  code: 'EPERM',
+  syscall: 'mkdir',
+  path: '/Users/massif/Library/Caches/ms-playwright/daemon/97e2e0554607c03b'
+}
+
+Node.js v24.10.0

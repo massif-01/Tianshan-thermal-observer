@@ -1,0 +1,585 @@
+diff --git a/README.md b/README.md
+index 40b1be6..1714fd7 100644
+--- a/README.md
++++ b/README.md
+@@ -106,4 +106,4 @@ R3b旁路报告区分历史保存评分与当前有效成绩，应用生产质
+ 
+ ## 本地研究与测试准备
+ 
+-首轮冻结灰箱研究的代码、模型副本和来源SHA见 [研究索引](docs/research/greybox-id-v1/README.md)。新A/B资格仅写独立研究结果，见 [准备研究](experiments/thermal_identification_prep_v2/README.md)。0.2.3中等负载候选的 [操作卡](docs/TTO中等负载测试操作卡.md) 默认离线预览；现场未执行，须先独立复审。
++首轮冻结灰箱研究的代码、模型副本和来源SHA见 [研究索引](docs/research/greybox-id-v1/README.md)。新A/B资格仅写独立研究结果，见 [准备研究](experiments/thermal_identification_prep_v2/README.md)。0.2.4中等负载候选的 [操作卡](docs/TTO中等负载测试操作卡.md) 默认离线预览；现场未执行，须先独立复审。
+diff --git a/docs/TTO中等负载候选安装说明.md b/docs/TTO中等负载候选安装说明.md
+index 0652cd7..1c92a07 100644
+--- a/docs/TTO中等负载候选安装说明.md
++++ b/docs/TTO中等负载候选安装说明.md
+@@ -1,20 +1,20 @@
+-# TTO 0.2.3 中等负载准备候选
++# TTO 0.2.4 中等负载准备候选
+ 
+ 本包只提供安装候选和已验证的离线入口。N305安装、设备连接和负载均未执行；未来现场工作需独立复审通过及用户确认窗口。研究模型没有进入wheel，没有控制收益或现场放行结论。
+ 
+-安装沿用原Conda流程，创建 `~/TTO-midload-0.2.3/conda-env`，入口 `~/TTO-midload-0.2.3/tto`。不安装或升级Conda base，不覆盖 `~/TTO`。安装器核对全包manifest、锁定依赖、wheel和实际导入；默认doctor为离线配置检查，不启动服务。未缓存的依赖可能需要下载；这与现场采集授权分开。
++安装沿用原Conda流程，创建 `~/TTO-midload-0.2.4/conda-env`，原TTO入口 `~/TTO-midload-0.2.4/tto`，中等负载入口 `~/TTO-midload-0.2.4/tto-midload`。后者用已安装Conda环境的隔离解释器运行同包runner，忽略旧PYTHONPATH；本包目录的兄弟模块可正常导入。离线预览同时验证版本、非editable导入路径及隔离状态，版本错误单独说明真实原因和正确入口。不安装或升级Conda base，不覆盖 `~/TTO`。安装器核对全包manifest、锁定依赖、wheel和实际导入；默认doctor为离线配置检查，不启动服务。未缓存的依赖可能需要下载；这与现场采集授权分开。
+ 
+ 若目标机已具备Python 3.10/pip的Conda本机缓存及匹配Linux x86_64 CP310的完整依赖wheel目录，可把操作卡安装行替换为：
+ 
+ ```sh
+-sh "$HOME/TTO-midload-prep-v1/TTO-v1-0.2.3-Conda安装包/install.sh" --prefix "$HOME/TTO-midload-0.2.3" --offline --offline-wheelhouse "$HOME/Downloads/tto-linux-wheelhouse"
++sh "$HOME/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/install.sh" --prefix "$HOME/TTO-midload-0.2.4" --offline --offline-wheelhouse "$HOME/Downloads/tto-linux-wheelhouse"
+ ```
+ 
+ 依赖锁与0.2.2相同。证据中证明的是开发机macOS arm64 CPython 3.10全新非editable安装与本地loopback；没有把它当作N305实测。bundle内的 `site/local-midload.json` 是本地私有配置，来源是两轮已有记录，不进入公共模板或patch。旧推理接口 `/v1/chat/completions` 支持的SSE和max_tokens字段保持；新工作块为单路顺序请求，题材为非敏感技术说明，不把字数当持续时间保证。运行时只在开始读取一次 `/v1/models`、`/metrics` 来核对驻留和无已知活动/排队任务；不自动加载模型，不重试探测，不运行第二个ESP32轮询器。没有可用的驻留/空闲证据就保留停止记录。
+ 
+ 每条请求最多256个生成token，整轮最多256条，单条在途最多30秒。20/60/180秒是发起窗口；正常结束以SSE的DONE或完整普通JSON及finish_reason确认。EOF、timeout、主动取消均不能证明服务器停止；脚本不调用虚构取消接口，不停止服务。发起窗口内当前输入未知只暂停，窗口不因此延长；近期60秒完整输入不满足时不进入该工作块。观察到保护、失温、风扇停用、控制绑定变化等明确异常后，本轮不自动恢复。
+ 
+-室温可选：复制包内 `scripts/thermal_trials/ambient.example.json` 到新的 `~/TTO-midload-0.2.3/ambient.json`，填写实际进风附近读数、测点、仪表、精度和实际观察/写入UTC时刻。未知保留null。若更新侧文件，在现场命令后加 `--ambient-file "$HOME/TTO-midload-0.2.3/ambient.json"`；runner在各阶段起止归档当时侧文件，不把旧读数当新测量。记录此前是否运行过负载、结束多久及机箱状态；180/600秒背景均不代表热平衡。
++室温可选：复制包内 `scripts/thermal_trials/ambient.example.json` 到新的 `~/TTO-midload-0.2.4/ambient.json`，填写实际进风附近读数、测点、仪表、精度和实际观察/写入UTC时刻。未知保留null。若更新侧文件，在现场命令后加 `--ambient-file "$HOME/TTO-midload-0.2.4/ambient.json"`；runner在各阶段起止归档当时侧文件，不把旧读数当新测量。记录此前是否运行过负载、结束多久及机箱状态；180/600秒背景均不代表热平衡。
+ 
+ 输出自动生成唯一UTC目录，内含TTO原始观察、原合同质量/控制资格、轮询时序、请求协议原件、事件/请求JSONL、计划和实际时刻、候选/配置SHA、输入覆盖、停止原因及 `trial-result.zip`。服务自报时钟与主机单调钟/UTC分列。未来计划和实际任务结束均不输入预测器；本runner只采集，不训练或加载灰箱模型。
+ 
+diff --git a/docs/TTO中等负载测试操作卡.md b/docs/TTO中等负载测试操作卡.md
+index 1b24adb..cff3091 100644
+--- a/docs/TTO中等负载测试操作卡.md
++++ b/docs/TTO中等负载测试操作卡.md
+@@ -1,28 +1,28 @@
+ # TTO 中等负载测试操作卡
+ 
+-**0.2.3候选｜TTO-MIDLOAD-DEV-v1.0｜先独立复审，再由用户确认现场窗口。下面现场命令本轮未执行。**
++**0.2.4候选｜TTO-MIDLOAD-DEV-v1.0｜先独立复审，再由用户确认现场窗口。下面现场命令本轮未执行。**
+ 
+-1. 把本次 `TTO-v1-0.2.3-中等负载准备-Conda安装候选.zip` 放到N305的 `~/Downloads/`，在已初始化Conda的终端安装到新目录。保留原 `~/TTO`。
++1. 把本次 `TTO-v1-0.2.4-R1-R2返修-Conda安装候选.zip` 放到N305的 `~/Downloads/`，在已初始化Conda的终端安装到新目录。保留原 `~/TTO`。
+ 
+    ```sh
+-   mkdir -p "$HOME/TTO-midload-prep-v1"
+-   unzip -n "$HOME/Downloads/TTO-v1-0.2.3-中等负载准备-Conda安装候选.zip" -d "$HOME/TTO-midload-prep-v1"
+-   sh "$HOME/TTO-midload-prep-v1/TTO-v1-0.2.3-Conda安装包/install.sh" --prefix "$HOME/TTO-midload-0.2.3"
+-   "$HOME/TTO-midload-0.2.3/tto" doctor --config "$HOME/TTO-midload-0.2.3/config/local.json"
++   mkdir -p "$HOME/TTO-midload-prep-r1-r2"
++   unzip -n "$HOME/Downloads/TTO-v1-0.2.4-R1-R2返修-Conda安装候选.zip" -d "$HOME/TTO-midload-prep-r1-r2"
++   sh "$HOME/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/install.sh" --prefix "$HOME/TTO-midload-0.2.4"
++   "$HOME/TTO-midload-0.2.4/tto" doctor --config "$HOME/TTO-midload-0.2.4/config/local.json"
+    ```
+ 
+-2. 先运行离线预览。它不访问设备，不读凭据。现场配置复用旧 `~/TTO/config/local.json`；推理配置已按旧记录填入本地候选的 `site/local-midload.json`。尚未现场确认端点、驻留或空闲，原AUTO、曲线、gain、保护必须保持，其他任务停止。
++2. 先用安装生成的隔离入口运行离线预览。它显示实际TTO版本和导入位置，不访问设备，不读凭据。plan、dry-run和现场命令都用同一tto-midload入口，不直接运行Python脚本。现场配置复用旧 `~/TTO/config/local.json`；推理配置已按旧记录填入本地候选的 `site/local-midload.json`。尚未现场确认端点、驻留或空闲，原AUTO、曲线、gain、保护必须保持，其他任务停止。
+ 
+    ```sh
+-   conda run --no-capture-output --prefix "$HOME/TTO-midload-0.2.3/conda-env" python "$HOME/TTO-midload-prep-v1/TTO-v1-0.2.3-Conda安装包/scripts/thermal_trials/run_midload.py" --plan --trial-config "$HOME/TTO-midload-prep-v1/TTO-v1-0.2.3-Conda安装包/site/local-midload.json" --tto-config "$HOME/TTO/config/local.json"
++   "$HOME/TTO-midload-0.2.4/tto-midload" --plan --trial-config "$HOME/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/site/local-midload.json" --tto-config "$HOME/TTO/config/local.json"
+    ```
+ 
+ 3. **仅在复审通过、用户确认现场窗口后**，运行下面一条命令。先记录600秒背景；前180秒在同一采集流检查，首个工作块前须有近期60秒完整输入。依次20/60/180秒单路发起窗口，回落420/600/600秒；已有请求自然结束再计回落。约41分20秒，总上限45分钟。无需逐题打点。
+ 
+    ```sh
+-   conda run --no-capture-output --prefix "$HOME/TTO-midload-0.2.3/conda-env" python "$HOME/TTO-midload-prep-v1/TTO-v1-0.2.3-Conda安装包/scripts/thermal_trials/run_midload.py" --live --trial-config "$HOME/TTO-midload-prep-v1/TTO-v1-0.2.3-Conda安装包/site/local-midload.json" --tto-config "$HOME/TTO/config/local.json" --output-root "$HOME/TTO-midload-0.2.3/trials"
++   "$HOME/TTO-midload-0.2.4/tto-midload" --live --trial-config "$HOME/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/site/local-midload.json" --tto-config "$HOME/TTO/config/local.json" --output-root "$HOME/TTO-midload-0.2.4/trials"
+    ```
+ 
+-4. 数据缺口会暂停新请求；明确异常、采集退出或超时会停止后续负载。需要手动停止时按 **Ctrl-C一次**。客户端退出不能证明服务器计算结束；若提示“最后一条请求是否结束仍未确认”，不要重启或叠加测试，用现有服务方式人工确认。不要杀推理服务、重启设备或改风扇。结束时交回终端给出的 `~/TTO-midload-0.2.3/trials/midload-…/trial-result.zip`；未完成的记录也要交回。
++4. 数据缺口会暂停新请求；明确异常、采集退出或超时会停止后续负载。需要手动停止时按 **Ctrl-C一次**。客户端退出不能证明服务器计算结束；若提示“最后一条请求是否结束仍未确认”，不要重启或叠加测试，用现有服务方式人工确认。不要杀推理服务、重启设备或改风扇。结束时交回终端给出的 `~/TTO-midload-0.2.4/trials/midload-…/trial-result.zip`；未完成的记录也要交回。
+ 
+ **回退：**停止本runner后，保留新候选和结果，继续使用原 `~/TTO/tto` 入口；未替换旧环境、配置或服务，无需重启。现场若没有室温读数，保留null并说明热前史，结果仅属缺边界观测的开发数据。可选环境侧文件与离线安装方法见《TTO中等负载候选安装说明.md》。
+diff --git a/install-manifest.json b/install-manifest.json
+index 043482d..cf25054 100644
+--- a/install-manifest.json
++++ b/install-manifest.json
+@@ -1,12 +1,12 @@
+ {
+   "installer_version": 3,
+-  "version": "0.2.3",
++  "version": "0.2.4",
+   "environment_manager": "conda",
+   "files": {
+     "install.sh": "762a72b94e96dd59b4d4dc8b0aa3ca8a807d49f793f9da43b8f0dd8bfe6ca153",
+     "requirements-locked.txt": "426fa81527a8e31213b3ea49b4841cb1f7b9b9f1b4702f1dcaeb625a95a6f97a",
+     "config/tto.example.json": "4463c064f6809cf371f447cb133d30e1fdb9854b1483077c8102f0e58b67ebd1",
+-    "scripts/install_tto.py": "88f54a11a8d12eb832d5435edbb071a039f5b091ddc20ae8c0d8d293d9277b29",
+-    "wheels/tianshan_thermal_observer-0.2.3-py3-none-any.whl": "55dce2ac1804c353caf6b91baa76e66e76b1eb4816863f98bbb59421886502b6"
++    "scripts/install_tto.py": "caa8231488c135a7d779edca880884a719d3beef0162f3a9eff4cbf307113fec",
++    "wheels/tianshan_thermal_observer-0.2.4-py3-none-any.whl": "3f483d036dc50b5db187ae0edf24b42c56afc547bdeb1e46b32010fadabbf5b6"
+   }
+ }
+diff --git a/pyproject.toml b/pyproject.toml
+index fd19333..7311e85 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -3,7 +3,7 @@ requires = ["setuptools==80.9.0", "wheel==0.45.1"]
+ build-backend = "setuptools.build_meta"
+ [project]
+ name = "tianshan-thermal-observer"
+-version = "0.2.3"
++version = "0.2.4"
+ description = "Read-only, CPU thermal recorder and causal short-term TJ observer"
+ requires-python = ">=3.10"
+ dependencies = ["python-socketio==5.13.0", "aiohttp==3.11.18", "psutil==7.0.0"]
+diff --git a/scripts/install_tto.py b/scripts/install_tto.py
+index 6cbfbea..43c7397 100644
+--- a/scripts/install_tto.py
++++ b/scripts/install_tto.py
+@@ -7,6 +7,7 @@ import os
+ from pathlib import Path
+ import subprocess
+ import shlex
++import shutil
+ import sys
+ from datetime import datetime, timezone
+ 
+@@ -42,6 +43,14 @@ cd "$install_dir"
+ exec {conda_exe} run --no-capture-output --prefix "$install_dir/conda-env" python -I -m tto "$@"
+ '''
+ 
++MIDLOAD_LAUNCHER = '''#!/bin/sh
++set -eu
++export CONDA_PIP_INTEROP_ENABLED=false
++install_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
++cd "$install_dir"
++exec {conda_exe} run --no-capture-output --prefix "$install_dir/conda-env" python -I "$install_dir/thermal_trials/run_midload.py" "$@"
++'''
++
+ 
+ def digest(path):
+     return hashlib.sha256(path.read_bytes()).hexdigest()
+@@ -69,7 +78,7 @@ def install(args):
+     previous=None
+     if prefix.exists() and any(prefix.iterdir()):
+         previous=json.loads(marker.read_text()) if marker.is_file() else None
+-        supported={'0.1.2','0.2.0','0.2.1','0.2.2','0.2.3'}
++        supported={'0.1.2','0.2.0','0.2.1','0.2.2','0.2.3','0.2.4'}
+         if not previous or previous.get('version') not in supported or previous.get('installer_version') not in (1,2,3) or previous.get('environment_manager') not in (None,'venv','conda'):
+             raise ValueError('目录已有其他内容，未改动：'+str(prefix)+'；请用--prefix指定新的独立目录。')
+     prefix.mkdir(parents=True,exist_ok=True)
+@@ -119,10 +128,22 @@ def install(args):
+     print('5/5 离线配置检查（不连接设备）',flush=True)
+     subprocess.run(runner+['python','-m','tto','doctor','--config',str(config)],env=env,cwd=prefix,check=True)
+     launcher=prefix/'tto';launcher.write_text(LAUNCHER.format(conda_exe=shlex.quote(str(conda))));launcher.chmod(0o755)
++    trial_source=bundle/'scripts/thermal_trials'
++    if trial_source.is_dir():
++        trial_dir=prefix/'thermal_trials';trial_dir.mkdir(exist_ok=True)
++        for path in sorted(trial_source.iterdir()):
++            if path.is_file() and path.suffix in ('.py','.json','.md'):shutil.copy2(path,trial_dir/path.name)
++        trial_launcher=prefix/'tto-midload'
++        trial_launcher.write_text(MIDLOAD_LAUNCHER.format(conda_exe=shlex.quote(str(conda))));trial_launcher.chmod(0o755)
++        # The same isolated script used by the installed launcher; no target/credentials.
++        trial_check=subprocess.run(runner+['python','-I',str(trial_dir/'run_midload.py'),'--plan'],env=env,cwd=prefix,check=True,capture_output=True,text=True)
++        trial_identity=json.loads(trial_check.stdout)['runtime']
++        identity['midload_runner']=dict(entry=str(trial_launcher),runtime=trial_identity,
++            files_sha256={p.name:digest(p) for p in sorted(trial_dir.iterdir()) if p.is_file()})
+     identity.update(environment_manager='conda',environment_prefix=str(environment),conda_executable=str(conda),conda_version=subprocess.check_output([str(conda),'--version'],env=env,text=True).strip(),wheel_sha256=digest(wheel),dependency_lock_sha256=digest(bundle/'requirements-locked.txt'),config_path=str(config),checked_at_utc=datetime.now(timezone.utc).isoformat(),offline_doctor_passed=True)
+     (prefix/'installation.json').write_text(json.dumps(identity,ensure_ascii=False,indent=2)+'\n')
+     marker.write_text(json.dumps({'installer_version':3,'version':version,'environment_manager':'conda','previous_version':previous.get('version') if previous else None,'status':'verified'})+'\n')
+-    print('\n安装完成：TTO '+version+'\n运行入口：'+str(launcher)+'\n本机配置：'+str(config)+'\n安装身份：'+str(prefix/'installation.json')+'\n未启动采集、设备连接或后台服务。',flush=True)
++    print('\n安装完成：TTO '+version+'\n运行入口：'+str(launcher)+'\n中等负载入口：'+str(prefix/'tto-midload')+'\n本机配置：'+str(config)+'\n安装身份：'+str(prefix/'installation.json')+'\n未启动采集、设备连接或后台服务。',flush=True)
+ 
+ 
+ def main():
+diff --git a/scripts/thermal_trials/README.md b/scripts/thermal_trials/README.md
+index e87b960..439bd10 100644
+--- a/scripts/thermal_trials/README.md
++++ b/scripts/thermal_trials/README.md
+@@ -1,13 +1,13 @@
+ # 中等负载测试工具
+ 
+-入口 `run_midload.py` 默认仅打印离线计划；`--help`、`--plan`、`--dry-run`不建网络会话，不读取headers文件。显式 `--live` 才可能连接配置目标；本轮仅自建loopback测试过协议和缩短的排程集成，真实设备未执行。
++安装入口 `tto-midload` 默认仅打印离线计划并核对本地安装身份；`--help`、`--plan`、`--dry-run`不建网络会话，不读取headers文件。显式 `--live` 才可能连接配置目标；本轮仅自建loopback测试过协议和缩短的排程集成，真实设备未执行。
+ 
+ 计划、预算、健康准入、停止和人工回退见包内 `docs/TTO中等负载测试操作卡.md`。公共 `plan.example.json` 不包含私有地址或凭据；私有目标仅在本地候选包 `site/local-midload.json`。请求工具沿用已有OpenAI兼容接口，针对真实记录中的SSE协议实现DONE/EOF区别；不把首数据行等同于首内容，不把客户端结束等同于GPU计算结束。
+ 
+-离线复核（安装TTO 0.2.3和现有requirements-locked.txt后）：
++离线复核（安装TTO 0.2.4和现有requirements-locked.txt后）：新增R2测试实际调用安装生成的入口，需要把 `TTO_MIDLOAD_INSTALLED_PREFIX` 设为该安装prefix，把 `TTO_MIDLOAD_LEGACY_SOURCE` 设为真实0.2.2源码的src目录。本次返修证据包已提供旧源副本和完整复跑命令；不得用虚构模块替代旧源，也不要把未安装入口的环境当作R2通过。
+ 
+ ```sh
+-python scripts/thermal_trials/run_midload.py --plan
++python -I scripts/thermal_trials/run_midload.py --plan
+ python -m pytest -q scripts/thermal_trials/tests experiments/thermal_identification_prep_v2/tests
+ ```
+ 
+diff --git a/scripts/thermal_trials/health.py b/scripts/thermal_trials/health.py
+index c61a4cf..8ac7de1 100644
+--- a/scripts/thermal_trials/health.py
++++ b/scripts/thermal_trials/health.py
+@@ -6,6 +6,7 @@ import threading
+ class TrialHealth:
+     def __init__(self):
+         self.lock=threading.Lock();self.nodes=[];self.latest_source=None
++        self.source_usable=False;self.source_epoch=0;self.source_rejection='no_accepted_source'
+         self.last_control_context=None;self.observed_abnormal=False
+         self.coverage={'complete_input_s':0.,'unknown_input_s':0.,'longest_continuous_s':0.,'current_continuous_s':0.,'reasons_seconds':{}}
+ 
+@@ -21,13 +22,26 @@ class TrialHealth:
+                     reason=','.join(previous['reasons']) or 'input_validity_expired_or_source_unusable'
+                     self.coverage['reasons_seconds'][reason]=self.coverage['reasons_seconds'].get(reason,0)+unknown
+                     self.coverage['current_continuous_s']=0.
+-            if q and q['accepted']:
+-                self.latest_source=dict(values=dict(q['values']),ref=record['ref'],platform=q.get('input_contract'),
+-                                        period_known=q.get('period_known',False))
++            if record['kind']=='boundary' or record.get('preceding_queue_gap'):
++                self.source_usable=False;self.source_epoch+=1;self.source_rejection=record.get('reason','queue_gap')
++            if q:
++                if q['accepted']:
++                    identity=(tuple(q['key'][:2]),record.get('connection_epoch'))
++                    if not self.source_usable or self.latest_source['identity']!=identity:self.source_epoch+=1
++                    meta=record['payload']['telemetry_meta'];age=q['age_lower_bound_ms']
++                    self.latest_source=dict(values=dict(q['values']),ref=record['ref'],platform=q.get('input_contract'),
++                                            period_known=q.get('period_known',False),identity=identity,key=list(q['key']),
++                                            accepted_t=t,age_at_accept_ms=age,valid_until=t+(meta['freshness_timeout_ms']-age)/1000)
++                    self.source_usable=True;self.source_rejection=None
++                elif not (q['reason']=='duplicate' and self.source_usable and self.latest_source['key']==engine.q.key and
++                          not engine.q.blocked and not engine.q.quarantined and q.get('period_known') and q.get('input_contract') and
++                          not q.get('lifecycle_violation')):
++                    if self.source_usable:self.source_epoch+=1
++                    self.source_usable=False;self.source_rejection=q['reason']
+             fan=engine.fan['data'] if engine.fan else {};temp=engine.temp['data'] if engine.temp else {}
+             scope,eligible,reasons=engine.control_qualification(t)
+             source=self.latest_source
+-            source_until=engine.q.anchor_t+(engine.q.timeout_ms-engine.q.anchor_age)/1000 if source else t
++            source_until=source['valid_until'] if source else t
+             until=min(source_until,engine.fan['t']+2.5 if engine.fan else t,engine.temp['t']+7.5 if engine.temp else t)
+             power=bool(source and all(isinstance(source['values'].get(k),(int,float)) and math.isfinite(source['values'][k]) for k in ('vdd_gpu','vdd_cpu_soc_mss')))
+             context=(fan.get('mode'),fan.get('enabled'),temp.get('manual_mode'),temp.get('active_source'),temp.get('bound_variable'))
+@@ -38,14 +52,19 @@ class TrialHealth:
+                       temp.get('manual_mode') is True or temp.get('normalized_valid') is False or
+                       fan.get('mode') is not None and fan.get('mode')!='auto' or changed)
+             self.observed_abnormal|=bool(abnormal)
+-            good=bool(source and source['platform'] and source['period_known'] and power and eligible and scope=='auto' and
++            good=bool(source and self.source_usable and source_until>t and source['platform'] and source['period_known'] and power and eligible and scope=='auto' and
+                       not engine.q.blocked and not engine.q.quarantined and not engine.mixed_profiles and not abnormal)
+-            node=dict(t=t,ref=record['ref'],complete=good,valid_until=until,observed_abnormal=bool(abnormal),control_context_changed=changed,
++            if not self.source_usable:reasons=[*reasons,'source_not_usable:'+str(self.source_rejection)]
++            node=dict(t=t,ref=record['ref'],complete=good,valid_until=until,source_valid_until=source_until,
++                      source_usable=self.source_usable,source_epoch=self.source_epoch,source_rejection=self.source_rejection,
++                      observed_abnormal=bool(abnormal),control_context_changed=changed,
+                       control_mode=scope,reasons=reasons,TJ=source['values'].get('tj') if source else None,
+                       source_ref=source['ref'] if source else None,fan_ref=engine.fan['ref'] if engine.fan else None,
+                       P_g=source['values'].get('vdd_gpu') if source else None,P_c=source['values'].get('vdd_cpu_soc_mss') if source else None,
+                       fan_age_s=t-engine.fan['t'] if engine.fan else None,PWM=fan.get('successful_duty'),gain=fan.get('controller_gain'),
+-                      source_age_ms=(t-engine.q.anchor_t)*1000+engine.q.anchor_age if source else None,source_period_ms=engine.c['orin']['source_sample_interval_ms'])
++                      source_age_ms=(t-source['accepted_t'])*1000+source['age_at_accept_ms'] if source else None,
++                      source_accepted_t=source['accepted_t'] if source else None,source_key=source['key'] if source else None,
++                      source_period_ms=engine.c['orin']['source_sample_interval_ms'])
+             self.nodes.append(node)
+             # Only the 180-second check history is needed here; original facts remain in TTO logs.
+             while len(self.nodes)>1 and self.nodes[1]['t']<t-180:self.nodes.pop(0)
+@@ -56,7 +75,7 @@ class TrialHealth:
+             coverage={**self.coverage,'reasons_seconds':dict(self.coverage['reasons_seconds'])}
+             abnormal=self.observed_abnormal
+         if not nodes:return dict(current_ready=False,continuous_60s=False,abnormal=False,gaps_180s=[dict(reason='no_data')],latest=None)
+-        last=nodes[-1];current=last['complete'] and last['valid_until']>=now;start=now-60
++        last=nodes[-1];current=last['complete'] and last['valid_until']>=now and last['source_valid_until']>now;start=now-60
+         recent=[n for n in nodes if n['t']>=start]
+         anchor=next((n for n in reversed(nodes) if n['t']<=start),None)
+         if anchor and (not recent or recent[0]['t']!=anchor['t']):recent.insert(0,anchor)
+@@ -65,7 +84,7 @@ class TrialHealth:
+             right=nodes[i+1]['t'] if i+1<len(nodes) else now;left=max(n['t'],now-180)
+             if right>left and (not n['complete'] or n['valid_until']<right):
+                 gaps.append(dict(from_t=max(left,n['valid_until']) if n['complete'] else left,to_t=right,ref=n['ref'],reasons=n['reasons']))
+-        continuous=bool(anchor and current and not any(g['to_t']>start for g in gaps))
++        continuous=bool(anchor and current and anchor['source_epoch']==last['source_epoch'] and not any(g['to_t']>start for g in gaps))
+         return dict(current_ready=bool(current),continuous_60s=continuous,abnormal=abnormal,
+                     gaps_180s=gaps,latest=last,checked_at_mono_s=now,observed_span_s=now-nodes[0]['t'],
+                     input_coverage=coverage,coverage_measured_until_mono_s=last['t'])
+diff --git a/scripts/thermal_trials/run_midload.py b/scripts/thermal_trials/run_midload.py
+index abe050f..8dadaba 100644
+--- a/scripts/thermal_trials/run_midload.py
++++ b/scripts/thermal_trials/run_midload.py
+@@ -10,6 +10,27 @@ import sys
+ from datetime import datetime,timezone
+ import zipfile
+ 
++# -I omits the script directory. Only this bundle's sibling modules are added.
++if sys.flags.isolated:sys.path.insert(0,str(Path(__file__).resolve().parent))
++
++EXPECTED_VERSION='0.2.4'
++
++
++class RuntimeIdentityError(ValueError):pass
++
++
++def runtime_identity():
++    import importlib.metadata as metadata
++    try:
++        import tto
++        installed_version=metadata.version('tianshan-thermal-observer')
++    except (ImportError,metadata.PackageNotFoundError) as error:
++        raise RuntimeIdentityError('没有找到本轮已安装TTO；请先安装0.2.4候选，再使用新安装目录的tto-midload入口。') from error
++    path=Path(tto.__file__).resolve()
++    if tto.__version__!=EXPECTED_VERSION or installed_version!=EXPECTED_VERSION or Path(sys.prefix) not in path.parents or 'site-packages' not in path.parts:
++        raise RuntimeIdentityError(f'运行环境不匹配：需要TTO {EXPECTED_VERSION}，实际导入{tto.__version__}（{path}），安装记录为{installed_version}。请使用0.2.4新安装目录下的tto-midload入口；不是配置文件缺项。')
++    return dict(version=tto.__version__,import_path=str(path),python=sys.executable,isolated=bool(sys.flags.isolated),non_editable=True)
++
+ 
+ def sha(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+ def write(path,obj):Path(path).write_text(json.dumps(obj,ensure_ascii=False,indent=2,allow_nan=False)+'\n')
+@@ -28,6 +49,7 @@ def load_trial(path):
+ def preview(config,args):
+     from trial import PHASES
+     return dict(trial_id=config['trial_id'],mode='dry_run',connected=False,credentials_read=False,
++                runtime=runtime_identity(),
+                 nominal_duration_s=2480,hard_limit_s=2700,initial_check_within_background_s=180,strict_history_s=60,
+                 phases=[dict(id=i,kind=k,duration_s=d) for i,k,d in PHASES],max_total_requests=256,max_tokens=256,max_inflight=1,
+                 max_request_wall_s=30,max_drain_s=30,model=config['inference']['model'],
+@@ -43,7 +65,7 @@ async def execute(args,config,clock=None,collector_factory=None,health_factory=N
+     import tto
+     from tto.config import load_config,public_config,require_live
+     from tto.collector import collect
+-    if tto.__version__!='0.2.3':raise ValueError('请使用本轮0.2.3安装候选运行测试。')
++    runtime_identity()
+     if not args.tto_config or not config['inference'].get('base_url'):raise ValueError('真实模式需要完整的本地TTO和推理服务配置。')
+     c=load_config(args.tto_config,environ={});require_live(c,hard_limit_s)
+     clock=clock or RealClock();start=clock.now();stop=asyncio.Event();health=(health_factory or TrialHealth)()
+@@ -109,12 +131,15 @@ def main(argv=None):
+     ap.add_argument('--ambient-file',type=Path)
+     args=ap.parse_args(argv)
+     try:
++        runtime_identity()
+         config=load_trial(args.trial_config)
+         if not args.live:
+             result=preview(config,args);print(json.dumps(result,ensure_ascii=False,indent=2));return 0
+         result=asyncio.run(execute(args,config));return 0 if result['status']=='completed' else 2
+     except KeyboardInterrupt:
+         print('已停止。若最后一条请求尚未确认结束，请不要再次启动测试。',flush=True);return 130
++    except RuntimeIdentityError as error:
++        print(str(error),file=sys.stderr);return 2
+     except (ValueError,KeyError,OSError,json.JSONDecodeError):
+         print('本地配置不完整或不可用；未启动测试。请按操作卡核对配置路径。',file=sys.stderr);return 2
+ 
+diff --git a/scripts/thermal_trials/tests/test_installed_entry.py b/scripts/thermal_trials/tests/test_installed_entry.py
+new file mode 100644
+index 0000000..32462ed
+--- /dev/null
++++ b/scripts/thermal_trials/tests/test_installed_entry.py
+@@ -0,0 +1,111 @@
++"""R2: use the installed operation-card launcher, not an identity helper."""
++import asyncio
++import json
++import os
++from pathlib import Path
++import signal
++import sys
++import time
++import pytest
++import socketio
++from aiohttp import web
++sys.path.insert(0,str(Path(__file__).parents[3]/'tests'))
++from tto.config import load_config
++from tto.demo import fan_packet,temp_packet
++from test_platform_curve import new_packet
++
++
++@pytest.fixture
++def installed():
++    prefix=Path(os.environ['TTO_MIDLOAD_INSTALLED_PREFIX'])
++    legacy=Path(os.environ['TTO_MIDLOAD_LEGACY_SOURCE'])
++    assert (prefix/'tto-midload').is_file() and (legacy/'tto/__init__.py').is_file()
++    assert '0.2.2' in (legacy/'tto/__init__.py').read_text()
++    env=dict(os.environ,PYTHONPATH=str(legacy))
++    return prefix,legacy,env
++
++
++async def child(command,env,timeout=20):
++    process=await asyncio.create_subprocess_exec(*map(str,command),env=env,stdout=asyncio.subprocess.PIPE,stderr=asyncio.subprocess.PIPE)
++    try:out,err=await asyncio.wait_for(process.communicate(),timeout)
++    finally:
++        if process.returncode is None:process.kill();await process.wait()
++    return process.returncode,out.decode(),err.decode()
++
++
++@pytest.mark.asyncio
++@pytest.mark.parametrize('mode',['--plan','--dry-run'])
++async def test_operation_card_preview_isolated_with_real_old_PYTHONPATH(tmp_path,installed,mode):
++    prefix,legacy,env=installed;calls=[]
++    app=web.Application()
++    async def hit(request):calls.append(request.path);return web.Response()
++    app.router.add_route('*','/{path:.*}',hit);server=web.AppRunner(app);await server.setup()
++    site=web.TCPSite(server,'127.0.0.1',0);await site.start()
++    origin='http://127.0.0.1:'+str(site._server.sockets[0].getsockname()[1])
++    cfg=tmp_path/'trial.json';cfg.write_text(json.dumps(dict(trial_id='TTO-MIDLOAD-DEV-v1.0',inference=dict(base_url=origin,model='owned-fixture',messages=[dict(role='user',content='not sent')],headers_file=str(tmp_path/'must-not-be-read.json')))))
++    try:
++        code,out,err=await child([prefix/'tto-midload',mode,'--trial-config',cfg,'--tto-config',tmp_path/'absent-tto-config.json'],env)
++        result=json.loads(out);assert code==0,(out,err)
++        assert result['runtime']['version']=='0.2.4' and result['runtime']['isolated'] and result['runtime']['non_editable']
++        assert Path(result['runtime']['import_path']).is_relative_to(prefix/'conda-env')
++        assert not result['connected'] and not result['credentials_read'] and not calls
++        (tmp_path/'entry-result.json').write_text(json.dumps(dict(returncode=code,preview=result,stderr=err,loopback_calls=calls,legacy_source=str(legacy)),indent=2)+'\n')
++    finally:await server.cleanup()
++
++
++@pytest.mark.asyncio
++async def test_old_direct_entry_reports_loaded_version_and_correct_action(tmp_path,installed):
++    prefix,legacy,env=installed
++    code,out,err=await child([prefix/'conda-env/bin/python',prefix/'thermal_trials/run_midload.py','--plan'],env)
++    assert code==2 and '实际导入0.2.2' in err and str(legacy) in err and 'tto-midload' in err
++    assert '本地配置不完整或不可用' not in err and not out
++    (tmp_path/'wrong-entry-result.json').write_text(json.dumps(dict(returncode=code,stdout=out,stderr=err),ensure_ascii=False,indent=2)+'\n')
++
++
++@pytest.mark.asyncio
++async def test_operation_card_entry_real_owned_collect_loopback_and_operator_stop(tmp_path,installed):
++    prefix,legacy,env=installed;calls=[]
++    sio=socketio.AsyncServer(async_mode='aiohttp',ping_interval=.1,ping_timeout=1);app=web.Application();sio.attach(app)
++    async def fan(request):calls.append(request.path);return web.json_response(fan_packet(19))
++    async def temp(request):calls.append(request.path);return web.json_response(temp_packet())
++    async def models(request):calls.append(request.path);return web.json_response({'data':[{'id':'owned-fixture'}]})
++    async def metrics(request):calls.append(request.path);return web.Response(text='vllm:num_requests_running 0\nvllm:num_requests_waiting 0\n')
++    async def inference(request):calls.append(request.path);raise AssertionError('The unchanged 600s passive phase must send no load.')
++    app.router.add_get('/api/v1/fan/status',fan);app.router.add_get('/api/v1/temp/status',temp)
++    app.router.add_get('/v1/models',models);app.router.add_get('/metrics',metrics);app.router.add_post('/v1/chat/completions',inference)
++    server=web.AppRunner(app);await server.setup();site=web.TCPSite(server,'127.0.0.1',0);await site.start()
++    origin='http://127.0.0.1:'+str(site._server.sockets[0].getsockname()[1])
++    async def emit_source():
++        seq=0
++        while True:
++            seq+=1;await sio.emit('tegrastats_update',new_packet(seq));await asyncio.sleep(1)
++    emitter=asyncio.create_task(emit_source())
++    c=load_config(environ={});c['orin'].update(base_url=origin,source_sample_interval_ms=1000,source_interval_evidence='owned-loopback-fixture');c['tianshan']['base_url']=origin
++    tto=tmp_path/'tto.json';tto.write_text(json.dumps(c));trial=tmp_path/'trial.json'
++    trial.write_text(json.dumps(dict(trial_id='TTO-MIDLOAD-DEV-v1.0',inference=dict(base_url=origin,model='owned-fixture',messages=[dict(role='user',content='not sent')],stream=True))))
++    command=[prefix/'tto-midload','--live','--trial-config',trial,'--tto-config',tto,'--output-root',tmp_path/'output']
++    process=await asyncio.create_subprocess_exec(*map(str,command),env=env,start_new_session=True,stdout=asyncio.subprocess.PIPE,stderr=asyncio.subprocess.PIPE)
++    try:
++        deadline=time.monotonic()+25
++        while time.monotonic()<deadline:
++            paths=list((tmp_path/'output').rglob('observations-*.jsonl'))
++            if paths and any('"kind":"orin"' in p.read_text() or '"kind": "orin"' in p.read_text() for p in paths):break
++            assert process.returncode is None
++            await asyncio.sleep(.05)
++        else:raise AssertionError('Installed entry did not receive owned WS input within budget.')
++        os.killpg(process.pid,signal.SIGINT)
++        out,err=await asyncio.wait_for(process.communicate(),15)
++        summaries=list((tmp_path/'output').glob('midload-*/summary.json'));assert len(summaries)==1,(out.decode(),err.decode())
++        result=json.loads(summaries[0].read_text());folder=summaries[0].parent;identity=json.loads((folder/'identity.json').read_text())
++        assert result['status']=='stopped' and result['requests']==0 and (folder/'trial-result.zip').is_file()
++        assert identity['tto_version']=='0.2.4' and Path(identity['tto_import_path']).is_relative_to(prefix/'conda-env')
++        assert identity['runner_sha256']==__import__('hashlib').sha256((prefix/'thermal_trials/run_midload.py').read_bytes()).hexdigest()
++        assert calls.count('/v1/models')==calls.count('/metrics')==1 and '/v1/chat/completions' not in calls
++        assert '/api/v1/fan/status' in calls and '/api/v1/temp/status' in calls
++        (tmp_path/'installed-loopback-entry.json').write_text(json.dumps(dict(command=[str(x) for x in command],returncode=process.returncode,stdout=out.decode(),stderr=err.decode(),calls=calls,
++            identity=identity,summary=result,scope='actual installed operation-card entry; production collector; owned loopback only; passive phase stopped, no inference request'),ensure_ascii=False,indent=2)+'\n')
++    finally:
++        if process.returncode is None:
++            os.killpg(process.pid,signal.SIGTERM);await process.wait()
++        emitter.cancel();await asyncio.gather(emitter,return_exceptions=True);await sio.shutdown();await server.cleanup()
++        await asyncio.sleep(.15)  # Owned server's already-closing ping task finishes.
+diff --git a/scripts/thermal_trials/tests/test_schedule.py b/scripts/thermal_trials/tests/test_schedule.py
+index 8949773..20b26f4 100644
+--- a/scripts/thermal_trials/tests/test_schedule.py
++++ b/scripts/thermal_trials/tests/test_schedule.py
+@@ -140,6 +140,7 @@ def test_health_uses_one_original_processed_stream_and_does_not_extend_TTL():
+             r=dict(kind=kind,payload=payload,mono_s=float(t),ref=f'fixture/{kind}:{t}',connection_epoch=1,observer_run_id='owned-fixture')
+             health.observe(r,engine.process(r),engine)
+     assert health.snapshot(70)['continuous_60s']
++    assert health.snapshot(72.5)['current_ready']  # Existing fan <=2.5s qualification is unchanged.
+     assert not health.snapshot(73)['current_ready']
+     f=fan_packet(19);f['data']['fans'][0]['guard_active']=True
+     r=dict(kind='fan',payload=f,mono_s=74.,ref='fixture/guard',observer_run_id='owned-fixture')
+diff --git a/scripts/thermal_trials/tests/test_source_admission.py b/scripts/thermal_trials/tests/test_source_admission.py
+new file mode 100644
+index 0000000..8996d00
+--- /dev/null
++++ b/scripts/thermal_trials/tests/test_source_admission.py
+@@ -0,0 +1,84 @@
++"""R1: production source decisions feed real health and real scheduling."""
++import asyncio
++import json
++import sys
++from pathlib import Path
++import pytest
++sys.path.insert(0,str(Path(__file__).parents[3]/'tests'))
++from tto.config import load_config
++from tto.engine import engine_for
++from tto.demo import fan_packet,temp_packet
++from test_platform_curve import new_packet
++from health import TrialHealth
++from trial import run_schedule
++from test_schedule import FakeClock,FakeRequester
++
++
++def feed(engine,health,t,seq,missing=False,kind='orin'):
++    for aux,payload in [('fan',fan_packet(19)),('temp',temp_packet())]:
++        record=dict(kind=aux,payload=payload,mono_s=float(t),ref=f'r1/{aux}:{t}',observer_run_id='r1-source-fixture')
++        health.observe(record,engine.process(record),engine)
++    payload=new_packet(seq)
++    if missing:payload['temperature'].pop('tj')
++    record=dict(kind=kind,payload=payload,mono_s=float(t),ref=f'r1/{kind}:{seq}:{t}',connection_epoch=1,observer_run_id='r1-source-fixture')
++    result=engine.process(record);health.observe(record,result,engine);return result['quality']
++
++
++def replay(end):
++    engine=engine_for(load_config(environ={}),record_schema=2);health=TrialHealth()
++    for t in range(end+1):feed(engine,health,t,t+1,missing=71<=t<=131)
++    return engine,health
++
++
++@pytest.mark.asyncio
++@pytest.mark.parametrize('at,current,history,requests',[(70,True,True,1),(71,False,False,0),(131,False,False,0),(132,True,False,0),(191,True,False,0),(192,True,True,1)])
++async def test_normal_missing_TJ_and_recovery_through_production_schedule(tmp_path,at,current,history,requests):
++    engine,health=replay(at);snapshot=health.snapshot(at)
++    assert snapshot['current_ready'] is current and snapshot['continuous_60s'] is history
++    assert snapshot['abnormal'] is False
++    if 71<=at<=131:
++        assert snapshot['latest']['source_accepted_t']==70 and snapshot['latest']['source_age_ms']==(at-70)*1000
++        assert engine.q.anchor_t==at  # Refused message time must not refresh the stored value.
++    clock=FakeClock();clock.t=float(at);stop=asyncio.Event();collector=asyncio.create_task(stop.wait());requester=FakeRequester(clock,.2);events=[]
++    try:
++        result=await run_schedule(clock,health,requester,stop,collector,lambda event,**kw:events.append(dict(event=event,**kw)),
++                                  phases=[('R1-admission','work',.15)],hard_limit_s=10)
++    finally:stop.set();await collector
++    assert len(requester.starts)==requests
++    (tmp_path/'decision.json').write_text(json.dumps(dict(at=at,snapshot=snapshot,requests=requester.starts,result=result,events=events),indent=2)+'\n')
++
++
++def test_duplicate_never_refreshes_the_accepted_sample_deadline():
++    engine,health=replay(70);deadline=health.snapshot(70)['latest']['source_valid_until']
++    for t in range(71,77):
++        q=feed(engine,health,t,71)
++        assert q['reason']=='duplicate' and not q['accepted']
++        assert health.snapshot(t)['latest']['source_valid_until']==deadline
++    assert not health.snapshot(76)['current_ready']
++
++
++def test_source_boundary_keeps_current_and_continuous_recovery_separate():
++    engine,health=replay(70)
++    record=dict(kind='boundary',reason='socketio_disconnected',mono_s=70.5,ref='r1/disconnected',observer_run_id='r1-source-fixture')
++    health.observe(record,engine.process(record),engine)
++    assert not health.snapshot(70.5)['current_ready']
++    feed(engine,health,71,72)
++    assert health.snapshot(71)['current_ready'] and not health.snapshot(71)['continuous_60s']
++    for t in range(72,132):feed(engine,health,t,t+1)
++    assert health.snapshot(131)['continuous_60s']
++
++
++@pytest.mark.asyncio
++async def test_missing_TJ_during_admitted_window_pauses_new_requests():
++    engine,health=replay(70);clock=FakeClock();clock.t=70.;stop=asyncio.Event();collector=asyncio.create_task(stop.wait())
++    requester=FakeRequester(clock,.3)
++    async def lose_source():
++        await clock.sleep(.15);feed(engine,health,clock.now(),72,missing=True)
++        return clock.now()
++    lost=asyncio.create_task(lose_source())
++    try:
++        result=await run_schedule(clock,health,requester,stop,collector,lambda *args,**kw:None,phases=[('R1-existing-window','work',1.)],hard_limit_s=10)
++        missing_at=await lost
++    finally:stop.set();await collector
++    assert result['status']=='completed' and requester.starts
++    assert not any(r['t']>=missing_at for r in requester.starts)
+diff --git a/scripts/thermal_trials/trial.py b/scripts/thermal_trials/trial.py
+index cdacb7e..9b2deff 100644
+--- a/scripts/thermal_trials/trial.py
++++ b/scripts/thermal_trials/trial.py
+@@ -38,7 +38,7 @@ async def run_schedule(clock,health,requester,stop,collector_task,emit,phases=PH
+         else:
+             check=health.snapshot(clock.now());checks.append(check);emit('work_admission',phase=phase,health=check)
+             if not check['continuous_60s']:
+-                reason='background_inputs_incomplete';print('风扇数据暂时不完整，本轮先不启动负载；记录已保存。',flush=True);break
++                reason='background_inputs_incomplete';print('采集数据暂时不完整，本轮先不启动负载；记录已保存。',flush=True);break
+             print('正在运行'+phase+'工作段，结束后会继续记录降温过程。',flush=True)
+             paused=False
+             while clock.now()<deadline:
+diff --git a/src/tto/__init__.py b/src/tto/__init__.py
+index b77a4e2..4c49751 100644
+--- a/src/tto/__init__.py
++++ b/src/tto/__init__.py
+@@ -1,2 +1,2 @@
+ """Importing TTO performs no I/O, networking or training-library imports."""
+-__version__ = "0.2.3"
++__version__ = "0.2.4"

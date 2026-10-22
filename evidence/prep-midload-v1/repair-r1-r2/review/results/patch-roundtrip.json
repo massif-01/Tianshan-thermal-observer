@@ -1,0 +1,74 @@
+{
+  "patch_sha256": "65d513690b1cc4b11c8cac3c9fa7e81dfe38ac13390f292de95969eed1ef9fc8",
+  "diff_path_count": 54,
+  "roundtrip_bytes_equal": true,
+  "unchanged_production_modules": {
+    "src/tto/recorded.py": true,
+    "src/tto/defaults.json": true,
+    "src/tto/config.py": true,
+    "src/tto/deployment.py": true,
+    "src/tto/util.py": true,
+    "src/tto/diagnostics.py": true,
+    "src/tto/evaluation.py": true,
+    "src/tto/features.py": true,
+    "src/tto/model.py": true,
+    "src/tto/dataset.py": true,
+    "src/tto/engine.py": true,
+    "src/tto/cli.py": true,
+    "src/tto/storage.py": true,
+    "src/tto/platform_quality.py": true,
+    "src/tto/demo.py": true,
+    "src/tto/quality.py": true,
+    "src/tto/profiles.py": true,
+    "src/tto/__main__.py": true,
+    "src/tto/report.py": true,
+    "src/tto/training.py": true,
+    "src/tto/platform_engine.py": true
+  },
+  "commands": [
+    {
+      "cmd": [
+        "git",
+        "apply",
+        "--reverse",
+        "--check",
+        "/mnt/data/tto_midload_review_20261013/candidate/results/midload-prep-v1.patch"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "cmd": [
+        "git",
+        "apply",
+        "--reverse",
+        "/mnt/data/tto_midload_review_20261013/candidate/results/midload-prep-v1.patch"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "cmd": [
+        "git",
+        "apply",
+        "--check",
+        "/mnt/data/tto_midload_review_20261013/candidate/results/midload-prep-v1.patch"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "cmd": [
+        "git",
+        "apply",
+        "/mnt/data/tto_midload_review_20261013/candidate/results/midload-prep-v1.patch"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ]
+}

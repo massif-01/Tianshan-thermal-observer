@@ -1,0 +1,44 @@
+{
+  "dataset": "../inputs/dataset.json",
+  "dataset_sha256": "8fe3635550cb99f116f49017982a0d5d94335729c8b9804fe931a87d623b0c9c",
+  "runs": [
+    "S"
+  ],
+  "role": "seen_development; not blind or independent confirmation",
+  "all_data_seen": true,
+  "models": [
+    {
+      "model_id": "G2-FROZEN-RM01-v1",
+      "manifest": "../baseline/frozen-model-manifest.json"
+    },
+    {
+      "model_id": "G2-GEN-L-20261021-v1",
+      "manifest": "../runs/generate/model-bundle/model-manifest.json"
+    },
+    {
+      "model_id": "G2-CAL-M-20261021-v1",
+      "manifest": "../runs/calibrate/model-bundle/model-manifest.json"
+    }
+  ],
+  "state_policy": "original R2 past60 then run E fixed; rolling60 Ts, current actual TJ; same budget for every model",
+  "horizons_s": [
+    15,
+    45,
+    90
+  ],
+  "future_label_tolerance_s": 2,
+  "methods": [
+    "G2-HOLD",
+    "G2-RELAX30",
+    "B0",
+    "B1",
+    "baseline-LP30-HOLD",
+    "baseline-LP120-HOLD"
+  ],
+  "selection": "no post-evaluation refit or search",
+  "main_horizon_s": 45,
+  "automatic_activation": false,
+  "baseline_frozen": true,
+  "runtime_profile": "offline_macos_accelerate_v1",
+  "main_metric": "45s same-cohort point_mae; time/balanced metrics separately retained"
+}

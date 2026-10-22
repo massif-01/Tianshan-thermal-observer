@@ -1,0 +1,69 @@
+{
+  "design_version": "TTO-SHORTQA-NEXT-v1.0-greybox-design",
+  "status": "design_only_not_fit_or_deployed",
+  "states": [
+    "fast_equivalent_temperature_delta",
+    "slow_unmeasured_equivalent_temperature_delta"
+  ],
+  "observation": "reported TJ Celsius",
+  "inputs": {
+    "power": [
+      "vdd_gpu",
+      "vdd_cpu_soc_mss",
+      "vin_sys_5v0"
+    ],
+    "power_unit": "W current per rail, not summed",
+    "actuator": "last successful logical PWM / 100",
+    "gain": "recorded diagnostic; not a separate heat input"
+  },
+  "equations": {
+    "fast": "-a*(xf-xs)+b_gpu*(P_gpu-P_gpu_ref)+b_cpu*(P_cpu-P_cpu_ref)+b_5v*(P_5v-P_5v_ref)",
+    "slow": "c*(xf-xs)-(d0+d1*u)*xs-d2*(u-u_ref)",
+    "observation": "T_ref + xf"
+  },
+  "constraints": {
+    "strict_positive": [
+      "a",
+      "c",
+      "d0"
+    ],
+    "nonnegative": [
+      "d1",
+      "d2",
+      "b_gpu",
+      "b_cpu",
+      "b_5v"
+    ],
+    "dynamic_parameters": 8
+  },
+  "single_initial_numerical_seed": {
+    "a": 0.1,
+    "c": 0.005,
+    "d0": 0.001,
+    "d1": 0.003,
+    "d2": 0.05,
+    "b_gpu": 0.03,
+    "b_cpu": 0.01,
+    "b_5v": 0.0
+  },
+  "seed_limit": "Numerical initialization only, not identified thermal quantities or a searched grid",
+  "initial_state": "xf from then-observed TJ minus causal T_ref; xs unknown estimated using past-only 60-second initialization block, separate per continuous segment",
+  "preprocessing": "full accepted 1-second irregular observations, referenced successful PWM as-of <=2.5 s; no gap bridging, no five-second origin subsampling",
+  "ambient": "unmeasured; locally stationary assumption and centered-state offset, no invented TTP or ambient temperature",
+  "fit": "single bounded positivity-constrained nonlinear least-squares with fixed Huber scale 0.3 C, stable matrix propagation with actual dt and zero-order-held current inputs; no model/parameter grid expansion",
+  "identifiability": "check rank/Jacobian/parameter correlation and segment/block sensitivity; PWM closed-loop and rails strongly collinear; no real heat-capacity claim",
+  "nested_reduction": "If rank inadequate, fix b_5v=0 without combining rails; compare simpler one-state structure, do not presume two states",
+  "future_inputs": {
+    "primary": "hold each last valid independent rail and successful PWM known at origin",
+    "unknown_or_expired": "report missing/fallback B0",
+    "planned_scenario": "only use advance-known schedule and label assumption",
+    "forbidden": [
+      "future measured rails",
+      "future successful PWM",
+      "actual future request end",
+      "future temperature to estimate current state"
+    ]
+  },
+  "evaluation": "development-only purged time windows, fixed parameters before outcome comparison, 15/45/90 s common origins plus source pulse coverage and underprediction; no 18-independent-events claim",
+  "confirmation": "future unused continuous process needed; not collected in this task"
+}

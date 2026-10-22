@@ -1,0 +1,25 @@
+{
+  "schema": "TTO-REF-CUES-v1",
+  "run_id": "SYNTHETIC-CUE-RUN",
+  "model_driven": false,
+  "max_prompts": 14,
+  "minimum_spacing_s": 30,
+  "late_grace_s": 5,
+  "background_offsets_s": [
+    30,
+    120
+  ],
+  "sparse_mid_s": 180,
+  "pre_continuous_offset_s": 270,
+  "pre_medium_offset_s": 369,
+  "bindings": {
+    "background": "resident_background",
+    "sparse": "sparse",
+    "pre_continuous": "between_groups",
+    "continuous": "continuous",
+    "pre_medium": "cooldown",
+    "medium": "optional_medium"
+  },
+  "missing_policy": "record_missing_no_wait_no_rerun",
+  "actual_field_plan_confirmed": false
+}

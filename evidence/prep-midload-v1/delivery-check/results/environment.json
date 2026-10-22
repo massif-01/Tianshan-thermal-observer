@@ -1,0 +1,31 @@
+{
+  "python": "3.10.18 (main, Sep 18 2025, 19:32:33) [Clang 20.1.4 ]",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "machine": "arm64",
+  "cpu_logical": null,
+  "cpu_physical": 14,
+  "memory_total_MiB": 36864.0,
+  "disk_free_GiB": 328.06396484375,
+  "CUDA_used": false,
+  "network_scope": "owned loopback only; dependencies and Conda from existing local caches",
+  "source_build_python": "CPython3.10.18",
+  "conda_installed_python": "3.10.22",
+  "target_N305_executed": false,
+  "commands": [
+    "python -m build --no-isolation --wheel --outdir wheels",
+    "pip install --no-index --find-links=<existing macOS CP310 cache> -r requirements-locked.txt",
+    "pip install --no-index --no-deps <0.2.3 wheel>",
+    "python -I tools/archive_and_identity.py",
+    "python -m pytest -q tests/test_polling_schedule.py tests/test_network.py tests/test_failures.py tests/test_config_storage.py tests/test_quality.py",
+    "python -m pytest -q scripts/thermal_trials/tests experiments/thermal_identification_prep_v2/tests",
+    "python experiments/thermal_identification_prep_v2/coverage_audit.py --handoff ../handoff --frozen ../frozen-greybox --output ../results/availability-v2",
+    "python scripts/create_tto_conda_bundle.py --output ../deliverables/TTO-v1-0.2.3-中等负载准备-Conda安装候选.zip --trial-site-config ../site/local-midload.json",
+    "CONDA_REGISTER_ENVS=false CONDA_OFFLINE=true CONDA_CHANNELS=conda-forge (existing cache) sh install.sh --prefix <fresh local test prefix> --offline --offline-wheelhouse <existing macOS CP310 cache>",
+    "python tools/protect_and_patch.py"
+  ],
+  "production_source_modified": [
+    "collector.py",
+    "__init__.py"
+  ],
+  "training_executed": false
+}

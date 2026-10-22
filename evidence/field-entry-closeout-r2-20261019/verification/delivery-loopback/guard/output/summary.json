@@ -1,0 +1,231 @@
+{
+  "mode": "execute",
+  "command_id": "LOOPBACK-guard",
+  "native_run_id": "57402644-36b6-49ba-a71a-c2d1d0678473",
+  "reason": "explicit_protection_or_mode_binding",
+  "elapsed_s": 18.236679174000074,
+  "time_coverage": {
+    "observed_s": 18.1825118700001,
+    "measurement_usable_s": 17.133654375000106,
+    "model_usable_s": 8.026674442000058,
+    "context_ready_s": 13.103601230000095,
+    "joint_ready_s": 8.026674442000058,
+    "work_paused_s": 0.0,
+    "tj_usable_s": 17.133654375000106,
+    "rail_usable_s": 17.133654375000106,
+    "PWM_usable_s": 18.076509650000162,
+    "temp_context_usable_s": 18.076509650000162
+  },
+  "phase_seconds": {
+    "uninitialized": 1.048857494999993,
+    "provisional": 9.106979933000048,
+    "tracking": 8.026674442000058
+  },
+  "fan_success_intervals": {
+    "count": 18,
+    "max_s": 1.0155237309998029,
+    "over_original_2_5s": 0
+  },
+  "protocol_requests": 100,
+  "successful_requests": 100,
+  "server_completion_unknown": false,
+  "schedule_completed": false,
+  "workload_intent": "evaluate_actual_protocol_GPU_rails_not_client_slots",
+  "collector_task_identity": 140737292938896,
+  "collector_engine_instance_id": 140737271115504,
+  "observer_instances_created": 1,
+  "native_callbacks": 61,
+  "native_run_directories": 1,
+  "I02_shared_engine_instance_id": 140737271115504,
+  "I02_preprocessed_views": 61,
+  "requester_sessions_all_closed": true,
+  "requester_instances_created": 4,
+  "request_executor_instances_created": 1,
+  "own_async_tasks_remaining": 0,
+  "collector_summary": {
+    "stop_reason": "external_stop",
+    "poll_missed": 0,
+    "poll_count": 23,
+    "connection_attempts": 1,
+    "payload_oversize": 0,
+    "orin_event_count": 18,
+    "business_payload_bytes_sum": 28449,
+    "business_payload_bytes_max": 1581,
+    "poll_rtt_ms": [
+      3.4581669999624864,
+      3.142128000035882,
+      1.8792690000282164,
+      6.048593999821605,
+      5.549891000100615,
+      6.182342000101926,
+      2.4068870000064635,
+      3.1752949998917757,
+      5.088771999908204,
+      4.374739000013506,
+      5.49568399992495,
+      4.100741999991442,
+      4.909648999955607,
+      3.813203999925463,
+      2.940214000091146,
+      5.646764999937659,
+      3.0139219998090994,
+      4.512487999818404,
+      1.8543529999988095,
+      1.2934010001117713,
+      1.1916519999886077,
+      1.5352730001723103,
+      8.554147000040757
+    ],
+    "prediction_ms": [
+      3.501750000168613,
+      3.2721269999456126,
+      2.5581780000720755,
+      1.6477300000588002,
+      2.3287219999019726
+    ],
+    "rss_mib": [
+      92.9921875,
+      92.9921875,
+      92.9921875,
+      92.9921875,
+      92.9921875,
+      92.9921875,
+      92.9921875,
+      92.9921875,
+      92.9921875,
+      92.9921875,
+      92.9921875,
+      93.0078125,
+      93.0078125,
+      93.0078125,
+      93.01171875,
+      93.015625,
+      93.0234375,
+      82.890625
+    ],
+    "cpu_pct_single_core": [
+      3.99969135181792,
+      3.975016982489617,
+      2.988839181338535,
+      4.985622874560909,
+      6.974097914408158,
+      3.991618029241151,
+      3.970737499112627,
+      4.975170045715613,
+      3.9689584820090897,
+      5.9652392208113705,
+      10.920923439014254,
+      10.915294227765127,
+      9.932153430121218,
+      6.983082511967338,
+      10.962043453174724,
+      1.994062580956091,
+      2.987190452377001,
+      8.942540759568418
+    ],
+    "elapsed_s": 18.200879647999955,
+    "queue_peak_items": 2,
+    "queue_peak_bytes": 2737,
+    "dropped": 0,
+    "quality": {
+      "boundary_socketio_connecting": 1,
+      "boundary_control_context_change": 2,
+      "boundary_stream": 1,
+      "new_samples": 18,
+      "boundary_input_boundary": 2,
+      "boundary_input_profile_change": 1,
+      "boundary_normal_scope_change": 1,
+      "boundary_socketio_disconnected": 1,
+      "boundary_run_end": 1
+    },
+    "processing": {
+      "fan_ok": 19,
+      "temp_ok": 4,
+      "origins": 5
+    },
+    "target_host_verified": false,
+    "polling_health": {
+      "contract": "TTO-POLL-INDEPENDENT-v1",
+      "max_inflight_per_endpoint": 1,
+      "max_total_inflight_limit": 2,
+      "max_total_inflight_observed": 2,
+      "end_inflight": 0,
+      "legacy_config_max_inflight_esp32": 1,
+      "endpoints": {
+        "fan": {
+          "sent": 19,
+          "returned": 19,
+          "http_ok": 19,
+          "errors": 0,
+          "skipped": 0,
+          "cancelled": 0,
+          "peak_inflight": 1,
+          "rtt_ms": {
+            "n": 19,
+            "p50": 4.100741999991442,
+            "p95": 6.419522500095804,
+            "min": 1.1916519999886077,
+            "max": 8.554147000040757
+          },
+          "send_interval_s": {
+            "n": 18,
+            "p50": 1.0043724909999128,
+            "p95": 1.0085148586999935,
+            "min": 1.0011789459999818,
+            "max": 1.0085781479999696
+          },
+          "return_interval_s": {
+            "n": 18,
+            "p50": 1.0052240225001015,
+            "p95": 1.0122909039498722,
+            "min": 0.9988890569998148,
+            "max": 1.0155225639998662
+          }
+        },
+        "temp": {
+          "sent": 4,
+          "returned": 4,
+          "http_ok": 4,
+          "errors": 0,
+          "skipped": 0,
+          "cancelled": 0,
+          "peak_inflight": 1,
+          "rtt_ms": {
+            "n": 4,
+            "p50": 2.7745075000211727,
+            "p95": 4.644520849967647,
+            "min": 1.8543529999988095,
+            "max": 4.909648999955607
+          },
+          "send_interval_s": {
+            "n": 3,
+            "p50": 5.005074697999817,
+            "p95": 5.006072222900002,
+            "min": 5.001430742000139,
+            "max": 5.006183059000023
+          },
+          "return_interval_s": {
+            "n": 3,
+            "p50": 5.00201940199986,
+            "p95": 5.008019179099961,
+            "min": 5.000695501000109,
+            "max": 5.008685820999972
+          }
+        }
+      }
+    }
+  },
+  "clock_end": {
+    "domain": "b952afb500f6:21:5c54b926-9ddd-4dfb-b24e-d72ec213d831",
+    "mono_before_s": 1621.19564106,
+    "utc": "2026-10-19T08:00:11.786036+00:00",
+    "mono_after_s": 1621.195684643,
+    "utc_clock_accuracy_s": null,
+    "host": "b952afb500f6",
+    "platform": "Linux-7.0.11-orbstack-00360-gc9bc4d96ac70-x86_64-with-glibc2.35",
+    "pid": 21
+  },
+  "control_changes": false,
+  "field_proven": false,
+  "synthetic_loopback_only": true
+}

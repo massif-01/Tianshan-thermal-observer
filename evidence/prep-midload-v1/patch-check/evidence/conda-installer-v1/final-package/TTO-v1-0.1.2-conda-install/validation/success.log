@@ -1,0 +1,140 @@
+安装TTO 0.1.2 → /private/tmp/tto-conda-installer-verification-final/installed with spaces
+1/5 使用预装Conda创建独立Python 3.10环境
+Channels:
+ - conda-forge
+ - defaults
+Platform: osx-arm64
+Collecting package metadata (repodata.json): ...working... done
+Solving environment: ...working... done
+
+## Package Plan ##
+
+  environment location: /private/tmp/tto-conda-installer-verification-final/installed with spaces/conda-env
+
+  added / updated specs:
+    - pip
+    - python=3.10
+
+
+The following NEW packages will be INSTALLED:
+
+  bzip2              conda-forge/osx-arm64::bzip2-1.0.8-h4e30115_10 
+  ca-certificates    conda-forge/noarch::ca-certificates-2026.7.22-hbd8a1cb_0 
+  libexpat           conda-forge/osx-arm64::libexpat-2.8.5-h6111c0a_0 
+  libffi             conda-forge/osx-arm64::libffi-3.7.0-h47dc5ef_1 
+  liblzma            conda-forge/osx-arm64::liblzma-5.8.3-h8088a28_1 
+  libsqlite          conda-forge/osx-arm64::libsqlite-3.54.0-h34a968b_101 
+  libzlib            conda-forge/osx-arm64::libzlib-1.3.2-h8088a28_3 
+  ncurses            conda-forge/osx-arm64::ncurses-6.6-he64c551_1 
+  openssl            conda-forge/osx-arm64::openssl-3.6.5-h55eecbc_0 
+  packaging          conda-forge/noarch::packaging-26.3-pyhc364b38_0 
+  pip                conda-forge/noarch::pip-26.2.1-pyh8b19718_0 
+  python             conda-forge/osx-arm64::python-3.10.22-hac0b6dc_0_cpython 
+  readline           conda-forge/osx-arm64::readline-8.3-h8b90a29_1 
+  setuptools         conda-forge/noarch::setuptools-84.0.0-pyh332efcf_0 
+  tk                 conda-forge/osx-arm64::tk-8.6.13-hbeba79b_4 
+  tzdata             conda-forge/noarch::tzdata-2026c-h151e31d_0 
+  wheel              conda-forge/noarch::wheel-0.48.0-pyhd8ed1ab_0 
+
+
+
+Downloading and Extracting Packages: ...working... done
+Preparing transaction: ...working... done
+Verifying transaction: ...working... done
+Executing transaction: ...working... done
+#
+# To activate this environment, use
+#
+#     $ conda activate "/private/tmp/tto-conda-installer-verification-final/installed with spaces/conda-env"
+#
+# To deactivate an active environment, use
+#
+#     $ conda deactivate
+
+2/5 安装锁定依赖（离线）
+Looking in links: /private/tmp/tto-installer-macos-wheelhouse
+Processing /private/tmp/tto-installer-macos-wheelhouse/aiohappyeyeballs-2.7.1-py3-none-any.whl (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 2))
+Processing /private/tmp/tto-installer-macos-wheelhouse/aiohttp-3.11.18-cp310-cp310-macosx_11_0_arm64.whl (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 3))
+Processing /private/tmp/tto-installer-macos-wheelhouse/aiosignal-1.4.0-py3-none-any.whl (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 4))
+Processing /private/tmp/tto-installer-macos-wheelhouse/async_timeout-5.0.1-py3-none-any.whl (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 5))
+Processing /private/tmp/tto-installer-macos-wheelhouse/attrs-26.1.0-py3-none-any.whl (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 6))
+Processing /private/tmp/tto-installer-macos-wheelhouse/bidict-0.23.1-py3-none-any.whl (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 7))
+Processing /private/tmp/tto-installer-macos-wheelhouse/build-1.2.2.post1-py3-none-any.whl (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 8))
+Processing /private/tmp/tto-installer-macos-wheelhouse/cloudpickle-3.1.2-py3-none-any.whl (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 9))
+Processing /private/tmp/tto-installer-macos-wheelhouse/exceptiongroup-1.3.1-py3-none-any.whl (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 10))
+Processing /private/tmp/tto-installer-macos-wheelhouse/frozenlist-1.8.0-cp310-cp310-macosx_11_0_arm64.whl (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 11))
+Processing /private/tmp/tto-installer-macos-wheelhouse/h11-0.16.0-py3-none-any.whl (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 12))
+Processing /private/tmp/tto-installer-macos-wheelhouse/idna-3.20-py3-none-any.whl (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 13))
+Processing /private/tmp/tto-installer-macos-wheelhouse/iniconfig-2.3.1-py3-none-any.whl (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 14))
+Processing /private/tmp/tto-installer-macos-wheelhouse/joblib-1.6.0-py3-none-any.whl (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 15))
+Processing /private/tmp/tto-installer-macos-wheelhouse/multidict-6.9.1-cp310-cp310-macosx_11_0_arm64.whl (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 16))
+Processing /private/tmp/tto-installer-macos-wheelhouse/numpy-2.2.6-cp310-cp310-macosx_14_0_arm64.whl (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 17))
+Requirement already satisfied: packaging==26.3 in /private/tmp/tto-conda-installer-verification-final/installed with spaces/conda-env/lib/python3.10/site-packages (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 18)) (26.3)
+Processing /private/tmp/tto-installer-macos-wheelhouse/pluggy-1.6.0-py3-none-any.whl (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 19))
+Processing /private/tmp/tto-installer-macos-wheelhouse/propcache-0.5.4-cp310-cp310-macosx_11_0_arm64.whl (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 20))
+Processing /private/tmp/tto-installer-macos-wheelhouse/psutil-7.0.0-cp36-abi3-macosx_11_0_arm64.whl (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 21))
+Processing /private/tmp/tto-installer-macos-wheelhouse/pyproject_hooks-1.3.3-py3-none-any.whl (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 22))
+Processing /private/tmp/tto-installer-macos-wheelhouse/pytest_asyncio-0.26.0-py3-none-any.whl (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 23))
+Processing /private/tmp/tto-installer-macos-wheelhouse/pytest-8.3.5-py3-none-any.whl (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 24))
+Processing /private/tmp/tto-installer-macos-wheelhouse/python_engineio-4.14.0-py3-none-any.whl (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 25))
+Processing /private/tmp/tto-installer-macos-wheelhouse/python_socketio-5.13.0-py3-none-any.whl (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 26))
+Processing /private/tmp/tto-installer-macos-wheelhouse/scikit_learn-1.6.1-cp310-cp310-macosx_12_0_arm64.whl (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 27))
+Processing /private/tmp/tto-installer-macos-wheelhouse/scipy-1.14.1-cp310-cp310-macosx_14_0_arm64.whl (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 28))
+Processing /private/tmp/tto-installer-macos-wheelhouse/setuptools-80.9.0-py3-none-any.whl (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 29))
+Processing /private/tmp/tto-installer-macos-wheelhouse/simple_websocket-1.1.0-py3-none-any.whl (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 30))
+Processing /private/tmp/tto-installer-macos-wheelhouse/threadpoolctl-3.7.0-py3-none-any.whl (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 31))
+Processing /private/tmp/tto-installer-macos-wheelhouse/tomli-2.5.0-py3-none-any.whl (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 32))
+Processing /private/tmp/tto-installer-macos-wheelhouse/typing_extensions-4.16.0-py3-none-any.whl (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 33))
+Processing /private/tmp/tto-installer-macos-wheelhouse/wheel-0.45.1-py3-none-any.whl (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 34))
+Processing /private/tmp/tto-installer-macos-wheelhouse/wsproto-1.3.2-py3-none-any.whl (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 35))
+Processing /private/tmp/tto-installer-macos-wheelhouse/yarl-1.25.1-cp310-cp310-macosx_11_0_arm64.whl (from -r /Users/massif/Tianshan-thermal-observer/requirements-locked.txt (line 36))
+Installing collected packages: wheel, typing_extensions, tomli, threadpoolctl, setuptools, pyproject_hooks, psutil, propcache, pluggy, numpy, iniconfig, idna, h11, frozenlist, cloudpickle, bidict, attrs, async-timeout, aiohappyeyeballs, wsproto, scipy, multidict, joblib, exceptiongroup, build, aiosignal, yarl, simple-websocket, scikit-learn, pytest, python-engineio, pytest-asyncio, aiohttp, python-socketio
+  Attempting uninstall: wheel
+    Found existing installation: wheel 0.48.0
+    Uninstalling wheel-0.48.0:
+      Successfully uninstalled wheel-0.48.0
+  Attempting uninstall: setuptools
+    Found existing installation: setuptools 84.0.0
+    Uninstalling setuptools-84.0.0:
+      Successfully uninstalled setuptools-84.0.0
+
+Successfully installed aiohappyeyeballs-2.7.1 aiohttp-3.11.18 aiosignal-1.4.0 async-timeout-5.0.1 attrs-26.1.0 bidict-0.23.1 build-1.2.2.post1 cloudpickle-3.1.2 exceptiongroup-1.3.1 frozenlist-1.8.0 h11-0.16.0 idna-3.20 iniconfig-2.3.1 joblib-1.6.0 multidict-6.9.1 numpy-2.2.6 pluggy-1.6.0 propcache-0.5.4 psutil-7.0.0 pyproject_hooks-1.3.3 pytest-8.3.5 pytest-asyncio-0.26.0 python-engineio-4.14.0 python-socketio-5.13.0 scikit-learn-1.6.1 scipy-1.14.1 setuptools-80.9.0 simple-websocket-1.1.0 threadpoolctl-3.7.0 tomli-2.5.0 typing_extensions-4.16.0 wheel-0.45.1 wsproto-1.3.2 yarl-1.25.1
+3/5 安装已核对的wheel
+Processing ./wheels/tianshan_thermal_observer-0.1.2-py3-none-any.whl
+Installing collected packages: tianshan-thermal-observer
+Successfully installed tianshan-thermal-observer-0.1.2
+No broken requirements found.
+4/5 核对实际导入文件、版本及依赖
+5/5 离线配置检查（不连接设备）
+{
+  "status": "offline_config_valid",
+  "connected": false,
+  "deployment_status": "deployment_unverified",
+  "config_sha256": "e14fd851747ec1c73914dc6f5c185a24f8c63365eab24f4d1c8f89fdba8db2d3",
+  "source_period_confirmed": false,
+  "model": "not_requested",
+  "message": "离线检查完成；尚未连接设备。"
+}
+
+安装完成：TTO 0.1.2
+运行入口：/private/tmp/tto-conda-installer-verification-final/installed with spaces/tto
+本机配置：/private/tmp/tto-conda-installer-verification-final/installed with spaces/config/local.json
+安装身份：/private/tmp/tto-conda-installer-verification-final/installed with spaces/installation.json
+未启动采集、设备连接或后台服务。
+WARNING: A space was detected in your requested environment path:
+'/private/tmp/tto-conda-installer-verification-final/installed with spaces/conda-env'
+Spaces in paths can sometimes be problematic. To minimize issues,
+make sure you activate your environment before running any executables!
+
+sysctl: sysctl fmt -1 1024 1: Operation not permitted
+sysctl: sysctl fmt -1 1024 1: Operation not permitted
+sysctl: unknown oid 'machdep.cpu.leaf7_features'
+sysctl: unknown oid 'machdep.cpu.vendor'
+sysctl: sysctl fmt -1 1024 1: Operation not permitted
+WARNING conda.conda_libmamba_solver.index:_json_path_to_repo_info(281): No repodata found for channel defaults. Solve will fail.
+WARNING conda.conda_libmamba_solver.index:_json_path_to_repo_info(281): No repodata found for channel defaults. Solve will fail.
+WARNING conda.conda_libmamba_solver.index:_json_path_to_repo_info(281): No repodata found for channel defaults. Solve will fail.
+WARNING conda.conda_libmamba_solver.index:_json_path_to_repo_info(281): No repodata found for channel defaults. Solve will fail.
+WARNING conda.core.path_actions:verify(1050): Unable to create environments file. Path not writable.
+  environment location: /Users/massif/.conda/environments.txt
+

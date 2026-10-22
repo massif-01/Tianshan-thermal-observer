@@ -1,0 +1,56 @@
+{
+  "output": "/Users/massif/Tianshan-thermal-observer/evidence/platform-curve-v2/tto-final-installed-verification/repair-probes/shadow-report",
+  "report_type": "shadow",
+  "conclusion": "模拟旁路：已读取当时保存的模型预测与事后评分；这是该次在线观察，不是新独立留出验证。 模拟记录仅验证软件，真实预测效果待数据。",
+  "next_step": "查看实际误差、覆盖和降级片段，再决定是否保留该冻结模型；不能据此降低PWM。",
+  "missing_required_logs": [],
+  "recorded_origins": 80
+}
+{
+  "R1": {
+    "synthetic_only": true,
+    "sequence": "A-B-C-D-E-A",
+    "creation_rejected": "非连续过程分组冲突：episode A，run 16583385-73ce-4620-a837-ab530ef16a0c [2026-01-01T00:00:00+00:00, 2026-01-01T00:06:39+00:00] 后又出现 run c229e898-7060-4b27-99f2-051902d258f7 [2026-01-06T00:00:00+00:00, 2026-01-06T00:06:39+00:00]；请确认分组，不自动改名或删段。",
+    "direct_validation_rejected": "非连续过程分组冲突：episode A，run 16583385-73ce-4620-a837-ab530ef16a0c [2026-01-01T00:00:00+00:00, 2026-01-01T00:06:39+00:00] 后又出现 run c229e898-7060-4b27-99f2-051902d258f7 [2026-01-06T00:00:00+00:00, 2026-01-06T00:06:39+00:00]；请确认分组，不自动改名或删段。"
+  },
+  "R2": {
+    "synthetic_only": true,
+    "unchanged_training_methods": true,
+    "missing_field": "vdd_gpu_soc",
+    "matched_counts_45s": {
+      "baseline": 266,
+      "m0": 198,
+      "m1": 0
+    },
+    "decision_function_only_with_explicit_unit_flags": "小模型M0有初步价值（M0层内对照）；M1尚未证明更多输入有用：证据不足：M1层缺少共同可评分起点或两个独立测试过程。",
+    "persisted_evaluation_conclusion": "模拟演示：仅验证软件正确性，不代表实机收益。"
+  },
+  "R3": {
+    "synthetic_only": true,
+    "stored_full_model_predictions": 44,
+    "stored_full_model_scores": 102,
+    "report_full_model_scores": 102,
+    "changed_model_file_did_not_change_statistics": true,
+    "log_removal_reported": [
+      "predictions.jsonl",
+      "scores.jsonl"
+    ],
+    "prediction_and_score_logs_unchanged": true,
+    "shadow_run": "shadow-runs/run-2026-10-12T154312.605893_0000-c8b13cfd"
+  },
+  "R4": [
+    {
+      "cross_origin": true,
+      "target_request_count": 0,
+      "session_closed": true,
+      "aiohttp": "3.11.18"
+    },
+    {
+      "cross_origin": false,
+      "target_request_count": 0,
+      "session_closed": true,
+      "aiohttp": "3.11.18"
+    }
+  ],
+  "hardware_executed": false
+}

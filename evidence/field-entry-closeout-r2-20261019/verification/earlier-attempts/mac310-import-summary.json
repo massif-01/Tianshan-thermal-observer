@@ -1,0 +1,41 @@
+{
+  "mode": "diagnose",
+  "command_id": "LOOPBACK-disconnect",
+  "native_run_id": null,
+  "reason": "collector_cleanup_failed:ImportError",
+  "elapsed_s": 12.0772362499265,
+  "time_coverage": {
+    "observed_s": 12.05580774997361,
+    "measurement_usable_s": 0.0,
+    "model_usable_s": 0.0,
+    "context_ready_s": 0.0,
+    "joint_ready_s": 0.0,
+    "work_paused_s": 0.0
+  },
+  "protocol_requests": 0,
+  "successful_requests": 0,
+  "server_completion_unknown": false,
+  "schedule_completed": false,
+  "workload_intent": "evaluate_actual_protocol_GPU_rails_not_client_slots",
+  "collector_task_identity": 4454292032,
+  "collector_engine_instance_id": null,
+  "observer_instances_created": 0,
+  "native_callbacks": 0,
+  "requester_instances_created": 0,
+  "request_executor_instances_created": 0,
+  "own_async_tasks_remaining": 0,
+  "collector_summary": null,
+  "clock_end": {
+    "domain": "Massif-MacBook-Pro.local:33529:2700489e-6d36-4911-827a-4e074e36977e",
+    "mono_before_s": 836871.163821416,
+    "utc": "2026-10-19T07:34:43.794640+00:00",
+    "mono_after_s": 836871.163826333,
+    "utc_clock_accuracy_s": null,
+    "host": "Massif-MacBook-Pro.local",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "pid": 33529
+  },
+  "control_changes": false,
+  "field_proven": false,
+  "synthetic_loopback_only": true
+}

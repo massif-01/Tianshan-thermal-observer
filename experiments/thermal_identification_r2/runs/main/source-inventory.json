@@ -1,0 +1,333 @@
+{
+  "handoff": {
+    "execution_id": "TTO-ID-R2-v1.0",
+    "archives": [
+      {
+        "path": "inputs/L-seven-conditions-original.zip",
+        "original_attachment_name": "TTO-第二轮七工况数据与分析-20261013-929742d7.zip",
+        "bytes": 4584649,
+        "sha256": "0acc23fb82f6b7a4d9c898c903c69a491d38e740790309b19bb32048420a5a88",
+        "purpose": "L：七工况完整原始分享归档",
+        "zip_members": 43,
+        "zip_crc_checked_on_packaging": true
+      },
+      {
+        "path": "inputs/S-shortqa-original-complete.zip",
+        "original_attachment_name": "TTO-短问答实测证据包-20261013-d2a7593a(1).zip",
+        "bytes": 2390128,
+        "sha256": "a560d8c03331ebb0d32f6ebefaf406efa6b951a35fddb62811aec355050bae6f",
+        "purpose": "S：完整短问答分享归档，已含此前补交60项",
+        "zip_members": 100,
+        "zip_crc_checked_on_packaging": true
+      },
+      {
+        "path": "inputs/previous-exploration-evidence.zip",
+        "original_attachment_name": "TTO-短问答后续核对证据包.zip",
+        "bytes": 1959868,
+        "sha256": "4daaa7b6c27fa47bb2f687e2d3a9e26601fbe885111267334cc6dc0c7e08680b",
+        "purpose": "旧派生序列、固定0.2.2源码、历史Ridge与证据",
+        "zip_members": 121,
+        "zip_crc_checked_on_packaging": true
+      },
+      {
+        "path": "inputs/greybox-v1-evidence.zip",
+        "original_attachment_name": "TTO-首轮灰箱实际辨识与对照实验证据包.zip",
+        "bytes": 9389124,
+        "sha256": "d2039aafbc778a35ad223a7f6f9cac378e570a1ed67f8e9cf4962da8385ef546",
+        "purpose": "已接受的首轮研究代码、冻结模型、全部拟合与原评价",
+        "zip_members": 223,
+        "zip_crc_checked_on_packaging": true
+      },
+      {
+        "path": "inputs/M-midload-original.zip",
+        "original_attachment_name": "TTO-0.2.4中等负载-完整实测证据.zip",
+        "bytes": 1227635,
+        "sha256": "afdacbd4495cbbeb6cd00179a582d44bcd650779737df7b6dc6bd29db06096fb",
+        "purpose": "M：完整实测归档，含内层trial-result.zip及任务准入覆盖记录",
+        "zip_members": 43,
+        "zip_crc_checked_on_packaging": true
+      },
+      {
+        "path": "inputs/M-independent-review.zip",
+        "original_attachment_name": "TTO-0.2.4中等负载实测-独立复核证据.zip",
+        "bytes": 252931,
+        "sha256": "c7a1853bd8836cbe426454f9106223e287468dbe556df85b8ddb7d45930d206c",
+        "purpose": "M独立核对脚本、结果及与实测记录对应的0.2.4处理源码",
+        "zip_members": 38,
+        "zip_crc_checked_on_packaging": true
+      }
+    ],
+    "root_rule": "All paths are relative to the handoff root.",
+    "status": "source_materials_only_not_new_experiment_results"
+  },
+  "old_models": {
+    "execution_id": "TTO-ID-R2-v1.0",
+    "primary_reference": "LS-fit",
+    "models": [
+      {
+        "label": "L-fit",
+        "model": "G1",
+        "archive": "inputs/greybox-v1-evidence.zip",
+        "member": "runs/main/fits/F-LS-G1/model.json",
+        "bytes": 1022,
+        "sha256": "9149d136f382a0776479b7087ce3ce3b82f33bb34a650c27b767e9e6aec8ef59",
+        "role_on_M": "diagnostic_fixed_reference"
+      },
+      {
+        "label": "L-fit",
+        "model": "G2",
+        "archive": "inputs/greybox-v1-evidence.zip",
+        "member": "runs/main/fits/F-LS-G2/model.json",
+        "bytes": 2698,
+        "sha256": "a2130d3968b02e7268231eb900f71e5b3fea777bfff73ddb3564b20048f2f02f",
+        "role_on_M": "diagnostic_fixed_reference"
+      },
+      {
+        "label": "L-fit",
+        "model": "ridge",
+        "archive": "inputs/greybox-v1-evidence.zip",
+        "member": "runs/main/fits/F-LS-ridge.json",
+        "bytes": 659305,
+        "sha256": "e325894f55a787bdf5322cc340f2941aff0328f425cdfd47c8e82891f902b545",
+        "role_on_M": "diagnostic_fixed_reference"
+      },
+      {
+        "label": "S-fit",
+        "model": "G1",
+        "archive": "inputs/greybox-v1-evidence.zip",
+        "member": "runs/main/fits/F-SL-G1/model.json",
+        "bytes": 1036,
+        "sha256": "67b8eb34efe8960f1ad35cfddd1411627e09317cd6c8004b2ad5e516acfadaf1",
+        "role_on_M": "diagnostic_fixed_reference"
+      },
+      {
+        "label": "S-fit",
+        "model": "G2",
+        "archive": "inputs/greybox-v1-evidence.zip",
+        "member": "runs/main/fits/F-SL-G2/model.json",
+        "bytes": 2906,
+        "sha256": "e6ef878cd0f294564c3152b80ec5f1593f0dd40bb5b9a9d5b3bbbac2ea2c04fd",
+        "role_on_M": "diagnostic_fixed_reference"
+      },
+      {
+        "label": "S-fit",
+        "model": "ridge",
+        "archive": "inputs/greybox-v1-evidence.zip",
+        "member": "runs/main/fits/F-SL-ridge.json",
+        "bytes": 444378,
+        "sha256": "b5f926567e09579c8cbdaa0c697d054f7b227f2298baf4ed4b52d77926790100",
+        "role_on_M": "diagnostic_fixed_reference"
+      },
+      {
+        "label": "LS-fit",
+        "model": "G1",
+        "archive": "inputs/greybox-v1-evidence.zip",
+        "member": "runs/main/fits/F-POOL-G1/model.json",
+        "bytes": 1092,
+        "sha256": "2e45f53db011f92ce74758b88ae72cccb17d7fd882d998a6da05507b46d36425",
+        "role_on_M": "primary_predeclared_reference"
+      },
+      {
+        "label": "LS-fit",
+        "model": "G2",
+        "archive": "inputs/greybox-v1-evidence.zip",
+        "member": "runs/main/fits/F-POOL-G2/model.json",
+        "bytes": 4473,
+        "sha256": "3c791275bb7172bc65031287ceb68c2d8a6e7d64ecce8a7962ac76d4745799cd",
+        "role_on_M": "primary_predeclared_reference"
+      },
+      {
+        "label": "LS-fit",
+        "model": "ridge",
+        "archive": "inputs/greybox-v1-evidence.zip",
+        "member": "runs/main/fits/F-POOL-ridge.json",
+        "bytes": 1064718,
+        "sha256": "42e96f0f3363fb61c250d1386509d2f79d28d7b6f56bfc4bab42ab2001b7d857",
+        "role_on_M": "primary_predeclared_reference"
+      }
+    ],
+    "note": "Nine JSON files: six greybox models plus three Ridge files, each containing R_TJ/R_IO heads. Do not select an old winner after viewing M."
+  },
+  "private_vs_share": [
+    {
+      "path": "inputs/L-seven-conditions-original.zip",
+      "original_attachment_name": "TTO-第二轮七工况数据与分析-20261013-929742d7.zip",
+      "bytes": 4584649,
+      "sha256": "0acc23fb82f6b7a4d9c898c903c69a491d38e740790309b19bb32048420a5a88",
+      "purpose": "L原始分享归档",
+      "status": "previously_observed_development_data",
+      "zip_crc_checked_on_packaging": true,
+      "verified_entries": 42
+    },
+    {
+      "path": "inputs/S-shortqa-original-complete.zip",
+      "original_attachment_name": "TTO-短问答实测证据包-20261013-d2a7593a(1).zip",
+      "bytes": 2390128,
+      "sha256": "a560d8c03331ebb0d32f6ebefaf406efa6b951a35fddb62811aec355050bae6f",
+      "purpose": "S原始完整分享归档，含此前补交60项",
+      "status": "previously_observed_development_data",
+      "zip_crc_checked_on_packaging": true,
+      "verified_entries": 99
+    },
+    {
+      "path": "inputs/previous-exploration-evidence.zip",
+      "original_attachment_name": "TTO-短问答后续核对证据包.zip",
+      "bytes": 1959868,
+      "sha256": "4daaa7b6c27fa47bb2f687e2d3a9e26601fbe885111267334cc6dc0c7e08680b",
+      "purpose": "派生完整accepted序列、资格、旧Ridge、固定源码与核对结果",
+      "status": "previously_observed_development_data",
+      "zip_crc_checked_on_packaging": true,
+      "verified_entries": 120
+    }
+  ],
+  "M_outer": "afdacbd4495cbbeb6cd00179a582d44bcd650779737df7b6dc6bd29db06096fb",
+  "M_inner": "979d9a4f547d4d2b4506772248606f45c700ee2b44315575be5bf9fc42cd2a5d",
+  "data_processors": {
+    "L": {
+      "recorded.py": "029679e59c68735d1ca98daf56553d6226c55e7d64597015712d972a8b7d2679",
+      "config.py": "5a05545f28b8b44b3e6f0e7efcf2453e01ee0726ef0bd228cc73d553e01d8e3e",
+      "deployment.py": "221b1d098d46623dc0eba5addc9804d917f8ede6cfa850cec1922c5cd177aaf7",
+      "util.py": "0a33bb268e7817ddd19b6ae81562c50e1fdd08a9cdb3fa08f8f2dd3fbb252f16",
+      "diagnostics.py": "93dfcc32ca5d9fee48d14b71375705f117a81afb2b0d17b89214be3317741055",
+      "evaluation.py": "e6b2fc86f32cc28dbe204519bc74c13a138b9873164318727d4187c6dad78181",
+      "collector.py": "648670f3873b987eb0320a3f61b1d1cfa1ce317282ca6fc0ad4c4cf15f9f4df3",
+      "__init__.py": "231215ac5f1648d9117ba85d9b7e4bfb16640dab55f9b744d3813865f970bf10",
+      "features.py": "d6b32b3584eea3b57eb658c0d9c005b197a420062daec613f78a057bc4462fa2",
+      "model.py": "371a6b81ad32c87654c231dd2e326b002a3e027b7a935b67117dd7508426fe7e",
+      "dataset.py": "32ee485269a521b0540f6d4050eab2dac46cc93a65603086eea263349d9487ee",
+      "engine.py": "c979174d9f78fce54418ed847e9b4e57b155da07eba37c255c7037ecb27bf66c",
+      "cli.py": "d6adf47989226d57f798125c8f020bfdb8d1e14b357bf4f85ca82d3150747ce1",
+      "storage.py": "cda8d22444a0e1fe5fc2f1fa86b73cb4e3f9be4e76edb3cf265520b3285143ec",
+      "platform_quality.py": "3f7e33e083251eaff8136319495ab682a7f7fdc554d0efad39fe5d990085044e",
+      "demo.py": "3e1475ee0753040f35d454138c47a39879c32d315db89824e101563d56b829fb",
+      "quality.py": "014e67c7885d291c8bede9ad3a51fb85398b26bc71e7336b3a0f18b81aec3e56",
+      "profiles.py": "3fb61fbe30bfce73cf7e1079c487e1ddb82b2301ed37d329e1e6da4bfc6944b4",
+      "__main__.py": "79ee6f134c5c5193377cf9b189cbdcc3e2095e49ba9cec310114441c15a917c4",
+      "report.py": "59834f8fc8f226311edf8376b3a8ecce6f5ca2a48ef79bc4532d551f14e9413e",
+      "training.py": "c8f0d6c83587b18c8a527e9d84e222276ee1bd0edc8e69a828dd1ed33a2de773",
+      "platform_engine.py": "d1d8e48f10c731beb8a0d0b7195ab7e32553aae875ebff30a73846be88f967ea"
+    },
+    "S": {
+      "recorded.py": "029679e59c68735d1ca98daf56553d6226c55e7d64597015712d972a8b7d2679",
+      "config.py": "5a05545f28b8b44b3e6f0e7efcf2453e01ee0726ef0bd228cc73d553e01d8e3e",
+      "deployment.py": "221b1d098d46623dc0eba5addc9804d917f8ede6cfa850cec1922c5cd177aaf7",
+      "util.py": "0a33bb268e7817ddd19b6ae81562c50e1fdd08a9cdb3fa08f8f2dd3fbb252f16",
+      "diagnostics.py": "93dfcc32ca5d9fee48d14b71375705f117a81afb2b0d17b89214be3317741055",
+      "evaluation.py": "e6b2fc86f32cc28dbe204519bc74c13a138b9873164318727d4187c6dad78181",
+      "collector.py": "648670f3873b987eb0320a3f61b1d1cfa1ce317282ca6fc0ad4c4cf15f9f4df3",
+      "__init__.py": "231215ac5f1648d9117ba85d9b7e4bfb16640dab55f9b744d3813865f970bf10",
+      "features.py": "d6b32b3584eea3b57eb658c0d9c005b197a420062daec613f78a057bc4462fa2",
+      "model.py": "371a6b81ad32c87654c231dd2e326b002a3e027b7a935b67117dd7508426fe7e",
+      "dataset.py": "32ee485269a521b0540f6d4050eab2dac46cc93a65603086eea263349d9487ee",
+      "engine.py": "c979174d9f78fce54418ed847e9b4e57b155da07eba37c255c7037ecb27bf66c",
+      "cli.py": "d6adf47989226d57f798125c8f020bfdb8d1e14b357bf4f85ca82d3150747ce1",
+      "storage.py": "cda8d22444a0e1fe5fc2f1fa86b73cb4e3f9be4e76edb3cf265520b3285143ec",
+      "platform_quality.py": "3f7e33e083251eaff8136319495ab682a7f7fdc554d0efad39fe5d990085044e",
+      "demo.py": "3e1475ee0753040f35d454138c47a39879c32d315db89824e101563d56b829fb",
+      "quality.py": "014e67c7885d291c8bede9ad3a51fb85398b26bc71e7336b3a0f18b81aec3e56",
+      "profiles.py": "3fb61fbe30bfce73cf7e1079c487e1ddb82b2301ed37d329e1e6da4bfc6944b4",
+      "__main__.py": "79ee6f134c5c5193377cf9b189cbdcc3e2095e49ba9cec310114441c15a917c4",
+      "report.py": "59834f8fc8f226311edf8376b3a8ecce6f5ca2a48ef79bc4532d551f14e9413e",
+      "training.py": "c8f0d6c83587b18c8a527e9d84e222276ee1bd0edc8e69a828dd1ed33a2de773",
+      "platform_engine.py": "d1d8e48f10c731beb8a0d0b7195ab7e32553aae875ebff30a73846be88f967ea"
+    },
+    "M": {
+      "recorded.py": "029679e59c68735d1ca98daf56553d6226c55e7d64597015712d972a8b7d2679",
+      "config.py": "5a05545f28b8b44b3e6f0e7efcf2453e01ee0726ef0bd228cc73d553e01d8e3e",
+      "deployment.py": "221b1d098d46623dc0eba5addc9804d917f8ede6cfa850cec1922c5cd177aaf7",
+      "util.py": "0a33bb268e7817ddd19b6ae81562c50e1fdd08a9cdb3fa08f8f2dd3fbb252f16",
+      "diagnostics.py": "93dfcc32ca5d9fee48d14b71375705f117a81afb2b0d17b89214be3317741055",
+      "evaluation.py": "e6b2fc86f32cc28dbe204519bc74c13a138b9873164318727d4187c6dad78181",
+      "collector.py": "d08c1f0b6187831e728420094137afa070f328d9b0252f3662a992443b2b0b5b",
+      "__init__.py": "672cde4b34710368c9ecba08ed361a47ef4a7c1f4ed5863a338bcde29549e700",
+      "features.py": "d6b32b3584eea3b57eb658c0d9c005b197a420062daec613f78a057bc4462fa2",
+      "model.py": "371a6b81ad32c87654c231dd2e326b002a3e027b7a935b67117dd7508426fe7e",
+      "dataset.py": "32ee485269a521b0540f6d4050eab2dac46cc93a65603086eea263349d9487ee",
+      "engine.py": "c979174d9f78fce54418ed847e9b4e57b155da07eba37c255c7037ecb27bf66c",
+      "cli.py": "d6adf47989226d57f798125c8f020bfdb8d1e14b357bf4f85ca82d3150747ce1",
+      "storage.py": "cda8d22444a0e1fe5fc2f1fa86b73cb4e3f9be4e76edb3cf265520b3285143ec",
+      "platform_quality.py": "3f7e33e083251eaff8136319495ab682a7f7fdc554d0efad39fe5d990085044e",
+      "demo.py": "3e1475ee0753040f35d454138c47a39879c32d315db89824e101563d56b829fb",
+      "quality.py": "014e67c7885d291c8bede9ad3a51fb85398b26bc71e7336b3a0f18b81aec3e56",
+      "profiles.py": "3fb61fbe30bfce73cf7e1079c487e1ddb82b2301ed37d329e1e6da4bfc6944b4",
+      "__main__.py": "79ee6f134c5c5193377cf9b189cbdcc3e2095e49ba9cec310114441c15a917c4",
+      "report.py": "59834f8fc8f226311edf8376b3a8ecce6f5ca2a48ef79bc4532d551f14e9413e",
+      "training.py": "c8f0d6c83587b18c8a527e9d84e222276ee1bd0edc8e69a828dd1ed33a2de773",
+      "platform_engine.py": "d1d8e48f10c731beb8a0d0b7195ab7e32553aae875ebff30a73846be88f967ea"
+    }
+  },
+  "processor_manifest_match": {
+    "L": {
+      "__init__.py": true,
+      "__main__.py": true,
+      "cli.py": true,
+      "collector.py": true,
+      "config.py": true,
+      "dataset.py": true,
+      "demo.py": true,
+      "deployment.py": true,
+      "diagnostics.py": true,
+      "engine.py": true,
+      "evaluation.py": true,
+      "features.py": true,
+      "model.py": true,
+      "platform_engine.py": true,
+      "platform_quality.py": true,
+      "profiles.py": true,
+      "quality.py": true,
+      "recorded.py": true,
+      "report.py": true,
+      "storage.py": true,
+      "training.py": true,
+      "util.py": true
+    },
+    "S": {
+      "__init__.py": true,
+      "__main__.py": true,
+      "cli.py": true,
+      "collector.py": true,
+      "config.py": true,
+      "dataset.py": true,
+      "demo.py": true,
+      "deployment.py": true,
+      "diagnostics.py": true,
+      "engine.py": true,
+      "evaluation.py": true,
+      "features.py": true,
+      "model.py": true,
+      "platform_engine.py": true,
+      "platform_quality.py": true,
+      "profiles.py": true,
+      "quality.py": true,
+      "recorded.py": true,
+      "report.py": true,
+      "storage.py": true,
+      "training.py": true,
+      "util.py": true
+    },
+    "M": {
+      "__init__.py": true,
+      "__main__.py": true,
+      "cli.py": true,
+      "collector.py": true,
+      "config.py": true,
+      "dataset.py": true,
+      "demo.py": true,
+      "deployment.py": true,
+      "diagnostics.py": true,
+      "engine.py": true,
+      "evaluation.py": true,
+      "features.py": true,
+      "model.py": true,
+      "platform_engine.py": true,
+      "platform_quality.py": true,
+      "profiles.py": true,
+      "quality.py": true,
+      "recorded.py": true,
+      "report.py": true,
+      "storage.py": true,
+      "training.py": true,
+      "util.py": true
+    }
+  }
+}

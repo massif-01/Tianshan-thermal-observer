@@ -1,0 +1,70 @@
+# Build intermediates
+build/*
+build-root-reset/
+!build/TianShanOS.bin
+!build/www.bin
+!build/ota_data_initial.bin
+!build/flasher_args.json
+!build/firmware-manifest.json
+!build/bootloader/
+build/bootloader/*
+!build/bootloader/bootloader.bin
+!build/partition_table/
+build/partition_table/*
+!build/partition_table/partition-table.bin
+
+# ESP-IDF managed components (downloaded dependencies)
+managed_components/
+
+# Cache directories
+.cache/
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.py[cod]
+.env
+venv/
+
+# ESP-IDF temporary files
+*.pyc
+sdkconfig.old
+
+# ===================
+# PKI Server Sensitive Files
+# ===================
+tools/pki-server/.env
+tools/pki-server/*.db
+tools/pki-server/*.key
+tools/pki-server/*.pem
+tools/pki-server/*.p12
+tools/pki-server/*.crt
+
+# ===================
+# Private Keys & Secrets (全局)
+# ===================
+*.key
+*_key
+secrets/
+password*.txt
+
+# Documentation
+frontend_modification.md
+frontend_emoji_list.md
+
+# Local regression dependencies
+tests/prompts/node_modules/
+
+# Local browser traces and validation/build snapshots
+.playwright-cli/
+output/

@@ -1,0 +1,26 @@
+{
+  "argv": [
+    "verify_handoff.py"
+  ],
+  "returncode": 0,
+  "stdout": "{\"payload_files_verified\": 511, \"nested_original_indexes\": {\"field\": 332, \"modeling\": 136}, \"same_run_and_frozen_identity\": true, \"supplement_is_offline_only\": true}\n",
+  "stderr": ""
+}
+{
+  "argv": [
+    "evidence/modeling/verify.py"
+  ],
+  "returncode": 0,
+  "stdout": "{\"payload_members_verified\": 136, \"frozen_identity_and_same_run_link\": true}\n",
+  "stderr": ""
+}
+{
+  "argv": [
+    "tools/recompute_supplement.py",
+    "--output",
+    "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-pro-review-independent-5xtob89r/analysis-replay"
+  ],
+  "returncode": 0,
+  "stdout": "{\"rows\": 2706, \"outputs\": 4, \"new_field_runs\": 0, \"theta_fits\": 0}\n",
+  "stderr": ""
+}

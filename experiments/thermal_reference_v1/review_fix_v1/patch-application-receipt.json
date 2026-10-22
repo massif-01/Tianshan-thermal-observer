@@ -1,0 +1,35 @@
+{
+  "status": "pass",
+  "accepted_archive_sha256": "f32ccb4c3a70d9005a74c66c2f0b736f5362c9e6ebe85d64f9e912feaef48b1c",
+  "patch_sha256": "60cbfb8ba0e7b217d610fc5743cd59cc54b7ec83cbdf9ca26f49dbd81daa8f85",
+  "changed_paths": [
+    "README.md",
+    "refprep/compare.py",
+    "tests/test_report_sources.py"
+  ],
+  "actual_apply_check_and_apply": [
+    {
+      "args": [
+        "git",
+        "apply",
+        "--check",
+        "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/review_fix_v1/software-fix.patch"
+      ],
+      "exit_code": 0
+    },
+    {
+      "args": [
+        "git",
+        "apply",
+        "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/review_fix_v1/software-fix.patch"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "all_three_applied_files_equal_current_bytes": true,
+  "fresh_copy_tests": "30 passed",
+  "test_interpreter": "/Users/massif/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+  "test_python": "3.12.14 (main, Aug 25 2026, 13:50:33) [Clang 22.1.3 ]",
+  "fresh_copy_directory": "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-ref-review-patch-wjcn74x9",
+  "note": "Copied accepted ZIP only; no original worktree, model or device mutation"
+}

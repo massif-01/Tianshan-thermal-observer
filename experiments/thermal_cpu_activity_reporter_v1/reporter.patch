@@ -1,0 +1,377 @@
+diff --git a/experiments/thermal_cpu_activity_reporter_v1/joint_check.py b/experiments/thermal_cpu_activity_reporter_v1/joint_check.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_activity_reporter_v1/joint_check.py
+@@ -0,0 +1,85 @@
++"""Reporter 1.0.1: original bridge and frozen consumers, explicit source declarations."""
++import argparse
++import base64
++import collections
++import json
++import os
++from pathlib import Path
++import subprocess
++import sys
++
++from provenance import classify, sha
++
++ROOT = Path(__file__).resolve().parent
++MODEL_ROOT = ROOT.parent/'thermal_cpu_activity_bridge_v1'
++sys.path.insert(0, str(MODEL_ROOT))
++from io_utils import read, lines, write, jsonl
++
++
++def main():
++    p = argparse.ArgumentParser(description=__doc__)
++    p.add_argument('--adapted', type=Path, required=True)
++    p.add_argument('--run-dir', type=Path, required=True)
++    p.add_argument('--output', type=Path, required=True)
++    a = p.parse_args()
++    a.output.mkdir(parents=True, exist_ok=False)
++    freeze = read(ROOT/'reporter-manifest.json')
++    for name, digest in freeze['reporter_files'].items():
++        if sha(ROOT/name) != digest:
++            raise ValueError('reporter identity changed: '+name)
++    for name, digest in freeze['unchanged_model_line_files'].items():
++        if sha(MODEL_ROOT/name) != digest:
++            raise ValueError('frozen model-line identity changed: '+name)
++    provenance = classify(a.run_dir, a.adapted)
++    receipt = dict(contract='TTO-CPU-PREP-CLOSE-v1.0-R1', reporter_version=freeze['version'],
++                   reporter_manifest_sha256=sha(ROOT/'reporter-manifest.json'),
++                   data_source=provenance, synthetic_only=provenance['synthetic_only'],
++                   new_physical_temperature_scores=False, source_lead_or_control_benefit=False,
++                   evaluate_stream_called=False, analysis_complete=False,
++                   reporter_execution=dict(network_clients=0, device_connections=0, parameter_search=0))
++    if not provenance['identity_association_verified']:
++        receipt['status'] = 'unresolved_source_association'
++        write(a.output/'joint-receipt.json', receipt)
++        print('Unresolved source association; frozen analysis not called. See joint-receipt.json.')
++        return
++    wire = {x['wire_seq']: x for x in lines(a.run_dir/'cpu-sidecar-wire.jsonl')}
++    arrivals = lines(a.run_dir/'cpu-sidecar-arrivals.jsonl')
++    for row in arrivals:
++        w = wire[row['wire_seq']]
++        assert not w['truncated'] and json.loads(base64.b64decode(w['raw_base64'])) == row['source']
++        assert w['received_at_mono_s'] == row['received_at_mono_s'] and w['receiver_domain'] == row['receiver_domain']
++    sys.path.insert(0, str(MODEL_ROOT/'frozen'))
++    from activity import load_candidate, Processor
++    c, f = load_candidate(MODEL_ROOT/'frozen')
++    processor = Processor(c, f)
++    frames = lines(a.adapted/'frames.jsonl')
++    outputs = [processor.process(x) for x in frames]
++    jsonl(a.output/'processor.jsonl', outputs)
++    counts = {n: dict(collections.Counter(r['variants'][n]['activity']['state'] for r in outputs)) for n in c['variants']}
++    availability = {n: any(state != 'UNKNOWN' and count > 0 for state, count in x.items()) for n, x in counts.items()}
++    # UNKNOWN is a retained result, not a reason to change the adapter or candidate.
++    env = dict(os.environ, PYTHONDONTWRITEBYTECODE='1', OPENBLAS_NUM_THREADS='1', OMP_NUM_THREADS='1')
++    args = [sys.executable, str(MODEL_ROOT/'frozen/evaluate_stream.py'),
++            '--frames', str(a.adapted.resolve()/'frames.jsonl'),
++            '--origins', str(a.adapted.resolve()/'thermal-origins.jsonl'),
++            '--registration', str(a.adapted.resolve()/'registration.json'),
++            '--output', str(a.output.resolve()/'evaluate-stream')]
++    with (a.output/'evaluate-stream.log').open('w') as log:
++        subprocess.run(args, env=env, stdout=log, stderr=subprocess.STDOUT, check=True)
++    receipt.update(status='analysed', analysis_complete=True,
++                   source_declaration_unresolved=provenance['category'] == 'unknown',
++                   actual_wire_to_source_rows_verified=len(arrivals), frames=len(frames), Activity_counts=counts,
++                   variant_has_nonUNKNOWN=availability,
++                   activity_comparison_status='some_available' if all(availability.values()) else 'unresolved_variant_availability',
++                   actual_sender_receiver_artifacts_used=bool(arrivals), manual_model_FRAME_used=False,
++                   original_TJ_origins=len(lines(a.adapted/'thermal-origins.jsonl')),
++                   revocations=dict(collections.Counter(x['reason'] for x in lines(a.adapted/'revocations.jsonl'))),
++                   candidate_sha256=sha(MODEL_ROOT/'frozen/candidate.json'),
++                   analysis_spec_sha256=sha(MODEL_ROOT/'frozen/analysis-spec.json'),
++                   evaluate_stream_called=True, actual_and_1s_delivery_conditions_written=True)
++    write(a.output/'joint-receipt.json', receipt)
++    print('Frozen analysis written:', provenance['label_zh'], len(arrivals), 'wire rows;', len(frames), 'frames.')
++
++
++if __name__ == '__main__':
++    main()
+diff --git a/experiments/thermal_cpu_activity_reporter_v1/provenance.py b/experiments/thermal_cpu_activity_reporter_v1/provenance.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_activity_reporter_v1/provenance.py
+@@ -0,0 +1,89 @@
++"""Classify declarations, never infer verified field hardware from missing flags."""
++import hashlib
++import json
++from pathlib import Path
++
++
++def sha(path):
++    return hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def classify(run_dir, adapted):
++    run_dir, adapted = Path(run_dir), Path(adapted)
++    reasons, identities, declarations = [], {}, []
++    result = dict(category='unknown', label_zh='未知', synthetic_only=None,
++                  identity_association_verified=False, physical_source_verified=False,
++                  Thor_N305_verified=False, source_timing_verified=False,
++                  reasons=reasons, metadata_sha256=identities, declarations=declarations)
++
++    def load(path, name):
++        identities[name] = sha(path)
++        return json.loads(path.read_text())
++
++    try:
++        launch = load(run_dir/'launch.json', 'launch.json')
++        binding = load(run_dir/'native-binding.json', 'native-binding.json')
++        manifest_rel = binding['native_manifest']
++        manifest_path = (run_dir/manifest_rel).resolve()
++        manifest_path.relative_to(run_dir.resolve())
++        manifest = load(manifest_path, manifest_rel)
++        registration = load(adapted/'registration.json', 'adapted/registration.json')
++        sources = load(adapted/'sources.json', 'adapted/sources.json')
++        recorded_root = Path(sources['run_dir'])
++        indexed = {}
++        for item in sources['files']:
++            try:
++                rel = Path(item['path']).relative_to(recorded_root)
++            except ValueError:
++                continue  # External config is retained in original provenance, not remapped here.
++            if rel in indexed:
++                reasons.append('duplicate_provenance_path:'+str(rel))
++            indexed[rel] = item
++        required = {'launch.json', 'native-binding.json', manifest_rel,
++                    'cpu-sidecar-wire.jsonl', 'cpu-sidecar-arrivals.jsonl',
++                    'sidecar-events.jsonl', 'states.jsonl'}
++        for rel in sorted(required):
++            item = indexed.get(Path(rel))
++            if item is None or sha(run_dir/rel) != item['sha256']:
++                reasons.append('provenance_missing_or_changed:'+rel)
++        run_ids = [binding['native_run_id'], manifest['observer_run_id'], registration['run_id']]
++        command_ids = [binding['command_id'], launch['command_id'],
++                       manifest['field_command_id'], registration['command_id']]
++        if not run_ids[0] or len(set(run_ids)) != 1:
++            reasons.append('run_identity_unassociated')
++        if not command_ids[0] or len(set(command_ids)) != 1:
++            reasons.append('command_identity_unassociated')
++        if not launch.get('config_sha256') or launch['config_sha256'] != manifest.get('config_sha256'):
++            reasons.append('native_launch_config_unassociated')
++    except (OSError, ValueError, KeyError, TypeError) as exc:
++        reasons.append('metadata_unavailable:'+type(exc).__name__+':'+str(exc))
++        return result
++    result.update(run_id=run_ids[0], command_id=command_ids[0],
++                  declared_role=registration.get('declared_role'),
++                  saw_new_data_for_parameter_selection=registration.get('saw_new_data_for_parameter_selection'))
++    if reasons:
++        return result
++    result['identity_association_verified'] = True
++    scopes = [('launch', launch), ('launch.binding', launch.get('binding', {})),
++              ('launch.binding.sidecar', launch.get('binding', {}).get('sidecar', {})),
++              ('manifest', manifest)]
++    for origin, obj in scopes:
++        for key in ('synthetic_loopback_only', 'synthetic', 'simulated'):
++            if key in obj:
++                declarations.append(dict(source=origin, field=key, value=obj[key]))
++    role = registration.get('declared_role')
++    declarations.append(dict(source='registration', field='declared_role', value=role))
++    synthetic = any(d['value'] is True for d in declarations)
++    synthetic = synthetic or role == 'synthetic_actual_sender_receiver_integration'
++    field = role == 'targeted_recorded_arrival_research'
++    if synthetic and field:
++        reasons.append('synthetic_and_field_role_conflict')
++    elif synthetic:
++        result.update(category='synthetic', label_zh='合成', synthetic_only=True)
++    elif (field and launch.get('synthetic_loopback_only') is False
++          and manifest.get('simulated') is False):
++        result.update(category='declared_field_unverified', label_zh='声明现场，证据另核', synthetic_only=False)
++        reasons.append('field_declaration_is_not_hardware_or_timing_verification')
++    else:
++        reasons.append('no_explicit_associated_source_declaration')
++    return result
+diff --git a/experiments/thermal_cpu_activity_reporter_v1/tests/test_provenance.py b/experiments/thermal_cpu_activity_reporter_v1/tests/test_provenance.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_activity_reporter_v1/tests/test_provenance.py
+@@ -0,0 +1,88 @@
++"""Three metadata classes; declared-field fixtures are never physical-field evidence."""
++import json
++from pathlib import Path
++import shutil
++import sys
++
++ROOT = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(ROOT))
++from provenance import classify, sha
++
++OLD = ROOT.parent/'thermal_cpu_activity_bridge_v1'
++
++
++def fixture(tmp_path):
++    run, adapted = tmp_path/'run', tmp_path/'adapted'
++    shutil.copytree(OLD/'inputs/joint-complete/run', run)
++    shutil.copytree(OLD/'results/final-v2', adapted)
++    return run, adapted
++
++
++def update_json(path, obj):
++    path.write_text(json.dumps(obj))
++
++
++def reindex(run, adapted):
++    sources = json.loads((adapted/'sources.json').read_text())
++    old_root = Path(sources['run_dir'])
++    for item in sources['files']:
++        try:
++            rel = Path(item['path']).relative_to(old_root)
++        except ValueError:
++            continue
++        item['sha256'] = sha(run/rel)
++    update_json(adapted/'sources.json', sources)
++
++
++def test_synthetic_from_actual_sender_receiver_metadata(tmp_path):
++    run, adapted = fixture(tmp_path)
++    result = classify(run, adapted)
++    assert result['category'] == 'synthetic' and result['synthetic_only'] is True
++    assert result['identity_association_verified'] is True
++    assert result['physical_source_verified'] is False
++
++
++def test_declared_field_does_not_verify_hardware_or_time(tmp_path):
++    run, adapted = fixture(tmp_path)
++    launch = json.loads((run/'launch.json').read_text())
++    launch['synthetic_loopback_only'] = False
++    launch['binding']['synthetic_loopback_only'] = False
++    launch['binding']['sidecar'].pop('synthetic')
++    update_json(run/'launch.json', launch)
++    reg = json.loads((adapted/'registration.json').read_text())
++    reg['declared_role'] = 'targeted_recorded_arrival_research'
++    update_json(adapted/'registration.json', reg)
++    reindex(run, adapted)
++    result = classify(run, adapted)
++    assert result['category'] == 'declared_field_unverified' and result['synthetic_only'] is False
++    assert result['identity_association_verified'] is True
++    assert result['physical_source_verified'] is False and result['Thor_N305_verified'] is False
++    assert result['source_timing_verified'] is False
++
++
++def test_unknown_missing_flags_conflict_or_unassociated(tmp_path):
++    run, adapted = fixture(tmp_path)
++    reg = json.loads((adapted/'registration.json').read_text())
++    reg['declared_role'] = 'targeted_recorded_arrival_research'
++    update_json(adapted/'registration.json', reg)
++    conflict = classify(run, adapted)
++    assert conflict['category'] == 'unknown' and conflict['synthetic_only'] is None
++    assert 'synthetic_and_field_role_conflict' in conflict['reasons']
++    launch = json.loads((run/'launch.json').read_text())
++    for obj in [launch, launch['binding'], launch['binding']['sidecar']]:
++        obj.pop('synthetic_loopback_only', None)
++        obj.pop('synthetic', None)
++    update_json(run/'launch.json', launch)
++    reindex(run, adapted)
++    assert classify(run, adapted)['category'] == 'unknown'  # Absence is not field proof.
++    launch['command_id'] = 'FOREIGN-COMMAND'
++    update_json(run/'launch.json', launch)
++    reindex(run, adapted)
++    foreign = classify(run, adapted)
++    assert foreign['identity_association_verified'] is False and foreign['category'] == 'unknown'
++    assert 'command_identity_unassociated' in foreign['reasons']
++    launch['command_id'] = reg['command_id']
++    update_json(run/'launch.json', launch)  # Do not reindex: changed evidence must remain unresolved.
++    assert classify(run, adapted)['identity_association_verified'] is False
++    (run/'launch.json').unlink()
++    assert classify(run, adapted)['category'] == 'unknown'
+diff --git a/experiments/thermal_cpu_activity_reporter_v1/pytest.ini b/experiments/thermal_cpu_activity_reporter_v1/pytest.ini
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_activity_reporter_v1/pytest.ini
+@@ -0,0 +1,2 @@
++[pytest]
++testpaths = tests
+diff --git a/experiments/thermal_cpu_activity_reporter_v1/reporter-manifest.json b/experiments/thermal_cpu_activity_reporter_v1/reporter-manifest.json
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_activity_reporter_v1/reporter-manifest.json
+@@ -0,0 +1,44 @@
++{
++  "version": "cpu-joint-reporter-1.0.1",
++  "created_at_utc": "2026-10-20T14:01:23.446295+00:00",
++  "scope": "reporter provenance declarations only; unique bridge and frozen consumers unchanged",
++  "reporter_files": {
++    "joint_check.py": "a391161edbe4908009053b52c41b49805008aa47aadc23e89817181a1d5e031b",
++    "provenance.py": "b18e4faac5cf88e2af5500cae2f5a7f0ca6fec8e6c003d860ba5e57c5fe45f4c",
++    "tests/test_provenance.py": "5785e9880435e05c32b27992dfcc131d795303d291adb445ea09a762df3ee658",
++    "pytest.ini": "c809c969ec7e11b9ff37784e9c6fcc0b7c5148d168e18b05aed797e03fbd6ead"
++  },
++  "unchanged_model_line_root": "../thermal_cpu_activity_bridge_v1",
++  "unchanged_model_line_files": {
++    "adapter-spec.json": "13fc98f9825e60ca47ff346167edab0c500d5f80609befd9c5c5c4474c5a09c0",
++    "bridge.py": "8d6fe5f013e67d2a26c192419b0b82f29a4c1aa794ddd598e2f6ba33a45045e3",
++    "frozen/activity.py": "81a605571d64a1f3818cfdcc4f811cf09a29872424bc93519682d0bbd707e97d",
++    "frozen/adapter.py": "68c10275c2a67a745fd89fc2c1cd665822185c8cfe8c398ce0f093dec941bb5f",
++    "frozen/analyse.py": "80f2d4964cff18487561b95e1b4e8477cd4c7a68d3c7dd2bb4a14a08bc8c18c2",
++    "frozen/analysis-spec.json": "df26198dd631a45564d88c10b7b30433ab8b272cb4cf5d3726d7be6eacbab716",
++    "frozen/candidate.json": "89ae53229af3e84b3bae1140a1ce013d6bf16e374cd5d3ffcde6fc7d28b78831",
++    "frozen/common.py": "b99664f1263e694721fde8c3eba744f21102915e7c35ee69e6b53629cd01d52b",
++    "frozen/evaluate_stream.py": "f7f4849a42820575517216744375f73d7aa69a4a97d350d0bf04cb2e050cae0f",
++    "frozen/freeze.json": "85f063a8002b0d0723cd91315d7e12b151f33cda0fc2a5267611012981d0e267",
++    "frozen/inputs/vendor/src/tto_field/research/models/primary.json": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
++    "frozen/inputs/vendor/src/tto_field/research/observer-spec.json": "2080adcf20773650299def2bb0f3ebdb9f87d8f85281d5b87a99d8b406c83c6b",
++    "frozen/stream_metrics.py": "2bcd3adde68d634cc40de293d215838a7c8ac56a2d310beeb1aeadfa6d7b043a",
++    "io_utils.py": "d5fa11209ac2d4355570f114d61ed0f98c2e19cba824ee76ac90bddd0327987d",
++    "joint_check.py": "18a14eb63883a785f334d58320d2f613c7da56ca56b1b3ecd2e4b721ee8d3a3c",
++    "pytest.ini": "37b7898dd0df68d7bacac4726b4836010200403a1abe9542fe229caebe39b8a3",
++    "replay.py": "3d8234f6a7d3da04319726f885eeba0d363f8a94a6f7465c343357fde40b1c2f",
++    "requirements.txt": "630ac856f45600848ad70e8b180b63c9dff66626edeaae3e952a607dc2694c28",
++    "tests/test_bridge.py": "27e8173dcc61934c9331a18b195cf0c669068e199b30935e4a1b2b11339f26ff",
++    "interface-freeze.json": "9278f1a6db1e0e9bc4ee488bb2958168799733a0d884f1ef771ddf57313c38dd"
++  },
++  "old_joint_receipt_sha256": "2eb36bb268429768f4a587530871c91b1241a444892007bc46de9bf15537c484",
++  "source_classes": [
++    "synthetic",
++    "declared_field_unverified",
++    "unknown"
++  ],
++  "hardware_and_timing_validation_claimed": false,
++  "deployable": false,
++  "new_models": 0,
++  "parameter_search": 0
++}
+diff --git a/experiments/thermal_cpu_activity_reporter_v1/README.md b/experiments/thermal_cpu_activity_reporter_v1/README.md
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_activity_reporter_v1/README.md
+@@ -0,0 +1,39 @@
++# CPU联合回执来源标签：报告器1.0.1
++
++本目录只修独立复审03要求的来源声明。原`thermal_cpu_activity_bridge_v1`整目录、唯一`bridge.py`、活动阈值、热模型、旧回执和旧成绩均保留。新报告器版本为`cpu-joint-reporter-1.0.1`，代码与依赖身份见`reporter-manifest.json`。它不是新的运行wheel，也不改变cpu.2候选。
++
++将本目录放在原R1目录的同级，名称分别为`thermal_cpu_activity_reporter_v1`与`thermal_cpu_activity_bridge_v1`。若独立解包，先将原R1证据ZIP的根目录解压为后者，再解压本补充包。原R1证据ZIP SHA为`5500ad25357c86bdb53dca7d3d6067d5d397e875e8d85a278f113ae2f6eeabff`。
++
++仍只通过原bridge适配新资料，再使用本报告器：
++
++```sh
++python /Users/massif/Tianshan-thermal-observer/experiments/thermal_cpu_activity_bridge_v1/bridge.py \
++  --run-dir "$CPU_RUN_DIR" --source-config "$CPU_SOURCE_CONFIG" --output "$CPU_ADAPTED_DIR"
++python /Users/massif/Tianshan-thermal-observer/experiments/thermal_cpu_activity_reporter_v1/joint_check.py \
++  --adapted "$CPU_ADAPTED_DIR" --run-dir "$CPU_RUN_DIR" --output "$CPU_REPORT_DIR"
++```
++
++这些变量由测试总控绑定本次同run/command的实际本地资料；两个输出目录都必须尚不存在。命令仅离线读文件，不调用采集器或设备。离线复跑所需Python/NumPy/SciPy沿用原R1环境；不新增依赖。
++
++来源判断同时读取实际launch、native-binding所指manifest、适配registration与sources。run/command/config必须相符，七个必要原文件的SHA必须与适配来源清单相符，绝对路径可按清单中的run根目录重定位。来源清单未覆盖或变更的文件不被静默接受。来源判断不通过时只写`unresolved_source_association`回执，不调用原分析器。
++
++|来源值|含义|synthetic_only|
++|---|---|---|
++|synthetic|关联资料明确声明合成|true|
++|declared_field_unverified|关联资料明确声明现场研究，实际硬件与时间证据仍待另核|false|
++|unknown|缺少声明、声明冲突或资料无法关联|null|
++
++manifest通用`simulated=false`或缺少synthetic键，均不独自证明Thor/N305实测。现场类必须同时有原registration的`targeted_recorded_arrival_research`、launch明确非合成及manifest非模拟声明。保留声明原值和文件SHA；不通过command名称、IP地址、温度波形猜实际来源。
++
++来源、可用性、算法收益分别保存。数据有关联但来源未明时可保留冻结数学输出，来源仍为unknown；有关联但某分支全UNKNOWN时保留结果及`unresolved_variant_availability`，不强制改成有效。`analysis_complete`只表示离线程序完成，不能证明现场身份、物理领先、预测收益或控制收益。本报告器不授予这些结论，相关验证/收益标志保持false。
++
++有限测试：
++
++```sh
++python -m pytest -c /Users/massif/Tianshan-thermal-observer/experiments/thermal_cpu_activity_reporter_v1/pytest.ini \
++  /Users/massif/Tianshan-thermal-observer/experiments/thermal_cpu_activity_reporter_v1/tests -q -p no:cacheprovider
++```
++
++三类元数据测试使用旧合成收发样例作底稿；现场声明的变异只测试标签，不是现场证据。`results/historical-synthetic`是同一旧150包的新报告回执，不能充当新60秒能力资料。`verification/unassociated-receipt.json`是明确变异的反例。
++
++新60秒资料尚未由本目录分析。收到后仅调用同一bridge和冻结分析器，检查真实计数窗/身份/接收顺序/撤销/原GPU与rail年龄/开销及逐时距覆盖，再给测试总控是否支持原12请求的建议；不自动开展设备访问或实验。

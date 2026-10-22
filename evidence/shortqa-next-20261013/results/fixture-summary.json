@@ -1,0 +1,62 @@
+{
+  "cases": [
+    {
+      "scenario": "short_pulse",
+      "n": 181,
+      "extra_permission_count": 23,
+      "pwm_changed": 85,
+      "identical": false
+    },
+    {
+      "scenario": "dense_pulses",
+      "n": 181,
+      "extra_permission_count": 8,
+      "pwm_changed": 70,
+      "identical": false
+    },
+    {
+      "scenario": "sustained_warming",
+      "n": 181,
+      "extra_permission_count": 0,
+      "pwm_changed": 0,
+      "identical": true
+    },
+    {
+      "scenario": "reheat",
+      "n": 181,
+      "extra_permission_count": 5,
+      "pwm_changed": 8,
+      "identical": false
+    },
+    {
+      "scenario": "jitter",
+      "n": 181,
+      "extra_permission_count": 0,
+      "pwm_changed": 0,
+      "identical": true
+    },
+    {
+      "scenario": "guard",
+      "n": 181,
+      "extra_permission_count": 0,
+      "pwm_changed": 0,
+      "identical": true
+    },
+    {
+      "scenario": "stale_recovery",
+      "n": 181,
+      "extra_permission_count": 0,
+      "pwm_changed": 0,
+      "identical": true
+    },
+    {
+      "scenario": "slow_reheat",
+      "n": 181,
+      "extra_permission_count": 6,
+      "pwm_changed": 111,
+      "identical": false
+    }
+  ],
+  "status": "passed",
+  "limits": "Supplied temperature paths; not identified plants or safety validation."
+}

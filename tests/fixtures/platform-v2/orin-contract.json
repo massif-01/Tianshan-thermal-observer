@@ -1,0 +1,47 @@
+{
+  "timestamp": 1791816004.296315,
+  "cpu": {
+    "cores": []
+  },
+  "memory": {
+    "ram": {},
+    "swap": {}
+  },
+  "temperature": {
+    "tj": 46.0
+  },
+  "power": {},
+  "gpu": {
+    "gr3d_freq": 0,
+    "schema_version": 1,
+    "utilization_pct": 0,
+    "source": "tegrastats",
+    "status": "valid",
+    "sampled_at_utc": "2026-10-12T14:40:04.296059Z",
+    "age_at_telemetry_receive_ms": 0,
+    "sample_interval_ms": 1000,
+    "freshness_timeout_ms": 5000,
+    "device_uuid": null
+  },
+  "platform": {
+    "schema_version": 1,
+    "family": "jetson_orin",
+    "soc": "tegra234",
+    "identification_source": "device_tree_compatible",
+    "compatible": [
+      "nvidia,tegra234"
+    ],
+    "gpu_backend": "tegrastats"
+  },
+  "telemetry_meta": {
+    "schema_version": 1,
+    "stream_id": "f9353aa5-2cb8-4fff-9334-4fb05cf4e216",
+    "sample_seq": 1,
+    "received_at": "2026-10-12T14:40:04.296059Z",
+    "sample_age_ms": 1.3282500149216503,
+    "fresh": true,
+    "collector_state": "running",
+    "freshness_timeout_ms": 5000,
+    "time_basis": "collector_receive"
+  }
+}

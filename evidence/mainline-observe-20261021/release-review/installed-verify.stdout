@@ -1,0 +1,157 @@
+{
+  "candidate_version": "0.2.4+observe.1",
+  "native_version": "0.2.4",
+  "native_source_identity": {
+    "kind": "package_source_hashes",
+    "sha256": "e3ad3b94711b2da2642cdec84d5055dae3c73dd7c35687be421018347361b69f",
+    "files": {
+      "__init__.py": "672cde4b34710368c9ecba08ed361a47ef4a7c1f4ed5863a338bcde29549e700",
+      "__main__.py": "79ee6f134c5c5193377cf9b189cbdcc3e2095e49ba9cec310114441c15a917c4",
+      "cli.py": "d6adf47989226d57f798125c8f020bfdb8d1e14b357bf4f85ca82d3150747ce1",
+      "collector.py": "94f3791bc1b9f4f2a47f06af07491ab0c199237475fe921d0b5df9ad9452c444",
+      "config.py": "a6739022a483de11a5436deed024b13aa017e8161fc7f3dad364d17ad526a7f7",
+      "dataset.py": "32ee485269a521b0540f6d4050eab2dac46cc93a65603086eea263349d9487ee",
+      "demo.py": "3e1475ee0753040f35d454138c47a39879c32d315db89824e101563d56b829fb",
+      "deployment.py": "221b1d098d46623dc0eba5addc9804d917f8ede6cfa850cec1922c5cd177aaf7",
+      "diagnostics.py": "93dfcc32ca5d9fee48d14b71375705f117a81afb2b0d17b89214be3317741055",
+      "engine.py": "c979174d9f78fce54418ed847e9b4e57b155da07eba37c255c7037ecb27bf66c",
+      "evaluation.py": "e6b2fc86f32cc28dbe204519bc74c13a138b9873164318727d4187c6dad78181",
+      "features.py": "d6b32b3584eea3b57eb658c0d9c005b197a420062daec613f78a057bc4462fa2",
+      "model.py": "371a6b81ad32c87654c231dd2e326b002a3e027b7a935b67117dd7508426fe7e",
+      "platform_engine.py": "d1d8e48f10c731beb8a0d0b7195ab7e32553aae875ebff30a73846be88f967ea",
+      "platform_quality.py": "3f7e33e083251eaff8136319495ab682a7f7fdc554d0efad39fe5d990085044e",
+      "profiles.py": "3fb61fbe30bfce73cf7e1079c487e1ddb82b2301ed37d329e1e6da4bfc6944b4",
+      "quality.py": "014e67c7885d291c8bede9ad3a51fb85398b26bc71e7336b3a0f18b81aec3e56",
+      "recorded.py": "029679e59c68735d1ca98daf56553d6226c55e7d64597015712d972a8b7d2679",
+      "report.py": "59834f8fc8f226311edf8376b3a8ecce6f5ca2a48ef79bc4532d551f14e9413e",
+      "storage.py": "cda8d22444a0e1fe5fc2f1fa86b73cb4e3f9be4e76edb3cf265520b3285143ec",
+      "training.py": "c8f0d6c83587b18c8a527e9d84e222276ee1bd0edc8e69a828dd1ed33a2de773",
+      "util.py": "0a33bb268e7817ddd19b6ae81562c50e1fdd08a9cdb3fa08f8f2dd3fbb252f16"
+    },
+    "git_head": null,
+    "dirty": null,
+    "git_state": "not_checked_in_installed_runtime"
+  },
+  "checked_files": 65,
+  "python": "3.12.3 (v3.12.3:f6650f9ad7, Apr  9 2024, 08:18:47) [Clang 13.0.0 (clang-1300.0.29.30)]",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "machine": "arm64",
+  "dependencies": {
+    "aiohttp": "3.11.18",
+    "python-socketio": "5.13.0",
+    "psutil": "7.0.0",
+    "numpy": "2.2.6",
+    "scipy": "1.15.3",
+    "threadpoolctl": "3.6.0"
+  },
+  "target_environment_checked": false,
+  "numeric_thread_policy": {
+    "schema": "TTO-NUMERIC-THREAD-POLICY-v1",
+    "candidate_version": "0.2.4+observe.1",
+    "pid": 10135,
+    "host": "Massif-MacBook-Pro.local",
+    "executable": "/Users/massif/Tianshan-thermal-observer/evidence/mainline-observe-20261021/release-env/bin/python",
+    "python": "3.12.3 (v3.12.3:f6650f9ad7, Apr  9 2024, 08:18:47) [Clang 13.0.0 (clang-1300.0.29.30)]",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "started_at_utc": "2026-10-21T13:54:28.187609+00:00",
+    "started_at_mono_s": 1032455.524448375,
+    "inherited_environment": {
+      "OPENBLAS_NUM_THREADS": null,
+      "OPENBLAS_DEFAULT_NUM_THREADS": null,
+      "OMP_NUM_THREADS": null,
+      "MKL_NUM_THREADS": null,
+      "NUMEXPR_NUM_THREADS": null
+    },
+    "policy": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OPENBLAS_DEFAULT_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    },
+    "policy_scope": "this candidate process numeric libraries only; not Python threads or other applications",
+    "modules_already_loaded": [],
+    "preloaded_versions": {
+      "numpy": null,
+      "scipy": null
+    },
+    "threadpoolctl_version": "3.6.0",
+    "verified": true,
+    "error": null,
+    "applied_at_mono_s": 1032455.53275,
+    "libraries": {
+      "numpy": {
+        "version": "2.2.6",
+        "module": "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/numpy/__init__.py",
+        "blas": {
+          "name": "scipy-openblas",
+          "found": true,
+          "version": "0.3.29",
+          "detection method": "pkgconfig",
+          "include directory": "/private/var/folders/hn/b1w4xwz56_58rv5ckn7581vw0000gn/T/cibw-run-uqh7mzsf/cp312-macosx_arm64/build/venv/lib/python3.12/site-packages/scipy_openblas64/include",
+          "lib directory": "/private/var/folders/hn/b1w4xwz56_58rv5ckn7581vw0000gn/T/cibw-run-uqh7mzsf/cp312-macosx_arm64/build/venv/lib/python3.12/site-packages/scipy_openblas64/lib",
+          "openblas configuration": "OpenBLAS 0.3.29  USE64BITINT DYNAMIC_ARCH NO_AFFINITY neoversen1 MAX_THREADS=64",
+          "pc file directory": "/private/var/folders/hn/b1w4xwz56_58rv5ckn7581vw0000gn/T/cirrus-ci-build/.openblas"
+        }
+      },
+      "scipy": {
+        "version": "1.15.3",
+        "module": "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/scipy/__init__.py",
+        "blas": {
+          "name": "scipy-openblas",
+          "found": true,
+          "version": "0.3.28",
+          "detection method": "pkgconfig",
+          "include directory": "/private/var/folders/hn/k7g0_sh57112t0xtjxcjcm5r0000gn/T/cibw-run-528_w15_/cp312-macosx_arm64/build/venv/lib/python3.12/site-packages/scipy_openblas32/include",
+          "lib directory": "/private/var/folders/hn/k7g0_sh57112t0xtjxcjcm5r0000gn/T/cibw-run-528_w15_/cp312-macosx_arm64/build/venv/lib/python3.12/site-packages/scipy_openblas32/lib",
+          "openblas configuration": "OpenBLAS 0.3.28 DYNAMIC_ARCH NO_AFFINITY neoversen1 MAX_THREADS=64",
+          "pc file directory": "/Users/runner/work/scipy/scipy"
+        }
+      }
+    },
+    "extension_modules": {
+      "numpy._core._multiarray_umath": "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/numpy/_core/_multiarray_umath.cpython-312-darwin.so",
+      "scipy.linalg._fblas": "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/scipy/linalg/_fblas.cpython-312-darwin.so",
+      "scipy.linalg._flapack": "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/scipy/linalg/_flapack.cpython-312-darwin.so"
+    },
+    "loaded_pools": [
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "num_threads": 1,
+        "prefix": "libscipy_openblas",
+        "filepath": "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/numpy/.dylibs/libscipy_openblas64_.dylib",
+        "version": "0.3.29",
+        "threading_layer": "pthreads",
+        "architecture": "neoversen1"
+      },
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "num_threads": 1,
+        "prefix": "libscipy_openblas",
+        "filepath": "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/scipy/.dylibs/libscipy_openblas.dylib",
+        "version": "0.3.28",
+        "threading_layer": "pthreads",
+        "architecture": "neoversen1"
+      }
+    ],
+    "final_environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OPENBLAS_DEFAULT_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    },
+    "pool_coverage": {
+      "numpy": [
+        "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/numpy/.dylibs/libscipy_openblas64_.dylib"
+      ],
+      "scipy": [
+        "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/scipy/.dylibs/libscipy_openblas.dylib"
+      ]
+    },
+    "checked_at_utc": "2026-10-21T13:54:28.334018+00:00",
+    "checked_at_mono_s": 1032455.679011125
+  }
+}

@@ -1,0 +1,227 @@
+{
+  "reason": "SIGTERM",
+  "error": null,
+  "elapsed_s": 9.055522834067233,
+  "clock_end": {
+    "domain": "Massif-MacBook-Pro.local:26907:1b6ff3cc-e58e-47a3-97bd-9f118a4f939b",
+    "mono_before_s": 1043169.429844666,
+    "utc": "2026-10-21T16:53:02.178414+00:00",
+    "mono_after_s": 1043169.429857208,
+    "utc_clock_accuracy_s": null,
+    "host": "Massif-MacBook-Pro.local",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "pid": 26907
+  },
+  "pid": 26907,
+  "native_run_id": "fb2eb549-6612-4c8d-81c6-5c5db6f0511f",
+  "collector_invocation_count": 1,
+  "collector_count": 1,
+  "stateful_observer_count": 1,
+  "valid_TJ_observed": 8,
+  "model_trial": "conditional_observation",
+  "native_callbacks": 29,
+  "I02_processed_views": 29,
+  "projection_diagnostics": {
+    "retain_history": false,
+    "retained": 0,
+    "quality_seen": 8,
+    "complete_quality_stream": "observations"
+  },
+  "shared_native_engine_id": 4390332048,
+  "projection_disabled": false,
+  "model_errors": 0,
+  "model_dropped_frames": 0,
+  "consumer_stopped": true,
+  "Requester_count": 0,
+  "sidecar_count": 0,
+  "control_permission": false,
+  "experiment_authorization": false,
+  "scoring": {
+    "contract": "TTO-OBSERVE-SCORING-v1",
+    "publication_mode": "live",
+    "stride_s": 5,
+    "valid_TJ_denominator": 8,
+    "scheduled_origin_denominator": 2,
+    "counts": {
+      "all_valid_TJ": 8,
+      "scheduled_TJ_origins": 2,
+      "issued/G2-HOLD/15": 2,
+      "valid_predictions/G2-HOLD/15": 2,
+      "issued/B0/15": 2,
+      "valid_predictions/B0/15": 2,
+      "issued/B1/15": 2,
+      "issued/G2-HOLD/45": 2,
+      "valid_predictions/G2-HOLD/45": 2,
+      "issued/B0/45": 2,
+      "valid_predictions/B0/45": 2,
+      "issued/B1/45": 2,
+      "issued/G2-HOLD/90": 2,
+      "valid_predictions/G2-HOLD/90": 2,
+      "issued/B0/90": 2,
+      "valid_predictions/B0/90": 2,
+      "issued/B1/90": 2,
+      "unscored/source_epoch_changed": 12
+    },
+    "per_method": {},
+    "same_set_G2_B0": {},
+    "percentile": "linear interpolation at (n-1)*.95; full bounded session error arrays",
+    "error": "prediction-actual",
+    "label": "first qualified received TJ at/after target within2s, same session/epoch/domain",
+    "statistical_unit": "one session, overlapping horizons are not independent experiments",
+    "all_native_valid_TJ_denominator": 8
+  },
+  "native_summary": {
+    "stop_reason": "SIGTERM",
+    "poll_missed": 0,
+    "poll_count": 11,
+    "connection_attempts": 1,
+    "payload_oversize": 0,
+    "orin_event_count": 8,
+    "business_payload_bytes_sum": 12640,
+    "business_payload_bytes_max": 1580,
+    "poll_rtt_ms": [
+      10.181000106967986,
+      2.0465420093387365,
+      2.4084580363705754,
+      2.0107500022277236,
+      1.6383329639211297,
+      4.668000037781894,
+      0.7423330098390579,
+      0.5731669953092933,
+      0.8112499490380287,
+      0.8909999160096049,
+      0.6790419574826956
+    ],
+    "prediction_ms": [
+      2.020500018261373,
+      0.7705839816480875
+    ],
+    "rss_mib": [
+      69.140625,
+      69.515625,
+      69.59375,
+      69.78125,
+      69.828125,
+      69.90625,
+      70.296875,
+      70.5
+    ],
+    "cpu_pct_single_core": [
+      2.2656585618506733,
+      2.0191266529831706,
+      1.69522554502094,
+      1.3249784263734117,
+      1.1272037364778305,
+      1.2308575649848992,
+      0.714582581457882,
+      0.6864672471724824
+    ],
+    "elapsed_s": 8.076047000009567,
+    "queue_peak_items": 2,
+    "queue_peak_bytes": 1962,
+    "dropped": 0,
+    "quality": {
+      "boundary_socketio_connecting": 1,
+      "boundary_control_context_change": 1,
+      "boundary_stream": 1,
+      "new_samples": 8,
+      "boundary_input_boundary": 1,
+      "boundary_input_profile_change": 1,
+      "boundary_socketio_disconnected": 1,
+      "boundary_run_end": 1
+    },
+    "processing": {
+      "fan_ok": 9,
+      "temp_ok": 2,
+      "origins": 2
+    },
+    "target_host_verified": false,
+    "polling_health": {
+      "contract": "TTO-POLL-INDEPENDENT-v1",
+      "max_inflight_per_endpoint": 1,
+      "max_total_inflight_limit": 2,
+      "max_total_inflight_observed": 2,
+      "end_inflight": 0,
+      "legacy_config_max_inflight_esp32": 1,
+      "endpoints": {
+        "fan": {
+          "sent": 9,
+          "returned": 9,
+          "http_ok": 9,
+          "errors": 0,
+          "skipped": 0,
+          "cancelled": 0,
+          "peak_inflight": 1,
+          "rtt_ms": {
+            "n": 9,
+            "retained_n": 9,
+            "p50": 1.6383329639211297,
+            "p95": 7.975800079293547,
+            "min": 0.6790419574826956,
+            "max": 10.181000106967986
+          },
+          "send_interval_s": {
+            "n": 8,
+            "retained_n": 8,
+            "p50": 1.000818166474346,
+            "p95": 1.0021243163617328,
+            "min": 1.0004132920876145,
+            "max": 1.0021342909894884
+          },
+          "return_interval_s": {
+            "n": 8,
+            "retained_n": 8,
+            "p50": 1.000408188032452,
+            "p95": 1.0033779479155782,
+            "min": 0.9933814579853788,
+            "max": 1.0040046670474112
+          }
+        },
+        "temp": {
+          "sent": 2,
+          "returned": 2,
+          "http_ok": 2,
+          "errors": 0,
+          "skipped": 0,
+          "cancelled": 0,
+          "peak_inflight": 1,
+          "rtt_ms": {
+            "n": 2,
+            "retained_n": 2,
+            "p50": 1.309854502324015,
+            "p95": 1.9728732586372644,
+            "min": 0.5731669953092933,
+            "max": 2.0465420093387365
+          },
+          "send_interval_s": {
+            "n": 1,
+            "retained_n": 1,
+            "p50": 5.000311207957566,
+            "p95": 5.000311207957566,
+            "min": 5.000311207957566,
+            "max": 5.000311207957566
+          },
+          "return_interval_s": {
+            "n": 1,
+            "retained_n": 1,
+            "p50": 4.998837832943536,
+            "p95": 4.998837832943536,
+            "min": 4.998837832943536,
+            "max": 4.998837832943536
+          }
+        }
+      }
+    },
+    "diagnostic_history_contract": {
+      "max_retained_per_series": 4096,
+      "percentiles": "last4096; full raw/resource journals preserved",
+      "sample_totals": {
+        "poll_rtt_ms": 11,
+        "prediction_ms": 2,
+        "rss_mib": 8,
+        "cpu_pct_single_core": 8
+      }
+    }
+  },
+  "thread_policy_same_pid": true
+}

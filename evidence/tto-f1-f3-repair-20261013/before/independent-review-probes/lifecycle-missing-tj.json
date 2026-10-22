@@ -1,0 +1,33 @@
+{
+  "fixture": "synthetic, no real devices",
+  "run": "/private/tmp/tto-final-candidate-review-20261013/synthetic-runs/run-2026-10-12T162405.668603_0000-3cf53b21",
+  "import_path": "/private/tmp/tto-platform-curve-v2/tto-clean-env/lib/python3.10/site-packages/tto/__init__.py",
+  "trace": [
+    {
+      "sample": 100,
+      "wire_period": 1000,
+      "reason": "new_sample",
+      "mixed": false
+    },
+    {
+      "sample": 101,
+      "wire_period": 3000,
+      "reason": "stale_or_missing_tj",
+      "mixed": false
+    },
+    {
+      "sample": 102,
+      "wire_period": 1000,
+      "reason": "new_sample",
+      "mixed": false
+    }
+  ],
+  "mixed_profiles": false,
+  "lifecycle_contract_change_count": 0,
+  "formal_dataset_accepted": true,
+  "quality_isolations": [],
+  "current_scored": 132,
+  "old_segment_current_scored": 54,
+  "excluded": 0,
+  "raw_unchanged": true
+}

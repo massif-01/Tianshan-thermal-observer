@@ -1,0 +1,27 @@
+{
+  "schema": "TTO-OPERATOR-AMBIENT-ADDENDUM-v1",
+  "run_id": "637f114b-563b-4c35-8062-a7588a89ce1c",
+  "run_alias": "M",
+  "ambient_temperature_C": 24.0,
+  "status": "user_confirmed",
+  "source": "project_owner_confirmation_in_current_conversation",
+  "original_statement_zh": "环境温度是 24 度，这个是确定的。",
+  "confirmation_record_date": "2026-10-14",
+  "confirmation_exact_time_utc": null,
+  "applies_to": "M medium-load experimental session only",
+  "session_time_beijing": {
+    "start": "2026-10-14T01:37:47.320421+08:00",
+    "end": "2026-10-14T02:19:38.028529+08:00"
+  },
+  "observation_type": "operator_confirmed_session_reference_not_sensor_timeseries",
+  "measurement_location": null,
+  "instrument": null,
+  "measurement_resolution_C": null,
+  "per_sample_observed_at": null,
+  "raw_ambient_snapshot_nulls": "retain_original_bytes; this sidecar supplements their missing context",
+  "other_runs": {
+    "L": "not_confirmed_by_this_statement",
+    "S": "not_confirmed_by_this_statement"
+  },
+  "modeling_rule": "Ambient=24C is known for M. Existing E_r is effective boundary, not automatically identical to room temperature. Keep frozen old-model semantics; test E_M=24 in the predeclared new diagnostic."
+}

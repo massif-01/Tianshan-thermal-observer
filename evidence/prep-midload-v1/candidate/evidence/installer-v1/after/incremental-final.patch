@@ -1,0 +1,333 @@
+--- /dev/null
++++ b/install.sh
+@@ -0,0 +1,15 @@
++#!/bin/sh
++# Local installation only; no device access or service startup.
++set -eu
++bundle_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
++if [ -n "${TTO_INSTALL_PYTHON:-}" ]; then
++    installer_python=$TTO_INSTALL_PYTHON
++elif command -v python3.10 >/dev/null 2>&1; then
++    installer_python=python3.10
++elif command -v python3 >/dev/null 2>&1; then
++    installer_python=python3
++else
++    printf '%s\n' '未找到Python。Ubuntu 22.04可先执行：sudo apt install python3 python3-venv' >&2
++    exit 1
++fi
++exec "$installer_python" "$bundle_dir/scripts/install_tto.py" "$@"
+--- /dev/null
++++ b/install-manifest.json
+@@ -0,0 +1,9 @@
++{
++  "installer_version": 1,
++  "version": "0.1.2",
++  "files": {
++    "wheels/tianshan_thermal_observer-0.1.2-py3-none-any.whl": "bfe55c967c017c45ebe0287a886eb17e30d7e44a0ca7af01d385fd4ad97ab465",
++    "requirements-locked.txt": "426fa81527a8e31213b3ea49b4841cb1f7b9b9f1b4702f1dcaeb625a95a6f97a",
++    "config/tto.example.json": "4463c064f6809cf371f447cb133d30e1fdb9854b1483077c8102f0e58b67ebd1"
++  }
++}
+--- /dev/null
++++ b/scripts/install_tto.py
+@@ -0,0 +1,114 @@
++#!/usr/bin/env python3
++"""Install a reviewed wheel locally, without configuring/connecting devices."""
++import argparse
++import hashlib
++import json
++import os
++from pathlib import Path
++import subprocess
++import sys
++from datetime import datetime, timezone
++
++VERIFY = '''
++import hashlib,importlib.metadata as metadata,json,sys,zipfile
++from pathlib import Path
++import tto
++installed=Path(tto.__file__).resolve().parent
++assert Path(sys.prefix) in installed.parents and 'site-packages' in installed.parts
++files={}
++with zipfile.ZipFile(sys.argv[1]) as z:
++ for name in z.namelist():
++  if name.startswith('tto/') and not name.endswith('/'):
++   relative=name[4:];content=z.read(name)
++   assert content==(installed/relative).read_bytes(),relative
++   files[relative]=hashlib.sha256(content).hexdigest()
++versions={}
++for line in Path(sys.argv[2]).read_text().splitlines():
++ if line and not line.startswith('#'):
++  name,version=line.split('==');versions[name]=metadata.version(name)
++  assert versions[name]==version,name
++assert tto.__version__==sys.argv[3]
++assert metadata.version('tianshan-thermal-observer')==sys.argv[3]
++print(json.dumps({'version':tto.__version__,'python':sys.version,'import_path':str(installed),'non_editable':True,'installed_files_sha256':files,'dependencies':versions}))
++'''
++
++LAUNCHER = '''#!/bin/sh
++set -eu
++install_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
++cd "$install_dir"
++exec "$install_dir/.venv/bin/tto" "$@"
++'''
++
++
++def digest(path):
++    return hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def install(args):
++    if sys.version_info < (3,10):
++        raise ValueError('需要Python 3.10或更高；Ubuntu 22.04默认Python 3.10。本轮验证使用3.10.18。')
++    bundle=Path(__file__).resolve().parent.parent
++    manifest=json.loads((bundle/'install-manifest.json').read_text())
++    version=manifest['version']
++    wheel=bundle/'wheels'/('tianshan_thermal_observer-'+version+'-py3-none-any.whl')
++    for name,expected in manifest['files'].items():
++        path=bundle/name
++        if not path.is_file() or digest(path)!=expected:
++            raise ValueError('安装包文件缺失或SHA不匹配：'+name+'；请重新取得完整安装包。')
++    wheelhouse=Path(args.offline_wheelhouse).expanduser().resolve() if args.offline_wheelhouse else None
++    if wheelhouse is not None and not wheelhouse.is_dir():
++        raise ValueError('离线依赖目录不存在：'+str(wheelhouse))
++    prefix=Path(args.prefix).expanduser().resolve()
++    marker=prefix/'.tto-install.json'
++    if prefix.exists() and any(prefix.iterdir()):
++        if not marker.is_file() or json.loads(marker.read_text()).get('version')!=version:
++            raise ValueError('目录已有其他内容，未改动：'+str(prefix)+'；请用--prefix指定新的独立目录。')
++    prefix.mkdir(parents=True,exist_ok=True)
++    marker.write_text(json.dumps({'installer_version':1,'version':version})+'\n')
++    env=dict(os.environ)
++    env.pop('PYTHONPATH',None);env.pop('PYTHONHOME',None)
++    env.update(PIP_DISABLE_PIP_VERSION_CHECK='1',PIP_NO_INPUT='1',PIP_CACHE_DIR=str(prefix/'.cache/pip'))
++    python=prefix/'.venv/bin/python'
++    print('安装TTO '+version+' → '+str(prefix),flush=True)
++    pip_ready = python.is_file() and subprocess.run([str(python),'-m','pip','--version'],env=env,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL).returncode == 0
++    if not pip_ready:
++        print('1/5 创建独立Python环境',flush=True)
++        result=subprocess.run([sys.executable,'-m','venv',str(prefix/'.venv')],env=env)
++        if result.returncode:
++            raise ValueError('虚拟环境创建失败。Ubuntu 22.04可先执行 sudo apt install python3-venv，再运行本脚本。')
++    print('2/5 安装锁定依赖'+('（离线）' if wheelhouse else '（需要下载时会联网）'),flush=True)
++    command=[str(python),'-m','pip','install']
++    if wheelhouse:command+=['--no-index','--find-links',str(wheelhouse)]
++    subprocess.run(command+['-r',str(bundle/'requirements-locked.txt')],env=env,check=True)
++    print('3/5 安装已核对的wheel',flush=True)
++    subprocess.run([str(python),'-m','pip','install','--no-index','--no-deps','--force-reinstall',str(wheel)],env=env,check=True)
++    subprocess.run([str(python),'-m','pip','check'],env=env,check=True)
++    print('4/5 核对实际导入文件、版本及依赖',flush=True)
++    result=subprocess.run([str(python),'-I','-c',VERIFY,str(wheel),str(bundle/'requirements-locked.txt'),version],env=env,check=True,capture_output=True,text=True)
++    identity=json.loads(result.stdout)
++    config=prefix/'config/local.json';config.parent.mkdir(exist_ok=True)
++    if not config.exists():
++        settings=json.loads((bundle/'config/tto.example.json').read_text())
++        settings['storage']['data_root']=str(prefix/'runs')
++        with config.open('x') as f:json.dump(settings,f,ensure_ascii=False,indent=2);f.write('\n')
++    launcher=prefix/'tto';launcher.write_text(LAUNCHER);launcher.chmod(0o755)
++    print('5/5 离线配置检查（不连接设备）',flush=True)
++    subprocess.run([str(python),'-m','tto','doctor','--config',str(config)],env=env,cwd=prefix,check=True)
++    identity.update(wheel_sha256=digest(wheel),dependency_lock_sha256=digest(bundle/'requirements-locked.txt'),config_path=str(config),checked_at_utc=datetime.now(timezone.utc).isoformat(),offline_doctor_passed=True)
++    (prefix/'installation.json').write_text(json.dumps(identity,ensure_ascii=False,indent=2)+'\n')
++    print('\n安装完成：TTO '+version+'\n运行入口：'+str(launcher)+'\n本机配置：'+str(config)+'\n安装身份：'+str(prefix/'installation.json')+'\n未启动采集、设备连接或后台服务。',flush=True)
++
++
++def main():
++    parser=argparse.ArgumentParser(description='TTO本地安装：创建独立环境、安装锁定包、核对身份、离线doctor。')
++    parser.add_argument('--prefix',default=str(Path.home()/'TTO'),help='独立安装目录，默认~/TTO')
++    parser.add_argument('--offline-wheelhouse',help='匹配目标系统/CPU/Python的离线依赖wheel目录；指定后pip禁止访问索引')
++    args=parser.parse_args()
++    try:install(args)
++    except (ValueError,OSError,subprocess.CalledProcessError) as error:
++        detail=str(error) if isinstance(error,ValueError) else ('本地命令失败，退出码 '+str(error.returncode) if isinstance(error,subprocess.CalledProcessError) else type(error).__name__)
++        print('\n安装未完成：'+detail+'\n配置和数据不会被覆盖；处理上述问题后可重跑。',file=sys.stderr)
++        return 1
++    return 0
++
++if __name__=='__main__':raise SystemExit(main())
+--- /dev/null
++++ b/scripts/verify_install.py
+@@ -0,0 +1,90 @@
++#!/usr/bin/env python3
++"""Real installer regression in NEW temp prefixes, offline dependency wheels only.
++Never installs in the user's default directory or contacts devices.
++"""
++import argparse
++import hashlib
++import json
++import os
++from pathlib import Path
++import shutil
++import subprocess
++import sys
++
++
++def sha(path):return hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def verify(output,wheelhouse,bundle=None):
++    output=Path(output).resolve();output.mkdir(parents=True,exist_ok=False)
++    bundle=Path(bundle).resolve() if bundle else Path(__file__).resolve().parent.parent
++    wheelhouse=Path(wheelhouse).resolve()
++    env=dict(os.environ,TTO_INSTALL_PYTHON=sys.executable,PIP_DISABLE_PIP_VERSION_CHECK='1')
++    cases={}
++    def run(name,args,expected=0):
++        result=subprocess.run(['sh',str(bundle/'install.sh'),*args],env=env,capture_output=True,text=True,timeout=600)
++        (output/(name+'.log')).write_text(result.stdout+result.stderr)
++        assert result.returncode==expected,(name,result.returncode,result.stdout[-300:],result.stderr[-500:])
++        return result
++    prefix=output/'installed with spaces'
++    arguments=['--prefix',str(prefix),'--offline-wheelhouse',str(wheelhouse)]
++    run('success',arguments)
++    identity=json.loads((prefix/'installation.json').read_text())
++    assert identity['version']=='0.1.2' and identity['non_editable'] and identity['offline_doctor_passed']
++    assert identity['wheel_sha256']==sha(bundle/'wheels/tianshan_thermal_observer-0.1.2-py3-none-any.whl')
++    assert str(prefix/'.venv') in identity['import_path']
++    config=prefix/'config/local.json';settings=json.loads(config.read_text())
++    assert settings['orin']['base_url'] is None and settings['tianshan']['base_url'] is None
++    assert settings['storage']['data_root']==str(prefix/'runs')
++    version=subprocess.run([str(prefix/'tto'),'--version'],capture_output=True,text=True,check=True)
++    assert version.stdout.strip()=='0.1.2'
++    (output/'launcher-version.log').write_text(version.stdout)
++    cases['success']={'passed':True,'version':'0.1.2','prefix_has_spaces':True,'non_editable':True,'wheel_files_equal_installed':True,'offline_dependencies':True,'config_endpoints_unset':True}
++    settings['run']['default_duration_s']=60
++    config.write_text(json.dumps(settings,indent=2)+'\n')
++    sentinel=prefix/'runs/user-record.txt';sentinel.parent.mkdir();sentinel.write_text('synthetic user-owned record\n')
++    model=prefix/'user-model.json';model.write_text('{"synthetic_user_owned":true}\n')
++    preserved={str(p.relative_to(prefix)):sha(p) for p in (config,sentinel,model)}
++    run('repeat-preserves-data',arguments)
++    assert preserved=={name:sha(prefix/name) for name in preserved}
++    cases['repeat']={'passed':True,'config_records_model_unchanged':preserved}
++    # A failed venv bootstrap can leave python present but pip absent.
++    # Move ONLY this test environment's pip files to reproduce that partial state.
++    site=Path(identity['import_path']).parent
++    disabled=output/'disabled-pip';disabled.mkdir()
++    for path in [site/'pip',*site.glob('pip-*.dist-info')]:shutil.move(str(path),str(disabled/path.name))
++    run('partial-bootstrap-retry',arguments)
++    assert preserved=={name:sha(prefix/name) for name in preserved}
++    cases['partial_bootstrap_retry']={'passed':True,'missing_pip_recovered':True,'config_records_model_unchanged':True}
++    occupied=output/'unrelated-directory';occupied.mkdir();(occupied/'do-not-touch.txt').write_text('existing file')
++    original=sha(occupied/'do-not-touch.txt')
++    run('occupied-directory',['--prefix',str(occupied),'--offline-wheelhouse',str(wheelhouse)],1)
++    assert sha(occupied/'do-not-touch.txt')==original and len(list(occupied.iterdir()))==1
++    cases['occupied']={'passed':True,'preexisting_file_unchanged':True}
++    missing=output/'missing-wheelhouse-prefix'
++    run('missing-wheelhouse',['--prefix',str(missing),'--offline-wheelhouse',str(output/'no-wheelhouse')],1)
++    assert not missing.exists()
++    cases['missing_wheelhouse']={'passed':True,'target_not_created':True}
++    tampered=output/'tampered-bundle';tampered.mkdir()
++    for name in ('install.sh','install-manifest.json','requirements-locked.txt'):
++        shutil.copy2(bundle/name,tampered/name)
++    for directory in ('scripts','wheels','config'):
++        (tampered/directory).mkdir()
++    shutil.copy2(bundle/'scripts/install_tto.py',tampered/'scripts/install_tto.py')
++    shutil.copy2(bundle/'config/tto.example.json',tampered/'config/tto.example.json')
++    wheel=tampered/'wheels/tianshan_thermal_observer-0.1.2-py3-none-any.whl'
++    wheel.write_bytes((bundle/'wheels'/wheel.name).read_bytes()+b'tampered')
++    rejected=output/'tampered-prefix'
++    result=subprocess.run(['sh',str(tampered/'install.sh'),'--prefix',str(rejected),'--offline-wheelhouse',str(wheelhouse)],env=env,capture_output=True,text=True,timeout=30)
++    (output/'tampered-wheel.log').write_text(result.stdout+result.stderr)
++    assert result.returncode==1 and 'SHA' in result.stderr and not rejected.exists()
++    cases['tampered_wheel']={'passed':True,'rejected_before_install':True}
++    # Doctor does not call collect/shadow, and installation creates no run.
++    assert list((prefix/'runs').iterdir())==[sentinel]
++    cases['no_collect']={'passed':True,'no_observation_run_created':True,'no_device_endpoints_configured':True}
++    (output/'findings.json').write_text(json.dumps({'passed':True,'cases':cases,'python':sys.version,'real_devices':False,'target_linux_executed':sys.platform=='linux'},ensure_ascii=False,indent=2))
++    print(json.dumps({'passed':True,'cases':len(cases),'output':str(output),'real_devices':False},ensure_ascii=False))
++
++if __name__=='__main__':
++    p=argparse.ArgumentParser();p.add_argument('--output',required=True);p.add_argument('--wheelhouse',required=True);p.add_argument('--bundle')
++    a=p.parse_args();verify(a.output,a.wheelhouse,a.bundle)
+--- /dev/null
++++ b/docs/便捷安装.md
+@@ -0,0 +1,62 @@
++# TTO 0.1.2便捷安装
++
++目标为N305上的Ubuntu 22.04 / Python 3.10，也可用于有兼容Python的观察电脑。安装包使用已审0.1.2 wheel，软件源码、模型和采集规则不变。
++
++下载并解压《TTO-v1-0.1.2-便捷安装包.zip》，进入解压出的目录，在终端执行：
++
++```sh
++sh install.sh
++```
++
++脚本自动检查Python、核对安装包SHA、创建`~/TTO/.venv`、安装锁定依赖和wheel、核对实际导入文件与版本，并执行离线doctor。默认需要联网下载Python依赖；准备依赖后也可完全离线安装。
++
++如果Ubuntu提示没有Python或venv，先安装系统提供的Python工具，再重跑：
++
++```sh
++sudo apt install python3 python3-venv
++sh install.sh
++```
++
++脚本本身不执行sudo、安装系统软件或修改系统Python。Python需3.10或更高，优先使用python3.10；本轮验证用3.10.18。
++
++安装完成后，检查版本：
++
++```sh
++~/TTO/tto --version
++```
++
++应输出`0.1.2`。安装身份保存在`~/TTO/installation.json`，实际程序位于独立虚拟环境。
++
++设备地址可以稍后填写。配置文件为`~/TTO/config/local.json`，默认两处地址为空；程序已放好风扇、温度及Orin接口规则。记录默认存入`~/TTO/runs`。本次安装只运行离线检查，没有采集、设备连接、训练、后台服务或开机启动。
++
++重复运行同一安装脚本，会核对并重装同一wheel，保留已有配置、模型和数据。若目标目录已有其他内容且并非本安装器创建，脚本会停止并提示改用新目录。依赖下载等步骤失败时，可处理提示后重跑。
++
++## 自选目录与离线依赖
++
++```sh
++sh install.sh --prefix "$HOME/TTO-observer"
++sh install.sh --offline-wheelhouse /path/to/wheelhouse
++```
++
++离线wheelhouse必须匹配目标系统、CPU与Python。例如目标N305是Linux x86_64 / Python 3.10，不能使用Mac ARM64的依赖轮子。
++
++可在联网且系统/CPU/Python匹配的电脑上准备依赖：
++
++```sh
++python3.10 -m pip download --only-binary=:all: \
++  -r requirements-locked.txt -d wheelhouse
++```
++
++复制wheelhouse至目标机后传给`--offline-wheelhouse`。指定此参数后pip使用`--no-index`，不访问包索引。默认完整依赖锁也含训练/测试库，但安装不会执行训练或回归。
++
++需指定Python解释器时：
++
++```sh
++TTO_INSTALL_PYTHON=/path/to/python3.10 sh install.sh
++```
++
++## 本轮验证范围
++
++在本机macOS ARM64 / CPython 3.10.18的全新临时目录，用预先准备的离线依赖实际验证七类结果：完整安装、重复安装保留配置/记录/模型、其他目录保护、缺离线依赖目录、wheel哈希不匹配拒绝、虚拟环境初始化中断后重试恢复pip、未创建采集run；目录含空格，启动器可直接运行。安装包解压后还会独立重跑安装验证。
++
++Ubuntu 22.04 / N305实机安装未执行。本机没有运行中的Docker守护进程，未启动它来做Linux容器测试。该限制与测试日志如实保存。原0.1.2 wheel及R3b复审交付包SHA保持不变；本轮只是安装入口与文档。
+--- a/README.md
++++ b/README.md
+@@ -6,10 +6,14 @@
+ 
+ ## 安装与离线检查
+ 
++便捷安装包解压后，在包目录执行 `sh install.sh`。默认安装到 `~/TTO`，自动创建虚拟环境、安装锁定依赖和0.1.2 wheel、核对身份并做离线doctor；设备地址可以稍后填写。安装后入口为 `~/TTO/tto`。重复安装保留配置、模型和数据；详见[便捷安装](docs/便捷安装.md)。
++
++手动安装命令：
++
+ ```sh
+ python3.10 -m venv .venv
+ .venv/bin/python -m pip install -r requirements-locked.txt
+-.venv/bin/python -m pip install --no-deps wheels/tianshan_thermal_observer-0.1.1-py3-none-any.whl
++.venv/bin/python -m pip install --no-deps wheels/tianshan_thermal_observer-0.1.2-py3-none-any.whl
+ .venv/bin/tto doctor --config config/tto.example.json
+ .venv/bin/tto demo --output /tmp/tto-demo-NEW
+ ```
+--- a/PROGRESS.md
++++ b/PROGRESS.md
+@@ -33,3 +33,7 @@
+ ## R3b有限收尾（0.1.2，本地离线）
+ 
+ 根因为质量回放的段隔离未传入历史评分汇总。保持Engine/Quality隔离规则，传递明确身份与触发引用，分别保存历史评分、有效评分和质量排除评分；有效指标及图共用有效集合，历史覆盖分母保留。固定模拟正常/冲突/恢复/序号倒退通过正式report验证；实际验证结果与新wheel身份见本轮收尾报告及证据包。未连接设备、部署、提交或推送。
++
++## 便捷安装入口（保持0.1.2候选）
++
++新增install.sh及Python安装器，默认独立目录、锁定依赖、候选SHA核对、非editable安装身份核对与离线doctor。原wheel、R3b证据包、生产源码和依赖锁不变。新增安装场景仅在临时目录离线测试，不在目标设备安装、连接或启动采集。交付独立便捷安装包，避免改写已审归档。

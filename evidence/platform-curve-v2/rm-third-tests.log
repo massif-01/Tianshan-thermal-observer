@@ -1,0 +1,39 @@
+........................................................................ [ 57%]
+.....................................................F                   [100%]
+=================================== FAILURES ===================================
+_____________ test_thor_http_and_socketio_same_sealed_measurement ______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b3d1d20>
+
+    def test_thor_http_and_socketio_same_sealed_measurement(monkeypatch):
+        from tegrastats_api.server import TegrastatsServer
+        from test_data import tick
+        fake = FakeProcess()
+        monkeypatch.setattr('tegrastats_api.parser.subprocess.Popen', lambda *a, **k: fake)
+        samplers = []
+        def factory(interval):
+            s = GPUSampler(interval, FakeReader());samplers.append(s);return s
+        p = TegrastatsParser(platform_reader=lambda: platform('thor'), gpu_factory=factory)
+        server = TegrastatsServer();server.parser = p
+        client = server.socketio.test_client(server.app)
+        try:
+            p.start();s = samplers[0];deadline = time.monotonic()+1
+            while not s.history and time.monotonic()<deadline:time.sleep(.002)
+            fake.lines.put('tj@46C');await_seq(p,1)
+            http = server.app.test_client().get('/api/status').json
+            tick(server,monkeypatch)
+            events = [x['args'][0] for x in client.get_received() if x['name']=='system_status_update']
+>           assert events and events[-1]['gpu']==http['gpu'] and events[-1]['platform']==http['platform']
+E           assert ([])
+
+../rm01OrinStatus/tests/offline/test_platform_gpu.py:155: AssertionError
+------------------------------ Captured log call -------------------------------
+INFO     tegrastats_api.server:server.py:98 Tegrastats API服务器已初始化
+INFO     tegrastats_api.server:server.py:217 WebSocket客户端连接: unknown, SID: oMtu5F0JHjTNjgHZAAAA, 当前连接数: 1
+INFO     tegrastats_api.server:server.py:234 数据更新线程启动
+INFO     tegrastats_api.server:server.py:261 数据更新线程停止
+INFO     tegrastats_api.server:server.py:229 WebSocket客户端断开: unknown, SID: oMtu5F0JHjTNjgHZAAAA, 当前连接数: 0
+- generated xml file: /Users/massif/Tianshan-thermal-observer/evidence/platform-curve-v2/rm-third-junit.xml -
+=========================== short test summary info ============================
+FAILED ../rm01OrinStatus/tests/offline/test_platform_gpu.py::test_thor_http_and_socketio_same_sealed_measurement
+1 failed, 125 passed in 14.57s

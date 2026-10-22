@@ -1,0 +1,37 @@
+{
+  "input_path": "numeric_export",
+  "synthetic_only": true,
+  "columns": {
+    "record_id": "id",
+    "measured_at_raw": "sample",
+    "original_value": "temperature",
+    "original_unit": "unit",
+    "original_channel": "channel"
+  },
+  "constants": {
+    "synthetic": true,
+    "time_source": "synthetic_instrument_sample_index",
+    "time_uncertainty_s": 0.1
+  },
+  "channels": {
+    "A": {
+      "session_id": "SYNTH-contact-fin",
+      "site_id": "SYNTH-contact-fin-site"
+    },
+    "B": {
+      "session_id": "SYNTH-contact-back",
+      "site_id": "SYNTH-contact-back-site"
+    }
+  },
+  "time_axis": {
+    "mode": "sample_index",
+    "index_origin": 0,
+    "sample_interval_s": 1,
+    "interval_basis": "SYNTHETIC explicitly selected 1s setting, not actual YET evidence"
+  },
+  "exported_at_raw": "SYNTHETIC export-time unknown",
+  "csv": {
+    "encoding": "utf-8-sig",
+    "delimiter": ","
+  }
+}

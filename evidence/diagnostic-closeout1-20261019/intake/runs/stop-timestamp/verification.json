@@ -1,0 +1,27 @@
+{
+  "candidate_changed": false,
+  "own_loopback_only": true,
+  "reason": "collector_exited",
+  "stop_instrumentation": [
+    {
+      "reason": "collector_exited",
+      "actual_observed_mono_s": 12.100969275000011,
+      "scheduler_cached_mono_s": 11.999745105999978,
+      "submitted_before_stop": 24
+    }
+  ],
+  "stop_event": {
+    "event": "stop_new_requests",
+    "mono_s": 11.999745105999978,
+    "run_id": "96e29766-453c-4185-912c-c902d23ee8f8",
+    "command_id": "REVIEW-COLLECTOR-EXIT-TIMESTAMP",
+    "reason": "collector_exited",
+    "recorded_at_utc": "2026-10-19T08:32:12.763789+00:00"
+  },
+  "event_order_submissions_after_stop": [],
+  "protocol_submissions_after_actual_observed_stop": [],
+  "old_test_false_positive_requests": [],
+  "timestamp_backdate_s": 0.10122416900003373,
+  "sessions_closed": true,
+  "tasks_remaining": 0
+}

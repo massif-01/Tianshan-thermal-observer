@@ -1,0 +1,151 @@
+{
+  "checked_at_utc": "2026-10-19T09:47:16.976123+00:00",
+  "native_run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+  "runner_alive": true,
+  "admission_rows": 3570,
+  "latest_admission": {
+    "evaluated_mono_s": 351108.083237144,
+    "scheduler_mono_s": 362.5901496249717,
+    "at_utc": "2026-10-19T09:47:16.787367+00:00",
+    "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+    "native_run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+    "collection_available": true,
+    "model_available": true,
+    "field_safety_available": true,
+    "execution_authorized": true,
+    "instrument_clock_ready": true,
+    "explicit_stop": false,
+    "start_allowed": true,
+    "reasons": [],
+    "observer_state": "tracking",
+    "successful_PWM_age_s": 0.8004827899858356,
+    "measurement_current": {
+      "tj": true,
+      "power": true,
+      "last_successful_pwm": true,
+      "control_context": true
+    },
+    "source_ages_s": {
+      "tj": 0.042698820994701236,
+      "power": 0.042698820994701236,
+      "last_successful_pwm": 0.8004827899858356,
+      "control_context": 2.233905246015638
+    },
+    "source_expiry_mono_s": {
+      "tj": 351112.595402841,
+      "power": 351112.595402841,
+      "last_successful_pwm": 351109.782655181,
+      "control_context": 351113.349232725
+    },
+    "model_state_age_s": 0.03996433800784871,
+    "model_consumable_until_mono_s": 351110.54043915,
+    "safety_status": "fresh",
+    "observation_cutoff": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1160",
+    "native_quality_preserved": true,
+    "model_permission": {
+      "local_demo": true,
+      "formal_field_authorized": false,
+      "device_actions": false
+    }
+  },
+  "phase_events": [
+    {
+      "event": "phase_start",
+      "mono_s": 9.32121633796487,
+      "run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+      "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+      "index": 0,
+      "stage": {
+        "kind": "background",
+        "seconds": 300
+      },
+      "window_end": 309.32121633796487,
+      "recorded_at_utc": "2026-10-19T09:41:23.518819+00:00"
+    },
+    {
+      "event": "phase_end",
+      "mono_s": 309.3408491969458,
+      "run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+      "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+      "index": 0,
+      "kind": "background",
+      "elapsed_s": 300.0196328589809,
+      "recorded_at_utc": "2026-10-19T09:46:23.538377+00:00"
+    },
+    {
+      "event": "phase_start",
+      "mono_s": 309.3408491969458,
+      "run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+      "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+      "index": 1,
+      "stage": {
+        "kind": "work",
+        "concurrency": 1,
+        "seconds": 360,
+        "repeat_key": "single-anchor"
+      },
+      "window_end": 669.3408491969458,
+      "recorded_at_utc": "2026-10-19T09:46:23.538440+00:00"
+    }
+  ],
+  "protocol_counts": {
+    "request_submit": 4,
+    "first_content": 4,
+    "request_end": 3
+  },
+  "protocol_firsts": {
+    "first_content": {
+      "event": "first_content",
+      "mono_s": 309.8815168479923,
+      "at_utc": "2026-10-19T09:46:24.078632+00:00",
+      "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+      "native_run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+      "request_id": "R0001",
+      "semantics": "first_received_SSE_content"
+    },
+    "request_end": {
+      "event": "request_end",
+      "mono_s": 326.8195190989645,
+      "at_utc": "2026-10-19T09:46:41.016633+00:00",
+      "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+      "native_run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+      "request_id": "R0001",
+      "submit_mono_s": 309.44237200997304,
+      "submitted_at_utc": "2026-10-19T09:46:23.639489+00:00",
+      "payload_sha256": "8502df772081ad7b9093975b5dbf5801e4c780dd21f6b619d87c13ca06dd00c0",
+      "max_tokens": 256,
+      "status": "completed",
+      "server_status": "protocol_completion_observed",
+      "first_network_mono_s": 309.88129349797964,
+      "first_content_mono_s": 309.88151482795365,
+      "finish_reason": "length",
+      "done": true,
+      "usage": {
+        "prompt_tokens": 49,
+        "total_tokens": 305,
+        "completion_tokens": 256
+      },
+      "server_request_id": "chatcmpl-8b386d94b21f7813",
+      "http_status": 200,
+      "client_end_mono_s": 326.81949666695436,
+      "client_end_at_utc": "2026-10-19T09:46:41.016613+00:00",
+      "duration_s": 17.377139867981896,
+      "request_end_semantics": "client protocol completion or unknown termination; never GPU kernel end"
+    }
+  },
+  "latest_resource": {
+    "mono_s": 362.4880775779602,
+    "rss_bytes": 83537920,
+    "cpu_times": {
+      "user": 10.4,
+      "system": 1.04,
+      "children_user": 0.0,
+      "children_system": 0.0,
+      "iowait": 0.0
+    },
+    "cpu_pct_single_core": 2.9557849800948546,
+    "field_log_bytes": 18580484,
+    "native_log_bytes": 3268922
+  },
+  "summary": null
+}

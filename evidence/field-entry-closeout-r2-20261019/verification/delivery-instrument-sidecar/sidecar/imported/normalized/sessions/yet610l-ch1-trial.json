@@ -1,0 +1,50 @@
+{
+  "run_id": "76dcbf05-7941-4ff3-9b93-e90ce3241e45",
+  "session_id": "yet610l-ch1-trial",
+  "site_id": "ch1-location-see-formal-probe-record",
+  "measurement_kind": "surface_contact",
+  "site_description": "SYNTHETIC no physical probe",
+  "instrument": {
+    "model": "YET-610L",
+    "serial_alias": "SYNTHETIC",
+    "firmware_version": "TEST",
+    "accuracy": null
+  },
+  "contact": {
+    "fixed_position": "SYNTHETIC no physical probe",
+    "surface_condition": null,
+    "attachment_method": "SYNTHETIC",
+    "installation_verified": false,
+    "probe_response_calibrated": false,
+    "installation_verification": "user_confirmation_only; physical calibration not established"
+  },
+  "geometry": {
+    "statistic": "single_probe_reading"
+  },
+  "settings": {
+    "actual_record_interval_s": 1,
+    "interval_evidence": "CSV Logging Summary + actual 2 adjacent intervals checked below"
+  },
+  "time": {
+    "clock_domain": "instrument_local_datetime",
+    "timezone": null,
+    "sync_anchors": []
+  },
+  "reference_record_id": null,
+  "synthetic": false,
+  "model_input": false,
+  "control_input": false,
+  "probe_integrity_report": {
+    "site_description": "SYNTHETIC no physical probe",
+    "attachment_method": "SYNTHETIC"
+  },
+  "schema": "TTO-EXTERNAL-REFERENCE-v1",
+  "absolute_status": "unverified_reference",
+  "quality_limitations": [
+    "unknown_instrument_accuracy",
+    "local_surface_not_air_whole_body_or_measured_Ts",
+    "unknown_contact_surface_condition",
+    "probe_response_not_calibrated_sampling_interval_is_not_response_time",
+    "contact_installation_not_field_verified"
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+  "native_run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+  "candidate_version": "0.2.4+closeout.2",
+  "actual_clock_start_utc": "2026-10-19T09:41:14.197777+00:00",
+  "hard_deadline_utc": "2026-10-19T10:41:14.197777+00:00",
+  "first_phase": {
+    "event": "phase_start",
+    "mono_s": 9.32121633796487,
+    "run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+    "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+    "index": 0,
+    "stage": {
+      "kind": "background",
+      "seconds": 300
+    },
+    "window_end": 309.32121633796487,
+    "recorded_at_utc": "2026-10-19T09:41:23.518819+00:00"
+  },
+  "notifications_sent": [
+    "actual_start",
+    "phase_background",
+    "phase_1_work_concurrency_1",
+    "work_1_first_content",
+    "work_1_first_end",
+    "work_1_complete",
+    "phase_2_recovery",
+    "phase_3_work_concurrency_2",
+    "work_3_first_content",
+    "work_3_first_end",
+    "work_3_complete",
+    "phase_4_recovery",
+    "phase_5_work_concurrency_4",
+    "work_5_first_content",
+    "work_5_first_end",
+    "work_5_complete",
+    "phase_6_recovery",
+    "phase_7_work_concurrency_1",
+    "work_7_first_content",
+    "work_7_first_end",
+    "work_7_complete",
+    "phase_8_final_recovery",
+    "end_clock_reminder",
+    "actual_end"
+  ],
+  "last_notified_phase_index": 8,
+  "end_clock_reminder_sent": true,
+  "finished": true,
+  "instrument_record_start_utc": null,
+  "instrument_lead_seconds": null,
+  "last_snapshot_utc": "2026-10-19T10:25:52.391399+00:00",
+  "last_checked_at_utc": "2026-10-19T10:25:53.105048+00:00",
+  "last_scheduler_mono_s": 2678.1941911109607,
+  "admission_rows": 26362,
+  "last_observer_state": "tracking",
+  "measurement_model_context_ready": true,
+  "actor_runner_alive": false,
+  "protocol_counts": {
+    "request_submit": 179,
+    "first_content": 179,
+    "request_end": 179
+  },
+  "latest_native_observation_ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8561",
+  "input_unready_events_observed": [
+    {
+      "mono_s": 1464.3735823369934,
+      "recorded_at_utc": "2026-10-19T10:05:38.571108+00:00",
+      "reasons": [
+        "control_context_unready"
+      ]
+    }
+  ],
+  "final_recovery_start_utc": "2026-10-19T10:18:28.738668+00:00",
+  "final_recovery_window_end_mono_s": 2714.5410623749485,
+  "end_clock_reminder_sent_at_utc": "2026-10-19T10:24:38.593374+00:00",
+  "end_clock_reminder_remaining_s_at_check": 122.13907024200307,
+  "actual_end_utc": "2026-10-19T10:26:28.850926+00:00",
+  "actual_elapsed_s": 2714.653307423985,
+  "actual_reason": "completed",
+  "archive_verified": true,
+  "waiting_for": [
+    "frozen_model_comparison"
+  ],
+  "heartbeat_status": "PAUSED",
+  "instrument_csv_received": true,
+  "end_clock_photo_received": true,
+  "probe_integrity_confirmed": true
+}

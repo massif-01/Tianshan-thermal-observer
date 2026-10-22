@@ -1,0 +1,20 @@
+{
+  "kind": "condition_transition_reported",
+  "observer_run_id": "c1a1bd6a-7854-4d08-bea7-42ea1335c0eb",
+  "source": "human_report",
+  "verbatim": "模型拉起完成了，现在进入工况3，模型保持运行，暂时不做推理，继续采集。",
+  "previous_condition_id": 2,
+  "completed_condition_id": 2,
+  "completed_condition_label": "模型拉起",
+  "completion_status": "normal_completion_reported",
+  "condition_id": 3,
+  "condition_label": "模型保持运行，暂时不做推理",
+  "reported_event_time": {
+    "description": "用户报告模型拉起已完成，当前进入模型运行但不推理的待机工况；起止时间为人工上报的近似说明",
+    "precision": "approximate_transition_now",
+    "exact_end_at_utc": null,
+    "exact_start_at_utc": null
+  },
+  "recorded_at_utc": "2026-10-13T02:28:52.076929+00:00",
+  "collection_continues": true
+}

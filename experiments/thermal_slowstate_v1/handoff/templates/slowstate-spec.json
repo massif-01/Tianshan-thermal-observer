@@ -1,0 +1,96 @@
+{
+  "id": "TTO-SLOWSTATE-v1.0",
+  "date": "2026-10-14",
+  "kind": "offline_research_only",
+  "owner_dialogue": "greybox_identification_and_comparison",
+  "test_dialogue": "paused_no_device_actions",
+  "objective": "Separate observed/predicted TJ, latent slow state and smooth-control demand; evaluate slow-state information beyond simple filters.",
+  "production_changes_allowed": false,
+  "hardware_actions_allowed": false,
+  "refit_allowed": false,
+  "deployable": false,
+  "input_archives": [
+    "inputs/r2-results-original.zip",
+    "inputs/r2-prerequisites-original.zip"
+  ],
+  "primary_model_member": "runs/main/fits/D-LSM-G2/model.json",
+  "frozen_sensitivity": [
+    "old_LS_fit_G2",
+    "D-LSM-G2-A24"
+  ],
+  "runs": {
+    "L": "929742d7-6f4d-4d80-b53e-4436d45ac12c",
+    "S": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02",
+    "M": "637f114b-563b-4c35-8062-a7588a89ce1c"
+  },
+  "ambient": {
+    "M_C": 24,
+    "source": "user_confirmed",
+    "L_C": null,
+    "S_C": null,
+    "never_replace_old_effective_E": true
+  },
+  "semantics": {
+    "Tf_hat": "model_output_estimate_of_TJ",
+    "Ts_hat": "unmeasured_latent_slow_state",
+    "demand_index": "dimensionless_incremental_shape_not_PWM_or_heat",
+    "q_equiv_units": "C/s"
+  },
+  "state_modes": [
+    "causal_prefix_free_response",
+    "causal_60s_state_estimate"
+  ],
+  "state_comparison": {
+    "branches": [
+      "STATE-G2",
+      "STATE-QS",
+      "STATE-LP30",
+      "STATE-LP120"
+    ],
+    "qs": "(c*TJ+(d0+d1*u)*E)/(c+d0+d1*u)",
+    "lp_tau_s": [
+      30,
+      120
+    ],
+    "common_current_Tf": "observed_TJ",
+    "initialize_lp": "first_legal_qs_in_strict_segment",
+    "time": "irregular_monotonic_left_hold",
+    "method_selection": "none"
+  },
+  "evaluation": {
+    "horizons_s": [
+      15,
+      45,
+      90
+    ],
+    "A_roll": "future_actual_inputs_allowed_but_no_future_TJ_feedback",
+    "B": "HOLD_only_new_ablation",
+    "old_RELAX30": "unchanged_reference",
+    "rules": "TTO-EVAL-AVAIL-v2.0",
+    "state_truth_available": false,
+    "unknown_future_requests": "not_predicted_or_revealed"
+  },
+  "demand_prototype": {
+    "reference": "branch_value_at_first_legal_causal_state_of_strict_segment",
+    "delta_scale_C": 10.0,
+    "clamp": [
+      0,
+      1
+    ],
+    "deadband": 0.02,
+    "full_scale_rise_s": 30,
+    "full_scale_fall_s": 120,
+    "same_shaping_for_all_branches": true,
+    "keep_raw_and_saturation": true,
+    "if_risk_or_invalid": "null_normal_demand_with_explicit_reason",
+    "actual_PWM_output": false,
+    "real_temperature_counterfactual_claims": false
+  },
+  "future_input_strategy_work": "deferred_this_round_not_cancelled",
+  "outputs": [
+    "TTO-快慢热状态与平稳散热需求-研究报告.md",
+    "TTO-快慢热状态与平稳散热需求-研究证据包.zip"
+  ],
+  "stop_after": "offline_results_and_review_package",
+  "remote_git_writes_allowed": false
+}

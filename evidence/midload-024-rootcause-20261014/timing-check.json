@@ -1,0 +1,23 @@
+{
+  "observer_monotonic_domain": "Same N305 Python time.monotonic as recorded run; no wall-clock alignment used",
+  "board_uptime_ms_at_anchor": 4846873,
+  "anchor_observer_monotonic_bounds_s": [
+    4801.831208264,
+    4801.884350283
+  ],
+  "last_valid_temp_ref": "a03db81c-ed3a-415c-a1d3-11bc26389419/observation:2846",
+  "last_known_variable_timestamp_ms": 3787012,
+  "invalid_temp_ref": "a03db81c-ed3a-415c-a1d3-11bc26389419/observation:2862",
+  "last_known_variable_age_at_invalid_ms_bounds": [
+    5597.754550000653,
+    5650.896568999626
+  ],
+  "board_timeout_ms": 10000,
+  "age_below_timeout": true,
+  "assumptions": [
+    "Same board and observer boots and no monotonic clock discontinuity",
+    "Clock-rate differences over the interval small relative to the >4-second margin",
+    "The already observed valid last_update was not subsequently reset or corrupted; such reset would be a separate invalidation, not subscription age expiration"
+  ],
+  "limits": "This compares the last known valid timestamp, not the unrecorded variable read return code or internal age at anomaly."
+}

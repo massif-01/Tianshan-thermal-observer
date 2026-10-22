@@ -1,0 +1,186 @@
+{
+  "note": "Original documents and member subset; this is not the complete historic evidence ZIP. Existing original data stay in the modelling workspace.",
+  "archives": [
+    {
+      "filename": "TTO-快慢热状态与平稳散热需求-研究证据包.zip",
+      "sha256": "a273a9f38d7755686f84ed8fccfc8ca7d8a5552b6385c271d8606979fe00fb17",
+      "bytes": 34201609
+    },
+    {
+      "filename": "TTO-中等负载测试准备-R1-R2返修证据包.zip",
+      "sha256": "2106e97cd01abc85c05c514dfa47aacb75237ce40ad82d5fce5e42e8e1e87371",
+      "bytes": 1466489
+    }
+  ],
+  "members": [
+    {
+      "original": "TTO-快慢热状态与平稳散热需求-研究报告.md",
+      "path": "references/01-快慢状态研究报告-原样.md",
+      "sha256": "644cf615af36d9c212c1fffff4d5984e4a74e704ae59673023271f02b5df9345",
+      "bytes": 26546
+    },
+    {
+      "original": "TTO-快慢热状态-独立核对与下一步.md",
+      "path": "references/02-快慢状态独立核对-原样.md",
+      "sha256": "c0c9ff0aee1d132cf4d0dfdb3c124806fd2e4b01a604cdceb64e24ca4a745c43",
+      "bytes": 12900
+    },
+    {
+      "original": "TTO-0.2.4中等负载实测-独立核对与下一步.md",
+      "path": "references/03-中等负载实测核对-原样.md",
+      "sha256": "45eef6727f0a6f8c180b9ca40658ae140fd4b5714d0ff1b2891ca582df40d084",
+      "bytes": 13613
+    },
+    {
+      "original_archive": "TTO-快慢热状态与平稳散热需求-研究证据包.zip",
+      "member": "README.md",
+      "path": "references/slowstate-snapshot/README.md",
+      "sha256": "38d529ec9a46a1e2c154e13e552bbedf46dc307dc9272bf783b9b51d8ed3ea0e",
+      "bytes": 4441
+    },
+    {
+      "original_archive": "TTO-快慢热状态与平稳散热需求-研究证据包.zip",
+      "member": "core.py",
+      "path": "references/slowstate-snapshot/core.py",
+      "sha256": "4f76a506febfdfd362e82b8bd65248ed1647edc482f24222b70e85a54845d3ea",
+      "bytes": 3375
+    },
+    {
+      "original_archive": "TTO-快慢热状态与平稳散热需求-研究证据包.zip",
+      "member": "run_study.py",
+      "path": "references/slowstate-snapshot/run_study.py",
+      "sha256": "fe27dd5ba3fd0fdb0b2c2d286305504373dba4b0f0be63981042ba29e9beca40",
+      "bytes": 38123
+    },
+    {
+      "original_archive": "TTO-快慢热状态与平稳散热需求-研究证据包.zip",
+      "member": "prepare.py",
+      "path": "references/slowstate-snapshot/prepare.py",
+      "sha256": "6dac3e37bb864aacf55bcb61ed1e5eb765de28ec980e5fa2c4f17523eae3bdc4",
+      "bytes": 9212
+    },
+    {
+      "original_archive": "TTO-快慢热状态与平稳散热需求-研究证据包.zip",
+      "member": "slowstate-spec.json",
+      "path": "references/slowstate-snapshot/slowstate-spec.json",
+      "sha256": "5f13140ff8dbfcb69424006feede4b4dc8b1ec5cc67afa7992fc8ff284777e76",
+      "bytes": 5778
+    },
+    {
+      "original_archive": "TTO-快慢热状态与平稳散热需求-研究证据包.zip",
+      "member": "tests/test_slowstate.py",
+      "path": "references/slowstate-snapshot/tests/test_slowstate.py",
+      "sha256": "338f83c96cc4a61f68923056e286186292402b1bfff7f8ba4470faa0ae7f1c3c",
+      "bytes": 10412
+    },
+    {
+      "original_archive": "TTO-快慢热状态与平稳散热需求-研究证据包.zip",
+      "member": "vendor/common.py",
+      "path": "references/slowstate-snapshot/vendor/common.py",
+      "sha256": "62b8ec1a34892028119a2c3b3ccaf69387ab6511b97bb108364bd146f1a6bf69",
+      "bytes": 1470
+    },
+    {
+      "original_archive": "TTO-快慢热状态与平稳散热需求-研究证据包.zip",
+      "member": "vendor/greybox.py",
+      "path": "references/slowstate-snapshot/vendor/greybox.py",
+      "sha256": "8a05128393b38ce32d236e58d1c3dbee34cf0e66f524976bf69ad5d5b5bd7fe4",
+      "bytes": 8931
+    },
+    {
+      "original_archive": "TTO-快慢热状态与平稳散热需求-研究证据包.zip",
+      "member": "vendor/initialize.py",
+      "path": "references/slowstate-snapshot/vendor/initialize.py",
+      "sha256": "6d35f9a9c09c527050ef367855364f4f057c76724d465d6acaec311c89e80834",
+      "bytes": 3261
+    },
+    {
+      "original_archive": "TTO-快慢热状态与平稳散热需求-研究证据包.zip",
+      "member": "vendor/propagate.c",
+      "path": "references/slowstate-snapshot/vendor/propagate.c",
+      "sha256": "45ad1be491dd6e1c70e3502f9c8db073df8f98173c6d57898d949fa42aeeef33",
+      "bytes": 1772
+    },
+    {
+      "original_archive": "TTO-快慢热状态与平稳散热需求-研究证据包.zip",
+      "member": "sources/models/primary.json",
+      "path": "references/slowstate-snapshot/sources/models/primary.json",
+      "sha256": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
+      "bytes": 4647
+    },
+    {
+      "original_archive": "TTO-快慢热状态与平稳散热需求-研究证据包.zip",
+      "member": "sources/models/old_LS.json",
+      "path": "references/slowstate-snapshot/sources/models/old_LS.json",
+      "sha256": "3c791275bb7172bc65031287ceb68c2d8a6e7d64ecce8a7962ac76d4745799cd",
+      "bytes": 4473
+    },
+    {
+      "original_archive": "TTO-快慢热状态与平稳散热需求-研究证据包.zip",
+      "member": "sources/models/A24.json",
+      "path": "references/slowstate-snapshot/sources/models/A24.json",
+      "sha256": "0649551be0360f1186c1e13c7ea827d28e89f4a000ef18da48e75e519913c246",
+      "bytes": 4768
+    },
+    {
+      "original_archive": "TTO-快慢热状态与平稳散热需求-研究证据包.zip",
+      "member": "sources/provenance/M-ambient-user-confirmed.json",
+      "path": "references/slowstate-snapshot/sources/provenance/M-ambient-user-confirmed.json",
+      "sha256": "509832b84fd48e94f82fc8595e244acaf7c136e747f76fa456695cea9211b61c",
+      "bytes": 1237
+    },
+    {
+      "original_archive": "TTO-快慢热状态与平稳散热需求-研究证据包.zip",
+      "member": "results/coverage.json",
+      "path": "references/slowstate-snapshot/results/coverage.json",
+      "sha256": "97453d01802c7977cb29a37c7ac449d1800baba5c16de263bdeeae60ff66c8bb",
+      "bytes": 3863
+    },
+    {
+      "original_archive": "TTO-快慢热状态与平稳散热需求-研究证据包.zip",
+      "member": "results/frozen-model-state-sensitivity.json",
+      "path": "references/slowstate-snapshot/results/frozen-model-state-sensitivity.json",
+      "sha256": "4e2059a8297216665d712e5cb7849091979aecf0422f95e19a8873bb6ad965e0",
+      "bytes": 15787
+    },
+    {
+      "original_archive": "TTO-快慢热状态与平稳散热需求-研究证据包.zip",
+      "member": "results/original-Tf-peak-errors.json",
+      "path": "references/slowstate-snapshot/results/original-Tf-peak-errors.json",
+      "sha256": "0f08cc67ca6deb911e03bcbaf8840e46b17b8903e2b2d1ea8b1a1c28217eff00",
+      "bytes": 18864
+    },
+    {
+      "original_archive": "TTO-快慢热状态与平稳散热需求-研究证据包.zip",
+      "member": "results/four-state-origins.jsonl",
+      "extraction": "first 12 lines; incomplete schema sample, not a data set",
+      "path": "references/trajectory-format-samples/four-state-origins.jsonl",
+      "sha256": "06fc94ff82309e3bb8f8224ac150ca7f3cd591af7d37eb406a7d63c83e53c6c2",
+      "bytes": 11787
+    },
+    {
+      "original_archive": "TTO-快慢热状态与平稳散热需求-研究证据包.zip",
+      "member": "results/states-causal60.jsonl",
+      "extraction": "first 4 lines; incomplete schema sample, not a data set",
+      "path": "references/trajectory-format-samples/states-causal60.jsonl",
+      "sha256": "96769b865af5959c729d88fe6f0c2a5ce59bcba8d4c77f611e0467f6455e1cab",
+      "bytes": 6133
+    },
+    {
+      "original_archive": "TTO-中等负载测试准备-R1-R2返修证据包.zip",
+      "member": "code/scripts/thermal_trials/trial.py",
+      "path": "references/runner-event-reference/trial.py",
+      "sha256": "522154d04a8b811221fafddc0d8c65ba116289de7d7034c825528bf6dc8ee0c9",
+      "bytes": 5491,
+      "role": "read-only event-schema reference, not authorization to execute or replace runner"
+    },
+    {
+      "original_archive": "TTO-中等负载测试准备-R1-R2返修证据包.zip",
+      "member": "code/scripts/thermal_trials/run_midload.py",
+      "path": "references/runner-event-reference/run_midload.py",
+      "sha256": "d37a5e034e540cfff8a00443b733983ffaeb71d95d63ae44534246de4b379630",
+      "bytes": 10396,
+      "role": "read-only event-schema reference, not authorization to execute or replace runner"
+    }
+  ]
+}

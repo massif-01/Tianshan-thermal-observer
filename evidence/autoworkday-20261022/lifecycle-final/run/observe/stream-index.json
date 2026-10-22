@@ -1,0 +1,39 @@
+{
+  "contract": "TTO-OBSERVE-SEGMENTS-v1",
+  "streams": {
+    "native/run-2026-10-21T165103.637694_0000-6f81f6c4/observations": [
+      "native/run-2026-10-21T165103.637694_0000-6f81f6c4/observations-0001.jsonl"
+    ],
+    "./observations": [
+      "observations-0001.jsonl"
+    ],
+    "./states": [
+      "states.jsonl"
+    ],
+    "native/run-2026-10-21T165103.637694_0000-6f81f6c4/events": [
+      "native/run-2026-10-21T165103.637694_0000-6f81f6c4/events.jsonl"
+    ],
+    "native/run-2026-10-21T165103.637694_0000-6f81f6c4/predictions": [
+      "native/run-2026-10-21T165103.637694_0000-6f81f6c4/predictions.jsonl"
+    ],
+    "./predictions": [
+      "predictions.jsonl"
+    ],
+    "./resources": [
+      "resources.jsonl"
+    ],
+    "native/run-2026-10-21T165103.637694_0000-6f81f6c4/scores": [
+      "native/run-2026-10-21T165103.637694_0000-6f81f6c4/scores.jsonl"
+    ],
+    "./scores": [
+      "scores.jsonl"
+    ]
+  },
+  "segments": 1,
+  "rotations": 0,
+  "session_max_bytes": 8589934592,
+  "segment_max_bytes": 2147483648,
+  "file_chunk_max_bytes": 67108864,
+  "segment_max_seconds": 14400,
+  "heat_state_reset_by_rotation": false
+}

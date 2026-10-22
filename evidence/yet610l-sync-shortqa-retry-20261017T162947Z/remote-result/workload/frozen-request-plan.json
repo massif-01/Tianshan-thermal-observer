@@ -1,0 +1,361 @@
+{
+  "status": "prepared_not_authorized_to_start",
+  "pilot_requests": 0,
+  "collector_mode": "external_single_collector_only; workload never creates collector",
+  "max_inflight": 1,
+  "hard_limit_seconds": 2400,
+  "phases": [
+    {
+      "id": "resident-baseline",
+      "seconds": 300
+    },
+    {
+      "id": "sparse",
+      "questions": 6,
+      "end_to_next_submit_seconds": 90
+    },
+    {
+      "id": "between-groups",
+      "seconds": 300
+    },
+    {
+      "id": "continuous",
+      "questions": 12,
+      "end_to_next_submit_seconds": 10
+    },
+    {
+      "id": "final-cooldown",
+      "seconds": 600
+    }
+  ],
+  "payloads": [
+    {
+      "phase": "sparse",
+      "question_id": "S01",
+      "payload": {
+        "model": "RM-01 VLM",
+        "messages": [
+          {
+            "role": "user",
+            "content": "请用中文一到两句话简短回答，不超过60个汉字：为什么下雨后路面会慢慢变干？"
+          }
+        ],
+        "max_tokens": 64,
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
+      }
+    },
+    {
+      "phase": "sparse",
+      "question_id": "S02",
+      "payload": {
+        "model": "RM-01 VLM",
+        "messages": [
+          {
+            "role": "user",
+            "content": "请用中文一到两句话简短回答，不超过60个汉字：为什么保温杯能让热水凉得慢一些？"
+          }
+        ],
+        "max_tokens": 64,
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
+      }
+    },
+    {
+      "phase": "sparse",
+      "question_id": "S03",
+      "payload": {
+        "model": "RM-01 VLM",
+        "messages": [
+          {
+            "role": "user",
+            "content": "请用中文一到两句话简短回答，不超过60个汉字：为什么气球放开后会向相反方向飞？"
+          }
+        ],
+        "max_tokens": 64,
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
+      }
+    },
+    {
+      "phase": "sparse",
+      "question_id": "S04",
+      "payload": {
+        "model": "RM-01 VLM",
+        "messages": [
+          {
+            "role": "user",
+            "content": "请用中文一到两句话简短回答，不超过60个汉字：为什么植物通常需要阳光？"
+          }
+        ],
+        "max_tokens": 64,
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
+      }
+    },
+    {
+      "phase": "sparse",
+      "question_id": "S05",
+      "payload": {
+        "model": "RM-01 VLM",
+        "messages": [
+          {
+            "role": "user",
+            "content": "请用中文一到两句话简短回答，不超过60个汉字：为什么镜子能照出人的样子？"
+          }
+        ],
+        "max_tokens": 64,
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
+      }
+    },
+    {
+      "phase": "sparse",
+      "question_id": "S06",
+      "payload": {
+        "model": "RM-01 VLM",
+        "messages": [
+          {
+            "role": "user",
+            "content": "请用中文一到两句话简短回答，不超过60个汉字：为什么声音在空房间里更容易产生回声？"
+          }
+        ],
+        "max_tokens": 64,
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
+      }
+    },
+    {
+      "phase": "continuous",
+      "question_id": "D01",
+      "payload": {
+        "model": "RM-01 VLM",
+        "messages": [
+          {
+            "role": "user",
+            "content": "请用中文一到两句话简短回答，不超过60个汉字：为什么金属勺摸起来常比木勺凉？"
+          }
+        ],
+        "max_tokens": 64,
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
+      }
+    },
+    {
+      "phase": "continuous",
+      "question_id": "D02",
+      "payload": {
+        "model": "RM-01 VLM",
+        "messages": [
+          {
+            "role": "user",
+            "content": "请用中文一到两句话简短回答，不超过60个汉字：为什么白天通常比夜晚更亮？"
+          }
+        ],
+        "max_tokens": 64,
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
+      }
+    },
+    {
+      "phase": "continuous",
+      "question_id": "D03",
+      "payload": {
+        "model": "RM-01 VLM",
+        "messages": [
+          {
+            "role": "user",
+            "content": "请用中文一到两句话简短回答，不超过60个汉字：为什么水烧开时会出现气泡？"
+          }
+        ],
+        "max_tokens": 64,
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
+      }
+    },
+    {
+      "phase": "continuous",
+      "question_id": "D04",
+      "payload": {
+        "model": "RM-01 VLM",
+        "messages": [
+          {
+            "role": "user",
+            "content": "请用中文一到两句话简短回答，不超过60个汉字：为什么物体会在阳光下形成影子？"
+          }
+        ],
+        "max_tokens": 64,
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
+      }
+    },
+    {
+      "phase": "continuous",
+      "question_id": "D05",
+      "payload": {
+        "model": "RM-01 VLM",
+        "messages": [
+          {
+            "role": "user",
+            "content": "请用中文一到两句话简短回答，不超过60个汉字：为什么自行车刹车能让车停下来？"
+          }
+        ],
+        "max_tokens": 64,
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
+      }
+    },
+    {
+      "phase": "continuous",
+      "question_id": "D06",
+      "payload": {
+        "model": "RM-01 VLM",
+        "messages": [
+          {
+            "role": "user",
+            "content": "请用中文一到两句话简短回答，不超过60个汉字：为什么拉紧的橡皮筋会缩回去？"
+          }
+        ],
+        "max_tokens": 64,
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
+      }
+    },
+    {
+      "phase": "continuous",
+      "question_id": "D07",
+      "payload": {
+        "model": "RM-01 VLM",
+        "messages": [
+          {
+            "role": "user",
+            "content": "请用中文一到两句话简短回答，不超过60个汉字：为什么窗户内侧有时会出现小水珠？"
+          }
+        ],
+        "max_tokens": 64,
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
+      }
+    },
+    {
+      "phase": "continuous",
+      "question_id": "D08",
+      "payload": {
+        "model": "RM-01 VLM",
+        "messages": [
+          {
+            "role": "user",
+            "content": "请用中文一到两句话简短回答，不超过60个汉字：为什么电风扇吹过时人会觉得凉？"
+          }
+        ],
+        "max_tokens": 64,
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
+      }
+    },
+    {
+      "phase": "continuous",
+      "question_id": "D09",
+      "payload": {
+        "model": "RM-01 VLM",
+        "messages": [
+          {
+            "role": "user",
+            "content": "请用中文一到两句话简短回答，不超过60个汉字：为什么磁铁能吸住一些铁制品？"
+          }
+        ],
+        "max_tokens": 64,
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
+      }
+    },
+    {
+      "phase": "continuous",
+      "question_id": "D10",
+      "payload": {
+        "model": "RM-01 VLM",
+        "messages": [
+          {
+            "role": "user",
+            "content": "请用中文一到两句话简短回答，不超过60个汉字：为什么蜡烛熄灭后会冒出一缕烟？"
+          }
+        ],
+        "max_tokens": 64,
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
+      }
+    },
+    {
+      "phase": "continuous",
+      "question_id": "D11",
+      "payload": {
+        "model": "RM-01 VLM",
+        "messages": [
+          {
+            "role": "user",
+            "content": "请用中文一到两句话简短回答，不超过60个汉字：为什么成熟的水果常常会变甜？"
+          }
+        ],
+        "max_tokens": 64,
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
+      }
+    },
+    {
+      "phase": "continuous",
+      "question_id": "D12",
+      "payload": {
+        "model": "RM-01 VLM",
+        "messages": [
+          {
+            "role": "user",
+            "content": "请用中文一到两句话简短回答，不超过60个汉字：为什么把声音放大后听得更清楚？"
+          }
+        ],
+        "max_tokens": 64,
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
+      }
+    }
+  ],
+  "protocol": "require normal response with finish_reason; timeout/unknown service completion stops further submissions; no automatic retry or extension",
+  "admission": "original non-override rules; await current collector identity and native health contract",
+  "defaults": "temperature/top_p/template/cache unchanged",
+  "runtime_binding": "pending coordinator directory/run/deadline/native admission contract"
+}

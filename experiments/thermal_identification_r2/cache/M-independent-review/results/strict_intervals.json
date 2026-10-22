@@ -1,0 +1,86 @@
+{
+  "segments": [
+    {
+      "start": 7322.613296687,
+      "end": 9658.993259027,
+      "first_ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:4",
+      "last_ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:7471",
+      "duration_s": 2336.37996234
+    },
+    {
+      "start": 9659.993726302,
+      "end": 9832.327195073,
+      "first_ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:7475",
+      "last_ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:8027",
+      "duration_s": 172.3334687709994
+    }
+  ],
+  "gaps": [
+    {
+      "start": 7321.657566351,
+      "end": 7321.708228926,
+      "reason": [
+        "unsupported_control_scope",
+        "fan_missing_or_stale",
+        "temperature_status_missing_or_stale",
+        "fan_not_enabled",
+        "fan_fault",
+        "guard_active",
+        "control_temperature_stale",
+        "successful_duty_unavailable",
+        "manual_temperature",
+        "control_temperature_invalid",
+        "active_temperature_source_untrusted",
+        "temperature_binding_unconfirmed",
+        "source_not_usable:socketio_connecting"
+      ],
+      "ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:1"
+    },
+    {
+      "start": 7321.708228926,
+      "end": 7321.723860677,
+      "reason": [
+        "temperature_status_missing_or_stale",
+        "manual_temperature",
+        "control_temperature_invalid",
+        "active_temperature_source_untrusted",
+        "temperature_binding_unconfirmed",
+        "source_not_usable:socketio_connecting"
+      ],
+      "ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:2"
+    },
+    {
+      "start": 7321.723860677,
+      "end": 7322.613296687,
+      "reason": [
+        "source_not_usable:socketio_connecting"
+      ],
+      "ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:3"
+    },
+    {
+      "start": 9658.993259027,
+      "end": 9659.100637483,
+      "reason": [
+        "control_temperature_stale"
+      ],
+      "ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:7472"
+    },
+    {
+      "start": 9659.100637483,
+      "end": 9659.981906606,
+      "reason": [
+        "control_temperature_stale"
+      ],
+      "ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:7473"
+    },
+    {
+      "start": 9659.981906606,
+      "end": 9659.993726302,
+      "reason": [
+        "control_temperature_stale"
+      ],
+      "ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:7474"
+    }
+  ],
+  "coverage_fraction": 0.9992208462680151
+}

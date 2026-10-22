@@ -1,0 +1,59 @@
+[
+  {
+    "path": "/api/v1/temp/status",
+    "sent_at_utc": "2026-10-13T16:41:24.267563+00:00",
+    "received_at_utc": "2026-10-13T16:41:24.319416+00:00",
+    "http_status": 200,
+    "payload": {
+      "code": 0,
+      "data": {
+        "initialized": true,
+        "manual_mode": false,
+        "active_source": "variable",
+        "preferred_source": "variable",
+        "bound_variable": "agx_info.temperature.tj",
+        "temperature_01c": 463,
+        "temperature_c": 46.3,
+        "valid": true,
+        "timestamp_ms": 3982181
+      }
+    }
+  },
+  {
+    "path": "/api/v1/fan/status",
+    "sent_at_utc": "2026-10-13T16:41:24.319528+00:00",
+    "received_at_utc": "2026-10-13T16:41:24.336198+00:00",
+    "http_status": 200,
+    "payload": {
+      "code": 0,
+      "data": {
+        "fans": [
+          {
+            "id": 0,
+            "mode": "auto",
+            "duty_valid": true,
+            "duty": 18,
+            "target_duty": 18,
+            "rpm": 0,
+            "temperature": 46.3,
+            "enabled": true,
+            "running": true,
+            "fault": false,
+            "control_temperature": 46.3,
+            "guard_temperature": 46.3,
+            "predicted_temperature": 46.4,
+            "slope_c_per_min": 0.20000000298023224,
+            "controller_gain": 0.991874933242798,
+            "cooling_response": -10.799999237060547,
+            "auto_state": "active",
+            "guard_active": false,
+            "temp_stale": false
+          }
+        ],
+        "temperature": 46.29999923706055,
+        "temp_valid": true,
+        "temp_source": "agx_info.temperature.tj"
+      }
+    }
+  }
+]

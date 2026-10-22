@@ -1,0 +1,205 @@
+{
+  "running": true,
+  "pid": 5825,
+  "process_created": 1792587803.906626,
+  "clock_domain": "Massif-MacBook-Pro.local:5825:190f3e4a-7ae3-4227-aa16-577ad8c7d67c",
+  "elapsed_s": 1.0006600419292226,
+  "reason": null,
+  "native_run_id": "a0812fb2-12a1-4e63-8653-3c0b1bcdd6c6",
+  "collection": true,
+  "latest_state": {
+    "schema": "TTO-OBSERVE-STATE-v1",
+    "identity": {
+      "device_id": "SYNTHETIC-DEVICE",
+      "thermal_config_id": "SYNTHETIC-THERMAL",
+      "observer_host_id": "Massif-MacBook-Pro.local",
+      "session_id": "bf7863d0-ce20-43eb-99b5-ba9e69310e18",
+      "expected_platform": {
+        "family": "jetson_thor",
+        "soc": "tegra264"
+      },
+      "observer_host_actual": "Massif-MacBook-Pro.local",
+      "boot_id": "1CD69A33-78DB-48B9-A4F2-A5CBFCD90DEF",
+      "clock_domain": "Massif-MacBook-Pro.local:5825:190f3e4a-7ae3-4227-aa16-577ad8c7d67c",
+      "run_id": "a0812fb2-12a1-4e63-8653-3c0b1bcdd6c6",
+      "model_sha256": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
+      "spec_sha256": "2080adcf20773650299def2bb0f3ebdb9f87d8f85281d5b87a99d8b406c83c6b"
+    },
+    "native_ref": "a0812fb2-12a1-4e63-8653-3c0b1bcdd6c6/observation:4",
+    "observed_through_mono_s": 1029392.198800791,
+    "generated_at_mono_s": 1029392.225992166,
+    "generated_at_utc": "2026-10-21T13:03:24.912537+00:00",
+    "model": {
+      "method": "AUGMENTED-KF",
+      "phase": "provisional",
+      "available": true,
+      "reasons": [
+        "cold_or_prior_uncertainty_not_resolved",
+        "observed_abnormal_or_unknown_control_context"
+      ],
+      "Tf_C": 44.3,
+      "Ts_C": 42.83112388468953,
+      "E_C": 35.28589118494435,
+      "E_source": "L/S training prior plus past TJ sequential inference",
+      "TJ_updates_since_cold_start": 1,
+      "cold_starts": 1,
+      "unknown_input_assumptions": [],
+      "conditional_inputs_rails_W_PWM": [
+        1.984,
+        5.952,
+        0.17
+      ],
+      "uncertainty": {
+        "meaning": "internal assumed-model covariance and 2-standard-deviation scale, NOT a calibrated 95% interval",
+        "covariance_C2": [
+          [
+            0.04000000000000001,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            164.0,
+            100.0
+          ],
+          [
+            0.0,
+            100.0,
+            100.0
+          ]
+        ],
+        "marginal_std_C": [
+          0.2,
+          12.806248474865697,
+          10.0
+        ],
+        "includes_theta_error": false,
+        "calibrated": false
+      },
+      "latest_innovation_C": null,
+      "boundary_projected": false,
+      "unprojected_state_C": null,
+      "dynamic_parameter_updates": 0,
+      "external_temperature_used": false,
+      "is_measured_Ts": false,
+      "instruction": "conditional research state; finite or tracking is not field permission"
+    },
+    "measurement": {
+      "tj": {
+        "value_C": 44.3,
+        "observed_mono_s": 1029392.198800791,
+        "observed_utc": "2026-10-21T13:03:24.883796+00:00",
+        "source_ref": "a0812fb2-12a1-4e63-8653-3c0b1bcdd6c6/observation:4",
+        "source_age_lower_bound_ms": 0.0,
+        "valid_until_mono_s": 1029397.198800791,
+        "native_source_valid": true,
+        "age_s": 0.0,
+        "raw_valid": true
+      },
+      "power": {
+        "rails_W": [
+          1.984,
+          5.952
+        ],
+        "names": [
+          "vdd_gpu",
+          "vdd_cpu_soc_mss"
+        ],
+        "observed_mono_s": 1029392.198800791,
+        "source_ref": "a0812fb2-12a1-4e63-8653-3c0b1bcdd6c6/observation:4",
+        "valid_until_mono_s": 1029397.198800791,
+        "native_source_valid": true,
+        "age_s": 0.0,
+        "raw_valid": true
+      },
+      "last_successful_pwm": {
+        "value_percent": 17,
+        "observed_mono_s": 1029391.486833625,
+        "observed_utc": "2026-10-21T13:03:24.171824+00:00",
+        "source_ref": "a0812fb2-12a1-4e63-8653-3c0b1bcdd6c6/observation:2",
+        "valid_until_mono_s": 1029393.986833625,
+        "last_observed_flags": {
+          "auto_state": "active",
+          "control_temperature": 44.3,
+          "controller_gain": 0.82,
+          "cooling_response": 7.599999904632568,
+          "duty": 17,
+          "duty_valid": true,
+          "enabled": true,
+          "fault": false,
+          "guard_active": false,
+          "guard_temperature": 44.3,
+          "id": 0,
+          "mode": "auto",
+          "predicted_temperature": 44.3,
+          "rpm": 0,
+          "running": true,
+          "slope_c_per_min": 0,
+          "target_duty": 17,
+          "temp_stale": false,
+          "temperature": 44.3,
+          "successful_duty": 17
+        },
+        "age_s": 0.7119671660475433,
+        "raw_valid": true
+      },
+      "control_context": {
+        "observed_mono_s": 1029391.486952166,
+        "observed_utc": "2026-10-21T13:03:24.171942+00:00",
+        "source_ref": "a0812fb2-12a1-4e63-8653-3c0b1bcdd6c6/observation:3",
+        "valid_until_mono_s": 1029398.986952166,
+        "last_observed_flags": {
+          "active_source": "variable",
+          "bound_variable": "agx_info.temperature.tj",
+          "initialized": true,
+          "manual_mode": false,
+          "preferred_source": "variable",
+          "temperature_01c": 443,
+          "temperature_c": 44.3,
+          "timestamp_ms": 202569269,
+          "valid": true,
+          "normalized_valid": true,
+          "normalized_temp": 44.3,
+          "clock": "esp32_update_ms"
+        },
+        "age_s": 0.7118486250983551,
+        "raw_valid": true
+      }
+    },
+    "safety": {
+      "guard": false,
+      "fault": false,
+      "mode": "auto",
+      "enabled": true,
+      "temp_stale": false,
+      "manual_mode": false,
+      "normalized_valid": true,
+      "active_source": "variable",
+      "binding": "agx_info.temperature.tj",
+      "fan_fresh": true,
+      "binding_fresh": true,
+      "context_changed_this_event": false,
+      "context_stable_s": 0.7118486250983551,
+      "unknown_is_normal": false,
+      "confirmed_normal_now": false
+    },
+    "experiment_authorization": false,
+    "start_allowed": false,
+    "control_permission": false,
+    "raw_recording_independent": true,
+    "model_lag_s": 0.0271913749165833,
+    "business_events": "unknown"
+  },
+  "model_queue_frames": 0,
+  "model_dropped_frames": 0,
+  "resource": {
+    "cpu_single_core_rolling10s": null,
+    "mean_target_pct": 5,
+    "hard_mean_pct": 8,
+    "hard_sustain_s": 30,
+    "rss_limit_bytes": 134217728
+  },
+  "experiment_authorization": false,
+  "control_permission": false,
+  "business_events": "unknown"
+}

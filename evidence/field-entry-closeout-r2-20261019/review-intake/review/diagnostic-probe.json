@@ -1,0 +1,63 @@
+{
+  "requests": 5,
+  "results": [
+    {
+      "case": "normal",
+      "timed_out": false,
+      "last_phase": "response_body",
+      "events": [
+        "request_start",
+        "connect",
+        "connection_ready",
+        "request_headers_sent",
+        "response_headers_received"
+      ]
+    },
+    {
+      "case": "normal",
+      "timed_out": false,
+      "last_phase": "response_body",
+      "events": [
+        "request_start",
+        "connection_reused",
+        "request_headers_sent",
+        "response_headers_received"
+      ]
+    },
+    {
+      "case": "headers",
+      "timed_out": true,
+      "last_phase": "request_headers_sent",
+      "events": [
+        "request_start",
+        "connection_reused",
+        "request_headers_sent"
+      ]
+    },
+    {
+      "case": "body",
+      "timed_out": true,
+      "last_phase": "response_body",
+      "events": [
+        "request_start",
+        "connect",
+        "connection_ready",
+        "request_headers_sent",
+        "response_headers_received"
+      ]
+    },
+    {
+      "case": "normal",
+      "timed_out": false,
+      "last_phase": "response_body",
+      "events": [
+        "request_start",
+        "connect",
+        "connection_ready",
+        "request_headers_sent",
+        "response_headers_received"
+      ]
+    }
+  ],
+  "scope": "actual candidate.sessions tracing only; no collect/Socket.IO, no field root cause or firmware verification"
+}

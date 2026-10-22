@@ -1,0 +1,147 @@
+{
+  "stop_reason": "external_stop",
+  "poll_missed": 0,
+  "poll_count": 14,
+  "connection_attempts": 1,
+  "payload_oversize": 0,
+  "orin_event_count": 10,
+  "business_payload_bytes_sum": 15801,
+  "business_payload_bytes_max": 1581,
+  "poll_rtt_ms": [
+    3.2666219999555324,
+    2.937329999895155,
+    4.092204000016864,
+    5.002078000188703,
+    11.651779999965584,
+    8.436574999905133,
+    4.8728280000887025,
+    3.5913710000841093,
+    3.6385800001426105,
+    3.1384970000090107,
+    2.2445400002197857,
+    7.2836179999740125,
+    5.1566189999903145,
+    3.784788000075423
+  ],
+  "prediction_ms": [
+    4.815578000034293,
+    2.6168730000790674
+  ],
+  "rss_mib": [
+    83.171875,
+    83.17578125,
+    83.17578125,
+    83.17578125,
+    83.17578125,
+    83.25,
+    83.25,
+    83.25,
+    83.25,
+    83.25390625
+  ],
+  "cpu_pct_single_core": [
+    1.9946685859741375,
+    4.995531701709916,
+    4.967882456109592,
+    3.9905935126421612,
+    5.988097159871102,
+    3.984217859646338,
+    4.965965166778937,
+    5.9635352421749666,
+    3.9643797506120326,
+    5.951860152808615
+  ],
+  "elapsed_s": 10.593984129000091,
+  "queue_peak_items": 2,
+  "queue_peak_bytes": 2736,
+  "dropped": 0,
+  "quality": {
+    "boundary_socketio_connecting": 1,
+    "boundary_control_context_change": 1,
+    "boundary_stream": 1,
+    "new_samples": 10,
+    "boundary_input_boundary": 1,
+    "boundary_input_profile_change": 1,
+    "boundary_socketio_disconnected": 1,
+    "boundary_run_end": 1
+  },
+  "processing": {
+    "fan_ok": 11,
+    "temp_ok": 3,
+    "origins": 2
+  },
+  "target_host_verified": false,
+  "polling_health": {
+    "contract": "TTO-POLL-INDEPENDENT-v1",
+    "max_inflight_per_endpoint": 1,
+    "max_total_inflight_limit": 2,
+    "max_total_inflight_observed": 2,
+    "end_inflight": 0,
+    "legacy_config_max_inflight_esp32": 1,
+    "endpoints": {
+      "fan": {
+        "sent": 11,
+        "returned": 11,
+        "http_ok": 11,
+        "errors": 0,
+        "skipped": 0,
+        "cancelled": 0,
+        "peak_inflight": 1,
+        "rtt_ms": {
+          "n": 11,
+          "p50": 3.784788000075423,
+          "p95": 10.044177499935358,
+          "min": 2.2445400002197857,
+          "max": 11.651779999965584
+        },
+        "send_interval_s": {
+          "n": 10,
+          "p50": 1.0052536414999622,
+          "p95": 1.0087202071000092,
+          "min": 1.0020588749998751,
+          "max": 1.009015201000011
+        },
+        "return_interval_s": {
+          "n": 10,
+          "p50": 1.0055465790001108,
+          "p95": 1.0119668002999105,
+          "min": 0.9972136710000541,
+          "max": 1.0147909039999377
+        }
+      },
+      "temp": {
+        "sent": 3,
+        "returned": 3,
+        "http_ok": 3,
+        "errors": 0,
+        "skipped": 0,
+        "cancelled": 0,
+        "peak_inflight": 1,
+        "rtt_ms": {
+          "n": 3,
+          "p50": 4.8728280000887025,
+          "p95": 5.128239900000153,
+          "min": 2.937329999895155,
+          "max": 5.1566189999903145
+        },
+        "send_interval_s": {
+          "n": 2,
+          "p50": 5.004438523499971,
+          "p95": 5.006164327949898,
+          "min": 5.002520963000052,
+          "max": 5.00635608399989
+        },
+        "return_interval_s": {
+          "n": 2,
+          "p50": 5.0055481680000184,
+          "p95": 5.008017240600077,
+          "min": 5.002804753999953,
+          "max": 5.0082915820000835
+        }
+      }
+    }
+  },
+  "ended_at_utc": "2026-10-19T08:00:40.653458+00:00",
+  "raw_bytes": 59422,
+  "observations": 36
+}

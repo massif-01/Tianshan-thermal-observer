@@ -1,0 +1,160 @@
+{
+  "contract": "TTO-MAINLINE-RETURN-v1.0-G2-GENERATOR",
+  "registered_at": "2026-10-21T12:58:21.971679+00:00",
+  "models": {
+    "G2": {
+      "equations": [
+        "dT_f/dt=-a*(T_f-T_s)+b_g*P_g+b_c*P_c",
+        "dT_s/dt=c*(T_f-T_s)-(d0+d1*u)*(T_s-E_r)"
+      ],
+      "output": "T_f approximately reported TJ, not measured TTP",
+      "dynamic_parameters": [
+        "a",
+        "c",
+        "d0",
+        "d1",
+        "b_g",
+        "b_c"
+      ],
+      "bounds": {
+        "a": [
+          0.0001,
+          4
+        ],
+        "c": [
+          1e-06,
+          1
+        ],
+        "d0": [
+          1e-06,
+          1
+        ],
+        "d1": [
+          0,
+          1
+        ],
+        "b_g": [
+          0,
+          5
+        ],
+        "b_c": [
+          0,
+          5
+        ]
+      }
+    }
+  },
+  "fit": {
+    "solver": "scipy.optimize.least_squares",
+    "method": "trf",
+    "x_scale": "jac",
+    "float": "float64",
+    "loss": "time_weighted_huber_on_unweighted_C_residual",
+    "huber_transition_C": 0.3,
+    "weights": "equal_run_then_equal_present_macroregime_then_effective_time",
+    "macroregime_order": [
+      "work_or_short_event_to_end_plus_30s_capped_at_next_submit",
+      "labelled_recovery_not_in_work",
+      "remaining_background"
+    ],
+    "seed_selection": "minimum_finite_converged_training_objective_only",
+    "max_nfev": 300,
+    "max_actual_residual_calls_per_seed": 1500,
+    "main_fits_max": 6,
+    "BLAS_threads": 1,
+    "rss_target_MiB": 2048,
+    "total_soft_budget_s": 600
+  },
+  "initializations": [
+    {
+      "id": "N1",
+      "G2": {
+        "a": 1,
+        "c": 0.02,
+        "d0": 0.01,
+        "d1": 0.02,
+        "b_g": 0.08,
+        "b_c": 0.04
+      }
+    },
+    {
+      "id": "N2",
+      "G2": {
+        "a": 0.33,
+        "c": 0.005,
+        "d0": 0.003,
+        "d1": 0.006,
+        "b_g": 0.04,
+        "b_c": 0.02
+      }
+    },
+    {
+      "id": "N3",
+      "G2": {
+        "a": 0.1,
+        "c": 0.002,
+        "d0": 0.001,
+        "d1": 0.002,
+        "b_g": 0.02,
+        "b_c": 0.01
+      }
+    },
+    {
+      "id": "N4",
+      "G2": {
+        "a": 0.033,
+        "c": 0.001,
+        "d0": 0.0003,
+        "d1": 0.0006,
+        "b_g": 0.01,
+        "b_c": 0.005
+      }
+    },
+    {
+      "id": "N5",
+      "G2": {
+        "a": 1,
+        "c": 0.001,
+        "d0": 0.001,
+        "d1": 0.006,
+        "b_g": 0.03,
+        "b_c": 0.015
+      }
+    },
+    {
+      "id": "N6",
+      "G2": {
+        "a": 0.1,
+        "c": 0.0003,
+        "d0": 0.0001,
+        "d1": 0.001,
+        "b_g": 0.015,
+        "b_c": 0.0075
+      }
+    }
+  ],
+  "limits": {
+    "max_starts": 6,
+    "wall_seconds": 600,
+    "rss_MiB": 2048,
+    "threads": 1
+  },
+  "selection": "minimum finite converged training objective; finite nonconverged explicitly diagnostic only",
+  "initialization": "inherited per-run E and per-strict-segment Ts nuisance; no ambient fixed; validation past60 only",
+  "comparison": "legacy R2 causal past60 state/E policy common to all G2; A and B separate; not the new realtime KF ledger or old official scores",
+  "intended_examples": {
+    "generate_train": [
+      "L"
+    ],
+    "calibration_new_relative_to_parent": [
+      "M"
+    ],
+    "validation_development": [
+      "S"
+    ],
+    "future_confirmation": []
+  },
+  "data_role": "L/M/S/Y/fixed-anchors all already examined; no new blind test",
+  "baseline_unchanged": true,
+  "CPU_special_branch": "paused"
+}

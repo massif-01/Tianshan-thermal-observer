@@ -1,0 +1,1 @@
+首个审查夹具没有向提取函数提供headers依赖，因此没有产生fan返回；后续max(gaps)触发ValueError: max() iterable argument is empty。仅修正审查夹具闭包依赖并补异常检查后重跑。原候选及原作者测试未改。

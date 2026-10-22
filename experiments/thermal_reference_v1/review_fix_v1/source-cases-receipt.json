@@ -1,0 +1,82 @@
+{
+  "status": "pass",
+  "cases": [
+    {
+      "name": "zero",
+      "classification": "no_numeric_records",
+      "total": 0,
+      "declared_external": 0,
+      "synthetic": 0,
+      "all_values_constructed_test_only": true,
+      "new_field_measurement": false,
+      "report_text": {
+        "source_status": "no_numeric_records",
+        "measurement_status": "未导入外部数值记录；现有遥测、冻结状态和覆盖仍可读取。",
+        "counts": "数值点0；声明为外部测量的数值点0；合成点0；配对点0。n是记录点，不是独立试验。",
+        "format_status": "尚无真实YET-610L样例验收回执；通用导入不代表厂商格式已验收。",
+        "validation_status": "输入类别不证明品牌、校准或现场来源；仪表精度、探头安装/响应及表面与Ts的物理对应未验证。"
+      },
+      "report_directory": "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/review_fix_v1/results/source-cases/zero/report",
+      "YET_format_validated": false,
+      "physical_mapping_validated": false
+    },
+    {
+      "name": "synthetic",
+      "classification": "synthetic_only",
+      "total": 2,
+      "declared_external": 0,
+      "synthetic": 2,
+      "all_values_constructed_test_only": true,
+      "new_field_measurement": false,
+      "report_text": {
+        "source_status": "synthetic_only",
+        "measurement_status": "本报告外部数值均为合成演示，不构成现场测温证据。",
+        "counts": "数值点2；声明为外部测量的数值点0；合成点2；配对点2。n是记录点，不是独立试验。",
+        "format_status": "尚无真实YET-610L样例验收回执；通用导入不代表厂商格式已验收。",
+        "validation_status": "输入类别不证明品牌、校准或现场来源；仪表精度、探头安装/响应及表面与Ts的物理对应未验证。"
+      },
+      "report_directory": "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/review_fix_v1/results/source-cases/synthetic/report",
+      "YET_format_validated": false,
+      "physical_mapping_validated": false
+    },
+    {
+      "name": "declared-external",
+      "classification": "declared_external_only",
+      "total": 2,
+      "declared_external": 2,
+      "synthetic": 0,
+      "all_values_constructed_test_only": true,
+      "new_field_measurement": false,
+      "report_text": {
+        "source_status": "declared_external_only",
+        "measurement_status": "已导入按输入声明分类的外部测量记录；仪表/探头响应及局部表面与Ts的物理对应尚未验证。",
+        "counts": "数值点2；声明为外部测量的数值点2；合成点0；配对点2。n是记录点，不是独立试验。",
+        "format_status": "尚无真实YET-610L样例验收回执；通用导入不代表厂商格式已验收。",
+        "validation_status": "输入类别不证明品牌、校准或现场来源；仪表精度、探头安装/响应及表面与Ts的物理对应未验证。"
+      },
+      "report_directory": "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/review_fix_v1/results/source-cases/declared-external/report",
+      "YET_format_validated": false,
+      "physical_mapping_validated": false
+    },
+    {
+      "name": "mixed",
+      "classification": "mixed_declared_external_and_synthetic",
+      "total": 2,
+      "declared_external": 1,
+      "synthetic": 1,
+      "all_values_constructed_test_only": true,
+      "new_field_measurement": false,
+      "report_text": {
+        "source_status": "mixed_declared_external_and_synthetic",
+        "measurement_status": "本报告包含按输入声明分类的外部测量记录和合成数值；两类分别计数，合成值不计为现场测温证据。",
+        "counts": "数值点2；声明为外部测量的数值点1；合成点1；配对点2。n是记录点，不是独立试验。",
+        "format_status": "尚无真实YET-610L样例验收回执；通用导入不代表厂商格式已验收。",
+        "validation_status": "输入类别不证明品牌、校准或现场来源；仪表精度、探头安装/响应及表面与Ts的物理对应未验证。"
+      },
+      "report_directory": "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/review_fix_v1/results/source-cases/mixed/report",
+      "YET_format_validated": false,
+      "physical_mapping_validated": false
+    }
+  ],
+  "note": "false metadata exercises the declared-external branch only; no real new CSV or field measurement"
+}

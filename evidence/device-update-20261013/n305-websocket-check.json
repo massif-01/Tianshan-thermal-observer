@@ -1,0 +1,6 @@
+websocket-client package not installed, only polling transport is available
+Traceback (most recent call last):
+  File "<stdin>", line 6, in <module>
+  File "/home/rm01/TTO/conda-env/lib/python3.10/site-packages/socketio/client.py", line 168, in connect
+    raise exceptions.ConnectionError(
+socketio.exceptions.ConnectionError: One or more namespaces failed to connect

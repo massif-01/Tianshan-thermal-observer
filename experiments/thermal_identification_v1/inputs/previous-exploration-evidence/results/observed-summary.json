@@ -1,0 +1,159 @@
+{
+  "fan_snapshot_count": 1261,
+  "gain_transitions": [
+    {
+      "utc": "2026-10-13T05:28:11.656088+00:00",
+      "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2",
+      "gain": 1.8686946630477905,
+      "ratio": null,
+      "cooling_response": 3.40000057220459,
+      "slope": 0.20000000298023224
+    },
+    {
+      "utc": "2026-10-13T05:31:36.892243+00:00",
+      "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:616",
+      "gain": 1.7752598524093628,
+      "ratio": 0.9499999585346715,
+      "cooling_response": 3.200000047683716,
+      "slope": -1.600000023841858
+    },
+    {
+      "utc": "2026-10-13T05:34:40.658208+00:00",
+      "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1165",
+      "gain": 1.68649685382843,
+      "ratio": 0.9499999966424832,
+      "cooling_response": 10.200000762939453,
+      "slope": -6.199999809265137
+    },
+    {
+      "utc": "2026-10-13T05:36:12.950803+00:00",
+      "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1442",
+      "gain": 1.6021720170974731,
+      "ratio": 0.9500000035342282,
+      "cooling_response": 8.399999618530273,
+      "slope": -4.400000095367432
+    },
+    {
+      "utc": "2026-10-13T05:37:45.955603+00:00",
+      "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1720",
+      "gain": 1.5220633745193481,
+      "ratio": 0.9499999739583198,
+      "cooling_response": 9.600000381469727,
+      "slope": -6.199999809265137
+    },
+    {
+      "utc": "2026-10-13T05:39:16.982479+00:00",
+      "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1994",
+      "gain": 1.4459601640701294,
+      "ratio": 0.9499999725877043,
+      "cooling_response": 9.800000190734863,
+      "slope": -4.800000190734863
+    },
+    {
+      "utc": "2026-10-13T05:40:48.024696+00:00",
+      "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2267",
+      "gain": 1.3736621141433716,
+      "ratio": 0.949999971144951,
+      "cooling_response": 6,
+      "slope": -2.799999952316284
+    },
+    {
+      "utc": "2026-10-13T05:42:21.258629+00:00",
+      "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2544",
+      "gain": 1.3049789667129517,
+      "ratio": 0.9499999696262633,
+      "cooling_response": 7.399999618530273,
+      "slope": -6.599999904632568
+    },
+    {
+      "utc": "2026-10-13T05:47:22.329597+00:00",
+      "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3447",
+      "gain": 1.2397300004959106,
+      "ratio": 0.949999986297562,
+      "cooling_response": 8,
+      "slope": -2.5999999046325684
+    }
+  ],
+  "pwm_range": [
+    16,
+    44
+  ],
+  "missing_prediction_origins": 10,
+  "exact_request_origins": 8,
+  "stale_event": {
+    "before": {
+      "auto_state": "active",
+      "control_temperature": 46.3,
+      "controller_gain": 1.2397300004959106,
+      "cooling_response": 8,
+      "duty": 33,
+      "duty_valid": true,
+      "enabled": true,
+      "fault": false,
+      "guard_active": false,
+      "guard_temperature": 46.3,
+      "id": 0,
+      "mode": "auto",
+      "predicted_temperature": 47.2,
+      "rpm": 0,
+      "running": true,
+      "slope_c_per_min": 1.2000000476837158,
+      "target_duty": 33,
+      "temp_stale": false,
+      "temperature": 46.3,
+      "t": 254565.293972883,
+      "utc": "2026-10-13T05:49:12.628910+00:00",
+      "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3765"
+    },
+    "event": {
+      "auto_state": "stale",
+      "control_temperature": 46.3,
+      "controller_gain": 1.2397300004959106,
+      "cooling_response": 8,
+      "duty": 25,
+      "duty_valid": true,
+      "enabled": true,
+      "fault": false,
+      "guard_active": false,
+      "guard_temperature": 46.3,
+      "id": 0,
+      "mode": "auto",
+      "predicted_temperature": 46.3,
+      "rpm": 0,
+      "running": true,
+      "slope_c_per_min": 1.2000000476837158,
+      "target_duty": 25,
+      "temp_stale": true,
+      "temperature": 46.3,
+      "t": 254566.310436253,
+      "utc": "2026-10-13T05:49:13.645377+00:00",
+      "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3769"
+    },
+    "recovery": {
+      "auto_state": "active",
+      "control_temperature": 46,
+      "controller_gain": 1.2397300004959106,
+      "cooling_response": 8,
+      "duty": 18,
+      "duty_valid": true,
+      "enabled": true,
+      "fault": false,
+      "guard_active": false,
+      "guard_temperature": 46,
+      "id": 0,
+      "mode": "auto",
+      "predicted_temperature": 40.9,
+      "rpm": 0,
+      "running": true,
+      "slope_c_per_min": -6.800000190734863,
+      "target_duty": 18,
+      "temp_stale": false,
+      "temperature": 46,
+      "t": 254569.302840954,
+      "utc": "2026-10-13T05:49:16.637782+00:00",
+      "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3776"
+    }
+  },
+  "http_timeouts": 0,
+  "high_80_or_more": 0
+}

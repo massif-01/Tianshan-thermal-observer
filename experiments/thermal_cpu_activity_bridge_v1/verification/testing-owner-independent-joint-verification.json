@@ -1,0 +1,50 @@
+{
+  "contract": "TTO-CPU-PREP-CLOSE-v1.0-R1",
+  "actual_wire_to_source_rows_verified": 150,
+  "frames": 342,
+  "Activity_counts": {
+    "INPUT-BASE": {
+      "UNKNOWN": 28,
+      "ACTIVE": 314
+    },
+    "INPUT-MEAN": {
+      "UNKNOWN": 128,
+      "ACTIVE": 214
+    },
+    "INPUT-CORE": {
+      "UNKNOWN": 128,
+      "ACTIVE": 214
+    }
+  },
+  "actual_sender_receiver_artifacts_used": true,
+  "manual_model_FRAME_used": false,
+  "original_TJ_origins": 56,
+  "revocations": {
+    "native_epoch_changed": 5,
+    "missing_complete_raw_counter_window": 1,
+    "counter_reset_iowait_decrease_or_zero_window": 1,
+    "online_set_changed": 2,
+    "transport_native_run_ending": 1
+  },
+  "candidate_sha256": "89ae53229af3e84b3bae1140a1ce013d6bf16e374cd5d3ffcde6fc7d28b78831",
+  "analysis_spec_sha256": "df26198dd631a45564d88c10b7b30433ab8b272cb4cf5d3726d7be6eacbab716",
+  "evaluate_stream_called": true,
+  "actual_and_1s_delivery_conditions_written": true,
+  "synthetic_only": true,
+  "new_physical_temperature_scores": false,
+  "source_lead_or_control_benefit": false,
+  "network_clients": 0,
+  "device_connections": 0,
+  "parameter_search": 0,
+  "adapter_code_sha256": "8d6fe5f013e67d2a26c192419b0b82f29a4c1aa794ddd598e2f6ba33a45045e3",
+  "interface_freeze_sha256": "9278f1a6db1e0e9bc4ee488bb2958168799733a0d884f1ef771ddf57313c38dd",
+  "exact_model_line_files_matched": {
+    "frames.jsonl": "e8d25355bb6ef028f4b87d35ef17dc019401536552a51d4314fa61f7805e126f",
+    "thermal-origins.jsonl": "71a1e042c5e0930c4ece3958b95f51dee4d0573a3f73b7aaf7ea257576df4068",
+    "registration.json": "f01b4e2b60ba5af76fdc77c03bf147f6320354537e97caabee01f0ea67f6498d",
+    "revocations.jsonl": "e8f93a4210390fce679e3b5ca155d387139a89ff02f69b1643f517c48a270389",
+    "source-query-diagnostics.jsonl": "aaea039435cc7a485b3ed76d6d22e140c33d4d181b4b88fdeeb50f172daf689b"
+  },
+  "model_regressions_independently_passed": 14,
+  "own_unique_native_run": "b1a4248e-7274-4991-91ce-d8d61644006b"
+}

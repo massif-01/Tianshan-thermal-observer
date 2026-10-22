@@ -1,0 +1,1610 @@
+fcd9fbd9c8d952ad5b6a7225fd2090fc98cded6f4ce0c8c44a40e2d7db5bd7b5  /home/rm01/Downloads/TTO-v1-0.2.4-R1-R2返修-Conda安装候选.zip
+Archive:  /home/rm01/Downloads/TTO-v1-0.2.4-R1-R2返修-Conda安装候选.zip
+  inflating: /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/README.md  
+  inflating: /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/config/tto.example.json  
+  inflating: /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/docs/TTO中等负载候选安装说明.md  
+  inflating: /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/docs/TTO中等负载测试操作卡.md  
+  inflating: /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/docs/TTO测试者使用说明.md  
+  inflating: /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/docs/TTO第一次测试操作卡.md  
+  inflating: /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/docs/platform-curve-v2-contract.md  
+  inflating: /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/install-manifest.json  
+  inflating: /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/install.sh  
+  inflating: /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt  
+  inflating: /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/scripts/install_tto.py  
+  inflating: /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/scripts/thermal_trials/README.md  
+  inflating: /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/scripts/thermal_trials/ambient.example.json  
+  inflating: /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/scripts/thermal_trials/health.py  
+  inflating: /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/scripts/thermal_trials/plan.example.json  
+  inflating: /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/scripts/thermal_trials/requester.py  
+  inflating: /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/scripts/thermal_trials/requests.example.json  
+  inflating: /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/scripts/thermal_trials/run_midload.py  
+  inflating: /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/scripts/thermal_trials/trial.py  
+  inflating: /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/site/local-midload.json  
+  inflating: /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/wheels/tianshan_thermal_observer-0.2.4-py3-none-any.whl  
+安装TTO 0.2.4 → /home/rm01/TTO-midload-0.2.4
+1/5 使用预装Conda创建独立Python 3.10环境
+2 channel Terms of Service accepted
+Retrieving notices: - \ | / - \ | / - \ | done
+Channels:
+ - defaults
+Platform: linux-64
+Collecting package metadata (repodata.json): - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / done
+Solving environment: \ done
+
+
+==> WARNING: A newer version of conda exists. <==
+    current version: 25.9.1
+    latest version: 26.9.2
+
+Please update conda by running
+
+    $ conda update -n base -c defaults conda
+
+
+
+## Package Plan ##
+
+  environment location: /home/rm01/TTO-midload-0.2.4/conda-env
+
+  added / updated specs:
+    - pip
+    - python=3.10
+
+
+The following packages will be downloaded:
+
+    package                    |            build
+    ---------------------------|-----------------
+    _libgcc_mutex-0.1          |             main           3 KB
+    _openmp_mutex-5.1          |           52_gnu           7 KB
+    bzip2-1.0.8                |       h5eee18b_6         262 KB
+    ca-certificates-2026.9.25  |       h06a4308_0         107 KB
+    ld_impl_linux-64-2.44      |       h9e0c5a2_3         725 KB
+    libexpat-2.9.0             |       h7354ed3_0         131 KB
+    libffi-3.4.8               |       h06d3fd0_3         137 KB
+    libgcc-15.2.0              |       h69a1729_8         803 KB
+    libgcc-ng-15.2.0           |       h166f726_8          28 KB
+    libnsl-2.0.0               |       h5eee18b_0          31 KB
+    libstdcxx-15.2.0           |       h39759b7_8         3.7 MB
+    libuuid-1.41.5             |       h5eee18b_0          27 KB
+    libxcb-1.17.0              |       h9b100fa_0         430 KB
+    libzlib-1.3.2              |       h47b2149_0          60 KB
+    ncurses-6.6                |       hfaaeb4e_0         893 KB
+    openssl-3.5.9              |       h1b28b03_0         5.7 MB
+    packaging-26.3             |  py310h06a4308_0         329 KB
+    pip-26.2.1                 |     pyhc872135_0         1.1 MB
+    pthread-stubs-0.3          |       h47b2149_2           7 KB
+    python-3.10.22             |       hd9cb797_0        24.4 MB
+    readline-8.3               |       hc2a1206_0         471 KB
+    setuptools-84.0.0          |  py310h06a4308_0         968 KB
+    sqlite-3.53.4              |       h795bf6d_0         1.2 MB
+    tk-8.6.15                  |       h54e0aa7_0         3.4 MB
+    tzdata-2026c               |       he532380_0         117 KB
+    wheel-0.47.0               |  py310h06a4308_0          56 KB
+    xorg-libx11-1.8.13         |       h65de747_0         817 KB
+    xorg-libxau-1.0.12         |       h9b100fa_0          13 KB
+    xorg-libxdmcp-1.1.5        |       h9b100fa_0          19 KB
+    xorg-xorgproto-2025.1      |       h47b2149_0         555 KB
+    xz-5.8.4                   |       h140a991_0         652 KB
+    zlib-1.3.2                 |       h47b2149_0          92 KB
+    ------------------------------------------------------------
+                                           Total:        47.2 MB
+
+The following NEW packages will be INSTALLED:
+
+  _libgcc_mutex      pkgs/main/linux-64::_libgcc_mutex-0.1-main 
+  _openmp_mutex      pkgs/main/linux-64::_openmp_mutex-5.1-52_gnu 
+  bzip2              pkgs/main/linux-64::bzip2-1.0.8-h5eee18b_6 
+  ca-certificates    pkgs/main/linux-64::ca-certificates-2026.9.25-h06a4308_0 
+  ld_impl_linux-64   pkgs/main/linux-64::ld_impl_linux-64-2.44-h9e0c5a2_3 
+  libexpat           pkgs/main/linux-64::libexpat-2.9.0-h7354ed3_0 
+  libffi             pkgs/main/linux-64::libffi-3.4.8-h06d3fd0_3 
+  libgcc             pkgs/main/linux-64::libgcc-15.2.0-h69a1729_8 
+  libgcc-ng          pkgs/main/linux-64::libgcc-ng-15.2.0-h166f726_8 
+  libnsl             pkgs/main/linux-64::libnsl-2.0.0-h5eee18b_0 
+  libstdcxx          pkgs/main/linux-64::libstdcxx-15.2.0-h39759b7_8 
+  libuuid            pkgs/main/linux-64::libuuid-1.41.5-h5eee18b_0 
+  libxcb             pkgs/main/linux-64::libxcb-1.17.0-h9b100fa_0 
+  libzlib            pkgs/main/linux-64::libzlib-1.3.2-h47b2149_0 
+  ncurses            pkgs/main/linux-64::ncurses-6.6-hfaaeb4e_0 
+  openssl            pkgs/main/linux-64::openssl-3.5.9-h1b28b03_0 
+  packaging          pkgs/main/linux-64::packaging-26.3-py310h06a4308_0 
+  pip                pkgs/main/noarch::pip-26.2.1-pyhc872135_0 
+  pthread-stubs      pkgs/main/linux-64::pthread-stubs-0.3-h47b2149_2 
+  python             pkgs/main/linux-64::python-3.10.22-hd9cb797_0 
+  readline           pkgs/main/linux-64::readline-8.3-hc2a1206_0 
+  setuptools         pkgs/main/linux-64::setuptools-84.0.0-py310h06a4308_0 
+  sqlite             pkgs/main/linux-64::sqlite-3.53.4-h795bf6d_0 
+  tk                 pkgs/main/linux-64::tk-8.6.15-h54e0aa7_0 
+  tzdata             pkgs/main/noarch::tzdata-2026c-he532380_0 
+  wheel              pkgs/main/linux-64::wheel-0.47.0-py310h06a4308_0 
+  xorg-libx11        pkgs/main/linux-64::xorg-libx11-1.8.13-h65de747_0 
+  xorg-libxau        pkgs/main/linux-64::xorg-libxau-1.0.12-h9b100fa_0 
+  xorg-libxdmcp      pkgs/main/linux-64::xorg-libxdmcp-1.1.5-h9b100fa_0 
+  xorg-xorgproto     pkgs/main/linux-64::xorg-xorgproto-2025.1-h47b2149_0 
+  xz                 pkgs/main/linux-64::xz-5.8.4-h140a991_0 
+  zlib               pkgs/main/linux-64::zlib-1.3.2-h47b2149_0 
+
+
+
+Downloading and Extracting Packages: ...working...python-3.10.22       | 24.4 MB   |            |   0% 
+openssl-3.5.9        | 5.7 MB    |            |   0% [A
+
+libstdcxx-15.2.0     | 3.7 MB    |            |   0% [A[A
+
+
+tk-8.6.15            | 3.4 MB    |            |   0% [A[A[A
+
+
+
+sqlite-3.53.4        | 1.2 MB    |            |   0% [A[A[A[A
+
+
+
+
+pip-26.2.1           | 1.1 MB    |            |   0% [A[A[A[A[A
+
+
+
+
+
+setuptools-84.0.0    | 968 KB    |            |   0% [A[A[A[A[A[A
+
+
+
+
+
+
+ncurses-6.6          | 893 KB    |            |   0% [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+xorg-libx11-1.8.13   | 817 KB    |            |   0% [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+libgcc-15.2.0        | 803 KB    |            |   0% [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+ld_impl_linux-64-2.4 | 725 KB    |            |   0% [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+xz-5.8.4             | 652 KB    |            |   0% [A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+xorg-xorgproto-2025. | 555 KB    |            |   0% [A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+readline-8.3         | 471 KB    |            |   0% [A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+libxcb-1.17.0        | 430 KB    |            |   0% [A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+packaging-26.3       | 329 KB    |            |   0% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+bzip2-1.0.8          | 262 KB    |            |   0% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+libffi-3.4.8         | 137 KB    |            |   0% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+libexpat-2.9.0       | 131 KB    |            |   0% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ ... (more hidden) ...[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+sqlite-3.53.4        | 1.2 MB    | 1          |   1% [A[A[A[A
+openssl-3.5.9        | 5.7 MB    |            |   0% [Apython-3.10.22       | 24.4 MB   |            |   0% 
+
+libstdcxx-15.2.0     | 3.7 MB    |            |   0% [A[A
+
+
+tk-8.6.15            | 3.4 MB    |            |   0% [A[A[A
+
+libstdcxx-15.2.0     | 3.7 MB    |            |   1% [A[A
+
+
+tk-8.6.15            | 3.4 MB    |            |   1% [A[A[A
+
+
+
+sqlite-3.53.4        | 1.2 MB    | 2          |   3% [A[A[A[A
+openssl-3.5.9        | 5.7 MB    |            |   1% [Apython-3.10.22       | 24.4 MB   |            |   0% 
+
+libstdcxx-15.2.0     | 3.7 MB    | 1          |   1% [A[A
+
+
+tk-8.6.15            | 3.4 MB    | 1          |   2% [A[A[A
+openssl-3.5.9        | 5.7 MB    | 1          |   1% [Apython-3.10.22       | 24.4 MB   |            |   0% 
+
+
+
+sqlite-3.53.4        | 1.2 MB    | 6          |   6% [A[A[A[A
+
+libstdcxx-15.2.0     | 3.7 MB    | 2          |   3% [A[A
+
+
+tk-8.6.15            | 3.4 MB    | 3          |   3% [A[A[Apython-3.10.22       | 24.4 MB   |            |   0% 
+openssl-3.5.9        | 5.7 MB    | 1          |   2% [A
+
+
+
+sqlite-3.53.4        | 1.2 MB    | #          |  10% [A[A[A[A
+
+libstdcxx-15.2.0     | 3.7 MB    | 4          |   4% [A[A
+
+
+tk-8.6.15            | 3.4 MB    | 4          |   5% [A[A[A
+openssl-3.5.9        | 5.7 MB    | 3          |   3% [Apython-3.10.22       | 24.4 MB   |            |   1% 
+
+libstdcxx-15.2.0     | 3.7 MB    | 6          |   7% [A[A
+
+
+
+sqlite-3.53.4        | 1.2 MB    | #7         |  18% [A[A[A[A
+
+
+tk-8.6.15            | 3.4 MB    | 7          |   7% [A[A[A
+openssl-3.5.9        | 5.7 MB    | 4          |   5% [Apython-3.10.22       | 24.4 MB   | 1          |   1% 
+
+libstdcxx-15.2.0     | 3.7 MB    | 9          |  10% [A[A
+
+
+
+sqlite-3.53.4        | 1.2 MB    | ##6        |  26% [A[A[A[A
+
+
+tk-8.6.15            | 3.4 MB    | #          |  11% [A[A[A
+openssl-3.5.9        | 5.7 MB    | 6          |   7% [Apython-3.10.22       | 24.4 MB   | 1          |   2% 
+
+libstdcxx-15.2.0     | 3.7 MB    | #4         |  15% [A[A
+
+
+
+sqlite-3.53.4        | 1.2 MB    | ###5       |  35% [A[A[A[A
+
+
+tk-8.6.15            | 3.4 MB    | #6         |  16% [A[A[A
+openssl-3.5.9        | 5.7 MB    | 8          |   9% [Apython-3.10.22       | 24.4 MB   | 2          |   3% 
+
+libstdcxx-15.2.0     | 3.7 MB    | ##1        |  22% [A[A
+
+
+
+sqlite-3.53.4        | 1.2 MB    | #####4     |  54% [A[A[A[A
+
+
+tk-8.6.15            | 3.4 MB    | ##4        |  24% [A[A[A
+openssl-3.5.9        | 5.7 MB    | #3         |  14% [Apython-3.10.22       | 24.4 MB   | 3          |   4% 
+
+libstdcxx-15.2.0     | 3.7 MB    | ###2       |  33% [A[A
+
+
+
+sqlite-3.53.4        | 1.2 MB    | #######8   |  78% [A[A[A[A
+
+
+tk-8.6.15            | 3.4 MB    | ###4       |  35% [A[A[A
+openssl-3.5.9        | 5.7 MB    | #9         |  19% [Apython-3.10.22       | 24.4 MB   | 5          |   6% 
+
+
+
+sqlite-3.53.4        | 1.2 MB    | ########## | 100% [A[A[A[A
+
+libstdcxx-15.2.0     | 3.7 MB    | ####8      |  48% [A[A
+
+
+tk-8.6.15            | 3.4 MB    | #####1     |  51% [A[A[A
+
+
+
+sqlite-3.53.4        | 1.2 MB    | ########## | 100% [A[A[A[A
+
+
+
+sqlite-3.53.4        | 1.2 MB    | ########## | 100% [A[A[A[A
+openssl-3.5.9        | 5.7 MB    | ##6        |  26% [Apython-3.10.22       | 24.4 MB   | 9          |   9% 
+
+libstdcxx-15.2.0     | 3.7 MB    | #######    |  71% [A[A
+
+
+tk-8.6.15            | 3.4 MB    | #######3   |  73% [A[A[A
+openssl-3.5.9        | 5.7 MB    | ###7       |  37% [Apython-3.10.22       | 24.4 MB   | #2         |  13% 
+
+libstdcxx-15.2.0     | 3.7 MB    | #########8 |  99% [A[A
+
+libstdcxx-15.2.0     | 3.7 MB    | ########## | 100% [A[A
+
+
+tk-8.6.15            | 3.4 MB    | ########## | 100% [A[A[A
+
+
+tk-8.6.15            | 3.4 MB    | ########## | 100% [A[A[A
+openssl-3.5.9        | 5.7 MB    | #####5     |  55% [Apython-3.10.22       | 24.4 MB   | #8         |  18% 
+openssl-3.5.9        | 5.7 MB    | #######4   |  75% [Apython-3.10.22       | 24.4 MB   | ##6        |  26% 
+
+libstdcxx-15.2.0     | 3.7 MB    | ########## | 100% [A[A
+
+
+
+
+pip-26.2.1           | 1.1 MB    | 1          |   1% [A[A[A[A[Apython-3.10.22       | 24.4 MB   | ###5       |  35% 
+
+
+tk-8.6.15            | 3.4 MB    | ########## | 100% [A[A[A
+
+
+
+
+pip-26.2.1           | 1.1 MB    | ######     |  60% [A[A[A[A[Apython-3.10.22       | 24.4 MB   | ####3      |  44% 
+
+
+
+
+pip-26.2.1           | 1.1 MB    | ########## | 100% [A[A[A[A[A
+
+
+
+
+
+setuptools-84.0.0    | 968 KB    | 1          |   2% [A[A[A[A[A[A
+openssl-3.5.9        | 5.7 MB    | ########7  |  88% [Apython-3.10.22       | 24.4 MB   | #####      |  51% 
+
+
+
+
+
+
+ncurses-6.6          | 893 KB    | 1          |   2% [A[A[A[A[A[A[A
+openssl-3.5.9        | 5.7 MB    | ########## | 100% [A
+
+
+
+
+
+setuptools-84.0.0    | 968 KB    | #########9 |  99% [A[A[A[A[A[A
+
+
+
+
+
+setuptools-84.0.0    | 968 KB    | ########## | 100% [A[A[A[A[A[Apython-3.10.22       | 24.4 MB   | #####7     |  58% 
+
+
+
+
+
+
+ncurses-6.6          | 893 KB    | ########## | 100% [A[A[A[A[A[A[A
+
+
+
+
+
+
+ncurses-6.6          | 893 KB    | ########## | 100% [A[A[A[A[A[A[Apython-3.10.22       | 24.4 MB   | ######7    |  67% 
+
+
+
+
+pip-26.2.1           | 1.1 MB    | ########## | 100% [A[A[A[A[A
+
+
+
+
+pip-26.2.1           | 1.1 MB    | ########## | 100% [A[A[A[A[Apython-3.10.22       | 24.4 MB   | #######7   |  78% 
+
+
+
+
+
+
+
+xorg-libx11-1.8.13   | 817 KB    | 1          |   2% [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+xorg-libx11-1.8.13   | 817 KB    | ########## | 100% [A[A[A[A[A[A[A[Apython-3.10.22       | 24.4 MB   | ########6  |  86% 
+
+
+
+
+
+
+
+
+libgcc-15.2.0        | 803 KB    | 1          |   2% [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+ld_impl_linux-64-2.4 | 725 KB    | 2          |   2% [A[A[A[A[A[A[A[A[A[Apython-3.10.22       | 24.4 MB   | #########4 |  95% 
+
+
+
+
+
+
+
+
+libgcc-15.2.0        | 803 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+xz-5.8.4             | 652 KB    | 2          |   2% [A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+ld_impl_linux-64-2.4 | 725 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+ld_impl_linux-64-2.4 | 725 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+xz-5.8.4             | 652 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A
+openssl-3.5.9        | 5.7 MB    | ########## | 100% [A
+openssl-3.5.9        | 5.7 MB    | ########## | 100% [A
+
+
+
+
+
+setuptools-84.0.0    | 968 KB    | ########## | 100% [A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+xorg-xorgproto-2025. | 555 KB    | 2          |   3% [A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+xorg-xorgproto-2025. | 555 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+libgcc-15.2.0        | 803 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+libgcc-15.2.0        | 803 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+readline-8.3         | 471 KB    | 3          |   3% [A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+xorg-libx11-1.8.13   | 817 KB    | ########## | 100% [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+xorg-libx11-1.8.13   | 817 KB    | ########## | 100% [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+libxcb-1.17.0        | 430 KB    | 3          |   4% [A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+readline-8.3         | 471 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+ld_impl_linux-64-2.4 | 725 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+packaging-26.3       | 329 KB    | 4          |   5% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+packaging-26.3       | 329 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[Apython-3.10.22       | 24.4 MB   | ########## | 100% 
+
+
+
+
+
+
+
+
+
+
+
+
+
+libxcb-1.17.0        | 430 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+xz-5.8.4             | 652 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+xz-5.8.4             | 652 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+bzip2-1.0.8          | 262 KB    | 6          |   6% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+bzip2-1.0.8          | 262 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+readline-8.3         | 471 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+readline-8.3         | 471 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+xorg-xorgproto-2025. | 555 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+xorg-xorgproto-2025. | 555 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+libffi-3.4.8         | 137 KB    | #1         |  12% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+libffi-3.4.8         | 137 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+libexpat-2.9.0       | 131 KB    | #2         |  12% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ ... (more hidden) ...[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ ... (more hidden) ...[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+packaging-26.3       | 329 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+packaging-26.3       | 329 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+libexpat-2.9.0       | 131 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+libxcb-1.17.0        | 430 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+libxcb-1.17.0        | 430 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+bzip2-1.0.8          | 262 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+bzip2-1.0.8          | 262 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+libffi-3.4.8         | 137 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+libffi-3.4.8         | 137 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ ... (more hidden) ...[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ ... (more hidden) ...[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+ncurses-6.6          | 893 KB    | ########## | 100% [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+libexpat-2.9.0       | 131 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+libexpat-2.9.0       | 131 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[Apython-3.10.22       | 24.4 MB   | ########## | 100% 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                      [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A                                                     
+                                                     [A
+
+                                                     [A[A
+
+
+                                                     [A[A[A
+
+
+
+                                                     [A[A[A[A
+
+
+
+
+                                                     [A[A[A[A[A
+
+
+
+
+
+                                                     [A[A[A[A[A[A
+
+
+
+
+
+
+                                                     [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+                                                     [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+                                                     [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+                                                     [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+                                                     [A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+                                                     [A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+                                                     [A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                     [A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                     [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                     [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                     [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                     [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+[A
+
+[A[A
+
+
+[A[A[A
+
+
+
+[A[A[A[A
+
+
+
+
+[A[A[A[A[A
+
+
+
+
+
+[A[A[A[A[A[A
+
+
+
+
+
+
+[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+[A[A[A[A[A[A[A[A[A[A[A[A done
+Preparing transaction: / - \ done
+Verifying transaction: / - \ | / - \ | / - \ | / - \ | / done
+Executing transaction: \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - done
+#
+# To activate this environment, use
+#
+#     $ conda activate /home/rm01/TTO-midload-0.2.4/conda-env
+#
+# To deactivate an active environment, use
+#
+#     $ conda deactivate
+
+2/5 安装锁定依赖（需要下载时会联网）
+Collecting aiohappyeyeballs==2.7.1 (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 2))
+  Downloading aiohappyeyeballs-2.7.1-py3-none-any.whl.metadata (5.9 kB)
+Collecting aiohttp==3.11.18 (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 3))
+  Downloading aiohttp-3.11.18-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (7.7 kB)
+Collecting aiosignal==1.4.0 (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 4))
+  Downloading aiosignal-1.4.0-py3-none-any.whl.metadata (3.7 kB)
+Collecting async-timeout==5.0.1 (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 5))
+  Downloading async_timeout-5.0.1-py3-none-any.whl.metadata (5.1 kB)
+Collecting attrs==26.1.0 (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 6))
+  Downloading attrs-26.1.0-py3-none-any.whl.metadata (8.8 kB)
+Collecting bidict==0.23.1 (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 7))
+  Downloading bidict-0.23.1-py3-none-any.whl.metadata (8.7 kB)
+Collecting build==1.2.2.post1 (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 8))
+  Downloading build-1.2.2.post1-py3-none-any.whl.metadata (6.5 kB)
+Collecting cloudpickle==3.1.2 (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 9))
+  Downloading cloudpickle-3.1.2-py3-none-any.whl.metadata (7.1 kB)
+Collecting exceptiongroup==1.3.1 (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 10))
+  Downloading exceptiongroup-1.3.1-py3-none-any.whl.metadata (6.7 kB)
+Collecting frozenlist==1.8.0 (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 11))
+  Downloading frozenlist-1.8.0-cp310-cp310-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (20 kB)
+Collecting h11==0.16.0 (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 12))
+  Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+Collecting idna==3.20 (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 13))
+  Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+Collecting iniconfig==2.3.1 (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 14))
+  Downloading iniconfig-2.3.1-py3-none-any.whl.metadata (2.8 kB)
+Collecting joblib==1.6.0 (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 15))
+  Downloading joblib-1.6.0-py3-none-any.whl.metadata (6.5 kB)
+Collecting multidict==6.9.1 (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 16))
+  Downloading multidict-6.9.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (5.3 kB)
+Collecting numpy==2.2.6 (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 17))
+  Downloading numpy-2.2.6-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (62 kB)
+Requirement already satisfied: packaging==26.3 in ./TTO-midload-0.2.4/conda-env/lib/python3.10/site-packages (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 18)) (26.3)
+Collecting pluggy==1.6.0 (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 19))
+  Downloading pluggy-1.6.0-py3-none-any.whl.metadata (4.8 kB)
+Collecting propcache==0.5.4 (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 20))
+  Downloading propcache-0.5.4-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (25 kB)
+Collecting psutil==7.0.0 (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 21))
+  Downloading psutil-7.0.0-cp36-abi3-manylinux_2_12_x86_64.manylinux2010_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (22 kB)
+Collecting pyproject_hooks==1.3.3 (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 22))
+  Downloading pyproject_hooks-1.3.3-py3-none-any.whl.metadata (1.3 kB)
+Collecting pytest-asyncio==0.26.0 (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 23))
+  Downloading pytest_asyncio-0.26.0-py3-none-any.whl.metadata (4.0 kB)
+Collecting pytest==8.3.5 (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 24))
+  Downloading pytest-8.3.5-py3-none-any.whl.metadata (7.6 kB)
+Collecting python-engineio==4.14.0 (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 25))
+  Downloading python_engineio-4.14.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting python-socketio==5.13.0 (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 26))
+  Downloading python_socketio-5.13.0-py3-none-any.whl.metadata (3.2 kB)
+Collecting scikit-learn==1.6.1 (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 27))
+  Downloading scikit_learn-1.6.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (18 kB)
+Collecting scipy==1.14.1 (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 28))
+  Downloading scipy-1.14.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (60 kB)
+Collecting setuptools==80.9.0 (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 29))
+  Downloading setuptools-80.9.0-py3-none-any.whl.metadata (6.6 kB)
+Collecting simple-websocket==1.1.0 (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 30))
+  Downloading simple_websocket-1.1.0-py3-none-any.whl.metadata (1.5 kB)
+Collecting threadpoolctl==3.7.0 (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 31))
+  Downloading threadpoolctl-3.7.0-py3-none-any.whl.metadata (24 kB)
+Collecting tomli==2.5.0 (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 32))
+  Downloading tomli-2.5.0-py3-none-any.whl.metadata (10 kB)
+Collecting typing_extensions==4.16.0 (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 33))
+  Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting wheel==0.45.1 (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 34))
+  Downloading wheel-0.45.1-py3-none-any.whl.metadata (2.3 kB)
+Collecting wsproto==1.3.2 (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 35))
+  Downloading wsproto-1.3.2-py3-none-any.whl.metadata (5.2 kB)
+Collecting yarl==1.25.1 (from -r /home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/requirements-locked.txt (line 36))
+  Downloading yarl-1.25.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (111 kB)
+Downloading aiohappyeyeballs-2.7.1-py3-none-any.whl (15 kB)
+Downloading aiohttp-3.11.18-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (1.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.6/1.6 MB 2.9 MB/s  0:00:00
+Downloading async_timeout-5.0.1-py3-none-any.whl (6.2 kB)
+Downloading multidict-6.9.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (303 kB)
+Downloading yarl-1.25.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (118 kB)
+Downloading aiosignal-1.4.0-py3-none-any.whl (7.5 kB)
+Downloading attrs-26.1.0-py3-none-any.whl (67 kB)
+Downloading bidict-0.23.1-py3-none-any.whl (32 kB)
+Downloading build-1.2.2.post1-py3-none-any.whl (22 kB)
+Downloading cloudpickle-3.1.2-py3-none-any.whl (22 kB)
+Downloading exceptiongroup-1.3.1-py3-none-any.whl (16 kB)
+Downloading frozenlist-1.8.0-cp310-cp310-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (219 kB)
+Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+Downloading idna-3.20-py3-none-any.whl (69 kB)
+Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+Downloading joblib-1.6.0-py3-none-any.whl (306 kB)
+Downloading numpy-2.2.6-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (16.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.8/16.8 MB 7.1 MB/s  0:00:02
+Downloading pluggy-1.6.0-py3-none-any.whl (20 kB)
+Downloading propcache-0.5.4-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (224 kB)
+Downloading psutil-7.0.0-cp36-abi3-manylinux_2_12_x86_64.manylinux2010_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (277 kB)
+Downloading pyproject_hooks-1.3.3-py3-none-any.whl (10 kB)
+Downloading pytest_asyncio-0.26.0-py3-none-any.whl (19 kB)
+Downloading pytest-8.3.5-py3-none-any.whl (343 kB)
+Downloading python_engineio-4.14.0-py3-none-any.whl (60 kB)
+Downloading python_socketio-5.13.0-py3-none-any.whl (77 kB)
+Downloading scikit_learn-1.6.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (13.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 13.5/13.5 MB 17.2 MB/s  0:00:00
+Downloading scipy-1.14.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (41.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 41.2/41.2 MB 13.4 MB/s  0:00:03
+Downloading setuptools-80.9.0-py3-none-any.whl (1.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 14.4 MB/s  0:00:00
+Downloading simple_websocket-1.1.0-py3-none-any.whl (13 kB)
+Downloading threadpoolctl-3.7.0-py3-none-any.whl (26 kB)
+Downloading tomli-2.5.0-py3-none-any.whl (14 kB)
+Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+Downloading wheel-0.45.1-py3-none-any.whl (72 kB)
+Downloading wsproto-1.3.2-py3-none-any.whl (24 kB)
+Installing collected packages: wheel, typing_extensions, tomli, threadpoolctl, setuptools, pyproject_hooks, psutil, propcache, pluggy, numpy, iniconfig, idna, h11, frozenlist, cloudpickle, bidict, attrs, async-timeout, aiohappyeyeballs, wsproto, scipy, multidict, joblib, exceptiongroup, build, aiosignal, yarl, simple-websocket, scikit-learn, pytest, python-engineio, pytest-asyncio, aiohttp, python-socketio
+  Attempting uninstall: wheel
+    Found existing installation: wheel 0.47.0
+    Uninstalling wheel-0.47.0:
+      Successfully uninstalled wheel-0.47.0
+  Attempting uninstall: setuptools
+    Found existing installation: setuptools 84.0.0
+    Uninstalling setuptools-84.0.0:
+      Successfully uninstalled setuptools-84.0.0
+
+Successfully installed aiohappyeyeballs-2.7.1 aiohttp-3.11.18 aiosignal-1.4.0 async-timeout-5.0.1 attrs-26.1.0 bidict-0.23.1 build-1.2.2.post1 cloudpickle-3.1.2 exceptiongroup-1.3.1 frozenlist-1.8.0 h11-0.16.0 idna-3.20 iniconfig-2.3.1 joblib-1.6.0 multidict-6.9.1 numpy-2.2.6 pluggy-1.6.0 propcache-0.5.4 psutil-7.0.0 pyproject_hooks-1.3.3 pytest-8.3.5 pytest-asyncio-0.26.0 python-engineio-4.14.0 python-socketio-5.13.0 scikit-learn-1.6.1 scipy-1.14.1 setuptools-80.9.0 simple-websocket-1.1.0 threadpoolctl-3.7.0 tomli-2.5.0 typing_extensions-4.16.0 wheel-0.45.1 wsproto-1.3.2 yarl-1.25.1
+3/5 安装已核对的wheel
+Processing ./TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/wheels/tianshan_thermal_observer-0.2.4-py3-none-any.whl
+Installing collected packages: tianshan-thermal-observer
+Successfully installed tianshan-thermal-observer-0.2.4
+No broken requirements found.
+4/5 核对实际导入文件、版本及依赖
+5/5 离线配置检查（不连接设备）
+{
+  "status": "offline_config_valid",
+  "connected": false,
+  "deployment_status": "deployment_unverified",
+  "config_sha256": "3bffdf56bf90681332e459659012f6b0f3512c6900bab141e4db9d1990e0a0c4",
+  "source_period_confirmed": false,
+  "model": "not_requested",
+  "input_selection": "automatic_remote_platform_declaration",
+  "message": "离线检查完成；尚未连接设备，平台和控制资格将在记录中检查。"
+}
+
+安装完成：TTO 0.2.4
+运行入口：/home/rm01/TTO-midload-0.2.4/tto
+中等负载入口：/home/rm01/TTO-midload-0.2.4/tto-midload
+本机配置：/home/rm01/TTO-midload-0.2.4/config/local.json
+安装身份：/home/rm01/TTO-midload-0.2.4/installation.json
+未启动采集、设备连接或后台服务。

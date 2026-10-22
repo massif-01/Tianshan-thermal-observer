@@ -1,0 +1,28 @@
+WARNING: The directory '/Users/massif/Library/Caches/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.
+Collecting python-socketio==5.13.0
+  Downloading python_socketio-5.13.0-py3-none-any.whl.metadata (3.2 kB)
+Collecting psutil==7.0.0
+  Downloading psutil-7.0.0-cp36-abi3-macosx_11_0_arm64.whl.metadata (22 kB)
+Collecting bidict>=0.21.0 (from python-socketio==5.13.0)
+  Downloading bidict-0.24.1-py3-none-any.whl.metadata (8.7 kB)
+Collecting python-engineio>=4.11.0 (from python-socketio==5.13.0)
+  Downloading python_engineio-4.14.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting simple-websocket>=0.10.0 (from python-engineio>=4.11.0->python-socketio==5.13.0)
+  Downloading simple_websocket-1.1.0-py3-none-any.whl.metadata (1.5 kB)
+Collecting wsproto (from simple-websocket>=0.10.0->python-engineio>=4.11.0->python-socketio==5.13.0)
+  Downloading wsproto-1.3.2-py3-none-any.whl.metadata (5.2 kB)
+Collecting h11<1,>=0.16.0 (from wsproto->simple-websocket>=0.10.0->python-engineio>=4.11.0->python-socketio==5.13.0)
+  Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+Downloading python_socketio-5.13.0-py3-none-any.whl (77 kB)
+Downloading psutil-7.0.0-cp36-abi3-macosx_11_0_arm64.whl (239 kB)
+Downloading bidict-0.24.1-py3-none-any.whl (36 kB)
+Downloading python_engineio-4.14.0-py3-none-any.whl (60 kB)
+Downloading simple_websocket-1.1.0-py3-none-any.whl (13 kB)
+Downloading wsproto-1.3.2-py3-none-any.whl (24 kB)
+Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+Installing collected packages: psutil, h11, bidict, wsproto, simple-websocket, python-engineio, python-socketio
+
+Successfully installed bidict-0.24.1 h11-0.16.0 psutil-7.0.0 python-engineio-4.14.0 python-socketio-5.13.0 simple-websocket-1.1.0 wsproto-1.3.2
+
+[notice] A new release of pip is available: 25.3 -> 26.2.1
+[notice] To update, run: /Users/massif/Tianshan-thermal-observer/investigations/issue-9-r2-20261018/.venv/bin/python3.14 -m pip install --upgrade pip

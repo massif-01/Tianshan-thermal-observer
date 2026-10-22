@@ -1,0 +1,110 @@
+{
+  "synthetic_checks": {
+    "valid": {
+      "ready": true,
+      "abnormal": false,
+      "native_abnormal": false,
+      "pass": true
+    },
+    "stale": {
+      "ready": true,
+      "abnormal": false,
+      "native_abnormal": true,
+      "pass": true
+    },
+    "invalid": {
+      "ready": true,
+      "abnormal": false,
+      "native_abnormal": true,
+      "pass": true
+    },
+    "default": {
+      "ready": true,
+      "abnormal": false,
+      "native_abnormal": true,
+      "pass": true
+    },
+    "fault": {
+      "ready": false,
+      "abnormal": true,
+      "native_abnormal": true,
+      "pass": true
+    },
+    "guard": {
+      "ready": false,
+      "abnormal": true,
+      "native_abnormal": true,
+      "pass": true
+    },
+    "disabled": {
+      "ready": false,
+      "abnormal": true,
+      "native_abnormal": true,
+      "pass": true
+    },
+    "not_auto": {
+      "ready": false,
+      "abnormal": true,
+      "native_abnormal": true,
+      "pass": true
+    },
+    "manual": {
+      "ready": false,
+      "abnormal": true,
+      "native_abnormal": true,
+      "pass": true
+    },
+    "binding_change": {
+      "ready": false,
+      "abnormal": true,
+      "native_abnormal": true,
+      "pass": true
+    },
+    "other_source": {
+      "ready": false,
+      "abnormal": true,
+      "native_abnormal": true,
+      "pass": true
+    },
+    "fan_http_missing": {
+      "ready": false,
+      "abnormal": false,
+      "native_abnormal": false,
+      "pass": true
+    },
+    "temp_http_missing": {
+      "ready": false,
+      "abnormal": false,
+      "native_abnormal": false,
+      "pass": true
+    },
+    "fan_http_stale": {
+      "ready": false,
+      "abnormal": false,
+      "native_abnormal": false,
+      "pass": true
+    },
+    "variable_default_variable": {
+      "pass": true
+    },
+    "socket_boundary": {
+      "pass": true
+    },
+    "expired_source": {
+      "pass": true
+    }
+  },
+  "plan_budget_checks": "passed",
+  "runtime": {
+    "version": "0.2.4",
+    "import_path": "/home/rm01/TTO-midload-0.2.4/conda-env/lib/python3.10/site-packages/tto/__init__.py",
+    "python": "/home/rm01/TTO-midload-0.2.4/conda-env/bin/python",
+    "isolated": true,
+    "non_editable": true
+  },
+  "config_hashes": {
+    "/home/rm01/TTO/config/local.json": "71fd4ac0954b273edca7f859ba45079d4e3709cda6ae448c0c9527990d539805",
+    "/home/rm01/TTO-midload-prep-r1-r2/TTO-v1-0.2.4-Conda安装包/site/local-midload.json": "5b7c744d2cc9725ae747e55ad7912bc3b6d54c46b138d888e542e56b7941e452"
+  },
+  "network_calls_performed": 0
+}

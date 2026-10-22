@@ -1,0 +1,40 @@
+{
+  "version": "0.2.4+observe.2",
+  "wheel": {
+    "bytes": 160088,
+    "sha256": "481a9671148fe40fcc33c2a65bc98c818be3178fe3138c1cd06bc93b3d21b725"
+  },
+  "candidate_manifest_sha256": "28680be46280395e4257a4e5beaf07a30b0c4b781797604439cb7bb622eddd84",
+  "candidate_files": 65,
+  "baseline_wheel_sha256": "492916f2f6f50fe69853e3b248ecf266283d52eca2c2fbf1c80e48b45178ba06",
+  "runtime_changes": [
+    {
+      "path": "tto_field/__init__.py",
+      "before_sha256": "5a3a2869cab8cee2a2bf779439b15a282205dbd8a93326c3f161950e999325c1",
+      "after_sha256": "ae5cdad332f3ee574624de73f213631771295bc1836ac25f15ddb35f7e1a639f"
+    },
+    {
+      "path": "tto_field/candidate-files.json",
+      "before_sha256": "d6de6b97370fbca02102a7af784a590958116c8db6696339a2da8c2918d0ee18",
+      "after_sha256": "28680be46280395e4257a4e5beaf07a30b0c4b781797604439cb7bb622eddd84"
+    },
+    {
+      "path": "tto_field/observe_cli.py",
+      "before_sha256": "9a9a9910a3422a3106e28ab8708e3fd4f8667f2334b1dbcc69432f26efcf0b80",
+      "after_sha256": "643a1cf57cba0ab66d14cbcef3d2206b00c0b3cae61cf7f5553baf1b9c8f0422"
+    },
+    {
+      "path": "tto_field/observe_runtime.py",
+      "before_sha256": "5371fb535a1e605229b7886780df7e4a37a6d50e2f68fda0f16e163dc7a711bd",
+      "after_sha256": "da2fa1ad7fd36d8190ea683d6330829f292a4d4c4680b9774f7a927ee358df83"
+    },
+    {
+      "path": "tto_field/projection.py",
+      "before_sha256": "6a0e7392c1117845a36c07ae3dfe6458e76e2c84960b2fcbc6fa080f7b664b05",
+      "after_sha256": "da13784953b3bb750bee45e0631fe5cfa17c783550a02abfc6a551f8dfc8c8ea"
+    }
+  ],
+  "protected_files_unchanged": 1060,
+  "frozen_runtime_other_files_identical": true,
+  "dependency_increment": 0
+}

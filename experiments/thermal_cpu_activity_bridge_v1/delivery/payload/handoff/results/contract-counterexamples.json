@@ -1,0 +1,88 @@
+{
+  "actual_field_envelope_to_model": {
+    "input_path": "/mnt/data/tto_cpu_prep_independent_review_20261020/work/loopback_run/capability/run/cpu-sidecar-arrivals.jsonl",
+    "rows": 150,
+    "source_schema": "TTO-CPU-SOURCE-v1",
+    "field_has_received_at": true,
+    "field_has_model_arrival_field": false,
+    "model_UNKNOWN_by_variant": {
+      "INPUT-BASE": 150,
+      "INPUT-MEAN": 150,
+      "INPUT-CORE": 150
+    },
+    "reasons": [
+      "arrival_time_unknown"
+    ],
+    "scope": "actual candidate field emitter and actual candidate model consumer; loopback-only payload, not field measurements"
+  },
+  "latest_invalid_does_not_revoke": {
+    "older_valid": {
+      "field": "cpu_mean_percent",
+      "value": 42.0,
+      "valid": true,
+      "clock_domain": "SYNTHETIC-N305",
+      "observed_window_end_s": 10.0,
+      "available_at_s": 10.01,
+      "decision_generated_s": 10.02
+    },
+    "new_invalid": {
+      "field": "cpu_mean_percent",
+      "value": null,
+      "valid": false,
+      "clock_domain": "SYNTHETIC-N305",
+      "observed_window_end_s": 10.3,
+      "available_at_s": 10.31,
+      "decision_generated_s": 10.32,
+      "reason": "counter_reset"
+    },
+    "origin": 10.5,
+    "actual_choice": {
+      "field": "cpu_mean_percent",
+      "value": 42.0,
+      "valid": true,
+      "clock_domain": "SYNTHETIC-N305",
+      "observed_window_end_s": 10.0,
+      "available_at_s": 10.01,
+      "decision_generated_s": 10.02
+    },
+    "expected_current_choice": null,
+    "note": "cpu_interface helper currently unused by live runtime, so does not assert unsafe device control; must not be used unchanged in field-to-model adapter"
+  },
+  "unbounded_mux_startup": {
+    "review_timeout_needed": true,
+    "commands_intercepted": [
+      [
+        "ssh",
+        "-S",
+        "/tmp/tto-rvw-z0og3j9e/mux",
+        "-O",
+        "check",
+        "TEST_ONLY_NO_SSH"
+      ]
+    ],
+    "check_waiting": true,
+    "candidate_owns_check_process": false,
+    "candidate_terminated_check": false,
+    "candidate_closed": false,
+    "candidate_status": "baseline",
+    "events": [],
+    "note": "review wait_for only; candidate itself has no wait bound. No SSH command was executed."
+  },
+  "invalid_frame_audit_detail": {
+    "status": "source_invalid",
+    "emitted_events": [
+      [
+        "sidecar-events.jsonl",
+        {
+          "event": "source_error",
+          "mono_s": 30.0,
+          "at_utc": "2026-10-19T18:23:17.185352+00:00",
+          "status": "source_invalid",
+          "error": "ValueError"
+        }
+      ]
+    ],
+    "raw_invalid_frame_retained": false,
+    "note": "diagnostic completeness issue only; valid activity input correctly not accepted"
+  }
+}

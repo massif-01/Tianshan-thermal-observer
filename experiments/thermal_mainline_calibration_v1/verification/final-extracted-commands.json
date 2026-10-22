@@ -1,0 +1,61 @@
+[
+  {
+    "argv": [
+      "/private/tmp/tto-yet-frozen-20261018-py312/bin/python",
+      "-m",
+      "pytest",
+      "-c",
+      "pytest.ini",
+      "tests",
+      "--confcutdir=.",
+      "-q",
+      "-p",
+      "no:cacheprovider"
+    ],
+    "cwd": "/private/tmp/tto-mainline-fresh-bundle-20261021-v2/experiments/thermal_mainline_calibration_v1/baseline",
+    "returncode": 0
+  },
+  {
+    "argv": [
+      "/private/tmp/tto-yet-frozen-20261018-py312/bin/python",
+      "-m",
+      "pytest",
+      "-c",
+      "pytest.ini",
+      "tests",
+      "--confcutdir=.",
+      "-q",
+      "-p",
+      "no:cacheprovider"
+    ],
+    "cwd": "/private/tmp/tto-mainline-fresh-bundle-20261021-v2/experiments/thermal_mainline_calibration_v1",
+    "returncode": 0
+  },
+  {
+    "argv": [
+      "/private/tmp/tto-yet-frozen-20261018-py312/bin/python",
+      "-m",
+      "g2_runtime",
+      "--input",
+      "golden/request.json",
+      "--output",
+      "/private/tmp/tto-mainline-fresh-replay-20261021-v2/A1-api.json"
+    ],
+    "cwd": "/private/tmp/tto-mainline-fresh-bundle-20261021-v2/experiments/thermal_mainline_calibration_v1/baseline",
+    "returncode": 0
+  },
+  {
+    "argv": [
+      "/private/tmp/tto-yet-frozen-20261018-py312/bin/python",
+      "-m",
+      "tool",
+      "compare",
+      "--plan",
+      "/private/tmp/tto-mainline-fresh-replay-20261021-v2/compare-plan.json",
+      "--output",
+      "/private/tmp/tto-mainline-fresh-replay-20261021-v2/compare"
+    ],
+    "cwd": "/private/tmp/tto-mainline-fresh-bundle-20261021-v2/experiments/thermal_mainline_calibration_v1",
+    "returncode": 0
+  }
+]

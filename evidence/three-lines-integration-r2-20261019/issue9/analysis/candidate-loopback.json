@@ -1,0 +1,86 @@
+{
+  "variant": "candidate",
+  "tests": 8,
+  "failures": 0,
+  "errors": 0,
+  "results": [
+    {
+      "test": "body_timeout",
+      "phase": "response_body",
+      "recovery": true
+    },
+    {
+      "test": "concurrent_host_snapshot_coherence",
+      "responses": 10,
+      "note": "synthetic immutable response; does not prove firmware atomicity"
+    },
+    {
+      "test": "connector_queue_cancel_recovery",
+      "queued_phase": "connector_queue",
+      "recovery": true
+    },
+    {
+      "test": "fast_reuse",
+      "trace_events": [
+        {
+          "phase": "request_start",
+          "mono_s": 734332.385576666
+        },
+        {
+          "phase": "connect",
+          "mono_s": 734332.385756625
+        },
+        {
+          "phase": "connection_ready",
+          "mono_s": 734332.387204333
+        },
+        {
+          "phase": "request_headers_sent",
+          "mono_s": 734332.387379666
+        },
+        {
+          "phase": "response_headers_received",
+          "mono_s": 734332.388498125
+        },
+        {
+          "phase": "request_start",
+          "mono_s": 734332.38863025
+        },
+        {
+          "phase": "connection_reused",
+          "mono_s": 734332.3887275
+        },
+        {
+          "phase": "request_headers_sent",
+          "mono_s": 734332.388820083
+        },
+        {
+          "phase": "response_headers_received",
+          "mono_s": 734332.389328083
+        }
+      ]
+    },
+    {
+      "test": "headers_timeout",
+      "phase": "request_headers_sent",
+      "recovery": true
+    },
+    {
+      "test": "oversize_redirect_recovery",
+      "passed": true
+    },
+    {
+      "test": "real_collector",
+      "fan_errors": 6,
+      "temp_success": 6,
+      "diagnostic_fields": true,
+      "max_inflight": 2
+    },
+    {
+      "test": "serialized_server_resource",
+      "two_requests_timed_out": true,
+      "client_phase": "request_headers_sent",
+      "note": "in-memory server lock; not field ESP proof"
+    }
+  ]
+}

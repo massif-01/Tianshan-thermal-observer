@@ -1,0 +1,62 @@
+{
+  "scope": "4 independent child processes; exact candidate Pipeline,39 same recorded events,12s pacing; no sidecar/network; NOT N305",
+  "runs": [
+    {
+      "events": 39,
+      "wall_s": 12.000322682999922,
+      "process_cpu_s": 0.07999999999999993,
+      "process_cpu_pct": 0.6666487403153811,
+      "max_abs_state_cov_diff_to_saved": 2.220446049250313e-16,
+      "phase_mismatches": [],
+      "name": "single1",
+      "pool_threads": [
+        1,
+        1
+      ],
+      "worker_cpu_s": 0
+    },
+    {
+      "events": 39,
+      "wall_s": 12.000305420000018,
+      "process_cpu_s": 10.709999999999999,
+      "process_cpu_pct": 89.24772849656341,
+      "max_abs_state_cov_diff_to_saved": 2.220446049250313e-16,
+      "phase_mismatches": [],
+      "name": "default1",
+      "pool_threads": [
+        5,
+        5
+      ],
+      "worker_cpu_s": 10.62
+    },
+    {
+      "events": 39,
+      "wall_s": 12.000268353000024,
+      "process_cpu_s": 10.760000000000003,
+      "process_cpu_pct": 89.66466151825713,
+      "max_abs_state_cov_diff_to_saved": 2.220446049250313e-16,
+      "phase_mismatches": [],
+      "name": "default2",
+      "pool_threads": [
+        5,
+        5
+      ],
+      "worker_cpu_s": 10.65
+    },
+    {
+      "events": 39,
+      "wall_s": 12.000289806999945,
+      "process_cpu_s": 0.07000000000000005,
+      "process_cpu_pct": 0.58331924583328,
+      "max_abs_state_cov_diff_to_saved": 2.220446049250313e-16,
+      "phase_mismatches": [],
+      "name": "single2",
+      "pool_threads": [
+        1,
+        1
+      ],
+      "worker_cpu_s": 0
+    }
+  ],
+  "field_cause_status": "mechanism reproduced locally; exact failed field process pool configuration was not captured"
+}

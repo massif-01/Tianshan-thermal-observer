@@ -1,0 +1,46 @@
+{
+  "contract": "TTO-REF-PREP-v1.0",
+  "status": "not_measured",
+  "physical_mapping_validated": false,
+  "surface_measurement_performed": false,
+  "instrument_profile_confirmed": false,
+  "instrument_selection_confirmed_by_user": "YET-610L + K型探头；耐温聚酰亚胺胶带已购买",
+  "real_YET_CSV_mapping_accepted": false,
+  "continuous_logging_field_verified": false,
+  "model_refit": false,
+  "external_model_input": false,
+  "control_authorization": "none",
+  "distinct_records": 0,
+  "history_revisions": 0,
+  "numeric_points": 0,
+  "real_numeric_points": 0,
+  "synthetic_numeric_points": 0,
+  "paired_points": 0,
+  "unpaired_reasons": {},
+  "reference_statuses": {},
+  "trajectory_sha256": "17cf1467de3ba522525e28c122304897b099de2f95c2a2af66aa3a57778dc6a5",
+  "coverage": {
+    "637f114b-563b-4c35-8062-a7588a89ce1c": {
+      "rows": 2382,
+      "span_s": 2448.7642860412598,
+      "legal_asof_hold_s": 2387.592563390732,
+      "legal_asof_fraction": 0.9750193503722566,
+      "demand_legal_hold_s": 2387.592563390732,
+      "population": "only supplied frozen trajectory window; not whole-run historical forecast coverage"
+    }
+  },
+  "model_sha256": [
+    "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0"
+  ],
+  "sparse_peak": "peak_not_directly_observed; sparse samples do not establish complete peak or second-scale lag",
+  "import_quality": [],
+  "session_events": [],
+  "continuous_limit": "1s target is sampling cadence, not calibrated probe response or automatically valid surface/Ts mapping",
+  "ambient": "only original M had user-confirmed 24C; no automatic assignment to any new run",
+  "sessions": {},
+  "figures": {
+    "status": "generated",
+    "runtime": "/private/tmp/tto-analysis-20261013-env/bin/python"
+  },
+  "measured_telemetry_sha256": "05949e4705835d0cd7efdde4160f513696c4349e606e5c397ea0ce850ac7e038"
+}

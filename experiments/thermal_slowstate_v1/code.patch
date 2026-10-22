@@ -1,0 +1,2698 @@
+diff --git a/experiments/thermal_slowstate_v1/README.md b/experiments/thermal_slowstate_v1/README.md
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_slowstate_v1/README.md
+@@ -0,0 +1,49 @@
++# TTO-SLOWSTATE-v1.0：实际离线研究
++
++本目录是新增的独立研究层。先读`产品决定与字段含义.md`与`slowstate-spec.json`，再读中文研究报告与`figures/中文图解.html`。所有L/S/M资料都是开发资料。模型没有控制权；本轮没有重新拟合动态参数，没有新安装候选。
++
++## 一条入口独立重跑
++
++保留原交接包中的两个ZIP，不解压历史脚本后执行它们：
++
++```
++python3 rerun.py --input-dir /绝对路径/原交接包/inputs
++```
++
++入口先校验固定SHA及CRC，再提取只读源副本，重建CPU传播核，导出三套冻结模型的两种状态、四分支A-roll/B-HOLD、普通需求和即时风险台账，执行有限测试，绘制四类中文图，最后独立回读。它不安装依赖、不使用网络、不执行任何设备入口、不调用历史fit/all。运行日志在`replay-logs/`。在交付目录重跑会更新本轮派生物；复审建议先复制或解压到新目录，便于与封存SHA对照。
++
++本机入口自动使用已经存在的`.venv310`计算环境和已存在的Matplotlib绘图环境，使用者无需逐项拼装。可用`--python /path/to/python --plot-python /path/to/python`明确指定；两参数可以是同一个Python。异机可用单一Python 3.10–3.12环境，所需库只有NumPy、SciPy、pytest、Matplotlib及一个中文字体；精确已执行版本和本机入口在`results/resources.json`、`figures/plot-environment.json`与`replay-logs/receipt.json`。C编译器只编译复制的CPU二状态传播核，未使用CUDA。源码中的绘图环境切换不是生产依赖变更。
++
++## 输入身份及重跑范围
++
++原大ZIP按`source-inventory.json`索引引用，不递归塞入成果ZIP。`sources/`已含本轮所需的不可变已登记数据、冻结模型、原预测/校准/状态、原控制快照子集和来源索引，可用于无需原大ZIP的回读；从原件完整重建使用上面的一条入口。`sources/provenance/`保留M的24°C附注、旧私有/分享归档身份区分。24°C未填到L/S，旧E未重写。
++
++两个必需原归档：
++
++| 文件 | SHA256 |
++|---|---|
++| r2-results-original.zip | 809e90eef398daf34e9cabfd5d4427d35275fc8185541d61810f67943f35aecb |
++| r2-prerequisites-original.zip | 7f52d7cfad66564ff07178bfe14a5a46da83390b0855c28f2b65cad8910c3614 |
++
++## 文件用途
++
++| 文件/目录 | 用途 |
++|---|---|
++| prepare.py、stage1-freeze.json | 来源/语义/规则在新成绩前冻结 |
++| vendor/ | 从已接受R2复制的CPU传播及过去前缀状态函数；原样保留，fit函数定义不被调用 |
++| core.py、run_study.py | 固定QS/LP、四分支传播、固定需求塑形、即时状态台账和诊断 |
++| results/states-A-long.jsonl | 同次自由传播的Tf/Ts；不读后续TJ反馈 |
++| results/states-causal60.jsonl | 原过去60秒估计；Tf观测锚定，不算预测 |
++| results/four-branch-predictions.jsonl | 每个独立时距的四来源同参数、同输入情景、同温度标签；原B0/B1/Ridge/RELAX30另字段保留 |
++| results/normal-demand-origins.jsonl | 原始/裁剪/塑形、参考、死区、限速、饱和，指数不是PWM |
++| results/fast-status-and-demand-ledger.jsonl | 所有原到达节点及已知有效期终点；即时失效，保留真实TJ与原异常 |
++| results/accepted-demand-availability.jsonl | 全6643个accepted起点的需求可用/不可用及原因 |
++| results/*metrics.json、*diagnostics.json | 温度、覆盖、形态、事件、初态/滑窗/模型敏感性、组合驱动 |
++| tests/、test-attempt-*.log | 仅研究层与直接复用函数检查，包含失败及修复后的日志 |
++| figures/ | 四类中文PNG/SVG/三句图解及HTML入口 |
++| verify_results.py、readback-checks.json | SHA、独立重算的共同集合/温度指标、因果字段与1797个原文件保护核对 |
++| code.patch、SHA256.json | 只包含新增研究代码/本地文档的补丁及封存成员身份 |
++
++初始两次计算尝试分别暴露新统计程序没有跳过无温度答案、S阶段元数据没有macro字段的兼容错误；失败日志保留。随后修正新程序的尾部时段裁切、已知资格到期仍保留快通道TJ的字段，以及补齐预定诊断。没有改变冻结的模型、规则、分支或塑形参数。所有成功/失败日志不构成新的参数搜索。
++
++独立复审只需核对本目录。本轮停止于离线交付，不自动部署、实测或继续训练。
+diff --git a/experiments/thermal_slowstate_v1/TTO-快慢热状态与平稳散热需求-研究报告.md b/experiments/thermal_slowstate_v1/TTO-快慢热状态与平稳散热需求-研究报告.md
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_slowstate_v1/TTO-快慢热状态与平稳散热需求-研究报告.md
+@@ -0,0 +1,356 @@
++# TTO：快慢热状态与平稳散热需求——研究报告
++
++**执行合同：TTO-SLOWSTATE-v1.0｜2026-10-14｜已完成实际离线计算，等待独立复审。**
++
++G2慢态有增量信息，但简单滤波已能解释一部分平稳行为。45秒、真实未来功率/PWM已知的共同集合上，G2的TJ误差在L/S/M为0.315/0.409/0.191°C，30秒因果滤波为0.444/0.502/0.195°C。L/S上G2更好；M上两者接近，不能宣布模型全面替代简单滤波。
++
++短脉冲不必复制为普通需求的一次明显升降；持续M负载下，G2需求也不是永远为零，会逐步升量并保留回落尾部。S连续短问答只有约36.3%的整组时间具备原状态资格，尚不能证明完整平台；已热参考还会令一些稀疏短任务的增量被裁成零，零值不能解释成没有散热需要。
++
++本轮真正导出了Tf与Ts，没有把旧的欠峰Tf改名。原TJ短峰误差仍存在；HOLD也仍不知道下一次任务，M负载段45秒预测MAE约4.13°C。潜在Ts尚无体温真值，不能据此给出安全风扇档位、噪音收益或现场放行结论。
++
++**唯一推荐下一步：另行预登记一次保持原AUTO/曲线/gain/保护的被动同步复核，加入一个位置明确的独立散热结构温度参照，覆盖完整连续短任务与随后的回落。** 目的同时检验慢态增量是否对应结构温升、补齐平台证据，而非继续挑更平滑的曲线。本轮不执行，也不要求用户现在追加实测或购买仪器。
++
++---
++
++**1．本轮做了什么，哪些仍未发生**
++
++模型动态参数重新拟合次数为0。主模型固定第二轮D-LSM-G2（Efree）；旧LS-fit G2和D-LSM-G2-A24仅作冻结敏感性。所有模型均`deployable=false`，L/S/M均为已看过的开发资料；没有新增模型族、参数搜索、未来请求预测器或在线参数更新。
++
++| 项目 | 本轮状态 |
++|---|---|
++| 模型/输入字段语义 | 已冻结；Tf仍是TJ输出，Ts仍是未测慢态 |
++| 两维A-long与因果60秒状态 | 已实际导出并逐点核对 |
++| G2/QS/LP30/LP120对照 | 已完成15/45/90秒A-roll和B-HOLD |
++| 普通需求及快风险接口 | 已完成离线原型、即时失效与恢复核对 |
++| 物理慢态验证 | 未完成；没有结构温度真值或实测热容 |
++| 真正未来温度预测 | 固定HOLD诊断已完成；未来负载切换问题仍未解决，输入策略研究暂缓一轮而非取消 |
++| 现场控制与噪音收益 | 未发生；没有设备指令、部署或安全放行 |
++
++本轮只新增`experiments/thermal_slowstate_v1/`。未改生产TTO、旧tests、采集器、runner、安装器、依赖锁、版本、原始日志、旧模型/成绩/spec、设备配置、风扇、WS或TianshanOS；未联网设备、发推理请求、运行现场doctor/collect/shadow、新负载、CUDA、服务重启、提交、推送或PR。原工作树保留。
++
++
++**2．来源、冻结与覆盖**
++
++
++规则冻结时间为`2026-10-14T02:55:11.168424+00:00`，在新成绩产生前写入。冻结spec SHA256：`5f13140ff8dbfcb69424006feede4b4dc8b1ec5cc67afa7992fc8ff284777e76`。模型、原归档和新派生物各自有SHA，没有沿用新结果的旧身份。
++
++
++| 记录 | 完整accepted数 | 原严格段数 | 具备60秒状态的起点 | 普通需求时间覆盖 |
++| --- | --- | --- | --- | --- |
++| L | 2529 | 26 | 1858 | 73.3% |
++| S | 1610 | 30 | 1190 | 73.6% |
++| M | 2504 | 2 | 2382 | 95.1% |
++
++
++
++共6643个accepted起点，沿用约1秒序列、原始引用、质量隔离、源身份、功率有效性、成功PWM与原TTL。58个严格段中13个足够长，主模型有5430个合法因果起点。请求与工作块没有被当作独立热过程，三轮才是三个连续热过程；这里的n是相关时序样本数，不是独立实验数。
++
++两个大ZIP均已核对SHA和CRC：`r2-results-original.zip`为`809e90eef398daf34e9cabfd5d4427d35275fc8185541d61810f67943f35aecb`，`r2-prerequisites-original.zip`为`7f52d7cfad66564ff07178bfe14a5a46da83390b0855c28f2b65cad8910c3614`。交付只索引原ZIP，不递归打包它们。`source-inventory.json`固定本轮直接使用的成员；`historical-provenance-index.json`额外索引同一已冻结归档内的历史身份附注，不回写第一阶段封存。
++
++私有与分享身份分开保留在`sources/provenance/r2-source-identity-supplement.json`。例如S的私有manifest SHA为`51cd77db0f8748c3f6fb002a964a170208ddc783177f711a271d7c7f10402bfa`，分享manifest为`2c5c6c3593b70dab6b3bdf2c1ea5425c49dc08d556235ceb2e211221720e8c3f`；其observations仍同为`121341bbccef3bb5bd34e2f5b327ebb4eb4f342d745cc26004d9c6061409c707`。这些是保留的历史身份记录，不宣称本轮重新读取了另一份私有日志。
++
++M用户确认24°C原附注逐字保留，只绑定`637f114b-563b-4c35-8062-a7588a89ce1c`。没有补造L/S室温，没有改ambient_snapshot、manifest、原SHA或原E。现场请求准入override未被用来放宽模型资格。
++
++
++| 冻结模型 | 本轮角色 | 原model.json SHA256 |
++| --- | --- | --- |
++| primary | 主对照 | dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0 |
++| old_LS | 诊断，不参与择优 | 3c791275bb7172bc65031287ceb68c2d8a6e7d64ecce8a7962ac76d4745799cd |
++| A24 | 诊断，不参与择优 | 0649551be0360f1186c1e13c7ea827d28e89f4a000ef18da48e75e519913c246 |
++
++
++
++**3．真正的Tf/Ts、初态和缺口**
++
++每个模型都从原因果前缀的Ts_initial和E出发，用记录中两rail及成功PWM进行两维传播。A-long在前缀后不再吸收TJ反馈；其5430个Tf与原封存A-long逐点相同，最大差0.0°C（明示容差1e-10°C），Ts取同次传播的第二列。三模型两类轨迹分别完整保存，不拼线择优。
++
++因果模式直接读取原states.jsonl；每点只用过去60秒。第一维Tf被锚定到当前TJ，不能把这个零当前误差计成预测能力。第二维Ts、未锚定的窗口末Tf、窗口首末引用、E、有效截止、当前输入和模型SHA都保留。每个预测起点的第二状态才在四分支间替换。
++
++
++| 前缀得到的有效E（°C） | L | S | M |
++| --- | --- | --- | --- |
++| primary | 36.14180 | 35.32751 | 35.16430 |
++| old_LS | 37.06773 | 36.52257 | 36.24981 |
++| A24 | 25.54718 | 25.28430 | 24.00000 |
++
++
++
++E在每轮首次合法前缀完成后固定，后续真实缺口仅重建慢初态。主模型M的E约35.164°C仍是等效边界，用户室温24°C没有被强写进去；A24则沿用既有M=24诊断。L/S的A24有效E也不代表测得室温。
++
++60秒不是热平衡：以M-00的固定方程和真实输入为例，初始Ts偏1°C，在60秒末仍令Tf偏约0.674°C、Ts偏约0.641°C；到300秒仍分别约0.177/0.169°C。这里只计算固定模型的单位线性敏感度，没有新拟合。初态/边界与短前缀的关系保存在`prefix-and-unit-initialization-sensitivity.json`。
++
++
++| 主模型记录 | 滑窗重估修正绝对值中位数（°C） | P95（°C） | 最大（°C） | 初态贴边次数 |
++| --- | --- | --- | --- | --- |
++| L | 0.0072 | 0.0363 | 0.3007 | 0 |
++| S | 0.0051 | 0.0167 | 0.2258 | 0 |
++| M | 0.0044 | 0.0220 | 0.2714 | 0 |
++
++
++
++这里的“修正”是当前滑窗Ts减去“上一合法状态沿已经到达的实际输入传播到当前”的Ts，用于区分估计器重估与真实输入传播。S02窗中能看到窗口移出短峰后的下探和回升；全部极值、速率、窗口首引用和初态变化均留存，没有另设跳变门槛剔除难点。绝对曲线并不等同于物理散热结构温度。
++
++M20/M60/M180三个开始边界前后均属M-00，过去窗口跨过边界，绝不新建慢初态。M只在原有真实失温/资格缺口处分为M-00、M-01。所有源缺口断线，恢复先满足原历史资格；新段增量参考是新参考，不能接成上一任务已冷却的证据。
++
++
++| 因果Ts主模型相对冻结参照 | 绝对差MAE（°C） | 固定首前缀增量差MAE（°C） |
++| --- | --- | --- |
++| L / old_LS | 1.139 | 1.130 |
++| L / A24 | 4.788 | 1.650 |
++| S / old_LS | 0.045 | 0.058 |
++| S / A24 | 3.279 | 0.131 |
++| M / old_LS | 0.205 | 0.209 |
++| M / A24 | 3.688 | 0.355 |
++
++
++
++状态敏感性只用每轮各模型的第一个合法起点作一次固定参考，没有每段自由平移或全段归一化。M上主模型与A24的绝对Ts差MAE约3.688°C，而增量差约0.355°C；这支持讨论部分形状信息，同时暴露物理标定和边界解释的不确定性。不能把增量较近说成绝对温度测准。
++
++**4．四种慢态的同条件温度对照**
++
++主模型θ、每轮前缀E、当前实测TJ、同一输入情景和温度答案固定。STATE-G2用原过去60秒Ts；STATE-QS是当前TJ和PWM下的慢方程零导数代数状态，不含历史；LP30/LP120只对这个代数状态作因果指数低通。低通使用实际不规则dt、上一个输入左持有；首个合法起点允许因果回放已发生前缀，前60秒不对外宣称E已知或滤波稳态。LP保留整段过去，G2仍用原60秒窗，记忆差异未隐藏。
++
++A-roll允许真实未来输入，不读未来TJ反馈；B-HOLD只保持当前输入，不知道后续请求或实际结束。原RELAX30、B0、B1、紧凑Ridge的系数/缩放/成绩均保留为旧参考，不重训也不逐点择策略。新STATE-G2的14339个A-roll、16290个HOLD派生值与原预测数值完全一致；其中无合法温度答案的预测仍保留，但不算误差。
++
++下面是未来控制状态可确认正常层的共同标签MAE（°C）。每行四分支同集合；A与B仍是不同信息合同，不能用A的好成绩宣称B或风扇成功。
++
++
++| 类别 | 轮次 | 时距秒 | 共同n | G2慢态 | 无记忆QS | LP30 | LP120 |
++| --- | --- | --- | --- | --- | --- | --- | --- |
++| A_roll | L | 15 | 1753 | 0.272 | 0.656 | 0.391 | 0.446 |
++| A_roll | L | 45 | 1544 | 0.315 | 0.682 | 0.444 | 0.406 |
++| A_roll | L | 90 | 1229 | 0.408 | 0.681 | 0.501 | 0.354 |
++| A_roll | S | 15 | 1130 | 0.269 | 0.385 | 0.364 | 0.399 |
++| A_roll | S | 45 | 1010 | 0.409 | 0.496 | 0.502 | 0.540 |
++| A_roll | S | 90 | 830 | 0.564 | 0.619 | 0.635 | 0.666 |
++| A_roll | M | 15 | 2351 | 0.174 | 0.355 | 0.180 | 0.346 |
++| A_roll | M | 45 | 2291 | 0.191 | 0.309 | 0.195 | 0.365 |
++| A_roll | M | 90 | 2201 | 0.237 | 0.280 | 0.243 | 0.311 |
++| B_HOLD | L | 15 | 1753 | 0.476 | 0.853 | 0.592 | 0.631 |
++| B_HOLD | L | 45 | 1544 | 1.248 | 1.606 | 1.379 | 1.270 |
++| B_HOLD | L | 90 | 1229 | 2.601 | 2.864 | 2.695 | 2.503 |
++| B_HOLD | S | 15 | 1130 | 0.350 | 0.447 | 0.428 | 0.464 |
++| B_HOLD | S | 45 | 1010 | 0.495 | 0.578 | 0.568 | 0.604 |
++| B_HOLD | S | 90 | 830 | 0.641 | 0.724 | 0.694 | 0.726 |
++| B_HOLD | M | 15 | 2351 | 0.348 | 0.514 | 0.354 | 0.507 |
++| B_HOLD | M | 45 | 2291 | 1.073 | 1.202 | 1.079 | 1.189 |
++| B_HOLD | M | 90 | 2201 | 2.065 | 2.166 | 2.070 | 2.120 |
++
++
++
++G2在45秒的三轮平均误差都优于这三种固定对照，但并非每个时距/分层都胜出：L的90秒A-roll中LP120优于G2；M的45秒回落层LP30约0.177°C，G2约0.179°C。简单滤波并非无效，M上整体差距只有约0.004°C，没有独立重复实验或置信区间，不能称显著优势。
++
++这个增量价值指本轮固定比较中的状态估计信息：G2初始化器结合过去TJ、功率与PWM，QS/LP则是规定的代数状态/简单滤波；不能把差别唯一归因为某个已测物理热容。它是下一步核对的依据，不是物理命名的许可证。
++
++
++| 45秒主模型 | 轮次 | 偏差（°C） | P95绝对误差（°C） | 最大欠预测（°C） |
++| --- | --- | --- | --- | --- |
++| A_roll | L | -0.117 | 0.983 | 3.796 |
++| A_roll | S | 0.299 | 1.020 | 2.933 |
++| A_roll | M | 0.081 | 0.620 | 2.994 |
++| B_HOLD | L | -0.320 | 9.938 | 11.986 |
++| B_HOLD | S | 0.234 | 1.377 | 4.260 |
++| B_HOLD | M | 0.073 | 9.295 | 11.359 |
++
++
++
++仍需正视动态失败。45秒B-HOLD在M工作起点层MAE约4.130°C，在L回落起点层约3.240°C；这主要暴露HOLD对未来负载/PWM切换的假设，不能仅换慢态就解决。原A-long在S02/S03/D01真实TJ峰时仍分别欠2.339/1.934/2.089°C。它们仍是Tf对TJ的错误，没有转名为“本来是在预测散热体”。
++
++对所有未来控制上下文均保留的45秒B共同集合，基线情况如下；S上B0与R_IO仍优于G2，不能删待机或改集合制造胜利。
++
++
++| 记录 | n | G2-HOLD | B0保持TJ | B1趋势 | R_TJ | R_IO | 原RELAX30 |
++| --- | --- | --- | --- | --- | --- | --- | --- |
++| L | 1813 | 1.275 | 1.614 | 2.178 | 1.676 | 1.826 | 6.170 |
++| S | 1184 | 0.574 | 0.398 | 0.732 | 0.411 | 0.397 | 0.425 |
++| M | 2336 | 1.054 | 1.289 | 1.798 | 1.263 | 1.336 | 1.281 |
++
++
++
++每个15/45/90秒独立判标签资格，有45秒答案而无90秒答案时保留45秒。A需完整输入路径；B遇未来辅助缺口仍保留可用温度答案，并分别报告正常、辅助缺口、已观测异常/变化、未分类缺口及旧严格集合。未知没有被记为正常。每个指标单元保存起点/时距/答案引用集合SHA，覆盖另表：
++
++
++| 记录 | 时距秒 | 温度答案总数 | A四分支可评分 | B四分支可评分 |
++| --- | --- | --- | --- | --- |
++| L | 15 | 2514 | 1753 | 1843 |
++| L | 45 | 2484 | 1544 | 1813 |
++| L | 90 | 2439 | 1229 | 1768 |
++| S | 15 | 1595 | 1130 | 1190 |
++| S | 45 | 1565 | 1010 | 1184 |
++| S | 90 | 1520 | 830 | 1139 |
++| M | 15 | 2488 | 2351 | 2366 |
++| M | 45 | 2458 | 2291 | 2336 |
++| M | 90 | 2413 | 2201 | 2291 |
++
++
++
++逐轮/工作/回落/背景/阶段/原事件窗的MAE、偏差、P95和最大欠预测完整见`temperature-metrics.json`及`event-temperature-metrics.json`，原B参考在逐点文件中独立字段保留。没有混合不同覆盖的分数排名，也没有将合并开发成绩称作最终泛化。
++
++**5．普通需求：哪些平稳来自状态，哪些来自固定后处理**
++
++每个严格段第一个合法因果状态固定各分支s_ref；原始指数为(s−s_ref)/10，保留负值和超界，再裁至[0,1]。相对上一输出差不超过0.02则保持，否则每秒升量最多1/30、降量最多1/120。每个分支完全相同，无网格搜索；10°C及死区/速率是本轮展示塑形值，绝不是物理热常数或固件值。
++
++下表均为相同资格期间，跨不可用缺口不累加变差或方向反转。有效反转按从极值累计反向移动≥0.02计数，防止下降每步小于0.02就被漏算；同时保留幅度，不能把始终零判作更好。
++
++
++| 记录 | 状态来源 | 原始幅度 | 原始总变差 | 输出幅度 | 输出总变差 | 输出有效反转 | 低于下限秒 |
++| --- | --- | --- | --- | --- | --- | --- | --- |
++| L | STATE-G2 | 1.169 | 3.951 | 0.565 | 1.270 | 2 | 780.8 |
++| L | STATE-QS | 1.450 | 16.607 | 0.671 | 2.727 | 26 | 963.0 |
++| L | STATE-LP30 | 1.305 | 3.139 | 0.601 | 1.115 | 1 | 853.9 |
++| L | STATE-LP120 | 0.844 | 1.783 | 0.403 | 0.714 | 1 | 899.5 |
++| S | STATE-G2 | 0.234 | 1.009 | 0.085 | 0.133 | 0 | 614.3 |
++| S | STATE-QS | 0.361 | 8.228 | 0.173 | 1.734 | 17 | 557.2 |
++| S | STATE-LP30 | 0.195 | 0.541 | 0.083 | 0.112 | 0 | 585.3 |
++| S | STATE-LP120 | 0.135 | 0.218 | 0.041 | 0.041 | 0 | 625.3 |
++| M | STATE-G2 | 0.594 | 3.029 | 0.566 | 1.877 | 5 | 1088.1 |
++| M | STATE-QS | 0.666 | 12.918 | 0.637 | 3.331 | 7 | 769.8 |
++| M | STATE-LP30 | 0.606 | 2.402 | 0.589 | 2.149 | 5 | 928.0 |
++| M | STATE-LP120 | 0.424 | 1.274 | 0.416 | 1.100 | 5 | 711.9 |
++
++
++
++所有分支上限裁剪时间均为0；原始幅度、负值、下限裁剪及不可用原因秒数全部留存。这里没有把指数标成百分比，也没有PWM换算。实际成功PWM独立坐标，只是原现场参考。
++
++稀疏S02中，G2慢态确实短暂上升，但仍低于本严格段较热的参考，G2/LP输出均被裁为零；QS更直接追随TJ尖峰，塑形后仍有一次上升和尾部。这个例子不能证明短任务没有热负担，也不能把零输出叫作模型控制获胜。
++
++连续S全组138.8秒，仅约36.3%具备状态/需求资格。可用前段G2指数范围约0.040–0.085、LP30约0.040–0.083，二者均较平稳；QS约0.047–0.173并有7次有效反转。由于后段缺资格，只能说已观察到前段累积趋势，尚未验证整组稳定平台。不能续TTL或补线制造完整结果。
++
++M20/M60/M180（实际约32.7/65.0/192.9秒）均在同一M-00内，工作段需求时间覆盖100%。G2工作段输出峰约0.157/0.261/0.566，持续任务越长，原型仍逐渐增加；LP30约0.185/0.334/0.589。LP120更慢、更低，不因曲线更平就自动更好。G2与LP30在多个信号指标相当，模型的附加价值更多体现在固定方程下对后续TJ的解释，而不是平稳外观专属权。
++
++结束后的状态尾部与塑形尾部分开，统一“接近本段参考”为指数≤0.02，未交叉则按300秒窗口/下一题/资格缺口/记录结束截尾：
++
++
++| M工作块结束 | 来源 | 目标首次≤.02（秒） | 输出首次≤.02（秒） | 约300秒目标 | 约300秒输出 |
++| --- | --- | --- | --- | --- | --- |
++| phase-M20 | STATE-G2 | 109.1 | 128.1 | 0.000 | 0.019 |
++| phase-M20 | STATE-LP30 | 110.1 | 136.1 | 0.000 | 0.018 |
++| phase-M20 | STATE-LP120 | 191.2 | 283.3 | 0.000 | 0.014 |
++| phase-M60 | STATE-G2 | 188.8 | 241.8 | 0.000 | 0.018 |
++| phase-M60 | STATE-LP30 | 189.8 | 254.8 | 0.001 | 0.017 |
++| phase-M60 | STATE-LP120 | — | — | 0.027 | 0.040 |
++| phase-M180 | STATE-G2 | — | — | 0.064 | 0.083 |
++| phase-M180 | STATE-LP30 | — | — | 0.055 | 0.072 |
++| phase-M180 | STATE-LP120 | — | — | 0.112 | 0.124 |
++
++
++
++G2的M20目标约109秒接近参考，塑形输出约128秒；M60约189/242秒。两者之差来自死区和限速，不是额外测得的热容。M180在300秒时目标仍约0.064、输出约0.083，尚未回到阈值；LP120尾部更长，不能由长短独自排序。返回阈值后的再越界也记录，首次交叉不冒充永远冷却完成。
++
++S连续组结束时普通状态不可用，因此原任务尾部/返回时间为未知。稍后资格恢复建立的是新段参考；图4明确标出，未接回原任务。S02的零增量更不等于冷机。所有返回描述都只是指数行为，不是风扇退档许可。
++
++**6．真实TJ与即时风险没有被慢滤波隐藏**
++
++快通道读取全部原到达节点的TJ、成功PWM引用、保护/故障/失温/源身份及当前资格，另添加仅从已知有效期安排的到期事件。它不等下一个TJ采样、死区或120秒降量。明确异常/变化或资格不足即普通需求null、清除持有信号；恢复须重新满足原历史规则，不续旧信号年龄。
++
++29个已观测异常/控制变化节点都在同一节点输出普通需求null；这是节点数，不是29个独立故障。辅助资格到期时，若最新真实TJ仍有效，快通道继续保留TJ和引用，普通需求仍不可用。未知状态保留null与原原因，不写成正常；普通高PWM也没有被自动当硬保护。没有新增跨Jetson统一温度阈值或设备写接口。
++
++全accepted需求可用性、每个原观察节点/已知到期的状态和原因，分别在`accepted-demand-availability.jsonl`、`fast-status-and-demand-ledger.jsonl`。普通指数与风险通道是接口分工，既有系统继续负责保护，本研究无控制权。
++
++**7．两rail共同活动的有限诊断**
++
++GPU与VDD_CPU_SOC_MSS保持两个rail，后者不是纯CPU。组合等效驱动q_equiv=b_g·P_GPU+b_c·P_CPU_SOC_MSS，单位°C/s，是G2快状态方程的一项，不是W、总热量或实测热容。5V、gain与其他温区仍留原诊断字段，没有相加当热输入。
++
++
++| 严格当前输入资格 | n | 功率相关r | GPU范围W | VDD_CPU_SOC_MSS范围W | GPU/另一rail范围 |
++| --- | --- | --- | --- | --- | --- |
++| L | 2508 | 0.96306 | 1.984–40.392 | 5.952–18.619 | 0.227–5.368 |
++| S | 1606 | 0.99036 | 1.984–22.590 | 5.952–15.060 | 0.313–1.500 |
++| M | 2503 | 0.99938 | 1.984–26.938 | 5.952–17.827 | 0.294–1.548 |
++
++
++
++完整accepted功率域与严格当前输入资格域分别保存，不用辅助失效点扩大模型预测集合。旧LS、主模型与A24的组合驱动形状在已观测域相关很高（M的主模型对旧LS约0.99999、对A24约0.99990），但绝对强度并不相同；快慢耦合、有效边界及系数存在补偿。温度响应相近不证明参数独立物理贡献唯一。
++
++因此共同推理活动不是数据错误，也不因共线性取消组合预测价值；A24的b_g接近0更不能推出GPU不发热。功率比例域外迁移仍缺证据。本轮不要求CPU-only/GPU-only实测，也不改变现有输入或模型解释。
++
++**8．四类图怎样读**
++
++可先打开`figures/中文图解.html`，每图有PNG与SVG，以下每图三句话。独立纵轴在图内明示，°C、无量纲指数和PWM不硬叠在同一轴。
++
++
++**图1-四种量的对应**
++
++
++
++![中文研究图](/Users/massif/Tianshan-thermal-observer/experiments/thermal_slowstate_v1/figures/图1-四种量的对应.png)
++
++
++
++横轴是每个放大窗口内的秒数，纵轴分别是实测TJ/模型Tf、自由响应Ts、因果Ts的°C，以及另轴的实际成功PWM快照%。
++
++主要看短TJ峰仍然存在、原Tf仍会欠峰，而真正Ts取自第二状态；连续组后半灰区明确断开，M工作块未重置。
++
++不能把Tf欠峰改名成测准散热体，也不能把Ts或另轴PWM解释成新的安全风扇指令。
++
++
++**图2-四慢态与共同温度误差**
++
++
++
++![中文研究图](/Users/massif/Tianshan-thermal-observer/experiments/thermal_slowstate_v1/figures/图2-四慢态与共同温度误差.png)
++
++
++
++上排横轴为各轮经过的秒数、纵轴为四种潜在状态来源的°C；下两排横轴为15/45/90秒时距、纵轴为共同标签上的温度MAE。
++
++主要看同一G2只换Ts后误差怎样改变：G2有增量信息，但M上30秒滤波接近；柱下n和灰区给出覆盖边界。
++
++这些是可观测TJ的误差，不能读成Ts的准确率、独立留出验证、未来输入已知的现场预测，或控制收益。
++
++
++**图3-平稳需求信号**
++
++
++
++![中文研究图](/Users/massif/Tianshan-thermal-observer/experiments/thermal_slowstate_v1/figures/图3-平稳需求信号.png)
++
++
++
++横轴为窗口秒数，上排是未裁剪无量纲增量，中排是同一死区及限速后的需求指数，下排另轴保留现场PWM百分比。
++
++主要看G2与30秒滤波都能减少短峰追随，持续M负载仍有升量；同时检查原始幅度、低于已热参考的负值和灰区，不把平直零线叫胜利。
++
++更平稳不等于真实更安静或更安全，指数不能直接代入现有TJ—PWM曲线；本轮没有执行任何新风扇动作。
++
++
++**图4-任务结束后的三种尾部**
++
++
++
++![中文研究图](/Users/massif/Tianshan-thermal-observer/experiments/thermal_slowstate_v1/figures/图4-任务结束后的三种尾部.png)
++
++
++
++横轴是任务结束附近的秒数，竖虚线为客户端完成；三排分别显示TJ/Tf、相对本段参考的状态°C、无量纲状态目标与塑形输出。
++
++主要看TJ可以先降而慢态仍高，以及状态目标和塑形输出之间额外尾部；连续组资格不足时保持灰区，恢复后新参考不接成原任务尾部或返回时间。
++
++客户端结束不等于GPU内核结束，尾部更长不自动更好；这些图不能证明降低风量后的温度、安全或噪音效果。
++
++
++
++
++**9．验证、复跑和唯一下一步**
++
++新增研究测试12项通过，覆盖字段分离、真实两维传播与SciPy矩阵指数对照、过去前缀因果性（改未来TJ/输入/请求元数据不改当前状态/需求）、不规则dt与左持有、断段/恢复/预热、M块不重置、同条件消融、独立时距标签、幅度/饱和/累计反转、即时风险失效与有效TJ保留、尾部时段不越界及冻结状态敏感性。合成输入只验算法，没有当RM-01实测。
++
++独立回读重算了276个逐轮共同集合指标单元，核对16290个因果状态的引用和过去截止、原41个直接来源成员及历史身份附注；1797个原文件SHA全部未变。四张图均做了视觉检查；新段参考和灰色资格缺口明确标注。没有重跑全产品/固件回归，未对无证据范围做全仓审查。
++
++新程序早期失败保留日志：无温度答案仍试图统计误差、S阶段没有macro字段的元数据兼容；另修正已知辅助到期仍保留快通道TJ，以及大UTC浮点相加引起的微秒级尾部时长越界。最后采用本轮单调时钟作区间裁切。死区边界单测也改用无相减舍入的精确构造。没有按结果扩大模型搜索、调整旧预测或塑形参数。
++
++
++一次完整CPU计算重放约15.7秒，进程峰值RSS约746.2MiB，NumPy 2.2.6，BLAS相关线程固定为1，CUDA使用为否。计算/绘图实际环境与每阶段用时见`results/resources.json`、`figures/plot-environment.json`和`replay-logs/receipt.json`。一条`rerun.py --input-dir ...`入口自动使用本机已有运行时，重建全部派生物、限定测试、四图和回读；不联网安装依赖。
++
++
++另将候选证据ZIP解压到新目录，通过同一入口从原ZIP重建、测试和回读，23个科学结果文件全部逐字节相同，用时42.6秒。`independent-replay-proof.json`记录被重跑候选ZIP的SHA、逐文件对照、环境和阶段回执；最终打包加入这份回执及交付说明，未改变上述科学结果。最终ZIP本身另核CRC与成员SHA。
++
++
++
++
++交付证据含新增代码及code.patch、前置冻结、三个原model.json、来源/私有分享SHA区别、全部状态/逐点消融/需求/快状态、完整分层指标、四类图及HTML、有限测试、失败与成功日志、资源与独立入口。原两个大ZIP仅索引引用。成果成员SHA与ZIP外层SHA单独封存；独立重跑应在新解压目录进行，以保留本次封存结果。
++
++唯一下一步仍是第一屏所述的一次被动同步复核：保持原AUTO、曲线、gain、保护和采样/TTL，用位置明确且记录精度/安装方式的独立结构温度参照，同时保留TJ、两rail、成功PWM和完整异常/恢复引用，覆盖完整连续短任务与随后回落。可证伪的是“慢态增量在多种任务节奏下比LP30更能解释该结构温升/回落”；若只有简单滤波同等或更好，不因模型名称保留物理解释。测点不等于整个TTP真值，需另行登记位置和边界。本轮不执行、不要求立刻购置仪器；现场记录不全或既有保护异常时停止该记录并由原系统处理，不调整风扇以追求漂亮结果。
++
++当前工作已停止于离线交付，等待独立复审。未来输入策略保持暂缓状态，短任务提前退档原型未实施。
++
+diff --git a/experiments/thermal_slowstate_v1/check_independent_replay.py b/experiments/thermal_slowstate_v1/check_independent_replay.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_slowstate_v1/check_independent_replay.py
+@@ -0,0 +1,47 @@
++"""Extract an evidence ZIP to a fresh local folder and compare all scientific outputs."""
++from pathlib import Path
++import argparse
++import json
++import os
++import subprocess
++import sys
++import tempfile
++import time
++import zipfile
++from prepare import ROOT,digest,read,write
++
++
++def main():
++    ap=argparse.ArgumentParser()
++    ap.add_argument('--archive',type=Path,required=True)
++    ap.add_argument('--input-dir',type=Path,required=True)
++    args=ap.parse_args()
++    directory=Path(tempfile.mkdtemp(prefix='tto-slowstate-independent-',dir='/private/tmp'))
++    with zipfile.ZipFile(args.archive) as z:
++        assert z.testzip() is None
++        for n in z.namelist():assert not n.startswith('/') and '..' not in Path(n).parts
++        z.extractall(directory)
++    started=time.perf_counter()
++    cmd=[sys.executable,str(directory/'rerun.py'),'--input-dir',str(args.input_dir.absolute())]
++    with (directory/'independent-entry.log').open('w') as f:
++        completed=subprocess.run(cmd,cwd=directory,stdout=f,stderr=subprocess.STDOUT)
++    assert completed.returncode==0,(directory/'independent-entry.log').read_text()
++    compared=[]
++    for path in sorted((ROOT/'results').iterdir()):
++        if path.name=='resources.json' or not path.is_file():continue
++        baseline=digest(path.read_bytes());replayed=digest((directory/'results'/path.name).read_bytes())
++        assert baseline==replayed,(path.name,baseline,replayed)
++        compared.append(dict(file='results/'+path.name,sha256=baseline,identical=True))
++    proof=dict(status='pass',tested_archive_sha256=digest(args.archive.read_bytes()),
++        extracted_to=str(directory),archive_CRC='pass',entry_returncode=completed.returncode,
++        wall_seconds=time.perf_counter()-started,scientific_output_files=compared,
++        entry_receipt=read(directory/'replay-logs/receipt.json'),
++        extracted_readback=read(directory/'readback-checks.json'),
++        note='Resources, timestamps and report absolute local image links are environment-dependent; scientific files match byte for byte.',
++        original_dynamic_refits=0,device_or_network_actions=False)
++    write(ROOT/'independent-replay-proof.json',proof)
++    print(json.dumps(dict(status='pass',directory=str(directory),identical_scientific_files=len(compared),
++                         wall_seconds=proof['wall_seconds']),ensure_ascii=False))
++
++
++if __name__=='__main__':main()
+diff --git a/experiments/thermal_slowstate_v1/core.py b/experiments/thermal_slowstate_v1/core.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_slowstate_v1/core.py
+@@ -0,0 +1,93 @@
++"""Causal state substitutions and dimensionless offline signal; no hardware IO."""
++import math
++import numpy as np
++
++BRANCHES = ['STATE-G2', 'STATE-QS', 'STATE-LP30', 'STATE-LP120']
++
++
++def qs(TJ, E, duty_fraction, p):
++    _, c, d0, d1, _, _ = p
++    d = d0 + d1 * duty_fraction
++    return (c * TJ + d * E) / (c + d)
++
++
++def lp_step(previous, previous_input, dt, tau):
++    assert dt >= 0 and tau > 0
++    return previous_input + (previous - previous_input) * math.exp(-dt / tau)
++
++
++def filters_at_origins(segment, E, p):
++    """Only prefix operations. E must already be known before publishing an origin."""
++    rows = segment['rows']
++    by_time = {r['mono_s']: r for r in rows}
++    timeline = segment['timeline']
++    current_TJ = rows[0]['values']['tj']
++    previous_t = timeline[0]['t']
++    previous_q = qs(current_TJ, E, timeline[0]['inputs'][2], p)
++    lp30 = lp120 = previous_q
++    out = {}
++    for node in timeline:
++        t = node['t']
++        dt = t - previous_t
++        lp30 = lp_step(lp30, previous_q, dt, 30)
++        lp120 = lp_step(lp120, previous_q, dt, 120)
++        if t in by_time:
++            row = by_time[t]
++            current_TJ = row['values']['tj']
++        current_q = qs(current_TJ, E, node['inputs'][2], p)
++        if t in by_time:
++            out[by_time[t]['ref']] = {'STATE-QS': current_q, 'STATE-LP30': lp30, 'STATE-LP120': lp120}
++        previous_t, previous_q = t, current_q
++    assert len(out) == len(rows)
++    return out
++
++
++def shape(state, reference, previous, dt):
++    """Fixed demonstration scale, NOT a physical cooling or actuator command."""
++    raw = (state - reference) / 10.0
++    target = float(np.clip(raw, 0, 1))
++    deadband = abs(target - previous) <= .02
++    change = 0.0 if deadband else float(np.clip(target - previous, -dt / 120, dt / 30))
++    output = previous + change
++    return dict(state=state, reference=reference, z_raw=raw, z_target=target, z_output=output,
++                deadband=deadband, change=change, dt_s=dt,
++                lower_clipped=raw < 0, upper_clipped=raw > 1,
++                rise_limited=not deadband and target - previous > dt / 30,
++                fall_limited=not deadband and previous - target > dt / 120)
++
++
++def reversal_count(values, threshold=.02):
++    if len(values) < 2:
++        return 0
++    low = high = float(values[0])
++    direction = count = 0
++    for v in values[1:]:
++        if direction == 0:
++            if v >= low + threshold:
++                direction, high = 1, v
++            elif v <= high - threshold:
++                direction, low = -1, v
++            else:
++                low, high = min(low, v), max(high, v)
++        elif direction == 1:
++            if v <= high - threshold:
++                count += 1
++                direction, low = -1, v
++            else:
++                high = max(high, v)
++        else:
++            if v >= low + threshold:
++                count += 1
++                direction, high = 1, v
++            else:
++                low = min(low, v)
++    return count
++
++
++def error_metrics(errors):
++    e = np.array(errors, dtype=float)
++    if len(e) == 0:
++        return dict(n=0, MAE=None, bias=None, P95_abs=None, max_under=None, max_over=None)
++    return dict(n=len(e), MAE=float(np.mean(abs(e))), bias=float(np.mean(e)),
++                P95_abs=float(np.percentile(abs(e), 95)), max_under=float(max(0, -e.min())),
++                max_over=float(max(0, e.max())))
+diff --git a/experiments/thermal_slowstate_v1/make_report.py b/experiments/thermal_slowstate_v1/make_report.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_slowstate_v1/make_report.py
+@@ -0,0 +1,259 @@
++"""Readable Chinese report from the sealed offline computations; no model operations."""
++from pathlib import Path
++from collections import Counter
++import json
++from prepare import read,jsonlines,digest
++
++ROOT=Path(__file__).absolute().parent
++TITLE='TTO-快慢热状态与平稳散热需求-研究报告.md'
++
++
++def f(value,d=3):return '—' if value is None else f'{value:.{d}f}'
++
++
++def table(headers,rows):
++    return '\n'.join(['| '+' | '.join(headers)+' |','| '+' | '.join(['---']*len(headers))+' |']+
++                     ['| '+' | '.join(map(str,row))+' |' for row in rows])
++
++
++def main():
++    result=ROOT/'results'
++    metrics=read(result/'temperature-metrics.json')
++    def cell(kind,run,h=45,scale='run',stratum='confirmed_normal'):
++        return next(x for x in metrics if x['kind']==kind and x['group']==run and x['h']==h and x['scale']==scale and x['stratum']==stratum)
++    specs=read(ROOT/'slowstate-spec.json')
++    data=read(ROOT/'sources/registered/data.json')
++    demand=read(result/'demand-signal-metrics.json')
++    signals={(r['run'],r['group']):r for r in demand}
++    tails={r['event']['run']+'/'+r['event']['id']:r for r in read(result/'post-task-tail-metrics.json')}
++    jumps=read(result/'state-window-diagnostics.json')
++    sensitivity=read(result/'frozen-model-state-sensitivity.json')
++    coverage=read(result/'coverage.json')
++    resources=read(result/'resources.json')
++    points=jsonlines(result/'four-branch-predictions.jsonl')
++    cals={m:read(ROOT/f'sources/evaluation/{m}/calibrations.json')['G2'] for m in ['primary','old_LS','A24']}
++    branches=['STATE-G2','STATE-QS','STATE-LP30','STATE-LP120']
++    counts=Counter(r['run'] for r in data['accepted'])
++    figindex=read(ROOT/'figures/figure-index.json')
++    text=[]
++    text.append('''# TTO：快慢热状态与平稳散热需求——研究报告
++
++**执行合同：TTO-SLOWSTATE-v1.0｜2026-10-14｜已完成实际离线计算，等待独立复审。**
++
++G2慢态有增量信息，但简单滤波已能解释一部分平稳行为。45秒、真实未来功率/PWM已知的共同集合上，G2的TJ误差在L/S/M为0.315/0.409/0.191°C，30秒因果滤波为0.444/0.502/0.195°C。L/S上G2更好；M上两者接近，不能宣布模型全面替代简单滤波。
++
++短脉冲不必复制为普通需求的一次明显升降；持续M负载下，G2需求也不是永远为零，会逐步升量并保留回落尾部。S连续短问答只有约36.3%的整组时间具备原状态资格，尚不能证明完整平台；已热参考还会令一些稀疏短任务的增量被裁成零，零值不能解释成没有散热需要。
++
++本轮真正导出了Tf与Ts，没有把旧的欠峰Tf改名。原TJ短峰误差仍存在；HOLD也仍不知道下一次任务，M负载段45秒预测MAE约4.13°C。潜在Ts尚无体温真值，不能据此给出安全风扇档位、噪音收益或现场放行结论。
++
++**唯一推荐下一步：另行预登记一次保持原AUTO/曲线/gain/保护的被动同步复核，加入一个位置明确的独立散热结构温度参照，覆盖完整连续短任务与随后的回落。** 目的同时检验慢态增量是否对应结构温升、补齐平台证据，而非继续挑更平滑的曲线。本轮不执行，也不要求用户现在追加实测或购买仪器。
++
++---
++
++**1．本轮做了什么，哪些仍未发生**
++
++模型动态参数重新拟合次数为0。主模型固定第二轮D-LSM-G2（Efree）；旧LS-fit G2和D-LSM-G2-A24仅作冻结敏感性。所有模型均`deployable=false`，L/S/M均为已看过的开发资料；没有新增模型族、参数搜索、未来请求预测器或在线参数更新。
++
++| 项目 | 本轮状态 |
++|---|---|
++| 模型/输入字段语义 | 已冻结；Tf仍是TJ输出，Ts仍是未测慢态 |
++| 两维A-long与因果60秒状态 | 已实际导出并逐点核对 |
++| G2/QS/LP30/LP120对照 | 已完成15/45/90秒A-roll和B-HOLD |
++| 普通需求及快风险接口 | 已完成离线原型、即时失效与恢复核对 |
++| 物理慢态验证 | 未完成；没有结构温度真值或实测热容 |
++| 真正未来温度预测 | 固定HOLD诊断已完成；未来负载切换问题仍未解决，输入策略研究暂缓一轮而非取消 |
++| 现场控制与噪音收益 | 未发生；没有设备指令、部署或安全放行 |
++
++本轮只新增`experiments/thermal_slowstate_v1/`。未改生产TTO、旧tests、采集器、runner、安装器、依赖锁、版本、原始日志、旧模型/成绩/spec、设备配置、风扇、WS或TianshanOS；未联网设备、发推理请求、运行现场doctor/collect/shadow、新负载、CUDA、服务重启、提交、推送或PR。原工作树保留。
++''')
++    text.append('**2．来源、冻结与覆盖**\n')
++    text.append(f"规则冻结时间为`{specs['implementation_freeze']['frozen_at']}`，在新成绩产生前写入。冻结spec SHA256：`{digest((ROOT/'slowstate-spec.json').read_bytes())}`。模型、原归档和新派生物各自有SHA，没有沿用新结果的旧身份。\n")
++    text.append(table(['记录','完整accepted数','原严格段数','具备60秒状态的起点','普通需求时间覆盖'],[
++        [r,counts[r],len([s for s in data['segments'] if s['run']==r]),
++         next(x for x in coverage if x['run']==r)['legal_causal_state_origins'],
++         f"{signals[(r,'whole-run')]['branches']['STATE-G2']['available_fraction']:.1%}"] for r in ['L','S','M']]))
++    text.append('''
++
++共6643个accepted起点，沿用约1秒序列、原始引用、质量隔离、源身份、功率有效性、成功PWM与原TTL。58个严格段中13个足够长，主模型有5430个合法因果起点。请求与工作块没有被当作独立热过程，三轮才是三个连续热过程；这里的n是相关时序样本数，不是独立实验数。
++
++两个大ZIP均已核对SHA和CRC：`r2-results-original.zip`为`809e90eef398daf34e9cabfd5d4427d35275fc8185541d61810f67943f35aecb`，`r2-prerequisites-original.zip`为`7f52d7cfad66564ff07178bfe14a5a46da83390b0855c28f2b65cad8910c3614`。交付只索引原ZIP，不递归打包它们。`source-inventory.json`固定本轮直接使用的成员；`historical-provenance-index.json`额外索引同一已冻结归档内的历史身份附注，不回写第一阶段封存。
++
++私有与分享身份分开保留在`sources/provenance/r2-source-identity-supplement.json`。例如S的私有manifest SHA为`51cd77db0f8748c3f6fb002a964a170208ddc783177f711a271d7c7f10402bfa`，分享manifest为`2c5c6c3593b70dab6b3bdf2c1ea5425c49dc08d556235ceb2e211221720e8c3f`；其observations仍同为`121341bbccef3bb5bd34e2f5b327ebb4eb4f342d745cc26004d9c6061409c707`。这些是保留的历史身份记录，不宣称本轮重新读取了另一份私有日志。
++
++M用户确认24°C原附注逐字保留，只绑定`637f114b-563b-4c35-8062-a7588a89ce1c`。没有补造L/S室温，没有改ambient_snapshot、manifest、原SHA或原E。现场请求准入override未被用来放宽模型资格。
++''')
++    text.append(table(['冻结模型','本轮角色','原model.json SHA256'],[[m,'主对照' if m=='primary' else '诊断，不参与择优',sha] for m,sha in specs['model_sha256'].items()]))
++    text.append('''
++
++**3．真正的Tf/Ts、初态和缺口**
++
++每个模型都从原因果前缀的Ts_initial和E出发，用记录中两rail及成功PWM进行两维传播。A-long在前缀后不再吸收TJ反馈；其5430个Tf与原封存A-long逐点相同，最大差0.0°C（明示容差1e-10°C），Ts取同次传播的第二列。三模型两类轨迹分别完整保存，不拼线择优。
++
++因果模式直接读取原states.jsonl；每点只用过去60秒。第一维Tf被锚定到当前TJ，不能把这个零当前误差计成预测能力。第二维Ts、未锚定的窗口末Tf、窗口首末引用、E、有效截止、当前输入和模型SHA都保留。每个预测起点的第二状态才在四分支间替换。
++''')
++    text.append(table(['前缀得到的有效E（°C）','L','S','M'],[[m]+[f(next(v['E'] for k,v in cals[m].items() if k.startswith(r)),5) for r in ['L','S','M']] for m in ['primary','old_LS','A24']]))
++    text.append('''
++
++E在每轮首次合法前缀完成后固定，后续真实缺口仅重建慢初态。主模型M的E约35.164°C仍是等效边界，用户室温24°C没有被强写进去；A24则沿用既有M=24诊断。L/S的A24有效E也不代表测得室温。
++
++60秒不是热平衡：以M-00的固定方程和真实输入为例，初始Ts偏1°C，在60秒末仍令Tf偏约0.674°C、Ts偏约0.641°C；到300秒仍分别约0.177/0.169°C。这里只计算固定模型的单位线性敏感度，没有新拟合。初态/边界与短前缀的关系保存在`prefix-and-unit-initialization-sensitivity.json`。
++''')
++    text.append(table(['主模型记录','滑窗重估修正绝对值中位数（°C）','P95（°C）','最大（°C）','初态贴边次数'],[
++        [r]+[f(next(v for v in jumps if v['model']=='primary' and v['run']==r)['correction'][k],4) for k in ['median','p95','max']]+[
++        next(v for v in jumps if v['model']=='primary' and v['run']==r)['bounds_hit_n']] for r in ['L','S','M']]))
++    text.append('''
++
++这里的“修正”是当前滑窗Ts减去“上一合法状态沿已经到达的实际输入传播到当前”的Ts，用于区分估计器重估与真实输入传播。S02窗中能看到窗口移出短峰后的下探和回升；全部极值、速率、窗口首引用和初态变化均留存，没有另设跳变门槛剔除难点。绝对曲线并不等同于物理散热结构温度。
++
++M20/M60/M180三个开始边界前后均属M-00，过去窗口跨过边界，绝不新建慢初态。M只在原有真实失温/资格缺口处分为M-00、M-01。所有源缺口断线，恢复先满足原历史资格；新段增量参考是新参考，不能接成上一任务已冷却的证据。
++''')
++    text.append(table(['因果Ts主模型相对冻结参照','绝对差MAE（°C）','固定首前缀增量差MAE（°C）'],[
++        [x['run']+' / '+x['other'],f(x['absolute_difference']['MAE']),f(x['incremental_difference']['MAE'])]
++        for x in sensitivity if x['mode']=='causal60']))
++    text.append('''
++
++状态敏感性只用每轮各模型的第一个合法起点作一次固定参考，没有每段自由平移或全段归一化。M上主模型与A24的绝对Ts差MAE约3.688°C，而增量差约0.355°C；这支持讨论部分形状信息，同时暴露物理标定和边界解释的不确定性。不能把增量较近说成绝对温度测准。
++
++**4．四种慢态的同条件温度对照**
++
++主模型θ、每轮前缀E、当前实测TJ、同一输入情景和温度答案固定。STATE-G2用原过去60秒Ts；STATE-QS是当前TJ和PWM下的慢方程零导数代数状态，不含历史；LP30/LP120只对这个代数状态作因果指数低通。低通使用实际不规则dt、上一个输入左持有；首个合法起点允许因果回放已发生前缀，前60秒不对外宣称E已知或滤波稳态。LP保留整段过去，G2仍用原60秒窗，记忆差异未隐藏。
++
++A-roll允许真实未来输入，不读未来TJ反馈；B-HOLD只保持当前输入，不知道后续请求或实际结束。原RELAX30、B0、B1、紧凑Ridge的系数/缩放/成绩均保留为旧参考，不重训也不逐点择策略。新STATE-G2的14339个A-roll、16290个HOLD派生值与原预测数值完全一致；其中无合法温度答案的预测仍保留，但不算误差。
++
++下面是未来控制状态可确认正常层的共同标签MAE（°C）。每行四分支同集合；A与B仍是不同信息合同，不能用A的好成绩宣称B或风扇成功。
++''')
++    rows=[]
++    for kind in ['A_roll','B_HOLD']:
++        for run in ['L','S','M']:
++            for h in [15,45,90]:
++                c=cell(kind,run,h)
++                rows.append([kind,run,h,c['n']]+[f(c['metrics'][b]['MAE']) for b in branches])
++    text.append(table(['类别','轮次','时距秒','共同n','G2慢态','无记忆QS','LP30','LP120'],rows))
++    text.append('''
++
++G2在45秒的三轮平均误差都优于这三种固定对照，但并非每个时距/分层都胜出：L的90秒A-roll中LP120优于G2；M的45秒回落层LP30约0.177°C，G2约0.179°C。简单滤波并非无效，M上整体差距只有约0.004°C，没有独立重复实验或置信区间，不能称显著优势。
++
++这个增量价值指本轮固定比较中的状态估计信息：G2初始化器结合过去TJ、功率与PWM，QS/LP则是规定的代数状态/简单滤波；不能把差别唯一归因为某个已测物理热容。它是下一步核对的依据，不是物理命名的许可证。
++''')
++    text.append(table(['45秒主模型','轮次','偏差（°C）','P95绝对误差（°C）','最大欠预测（°C）'],[
++        [kind,run]+[f(cell(kind,run)['metrics']['STATE-G2'][key]) for key in ['bias','P95_abs','max_under']]
++        for kind in ['A_roll','B_HOLD'] for run in ['L','S','M']]))
++    text.append('''
++
++仍需正视动态失败。45秒B-HOLD在M工作起点层MAE约4.130°C，在L回落起点层约3.240°C；这主要暴露HOLD对未来负载/PWM切换的假设，不能仅换慢态就解决。原A-long在S02/S03/D01真实TJ峰时仍分别欠2.339/1.934/2.089°C。它们仍是Tf对TJ的错误，没有转名为“本来是在预测散热体”。
++
++对所有未来控制上下文均保留的45秒B共同集合，基线情况如下；S上B0与R_IO仍优于G2，不能删待机或改集合制造胜利。
++''')
++    refrows=[]
++    for run in ['L','S','M']:
++        c=cell('B_HOLD',run,stratum='all_contexts')
++        refrows.append([run,c['n'],f(c['metrics']['STATE-G2']['MAE'])]+[f(c['references'][b]['MAE']) for b in ['B0','B1','R_TJ','R_IO','G2-RELAX30']])
++    text.append(table(['记录','n','G2-HOLD','B0保持TJ','B1趋势','R_TJ','R_IO','原RELAX30'],refrows))
++    text.append('''
++
++每个15/45/90秒独立判标签资格，有45秒答案而无90秒答案时保留45秒。A需完整输入路径；B遇未来辅助缺口仍保留可用温度答案，并分别报告正常、辅助缺口、已观测异常/变化、未分类缺口及旧严格集合。未知没有被记为正常。每个指标单元保存起点/时距/答案引用集合SHA，覆盖另表：
++''')
++    text.append(table(['记录','时距秒','温度答案总数','A四分支可评分','B四分支可评分'],[
++        [c['run'],c['h'],c['qualified_temperature_labels'],c['A_roll_scored'],c['B_HOLD_scored']] for c in coverage]))
++    text.append('''
++
++逐轮/工作/回落/背景/阶段/原事件窗的MAE、偏差、P95和最大欠预测完整见`temperature-metrics.json`及`event-temperature-metrics.json`，原B参考在逐点文件中独立字段保留。没有混合不同覆盖的分数排名，也没有将合并开发成绩称作最终泛化。
++
++**5．普通需求：哪些平稳来自状态，哪些来自固定后处理**
++
++每个严格段第一个合法因果状态固定各分支s_ref；原始指数为(s−s_ref)/10，保留负值和超界，再裁至[0,1]。相对上一输出差不超过0.02则保持，否则每秒升量最多1/30、降量最多1/120。每个分支完全相同，无网格搜索；10°C及死区/速率是本轮展示塑形值，绝不是物理热常数或固件值。
++
++下表均为相同资格期间，跨不可用缺口不累加变差或方向反转。有效反转按从极值累计反向移动≥0.02计数，防止下降每步小于0.02就被漏算；同时保留幅度，不能把始终零判作更好。
++''')
++    srows=[]
++    for run in ['L','S','M']:
++        for b in branches:
++            v=signals[(run,'whole-run')]['branches'][b]
++            srows.append([run,b,f(v['z_raw']['amplitude']),f(v['z_raw']['total_variation']),
++                f(v['z_output']['amplitude']),f(v['z_output']['total_variation']),v['z_output']['significant_reversals'],f(v['lower_clipped_s'],1)])
++    text.append(table(['记录','状态来源','原始幅度','原始总变差','输出幅度','输出总变差','输出有效反转','低于下限秒'],srows))
++    text.append('''
++
++所有分支上限裁剪时间均为0；原始幅度、负值、下限裁剪及不可用原因秒数全部留存。这里没有把指数标成百分比，也没有PWM换算。实际成功PWM独立坐标，只是原现场参考。
++
++稀疏S02中，G2慢态确实短暂上升，但仍低于本严格段较热的参考，G2/LP输出均被裁为零；QS更直接追随TJ尖峰，塑形后仍有一次上升和尾部。这个例子不能证明短任务没有热负担，也不能把零输出叫作模型控制获胜。
++
++连续S全组138.8秒，仅约36.3%具备状态/需求资格。可用前段G2指数范围约0.040–0.085、LP30约0.040–0.083，二者均较平稳；QS约0.047–0.173并有7次有效反转。由于后段缺资格，只能说已观察到前段累积趋势，尚未验证整组稳定平台。不能续TTL或补线制造完整结果。
++
++M20/M60/M180（实际约32.7/65.0/192.9秒）均在同一M-00内，工作段需求时间覆盖100%。G2工作段输出峰约0.157/0.261/0.566，持续任务越长，原型仍逐渐增加；LP30约0.185/0.334/0.589。LP120更慢、更低，不因曲线更平就自动更好。G2与LP30在多个信号指标相当，模型的附加价值更多体现在固定方程下对后续TJ的解释，而不是平稳外观专属权。
++
++结束后的状态尾部与塑形尾部分开，统一“接近本段参考”为指数≤0.02，未交叉则按300秒窗口/下一题/资格缺口/记录结束截尾：
++''')
++    tailrows=[]
++    for ev in ['phase-M20','phase-M60','phase-M180']:
++        row=tails['M/'+ev]
++        for b in ['STATE-G2','STATE-LP30','STATE-LP120']:
++            v=row['branches'][b]
++            tailrows.append([ev,b,f(v['z_target']['first_return_s'],1),f(v['z_output']['first_return_s'],1),
++                f(v['z_target']['final_value']),f(v['z_output']['final_value'])])
++    text.append(table(['M工作块结束','来源','目标首次≤.02（秒）','输出首次≤.02（秒）','约300秒目标','约300秒输出'],tailrows))
++    text.append('''
++
++G2的M20目标约109秒接近参考，塑形输出约128秒；M60约189/242秒。两者之差来自死区和限速，不是额外测得的热容。M180在300秒时目标仍约0.064、输出约0.083，尚未回到阈值；LP120尾部更长，不能由长短独自排序。返回阈值后的再越界也记录，首次交叉不冒充永远冷却完成。
++
++S连续组结束时普通状态不可用，因此原任务尾部/返回时间为未知。稍后资格恢复建立的是新段参考；图4明确标出，未接回原任务。S02的零增量更不等于冷机。所有返回描述都只是指数行为，不是风扇退档许可。
++
++**6．真实TJ与即时风险没有被慢滤波隐藏**
++
++快通道读取全部原到达节点的TJ、成功PWM引用、保护/故障/失温/源身份及当前资格，另添加仅从已知有效期安排的到期事件。它不等下一个TJ采样、死区或120秒降量。明确异常/变化或资格不足即普通需求null、清除持有信号；恢复须重新满足原历史规则，不续旧信号年龄。
++
++29个已观测异常/控制变化节点都在同一节点输出普通需求null；这是节点数，不是29个独立故障。辅助资格到期时，若最新真实TJ仍有效，快通道继续保留TJ和引用，普通需求仍不可用。未知状态保留null与原原因，不写成正常；普通高PWM也没有被自动当硬保护。没有新增跨Jetson统一温度阈值或设备写接口。
++
++全accepted需求可用性、每个原观察节点/已知到期的状态和原因，分别在`accepted-demand-availability.jsonl`、`fast-status-and-demand-ledger.jsonl`。普通指数与风险通道是接口分工，既有系统继续负责保护，本研究无控制权。
++
++**7．两rail共同活动的有限诊断**
++
++GPU与VDD_CPU_SOC_MSS保持两个rail，后者不是纯CPU。组合等效驱动q_equiv=b_g·P_GPU+b_c·P_CPU_SOC_MSS，单位°C/s，是G2快状态方程的一项，不是W、总热量或实测热容。5V、gain与其他温区仍留原诊断字段，没有相加当热输入。
++''')
++    q=read(result/'combined-drive-diagnostics.json')
++    text.append(table(['严格当前输入资格','n','功率相关r','GPU范围W','VDD_CPU_SOC_MSS范围W','GPU/另一rail范围'],[
++        [x['run'],x['strict_current_input_population']['n'],f(x['strict_current_input_population']['power_correlation'],5),
++         f(x['strict_current_input_population']['VDD_GPU_W']['min'])+'–'+f(x['strict_current_input_population']['VDD_GPU_W']['max']),
++         f(x['strict_current_input_population']['VDD_CPU_SOC_MSS_W']['min'])+'–'+f(x['strict_current_input_population']['VDD_CPU_SOC_MSS_W']['max']),
++         f(x['strict_current_input_population']['ratio_gpu_to_cpu_soc_mss']['min'])+'–'+f(x['strict_current_input_population']['ratio_gpu_to_cpu_soc_mss']['max'])] for x in q]))
++    text.append('''
++
++完整accepted功率域与严格当前输入资格域分别保存，不用辅助失效点扩大模型预测集合。旧LS、主模型与A24的组合驱动形状在已观测域相关很高（M的主模型对旧LS约0.99999、对A24约0.99990），但绝对强度并不相同；快慢耦合、有效边界及系数存在补偿。温度响应相近不证明参数独立物理贡献唯一。
++
++因此共同推理活动不是数据错误，也不因共线性取消组合预测价值；A24的b_g接近0更不能推出GPU不发热。功率比例域外迁移仍缺证据。本轮不要求CPU-only/GPU-only实测，也不改变现有输入或模型解释。
++
++**8．四类图怎样读**
++
++可先打开`figures/中文图解.html`，每图有PNG与SVG，以下每图三句话。独立纵轴在图内明示，°C、无量纲指数和PWM不硬叠在同一轴。
++''')
++    for figure in figindex:
++        text.append('**'+figure['name']+'**\n\n')
++        text.append('![中文研究图]('+str(ROOT/'figures'/figure['png'])+')\n\n')
++        text.append('\n\n'.join(figure['caption'])+'\n')
++    text.append('''
++
++**9．验证、复跑和唯一下一步**
++
++新增研究测试12项通过，覆盖字段分离、真实两维传播与SciPy矩阵指数对照、过去前缀因果性（改未来TJ/输入/请求元数据不改当前状态/需求）、不规则dt与左持有、断段/恢复/预热、M块不重置、同条件消融、独立时距标签、幅度/饱和/累计反转、即时风险失效与有效TJ保留、尾部时段不越界及冻结状态敏感性。合成输入只验算法，没有当RM-01实测。
++
++独立回读重算了276个逐轮共同集合指标单元，核对16290个因果状态的引用和过去截止、原41个直接来源成员及历史身份附注；1797个原文件SHA全部未变。四张图均做了视觉检查；新段参考和灰色资格缺口明确标注。没有重跑全产品/固件回归，未对无证据范围做全仓审查。
++
++新程序早期失败保留日志：无温度答案仍试图统计误差、S阶段没有macro字段的元数据兼容；另修正已知辅助到期仍保留快通道TJ，以及大UTC浮点相加引起的微秒级尾部时长越界。最后采用本轮单调时钟作区间裁切。死区边界单测也改用无相减舍入的精确构造。没有按结果扩大模型搜索、调整旧预测或塑形参数。
++''')
++    text.append(f"一次完整CPU计算重放约{resources['wall_seconds']:.1f}秒，进程峰值RSS约{resources['maxrss_bytes_macos']/1024**2:.1f}MiB，NumPy {resources['numpy']}，BLAS相关线程固定为1，CUDA使用为否。计算/绘图实际环境与每阶段用时见`results/resources.json`、`figures/plot-environment.json`和`replay-logs/receipt.json`。一条`rerun.py --input-dir ...`入口自动使用本机已有运行时，重建全部派生物、限定测试、四图和回读；不联网安装依赖。\n")
++    if (ROOT/'independent-replay-proof.json').exists():
++        proof=read(ROOT/'independent-replay-proof.json')
++        text.append(f"另将候选证据ZIP解压到新目录，通过同一入口从原ZIP重建、测试和回读，{len(proof['scientific_output_files'])}个科学结果文件全部逐字节相同，用时{proof['wall_seconds']:.1f}秒。`independent-replay-proof.json`记录被重跑候选ZIP的SHA、逐文件对照、环境和阶段回执；最终打包加入这份回执及交付说明，未改变上述科学结果。最终ZIP本身另核CRC与成员SHA。\n")
++    text.append('''
++
++交付证据含新增代码及code.patch、前置冻结、三个原model.json、来源/私有分享SHA区别、全部状态/逐点消融/需求/快状态、完整分层指标、四类图及HTML、有限测试、失败与成功日志、资源与独立入口。原两个大ZIP仅索引引用。成果成员SHA与ZIP外层SHA单独封存；独立重跑应在新解压目录进行，以保留本次封存结果。
++
++唯一下一步仍是第一屏所述的一次被动同步复核：保持原AUTO、曲线、gain、保护和采样/TTL，用位置明确且记录精度/安装方式的独立结构温度参照，同时保留TJ、两rail、成功PWM和完整异常/恢复引用，覆盖完整连续短任务与随后回落。可证伪的是“慢态增量在多种任务节奏下比LP30更能解释该结构温升/回落”；若只有简单滤波同等或更好，不因模型名称保留物理解释。测点不等于整个TTP真值，需另行登记位置和边界。本轮不执行、不要求立刻购置仪器；现场记录不全或既有保护异常时停止该记录并由原系统处理，不调整风扇以追求漂亮结果。
++
++当前工作已停止于离线交付，等待独立复审。未来输入策略保持暂缓状态，短任务提前退档原型未实施。
++''')
++    (ROOT/TITLE).write_text('\n\n'.join(text)+'\n')
++    print(TITLE)
++
++
++if __name__=='__main__':main()
+diff --git a/experiments/thermal_slowstate_v1/package_evidence.py b/experiments/thermal_slowstate_v1/package_evidence.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_slowstate_v1/package_evidence.py
+@@ -0,0 +1,55 @@
++"""New research-only patch and evidence archive. No Git mutations or recursive input ZIPs."""
++from pathlib import Path
++import difflib
++import hashlib
++import json
++import zipfile
++from prepare import read,write,digest
++
++ROOT=Path(__file__).absolute().parent
++TITLE='TTO-快慢热状态与平稳散热需求-研究证据包.zip'
++EXCLUDED_NAMES={TITLE,'SHA256.json','archive-sha256.json','package-check.json','standalone-replay-check.json'}
++EXCLUDED_DIRS={'__pycache__','.pytest_cache','build'}
++
++
++def included(path):
++    rel=path.relative_to(ROOT)
++    return (path.is_file() and not any(x in EXCLUDED_DIRS for x in rel.parts) and
++            path.name not in EXCLUDED_NAMES and path.suffix not in ['.zip','.pyc','.so'] and
++            path.name!='.DS_Store')
++
++
++def main():
++    assert read(ROOT/'readback-checks.json')['status']=='pass'
++    # A patch only for added executable research files and local documents, never old dirty diffs.
++    patch=[]
++    code_files=[p for p in ROOT.rglob('*') if included(p) and p.suffix in ['.py','.c','.md'] and
++                p.relative_to(ROOT).parts[0] not in ['handoff','sources']]
++    for path in sorted(code_files):
++        name='experiments/thermal_slowstate_v1/'+str(path.relative_to(ROOT))
++        patch+= [f'diff --git a/{name} b/{name}\n','new file mode 100644\n']
++        patch+=list(difflib.unified_diff([],path.read_text().splitlines(keepends=True),
++                                       fromfile='/dev/null',tofile='b/'+name))
++    (ROOT/'code.patch').write_text(''.join(patch))
++    paths=sorted(p for p in ROOT.rglob('*') if included(p))
++    files={str(p.relative_to(ROOT)):dict(sha256=digest(p.read_bytes()),bytes=p.stat().st_size) for p in paths}
++    write(ROOT/'SHA256.json',dict(schema='TTO-SLOWSTATE-ARTIFACT-SHA256-v1',files=files,
++        self_excluded='SHA256.json',input_archives='indexed only; not recursively bundled'))
++    archive=ROOT/TITLE
++    with zipfile.ZipFile(archive,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=6) as z:
++        for path in paths+[ROOT/'SHA256.json']:
++            z.write(path,str(path.relative_to(ROOT)))
++    with zipfile.ZipFile(archive) as z:
++        assert z.testzip() is None
++        stored=json.loads(z.read('SHA256.json'))['files']
++        for member,info in stored.items():
++            assert digest(z.read(member))==info['sha256'],member
++        assert not any(n.endswith('.zip') for n in z.namelist())
++    write(ROOT/'archive-sha256.json',dict(file=TITLE,bytes=archive.stat().st_size,sha256=digest(archive.read_bytes())))
++    write(ROOT/'package-check.json',dict(status='pass',CRC='pass',all_member_SHA256='pass',members=len(paths)+1,
++        recursive_input_archives=False,code_patch_added_files=len(code_files),old_files_modified=0,
++        input_archives_indexed=read(ROOT/'stage1-freeze.json')['original_archive_sha256']))
++    print(json.dumps(read(ROOT/'archive-sha256.json'),ensure_ascii=False))
++
++
++if __name__=='__main__':main()
+diff --git a/experiments/thermal_slowstate_v1/plots.py b/experiments/thermal_slowstate_v1/plots.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_slowstate_v1/plots.py
+@@ -0,0 +1,243 @@
++"""Four static scientific figure classes. Reads derived files, never recomputes fits."""
++from pathlib import Path
++import json
++import os
++import sys
++import time
++import numpy as np
++import matplotlib
++matplotlib.use('Agg')
++import matplotlib.pyplot as plt
++from matplotlib.font_manager import FontProperties, fontManager
++
++ROOT=Path(__file__).absolute().parent
++OUT=ROOT/'figures'
++
++
++def read(path):return json.loads(Path(path).read_text())
++def lines(path):return [json.loads(x) for x in Path(path).read_text().splitlines() if x]
++
++
++def setup():
++    for font in ['/System/Library/Fonts/Supplemental/Arial Unicode.ttf',
++                 '/System/Library/Fonts/STHeiti Medium.ttc',
++                 '/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc']:
++        if Path(font).exists():
++            fontManager.addfont(font)
++            plt.rcParams['font.family']=FontProperties(fname=font).get_name()
++            break
++    plt.rcParams.update({'axes.unicode_minus':False,'font.size':10,'axes.titlesize':12,
++        'axes.spines.top':False,'axes.spines.right':False,'axes.grid':True,'grid.alpha':.17,
++        'figure.facecolor':'#fcfcfd','axes.facecolor':'#ffffff','savefig.facecolor':'#fcfcfd',
++        'svg.fonttype':'none'})
++    OUT.mkdir(exist_ok=True)
++
++
++BRANCHES=['STATE-G2','STATE-QS','STATE-LP30','STATE-LP120']
++NAMES={'STATE-G2':'G2过去60秒慢态','STATE-QS':'无慢记忆（代数状态）',
++       'STATE-LP30':'30秒因果滤波','STATE-LP120':'120秒因果滤波'}
++COLORS={'STATE-G2':'#b3412e','STATE-QS':'#9b9283','STATE-LP30':'#1b7e91','STATE-LP120':'#7256a3'}
++
++
++def window(rows,run,start,end):return [r for r in rows if r['run']==run and start<=r['wall']<=end]
++
++
++def trace(ax,rows,key,start,label,color,style='-',segment=True):
++    x,y=[],[]
++    prev=None
++    for row in rows:
++        if prev is not None:
++            broken=(row.get('segment')!=prev.get('segment')) if segment else (row['t']>prev.get('source_valid_until',prev['t']+5))
++            if broken:
++                x.append(np.nan);y.append(np.nan)
++        x.append(row['wall']-start);y.append(key(row));prev=row
++    ax.plot(x,y,style,label=label,color=color,lw=1.6)
++
++
++def unavailable(ax,ledger,run,start,end):
++    for r in ledger:
++        if r['run']!=run or r['ordinary_available']:
++            continue
++        a=max(start,r['wall']);b=min(end,r['wall']+r['duration_s'])
++        if b>a:ax.axvspan(a-start,b-start,color='#a0a5ae',alpha=.1,lw=0)
++
++
++def events(ax,runs,run,start,end):
++    r=next(r for r in runs if r['run']==run)
++    if run=='L':
++        ranges=[p for p in r['phases'] if p.get('macro')=='work']
++    else:ranges=r['requests']
++    for ev in ranges:
++        a=max(start,ev['start']);b=min(end,ev['end'])
++        if b>a:ax.axvspan(a-start,b-start,color='#deb46b',alpha=.12,lw=0)
++
++
++def pwm(ax,ledger,run,start,end):
++    rows=window(ledger,run,start,end)
++    x,y=[],[]
++    last=None
++    for r in rows:
++        if r['event']!='original_observation':continue
++        if r['fast_status']['fan_ref']==last:continue
++        last=r['fast_status']['fan_ref']
++        x.append(r['wall']-start)
++        y.append(r['fast_status']['successful_PWM_percent'] if r['fast_status']['successful_PWM_percent'] is not None else np.nan)
++    ax.step(x,y,where='post',color='#425466',lw=1.3,label='成功PWM原快照（现场参考）')
++    ax.set_ylabel('实测PWM（%）')
++
++
++def finish(fig,name,caption):
++    fig.savefig(OUT/f'{name}.png',dpi=165,bbox_inches='tight')
++    fig.savefig(OUT/f'{name}.svg',bbox_inches='tight')
++    plt.close(fig)
++    return dict(name=name,png=f'{name}.png',svg=f'{name}.svg',caption=caption)
++
++
++def main():
++    started=time.perf_counter();setup()
++    data=read(ROOT/'sources/registered/data.json')
++    runs=data['runs'];accepted=data['accepted']
++    long=[r for r in lines(ROOT/'results/states-A-long.jsonl') if r['model']=='primary']
++    causal=[r for r in lines(ROOT/'results/states-causal60.jsonl') if r['model']=='primary']
++    origins=lines(ROOT/'results/four-state-origins.jsonl')
++    demand=lines(ROOT/'results/normal-demand-origins.jsonl')
++    ledger=lines(ROOT/'results/fast-status-and-demand-ledger.jsonl')
++    metrics=read(ROOT/'results/temperature-metrics.json')
++    s=next(r for r in runs if r['run']=='S');m=next(r for r in runs if r['run']=='M')
++    sparse=next(r for r in s['requests'] if r['id']=='S02')
++    continuous=next(p for p in s['phases'] if p['id']=='continuous')
++    mid=next(p for p in m['phases'] if p['id']=='M60')
++    cols=[('S',sparse['start']-15,sparse['end']+80,'稀疏短问答 S02'),
++          ('S',continuous['start']-15,continuous['end']+25,'连续短问答全组'),
++          ('M',mid['start']-20,mid['end']+100,'中等工作块 M60（实际约65秒）')]
++    figs=[]
++    fig,axs=plt.subplots(4,3,figsize=(17,11),squeeze=False)
++    fig.suptitle('图1｜TJ、原定义Tf、真正Ts与现场PWM分开读',fontsize=19,y=1.015)
++    for col,(run,start,end,title) in enumerate(cols):
++        ar=window(accepted,run,start,end);lr=window(long,run,start,end);cr=window(causal,run,start,end)
++        trace(axs[0,col],ar,lambda r:r['values']['tj'],start,'实测TJ','#202d3c',segment=False)
++        trace(axs[0,col],lr,lambda r:r['Tf'],start,'A-long Tf：TJ估计','#b3412e')
++        trace(axs[1,col],lr,lambda r:r['Ts'],start,'A-long同次传播的潜在Ts','#466ba7')
++        trace(axs[2,col],cr,lambda r:r['Ts'],start,'过去60秒因果Ts','#137d72')
++        pwm(axs[3,col],ledger,run,start,end)
++        axs[0,col].set_title(title)
++        for row in range(4):
++            ax=axs[row,col];unavailable(ax,ledger,run,start,end);events(ax,runs,run,start,end)
++            ax.set_xlim(0,end-start);ax.legend(fontsize=8,loc='best')
++            if row==3:ax.set_xlabel('相对本窗起点（秒）')
++        for row,label in enumerate(['TJ / Tf（°C）','A-long Ts（°C）','因果Ts（°C）']):axs[row,col].set_ylabel(label)
++    fig.text(.5,-.008,'各面板独立纵轴；灰色：普通状态/需求资格不足，实测TJ仍保留；浅黄：请求执行。因果Tf锚到当前TJ，未当预测得分。',ha='center',fontsize=10)
++    fig.tight_layout()
++    figs.append(finish(fig,'图1-四种量的对应',[
++        '横轴是每个放大窗口内的秒数，纵轴分别是实测TJ/模型Tf、自由响应Ts、因果Ts的°C，以及另轴的实际成功PWM快照%。',
++        '主要看短TJ峰仍然存在、原Tf仍会欠峰，而真正Ts取自第二状态；连续组后半灰区明确断开，M工作块未重置。',
++        '不能把Tf欠峰改名成测准散热体，也不能把Ts或另轴PWM解释成新的安全风扇指令。']))
++
++    fig,axs=plt.subplots(3,3,figsize=(17,10.2),squeeze=False)
++    fig.suptitle('图2｜慢态的价值：看共同标签的温度误差，同时看简单滤波',fontsize=18,y=1.015)
++    for col,run in enumerate(['L','S','M']):
++        rr=[r for r in origins if r['run']==run];start=min(r['wall'] for r in accepted if r['run']==run)
++        for b in BRANCHES:trace(axs[0,col],rr,lambda r,b=b:r['states'][b],start,NAMES[b],COLORS[b])
++        end=max(r['wall'] for r in accepted if r['run']==run)
++        unavailable(axs[0,col],ledger,run,start,end);axs[0,col].set_title(f'{run}记录｜潜在状态，无Ts真值')
++        axs[0,col].set_ylabel('状态来源（°C）');axs[0,col].set_xlabel('距本轮记录起点（秒）')
++        axs[0,col].legend(fontsize=7,ncol=2)
++        for row,kind,title in [(1,'A_roll','给定真实未来输入：A-roll'),(2,'B_HOLD','仅当前输入保持：B-HOLD')]:
++            ax=axs[row,col];ns=[]
++            for bi,b in enumerate(BRANCHES):
++                values=[]
++                for h in [15,45,90]:
++                    cell=next(v for v in metrics if v['kind']==kind and v['h']==h and v['stratum']=='confirmed_normal' and v['scale']=='run' and v['group']==run)
++                    values.append(cell['metrics'][b]['MAE'])
++                    if bi==0:ns.append(cell['n'])
++                ax.bar(np.arange(3)+(bi-1.5)*.19,values,width=.18,color=COLORS[b],label=NAMES[b])
++            ax.set_xticks(range(3),[f'{h}秒\nn={n}' for h,n in zip([15,45,90],ns)])
++            ax.set_title(title,fontsize=11);ax.set_ylabel('温度MAE（°C）')
++            if col==0 and row==2:ax.legend(fontsize=7,ncol=2)
++    fig.text(.5,-.008,'全部为开发/拟合内诊断；每根并列柱使用同一起点、同一温度答案。主图为未来控制状态可确认正常层；其他层与完整覆盖另存。各面板独立纵轴。',ha='center',fontsize=9)
++    fig.tight_layout()
++    figs.append(finish(fig,'图2-四慢态与共同温度误差',[
++        '上排横轴为各轮经过的秒数、纵轴为四种潜在状态来源的°C；下两排横轴为15/45/90秒时距、纵轴为共同标签上的温度MAE。',
++        '主要看同一G2只换Ts后误差怎样改变：G2有增量信息，但M上30秒滤波接近；柱下n和灰区给出覆盖边界。',
++        '这些是可观测TJ的误差，不能读成Ts的准确率、独立留出验证、未来输入已知的现场预测，或控制收益。']))
++
++    fig,axs=plt.subplots(3,3,figsize=(17,10),squeeze=False)
++    fig.suptitle('图3｜离线增量需求形态；没有执行风扇指令',fontsize=19,y=1.015)
++    for col,(run,start,end,title) in enumerate(cols):
++        rows=window(demand,run,start,end)
++        axs[0,col].set_title(title)
++        for b in BRANCHES:
++            trace(axs[0,col],rows,lambda r,b=b:r['branches'][b]['z_raw'],start,NAMES[b],COLORS[b])
++            trace(axs[1,col],rows,lambda r,b=b:r['branches'][b]['z_output'],start,NAMES[b],COLORS[b])
++        axs[0,col].axhline(0,color='#888',ls=':',lw=1,label='下限0；上限1在本窗外' if col==0 else None)
++        axs[1,col].axhline(0,color='#888',ls=':',lw=.8)
++        axs[0,col].set_ylabel('裁剪前增量（无量纲）')
++        axs[1,col].set_ylabel('相同塑形后（无量纲）')
++        pwm(axs[2,col],ledger,run,start,end)
++        for row in range(3):
++            ax=axs[row,col];unavailable(ax,ledger,run,start,end);events(ax,runs,run,start,end)
++            ax.set_xlim(0,end-start)
++            if row==2:ax.set_xlabel('相对本窗起点（秒）')
++        axs[0,col].legend(fontsize=7,ncol=2)
++        axs[2,col].legend(fontsize=8)
++        if col==0:
++            axs[1,col].text(.03,.48,'本窗G2低于已热参考\n零值不等于无需散热',fontsize=9,
++                color='#6a4638',transform=axs[1,col].transAxes)
++    fig.text(.5,-.008,'纵轴独立缩放，不是PWM换算。固定尺度10°C、死区0.02、全幅升30秒/降120秒；所有分支相同。参考可能已热，0不等于无需散热。灰区不续龄。',ha='center',fontsize=9)
++    fig.tight_layout()
++    figs.append(finish(fig,'图3-平稳需求信号',[
++        '横轴为窗口秒数，上排是未裁剪无量纲增量，中排是同一死区及限速后的需求指数，下排另轴保留现场PWM百分比。',
++        '主要看G2与30秒滤波都能减少短峰追随，持续M负载仍有升量；同时检查原始幅度、低于已热参考的负值和灰区，不把平直零线叫胜利。',
++        '更平稳不等于真实更安静或更安全，指数不能直接代入现有TJ—PWM曲线；本轮没有执行任何新风扇动作。']))
++
++    mend=next(p for p in m['phases'] if p['id']=='M180')
++    tails=[('S',sparse['end']-8,sparse['end']+85,sparse['end'],'S02结束后（下一题前）'),
++           ('S',continuous['end']-15,continuous['end']+180,continuous['end'],'连续组结束后：资格不足'),
++           ('M',mend['end']-15,mend['end']+300,mend['end'],'M180结束后300秒')]
++    fig,axs=plt.subplots(3,3,figsize=(17,10.4),squeeze=False)
++    fig.suptitle('图4｜结束后分清：TJ回落、状态残留和塑形尾部',fontsize=19,y=1.015)
++    for col,(run,start,end,taskend,title) in enumerate(tails):
++        ar=window(accepted,run,start,end);lr=window(long,run,start,end);dr=window(demand,run,start,end)
++        trace(axs[0,col],ar,lambda r:r['values']['tj'],start,'实测TJ','#202d3c',segment=False)
++        trace(axs[0,col],lr,lambda r:r['Tf'],start,'原定义A-long Tf','#b3412e')
++        for b in BRANCHES:
++            trace(axs[1,col],dr,lambda r,b=b:r['branches'][b]['state']-r['branches'][b]['reference'],start,NAMES[b],COLORS[b])
++        for b in ['STATE-G2','STATE-LP30']:
++            trace(axs[2,col],dr,lambda r,b=b:r['branches'][b]['z_target'],start,NAMES[b]+'：状态目标',COLORS[b],style='--')
++            trace(axs[2,col],dr,lambda r,b=b:r['branches'][b]['z_output'],start,NAMES[b]+'：塑形输出',COLORS[b])
++        axs[1,col].axhline(.2,color='#888',ls=':',lw=1,label='参考附近：+0.2°C')
++        axs[2,col].axhline(.02,color='#888',ls=':',lw=1,label='参考附近：0.02')
++        axs[0,col].set_title(title)
++        for row in range(3):
++            ax=axs[row,col];unavailable(ax,ledger,run,start,end)
++            ax.axvline(taskend-start,color='#333',ls=':',lw=1)
++            ax.set_xlim(0,end-start);ax.legend(fontsize=7,loc='best',ncol=1 if row==0 else 2)
++            if row==2:ax.set_xlabel('相对窗口起点（秒）；竖虚线=客户端结束')
++        for row,label in enumerate(['TJ / Tf（°C）','相对本段参考的状态（°C）','目标/输出（无量纲）']):axs[row,col].set_ylabel(label)
++        if not dr:axs[1,col].text(.5,.5,'原60秒状态资格不足\n不补线、不计算返回时间',ha='center',va='center',transform=axs[1,col].transAxes,color='#666')
++        if col==1 and dr:
++            recovery=dr[0]['wall']-start
++            for row in [1,2]:
++                axs[row,col].axvline(recovery,color='#7256a3',ls=':',lw=1)
++            axs[1,col].text(.04,.57,'灰区无慢态\n恢复后固定新段参考\n不拼成原任务尾部',fontsize=9,
++                color='#7256a3',transform=axs[1,col].transAxes)
++    fig.text(.5,-.01,'每格独立纵轴。状态目标仍高的尾部来自状态；目标与实线之差来自固定死区/限速；没有假设新需求会产生与原风扇相同的实测TJ。',ha='center',fontsize=9)
++    fig.tight_layout()
++    figs.append(finish(fig,'图4-任务结束后的三种尾部',[
++        '横轴是任务结束附近的秒数，竖虚线为客户端完成；三排分别显示TJ/Tf、相对本段参考的状态°C、无量纲状态目标与塑形输出。',
++        '主要看TJ可以先降而慢态仍高，以及状态目标和塑形输出之间额外尾部；连续组资格不足时保持灰区，恢复后新参考不接成原任务尾部或返回时间。',
++        '客户端结束不等于GPU内核结束，尾部更长不自动更好；这些图不能证明降低风量后的温度、安全或噪音效果。']))
++    (OUT/'figure-index.json').write_text(json.dumps(figs,ensure_ascii=False,indent=2)+'\n')
++    sections=[]
++    for f in figs:
++        sections.append(f'<section><h2>{f["name"]}</h2><a href="{f["svg"]}"><img src="{f["png"]}" alt="{f["name"]}"></a>'+''.join(f'<p>{s}</p>' for s in f['caption'])+'</section>')
++    (OUT/'中文图解.html').write_text('''<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>TTO快慢状态与平稳需求图解</title>
++<style>body{max-width:1500px;margin:30px auto;padding:0 24px;font-family:system-ui;color:#213044;background:#fafbfd;line-height:1.7}img{width:100%;border:1px solid #ddd}section{margin:44px 0}p{max-width:1100px}a{color:#1b7e91}</style>
++<h1>快慢热状态与平稳需求：四类图解</h1><p>离线开发资料；固定模型，零次重新拟合。灰色表示普通状态/需求资格不足；真实TJ及原风险信息保留。点击图可打开矢量原图。</p>'''+''.join(sections)+'</html>')
++    (OUT/'plot-environment.json').write_text(json.dumps(dict(python=sys.version,executable=sys.executable,
++        numpy=np.__version__,matplotlib=matplotlib.__version__,font_family=plt.rcParams['font.family'],
++        wall_seconds=time.perf_counter()-started),ensure_ascii=False,indent=2)+'\n')
++    print('Saved four Chinese figure classes, SVG originals and standalone HTML guide.')
++
++
++if __name__=='__main__':main()
+diff --git a/experiments/thermal_slowstate_v1/prepare.py b/experiments/thermal_slowstate_v1/prepare.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_slowstate_v1/prepare.py
+@@ -0,0 +1,162 @@
++"""Read two fixed local archives, freeze the study before computing outcomes."""
++from pathlib import Path
++import argparse
++import datetime as dt
++import hashlib
++import io
++import json
++import zipfile
++
++ROOT = Path(__file__).absolute().parent
++ARCHIVES = {
++    'r2-results-original.zip': '809e90eef398daf34e9cabfd5d4427d35275fc8185541d61810f67943f35aecb',
++    'r2-prerequisites-original.zip': '7f52d7cfad66564ff07178bfe14a5a46da83390b0855c28f2b65cad8910c3614',
++}
++MODELS = {'primary': 'D-LSM', 'old_LS': 'LS-fit-on-LSM', 'A24': 'D-LSM-G2-A24'}
++
++
++def digest(b):
++    return hashlib.sha256(b).hexdigest()
++
++
++def write(path, value):
++    path = Path(path)
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(value, ensure_ascii=False, indent=2, allow_nan=False) + '\n')
++
++
++def read(path):
++    return json.loads(Path(path).read_text())
++
++
++def jsonlines(path):
++    return [json.loads(x) for x in Path(path).read_text().splitlines() if x]
++
++
++def write_lines(path, rows):
++    path = Path(path)
++    path.parent.mkdir(parents=True, exist_ok=True)
++    with path.open('w') as f:
++        for row in rows:
++            f.write(json.dumps(row, ensure_ascii=False, separators=(',', ':'), allow_nan=False) + '\n')
++
++
++def prepare(input_dir, root=ROOT):
++    root = Path(root)
++    source = root / 'sources'
++    inventory = []
++    archives = {}
++    for name, expected in ARCHIVES.items():
++        path = Path(input_dir) / name
++        b = path.read_bytes()
++        assert digest(b) == expected, name
++        z = zipfile.ZipFile(io.BytesIO(b))
++        assert z.testzip() is None
++        archives[name] = z
++        inventory.append(dict(kind='original_archive', name=name, bytes=len(b), sha256=expected,
++                              zip_crc='pass', role='immutable research source'))
++
++    def copy(z, member, dest):
++        b = z.read(member)
++        path = source / dest
++        path.parent.mkdir(parents=True, exist_ok=True)
++        path.write_bytes(b)
++        inventory.append(dict(kind='member', member=member, copied_to=str(path.relative_to(root)),
++                              bytes=len(b), sha256=digest(b)))
++
++    rz = archives['r2-results-original.zip']
++    for name in ['data.json', 'examples.json', 'evidence-L.json', 'evidence-S.json', 'evidence-M.json']:
++        copy(rz, 'runs/main/registered/' + name, 'registered/' + name)
++    for model, folder in MODELS.items():
++        for name in ['states.jsonl', 'calibrations.json', 'A-long.jsonl', 'predictions.jsonl',
++                     'A-long-metrics.json', 'A-roll-metrics.json', 'B-metrics.json', 'coverage.json',
++                     'evaluation-identity.json']:
++            copy(rz, f'runs/main/evaluation/{folder}/{name}', f'evaluation/{model}/{name}')
++    for model, folder in [('primary', 'D-LSM-G2'), ('A24', 'D-LSM-G2-A24')]:
++        copy(rz, f'runs/main/fits/{folder}/model.json', f'models/{model}.json')
++    pz = archives['r2-prerequisites-original.zip']
++    v1 = zipfile.ZipFile(io.BytesIO(pz.read('inputs/greybox-v1-evidence.zip')))
++    copy(v1, 'runs/main/fits/F-POOL-G2/model.json', 'models/old_LS.json')
++    for name in ['inputs/input-index.json', 'inputs/legacy-input-index.json',
++                 'metadata/M-ambient-user-confirmed.json', 'metadata/24C补充说明.md',
++                 'references/frozen-old-model-index.json', 'references/source-documents.json']:
++        copy(pz, name, 'provenance/' + Path(name).name)
++    for run, member in [('L', 'inputs/L-seven-conditions-original.zip'),
++                        ('S', 'inputs/S-shortqa-original-complete.zip'),
++                        ('M', 'inputs/M-midload-original.zip')]:
++        b = pz.read(member)
++        z = zipfile.ZipFile(io.BytesIO(b))
++        inventory.append(dict(kind='original_nested_archive', run=run, member=member,
++                              sha256=digest(b), bytes=len(b), identity='shared archive; not private original'))
++        if run == 'M':
++            z = zipfile.ZipFile(io.BytesIO(z.read('trial-result.zip')))
++        obs = next(n for n in z.namelist() if n.endswith('observations-0001.jsonl'))
++        b = z.read(obs)
++        # Payloads are copied, never interpreted as commands. No original file is rewritten.
++        records = [json.loads(x) for x in b.splitlines()]
++        write_lines(source / f'control-{run}.jsonl', [r for r in records if r['kind'] in ('fan', 'temp', 'boundary')])
++        inventory.append(dict(kind='original_log', run=run, nested_member=obs, sha256=digest(b),
++                              records=len(records), derived_control_only=f'sources/control-{run}.jsonl'))
++    write(root / 'source-inventory.json', inventory)
++
++    spec = read(root / 'handoff/templates/slowstate-spec.json')
++    spec['implementation_freeze'] = dict(
++        frozen_at=dt.datetime.now(dt.timezone.utc).isoformat(),
++        parameters='copied immutable model JSON; no dynamic optimization',
++        state_replay_tolerance_C=1e-10,
++        run_E='sealed first causal 60 s prefix calibration, fixed for run; never training E',
++        A_long='exact 2D propagation with saved causal Ts_initial, score only after 60 s; no TJ feedback',
++        causal_state='sealed past-60 state[1]; state[0] anchored observed TJ is not prediction',
++        LP='union of actual accepted TJ and successful input event nodes, exact left hold; prefix replay only after E known',
++        LP_memory='all past in strict segment, compared with fixed 60 s G2 window; no window search',
++        all_branches_warmup_s=60,
++        comparison='four branches use identical per-horizon (origin ref,h,label ref) inherited from sealed primary',
++        main_context='confirmed_normal; every other v2 context and legacy strict separately retained',
++        weights='per-origin unweighted metrics plus support seconds; no pooled-win claims across unequal cohorts',
++        ablation_model='primary D-LSM G2 only',
++        model_sensitivity='old_LS / primary / A24, absolute and one fixed first legal reference per run',
++        demand_reference='first legal branch state of each strict segment; not equilibrium or ambient',
++        demand_sampling='at actual legal accepted-TJ origins, real dt; fast ledger at every raw node plus known validity expiries',
++        demand_invalid='null immediately, clear held output; no cross-gap carry; rebuild existing 60 s qualification',
++        reversals='cumulative excursion >=0.02 from last extreme (turning-point hysteresis)',
++        saturation='raw<0 or raw>1 duration, plus at-boundary duration; also raw amplitude retained',
++        tail_return='first crossing target/output <=0.02 or state <=reference+0.2 C; report censor/recross',
++        tail_censor='next request, qualification loss, source/reference change or record end; no extrapolated return',
++        event_metadata='posthoc annotation and diagnostics only; never state/filter/demand features',
++        resource_policy='CPU single BLAS thread; soft 3600 s budget; own child resource counters',
++        runtime_actions='local file reads/writes and CPU kernel only; no network or device functions',
++        requested_outputs=['four Chinese figure classes','state/jump/initialization/coverage/q diagnostics',
++                           'all four-branch A-roll/B-HOLD point results','fast event ledger and normal demand'])
++    for name in MODELS:
++        spec.setdefault('model_sha256', {})[name] = digest((source / f'models/{name}.json').read_bytes())
++    spec['source_inventory_sha256'] = digest((root / 'source-inventory.json').read_bytes())
++    freeze = root / 'slowstate-spec.json'
++    if freeze.exists():
++        old = read(freeze)
++        spec['implementation_freeze']['frozen_at'] = old['implementation_freeze']['frozen_at']
++        assert old == spec, 'frozen spec differs; do not silently overwrite'
++    else:
++        write(freeze, spec)
++    write(root / 'stage1-freeze.json', dict(spec_sha256=digest(freeze.read_bytes()),
++          source_inventory_sha256=spec['source_inventory_sha256'], models=spec['model_sha256'],
++          frozen_at=spec['implementation_freeze']['frozen_at'], all_data_development=True,
++          no_fit=True, deployable=False, original_archive_sha256=ARCHIVES))
++    # Supplemental historical identity views, already committed by the frozen archive SHA.
++    # Kept outside the pre-score inventory so adding a readable index cannot rewrite that seal.
++    supplement=[]
++    for member in ['runs/main/source-identity-supplement.json','runs/main/source-inventory.json']:
++        b=rz.read(member)
++        dest=root/'sources/provenance'/('r2-'+Path(member).name)
++        dest.write_bytes(b)
++        supplement.append(dict(archive='r2-results-original.zip',archive_sha256=ARCHIVES['r2-results-original.zip'],
++            member=member, copied_to=str(dest.relative_to(root)), sha256=digest(b),
++            role='historical private-original / shared-archive identities, not a newly supplied original'))
++    write(root/'historical-provenance-index.json',supplement)
++    print('Stage1 frozen; verified original archives and copied immutable source subset.', flush=True)
++
++
++if __name__ == '__main__':
++    ap = argparse.ArgumentParser()
++    ap.add_argument('--input-dir', type=Path, default=ROOT / 'handoff/inputs')
++    args = ap.parse_args()
++    prepare(args.input_dir)
+diff --git a/experiments/thermal_slowstate_v1/rerun.py b/experiments/thermal_slowstate_v1/rerun.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_slowstate_v1/rerun.py
+@@ -0,0 +1,61 @@
++"""One local-only entry: prepare -> CPU research -> limited tests -> four figures -> readback."""
++from pathlib import Path
++import argparse
++import importlib.util
++import json
++import os
++import subprocess
++import sys
++import time
++
++ROOT=Path(__file__).absolute().parent
++
++
++def supports(exe,modules):
++    if not Path(exe).exists():return False
++    code='import '+','.join(modules)
++    return subprocess.run([str(exe),'-c',code],capture_output=True).returncode==0
++
++
++def choose(explicit,modules,candidates):
++    if explicit:
++        path=Path(explicit).absolute()  # Keep venv symlink identity; do not resolve().
++        if supports(path,modules):return path
++        raise SystemExit(f'{path} lacks required local modules {modules}')
++    for exe in candidates:
++        if supports(exe,modules):return Path(exe).absolute()
++    raise SystemExit('No suitable existing local Python. See README; this entry never installs packages or uses the network.')
++
++
++def main():
++    ap=argparse.ArgumentParser()
++    ap.add_argument('--input-dir',type=Path,required=True,help='Directory containing the two original named R2 ZIPs')
++    ap.add_argument('--python',type=Path)
++    ap.add_argument('--plot-python',type=Path)
++    args=ap.parse_args()
++    repo_python=Path('/Users/massif/Tianshan-thermal-observer/.venv310/bin/python')
++    runtime=choose(args.python,['numpy','scipy','pytest'],[Path(sys.executable),repo_python])
++    plot=choose(args.plot_python,['numpy','matplotlib'],[runtime,Path('/private/tmp/tto-analysis-20261013-env/bin/python')])
++    env=os.environ.copy()
++    for k in ['OPENBLAS_NUM_THREADS','OMP_NUM_THREADS','MKL_NUM_THREADS','VECLIB_MAXIMUM_THREADS']:env[k]='1'
++    env['MPLCONFIGDIR']=str(ROOT/'build/mpl-cache')
++    logs=ROOT/'replay-logs';logs.mkdir(exist_ok=True)
++    stages=[('prepare',[runtime,ROOT/'prepare.py','--input-dir',args.input_dir.absolute()]),
++            ('compute',[runtime,ROOT/'run_study.py']),
++            ('tests',[runtime,'-m','pytest','-q',ROOT/'tests']),
++            ('plots',[plot,ROOT/'plots.py']),
++            ('readback',[runtime,ROOT/'verify_results.py']),
++            ('report',[runtime,ROOT/'make_report.py'])]
++    receipt=[]
++    for label,cmd in stages:
++        started=time.perf_counter()
++        print(label,flush=True)
++        with (logs/(label+'.log')).open('w') as f:
++            result=subprocess.run([str(c) for c in cmd],cwd=ROOT,env=env,stdout=f,stderr=subprocess.STDOUT)
++        receipt.append(dict(stage=label,exit_code=result.returncode,wall_seconds=time.perf_counter()-started))
++        (logs/'receipt.json').write_text(json.dumps(dict(runtime=str(runtime),plot_runtime=str(plot),stages=receipt),indent=2)+'\n')
++        if result.returncode:raise SystemExit(f'{label} failed; see {logs/(label+".log")}')
++    print('Replay complete. Original inputs/models unchanged. No fitting, network or device actions.',flush=True)
++
++
++if __name__=='__main__':main()
+diff --git a/experiments/thermal_slowstate_v1/run_study.py b/experiments/thermal_slowstate_v1/run_study.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_slowstate_v1/run_study.py
+@@ -0,0 +1,634 @@
++"""Frozen-state replay, four-way ablation and offline demand. Never fits dynamics."""
++from pathlib import Path
++import bisect
++from collections import defaultdict, Counter
++import datetime as dt
++import hashlib
++import json
++import os
++import platform
++import resource
++import sys
++import time
++import numpy as np
++
++ROOT = Path(__file__).absolute().parent
++sys.path.insert(0, str(ROOT / 'vendor'))
++from greybox import build_kernel, propagate, arrays, forecast
++from initialize import path_between
++from prepare import read, write, jsonlines, write_lines, digest, MODELS
++from core import BRANCHES, filters_at_origins, shape, reversal_count, error_metrics
++
++PARAM_NAMES = ['a', 'c', 'd0', 'd1', 'b_g', 'b_c']
++OUT = ROOT / 'results'
++SRC = ROOT / 'sources'
++
++
++def parameters(model):
++    return [model['dynamic'][key] for key in PARAM_NAMES]
++
++
++def load_inputs():
++    data = read(SRC / 'registered/data.json')
++    models = {name: read(SRC / f'models/{name}.json') for name in MODELS}
++    return data, models
++
++
++def distributions(values):
++    v = np.array(values, dtype=float)
++    return dict(n=len(v), min=float(v.min()), median=float(np.median(v)),
++                p95=float(np.percentile(v, 95)), max=float(v.max())) if len(v) else dict(n=0)
++
++
++def export_states(data, models):
++    accepted = {r['ref']: r for r in data['accepted']}
++    segments = {s['id']: s for s in data['segments']}
++    all_causal, all_long, jump_records, replay_checks = [], [], [], []
++    specs = read(ROOT / 'slowstate-spec.json')
++    tol = specs['implementation_freeze']['state_replay_tolerance_C']
++    for name, model in models.items():
++        p = parameters(model)
++        source = SRC / f'evaluation/{name}'
++        cals = read(source / 'calibrations.json')['G2']
++        sealed_long = {r['ref']: r for r in jsonlines(source / 'A-long.jsonl') if 'G2' in r['A']}
++        causal = [r for r in jsonlines(source / 'states.jsonl') if r['model'] == 'G2']
++        causal_by_ref = {r['ref']: r for r in causal}
++        long_errors = []
++        for sid, cal in cals.items():
++            segment = segments[sid]
++            a = arrays(segment)
++            z = propagate('G2', p, cal['E'], a['dt'], a['u'],
++                          [a['y'][0], cal['Ts_initial']])
++            for row, state in zip(segment['rows'], z[a['index']]):
++                if row['ref'] not in sealed_long:
++                    continue
++                old = sealed_long[row['ref']]
++                error = float(state[0] - old['A']['G2'])
++                long_errors.append(abs(error))
++                all_long.append(dict(model=name, model_sha256=specs['model_sha256'][name],
++                    mode='A-long_no_temperature_feedback_after_prefix', ref=row['ref'], run=row['run'],
++                    segment=sid, t=row['mono_s'], utc=row['utc'], wall=row['wall'],
++                    Tf=float(state[0]), Ts=float(state[1]), measured_TJ=row['values']['tj'],
++                    Tf_error=float(state[0] - row['values']['tj']), sealed_Tf=old['A']['G2'],
++                    E=cal['E'], current_inputs=segment['timeline'][row['timeline_index']]['inputs'],
++                    source_valid_until=row['source_valid_until'],
++                    current_input_valid_until=segment['timeline'][row['timeline_index']]['valid_until'],
++                    prefix=cal, no_TJ_feedback=True, state_truth_available=False))
++        assert long_errors and max(long_errors) <= tol, (name, max(long_errors))
++        previous = {}
++        for old in causal:
++            row = accepted[old['ref']]
++            segment = segments[old['segment']]
++            node = segment['timeline'][next(i for i, n in enumerate(segment['timeline']) if n['t'] == row['mono_s'])]
++            state = dict(model=name, model_sha256=specs['model_sha256'][name],
++                mode='causal_past60_observed_Tf_anchor', ref=row['ref'], run=row['run'],
++                segment=old['segment'], t=row['mono_s'], utc=row['utc'], wall=row['wall'],
++                Tf=row['values']['tj'], Tf_is_observation_anchor=True, Ts=old['state'][1],
++                unanchored_prefix_end_Tf=old['evidence']['state'][0],
++                E=old['E'], current_inputs=node['inputs'], current_input_valid_until=node['valid_until'],
++                source_valid_until=row['source_valid_until'], source_epoch=row['source_epoch'],
++                source_identity=row['source_identity'], evidence=old['evidence'],
++                fan_ref=node['fan_ref'], temp_ref=node['temp_ref'], power_ref=node['power_ref'],
++                input_cutoff=old['input_cutoff'], parameter_learning=False, state_truth_available=False)
++            assert state['input_cutoff'] <= state['t'] + 1e-9
++            assert state['evidence']['end'] <= state['t'] + 1e-9
++            assert state['Tf'] == old['state'][0]
++            all_causal.append(state)
++            if state['segment'] in previous:
++                prev = previous[state['segment']]
++                dts, u = path_between(segment, prev['t'], state['t'])
++                pred = propagate('G2', p, state['E'], dts, u, [prev['Tf'], prev['Ts']])[-1]
++                jump_records.append(dict(model=name, run=row['run'], segment=state['segment'],
++                    ref=state['ref'], previous_ref=prev['ref'], wall=state['wall'], dt=state['t'] - prev['t'],
++                    delta_Ts=state['Ts'] - prev['Ts'],
++                    correction_after_already_observed_path=state['Ts'] - float(pred[1]),
++                    previous_window_first=prev['evidence']['first_ref'], window_first=state['evidence']['first_ref'],
++                    initial_Ts=state['evidence']['Ts_initial'], previous_initial_Ts=prev['evidence']['Ts_initial'],
++                    bounds_hit=state['evidence']['bounds_hit']))
++            previous[state['segment']] = state
++        replay_checks.append(dict(model=name, A_long_n=len(long_errors), max_abs_Tf_replay_error_C=max(long_errors),
++                                  tolerance_C=tol, causal_n=len(causal_by_ref), match=True))
++        print(name, 'A-long', len(long_errors), 'causal', len(causal_by_ref), 'replay error', max(long_errors), flush=True)
++    write_lines(OUT / 'states-A-long.jsonl', all_long)
++    write_lines(OUT / 'states-causal60.jsonl', all_causal)
++    write_lines(OUT / 'rolling-jumps.jsonl', jump_records)
++    write(OUT / 'replay-checks.json', replay_checks)
++    write(ROOT / 'stage2-state-export.json', dict(finished_at=dt.datetime.now(dt.timezone.utc).isoformat(),
++          spec_sha256=digest((ROOT / 'slowstate-spec.json').read_bytes()), no_fit=True,
++          checks=replay_checks, outputs={n: digest((OUT / n).read_bytes()) for n in
++          ['states-A-long.jsonl', 'states-causal60.jsonl', 'rolling-jumps.jsonl']}))
++    return all_causal, all_long, jump_records
++
++
++def ablate(data, model, causal):
++    p = parameters(model)
++    segments = {s['id']: s for s in data['segments']}
++    primary = [r for r in causal if r['model'] == 'primary']
++    primary_by_ref = {r['ref']: r for r in primary}
++    state_values = {}
++    for sid, segment in segments.items():
++        selected = [r for r in primary if r['segment'] == sid]
++        if not selected:
++            continue
++        E = selected[0]['E']
++        assert all(r['E'] == E for r in selected)
++        filters = filters_at_origins(segment, E, p)
++        for state in selected:
++            state_values[state['ref']] = dict(filters[state['ref']], **{'STATE-G2': state['Ts']})
++    write_lines(OUT / 'four-state-origins.jsonl', [dict(ref=r['ref'], run=r['run'], segment=r['segment'],
++        t=r['t'], utc=r['utc'], wall=r['wall'], E=r['E'], current_TJ=r['Tf'],
++        current_inputs=r['current_inputs'], states=state_values[r['ref']],
++        input_cutoff=r['input_cutoff'], initialization_window=r['evidence'],
++        parameter_model_sha256=r['model_sha256']) for r in primary])
++    points, a_replay, b_replay = [], [], []
++    sealed = jsonlines(SRC / 'evaluation/primary/predictions.jsonl')
++    for original in sealed:
++        ref = original['ref']
++        current_state = primary_by_ref.get(ref)
++        item = dict(original)
++        item['reference_B'] = item.pop('B')
++        item['reference_A'] = item.pop('A')
++        item['B_HOLD'], item['A_roll'] = {}, {}
++        item['ablation_available'] = current_state is not None
++        item['unavailable_reason'] = None if current_state is not None else 'original_60s_state_unavailable'
++        if current_state is not None:
++            h, E = original['h'], current_state['E']
++            segment = segments[original['segment']]
++            B_valid = item['reference_B'].get('G2-HOLD') is not None
++            A_valid = item['reference_A'].get('G2') is not None
++            item['state_values'] = state_values[ref]
++            item['common_current_TJ'] = current_state['Tf']
++            item['common_E'] = E
++            item['current_inputs'] = current_state['current_inputs']
++            if A_valid:
++                dts, future = path_between(segment, original['t'], original['t'] + h)
++            for branch in BRANCHES:
++                initial = [current_state['Tf'], state_values[ref][branch]]
++                if B_valid:
++                    item['B_HOLD'][branch] = float(forecast('G2', p, E, initial,
++                        np.array(current_state['current_inputs']), h, 'HOLD', model['P10_fit']))
++                if A_valid:
++                    item['A_roll'][branch] = float(propagate('G2', p, E, dts, future, initial)[-1, 0])
++            if B_valid:
++                b_replay.append(abs(item['B_HOLD']['STATE-G2'] - item['reference_B']['G2-HOLD']))
++            if A_valid:
++                a_replay.append(abs(item['A_roll']['STATE-G2'] - item['reference_A']['G2']))
++        for kind in ['B_HOLD', 'A_roll']:
++            assert len(item[kind]) in (0, 4)
++        points.append(item)
++    check = dict(A_roll_n=len(a_replay), A_roll_max_replay_error_C=max(a_replay),
++                 B_HOLD_n=len(b_replay), B_HOLD_max_replay_error_C=max(b_replay), tolerance_C=1e-10)
++    assert max(a_replay + b_replay) <= check['tolerance_C'], check
++    write(OUT / 'ablation-replay-check.json', check)
++    write_lines(OUT / 'four-branch-predictions.jsonl', points)
++    return primary, state_values, points
++
++
++def calculate_prediction_metrics(points):
++    groups = defaultdict(list)
++    for r in points:
++        if r['label'] is None:
++            continue
++        # Side-by-side groups are complete four-branch cohorts, independently per h.
++        for kind in ['A_roll', 'B_HOLD']:
++            if not r[kind]:
++                continue
++            for stratum in [r['control_context'], 'all_contexts'] + (['legacy_strict'] if r['strict_label'] else []):
++                for scale, value in [('all', 'LSM'), ('run', r['run']),
++                                     ('macro', r['run'] + '/' + r['macro']),
++                                     ('phase', r['run'] + '/' + str(r['phase'])),
++                                     ('regime', r['run'] + '/' + str(r['regime']))]:
++                    groups[(kind, r['h'], stratum, scale, value)].append(r)
++    summary = []
++    for (kind, h, stratum, scale, value), rows in sorted(groups.items()):
++        cohort = '\n'.join(f"{r['ref']}|{h}|{r['label']['ref']}" for r in rows)
++        metrics = {b: error_metrics([r[kind][b] - r['label']['value'] for r in rows]) for b in BRANCHES}
++        refs = ['B0', 'B1', 'R_TJ', 'R_IO', 'G2-RELAX30']
++        reference = {}
++        for b in refs:
++            pairs = [r for r in rows if r['reference_B'].get(b) is not None]
++            reference[b] = dict(error_metrics([r['reference_B'][b] - r['label']['value'] for r in pairs]),
++                                same_cohort=len(pairs) == len(rows))
++        summary.append(dict(kind=kind, h=h, stratum=stratum, scale=scale, group=value,
++            cohort_sha256=hashlib.sha256(cohort.encode()).hexdigest(), n=len(rows),
++            support_seconds=sum(r['duration'] for r in rows), metrics=metrics, references=reference,
++            paired_MAE_G2_minus={b: metrics['STATE-G2']['MAE'] - metrics[b]['MAE'] for b in BRANCHES[1:]}))
++    write(OUT / 'temperature-metrics.json', summary)
++    coverage = []
++    for run in ['L', 'S', 'M']:
++        for h in [15, 45, 90]:
++            rows = [r for r in points if r['run'] == run and r['h'] == h]
++            coverage.append(dict(run=run, h=h, accepted_origins=len(rows),
++                qualified_temperature_labels=sum(r['label'] is not None for r in rows),
++                legal_causal_state_origins=sum(r['ablation_available'] for r in rows),
++                A_roll_all_four=sum(bool(r['A_roll']) for r in rows),
++                B_HOLD_all_four=sum(bool(r['B_HOLD']) for r in rows),
++                A_roll_scored=sum(bool(r['A_roll']) and r['label'] is not None for r in rows),
++                B_HOLD_scored=sum(bool(r['B_HOLD']) and r['label'] is not None for r in rows),
++                B_contexts=dict(Counter(r['control_context'] for r in rows if r['B_HOLD'])),
++                independent_horizon=True))
++    write(OUT / 'coverage.json', coverage)
++    return summary
++
++
++def observed_flags(node, raw):
++    fan_payload = (raw.get(node['fan_ref']) or {}).get('payload') or {}
++    fans = (fan_payload.get('data') or {}).get('fans') or []
++    fan = next((f for f in fans if f.get('id') == 0), {})
++    temp_payload = (raw.get(node['temp_ref']) or {}).get('payload') or {}
++    temp = temp_payload.get('data') or {}
++    duty = fan.get('duty') if fan.get('duty_valid') is True else None
++    return dict(fan_ref=node['fan_ref'], temp_ref=node['temp_ref'],
++        fault=fan.get('fault'), guard_active=fan.get('guard_active'), temp_stale=fan.get('temp_stale'),
++        enabled=fan.get('enabled'), mode=fan.get('mode'), successful_PWM_percent=duty,
++        duty_valid=fan.get('duty_valid'), manual_temperature=temp.get('manual_mode'),
++        active_source=temp.get('active_source'), bound_variable=temp.get('bound_variable'),
++        control_temperature_valid=temp.get('valid'),
++        current_input_qualified=bool(node['good']), original_control_eligible=node['control_eligible'],
++        observed_abnormal_or_changed=node['observed_abnormal_or_changed'],
++        context_known=node['context_known'], context_change=node['context_change'],
++        source_epoch=node['source_epoch'])
++
++
++def demand_and_fast_ledger(data, primary, state_values):
++    state_by_ref = {r['ref']: r for r in primary}
++    accepted = {r['ref']: r for r in data['accepted']}
++    demand = []
++    reference, previous = {}, {}
++    for state in primary:
++        sid, ref = state['segment'], state['ref']
++        if sid not in reference:
++            reference[sid] = state_values[ref].copy()
++            previous[sid] = (state['t'], {b: 0.0 for b in BRANCHES})
++        tprev, zprev = previous[sid]
++        dt_s = state['t'] - tprev
++        branches = {b: shape(state_values[ref][b], reference[sid][b], zprev[b], dt_s) for b in BRANCHES}
++        previous[sid] = (state['t'], {b: branches[b]['z_output'] for b in BRANCHES})
++        demand.append(dict(ref=ref, run=state['run'], segment=sid, t=state['t'], wall=state['wall'],
++            utc=state['utc'], measured_TJ=state['Tf'], branches=branches,
++            reference_is_not_equilibrium=True, normal_only=True, deployable=False,
++            source_epoch=state['source_epoch'], valid_until=state['current_input_valid_until']))
++    dbyref = {r['ref']: r for r in demand}
++    ledger = []
++    for run in ['L', 'S', 'M']:
++        evidence = read(SRC / f'registered/evidence-{run}.json')
++        raw = {r['ref']: r for r in jsonlines(SRC / f'control-{run}.jsonl')}
++        sample_times = [r['mono_s'] for r in evidence['samples']]
++        offset = evidence['samples'][0]['wall'] - sample_times[0]
++        held = None
++        last_source = None
++        last_node = None
++        for node in evidence['nodes']:
++            t = node['t']
++            # This event is scheduled from an ALREADY KNOWN expiry, never backdated from a future gap.
++            if last_node is not None and last_node['good'] and last_node['valid_until'] < t - 1e-9:
++                deadline = last_node['valid_until']
++                expiry_i = bisect.bisect_right(sample_times, deadline) - 1
++                expiry_sample = evidence['samples'][expiry_i] if expiry_i >= 0 else None
++                ledger.append(dict(run=run, t=deadline, wall=deadline + offset,
++                    ref=None, trigger_ref=last_node['ref'], event='known_input_expiry',
++                    derived_event=True, fast_status=dict(observed_flags(last_node, raw), current_input_qualified=False),
++                    ordinary_available=False, reason='known_input_validity_expired',
++                    normal_extra_demand_index=None, shape_ref=None, segment=None,
++                    current_input_valid_until=deadline,
++                    measured_TJ=expiry_sample['values']['tj'] if expiry_sample else None,
++                    measured_TJ_ref=expiry_sample['ref'] if expiry_sample else None,
++                    measured_TJ_valid=bool(expiry_sample and deadline < expiry_sample['source_valid_until'] and
++                                           expiry_sample['source_epoch'] == last_node['source_epoch']),
++                    measured_TJ_valid_until=expiry_sample['source_valid_until'] if expiry_sample else None))
++                held = None
++            flags = observed_flags(node, raw)
++            si = bisect.bisect_right(sample_times, t + 1e-9) - 1
++            sample = evidence['samples'][si] if si >= 0 else None
++            source_change = last_source is not None and last_source != node['source_epoch']
++            current_good = (node['good'] and node['valid_until'] > t and
++                            not node['observed_abnormal_or_changed'] and not node['context_change'] and
++                            not source_change)
++            reasons = list(node['reasons'])
++            if source_change:
++                reasons.append('source_identity_changed')
++            if not current_good:
++                held = None
++            elif node['ref'] in dbyref:
++                held = dbyref[node['ref']]
++            available = current_good and held is not None and held['source_epoch'] == node['source_epoch']
++            ledger.append(dict(run=run, t=t, wall=t + offset, ref=node['ref'], trigger_ref=node['trigger_ref'],
++                event='original_observation', derived_event=False, fast_status=flags,
++                measured_TJ=sample['values']['tj'] if sample else None,
++                measured_TJ_ref=sample['ref'] if sample else None,
++                measured_TJ_valid=bool(sample and t < sample['source_valid_until'] and sample['source_epoch'] == node['source_epoch']),
++                measured_TJ_valid_until=sample['source_valid_until'] if sample else None,
++                current_input_valid_until=node['valid_until'],
++                ordinary_available=available,
++                reason=None if available else (';'.join(reasons) if reasons else 'original_60s_history_unavailable'),
++                normal_extra_demand_index={b: held['branches'][b]['z_output'] for b in BRANCHES} if available else None,
++                shape_ref=held['ref'] if available else None, segment=held['segment'] if available else None))
++            last_node, last_source = node, node['source_epoch']
++        runledger = [r for r in ledger if r['run'] == run]
++        for i, r in enumerate(runledger):
++            r['duration_s'] = (runledger[i + 1]['t'] - r['t']) if i + 1 < len(runledger) else 0.0
++            assert r['duration_s'] >= 0
++    write_lines(OUT / 'normal-demand-origins.jsonl', demand)
++    write_lines(OUT / 'fast-status-and-demand-ledger.jsonl', ledger)
++    # Complete accepted-origin availability, including otherwise valid TJ without legal state.
++    origins = []
++    ledger_by_ref = {r['ref']: r for r in ledger if r['ref'] is not None}
++    for row in data['accepted']:
++        l = ledger_by_ref[row['ref']]
++        origins.append(dict(ref=row['ref'], run=row['run'], t=row['mono_s'], wall=row['wall'], utc=row['utc'],
++            measured_TJ=row['values']['tj'], source_identity=row['source_identity'],
++            ordinary_available=l['ordinary_available'], reason=l['reason'], segment=l['segment'],
++            shape_ref=l['shape_ref'], branches=dbyref[row['ref']]['branches'] if row['ref'] in dbyref else None,
++            fast_status=l['fast_status']))
++    write_lines(OUT / 'accepted-demand-availability.jsonl', origins)
++    return demand, ledger
++
++
++def signal_stats(rows, ledger, branch):
++    byref = {r['ref']: r for r in rows}
++    runs = sorted({l['run'] for l in ledger})
++    available = [l for l in ledger if l['ordinary_available'] and l['shape_ref'] in byref]
++    support = sum(l['duration_s'] for l in ledger)
++    available_s = sum(l['duration_s'] for l in available)
++    result = dict(total_seconds=support, available_seconds=available_s,
++                  unavailable_seconds=support - available_s,
++                  available_fraction=available_s / support if support else None,
++                  unavailable_reason_seconds={})
++    for l in ledger:
++        if not l['ordinary_available']:
++            key = l['reason']
++            result['unavailable_reason_seconds'][key] = result['unavailable_reason_seconds'].get(key, 0) + l['duration_s']
++    for field in ['z_raw', 'z_target', 'z_output']:
++        sequences, values, weighted = [], [], []
++        seq, last = [], None
++        for l in ledger:
++            if not l['ordinary_available'] or l['shape_ref'] not in byref:
++                if seq:
++                    sequences.append(seq)
++                seq, last = [], None
++                continue
++            d = byref[l['shape_ref']]
++            key = (l['run'], l['segment'])
++            v = d['branches'][branch][field]
++            if last is not None and key != last:
++                sequences.append(seq)
++                seq = []
++            seq.append(v)
++            values.append(v)
++            weighted.append((v, l['duration_s']))
++            last = key
++        if seq:
++            sequences.append(seq)
++        result[field] = dict(min=min(values) if values else None, max=max(values) if values else None,
++            amplitude=max(values) - min(values) if values else None,
++            weighted_mean=sum(v * s for v, s in weighted) / available_s if available_s else None,
++            total_variation=sum(sum(abs(b - a) for a, b in zip(s, s[1:])) for s in sequences),
++            significant_reversals=sum(reversal_count(s) for s in sequences))
++    result['lower_clipped_s'] = sum(l['duration_s'] for l in available if byref[l['shape_ref']]['branches'][branch]['lower_clipped'])
++    result['upper_clipped_s'] = sum(l['duration_s'] for l in available if byref[l['shape_ref']]['branches'][branch]['upper_clipped'])
++    result['at_zero_target_s'] = sum(l['duration_s'] for l in available if byref[l['shape_ref']]['branches'][branch]['z_target'] == 0)
++    result['at_one_target_s'] = sum(l['duration_s'] for l in available if byref[l['shape_ref']]['branches'][branch]['z_target'] == 1)
++    return result
++
++
++def events_for_runs(data):
++    events = []
++    for run in data['runs']:
++        for ph in run['phases']:
++            if ph.get('macro') == 'work' or (run['run'] == 'S' and ph['id'] in ['pilot','sparse','continuous']):
++                events.append(dict(run=run['run'], id='phase-' + str(ph['id']), kind='work_phase',
++                                   start=ph['start'], end=ph['end']))
++        for req in run['requests']:
++            events.append(dict(run=run['run'], id=req['id'], kind='request',
++                               start=req['start'], end=req['end']))
++    return events
++
++
++def demand_metrics(data, demand, ledger):
++    metrics = []
++    for run in data['runs']:
++        r = run['run']
++        ranges = [('whole-run', None, None)] + [('phase-' + str(p['id']), p['start'], p['end']) for p in run['phases']]
++        for label, start, end in ranges:
++            ls = [l for l in ledger if l['run'] == r and (start is None or
++                  (l['wall'] < end and l['wall'] + l['duration_s'] > start))]
++            if start is not None:
++                if ls:
++                    clock_offset=ls[0]['wall']-ls[0]['t']
++                    start_mono,end_mono=start-clock_offset,end-clock_offset
++                    ls = [dict(l, duration_s=max(0,min(l['t']+l['duration_s'],end_mono)-max(l['t'],start_mono))) for l in ls]
++            rows = [d for d in demand if d['run'] == r]
++            metrics.append(dict(run=r, group=label, branches={b: signal_stats(rows, ls, b) for b in BRANCHES}))
++    write(OUT / 'demand-signal-metrics.json', metrics)
++    events = events_for_runs(data)
++    tails = []
++    byref = {d['ref']: d for d in demand}
++    for ev in events:
++        r, end = ev['run'], ev['end']
++        requests = [e for e in events if e['run'] == r and e['kind'] == 'request' and e['start'] > end + 1e-6]
++        next_start = min((e['start'] for e in requests), default=float('inf'))
++        runls = [l for l in ledger if l['run'] == r and l['wall'] >= end]
++        if not runls:
++            continue
++        if not runls[0]['ordinary_available']:
++            tails.append(dict(event=ev, status='unavailable_at_end', reason=runls[0]['reason'], branches=None))
++            continue
++        sid = runls[0]['segment']
++        valid = []
++        censor = '300s_window_end'
++        censor_wall = min(end+300, next_start, runls[-1]['wall'])
++        for l in runls:
++            if l['wall'] >= end + 300:
++                break
++            if l['wall'] >= next_start:
++                censor = 'next_request'
++                break
++            if not l['ordinary_available'] or l['segment'] != sid:
++                censor = 'qualification_or_reference_changed'
++                censor_wall = min(censor_wall, l['wall'])
++                break
++            valid.append(l)
++        if runls[-1]['wall'] < end+300 and censor == '300s_window_end':
++            censor = 'record_end'
++        clock_offset=runls[0]['wall']-runls[0]['t']
++        end_mono=end-clock_offset
++        censor_relative=censor_wall-clock_offset-end_mono
++        bs = {}
++        for b in BRANCHES:
++            fieldstats = {}
++            for field in ['z_raw', 'z_target', 'z_output']:
++                vals = [(l['wall'] - end, byref[l['shape_ref']]['branches'][b][field]) for l in valid]
++                cross = next((i for i, (t, v) in enumerate(vals) if v <= .02), None)
++                fieldstats[field] = dict(at_first=vals[0][1] if vals else None,
++                    first_return_s=vals[cross][0] if cross is not None else None,
++                    recrosses_above_after_return=bool(cross is not None and any(v > .02 for _, v in vals[cross + 1:])),
++                    final_value=vals[-1][1] if vals else None)
++            bs[b] = fieldstats
++        tails.append(dict(event=ev, status='observed_until_censor', segment=sid,
++            observed_tail_s=valid[-1]['wall'] - end if valid else 0,
++            censor=censor, branches=bs,
++            bins={f'{lo}-{hi}s': dict(available_seconds=sum(max(0,min(l['t']-end_mono+l['duration_s'],hi,censor_relative)-
++                                                            max(l['t']-end_mono,lo)) for l in valid))
++                  for lo, hi in [(0,5),(5,15),(15,45),(45,90),(90,300)]}))
++    write(OUT / 'post-task-tail-metrics.json', tails)
++    return metrics, tails
++
++
++def diagnostics(data, models, causal, long, jumps, points, ledger):
++    # No threshold-based exclusions: retain extrema and distributions of all re-estimation corrections.
++    jump_summary = []
++    for model in MODELS:
++        for run in ['L','S','M']:
++            selected = [j for j in jumps if j['model'] == model and j['run'] == run]
++            states = [r for r in causal if r['model'] == model and r['run'] == run]
++            jump_summary.append(dict(model=model, run=run, Ts=distributions([r['Ts'] for r in states]),
++                delta_Ts=distributions([abs(j['delta_Ts']) for j in selected]),
++                delta_Ts_rate_C_s=distributions([abs(j['delta_Ts'])/j['dt'] for j in selected]),
++                correction=distributions([abs(j['correction_after_already_observed_path']) for j in selected]),
++                initial_Ts=distributions([r['evidence']['Ts_initial'] for r in states]),
++                bounds_hit_n=sum(bool(r['evidence']['bounds_hit']) for r in states),
++                largest_corrections=sorted(selected, key=lambda j:abs(j['correction_after_already_observed_path']), reverse=True)[:20]))
++    write(OUT / 'state-window-diagnostics.json', jump_summary)
++    init_diagnostics=[]
++    segments={s['id']:s for s in data['segments']}
++    for model in MODELS:
++        cals=read(SRC/f'evaluation/{model}/calibrations.json')['G2']
++        p=parameters(models[model])
++        for sid,cal in cals.items():
++            seg=segments[sid];start=seg['rows'][0]['mono_s']
++            response=[]
++            for offset in [60,105,150,300]:
++                if start+offset>seg['rows'][-1]['mono_s']:continue
++                ds,u=path_between(seg,start,start+offset)
++                zero=u.copy();zero[:,:2]=0
++                response.append(dict(seconds_from_strict_start=offset,
++                    per_1C_initial_Tf=propagate('G2',p,0,ds,zero,[1,0])[-1].tolist(),
++                    per_1C_initial_Ts=propagate('G2',p,0,ds,zero,[0,1])[-1].tolist(),
++                    per_1C_fixed_E=propagate('G2',p,1,ds,zero,[0,0])[-1].tolist()))
++            init_diagnostics.append(dict(model=model,run=seg['run'],segment=sid,
++                original_causal_calibration=cal,unit_sensitivity=response,
++                sensitivity_is_dimensionless_linear_response=True,no_refit=True,
++                prefix_is_not_equilibrium=True))
++    write(OUT/'prefix-and-unit-initialization-sensitivity.json',init_diagnostics)
++    sensitivity = []
++    for mode, records in [('causal60', causal), ('A-long', long)]:
++        for run in ['L','S','M']:
++            maps = {m: {r['ref']:r for r in records if r['model'] == m and r['run'] == run} for m in MODELS}
++            refs = sorted(set.intersection(*(set(v) for v in maps.values())), key=lambda k:maps['primary'][k]['t'])
++            for other in ['old_LS','A24']:
++                first = refs[0]
++                absolute = [maps['primary'][r]['Ts'] - maps[other][r]['Ts'] for r in refs]
++                incremental = [(maps['primary'][r]['Ts'] - maps['primary'][first]['Ts']) -
++                    (maps[other][r]['Ts'] - maps[other][first]['Ts']) for r in refs]
++                sensitivity.append(dict(mode=mode, run=run, other=other, n=len(refs),
++                    fixed_reference_ref=first, reference_primary=maps['primary'][first]['Ts'],
++                    reference_other=maps[other][first]['Ts'], absolute_difference=error_metrics(absolute),
++                    incremental_difference=error_metrics(incremental), no_per_segment_recentring=True,
++                    Tf_difference=error_metrics([maps['primary'][r]['Tf']-maps[other][r]['Tf'] for r in refs]) if mode=='A-long' else None,
++                    Tf_TJ_errors_common={m:error_metrics([maps[m][r]['Tf_error'] for r in refs]) for m in MODELS} if mode=='A-long' else None,
++                    causal_Tf_is_observation_anchor=mode=='causal60'))
++    write(OUT / 'frozen-model-state-sensitivity.json', sensitivity)
++    q_rows, qsummary = [], []
++    for run in ['L','S','M']:
++        rows = [r for r in data['accepted'] if r['run'] == run]
++        evidence_nodes = {n['ref']:n for n in read(SRC/f'registered/evidence-{run}.json')['nodes']}
++        P = np.array([[r['values']['vdd_gpu'], r['values']['vdd_cpu_soc_mss']] for r in rows])
++        qs = {m:P @ np.array(parameters(v)[4:]) for m,v in models.items()}
++        for i, row in enumerate(rows):
++            q_rows.append(dict(run=run, ref=row['ref'], wall=row['wall'], t=row['mono_s'],
++                VDD_GPU_W=float(P[i,0]), VDD_CPU_SOC_MSS_W=float(P[i,1]),
++                power_qualified=evidence_nodes[row['ref']]['power_ok'],
++                full_current_input_qualified=evidence_nodes[row['ref']]['good'],
++                q_equiv_C_per_s={m:float(v[i]) for m,v in qs.items()}))
++        qsummary.append(dict(run=run, n=len(rows), power_correlation=float(np.corrcoef(P.T)[0,1]),
++            VDD_GPU_W=distributions(P[:,0]), VDD_CPU_SOC_MSS_W=distributions(P[:,1]),
++            ratio_gpu_to_cpu_soc_mss=distributions(P[:,0]/P[:,1]),
++            q_equiv={m:distributions(v) for m,v in qs.items()},
++            primary_vs={m:dict(correlation=float(np.corrcoef(qs['primary'],qs[m])[0,1]),
++                signed_difference_C_per_s=distributions(qs['primary']-qs[m]),
++                MAE_C_per_s=float(np.mean(abs(qs['primary']-qs[m])))) for m in ['old_LS','A24']},
++            attribution='combined-drive support only; not independent CPU or GPU thermal contribution'))
++        qsummary[-1]['population']='all original accepted TJ records with their recorded rail values; qualification flags retained'
++        legal=np.array([evidence_nodes[row['ref']]['good'] for row in rows])
++        qsummary[-1]['strict_current_input_population']=dict(n=int(legal.sum()),power_correlation=float(np.corrcoef(P[legal].T)[0,1]),
++            VDD_GPU_W=distributions(P[legal,0]),VDD_CPU_SOC_MSS_W=distributions(P[legal,1]),
++            ratio_gpu_to_cpu_soc_mss=distributions(P[legal,0]/P[legal,1]),
++            q_equiv={m:distributions(v[legal]) for m,v in qs.items()})
++    write_lines(OUT / 'combined-drive.jsonl', q_rows)
++    write(OUT / 'combined-drive-diagnostics.json', qsummary)
++    boundaries = []
++    pc = [r for r in causal if r['model'] == 'primary']
++    for run in data['runs']:
++        for ph in run['phases']:
++            candidates = [r for r in pc if r['run'] == run['run']]
++            before = [r for r in candidates if r['wall'] < ph['start']]
++            after = [r for r in candidates if r['wall'] >= ph['start']]
++            boundaries.append(dict(run=run['run'], phase=ph['id'], wall=ph['start'],
++                previous_ref=before[-1]['ref'] if before else None, next_ref=after[0]['ref'] if after else None,
++                previous_segment=before[-1]['segment'] if before else None,
++                next_segment=after[0]['segment'] if after else None,
++                phase_does_not_reset_state=True))
++    write(OUT / 'phase-boundary-audit.json', boundaries)
++    long_by_ref = {r['ref']:r for r in long if r['model']=='primary'}
++    peaks = []
++    for ev in events_for_runs(data):
++        rows = [r for r in data['accepted'] if r['run']==ev['run'] and ev['start']<=r['wall']<=ev['end']+5]
++        if not rows:
++            continue
++        peak = max(rows,key=lambda r:r['values']['tj'])
++        matched = long_by_ref.get(peak['ref'])
++        peaks.append(dict(event=ev, actual_peak_C=peak['values']['tj'], actual_peak_ref=peak['ref'],
++            at_actual_peak_Tf_error_C=matched['Tf_error'] if matched else None,
++            A_long_available_at_actual_peak=matched is not None,
++            qualification_coverage=len([r for r in rows if r['ref'] in long_by_ref])/len(rows)))
++    write(OUT / 'original-Tf-peak-errors.json', peaks)
++    # Explicit event windows, all v2 contexts kept. No inference uses these future annotations.
++    event_metrics = []
++    for ev in events_for_runs(data):
++        for window, lo, hi in [('work',ev['start'],ev['end'])] + [
++            (f'tail-{a}-{b}',ev['end']+a,ev['end']+b) for a,b in [(0,5),(5,15),(15,45),(45,90),(90,300)]]:
++            selected = [p for p in points if p['run']==ev['run'] and lo<=p['wall']<hi]
++            for kind in ['A_roll','B_HOLD']:
++                for h in [15,45,90]:
++                    subset = [p for p in selected if p['h']==h and p[kind] and p['label'] is not None]
++                    event_metrics.append(dict(event=ev, window=window, kind=kind,h=h,n=len(subset),
++                        context_counts=dict(Counter(p['control_context'] for p in subset)),
++                        metrics={b:error_metrics([p[kind][b]-p['label']['value'] for p in subset]) for b in BRANCHES}))
++    write(OUT / 'event-temperature-metrics.json',event_metrics)
++    bad = [l for l in ledger if l['event']=='original_observation' and
++           (l['fast_status']['observed_abnormal_or_changed'] or l['fast_status']['temp_stale'] is True or l['fast_status']['guard_active'] is True or l['fast_status']['fault'] is True)]
++    assert bad and all(l['normal_extra_demand_index'] is None for l in bad)
++    write(OUT / 'risk-invalidation-audit.json',dict(observed_abnormal_nodes=len(bad),
++        ordinary_null_same_node=sum(l['normal_extra_demand_index'] is None for l in bad),
++        examples=bad[:10], artificial_temperature_thresholds=False, hardware_commands=False))
++    return sensitivity
++
++
++def main():
++    started=time.perf_counter()
++    before=resource.getrusage(resource.RUSAGE_SELF)
++    assert read(ROOT/'stage1-freeze.json')['spec_sha256']==digest((ROOT/'slowstate-spec.json').read_bytes())
++    OUT.mkdir(exist_ok=True)
++    build_kernel(ROOT/'build')
++    data,models=load_inputs()
++    causal,long,jumps=export_states(data,models)
++    primary,values,points=ablate(data,models['primary'],causal)
++    calculate_prediction_metrics(points)
++    demand,ledger=demand_and_fast_ledger(data,primary,values)
++    demand_metrics(data,demand,ledger)
++    diagnostics(data,models,causal,long,jumps,points,ledger)
++    after=resource.getrusage(resource.RUSAGE_SELF)
++    write(OUT/'resources.json',dict(wall_seconds=time.perf_counter()-started,
++        user_cpu_s=after.ru_utime-before.ru_utime,system_cpu_s=after.ru_stime-before.ru_stime,
++        maxrss_bytes_macos=after.ru_maxrss,python=sys.version,executable=sys.executable,
++        platform=platform.platform(),machine=platform.machine(),
++        single_thread_env={k:os.environ.get(k) for k in ['OPENBLAS_NUM_THREADS','OMP_NUM_THREADS','MKL_NUM_THREADS','VECLIB_MAXIMUM_THREADS']},
++        numpy=np.__version__,cuda_used=False,optimization_runs=0,network_requests=0))
++    write(ROOT/'stage3-complete.json',dict(finished_at=dt.datetime.now(dt.timezone.utc).isoformat(),
++        spec_sha256=digest((ROOT/'slowstate-spec.json').read_bytes()),parameter_refits=0,
++        results={p.name:digest(p.read_bytes()) for p in sorted(OUT.iterdir()) if p.is_file()}))
++    print('Offline state / ablation / demand complete.',flush=True)
++
++
++if __name__=='__main__':
++    main()
+diff --git a/experiments/thermal_slowstate_v1/tests/test_slowstate.py b/experiments/thermal_slowstate_v1/tests/test_slowstate.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_slowstate_v1/tests/test_slowstate.py
+@@ -0,0 +1,219 @@
++"""Limited algorithm and real-file replay checks, not a product/device test suite."""
++from pathlib import Path
++import copy
++import json
++import sys
++import numpy as np
++import pytest
++from scipy.linalg import expm
++
++ROOT = Path(__file__).absolute().parents[1]
++sys.path.insert(0, str(ROOT))
++sys.path.insert(0, str(ROOT / 'vendor'))
++from core import qs, lp_step, filters_at_origins, shape, reversal_count, BRANCHES
++from prepare import read, jsonlines, digest
++from greybox import build_kernel, propagate, matrices, forecast
++from initialize import rolling_state, path_between
++
++
++@pytest.fixture(scope='session')
++def real():
++    build_kernel(ROOT / 'build/tests')
++    data = read(ROOT / 'sources/registered/data.json')
++    model = read(ROOT / 'sources/models/primary.json')
++    p = [model['dynamic'][k] for k in ['a','c','d0','d1','b_g','b_c']]
++    states = jsonlines(ROOT / 'results/states-causal60.jsonl')
++    return data, model, p, states
++
++
++def test_irregular_left_hold_and_qs():
++    assert lp_step(10, 20, 0, 30) == 10
++    assert lp_step(10, 20, 13, 30) == pytest.approx(20-10*np.exp(-13/30))
++    p = [.1,.02,.003,.004,.03,.05]
++    q = qs(50,24,.4,p)
++    assert p[1]*(50-q)+(p[2]+p[3]*.4)*(24-q) == pytest.approx(0,abs=1e-14)
++    segment = dict(rows=[dict(ref=str(t),mono_s=t,values={'tj':40+t}) for t in [0.,1.5,8.]],
++                   timeline=[dict(t=t,inputs=[2,6,.2]) for t in [0.,1.5,2.7,8.]])
++    a=filters_at_origins(segment,24,p)
++    assert a['1.5']['STATE-LP30']==a['0.0']['STATE-QS']
++    assert a['8.0']['STATE-LP30']==pytest.approx(lp_step(a['0.0']['STATE-QS'],a['1.5']['STATE-QS'],6.5,30))
++    mutated=copy.deepcopy(segment)
++    mutated['rows'][-1]['values']['tj']=120
++    mutated['timeline'][-1]['inputs']=[50,25,1.]
++    mutated['future_request_end']=999
++    b=filters_at_origins(mutated,24,p)
++    assert a['0.0']==b['0.0'] and a['1.5']==b['1.5']
++
++
++def test_demand_fixed_limits_amplitude_and_hysteresis():
++    first=shape(45,45,0,0)
++    assert first['z_output']==0
++    assert shape(.2,0,0,1)['deadband']
++    assert shape(45.199,45,0,1)['deadband']
++    rising=shape(65,45,0,1.7)
++    assert rising['z_raw']==2 and rising['z_target']==1
++    assert rising['z_output']==pytest.approx(1.7/30)
++    falling=shape(44,45,1,3.2)
++    assert falling['z_raw']<0 and falling['z_target']==0
++    assert falling['z_output']==pytest.approx(1-3.2/120)
++    # Gradual falls smaller than 0.02 per step must still count as a reversal.
++    vals=list(np.linspace(0,.3,101))+list(np.linspace(.3,.1,101))+list(np.linspace(.1,.4,101))
++    assert reversal_count(vals)==2
++    assert reversal_count([0,0,0,0])==0
++    assert len({json.dumps(shape(48,43,.2,1.03),sort_keys=True) for _ in BRANCHES})==1
++
++
++def test_exact_cpu_propagation_against_expm(real):
++    _,_,p,_=real
++    E=34.9
++    dts=np.array([.01,1.7,7.93,30.4])
++    inputs=np.array([[2,6,.18],[30,16,.4],[4,7,.2],[10,9,.3]])
++    out=propagate('G2',p,E,dts,inputs,[46,42])
++    z=np.array([46.,42.,1.])
++    for i,(d,u) in enumerate(zip(dts,inputs)):
++        A,f=matrices('G2',p,E,u)
++        M=np.zeros((3,3));M[:2,:2]=A;M[:2,2]=f
++        z=expm(M*d)@z
++        assert np.max(abs(out[i+1]-z[:2]))<1e-10
++
++
++def test_real_past60_state_does_not_read_future(real):
++    data,model,p,states=real
++    for run in ['L','S','M']:
++        chosen=[s for s in states if s['model']=='primary' and s['run']==run][90]
++        seg=next(s for s in data['segments'] if s['id']==chosen['segment'])
++        idx=next(i for i,r in enumerate(seg['rows']) if r['ref']==chosen['ref'])
++        before,_=rolling_state('G2',p,chosen['E'],seg,idx)
++        mut=copy.deepcopy(seg)
++        for r in mut['rows'][idx+1:]:r['values']['tj']=119.
++        for n in mut['timeline']:
++            if n['t']>chosen['t']:n['inputs']=[99,88,1.]
++        mut['future_requests']=[dict(start=chosen['t']+1,end=chosen['t']+2)]
++        after,_=rolling_state('G2',p,chosen['E'],mut,idx)
++        assert before==after
++        assert before[0]==chosen['Tf']
++        assert before[1]==pytest.approx(chosen['Ts'],abs=1e-10)
++        fa=filters_at_origins(seg,chosen['E'],p)[chosen['ref']]
++        fb=filters_at_origins(mut,chosen['E'],p)[chosen['ref']]
++        assert fa==fb
++        demand_a={b:shape(v,40,.2,1.1) for b,v in fa.items()}
++        demand_b={b:shape(v,40,.2,1.1) for b,v in fb.items()}
++        assert demand_a==demand_b
++        assert forecast('G2',p,chosen['E'],before,np.array(chosen['current_inputs']),45,'HOLD',model['P10_fit'])==forecast(
++            'G2',p,chosen['E'],after,np.array(chosen['current_inputs']),45,'HOLD',model['P10_fit'])
++        # A-roll is explicitly allowed to use changed future input (but no future TJ).
++        if seg['rows'][-1]['mono_s']>chosen['t']+45:
++            dt1,u1=path_between(seg,chosen['t'],chosen['t']+45)
++            dt2,u2=path_between(mut,chosen['t'],chosen['t']+45)
++            assert abs(propagate('G2',p,chosen['E'],dt1,u1,before)[-1,0]-
++                       propagate('G2',p,chosen['E'],dt2,u2,after)[-1,0])>1
++
++
++def test_two_dimensional_export_and_anchor_not_forecast(real):
++    _,_,_,states=real
++    long=jsonlines(ROOT/'results/states-A-long.jsonl')
++    checks=read(ROOT/'results/replay-checks.json')
++    assert all(c['max_abs_Tf_replay_error_C']<=1e-10 for c in checks)
++    assert all(r['Tf']==r['sealed_Tf'] for r in long)
++    assert sum(abs(r['Tf']-r['Ts'])>.5 for r in long)>.8*len(long)
++    assert all(s['Tf_is_observation_anchor'] and not s['parameter_learning'] for s in states)
++    assert all(s['evidence']['end']<=s['t']+1e-9 for s in states)
++    assert all(s['state_truth_available'] is False for s in states+long)
++
++
++def test_model_and_original_members_hash_unchanged():
++    inv=read(ROOT/'source-inventory.json')
++    for item in inv:
++        if item['kind']=='member':
++            assert digest((ROOT/item['copied_to']).read_bytes())==item['sha256']
++    freeze=read(ROOT/'stage1-freeze.json')
++    assert digest((ROOT/'slowstate-spec.json').read_bytes())==freeze['spec_sha256']
++    for name,sha in freeze['models'].items():
++        assert digest((ROOT/f'sources/models/{name}.json').read_bytes())==sha
++
++
++def test_same_cohort_and_independent_horizons():
++    points=jsonlines(ROOT/'results/four-branch-predictions.jsonl')
++    check=read(ROOT/'results/ablation-replay-check.json')
++    assert check['A_roll_max_replay_error_C']<=1e-10 and check['B_HOLD_max_replay_error_C']<=1e-10
++    partial=0
++    byref={}
++    for row in points:
++        byref.setdefault(row['ref'],{})[row['h']]=row
++        for kind in ['A_roll','B_HOLD']:
++            assert not row[kind] or set(row[kind])==set(BRANCHES)
++    for rows in byref.values():
++        if rows[45]['label'] is not None and rows[90]['label'] is None:
++            partial+=1
++    assert partial>0
++    metrics=read(ROOT/'results/temperature-metrics.json')
++    assert all(len({m['n'] for m in r['metrics'].values()})==1 for r in metrics)
++    assert all(r['n']==r['metrics']['STATE-G2']['n'] for r in metrics)
++
++
++def test_M_work_blocks_keep_slow_state_and_qualification(real):
++    data,_,_,states=real
++    model_states=[r for r in states if r['model']=='primary' and r['run']=='M']
++    run=next(r for r in data['runs'] if r['run']=='M')
++    for phase in [p for p in run['phases'] if p['macro']=='work']:
++        a=[r for r in model_states if phase['start']-5<=r['wall']<=phase['start']+5]
++        assert len(a)>=8 and {r['segment'] for r in a}=={'M-00'}
++        assert all(r['t']-r['evidence']['start']>58 for r in a)
++    assert {r['segment'] for r in model_states}=={'M-00','M-01'}
++
++
++def test_fast_risk_is_immediate_and_demand_never_extended():
++    ledger=jsonlines(ROOT/'results/fast-status-and-demand-ledger.jsonl')
++    rows={r['ref']:r for r in jsonlines(ROOT/'results/normal-demand-origins.jsonl')}
++    bad=[r for r in ledger if r['fast_status']['observed_abnormal_or_changed'] or r['fast_status']['temp_stale'] is True]
++    assert bad
++    assert all(r['normal_extra_demand_index'] is None and not r['ordinary_available'] for r in bad)
++    assert all(r['normal_extra_demand_index'] is None for r in ledger if r['event']=='known_input_expiry')
++    for r in ledger:
++        if r['ordinary_available']:
++            d=rows[r['shape_ref']]
++            assert d['t']<=r['t'] and d['source_epoch']==r['fast_status']['source_epoch']
++            assert r['t']<r['current_input_valid_until']
++            assert set(r['normal_extra_demand_index'])==set(BRANCHES)
++
++
++def test_expiry_keeps_fast_TJ_and_tail_bins_do_not_overcount():
++    ledger=jsonlines(ROOT/'results/fast-status-and-demand-ledger.jsonl')
++    expiry=[r for r in ledger if r['event']=='known_input_expiry']
++    assert expiry
++    kept=[r for r in expiry if r['measured_TJ_valid']]
++    assert kept and all(r['measured_TJ'] is not None and r['normal_extra_demand_index'] is None for r in kept)
++    tails=read(ROOT/'results/post-task-tail-metrics.json')
++    for row in tails:
++        if row['status']=='unavailable_at_end':
++            assert row['branches'] is None
++            continue
++        for label,value in row['bins'].items():
++            lo,hi=map(float,label[:-1].split('-'))
++            assert value['available_seconds']<=hi-lo+1e-7
++
++
++def test_sensitivity_is_frozen_and_not_a_Ts_accuracy_claim():
++    rows=read(ROOT/'results/frozen-model-state-sensitivity.json')
++    assert all(r['no_per_segment_recentring'] for r in rows)
++    assert all(r['Tf_difference'] is None for r in rows if r['mode']=='causal60')
++    init=read(ROOT/'results/prefix-and-unit-initialization-sensitivity.json')
++    assert all(r['no_refit'] and r['prefix_is_not_equilibrium'] for r in init)
++    assert read(ROOT/'results/resources.json')['optimization_runs']==0
++
++
++def test_signal_scale_not_an_actuator_and_gaps_not_joined():
++    rows=jsonlines(ROOT/'results/normal-demand-origins.jsonl')
++    previous={}
++    for r in rows:
++        for b,v in r['branches'].items():
++            assert 0<=v['z_output']<=1
++            assert v['z_target']==max(0,min(1,v['z_raw']))
++            assert -v['dt_s']/120-1e-12<=v['change']<=v['dt_s']/30+1e-12
++        if r['segment'] not in previous:
++            assert all(v['z_output']==0 and v['dt_s']==0 for v in r['branches'].values())
++        previous[r['segment']]=r
++        assert not r['deployable'] and r['reference_is_not_equilibrium']
++    metrics=read(ROOT/'results/demand-signal-metrics.json')
++    assert all(m['branches'][b]['z_output']['amplitude'] is not None for m in metrics for b in BRANCHES
++               if m['branches'][b]['available_seconds']>0)
+diff --git a/experiments/thermal_slowstate_v1/vendor/common.py b/experiments/thermal_slowstate_v1/vendor/common.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_slowstate_v1/vendor/common.py
+@@ -0,0 +1,49 @@
++"""Small, offline-only experiment utilities."""
++import hashlib
++import json
++from pathlib import Path
++from datetime import datetime, timezone
++import numpy as np
++
++
++def sha(path):
++    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
++
++
++def read(path):
++    return json.loads(Path(path).read_text())
++
++
++def write(path, obj):
++    def cast(x):
++        if isinstance(x, np.ndarray):
++            return x.tolist()
++        if isinstance(x, np.generic):
++            return x.item()
++        if isinstance(x, Path):
++            return str(x)
++        raise TypeError(type(x))
++    Path(path).parent.mkdir(parents=True, exist_ok=True)
++    Path(path).write_text(json.dumps(obj, ensure_ascii=False, indent=2, default=cast, allow_nan=False)+'\n')
++
++
++def stamp():
++    return datetime.now(timezone.utc).isoformat()
++
++
++def seconds(utc):
++    return datetime.fromisoformat(utc).timestamp()
++
++
++def balanced_weights(rows):
++    """Equal runs, equal present macroclasses, then actual supported time."""
++    w = np.zeros(len(rows))
++    runs = sorted({r['run'] for r in rows if r['duration'] > 0})
++    for run in runs:
++        classes = sorted({r['macro'] for r in rows if r['run'] == run and r['duration'] > 0})
++        for macro in classes:
++            ids = [i for i, r in enumerate(rows) if r['run'] == run and r['macro'] == macro]
++            dt = np.array([rows[i]['duration'] for i in ids])
++            if dt.sum():
++                w[ids] = dt/dt.sum()/len(classes)/len(runs)
++    return w
+diff --git a/experiments/thermal_slowstate_v1/vendor/greybox.py b/experiments/thermal_slowstate_v1/vendor/greybox.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_slowstate_v1/vendor/greybox.py
+@@ -0,0 +1,172 @@
++"""Constrained thermal candidates with exact CPU propagation and bounded fitting."""
++import ctypes
++import os
++import subprocess
++import time
++from pathlib import Path
++import numpy as np
++from scipy.linalg import expm
++from scipy.optimize import least_squares
++from common import write, balanced_weights, stamp, sha
++
++LIB = None
++
++
++def build_kernel(build_dir):
++    global LIB
++    build_dir=Path(build_dir);build_dir.mkdir(parents=True,exist_ok=True)
++    source=Path(__file__).with_name('propagate.c')
++    binary=build_dir/'propagate.so'
++    cmd=[os.environ.get('CC','cc'),'-O2','-fPIC','-shared',str(source),'-o',str(binary),'-lm']
++    result=subprocess.run(cmd,capture_output=True,text=True,check=True)
++    write(build_dir/'compiler.json',dict(command=cmd,stdout=result.stdout,stderr=result.stderr,source_sha256=sha(source)))
++    LIB=ctypes.CDLL(str(binary.resolve()))
++    ptr=np.ctypeslib.ndpointer(dtype=np.float64,flags='C_CONTIGUOUS')
++    LIB.trajectory.argtypes=[ctypes.c_int,ctypes.c_size_t,ptr,ctypes.c_double,ptr,ptr,ptr,ptr]
++    LIB.trajectory.restype=None
++
++
++def propagate(model,p,E,dt,inputs,initial):
++    p,dt,inputs,initial=[np.ascontiguousarray(x,dtype=np.float64) for x in (p,dt,inputs,initial)]
++    assert len(initial)==2 and inputs.shape==(len(dt),3)
++    out=np.empty((len(dt)+1,2),dtype=np.float64)
++    LIB.trajectory(int(model[-1]),len(dt),p,float(E),dt,inputs,initial,out)
++    return out
++
++
++def matrices(model,p,E,u):
++    pg,pc,duty=u
++    if model=='G1':
++        k=p[0]+p[1]*duty
++        return np.array([[-k]]),np.array([k*E+p[2]*pg+p[3]*pc])
++    a,c,d0,d1,bg,bc=p;d=d0+d1*duty
++    return np.array([[-a,a],[c,-c-d]]),np.array([bg*pg+bc*pc,d*E])
++
++
++def forecast(model,p,E,state,current,h,scenario,floors):
++    if scenario=='HOLD':
++        return propagate(model,p,E,[h],[current],state)[-1,0]
++    # Augment with the *known hypothetical* exponential power deviation state.
++    floor=np.minimum(current[:2],floors)
++    A,f=matrices(model,p,E,[*floor,current[2]])
++    n=len(A);M=np.zeros((n+2,n+2));M[:n,:n]=A;M[:n,-1]=f
++    b=p[2:] if model=='G1' else p[4:]
++    M[0,n]=np.dot(b,np.asarray(current[:2])-floor);M[n,n]=-1/30
++    return (expm(M*h)@np.r_[state[:n],1.,1.])[0]
++
++
++def arrays(segment):
++    t=np.array([n['t'] for n in segment['timeline']])
++    return dict(dt=np.diff(t),u=np.array([n['inputs'] for n in segment['timeline'][:-1]],dtype=float).reshape(-1,3),
++                index=np.array([a['timeline_index'] for a in segment['rows']],dtype=int),
++                y=np.array([a['values']['tj'] for a in segment['rows']]),segment=segment)
++
++
++def huber_loss(weights):
++    def loss(z):
++        z=np.asarray(z);root=np.sqrt(np.maximum(z,1.));mask=z<=1
++        return np.array([np.where(mask,z,2*root-1),np.where(mask,1,1/root),np.where(mask,0,-0.5/(root**3))])*weights
++    return loss
++
++
++class FitProblem:
++    def __init__(self,model,segments,spec):
++        self.model,self.spec=model,spec
++        self.groups=[arrays(s) for s in segments if s['eligible_for_fit']]
++        self.runs=sorted({g['segment']['run'] for g in self.groups})
++        self.dynamic=spec['models'][model]['dynamic_parameters']
++        self.names=self.dynamic+[f'E_{r}' for r in self.runs]+([f'Ts_{g["segment"]["id"]}' for g in self.groups] if model=='G2' else [])
++        bounds=[spec['models'][model]['bounds'][n] for n in self.dynamic]+[[-10,60]]*len(self.runs)+([[-20,120]]*len(self.groups) if model=='G2' else [])
++        self.lo,self.hi=np.array(bounds).T
++        self.rows=[a for g in self.groups for a in g['segment']['rows']]
++        self.weights=balanced_weights(self.rows)
++        self.nd=len(self.dynamic)
++
++    def initial(self,seed):
++        values=[seed[self.model][k] for k in self.dynamic]
++        values += [np.clip(next(g['y'][0] for g in self.groups if g['segment']['run']==r)-15,-10,60) for r in self.runs]
++        if self.model=='G2': values += [np.clip(g['y'][0]-2,-20,120) for g in self.groups]
++        return np.array(values)
++
++    def responses(self,x):
++        out=[]
++        for j,g in enumerate(self.groups):
++            E=x[self.nd+self.runs.index(g['segment']['run'])]
++            ts=x[self.nd+len(self.runs)+j] if self.model=='G2' else 0
++            z=propagate(self.model,x[:self.nd],E,g['dt'],g['u'],[g['y'][0],ts])
++            out.append(z[g['index'],0])
++        return out
++
++    def residual(self,x):
++        return np.concatenate([v-g['y'] for v,g in zip(self.responses(x),self.groups)])
++
++    def objective(self,x):
++        e=self.residual(x)/.3
++        return float(np.dot(self.weights,np.where(np.abs(e)<=1,e*e,2*np.abs(e)-1)))
++
++
++def solve(problem,x0,seed_id,out,max_nfev=300,max_calls=1500,fixed_d1=False):
++    start=time.perf_counter();calls=0;best=(float('inf'),x0.copy());trace=[]
++    free=np.arange(len(x0))
++    if fixed_d1: free=np.delete(free,3);x0=x0.copy();x0[3]=0
++    def unpack(z):
++        x=x0.copy();x[free]=z;return x
++    def residual(z):
++        nonlocal calls,best
++        if calls>=max_calls: raise RuntimeError('actual_residual_call_budget')
++        calls+=1;x=unpack(z);r=problem.residual(x)/.3
++        J=float(np.dot(problem.weights,np.where(abs(r)<=1,r*r,2*abs(r)-1)))
++        if np.isfinite(J) and J<best[0]:best=(J,x.copy())
++        trace.append(dict(call=calls,J=J if np.isfinite(J) else None))
++        return r
++    def jacobian(z):
++        # Finite differences only for nonlinear dynamics. Nuisance columns are
++        # exact homogeneous/affine sensitivities, not 56 perturbed full fits.
++        x=unpack(z);base=residual(z);J=np.zeros((len(base),len(x)))
++        for k in range(problem.nd):
++            if k not in free: continue
++            step=np.sqrt(np.finfo(float).eps)*max(abs(x[k]),.01)
++            if x[k]+step>problem.hi[k]: step=-step
++            zp=z.copy();zp[list(free).index(k)]+=step
++            J[:,k]=(residual(zp)-base)/step
++        pos=0
++        for j,g in enumerate(problem.groups):
++            n=len(g['y']);zero=g['u'].copy();zero[:,:2]=0
++            eb=propagate(problem.model,x[:problem.nd],1,g['dt'],zero,[0,0])[g['index'],0]/.3
++            J[pos:pos+n,problem.nd+problem.runs.index(g['segment']['run'])]=eb
++            if problem.model=='G2':
++                sb=propagate('G2',x[:problem.nd],0,g['dt'],zero,[0,1])[g['index'],0]/.3
++                J[pos:pos+n,problem.nd+len(problem.runs)+j]=sb
++            pos+=n
++        return J[:,free]
++    try:
++        result=least_squares(residual,x0[free],jac=jacobian,bounds=(problem.lo[free],problem.hi[free]),method='trf',x_scale='jac',
++                             loss=huber_loss(problem.weights),max_nfev=max_nfev,ftol=1e-8,xtol=1e-8,gtol=1e-8)
++        x=unpack(result.x);status=int(result.status);message=result.message;nfev=result.nfev;optimality=float(result.optimality)
++        J=float(np.dot(problem.weights,np.where(abs(result.fun)<=1,result.fun**2,2*abs(result.fun)-1)))
++    except RuntimeError as e:
++        x=best[1];J=best[0];status=0;message=str(e);nfev=None;optimality=None
++    entry=dict(seed=seed_id,initial=x0,parameters=dict(zip(problem.names,x)),x=x,J=J,finite=bool(np.isfinite(x).all() and np.isfinite(J)),
++               converged=status>0,status=status,message=message,nfev=nfev,actual_residual_calls=calls,optimality=optimality,
++               seconds=time.perf_counter()-start,finished_at=stamp(),
++               boundary_parameters=[name for name,v,lo,hi in zip(problem.names,x,problem.lo,problem.hi) if min(v-lo,hi-v)<1e-4*(hi-lo)],trace=trace)
++    write(out,entry)
++    print(problem.model,seed_id,'J',round(J,6),'status',status,'calls',calls,'seconds',round(entry['seconds'],2),flush=True)
++    return entry
++
++
++def fit(model,segments,spec,out):
++    out=Path(out);out.mkdir(parents=True,exist_ok=False)
++    problem=FitProblem(model,segments,spec)
++    trials=[solve(problem,problem.initial(seed),seed['id'],out/f'{seed["id"]}.json',spec['fit']['max_nfev'],spec['fit']['max_actual_residual_calls_per_seed']) for seed in spec['initializations']]
++    good=[v for v in trials if v['converged'] and v['finite']]
++    selected=min(good if good else [v for v in trials if v['finite']],key=lambda v:v['J'])
++    rows=problem.rows;P=np.array([[r['values']['vdd_gpu'],r['values']['vdd_cpu_soc_mss']] for r in rows])
++    artifact=dict(schema='TTO-GREYBOX-EXPERIMENT-v1',deployable=False,model=model,
++                  fit_runs=problem.runs,selected_seed=selected['seed'],converged=selected['converged'],selection='training_objective_only',
++                  dynamic={k:selected['parameters'][k] for k in problem.dynamic},parameters=selected['parameters'],x=selected['x'],
++                  J=selected['J'],P10_fit=np.percentile(P,10,axis=0),input_min=P.min(axis=0),input_max=P.max(axis=0),
++                  u_range=[min(r['values']['duty']/100 for r in rows),max(r['values']['duty']/100 for r in rows)],
++                  frozen_at=stamp(),parameter_count=len(problem.names),spec_sha256=sha(Path(out).parents[1]/'experiment-spec.json'))
++    write(out/'model.json',artifact)
++    return artifact,problem,trials
+diff --git a/experiments/thermal_slowstate_v1/vendor/initialize.py b/experiments/thermal_slowstate_v1/vendor/initialize.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_slowstate_v1/vendor/initialize.py
+@@ -0,0 +1,62 @@
++"""Past-only affine boundary / state estimation with fixed dynamic parameters."""
++import numpy as np
++from scipy.optimize import lsq_linear
++from greybox import propagate
++
++
++def path_between(segment,start,end):
++    """Nominal end time; only actual left-held input events strictly before end."""
++    times=np.array([n['t'] for n in segment['timeline']])
++    lo=np.searchsorted(times,start,side='right')-1
++    hi=np.searchsorted(times,end,side='left')
++    mids=times[lo+1:hi]
++    edges=np.r_[start,mids,end]
++    inputs=np.array([n['inputs'] for n in segment['timeline'][lo:hi]],float).reshape(-1,3)
++    return np.diff(edges),inputs
++
++
++def estimate(model,p,segment,end,window,E=None,E_fallback=None):
++    """All observed TJ used is in [end-window,end], inclusively."""
++    rows=segment['rows']
++    chosen=[a for a in rows if end-window-1e-9<=a['mono_s']<=end+1e-9]
++    assert chosen and chosen[-1]['mono_s']<=end+1e-9
++    start=chosen[0]['mono_s']
++    dt,u=path_between(segment,start,end)
++    times=np.r_[start,start+np.cumsum(dt)]
++    idx=np.array([np.argmin(abs(times-r['mono_s'])) for r in chosen])
++    y=np.array([a['values']['tj'] for a in chosen]);y0=y[0]
++    z=propagate(model,p,0 if E is None else E,dt,u,[y0,0])
++    columns=[];names=[]
++    zero=u.copy();zero[:,:2]=0
++    if E is None:
++        columns.append(propagate(model,p,1,dt,zero,[0,0])[:,0]);names.append('E')
++    if model=='G2':
++        columns.append(propagate(model,p,0,dt,zero,[0,1])[:,0]);names.append('Ts')
++    X=np.array(columns).T[idx] if columns else np.empty((len(chosen),0))
++    norms=np.linalg.norm(X,axis=0)
++    singular=np.linalg.svd(X/np.where(norms>0,norms,1),compute_uv=False)
++    ratio=float(singular[-1]/singular[0]) if len(singular) and singular[0]>0 else 0
++    weak=E is None and model=='G2' and ratio<1e-6
++    if weak:
++        result=estimate(model,p,segment,end,window,E=E_fallback)
++        result.update(weak_prefix_calibration=True,original_singular_ratio=ratio,original_singular_values=singular.tolist())
++        return result
++    lower=[-10 if n=='E' else -20 for n in names];upper=[60 if n=='E' else 120 for n in names]
++    fit=lsq_linear(X,y-z[idx,0],bounds=(lower,upper),tol=1e-12) if names else None
++    values=dict(zip(names,fit.x)) if fit else {}
++    Er=values.get('E',E);ts=values.get('Ts',0.)
++    states=propagate(model,p,Er,dt,u,[y0,ts])
++    return dict(E=float(Er),Ts_initial=float(ts),state=states[-1].tolist(),start=start,end=end,
++                first_ref=chosen[0]['ref'],last_ref=chosen[-1]['ref'],n=len(chosen),rank=int(np.linalg.matrix_rank(X)) if names else 0,
++                normalized_singular_values=singular.tolist(),singular_ratio=ratio,condition=1/ratio if ratio>0 else None,
++                weak_prefix_calibration=False,rmse=float(np.sqrt(np.mean((states[idx,0]-y)**2))),
++                bounds_hit=[n for n,v,l,h in zip(names,fit.x if fit else [],lower,upper) if min(v-l,h-v)<1e-5])
++
++
++def rolling_state(model,p,E,segment,index,window=60):
++    row=segment['rows'][index];t=row['mono_s']
++    if model=='G1':
++        return [row['values']['tj'],0.],dict(start=t,end=t,first_ref=row['ref'],last_ref=row['ref'],n=1)
++    result=estimate(model,p,segment,t,window,E=E)
++    state=result['state'].copy();state[0]=row['values']['tj']
++    return state,result
+diff --git a/experiments/thermal_slowstate_v1/vendor/propagate.c b/experiments/thermal_slowstate_v1/vendor/propagate.c
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_slowstate_v1/vendor/propagate.c
+@@ -0,0 +1,48 @@
++/* Exact affine G1/G2 propagation. No inverse of A, no Euler integration. */
++#include <math.h>
++#include <stddef.h>
++
++static double phi(double z, double dt) {
++    return fabs(z*dt)<1e-8 ? dt*(1+z*dt/2+z*z*dt*dt/6) : expm1(z*dt)/z;
++}
++
++static void step(int model,const double *p,double E,const double *u,double dt,double *x) {
++    if(model==1) {
++        double k=p[0]+p[1]*u[2], q=p[2]*u[0]+p[3]*u[1];
++        x[0] += phi(-k,dt)*(q-k*(x[0]-E));
++        return;
++    }
++    double a=p[0],c=p[1],d=p[2]+p[3]*u[2];
++    double A[4]={-a,a,c,-c-d};
++    double v[2]={-a*(x[0]-x[1])+p[4]*u[0]+p[5]*u[1], c*(x[0]-x[1])-d*(x[1]-E)};
++    double norm=(2*a+2*c+d)*dt;
++    /* x_new=x+integral exp(A*s) ds * (A*x+f). Stable at tiny dt. */
++    if(norm<0.1) {
++        double t0=dt*v[0],t1=dt*v[1],q0=t0,q1=t1;
++        for(int k=2;k<=12;k++) {
++            double n0=dt*(A[0]*t0+A[1]*t1)/k;
++            double n1=dt*(A[2]*t0+A[3]*t1)/k;
++            t0=n0;t1=n1;q0+=n0;q1+=n1;
++        }
++        x[0]+=q0;x[1]+=q1;return;
++    }
++    double sum=a+c+d, disc=sqrt((a-c-d)*(a-c-d)+4*a*c);
++    double lo=-(sum+disc)/2, hi=-2*a*d/(sum+disc);
++    double fl=phi(lo,dt), fh=phi(hi,dt), slope;
++    if(disc>1e-7*fmax(1.,sum)) slope=(fh-fl)/disc;
++    else {
++        double mid=(hi+lo)/2,z=mid*dt;
++        slope=(exp(z)*(z-1)+1)/(mid*mid);
++    }
++    double q0=fl*v[0]+slope*((A[0]-lo)*v[0]+A[1]*v[1]);
++    double q1=fl*v[1]+slope*(A[2]*v[0]+(A[3]-lo)*v[1]);
++    x[0]+=q0;x[1]+=q1;
++}
++
++void trajectory(int model,size_t n,const double *p,double E,const double *dt,const double *inputs,const double *initial,double *out) {
++    double x[2]={initial[0],initial[1]};out[0]=x[0];out[1]=x[1];
++    for(size_t i=0;i<n;i++) {
++        step(model,p,E,inputs+3*i,dt[i],x);
++        out[2*(i+1)]=x[0];out[2*(i+1)+1]=x[1];
++    }
++}
+diff --git a/experiments/thermal_slowstate_v1/verify_results.py b/experiments/thermal_slowstate_v1/verify_results.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_slowstate_v1/verify_results.py
+@@ -0,0 +1,91 @@
++"""Independent file/cohort/metric readback; local only, no model selection."""
++from pathlib import Path
++from collections import Counter
++import argparse
++import hashlib
++import json
++import math
++import numpy as np
++from prepare import read, jsonlines, write, digest
++
++ROOT=Path(__file__).absolute().parent
++BRANCHES=['STATE-G2','STATE-QS','STATE-LP30','STATE-LP120']
++
++
++def verify(root=ROOT):
++    root=Path(root);checks={}
++    inv=read(root/'source-inventory.json')
++    for item in inv:
++        if item['kind']=='member':
++            assert digest((root/item['copied_to']).read_bytes())==item['sha256']
++    checks['immutable_source_member_hashes']=sum(i['kind']=='member' for i in inv)
++    for item in read(root/'historical-provenance-index.json'):
++        assert digest((root/item['copied_to']).read_bytes())==item['sha256']
++    checks['historical_private_vs_shared_identity_preserved']=True
++    freeze=read(root/'stage1-freeze.json')
++    assert digest((root/'slowstate-spec.json').read_bytes())==freeze['spec_sha256']
++    assert read(root/'stage3-complete.json')['spec_sha256']==freeze['spec_sha256']
++    for name,sha in read(root/'stage3-complete.json')['results'].items():
++        assert digest((root/'results'/name).read_bytes())==sha,name
++    checks['stages_match_frozen_spec']=True
++    points=jsonlines(root/'results/four-branch-predictions.jsonl')
++    rows=read(root/'results/temperature-metrics.json')
++    count=0
++    for cell in rows:
++        if cell['scale']!='run':continue
++        selected=[]
++        for point in points:
++            if point['run']!=cell['group'] or point['h']!=cell['h'] or point['label'] is None or not point[cell['kind']]:continue
++            st=cell['stratum']
++            if st=='legacy_strict' and not point['strict_label']:continue
++            if st not in ['legacy_strict','all_contexts'] and st!=point['control_context']:continue
++            selected.append(point)
++        assert len(selected)==cell['n']
++        cohort='\n'.join(f"{p['ref']}|{p['h']}|{p['label']['ref']}" for p in selected)
++        assert hashlib.sha256(cohort.encode()).hexdigest()==cell['cohort_sha256']
++        for branch in BRANCHES:
++            e=np.array([p[cell['kind']][branch]-p['label']['value'] for p in selected])
++            actual=cell['metrics'][branch]
++            independent=dict(MAE=float(np.mean(abs(e))),bias=float(np.mean(e)),
++                P95_abs=float(np.quantile(abs(e),.95)),max_under=max(0,float(-min(e))),max_over=max(0,float(max(e))))
++            for key,value in independent.items():assert abs(value-actual[key])<1e-11,(cell['group'],key)
++            count+=1
++    checks['independent_per_run_metric_cells']=count
++    orig=read(root/'sources/registered/data.json')
++    accepted={r['ref']:r for r in orig['accepted']}
++    states=jsonlines(root/'results/states-causal60.jsonl')
++    for s in states:
++        assert s['Tf']==accepted[s['ref']]['values']['tj']
++        assert s['Tf_is_observation_anchor'] and not s['state_truth_available']
++        assert s['evidence']['end']<=s['t']+1e-9 and s['input_cutoff']<=s['t']+1e-9
++    for c in read(root/'results/replay-checks.json'):
++        assert c['match'] and c['max_abs_Tf_replay_error_C']<=1e-10
++    checks['all_causal_states_prefix_only']=len(states)
++    # The observed fast channel remains independent of whether slow demand is available.
++    ledger=jsonlines(root/'results/fast-status-and-demand-ledger.jsonl')
++    abnormal=[l for l in ledger if l['fast_status']['observed_abnormal_or_changed']]
++    assert abnormal and all(l['normal_extra_demand_index'] is None for l in abnormal)
++    assert any(l['measured_TJ_valid'] and l['normal_extra_demand_index'] is None for l in ledger)
++    checks['abnormal_nodes_null_immediately']=len(abnormal)
++    checks['whole_run_availability_seconds']={r:sum(l['duration_s'] for l in ledger if l['run']==r and l['ordinary_available']) for r in ['L','S','M']}
++    figs=read(root/'figures/figure-index.json')
++    assert len(figs)==4 and all(len(f['caption'])==3 for f in figs)
++    for f in figs:
++        assert (root/'figures'/f['png']).stat().st_size>10000
++        assert (root/'figures'/f['svg']).stat().st_size>10000
++    checks['four_chinese_figure_classes']=True
++    # A portable extracted package need not contain the original repo. In the actual worktree it must match.
++    repo=root.parents[1] if len(root.parents)>1 else root
++    protected=read(root/'protected-before.json')
++    if (repo/'src/tto').exists() and (repo/'experiments/thermal_identification_r2').exists():
++        changed=[n for n,sha in protected.items() if not (repo/n).exists() or digest((repo/n).read_bytes())!=sha]
++        assert not changed,changed
++        checks['protected_original_files_unchanged']=len(protected)
++    else:
++        checks['protected_original_files_unchanged']='original checkout absent; immutable copied source hashes checked'
++    write(root/'readback-checks.json',dict(status='pass',checks=checks,deployable=False,
++          scope='offline research only; no device/control/sound/safety acceptance'))
++    print(json.dumps(dict(status='pass',checks=checks),ensure_ascii=False))
++
++
++if __name__=='__main__':verify()
+diff --git a/experiments/thermal_slowstate_v1/产品决定与字段含义.md b/experiments/thermal_slowstate_v1/产品决定与字段含义.md
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_slowstate_v1/产品决定与字段含义.md
+@@ -0,0 +1,13 @@
++# TTO-SLOWSTATE-v1.0：先冻结产品含义
++
++本轮以温度安全和性能可维持为前提，研究日常散热的平稳性。短TJ尖峰无需自动复制成普通慢热需求的一次明显升降；连续短任务可以形成适度平台；任务结束后允许有依据的继续散热。所有计算均为离线，不能给出现有风扇可以降低到什么档位的结论。
++
++实测TJ是原观测目标；原G2第一状态Tf仍是TJ估计，欠峰和迟降仍是误差。第二状态Ts是未测量的潜在慢态，不是TTP温度、散热体实测温度或已识别热容。因果估计器的Tf锚定当前TJ，不计作零误差预测成绩。A-long两维自由传播与每点过去60秒重估分别保存。
++
++普通增量需求指数无量纲，没有执行器权限。零值不是零散热、停风扇或安全许可。固定10°C尺度、0.02死区、30秒全幅升量、120秒全幅降量只比较信号形态。所有分支使用同一处理。实际TJ、原保护/故障/失温/资格状态单独立即输出；异常和资格不足时普通需求为null，不延长旧值有效期。
++
++主模型固定第二轮D-LSM-G2；旧LS和A24只做既有参数敏感性。四来源只换起点Ts，共用当前实测TJ、主模型参数、原前缀E、输入情景和独立时距标签。没有参数重新拟合、窗口择优或新模型族。数据全部是开发资料。
++
++GPU与VDD_CPU_SOC_MSS是两个独立rail。后者不是纯CPU。共同活动属于正常推理；共线性限制独立贡献归因，不自动否定组合预测。q_equiv是方程等效驱动，单位°C/s，不是W或实测热量。24°C只绑定M用户确认附注，不覆盖旧E，不填补L/S环境。
++
++本轮不修改生产代码、旧数据/模型/成绩、采集/runner/安装器/风扇/WS/TTL。没有设备、网络请求、负载、CUDA、部署、提交、推送或PR。未来输入策略暂缓一轮，不取消；本轮不实现请求预测器。完成实际计算、限定测试、报告和证据后停止等待独立复审。

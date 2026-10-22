@@ -1,0 +1,81 @@
+........................................................................ [ 57%]
+...........................F......F..................                    [100%]
+=================================== FAILURES ===================================
+___________________ test_reader_identical_noise_and_missing ____________________
+
+collector = (<tegrastats_api.parser.TegrastatsParser object at 0x10bce9d50>, [<test_data.FakeProcess object at 0x10bceb340>], [['tegrastats', '--interval', '1000']])
+
+    def test_reader_identical_noise_and_missing(collector):
+        p, processes, commands = collector
+        p.start()
+        assert commands == [["tegrastats", "--interval", "1000"]]
+        processes[0].lines.put(LINE + "\n")
+        await_seq(p, 1)
+        first = p.get_snapshot()
+        processes[0].lines.put(LINE + "\n")
+        await_seq(p, 2)
+        second = p.get_snapshot()[1]
+        for noise in ("", "ordinary log", "error tj@45C", "tj@1.2.3C", "CPU [garbage]", "VDD_BAD 1W/2W"):
+            assert not accept(p, noise)
+        assert p.get_snapshot()[1]["sample_seq"] == 2
+        assert p.get_snapshot()[1]["received_at"] == second["received_at"]
+        assert accept(p, "tj@46C")
+        data, meta = p.get_snapshot()
+        assert meta["sample_seq"] == 3
+>       assert data["power"] == {} and data["gpu"] == {}
+E       AssertionError: assert ({} == {}
+E         
+E         Use -v to get more diff and {'age_at_tele...s': None, ...} == {}
+E         
+E         Left contains 9 more items:
+E         {'age_at_telemetry_receive_ms': None,
+E          'device_uuid': None,
+E          'freshness_timeout_ms': None,
+E          'sample_interval_ms': None,
+E          'sampled_at_utc': None,...
+E         
+E         ...Full output truncated (5 lines hidden), use '-vv' to show)
+
+../rm01OrinStatus/tests/offline/test_data.py:200: AssertionError
+_______________________ test_http_baseline_normal_fields _______________________
+
+collector = (<tegrastats_api.parser.TegrastatsParser object at 0x10bce8d90>, [<test_data.FakeProcess object at 0x10bce9ae0>], [['tegrastats', '--interval', '1000']])
+
+    def test_http_baseline_normal_fields(collector):
+        p, _, _ = collector
+        p.start()
+        assert accept(p)
+        new = TegrastatsServer()
+        new.parser = p
+        old = baseline_module("server").TegrastatsServer()
+        old.parser._current_data = baseline_module("parser").TegrastatsParser.parse_line(LINE)
+        for endpoint in ("status", "cpu", "memory", "temperature", "power"):
+            before = old.app.test_client().get("/api/" + endpoint).json
+            after = new.app.test_client().get("/api/" + endpoint).json
+            assert isinstance(before.pop("timestamp"), str)
+            assert isinstance(after.pop("timestamp"), str)
+            assert isinstance(after.pop("telemetry_meta"), dict)
+            if "power" in before:
+                before.pop("power")
+                after.pop("power")
+>           assert before == after
+E           AssertionError: assert {'cpu': {'cor... 43.875, ...}} == {'cpu': {'cor...e', ...}, ...}
+E             
+E             Omitting 3 identical items, use -vv to show
+E             Differing items:
+E             {'gpu': {'gr3d_freq': 0}} != {'gpu': {'age_at_telemetry_receive_ms': None, 'device_uuid': None, 'freshness_timeout_ms': None, 'gr3d_freq': 0, ...}}
+E             Right contains 1 more item:
+E             {'platform': {'compatible': [],
+E                           'family': 'unknown',...
+E             
+E             ...Full output truncated (5 lines hidden), use '-vv' to show
+
+../rm01OrinStatus/tests/offline/test_data.py:345: AssertionError
+------------------------------ Captured log call -------------------------------
+INFO     tegrastats_api.server:server.py:98 Tegrastats API服务器已初始化
+INFO     tegrastats_api.baseline_server:server.py:96 Tegrastats API服务器已初始化
+- generated xml file: /Users/massif/Tianshan-thermal-observer/evidence/platform-curve-v2/rm-first-junit.xml -
+=========================== short test summary info ============================
+FAILED ../rm01OrinStatus/tests/offline/test_data.py::test_reader_identical_noise_and_missing
+FAILED ../rm01OrinStatus/tests/offline/test_data.py::test_http_baseline_normal_fields
+2 failed, 123 passed in 14.32s

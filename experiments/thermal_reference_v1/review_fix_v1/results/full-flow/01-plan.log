@@ -1,0 +1,42 @@
+{
+  "contract": "TTO-REF-PREP-v1.0",
+  "mode": "offline_plan",
+  "backup_sparse_cue_plan": {
+    "schema": "TTO-REF-CUES-v1",
+    "run_id": "SYNTHETIC-CUE-RUN",
+    "model_driven": false,
+    "max_prompts": 14,
+    "minimum_spacing_s": 30,
+    "late_grace_s": 5,
+    "background_offsets_s": [
+      30,
+      120
+    ],
+    "sparse_mid_s": 180,
+    "pre_continuous_offset_s": 270,
+    "pre_medium_offset_s": 369,
+    "bindings": {
+      "background": "resident_background",
+      "sparse": "sparse",
+      "pre_continuous": "between_groups",
+      "continuous": "continuous",
+      "pre_medium": "cooldown",
+      "medium": "optional_medium"
+    },
+    "missing_policy": "record_missing_no_wait_no_rerun",
+    "actual_field_plan_confirmed": false
+  },
+  "default_input_path": "numeric_export",
+  "continuous_mode_prompts": [
+    "开始独立记录",
+    "开始附近独立校时",
+    "结束附近独立校时及停止记录",
+    "移动/重贴/松脱时记事件并换会话"
+  ],
+  "measurement_sites": "主参照YET-610L+K型探头，用耐温聚酰亚胺胶带固定同一局部表面；背板另测点，人工/红外为备用",
+  "preparation": "用户已购买仪表与胶带；真实CSV列格式待1–2分钟试记录；接触式不要求IR发射率/反射/ROI；实际接触和探头响应未验证",
+  "clocks": "提醒/按键/实际拍摄或区间/写入分别保存；mtime与聊天时间不当测量时间",
+  "missing": "遗漏记未采，不延长、不补跑；外部测温不是全局建模前置",
+  "device_access": false,
+  "workload_actions": false
+}

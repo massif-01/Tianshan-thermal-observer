@@ -1,0 +1,30 @@
+{
+  "scope": "OFFLINE new gate against unchanged old resource records, NOT a new field test",
+  "source_file": "evidence/cpu2-capability-20261020/remote-result/run/resources.jsonl",
+  "source_sha256": "5a5c60ee4d0765d3a847097d8a42a3e0be97240b51509d1e0c5f9f44b90c18a4",
+  "interval_start_reconstructed_from_previous_original_resource_row": true,
+  "admission": {
+    "evaluated_mono_s": 30.0,
+    "resource_sample": {
+      "mono_s": 29.408508395019453,
+      "rss_bytes": 77041664,
+      "cpu_times": {
+        "user": 49.27,
+        "system": 0.15,
+        "children_user": 0.0,
+        "children_system": 0.0,
+        "iowait": 0.0
+      },
+      "cpu_pct_single_core": 160.8241986435912,
+      "field_log_bytes": 1480347,
+      "native_log_bytes": 185974,
+      "interval_start_mono_s": 28.394979328033514
+    },
+    "cpu_limit_single_core_percent": 8.0,
+    "rss_limit_bytes": 134217728,
+    "allowed": false,
+    "reason": "baseline_receiver_resource_budget_exceeded",
+    "interval_contract": "latest actual1s interval; start>=1s, span0.5..2s, age0..1.5s; no averaging or host-core normalization",
+    "sample_age_s": 0.591491604980547
+  }
+}

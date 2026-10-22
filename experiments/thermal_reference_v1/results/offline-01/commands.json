@@ -1,0 +1,226 @@
+[
+  {
+    "label": "01-plan",
+    "command": [
+      "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/ref.py",
+      "plan",
+      "--cue-plan",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/fixtures/synthetic/cue-plan.json"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 0.041148874966893345
+  },
+  {
+    "label": "02-session-fin",
+    "command": [
+      "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/ref.py",
+      "init-session",
+      "--store",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/results/offline-01/reference-sidecar",
+      "--session",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/fixtures/synthetic/fin-session.json"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 0.03326020803069696
+  },
+  {
+    "label": "02-session-back",
+    "command": [
+      "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/ref.py",
+      "init-session",
+      "--store",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/results/offline-01/reference-sidecar",
+      "--session",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/fixtures/synthetic/back-session.json"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 0.03290287498384714
+  },
+  {
+    "label": "03-fixed-cues",
+    "command": [
+      "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/ref.py",
+      "watch-events",
+      "--events",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/fixtures/synthetic/events.jsonl",
+      "--cue-plan",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/fixtures/synthetic/cue-plan.json",
+      "--output",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/results/offline-01/synthetic-cues",
+      "--replay"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 0.03408820799086243
+  },
+  {
+    "label": "04-old-M-events",
+    "command": [
+      "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/ref.py",
+      "watch-events",
+      "--events",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/fixtures/real/M-runner-events-subset.jsonl",
+      "--cue-plan",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/fixtures/real/M-cue-plan.json",
+      "--output",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/results/offline-01/M-cue-replay",
+      "--replay"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 0.0314987080055289
+  },
+  {
+    "label": "05-mark-no-exposure",
+    "command": [
+      "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/ref.py",
+      "mark",
+      "--store",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/results/offline-01/reference-sidecar",
+      "--session-id",
+      "SYNTH-fin",
+      "--record-id",
+      "fin-bg",
+      "--note",
+      "合成演示：先打点；不是曝光时间"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 0.030433666019234806
+  },
+  {
+    "label": "06-late-revision",
+    "command": [
+      "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/ref.py",
+      "record",
+      "--store",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/results/offline-01/reference-sidecar",
+      "--session-id",
+      "SYNTH-fin",
+      "--record-id",
+      "fin-bg",
+      "--revise",
+      "--value",
+      "41.0",
+      "--unit",
+      "C",
+      "--measured-at",
+      "2026-10-13T17:39:19.288921+00:00",
+      "--uncertainty-s",
+      "0",
+      "--time-source",
+      "synthetic_explicit_timestamp_not_real_measurement"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 0.03028937499038875
+  },
+  {
+    "label": "07-csv",
+    "command": [
+      "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/ref.py",
+      "import",
+      "--store",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/results/offline-01/reference-sidecar",
+      "--file",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/fixtures/synthetic/external.csv",
+      "--mapping",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/fixtures/synthetic/csv-mapping.json"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 0.03139120800187811
+  },
+  {
+    "label": "08-duplicate-import",
+    "command": [
+      "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/ref.py",
+      "import",
+      "--store",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/results/offline-01/reference-sidecar",
+      "--file",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/fixtures/synthetic/external.csv",
+      "--mapping",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/fixtures/synthetic/csv-mapping.json"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 0.029683667002245784
+  },
+  {
+    "label": "09-json",
+    "command": [
+      "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/ref.py",
+      "import",
+      "--store",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/results/offline-01/reference-sidecar",
+      "--file",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/fixtures/synthetic/external.json",
+      "--mapping",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/fixtures/synthetic/json-mapping.json"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 0.030723041971214116
+  },
+  {
+    "label": "10-compare",
+    "command": [
+      "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/ref.py",
+      "compare",
+      "--store",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/results/offline-01/reference-sidecar",
+      "--trajectory",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/fixtures/real/M-frozen.jsonl",
+      "--output",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/results/offline-01/synthetic-report"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 14.191342292004265
+  },
+  {
+    "label": "11-zero-measurements",
+    "command": [
+      "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/ref.py",
+      "compare",
+      "--store",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/results/offline-01/zero-sidecar",
+      "--trajectory",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/fixtures/real/M-frozen.jsonl",
+      "--output",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/results/offline-01/zero-report"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 13.277256792003755
+  },
+  {
+    "label": "12-tests",
+    "command": [
+      "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/tests",
+      "-o",
+      "cache_dir=/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/results/offline-01/pytest-cache"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 0.7656871250364929
+  },
+  {
+    "label": "13-readback",
+    "command": [
+      "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/verify_local.py",
+      "--run-output",
+      "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/results/offline-01"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 12.527837665984407
+  }
+]

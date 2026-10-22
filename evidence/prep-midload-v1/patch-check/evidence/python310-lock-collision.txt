@@ -1,0 +1,50 @@
+..................................F....................                  [100%]
+=================================== FAILURES ===================================
+______________ test_actual_socketio_heartbeat_reconnect_readonly _______________
+
+config = {'features': {'fan_max_age_s': 2.5, 'history_s': 180, 'max_feature_columns': 64, 'missing_optional_policy': 'fallback_...ct_timeout_s': 5.0, 'follow_redirects': False, 'max_business_payload_bytes': 65536, 'max_inflight_esp32': 1, ...}, ...}
+tmp_path = PosixPath('/private/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/pytest-of-massif/pytest-6/test_actual_socketio_heartbeat0')
+
+    async def test_actual_socketio_heartbeat_reconnect_readonly(config, tmp_path):
+        sio, runner, origin, requests = await make_server()
+        config['orin']['base_url'] = config['tianshan']['base_url'] = origin
+        connected = []
+        @sio.event
+        async def connect(sid, environ):
+            connected.append(sid)
+        async def emit():
+            seq = 0
+            while True:
+                seq += 1
+                await sio.emit('tegrastats_update', packet(seq, 40))
+                await sio.emit('model_status_update', {'private_task_text': 'DO_NOT_SAVE'})
+                if seq == 8 and connected:
+                    await sio.disconnect(connected[-1])
+                await asyncio.sleep(.1)
+        task = asyncio.create_task(emit())
+        try:
+>           path, stats = await collect(config, 3.5, data_root=tmp_path)
+
+tests/test_network.py:52: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/tto/collector.py:139: in collect
+    with InstanceLock():
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <tto.storage.InstanceLock object at 0x10d5f13c0>
+
+    def __enter__(self):
+        self.fd = os.open(self.path, os.O_CREAT | os.O_RDWR | getattr(os, 'O_NOFOLLOW', 0), 0o600)
+        try:
+            fcntl.flock(self.fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            os.close(self.fd)
+            self.fd = None
+>           raise ValueError('另一个TTO观察进程正在运行。') from None
+E           ValueError: 另一个TTO观察进程正在运行。
+
+src/tto/storage.py:28: ValueError
+- generated xml file: /Users/massif/Tianshan-thermal-observer/evidence/junit-final-python310.xml -
+=========================== short test summary info ============================
+FAILED tests/test_network.py::test_actual_socketio_heartbeat_reconnect_readonly
+1 failed, 54 passed in 4.22s

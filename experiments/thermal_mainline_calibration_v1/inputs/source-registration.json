@@ -1,0 +1,207 @@
+{
+  "original_archive": "/Users/massif/Tianshan-thermal-observer/experiments/thermal_identification_r2/TTO-旧模型新数据检验与第二轮辨识证据包.zip",
+  "original_archive_sha256": "809e90eef398daf34e9cabfd5d4427d35275fc8185541d61810f67943f35aecb",
+  "original_archive_bytes": 35780914,
+  "normalized_dataset_sha256": "8fe3635550cb99f116f49017982a0d5d94335729c8b9804fe931a87d623b0c9c",
+  "retained_timing_quality_and_refs": true,
+  "no_new_measurements": true,
+  "raw_logs_unchanged": true,
+  "fit_code_sources": {
+    "common.py": {
+      "archive_member": "vendor/v1/common.py",
+      "sha256": "62b8ec1a34892028119a2c3b3ccaf69387ab6511b97bb108364bd146f1a6bf69"
+    },
+    "greybox.py": {
+      "archive_member": "vendor/v1/greybox.py",
+      "sha256": "8a05128393b38ce32d236e58d1c3dbee34cf0e66f524976bf69ad5d5b5bd7fe4"
+    },
+    "propagate.c": {
+      "archive_member": "vendor/v1/propagate.c",
+      "sha256": "45ad1be491dd6e1c70e3502f9c8db073df8f98173c6d57898d949fa42aeeef33"
+    },
+    "initialize.py": {
+      "archive_member": "vendor/v1/initialize.py",
+      "sha256": "6d35f9a9c09c527050ef367855364f4f057c76724d465d6acaec311c89e80834"
+    },
+    "ridge_reference.py": {
+      "archive_member": "vendor/v1/ridge_reference.py",
+      "sha256": "f9a320fb52956cfe8451f6ce44c2532434fafef87847e31586d662bb307bec90"
+    },
+    "data_views.py": {
+      "archive_member": "data_views.py",
+      "sha256": "ef3c18e022a35dd4529cdb4846d469e9edcd206d144db91759a4d15ae1659b91"
+    },
+    "scoring.py": {
+      "archive_member": "scoring.py",
+      "sha256": "7201ff185eb129b8614d8a3fd90e9cb2bd359461287dbe556dd79536240c4eec"
+    },
+    "slow_core.py": {
+      "original": "experiments/thermal_slowstate_v1/core.py",
+      "sha256": "4f76a506febfdfd362e82b8bd65248ed1647edc482f24222b70e85a54845d3ea"
+    }
+  },
+  "evidence_sources": {
+    "L": {
+      "archive_member": "runs/main/registered/evidence-L.json",
+      "sha256": "10849cd22650c8434a4e905831225bb7f5636ef995e164a575059307913afcb4",
+      "source_hashes": {
+        "recorded.py": "029679e59c68735d1ca98daf56553d6226c55e7d64597015712d972a8b7d2679",
+        "config.py": "5a05545f28b8b44b3e6f0e7efcf2453e01ee0726ef0bd228cc73d553e01d8e3e",
+        "deployment.py": "221b1d098d46623dc0eba5addc9804d917f8ede6cfa850cec1922c5cd177aaf7",
+        "util.py": "0a33bb268e7817ddd19b6ae81562c50e1fdd08a9cdb3fa08f8f2dd3fbb252f16",
+        "diagnostics.py": "93dfcc32ca5d9fee48d14b71375705f117a81afb2b0d17b89214be3317741055",
+        "evaluation.py": "e6b2fc86f32cc28dbe204519bc74c13a138b9873164318727d4187c6dad78181",
+        "collector.py": "648670f3873b987eb0320a3f61b1d1cfa1ce317282ca6fc0ad4c4cf15f9f4df3",
+        "__init__.py": "231215ac5f1648d9117ba85d9b7e4bfb16640dab55f9b744d3813865f970bf10",
+        "features.py": "d6b32b3584eea3b57eb658c0d9c005b197a420062daec613f78a057bc4462fa2",
+        "model.py": "371a6b81ad32c87654c231dd2e326b002a3e027b7a935b67117dd7508426fe7e",
+        "dataset.py": "32ee485269a521b0540f6d4050eab2dac46cc93a65603086eea263349d9487ee",
+        "engine.py": "c979174d9f78fce54418ed847e9b4e57b155da07eba37c255c7037ecb27bf66c",
+        "cli.py": "d6adf47989226d57f798125c8f020bfdb8d1e14b357bf4f85ca82d3150747ce1",
+        "storage.py": "cda8d22444a0e1fe5fc2f1fa86b73cb4e3f9be4e76edb3cf265520b3285143ec",
+        "platform_quality.py": "3f7e33e083251eaff8136319495ab682a7f7fdc554d0efad39fe5d990085044e",
+        "demo.py": "3e1475ee0753040f35d454138c47a39879c32d315db89824e101563d56b829fb",
+        "quality.py": "014e67c7885d291c8bede9ad3a51fb85398b26bc71e7336b3a0f18b81aec3e56",
+        "profiles.py": "3fb61fbe30bfce73cf7e1079c487e1ddb82b2301ed37d329e1e6da4bfc6944b4",
+        "__main__.py": "79ee6f134c5c5193377cf9b189cbdcc3e2095e49ba9cec310114441c15a917c4",
+        "report.py": "59834f8fc8f226311edf8376b3a8ecce6f5ca2a48ef79bc4532d551f14e9413e",
+        "training.py": "c8f0d6c83587b18c8a527e9d84e222276ee1bd0edc8e69a828dd1ed33a2de773",
+        "platform_engine.py": "d1d8e48f10c731beb8a0d0b7195ab7e32553aae875ebff30a73846be88f967ea"
+      },
+      "source_matches_manifest": {
+        "__init__.py": true,
+        "__main__.py": true,
+        "cli.py": true,
+        "collector.py": true,
+        "config.py": true,
+        "dataset.py": true,
+        "demo.py": true,
+        "deployment.py": true,
+        "diagnostics.py": true,
+        "engine.py": true,
+        "evaluation.py": true,
+        "features.py": true,
+        "model.py": true,
+        "platform_engine.py": true,
+        "platform_quality.py": true,
+        "profiles.py": true,
+        "quality.py": true,
+        "recorded.py": true,
+        "report.py": true,
+        "storage.py": true,
+        "training.py": true,
+        "util.py": true
+      },
+      "source_epoch_count": 1
+    },
+    "M": {
+      "archive_member": "runs/main/registered/evidence-M.json",
+      "sha256": "9986680d5768494c9e4a0a2bf1a06270d9b448adbac6872fc2757c76cd59887d",
+      "source_hashes": {
+        "recorded.py": "029679e59c68735d1ca98daf56553d6226c55e7d64597015712d972a8b7d2679",
+        "config.py": "5a05545f28b8b44b3e6f0e7efcf2453e01ee0726ef0bd228cc73d553e01d8e3e",
+        "deployment.py": "221b1d098d46623dc0eba5addc9804d917f8ede6cfa850cec1922c5cd177aaf7",
+        "util.py": "0a33bb268e7817ddd19b6ae81562c50e1fdd08a9cdb3fa08f8f2dd3fbb252f16",
+        "diagnostics.py": "93dfcc32ca5d9fee48d14b71375705f117a81afb2b0d17b89214be3317741055",
+        "evaluation.py": "e6b2fc86f32cc28dbe204519bc74c13a138b9873164318727d4187c6dad78181",
+        "collector.py": "d08c1f0b6187831e728420094137afa070f328d9b0252f3662a992443b2b0b5b",
+        "__init__.py": "672cde4b34710368c9ecba08ed361a47ef4a7c1f4ed5863a338bcde29549e700",
+        "features.py": "d6b32b3584eea3b57eb658c0d9c005b197a420062daec613f78a057bc4462fa2",
+        "model.py": "371a6b81ad32c87654c231dd2e326b002a3e027b7a935b67117dd7508426fe7e",
+        "dataset.py": "32ee485269a521b0540f6d4050eab2dac46cc93a65603086eea263349d9487ee",
+        "engine.py": "c979174d9f78fce54418ed847e9b4e57b155da07eba37c255c7037ecb27bf66c",
+        "cli.py": "d6adf47989226d57f798125c8f020bfdb8d1e14b357bf4f85ca82d3150747ce1",
+        "storage.py": "cda8d22444a0e1fe5fc2f1fa86b73cb4e3f9be4e76edb3cf265520b3285143ec",
+        "platform_quality.py": "3f7e33e083251eaff8136319495ab682a7f7fdc554d0efad39fe5d990085044e",
+        "demo.py": "3e1475ee0753040f35d454138c47a39879c32d315db89824e101563d56b829fb",
+        "quality.py": "014e67c7885d291c8bede9ad3a51fb85398b26bc71e7336b3a0f18b81aec3e56",
+        "profiles.py": "3fb61fbe30bfce73cf7e1079c487e1ddb82b2301ed37d329e1e6da4bfc6944b4",
+        "__main__.py": "79ee6f134c5c5193377cf9b189cbdcc3e2095e49ba9cec310114441c15a917c4",
+        "report.py": "59834f8fc8f226311edf8376b3a8ecce6f5ca2a48ef79bc4532d551f14e9413e",
+        "training.py": "c8f0d6c83587b18c8a527e9d84e222276ee1bd0edc8e69a828dd1ed33a2de773",
+        "platform_engine.py": "d1d8e48f10c731beb8a0d0b7195ab7e32553aae875ebff30a73846be88f967ea"
+      },
+      "source_matches_manifest": {
+        "__init__.py": true,
+        "__main__.py": true,
+        "cli.py": true,
+        "collector.py": true,
+        "config.py": true,
+        "dataset.py": true,
+        "demo.py": true,
+        "deployment.py": true,
+        "diagnostics.py": true,
+        "engine.py": true,
+        "evaluation.py": true,
+        "features.py": true,
+        "model.py": true,
+        "platform_engine.py": true,
+        "platform_quality.py": true,
+        "profiles.py": true,
+        "quality.py": true,
+        "recorded.py": true,
+        "report.py": true,
+        "storage.py": true,
+        "training.py": true,
+        "util.py": true
+      },
+      "source_epoch_count": 1
+    },
+    "S": {
+      "archive_member": "runs/main/registered/evidence-S.json",
+      "sha256": "7dccc9fc207bf9da3d101b8560f2db5e25ebdfa6678c281ac59de9cb87da8c32",
+      "source_hashes": {
+        "recorded.py": "029679e59c68735d1ca98daf56553d6226c55e7d64597015712d972a8b7d2679",
+        "config.py": "5a05545f28b8b44b3e6f0e7efcf2453e01ee0726ef0bd228cc73d553e01d8e3e",
+        "deployment.py": "221b1d098d46623dc0eba5addc9804d917f8ede6cfa850cec1922c5cd177aaf7",
+        "util.py": "0a33bb268e7817ddd19b6ae81562c50e1fdd08a9cdb3fa08f8f2dd3fbb252f16",
+        "diagnostics.py": "93dfcc32ca5d9fee48d14b71375705f117a81afb2b0d17b89214be3317741055",
+        "evaluation.py": "e6b2fc86f32cc28dbe204519bc74c13a138b9873164318727d4187c6dad78181",
+        "collector.py": "648670f3873b987eb0320a3f61b1d1cfa1ce317282ca6fc0ad4c4cf15f9f4df3",
+        "__init__.py": "231215ac5f1648d9117ba85d9b7e4bfb16640dab55f9b744d3813865f970bf10",
+        "features.py": "d6b32b3584eea3b57eb658c0d9c005b197a420062daec613f78a057bc4462fa2",
+        "model.py": "371a6b81ad32c87654c231dd2e326b002a3e027b7a935b67117dd7508426fe7e",
+        "dataset.py": "32ee485269a521b0540f6d4050eab2dac46cc93a65603086eea263349d9487ee",
+        "engine.py": "c979174d9f78fce54418ed847e9b4e57b155da07eba37c255c7037ecb27bf66c",
+        "cli.py": "d6adf47989226d57f798125c8f020bfdb8d1e14b357bf4f85ca82d3150747ce1",
+        "storage.py": "cda8d22444a0e1fe5fc2f1fa86b73cb4e3f9be4e76edb3cf265520b3285143ec",
+        "platform_quality.py": "3f7e33e083251eaff8136319495ab682a7f7fdc554d0efad39fe5d990085044e",
+        "demo.py": "3e1475ee0753040f35d454138c47a39879c32d315db89824e101563d56b829fb",
+        "quality.py": "014e67c7885d291c8bede9ad3a51fb85398b26bc71e7336b3a0f18b81aec3e56",
+        "profiles.py": "3fb61fbe30bfce73cf7e1079c487e1ddb82b2301ed37d329e1e6da4bfc6944b4",
+        "__main__.py": "79ee6f134c5c5193377cf9b189cbdcc3e2095e49ba9cec310114441c15a917c4",
+        "report.py": "59834f8fc8f226311edf8376b3a8ecce6f5ca2a48ef79bc4532d551f14e9413e",
+        "training.py": "c8f0d6c83587b18c8a527e9d84e222276ee1bd0edc8e69a828dd1ed33a2de773",
+        "platform_engine.py": "d1d8e48f10c731beb8a0d0b7195ab7e32553aae875ebff30a73846be88f967ea"
+      },
+      "source_matches_manifest": {
+        "__init__.py": true,
+        "__main__.py": true,
+        "cli.py": true,
+        "collector.py": true,
+        "config.py": true,
+        "dataset.py": true,
+        "demo.py": true,
+        "deployment.py": true,
+        "diagnostics.py": true,
+        "engine.py": true,
+        "evaluation.py": true,
+        "features.py": true,
+        "model.py": true,
+        "platform_engine.py": true,
+        "platform_quality.py": true,
+        "profiles.py": true,
+        "quality.py": true,
+        "recorded.py": true,
+        "report.py": true,
+        "storage.py": true,
+        "training.py": true,
+        "util.py": true
+      },
+      "source_epoch_count": 1
+    }
+  },
+  "local_scratch_registration_not_used": "root registered/ differs in metadata; use exact sealed archive runs/main/registered entries",
+  "private_vs_share": "original-source-inventory.json retains private and shared archive identities without equating their hashes",
+  "M_ambient": "24C only applies original M; not used to fix E here"
+}

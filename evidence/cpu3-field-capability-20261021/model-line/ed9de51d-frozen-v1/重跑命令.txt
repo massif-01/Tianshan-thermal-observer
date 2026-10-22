@@ -1,0 +1,15 @@
+# 仅离线复跑。输出目录必须不存在；不运行任何现场入口。
+# 原输入run：ed9de51d-7cb3-4a60-9be4-5ee5ba238a1a
+# source config SHA：651913b5e549d5e3131bd69e261cf8f973c40f5b378641450c361f0c1787cf4a
+# 原bridge SHA：8d6fe5f013e67d2a26c192419b0b82f29a4c1aa794ddd598e2f6ba33a45045e3
+# 来源报告器清单SHA：80285a84bdb6fc7972413f64e2b1820d387718113345184172a2d69ead2fe8da
+PYTHONDONTWRITEBYTECODE=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 \
+/private/tmp/tto-yet-frozen-20261018-py312/bin/python /Users/massif/Tianshan-thermal-observer/experiments/thermal_cpu_activity_bridge_v1/bridge.py \
+  --run-dir /Users/massif/Tianshan-thermal-observer/evidence/cpu3-field-capability-20261021/remote-result/run \
+  --source-config /Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/preparation/field-payload/source-config.json \
+  --output /private/tmp/tto-cpu3-readout-20261021-NEW/adapted
+PYTHONDONTWRITEBYTECODE=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 \
+/private/tmp/tto-yet-frozen-20261018-py312/bin/python /Users/massif/Tianshan-thermal-observer/experiments/thermal_cpu_activity_reporter_v1/joint_check.py \
+  --run-dir /Users/massif/Tianshan-thermal-observer/evidence/cpu3-field-capability-20261021/remote-result/run \
+  --adapted /private/tmp/tto-cpu3-readout-20261021-NEW/adapted \
+  --output /private/tmp/tto-cpu3-readout-20261021-NEW/joint

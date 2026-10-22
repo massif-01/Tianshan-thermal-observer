@@ -1,0 +1,85 @@
+{
+  "schema": "TTO-NUMERIC-THREAD-POLICY-v1",
+  "candidate_version": "mainline-calibration.1",
+  "pid": 5992,
+  "host": "Massif-MacBook-Pro.local",
+  "executable": "/Users/massif/Tianshan-thermal-observer/.venv/bin/python",
+  "python": "3.12.3 (v3.12.3:f6650f9ad7, Apr  9 2024, 08:18:47) [Clang 13.0.0 (clang-1300.0.29.30)]",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "started_at_utc": "2026-10-21T13:05:35.271652+00:00",
+  "started_at_mono_s": 1029522.577362791,
+  "inherited_environment": {
+    "OPENBLAS_NUM_THREADS": "1",
+    "OPENBLAS_DEFAULT_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1"
+  },
+  "policy": {
+    "OPENBLAS_NUM_THREADS": "1",
+    "OPENBLAS_DEFAULT_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1"
+  },
+  "policy_scope": "this candidate process numeric libraries only; not Python threads or other applications",
+  "modules_already_loaded": [],
+  "preloaded_versions": {
+    "numpy": null,
+    "scipy": null
+  },
+  "threadpoolctl_version": "3.7.0",
+  "verified": false,
+  "error": "numeric_backend_not_verifiable_by_candidate",
+  "applied_at_mono_s": 1029522.586761875,
+  "libraries": {
+    "numpy": {
+      "version": "2.2.6",
+      "module": "/Users/massif/Tianshan-thermal-observer/.venv/lib/python3.12/site-packages/numpy/__init__.py",
+      "blas": {
+        "name": "accelerate",
+        "found": true,
+        "version": "unknown",
+        "detection method": "system",
+        "include directory": "unknown",
+        "lib directory": "unknown",
+        "openblas configuration": "unknown",
+        "pc file directory": "unknown"
+      }
+    },
+    "scipy": {
+      "version": "1.14.1",
+      "module": "/Users/massif/Tianshan-thermal-observer/.venv/lib/python3.12/site-packages/scipy/__init__.py",
+      "blas": {
+        "name": "accelerate",
+        "found": true,
+        "version": "unknown",
+        "detection method": "extraframeworks",
+        "include directory": "unknown",
+        "lib directory": "unknown",
+        "openblas configuration": "unknown",
+        "pc file directory": "unknown"
+      }
+    }
+  },
+  "extension_modules": {
+    "numpy._core._multiarray_umath": "/Users/massif/Tianshan-thermal-observer/.venv/lib/python3.12/site-packages/numpy/_core/_multiarray_umath.cpython-312-darwin.so",
+    "scipy.linalg._fblas": "/Users/massif/Tianshan-thermal-observer/.venv/lib/python3.12/site-packages/scipy/linalg/_fblas.cpython-312-darwin.so",
+    "scipy.linalg._flapack": "/Users/massif/Tianshan-thermal-observer/.venv/lib/python3.12/site-packages/scipy/linalg/_flapack.cpython-312-darwin.so"
+  },
+  "loaded_pools": [],
+  "final_environment": {
+    "OPENBLAS_NUM_THREADS": "1",
+    "OPENBLAS_DEFAULT_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1"
+  },
+  "pool_coverage": {
+    "numpy": [],
+    "scipy": []
+  },
+  "error_class": "RuntimeError",
+  "checked_at_utc": "2026-10-21T13:05:35.480675+00:00",
+  "checked_at_mono_s": 1029522.795685708
+}

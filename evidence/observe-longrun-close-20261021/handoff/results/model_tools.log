@@ -1,0 +1,30 @@
+...........F                                                             [100%]
+=================================== FAILURES ===================================
+__________ test_stationary_data_returns_insufficient_without_fitting ___________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1/test_stationary_data_returns_i0')
+
+    def test_stationary_data_returns_insufficient_without_fitting(tmp_path):
+        data=dict(schema='TTO-G2-MODELING-DATA-v1',runs=[dict(run=n,run_id=n,device_id=DEVICE,thermal_config_id=CONFIG,role='synthetic_software_fixture') for n in ['T','V']],
+                  segments=[dict(id='T-00',run='T',eligible_for_fit=True,rows=[dict(values=dict(tj=45.,vdd_gpu=2.,vdd_cpu_soc_mss=6.,duty=20))]*2)],examples=[],all_seen_development=True)
+        data_path=tmp_path/'data.json';write(data_path,data)
+        job=read(ROOT/'config/generate.json');job.update(dataset=str(data_path),dataset_sha256=sha(data_path),solver_spec=str(ROOT/'config/solver-spec.json'),
+              train_runs=['T'],validation_runs=['V'],data_role='synthetic software fixture',model_id='G2-SYNTHETIC-INSUFFICIENT')
+        path=tmp_path/'job.json';write(path,job)
+        env=dict(os.environ,PYTHONDONTWRITEBYTECODE='1')
+        p=subprocess.run([sys.executable,'-m','tool','generate','--job',str(path),'--parent',str(BASE),'--output',str(tmp_path/'out')],cwd=ROOT,env=env,capture_output=True,text=True)
+        assert p.returncode==0,p.stdout+p.stderr
+        result=read(tmp_path/'out/result.json')
+>       assert result['status']=='insufficient_excitation' and result['new_theta_fit'] is False
+E       AssertionError: assert ('numerical_or_runtime_failure' == 'insufficient_excitation'
+E         
+E         - insufficient_excitation
+E         + numerical_or_runtime_failure)
+
+tests/test_workflow.py:180: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_workflow.py::test_stationary_data_returns_insufficient_without_fitting - AssertionError: assert ('numerical_or_runtime_failure' == 'insufficient_excitation'
+  
+  - insufficient_excitation
+  + numerical_or_runtime_failure)
+1 failed, 11 passed in 3.19s

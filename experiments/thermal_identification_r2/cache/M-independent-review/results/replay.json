@@ -1,0 +1,51 @@
+{
+  "observations": 8028,
+  "events": 2509,
+  "source_results_matched": 2508,
+  "accepted_new_TJ": 2504,
+  "predictions_exact_match": 491,
+  "scores_exact_match": 1473,
+  "health_snapshot_exact_match": true,
+  "native_coverage": {
+    "complete_input_s": 2508.7134311109994,
+    "unknown_input_s": 1.9561976109998795,
+    "longest_continuous_s": 2336.37996234,
+    "current_continuous_s": 172.3334687709994,
+    "reasons_seconds": {
+      "unsupported_control_scope,fan_missing_or_stale,temperature_status_missing_or_stale,fan_not_enabled,fan_fault,guard_active,control_temperature_stale,successful_duty_unavailable,manual_temperature,control_temperature_invalid,active_temperature_source_untrusted,temperature_binding_unconfirmed,source_not_usable:socketio_connecting": 0.05066257499947824,
+      "temperature_status_missing_or_stale,manual_temperature,control_temperature_invalid,active_temperature_source_untrusted,temperature_binding_unconfirmed,source_not_usable:socketio_connecting": 0.015631751000000804,
+      "source_not_usable:socketio_connecting": 0.8894360100002814,
+      "control_temperature_stale": 1.0004672750001191
+    }
+  },
+  "override_coverage": {
+    "complete_input_s": 2509.7138983859995,
+    "unknown_input_s": 0.9557303359997604,
+    "longest_continuous_s": 2509.7138983859995,
+    "current_continuous_s": 2509.7138983859995,
+    "reasons_seconds": {
+      "unsupported_control_scope,fan_missing_or_stale,temperature_status_missing_or_stale,fan_not_enabled,fan_fault,guard_active,control_temperature_stale,successful_duty_unavailable,manual_temperature,control_temperature_invalid,active_temperature_source_untrusted,temperature_binding_unconfirmed,source_not_usable:socketio_connecting": 0.05066257499947824,
+      "temperature_status_missing_or_stale,manual_temperature,control_temperature_invalid,active_temperature_source_untrusted,temperature_binding_unconfirmed,source_not_usable:socketio_connecting": 0.015631751000000804,
+      "source_not_usable:socketio_connecting": 0.8894360100002814
+    }
+  },
+  "native_abnormal_latched": true,
+  "override_abnormal_latched": false,
+  "quality_counts": {
+    "boundary_socketio_connecting": 1,
+    "boundary_control_context_change": 3,
+    "boundary_stream": 1,
+    "new_samples": 2504,
+    "boundary_input_boundary": 3,
+    "boundary_input_profile_change": 1,
+    "duplicate": 4,
+    "boundary_normal_scope_change": 2,
+    "boundary_socketio_disconnected": 1,
+    "boundary_run_end": 1
+  },
+  "has_model": false,
+  "prediction_methods": {
+    "persist": 491,
+    "trend30": 486
+  }
+}

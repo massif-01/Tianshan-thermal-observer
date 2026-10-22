@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/Users/massif/Tianshan-thermal-observer/scripts/package_platform_evidence.py", line 110, in <module>
+    package(p.parse_args())
+  File "/Users/massif/Tianshan-thermal-observer/scripts/package_platform_evidence.py", line 30, in package
+    for name in ('README.md','pyproject.toml','requirements-locked.txt','install.sh','install-manifest.json',a.report):copy(root/name,Path(name))
+  File "/Users/massif/Tianshan-thermal-observer/scripts/package_platform_evidence.py", line 23, in copy
+    else:shutil.copy2(src,dst)
+  File "/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/shutil.py", line 434, in copy2
+    copyfile(src, dst, follow_symlinks=follow_symlinks)
+  File "/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/shutil.py", line 254, in copyfile
+    with open(src, 'rb') as fsrc:
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/massif/Tianshan-thermal-observer/TTO-Orin-Thor-CURVE适配实施与验证报告.md'

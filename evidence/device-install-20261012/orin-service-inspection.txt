@@ -1,0 +1,57 @@
+agx
+Mon Oct 12 11:33:40 UTC 2026
+MainPID=23816
+ExecStart={ path=/home/rm01/.venvs/tegrastats-api/bin/tegrastats-api ; argv[]=/home/rm01/.venvs/tegrastats-api/bin/tegrastats-api run --host 0.0.0.0 --port 58090 ; ignore_errors=no ; start_time=[Sat 2026-09-05 09:08:53 UTC] ; stop_time=[n/a] ; pid=23816 ; code=(null) ; status=0/0 }
+WorkingDirectory=/home/rm01/rm01OrinStatus
+FragmentPath=/etc/systemd/system/tegrastats-api.service
+ActiveEnterTimestamp=Sat 2026-09-05 09:08:53 UTC
+# /etc/systemd/system/tegrastats-api.service
+[Unit]
+Description=Tegrastats API Server
+Documentation=https://github.com/your-repo/tegrastats-api
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=60
+StartLimitBurst=3
+
+[Service]
+Type=simple
+User=rm01
+Group=rm01
+WorkingDirectory=/home/rm01/rm01OrinStatus
+Environment=PATH=/home/rm01/miniconda3/envs/tegrastats-api/bin:/usr/local/bin:/usr/bin:/bin
+Environment=PYTHONPATH=/home/rm01/rm01OrinStatus
+Environment=TEGRASTATS_API_HOST=0.0.0.0
+Environment=TEGRASTATS_API_PORT=58090
+Environment=TEGRASTATS_API_ALLOW_UNSAFE_WERKZEUG=true
+ExecStart=/home/rm01/miniconda3/envs/tegrastats-api/bin/tegrastats-api run --host 0.0.0.0 --port 58090
+ExecReload=/bin/kill -HUP 
+KillMode=mixed
+KillSignal=SIGTERM
+TimeoutStopSec=30
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=tegrastats-api
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=false
+ReadWritePaths=/home/rm01/rm01OrinStatus
+ReadWritePaths=/tmp
+ReadWritePaths=/var/tmp
+
+[Install]
+WantedBy=multi-user.target
+
+# /etc/systemd/system/tegrastats-api.service.d/override.conf
+[Service]
+Environment=PATH=/home/rm01/.venvs/tegrastats-api/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=
+ExecStart=/home/rm01/.venvs/tegrastats-api/bin/tegrastats-api run --host 0.0.0.0 --port 58090
+State  Recv-Q Send-Q Local Address:Port  Peer Address:PortProcess
+LISTEN 0      128          0.0.0.0:58090      0.0.0.0:*    users:(("tegrastats-api",pid=23816,fd=4))
+ca690bdfbe5d21a0866fabafa70e79fae3860411 Merge pull request #3 from massif-01/bugfix/ws-data-reliability

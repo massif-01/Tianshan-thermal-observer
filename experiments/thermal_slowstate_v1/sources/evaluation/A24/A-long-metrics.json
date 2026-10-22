@@ -1,0 +1,1009 @@
+[
+  {
+    "scope": "all",
+    "value": "all",
+    "cohort_id": "d040bbd6a4005c09e831bcfc8769e472cd7efeaf1bb9b2864ff5fd0eaf4b9e23",
+    "metrics": {
+      "G2": {
+        "n": 5430,
+        "seconds": 5429.270237494027,
+        "mae": 0.5232832031480535,
+        "balanced_mae": 0.5100254673054859,
+        "point_mae": 0.5234841221595494,
+        "rmse": 0.8411791465099573,
+        "p95_abs": 1.989709598400973,
+        "bias": 0.3448941560083655,
+        "underprediction_p95": 0.4628693059263215,
+        "underprediction_max": 3.2182592056960218
+      }
+    }
+  },
+  {
+    "scope": "run",
+    "value": "L",
+    "cohort_id": "0edc19729ca5422c98147f2112d7053a14d6ff9eead07f1a41e9f0405441a720",
+    "metrics": {
+      "G2": {
+        "n": 1858,
+        "seconds": 1855.6584284619894,
+        "mae": 0.9500686352586665,
+        "balanced_mae": 0.8067935589819745,
+        "point_mae": 0.949057296357331,
+        "rmse": 1.2443845922117356,
+        "p95_abs": 2.389472005263576,
+        "bias": 0.8422950790859314,
+        "underprediction_p95": 0.21646996758134623,
+        "underprediction_max": 3.1322433091958857
+      }
+    }
+  },
+  {
+    "scope": "run",
+    "value": "M",
+    "cohort_id": "351341f93c41db6362981f4147380b4333733ddda41092d98353de872a82a9c5",
+    "metrics": {
+      "G2": {
+        "n": 2382,
+        "seconds": 2386.510095662001,
+        "mae": 0.2590168468153963,
+        "balanced_mae": 0.32763784579467237,
+        "point_mae": 0.2591084736997111,
+        "rmse": 0.5158019672322177,
+        "p95_abs": 0.9755278325291155,
+        "bias": -0.013945307891810022,
+        "underprediction_p95": 0.6633529006799816,
+        "underprediction_max": 3.2182592056960218
+      }
+    }
+  },
+  {
+    "scope": "run",
+    "value": "S",
+    "cohort_id": "116d09e8f9a64adbe5dbb5999930f2362809baf2201bfa78d3fadcb734005495",
+    "metrics": {
+      "G2": {
+        "n": 1190,
+        "seconds": 1187.101713370037,
+        "mae": 0.38741139444578143,
+        "balanced_mae": 0.39564499713981094,
+        "point_mae": 0.3882133969258154,
+        "rmse": 0.5298329670888078,
+        "p95_abs": 0.9314386541245574,
+        "bias": 0.2887639936444436,
+        "underprediction_p95": 0.07559573294070057,
+        "underprediction_max": 3.0597316205347695
+      }
+    }
+  },
+  {
+    "scope": "macro",
+    "value": "background",
+    "cohort_id": "930d71d5a668227e05a7925748c45d8c1341940aaa22dd6878d94224077ddf08",
+    "metrics": {
+      "G2": {
+        "n": 937,
+        "seconds": 937.1493344570172,
+        "mae": 0.10043145350311161,
+        "balanced_mae": 0.09961241327439518,
+        "point_mae": 0.10046772287688746,
+        "rmse": 0.12561988327064416,
+        "p95_abs": 0.22033938498865097,
+        "bias": -0.09003708473788165,
+        "underprediction_p95": 0.21852671266155568,
+        "underprediction_max": 0.8235960657933745
+      }
+    }
+  },
+  {
+    "scope": "macro",
+    "value": "recovery",
+    "cohort_id": "20ae0491dcc1d2ef4ceb3c4056d719078496fa4251340fa5cb66f6e4dd42b346",
+    "metrics": {
+      "G2": {
+        "n": 2699,
+        "seconds": 2700.511065454022,
+        "mae": 0.38282243690531725,
+        "balanced_mae": 0.5968804620034504,
+        "point_mae": 0.3832041596790531,
+        "rmse": 0.6979162845432492,
+        "p95_abs": 1.1251451236209886,
+        "bias": 0.2766484900877129,
+        "underprediction_p95": 0.4273092564153927,
+        "underprediction_max": 1.1333377725019176
+      }
+    }
+  },
+  {
+    "scope": "macro",
+    "value": "work",
+    "cohort_id": "63b8015d7698dbcf366953cf74b8fd20eee107afceb9ed3836760f8bb3572a67",
+    "metrics": {
+      "G2": {
+        "n": 1794,
+        "seconds": 1791.609837582988,
+        "mae": 0.9561849839848517,
+        "balanced_mae": 0.8335835266386122,
+        "point_mae": 0.955469620968197,
+        "rmse": 1.1839773876004738,
+        "p95_abs": 2.313055267637125,
+        "bias": 0.6752639086027241,
+        "underprediction_p95": 1.0167042387466212,
+        "underprediction_max": 3.2182592056960218
+      }
+    }
+  },
+  {
+    "scope": "regime",
+    "value": "continuous_short",
+    "cohort_id": "a4762444de08f5cdc7551e7c2bb2518f2be8dfe42476e7cf246fa71bd425749c",
+    "metrics": {
+      "G2": {
+        "n": 51,
+        "seconds": 50.04850397800328,
+        "mae": 1.0479763910596596,
+        "balanced_mae": 1.0479763910596596,
+        "point_mae": 1.0425660929954477,
+        "rmse": 1.2117094234959849,
+        "p95_abs": 2.3315096566031137,
+        "bias": 0.19615242664161234,
+        "underprediction_p95": 2.3315096566031137,
+        "underprediction_max": 2.766002893916877
+      }
+    }
+  },
+  {
+    "scope": "regime",
+    "value": "cooldown",
+    "cohort_id": "20ae0491dcc1d2ef4ceb3c4056d719078496fa4251340fa5cb66f6e4dd42b346",
+    "metrics": {
+      "G2": {
+        "n": 2699,
+        "seconds": 2700.511065454022,
+        "mae": 0.38282243690531725,
+        "balanced_mae": 0.5968804620034504,
+        "point_mae": 0.3832041596790531,
+        "rmse": 0.6979162845432492,
+        "p95_abs": 1.1251451236209886,
+        "bias": 0.2766484900877129,
+        "underprediction_p95": 0.4273092564153927,
+        "underprediction_max": 1.1333377725019176
+      }
+    }
+  },
+  {
+    "scope": "regime",
+    "value": "idle",
+    "cohort_id": "930d71d5a668227e05a7925748c45d8c1341940aaa22dd6878d94224077ddf08",
+    "metrics": {
+      "G2": {
+        "n": 937,
+        "seconds": 937.1493344570172,
+        "mae": 0.10043145350311161,
+        "balanced_mae": 0.09961241327439518,
+        "point_mae": 0.10046772287688746,
+        "rmse": 0.12561988327064416,
+        "p95_abs": 0.22033938498865097,
+        "bias": -0.09003708473788165,
+        "underprediction_p95": 0.21852671266155568,
+        "underprediction_max": 0.8235960657933745
+      }
+    }
+  },
+  {
+    "scope": "regime",
+    "value": "isolated_pulse",
+    "cohort_id": "f1c2a1c40145a5817f9bfa9ce9633d88aa6c9b4bdd0cf0d551186a465e9aa262",
+    "metrics": {
+      "G2": {
+        "n": 179,
+        "seconds": 178.16695390400128,
+        "mae": 0.7233962360857971,
+        "balanced_mae": 0.7233962360857971,
+        "point_mae": 0.7255264813451829,
+        "rmse": 0.8803082800833605,
+        "p95_abs": 2.017092166202118,
+        "bias": 0.36206498579711976,
+        "underprediction_p95": 2.017092166202118,
+        "underprediction_max": 3.0597316205347695
+      }
+    }
+  },
+  {
+    "scope": "regime",
+    "value": "long_rise",
+    "cohort_id": "76e76d0b7c8fb10fa596b54e53db412737ce1685c09b5c76a5b728d22a842b83",
+    "metrics": {
+      "G2": {
+        "n": 179,
+        "seconds": 179.1556064739998,
+        "mae": 1.5227136140193847,
+        "balanced_mae": 1.5227136140193847,
+        "point_mae": 1.522767590516709,
+        "rmse": 1.7715747373623796,
+        "p95_abs": 3.063098936244785,
+        "bias": 0.9557529397433352,
+        "underprediction_p95": 2.053720465853584,
+        "underprediction_max": 3.1322433091958857
+      }
+    }
+  },
+  {
+    "scope": "regime",
+    "value": "long_sustained",
+    "cohort_id": "46991232ace3403aa0ada826f79d24568d8e5c094ba6c7389190726fffe012b7",
+    "metrics": {
+      "G2": {
+        "n": 1088,
+        "seconds": 1087.9683183839952,
+        "mae": 0.9813469549557909,
+        "balanced_mae": 0.9813469549557909,
+        "point_mae": 0.9808245993274771,
+        "rmse": 1.1625025069140866,
+        "p95_abs": 2.1106535873358827,
+        "bias": 0.9670455141226586,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.7800883346858996
+      }
+    }
+  },
+  {
+    "scope": "regime",
+    "value": "midload_rise",
+    "cohort_id": "e28924ec7f54278b37a9cd1d88e081519043399dcf7ec8368b9d797219c9f5af",
+    "metrics": {
+      "G2": {
+        "n": 152,
+        "seconds": 152.0604535629991,
+        "mae": 0.944084280136013,
+        "balanced_mae": 0.944084280136013,
+        "point_mae": 0.9440133573090598,
+        "rmse": 1.2652117643880616,
+        "p95_abs": 2.675866780642789,
+        "bias": -0.4597366670034873,
+        "underprediction_p95": 2.675866780642789,
+        "underprediction_max": 3.2182592056960218
+      }
+    }
+  },
+  {
+    "scope": "regime",
+    "value": "midload_sustained",
+    "cohort_id": "ebf94ee34b981f8dda66fb8ab5f9b110cf77e0079226dcd6627ee278a68a8d37",
+    "metrics": {
+      "G2": {
+        "n": 138,
+        "seconds": 138.20360314299978,
+        "mae": 0.32972398078236065,
+        "balanced_mae": 0.32972398078236065,
+        "point_mae": 0.3297051989131838,
+        "rmse": 0.40451596333127754,
+        "p95_abs": 0.7487557525914971,
+        "bias": -0.11589658425418703,
+        "underprediction_p95": 0.6099875965529392,
+        "underprediction_max": 1.0229076168604365
+      }
+    }
+  },
+  {
+    "scope": "regime",
+    "value": "model_loading",
+    "cohort_id": "3094204cd1327339ac7b6685c2f3f263dcf70dc0d8f46082bb971aaaa5f1ad8e",
+    "metrics": {
+      "G2": {
+        "n": 7,
+        "seconds": 6.006398136989446,
+        "mae": 0.36152549576593684,
+        "balanced_mae": 0.36152549576593684,
+        "point_mae": 0.3386397973724747,
+        "rmse": 0.4713237328974865,
+        "p95_abs": 0.7716447608228073,
+        "bias": -0.3219861884278892,
+        "underprediction_p95": 0.7716447608228073,
+        "underprediction_max": 0.7749631631090566
+      }
+    }
+  },
+  {
+    "scope": "phase",
+    "value": "1",
+    "cohort_id": "239bbe2b50db120723f7b278a3f20154e20277734d5f162e5606a4545c0c8a9a",
+    "metrics": {
+      "G2": {
+        "n": 168,
+        "seconds": 168.1591187939921,
+        "mae": 0.1602897089571934,
+        "balanced_mae": 0.1602897089571934,
+        "point_mae": 0.16028265679128464,
+        "rmse": 0.19734462871466915,
+        "p95_abs": 0.28570754727304254,
+        "bias": -0.1597867971625398,
+        "underprediction_p95": 0.28570754727304254,
+        "underprediction_max": 0.8235960657933745
+      }
+    }
+  },
+  {
+    "scope": "phase",
+    "value": "2",
+    "cohort_id": "3094204cd1327339ac7b6685c2f3f263dcf70dc0d8f46082bb971aaaa5f1ad8e",
+    "metrics": {
+      "G2": {
+        "n": 7,
+        "seconds": 6.006398136989446,
+        "mae": 0.36152549576593684,
+        "balanced_mae": 0.36152549576593684,
+        "point_mae": 0.3386397973724747,
+        "rmse": 0.4713237328974865,
+        "p95_abs": 0.7716447608228073,
+        "bias": -0.3219861884278892,
+        "underprediction_p95": 0.7716447608228073,
+        "underprediction_max": 0.7749631631090566
+      }
+    }
+  },
+  {
+    "scope": "phase",
+    "value": "3",
+    "cohort_id": "0f95e59c7a2dc6550b41dca37973f9f0d71b2fd8a304428987c4932ebf55c444",
+    "metrics": {
+      "G2": {
+        "n": 3,
+        "seconds": 3.002679382014321,
+        "mae": 0.0761514808345812,
+        "balanced_mae": 0.0761514808345812,
+        "point_mae": 0.0761518132637941,
+        "rmse": 0.07791499942141657,
+        "p95_abs": 0.09394490274997551,
+        "bias": 0.0761514808345812,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      }
+    }
+  },
+  {
+    "scope": "phase",
+    "value": "4",
+    "cohort_id": "1396bd9d46ae75e72675a9c7733b209ddffd0caaab357f7323b2445ee6df67db",
+    "metrics": {
+      "G2": {
+        "n": 442,
+        "seconds": 441.4112586409901,
+        "mae": 0.7109458772756844,
+        "balanced_mae": 0.7109458772756844,
+        "point_mae": 0.7109835530363007,
+        "rmse": 0.8667843157999388,
+        "p95_abs": 1.469285042745586,
+        "bias": 0.5579250319480307,
+        "underprediction_p95": 0.26098415777798617,
+        "underprediction_max": 3.1322433091958857
+      }
+    }
+  },
+  {
+    "scope": "phase",
+    "value": "5a",
+    "cohort_id": "0830b5336fcc189590e1691bb63511b51d9be8664c0c6a2bb5a27478c9711ac9",
+    "metrics": {
+      "G2": {
+        "n": 537,
+        "seconds": 537.4587066050153,
+        "mae": 1.119736306594016,
+        "balanced_mae": 1.119736306594016,
+        "point_mae": 1.11981446244476,
+        "rmse": 1.3157836826118487,
+        "p95_abs": 2.146187084980394,
+        "bias": 1.048735015289462,
+        "underprediction_p95": 0.11854057564230215,
+        "underprediction_max": 2.4860132617852173
+      }
+    }
+  },
+  {
+    "scope": "phase",
+    "value": "5b",
+    "cohort_id": "3465341c0da68211a0d472ed0a79c88b7682d6a8cce62adcf6806cbbed370587",
+    "metrics": {
+      "G2": {
+        "n": 288,
+        "seconds": 288.25395961198956,
+        "mae": 1.473858455639805,
+        "balanced_mae": 1.473858455639805,
+        "point_mae": 1.4726300902635587,
+        "rmse": 1.634859490266083,
+        "p95_abs": 2.879543706369052,
+        "bias": 1.434211777864108,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 1.442092141642263
+      }
+    }
+  },
+  {
+    "scope": "phase",
+    "value": "6",
+    "cohort_id": "6464cf1c0eef7ecf1f503c5120bf3a0ec6de174b372432d146bd8e0f9bb1026d",
+    "metrics": {
+      "G2": {
+        "n": 140,
+        "seconds": 139.12390729400795,
+        "mae": 0.8979438903126737,
+        "balanced_mae": 0.8979438903126737,
+        "point_mae": 0.9001128261042217,
+        "rmse": 0.9257947337198124,
+        "p95_abs": 1.1773653081737874,
+        "bias": 0.8979438903126737,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      }
+    }
+  },
+  {
+    "scope": "phase",
+    "value": "7",
+    "cohort_id": "d8a39bd82fc97b2b8e83d073a3c5e5936df3eaeb8c77f813f8efb280239b5cc3",
+    "metrics": {
+      "G2": {
+        "n": 103,
+        "seconds": 102.1040678829886,
+        "mae": 0.12230886801080662,
+        "balanced_mae": 0.12230886801080662,
+        "point_mae": 0.12175711247061102,
+        "rmse": 0.1340854875969977,
+        "p95_abs": 0.19532215318967586,
+        "bias": -0.1218340333571752,
+        "underprediction_p95": 0.19532215318967586,
+        "underprediction_max": 0.22515146608468228
+      }
+    }
+  },
+  {
+    "scope": "phase",
+    "value": "I1",
+    "cohort_id": "8104292ba1d9ff5591f0216929a1b33e6bf6ba19d2e2657b14cd8d08437586e4",
+    "metrics": {
+      "G2": {
+        "n": 120,
+        "seconds": 120.0980949359946,
+        "mae": 0.8292284664447538,
+        "balanced_mae": 0.8292284664447538,
+        "point_mae": 0.8292391053811634,
+        "rmse": 1.1580763571762014,
+        "p95_abs": 2.8916002822777918,
+        "bias": 0.8292284664447538,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      }
+    }
+  },
+  {
+    "scope": "phase",
+    "value": "I2",
+    "cohort_id": "5ebb14b5c1e7db5965c7dc980f2b494ea157e239829caf195df13e95f00bdf25",
+    "metrics": {
+      "G2": {
+        "n": 50,
+        "seconds": 50.040237178007374,
+        "mae": 3.1208692593466334,
+        "balanced_mae": 3.1208692593466334,
+        "point_mae": 3.1208800522799423,
+        "rmse": 3.317871927853846,
+        "p95_abs": 5.621191300380356,
+        "bias": 3.1208692593466334,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      }
+    }
+  },
+  {
+    "scope": "phase",
+    "value": "M180",
+    "cohort_id": "5d9e9d1ceff7b2f43979b9dd361013197d9cd425d8b70e8a40b4eca01d8ba1bc",
+    "metrics": {
+      "G2": {
+        "n": 193,
+        "seconds": 193.2621205739997,
+        "mae": 0.5033314786716424,
+        "balanced_mae": 0.5033314786716424,
+        "point_mae": 0.5033585068866931,
+        "rmse": 0.7378380953574489,
+        "p95_abs": 1.7093873632156287,
+        "bias": -0.1692748955665704,
+        "underprediction_p95": 1.7093873632156287,
+        "underprediction_max": 2.9868359882253515
+      }
+    }
+  },
+  {
+    "scope": "phase",
+    "value": "M20",
+    "cohort_id": "fd8fbbeaece06cc148e4798cd6e24329591a90763adb8531bac513292d7a45f7",
+    "metrics": {
+      "G2": {
+        "n": 32,
+        "seconds": 32.036958658,
+        "mae": 1.2586844137214153,
+        "balanced_mae": 1.2586844137214153,
+        "point_mae": 1.2584923567642607,
+        "rmse": 1.6272373317728128,
+        "p95_abs": 2.9259431131163716,
+        "bias": -1.1846860942522097,
+        "underprediction_p95": 2.9259431131163716,
+        "underprediction_max": 3.2182592056960218
+      }
+    }
+  },
+  {
+    "scope": "phase",
+    "value": "M60",
+    "cohort_id": "b0736a6a2fac6bd35b4f0a770843d21d454fee52cf5ce0895c049da00fd2797f",
+    "metrics": {
+      "G2": {
+        "n": 65,
+        "seconds": 64.96497747399917,
+        "mae": 0.793159615902082,
+        "balanced_mae": 0.793159615902082,
+        "point_mae": 0.7933753925447437,
+        "rmse": 1.0814839465773314,
+        "p95_abs": 2.464310715904963,
+        "bias": -0.23484849116879378,
+        "underprediction_p95": 2.464310715904963,
+        "underprediction_max": 2.9619547758253404
+      }
+    }
+  },
+  {
+    "scope": "phase",
+    "value": "between-groups",
+    "cohort_id": "8df9ee4f166ca59d71134642449256f2142562581c3b1fb3888406f79e6a6bd2",
+    "metrics": {
+      "G2": {
+        "n": 234,
+        "seconds": 234.21596178002073,
+        "mae": 0.2713665865064603,
+        "balanced_mae": 0.2713665865064603,
+        "point_mae": 0.2713649353008196,
+        "rmse": 0.28591366264697304,
+        "p95_abs": 0.3866395603414784,
+        "bias": 0.2713665865064603,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      }
+    }
+  },
+  {
+    "scope": "phase",
+    "value": "continuous",
+    "cohort_id": "a4762444de08f5cdc7551e7c2bb2518f2be8dfe42476e7cf246fa71bd425749c",
+    "metrics": {
+      "G2": {
+        "n": 51,
+        "seconds": 50.04850397800328,
+        "mae": 1.0479763910596596,
+        "balanced_mae": 1.0479763910596596,
+        "point_mae": 1.0425660929954477,
+        "rmse": 1.2117094234959849,
+        "p95_abs": 2.3315096566031137,
+        "bias": 0.19615242664161234,
+        "underprediction_p95": 2.3315096566031137,
+        "underprediction_max": 2.766002893916877
+      }
+    }
+  },
+  {
+    "scope": "phase",
+    "value": "cooldown_1",
+    "cohort_id": "741437b7d05e949634c945aca8a5b46d57fa5e9f4bf31206c51a6479e9b88fc4",
+    "metrics": {
+      "G2": {
+        "n": 419,
+        "seconds": 420.3508936920007,
+        "mae": 0.21231919427547805,
+        "balanced_mae": 0.21231919427547805,
+        "point_mae": 0.21262277657727482,
+        "rmse": 0.5242315988301531,
+        "p95_abs": 0.5117803777689598,
+        "bias": 0.09485465589155671,
+        "underprediction_p95": 0.37902244647727523,
+        "underprediction_max": 0.5212970492211468
+      }
+    }
+  },
+  {
+    "scope": "phase",
+    "value": "cooldown_2",
+    "cohort_id": "22576ebe16c451b1ae82e70f0431338f08782cf6c79c42b8a7784b5c7b993695",
+    "metrics": {
+      "G2": {
+        "n": 598,
+        "seconds": 599.9166137909997,
+        "mae": 0.23474723553694804,
+        "balanced_mae": 0.23474723553694804,
+        "point_mae": 0.23495186594594453,
+        "rmse": 0.45510895162087256,
+        "p95_abs": 0.6386796445556199,
+        "bias": 0.10321568097224529,
+        "underprediction_p95": 0.5536690941190826,
+        "underprediction_max": 0.757360009549906
+      }
+    }
+  },
+  {
+    "scope": "phase",
+    "value": "final-cooldown",
+    "cohort_id": "65d5d079cc9fdff61765a6562aae769962f537e254483b01b38f712334866a2b",
+    "metrics": {
+      "G2": {
+        "n": 193,
+        "seconds": 193.18490403197939,
+        "mae": 0.129072495917206,
+        "balanced_mae": 0.129072495917206,
+        "point_mae": 0.12907227365794077,
+        "rmse": 0.14311843749513195,
+        "p95_abs": 0.22340143456772943,
+        "bias": 0.12463891644859167,
+        "underprediction_p95": 0.012819732960649317,
+        "underprediction_max": 0.06657969213573267
+      }
+    }
+  },
+  {
+    "scope": "phase",
+    "value": "final_cooldown",
+    "cohort_id": "e2ea48cc8563af92f3b2d1be2b1919fe9963dce7a3661f87ccb8cb7ff0fa387d",
+    "metrics": {
+      "G2": {
+        "n": 538,
+        "seconds": 537.2163614800011,
+        "mae": 0.2846289042443221,
+        "balanced_mae": 0.2846289042443221,
+        "point_mae": 0.28405077567316545,
+        "rmse": 0.4799151948220646,
+        "p95_abs": 1.0492490816306725,
+        "bias": -0.008703801925776694,
+        "underprediction_p95": 0.9756731033016539,
+        "underprediction_max": 1.1333377725019176
+      }
+    }
+  },
+  {
+    "scope": "phase",
+    "value": "pilot",
+    "cohort_id": "961d1786019d66035864c3cf3781577ed4ab30c95e0640006900b971808fc620",
+    "metrics": {
+      "G2": {
+        "n": 34,
+        "seconds": 34.029476606985554,
+        "mae": 0.47525035344160554,
+        "balanced_mae": 0.47525035344160554,
+        "point_mae": 0.4752695629395631,
+        "rmse": 0.7635220382965014,
+        "p95_abs": 1.4169278256628761,
+        "bias": 0.04874527111142604,
+        "underprediction_p95": 1.4169278256628761,
+        "underprediction_max": 3.0597316205347695
+      }
+    }
+  },
+  {
+    "scope": "phase",
+    "value": "resident-baseline",
+    "cohort_id": "4f1da90d1c01311e8f782ae9e2323602448cf3b2eb3b9240d806a0432c49d5fb",
+    "metrics": {
+      "G2": {
+        "n": 104,
+        "seconds": 103.09077217901358,
+        "mae": 0.33862970991267183,
+        "balanced_mae": 0.33862970991267183,
+        "point_mae": 0.339065099184996,
+        "rmse": 0.3602842421903586,
+        "p95_abs": 0.47989172405922104,
+        "bias": 0.33862970991267183,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      }
+    }
+  },
+  {
+    "scope": "phase",
+    "value": "resident_background",
+    "cohort_id": "8a0162f323a06e429794a48878e632bb426c4b55e24e7c5fc425be7e85fa8161",
+    "metrics": {
+      "G2": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.08544541988566665,
+        "balanced_mae": 0.08544541988566665,
+        "point_mae": 0.08528409694227058,
+        "rmse": 0.10010954225417709,
+        "p95_abs": 0.18162827633831427,
+        "bias": -0.08254614986008929,
+        "underprediction_p95": 0.18162827633831427,
+        "underprediction_max": 0.25013323240860075
+      }
+    }
+  },
+  {
+    "scope": "phase",
+    "value": "sparse",
+    "cohort_id": "945c2437647546b60572ad3e3f954fea1a989caead1a7e735ae133ffc37a444f",
+    "metrics": {
+      "G2": {
+        "n": 445,
+        "seconds": 444.4081170069985,
+        "mae": 0.5833143139650245,
+        "balanced_mae": 0.6349651740317045,
+        "point_mae": 0.5844911575621525,
+        "rmse": 0.6749209427154773,
+        "p95_abs": 1.005972811441816,
+        "bias": 0.4711121700704355,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 2.6682394105823164
+      }
+    }
+  },
+  {
+    "scope": "phase",
+    "value": "unlabelled",
+    "cohort_id": "b1597c0f4c0d80591652cd399f347b338f4eaae0b27dec93d76812d43d63c502",
+    "metrics": {
+      "G2": {
+        "n": 129,
+        "seconds": 128.12397778703598,
+        "mae": 0.06745108099701465,
+        "balanced_mae": 0.06745108099701465,
+        "point_mae": 0.06877695621887972,
+        "rmse": 0.08854221044766619,
+        "p95_abs": 0.18281269460334781,
+        "bias": -0.004652476511704758,
+        "underprediction_p95": 0.12173966297684018,
+        "underprediction_max": 0.1490982446723521
+      }
+    }
+  },
+  {
+    "scope": "segment",
+    "value": "L-00",
+    "cohort_id": "c4d35466d31b7a0989414e7ac7dc7ac30869ef41ca4f6ddcc277b5e8c93200bd",
+    "metrics": {
+      "G2": {
+        "n": 175,
+        "seconds": 174.16551693098154,
+        "mae": 0.16722967202383554,
+        "balanced_mae": 0.2609076023615651,
+        "point_mae": 0.16741694241453225,
+        "rmse": 0.2127508174014179,
+        "p95_abs": 0.3149093147367174,
+        "bias": -0.16538052282468158,
+        "underprediction_p95": 0.3149093147367174,
+        "underprediction_max": 0.8235960657933745
+      }
+    }
+  },
+  {
+    "scope": "segment",
+    "value": "L-11",
+    "cohort_id": "5e2e060a05cc888aaf73696c251330733b8c04a4d1886846f28149f4a939a0eb",
+    "metrics": {
+      "G2": {
+        "n": 189,
+        "seconds": 188.17315281101037,
+        "mae": 0.7969876211804898,
+        "balanced_mae": 0.4424140028154999,
+        "point_mae": 0.7945499867016119,
+        "rmse": 0.9541659611943202,
+        "p95_abs": 1.4529201880920197,
+        "bias": 0.47582939165436205,
+        "underprediction_p95": 1.3211868553623058,
+        "underprediction_max": 3.1322433091958857
+      }
+    }
+  },
+  {
+    "scope": "segment",
+    "value": "L-12",
+    "cohort_id": "23c48e7b63a2971cda12b7d36f375247b4d1bb141561847db1906af43c7d1cdb",
+    "metrics": {
+      "G2": {
+        "n": 243,
+        "seconds": 243.22870272101136,
+        "mae": 0.6570408548623397,
+        "balanced_mae": 0.6570408548623397,
+        "point_mae": 0.6586510367012833,
+        "rmse": 0.8077934157145255,
+        "p95_abs": 1.471450301722774,
+        "bias": 0.6278018413179074,
+        "underprediction_p95": 0.08854324587051234,
+        "underprediction_max": 0.7800883346858996
+      }
+    }
+  },
+  {
+    "scope": "segment",
+    "value": "L-19",
+    "cohort_id": "82d7e557408711c6f157c6d702339cd741e8c9f9a14061ef866a73ad117438f7",
+    "metrics": {
+      "G2": {
+        "n": 305,
+        "seconds": 304.26577941098367,
+        "mae": 0.802861495522674,
+        "balanced_mae": 0.807447862042892,
+        "point_mae": 0.8007102066203182,
+        "rmse": 1.0628465666508575,
+        "p95_abs": 1.985775705882115,
+        "bias": 0.6846746371879245,
+        "underprediction_p95": 0.20443122761504084,
+        "underprediction_max": 2.4860132617852173
+      }
+    }
+  },
+  {
+    "scope": "segment",
+    "value": "L-20",
+    "cohort_id": "a6d1a2ef54f4b876457aa4ae34f92e883b43cd4a5065d1f14240bcfaaa8b0847",
+    "metrics": {
+      "G2": {
+        "n": 703,
+        "seconds": 704.5973014110059,
+        "mae": 1.4794229042237972,
+        "balanced_mae": 2.2374026103496334,
+        "point_mae": 1.4808747525549084,
+        "rmse": 1.7143331573404181,
+        "p95_abs": 2.8745022743145197,
+        "bias": 1.460080852456799,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 1.442092141642263
+      }
+    }
+  },
+  {
+    "scope": "segment",
+    "value": "L-24",
+    "cohort_id": "6464cf1c0eef7ecf1f503c5120bf3a0ec6de174b372432d146bd8e0f9bb1026d",
+    "metrics": {
+      "G2": {
+        "n": 140,
+        "seconds": 139.12390729400795,
+        "mae": 0.8979438903126737,
+        "balanced_mae": 0.8979438903126737,
+        "point_mae": 0.9001128261042217,
+        "rmse": 0.9257947337198124,
+        "p95_abs": 1.1773653081737874,
+        "bias": 0.8979438903126737,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      }
+    }
+  },
+  {
+    "scope": "segment",
+    "value": "L-25",
+    "cohort_id": "d8a39bd82fc97b2b8e83d073a3c5e5936df3eaeb8c77f813f8efb280239b5cc3",
+    "metrics": {
+      "G2": {
+        "n": 103,
+        "seconds": 102.1040678829886,
+        "mae": 0.12230886801080662,
+        "balanced_mae": 0.12230886801080662,
+        "point_mae": 0.12175711247061102,
+        "rmse": 0.1340854875969977,
+        "p95_abs": 0.19532215318967586,
+        "bias": -0.1218340333571752,
+        "underprediction_p95": 0.19532215318967586,
+        "underprediction_max": 0.22515146608468228
+      }
+    }
+  },
+  {
+    "scope": "segment",
+    "value": "M-00",
+    "cohort_id": "16f782c43c4880b6fbde8717feb122f86820adf5a7faae82462207766ee09af1",
+    "metrics": {
+      "G2": {
+        "n": 2269,
+        "seconds": 2274.5368221610006,
+        "mae": 0.26913456656427126,
+        "balanced_mae": 0.33260595031347256,
+        "point_mae": 0.26936074485044503,
+        "rmse": 0.5281431617447984,
+        "p95_abs": 1.0126318904664953,
+        "bias": -0.012975038531949812,
+        "underprediction_p95": 0.6865287409112837,
+        "underprediction_max": 3.2182592056960218
+      }
+    }
+  },
+  {
+    "scope": "segment",
+    "value": "M-01",
+    "cohort_id": "55ea879624e08bf9d2c7147c2646f128013a13ffe3f1753822f236568a29a56a",
+    "metrics": {
+      "G2": {
+        "n": 113,
+        "seconds": 111.97327350100022,
+        "mae": 0.053493462479257486,
+        "balanced_mae": 0.053493462479257486,
+        "point_mae": 0.053246498115506045,
+        "rmse": 0.06592266442002387,
+        "p95_abs": 0.11479517711908328,
+        "bias": -0.03365459491552923,
+        "underprediction_p95": 0.11479517711908328,
+        "underprediction_max": 0.18936478835174597
+      }
+    }
+  },
+  {
+    "scope": "segment",
+    "value": "S-00",
+    "cohort_id": "78cf834fcf96308161289911361f53851035f62187ff565b69e43b71141246a4",
+    "metrics": {
+      "G2": {
+        "n": 250,
+        "seconds": 249.22821243101498,
+        "mae": 0.2288118645162989,
+        "balanced_mae": 0.2889675461281548,
+        "point_mae": 0.22944214221522616,
+        "rmse": 0.3678899206953462,
+        "p95_abs": 0.48071135590468966,
+        "bias": 0.1335098957269383,
+        "underprediction_p95": 0.12010172144677077,
+        "underprediction_max": 3.0597316205347695
+      }
+    }
+  },
+  {
+    "scope": "segment",
+    "value": "S-02",
+    "cohort_id": "945c2437647546b60572ad3e3f954fea1a989caead1a7e735ae133ffc37a444f",
+    "metrics": {
+      "G2": {
+        "n": 445,
+        "seconds": 444.4081170069985,
+        "mae": 0.5833143139650245,
+        "balanced_mae": 0.6349651740317045,
+        "point_mae": 0.5844911575621525,
+        "rmse": 0.6749209427154773,
+        "p95_abs": 1.005972811441816,
+        "bias": 0.4711121700704355,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 2.6682394105823164
+      }
+    }
+  },
+  {
+    "scope": "segment",
+    "value": "S-03",
+    "cohort_id": "1dce164522ee76ea7e075c552d0277f4c82e25f14496815855369c3b376f8efd",
+    "metrics": {
+      "G2": {
+        "n": 285,
+        "seconds": 284.264465758024,
+        "mae": 0.4080989733311402,
+        "balanced_mae": 0.6596714887830599,
+        "point_mae": 0.4093693529935426,
+        "rmse": 0.5708388552090983,
+        "p95_abs": 1.0138402158014401,
+        "bias": 0.258124142822337,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 2.766002893916877
+      }
+    }
+  },
+  {
+    "scope": "segment",
+    "value": "S-23",
+    "cohort_id": "675ccc97816236b05cc5dae740ae39e9e5aa4fe719b351994e805a5b4273b8cc",
+    "metrics": {
+      "G2": {
+        "n": 210,
+        "seconds": 209.20091817399953,
+        "mae": 0.13208692326806226,
+        "balanced_mae": 0.14875969661445765,
+        "point_mae": 0.13259321937902974,
+        "rmse": 0.1458446765974353,
+        "p95_abs": 0.22605376982934042,
+        "bias": 0.12799276999360085,
+        "underprediction_p95": 0.011931168944387215,
+        "underprediction_max": 0.06657969213573267
+      }
+    }
+  }
+]

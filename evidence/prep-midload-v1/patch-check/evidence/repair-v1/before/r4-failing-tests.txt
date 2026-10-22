@@ -1,0 +1,113 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+___________ test_websocket_redirect_never_sends_target_request[True] ___________
+
+config = {'features': {'fan_max_age_s': 2.5, 'history_s': 180, 'max_feature_columns': 64, 'missing_optional_policy': 'fallback_...ct_timeout_s': 5.0, 'follow_redirects': False, 'max_business_payload_bytes': 65536, 'max_inflight_esp32': 1, ...}, ...}
+cross_origin = True
+
+    @pytest.mark.parametrize('cross_origin', [True, False])
+    async def test_websocket_redirect_never_sends_target_request(config, cross_origin):
+        seen = []
+        runners = []
+        async def target(request):
+            seen.append({'path': request.path, 'fixture_header': request.headers.get('X-TTO-Test')})
+            ws = web.WebSocketResponse(); await ws.prepare(request); await ws.close()
+            return ws
+        async def start(app):
+            runner = web.AppRunner(app); await runner.setup(); runners.append(runner)
+            site = web.TCPSite(runner, '127.0.0.1', 0); await site.start()
+            return f'http://127.0.0.1:{site._server.sockets[0].getsockname()[1]}'
+        target_url = None
+        async def redirect(request):
+            raise web.HTTPFound(target_url)
+        try:
+            app = web.Application(); app.router.add_get('/socket.io/', redirect)
+            app.router.add_get('/api/v1/fan/status', redirect)
+            app.router.add_get('/not-authorized', target)
+            origin = await start(app)
+            if cross_origin:
+                other = web.Application(); other.router.add_get('/not-authorized', target)
+                target_url = await start(other) + '/not-authorized'
+            else:
+                target_url = origin + '/not-authorized'
+            config['orin']['base_url'] = config['tianshan']['base_url'] = origin
+            async with sessions(config, 'orin', socketio=True) as session:
+>               with pytest.raises(ValueError, match='redirect'):
+E               Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_repair_r4.py:35: Failed
+__________ test_websocket_redirect_never_sends_target_request[False] ___________
+
+config = {'features': {'fan_max_age_s': 2.5, 'history_s': 180, 'max_feature_columns': 64, 'missing_optional_policy': 'fallback_...ct_timeout_s': 5.0, 'follow_redirects': False, 'max_business_payload_bytes': 65536, 'max_inflight_esp32': 1, ...}, ...}
+cross_origin = False
+
+    @pytest.mark.parametrize('cross_origin', [True, False])
+    async def test_websocket_redirect_never_sends_target_request(config, cross_origin):
+        seen = []
+        runners = []
+        async def target(request):
+            seen.append({'path': request.path, 'fixture_header': request.headers.get('X-TTO-Test')})
+            ws = web.WebSocketResponse(); await ws.prepare(request); await ws.close()
+            return ws
+        async def start(app):
+            runner = web.AppRunner(app); await runner.setup(); runners.append(runner)
+            site = web.TCPSite(runner, '127.0.0.1', 0); await site.start()
+            return f'http://127.0.0.1:{site._server.sockets[0].getsockname()[1]}'
+        target_url = None
+        async def redirect(request):
+            raise web.HTTPFound(target_url)
+        try:
+            app = web.Application(); app.router.add_get('/socket.io/', redirect)
+            app.router.add_get('/api/v1/fan/status', redirect)
+            app.router.add_get('/not-authorized', target)
+            origin = await start(app)
+            if cross_origin:
+                other = web.Application(); other.router.add_get('/not-authorized', target)
+                target_url = await start(other) + '/not-authorized'
+            else:
+                target_url = origin + '/not-authorized'
+            config['orin']['base_url'] = config['tianshan']['base_url'] = origin
+            async with sessions(config, 'orin', socketio=True) as session:
+>               with pytest.raises(ValueError, match='redirect'):
+E               Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_repair_r4.py:35: Failed
+__________ test_redirect_failure_collect_closes_within_attempt_budget __________
+
+config = {'features': {'fan_max_age_s': 2.5, 'history_s': 180, 'max_feature_columns': 64, 'missing_optional_policy': 'fallback_...ct_timeout_s': 5.0, 'follow_redirects': False, 'max_business_payload_bytes': 65536, 'max_inflight_esp32': 1, ...}, ...}
+tmp_path = PosixPath('/private/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/pytest-of-massif/pytest-16/test_redirect_failure_collect_0')
+
+    async def test_redirect_failure_collect_closes_within_attempt_budget(config, tmp_path):
+        seen = []
+        async def target(request):
+            seen.append(request.path)
+            return web.Response()
+        async def redirect(request):
+            raise web.HTTPFound('/not-authorized')
+        app = web.Application(); app.router.add_get('/socket.io/', redirect)
+        app.router.add_get('/not-authorized', target)
+        app.router.add_get('/api/v1/fan/status', redirect)
+        app.router.add_get('/api/v1/temp/status', redirect)
+        runner = web.AppRunner(app); await runner.setup()
+        site = web.TCPSite(runner, '127.0.0.1', 0); await site.start()
+        origin = f'http://127.0.0.1:{site._server.sockets[0].getsockname()[1]}'
+        config['orin']['base_url'] = config['tianshan']['base_url'] = origin
+        config['network'].update(reconnect_max_attempts=2, reconnect_initial_s=.1, reconnect_max_s=.1)
+        try:
+            path, stats = await asyncio.wait_for(collect(config, 3, data_root=tmp_path), 5)
+            assert stats['connection_attempts'] == 2
+            assert stats['stop_reason'] == 'reconnect_attempt_budget'
+>           assert seen == []
+E           AssertionError: assert ['/not-author...t-authorized'] == []
+E             
+E             Left contains 2 more items, first extra item: '/not-authorized'
+E             Use -v to get more diff
+
+tests/test_repair_r4.py:68: AssertionError
+----------------------------- Captured stdout call -----------------------------
+本轮TTO已停止；现有风扇控制未被修改。
+=========================== short test summary info ============================
+FAILED tests/test_repair_r4.py::test_websocket_redirect_never_sends_target_request[True]
+FAILED tests/test_repair_r4.py::test_websocket_redirect_never_sends_target_request[False]
+FAILED tests/test_repair_r4.py::test_redirect_failure_collect_closes_within_attempt_budget
+3 failed in 0.47s

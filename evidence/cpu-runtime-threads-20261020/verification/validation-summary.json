@@ -1,0 +1,57 @@
+{
+  "scope": "local macOS ARM64, actual installed final CPU3 CLI, synthetic loopback; not N305 validation",
+  "pid": 51538,
+  "pid_matches_runtime": true,
+  "elapsed_s": 60.042963374988176,
+  "sidecar_start_s": 30.07653170800768,
+  "sidecar_stop_s": 60.03855391591787,
+  "sidecar_status": "native_run_ending",
+  "resources_by_actual_phase": {
+    "before": {
+      "samples": 29,
+      "cpu_mean_pct": 1.8032709843799284,
+      "cpu_max_pct": 4.05493329292603,
+      "rss_max_mib": 72.484375
+    },
+    "during": {
+      "samples": 30,
+      "cpu_mean_pct": 1.8254693984029318,
+      "cpu_max_pct": 2.5775371166599927,
+      "rss_max_mib": 73.96875
+    },
+    "after": {
+      "samples": 0,
+      "cpu_mean_pct": null,
+      "cpu_max_pct": null,
+      "rss_max_mib": null
+    }
+  },
+  "requester_instances": 0,
+  "native_collectors": 1,
+  "estimators": 1,
+  "own_async_tasks_remaining": 0,
+  "wire_packets": 150,
+  "states": 193,
+  "pools": [
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 1,
+      "prefix": "libscipy_openblas",
+      "filepath": "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/numpy/.dylibs/libscipy_openblas64_.dylib",
+      "version": "0.3.29",
+      "threading_layer": "pthreads",
+      "architecture": "neoversen1"
+    },
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 1,
+      "prefix": "libscipy_openblas",
+      "filepath": "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/scipy/.dylibs/libscipy_openblas.dylib",
+      "version": "0.3.28",
+      "threading_layer": "pthreads",
+      "architecture": "neoversen1"
+    }
+  ]
+}

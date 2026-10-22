@@ -1,0 +1,18 @@
+{
+  "working_directory": "/Users/massif/Tianshan-thermal-observer",
+  "commands": [
+    "git archive 52f571acb128af44f4b06bbba049148e00fd97fb src/tto pyproject.toml | tar -x -C /private/tmp/tto-offline-next-52f571a (existing isolated checkout)",
+    "python3 evidence/shortqa-next-20261013/scripts/verify_evidence.py",
+    "PYTHONPATH=/private/tmp/tto-offline-next-52f571a/src PYTHONDONTWRITEBYTECODE=1 .venv/bin/python evidence/shortqa-next-20261013/scripts/prepare_data.py",
+    "PYTHONPATH=/private/tmp/tto-offline-next-52f571a/src PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m tto train --dataset evidence/shortqa-next-20261013/model-exploration/short-qa/exploratory-split/dataset.json --split evidence/shortqa-next-20261013/model-exploration/short-qa/exploratory-split/split.json --output evidence/shortqa-next-20261013/model-exploration/short-qa/model.json",
+    "PYTHONPATH=/private/tmp/tto-offline-next-52f571a/src PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m tto evaluate --dataset evidence/shortqa-next-20261013/model-exploration/short-qa/exploratory-split/dataset.json --split evidence/shortqa-next-20261013/model-exploration/short-qa/exploratory-split/split.json --models evidence/shortqa-next-20261013/model-exploration/short-qa/model.json --output evidence/shortqa-next-20261013/model-exploration/short-qa/evaluation",
+    "python3 /private/tmp/tto-shortqa-next-v1-package/reference/independent/scripts/audit_shortqa.py --input evidence/short-qa-20261013 --output evidence/shortqa-next-20261013/results/external-audit-on-complete-original.json",
+    "python3 evidence/shortqa-next-20261013/scripts/run_control_prototype.py",
+    "PYTHONPATH=/private/tmp/tto-offline-next-52f571a/src PYTHONDONTWRITEBYTECODE=1 .venv/bin/python evidence/shortqa-next-20261013/scripts/summarize_analysis.py",
+    "MPLCONFIGDIR=/private/tmp/tto-mpl-cache-20261013 PYTHONDONTWRITEBYTECODE=1 /private/tmp/tto-analysis-20261013-env/bin/python evidence/shortqa-next-20261013/scripts/plot_results.py"
+  ],
+  "C_commands": "results/control-prototype-identity.json contains exact compiler/exec arguments",
+  "scope": "offline; three known-board read-only GET receipts stored separately",
+  "ridge_train_invocations": 1,
+  "evaluation_invocations": 1
+}

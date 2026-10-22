@@ -1,0 +1,25 @@
+{
+  "id": "YET-SYNC-TRANSIENT-TEMP-CONTINUE-v1",
+  "authorized_by": "direct_user_instruction_after_previous_run_stopped",
+  "scope": "experiment scheduling only; raw collector and TrialHealth remain unchanged",
+  "changes": [
+    "temp_stale/normalized_valid=false alone do not stop collector",
+    "active_source variable/default transition alone does not stop collector",
+    "native current_ready and TTL retained; do not submit until current input ready again"
+  ],
+  "retained_stops": [
+    "fault",
+    "guard_active",
+    "fan disabled",
+    "non-AUTO",
+    "manual temperature",
+    "binding change",
+    "unapproved active source",
+    "control context changes other than allowed source fallback",
+    "hard deadline",
+    "collector failure",
+    "unknown request completion"
+  ],
+  "no_production_or_protection_changes": true,
+  "old_M_policy_not_copied": true
+}

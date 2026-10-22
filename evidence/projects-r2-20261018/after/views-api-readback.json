@@ -1,0 +1,147 @@
+{
+  "user": {
+    "projectV2": {
+      "id": "PVT_kwHOCoNcq84BnjKJ",
+      "views": {
+        "nodes": [
+          {
+            "id": "PVTV_lAHOCoNcq84BnjKJzgMHUXA",
+            "name": "产品路线",
+            "number": 1,
+            "layout": "TABLE_LAYOUT",
+            "filter": ""
+          },
+          {
+            "id": "PVTV_lAHOCoNcq84BnjKJzgMHUc8",
+            "name": "执行状态",
+            "number": 2,
+            "layout": "BOARD_LAYOUT",
+            "filter": "-kind:Overview"
+          },
+          {
+            "id": "PVTV_lAHOCoNcq84BnjKJzgMHUdA",
+            "name": "已排期时间轴",
+            "number": 3,
+            "layout": "ROADMAP_LAYOUT",
+            "filter": "has:\"Start date\" has:\"Target date\""
+          },
+          {
+            "id": "PVTV_lAHOCoNcq84BnjKJzgMHUdM",
+            "name": "未排期",
+            "number": 4,
+            "layout": "TABLE_LAYOUT",
+            "filter": "no:\"Start date\" no:\"Target date\""
+          }
+        ],
+        "pageInfo": {
+          "hasNextPage": false,
+          "endCursor": "NA"
+        }
+      },
+      "fields": {
+        "nodes": [
+          {
+            "id": "PVTF_lAHOCoNcq84BnjKJzhmHQWQ",
+            "name": "Title",
+            "databaseId": 428294500
+          },
+          {
+            "id": "PVTF_lAHOCoNcq84BnjKJzhmHQWY",
+            "name": "Assignees",
+            "databaseId": 428294502
+          },
+          {
+            "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQWg",
+            "name": "Status",
+            "databaseId": 428294504
+          },
+          {
+            "id": "PVTF_lAHOCoNcq84BnjKJzhmHQWs",
+            "name": "Labels",
+            "databaseId": 428294507
+          },
+          {
+            "id": "PVTF_lAHOCoNcq84BnjKJzhmHQW0",
+            "name": "Linked pull requests",
+            "databaseId": 428294509
+          },
+          {
+            "id": "PVTF_lAHOCoNcq84BnjKJzhmHQW8",
+            "name": "Milestone",
+            "databaseId": 428294511
+          },
+          {
+            "id": "PVTF_lAHOCoNcq84BnjKJzhmHQXE",
+            "name": "Repository",
+            "databaseId": 428294513
+          },
+          {
+            "id": "PVTF_lAHOCoNcq84BnjKJzhmHQXQ",
+            "name": "Reviewers",
+            "databaseId": 428294516
+          },
+          {
+            "id": "PVTF_lAHOCoNcq84BnjKJzhmHQXU",
+            "name": "Parent issue",
+            "databaseId": 428294517
+          },
+          {
+            "id": "PVTF_lAHOCoNcq84BnjKJzhmHQXY",
+            "name": "Sub-issues progress",
+            "databaseId": 428294518
+          },
+          {
+            "id": "PVTF_lAHOCoNcq84BnjKJzhmHQXc",
+            "name": "Created",
+            "databaseId": 428294519
+          },
+          {
+            "id": "PVTF_lAHOCoNcq84BnjKJzhmHQXg",
+            "name": "Updated",
+            "databaseId": 428294520
+          },
+          {
+            "id": "PVTF_lAHOCoNcq84BnjKJzhmHQXk",
+            "name": "Closed",
+            "databaseId": 428294521
+          },
+          {
+            "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQoY",
+            "name": "Phase",
+            "databaseId": 428294790
+          },
+          {
+            "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQ-8",
+            "name": "Horizon",
+            "databaseId": 428295151
+          },
+          {
+            "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRAA",
+            "name": "Kind",
+            "databaseId": 428295168
+          },
+          {
+            "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRBU",
+            "name": "Priority",
+            "databaseId": 428295189
+          },
+          {
+            "id": "PVTF_lAHOCoNcq84BnjKJzhmHRCQ",
+            "name": "Responsible chat",
+            "databaseId": 428295204
+          },
+          {
+            "id": "PVTF_lAHOCoNcq84BnjKJzhmHRCU",
+            "name": "Start date",
+            "databaseId": 428295205
+          },
+          {
+            "id": "PVTF_lAHOCoNcq84BnjKJzhmHRCY",
+            "name": "Target date",
+            "databaseId": 428295206
+          }
+        ]
+      }
+    }
+  }
+}

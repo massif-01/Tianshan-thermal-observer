@@ -1,0 +1,712 @@
+已连接，正在等待第一份有效温度数据。
+本轮TTO已停止；现有风扇控制未被修改。
+{
+  "schema_version": 1,
+  "simulated": false,
+  "conclusion": "软件可用，预测效果待验证。 已收到TJ也不代表可建模：平台身份或实际控制温度/来源尚未满足资格。",
+  "deployment_status": "deployment_unverified",
+  "connection_reliable": "observed_samples_only",
+  "quality": {
+    "boundary_socketio_connecting": 1,
+    "boundary_control_context_change": 1,
+    "boundary_stream": 1,
+    "new_samples": 1,
+    "boundary_input_boundary": 1,
+    "boundary_socketio_disconnected": 1,
+    "boundary_run_end": 1
+  },
+  "new_samples": 1,
+  "duplicate_received": 0,
+  "origin_count": 1,
+  "normal_auto_origins": 1,
+  "warm_origins": 0,
+  "label_counts": {
+    "15": 0,
+    "45": 0,
+    "90": 0
+  },
+  "episode": "synthetic-signal-check",
+  "episode_evidence": "operator_named_process",
+  "independent_episode_count": "unknown_until_operator_groups_complete_processes",
+  "availability": {
+    "cpu_freq": 1.0,
+    "cpu_freq_mean_120": 0.0,
+    "cpu_freq_mean_30": 0.0,
+    "cpu_reported_cores": 1.0,
+    "cpu_reported_cores_mean_120": 0.0,
+    "cpu_reported_cores_mean_30": 0.0,
+    "cpu_usage": 1.0,
+    "cpu_usage_mean_120": 0.0,
+    "cpu_usage_mean_30": 0.0,
+    "duty": 1.0,
+    "duty_change_30": 0.0,
+    "duty_mean_120": 0.0,
+    "duty_mean_30": 0.0,
+    "gain": 1.0,
+    "gpu_busy": 1.0,
+    "gpu_busy_mean_120": 0.0,
+    "gpu_busy_mean_30": 0.0,
+    "temp_cpu": 0.0,
+    "temp_cpu_mean_120": 0.0,
+    "temp_cpu_mean_30": 0.0,
+    "temp_gpu": 0.0,
+    "temp_gpu_mean_120": 0.0,
+    "temp_gpu_mean_30": 0.0,
+    "temp_soc0": 0.0,
+    "temp_soc0_mean_120": 0.0,
+    "temp_soc0_mean_30": 0.0,
+    "temp_soc1": 0.0,
+    "temp_soc1_mean_120": 0.0,
+    "temp_soc1_mean_30": 0.0,
+    "temp_soc2": 0.0,
+    "temp_soc2_mean_120": 0.0,
+    "temp_soc2_mean_30": 0.0,
+    "tj": 1.0,
+    "tj_lag_120": 0.0,
+    "tj_lag_15": 0.0,
+    "tj_lag_180": 0.0,
+    "tj_lag_30": 0.0,
+    "tj_lag_5": 0.0,
+    "tj_lag_60": 0.0,
+    "tj_mean_10": 0.0,
+    "tj_mean_120": 0.0,
+    "tj_mean_30": 0.0,
+    "tj_slope_10": 0.0,
+    "tj_slope_120": 0.0,
+    "tj_slope_30": 0.0,
+    "vdd_cpu_cv": 0.0,
+    "vdd_cpu_cv_mean_120": 0.0,
+    "vdd_cpu_cv_mean_30": 0.0,
+    "vdd_gpu_soc": 0.0,
+    "vdd_gpu_soc_mean_120": 0.0,
+    "vdd_gpu_soc_mean_30": 0.0,
+    "vin_sys_5v0": 0.0,
+    "vin_sys_5v0_mean_120": 0.0,
+    "vin_sys_5v0_mean_30": 0.0
+  },
+  "resource": {
+    "rss_mib": {
+      "count": 0,
+      "max": null,
+      "p95": null,
+      "p99": null,
+      "mean": null
+    },
+    "cpu_pct_single_core": {
+      "count": 0,
+      "max": null,
+      "p95": null,
+      "p99": null,
+      "mean": null
+    },
+    "prediction_ms": {
+      "count": 1,
+      "max": 0.7237500103656203,
+      "p95": 0.7237500103656203,
+      "p99": 0.7237500103656203,
+      "mean": 0.7237500103656203
+    },
+    "poll_rtt_ms": {
+      "count": 2,
+      "max": 4.970957990735769,
+      "p95": 4.745339292276185,
+      "p99": 4.925834251043852,
+      "mean": 2.7147710061399266
+    }
+  },
+  "host_scope": "recorded_observer_host_only",
+  "poll_missed": 0,
+  "dropped": 0,
+  "observation_rate_hz": 15.078384985264806,
+  "orin_event_rate_hz": 3.015676997052961,
+  "business_payload_bytes": {
+    "maximum": 701,
+    "mean": 701.0
+  },
+  "asynchronous_control_temperature_differences": {
+    "count": 0,
+    "max_absolute_c": null,
+    "first": null,
+    "last": null,
+    "note": "异步量化与绑定路径有差别；不据此自动判错误或改绑。"
+  },
+  "source_status": {
+    "fan_ok": 1,
+    "temp_ok": 1,
+    "origins": 1
+  },
+  "stop_reason": "SIGINT",
+  "next_step": "先核对平台声明、GPU缺项和控制温度实际有效性；保留CURVE原状，现场来源核对另行安排。",
+  "time_axis_note": "接收时间近似；源年龄是下界，不含未测网络在途时间。",
+  "report_type": "collect",
+  "recorded_results": {
+    "source": "persisted_predictions_and_scores",
+    "logs": {
+      "predictions.jsonl": {
+        "present": true,
+        "sha256": "ee541fbd2cfc14dfb87a4cc6a267415f8179401fe143f3c0c99da8c684171be9",
+        "record_count": 1
+      },
+      "scores.jsonl": {
+        "present": true,
+        "sha256": "f7fc12a839afc82a4f8fb19e13df42d8f271acee3202f46781347cc05a106c3a",
+        "record_count": 3
+      }
+    },
+    "missing_logs": [],
+    "log_evidence_complete": true,
+    "issues": [],
+    "models": {
+      "baseline_no_model": {
+        "model_sha256": null,
+        "prediction_origins": 1,
+        "actual_methods": {
+          "persist": 1
+        },
+        "fallback_origins": 1,
+        "unavailable_method_reasons": {
+          "persist": {},
+          "trend30": {
+            "warming_up_10s": 1
+          },
+          "ridge_tj": {
+            "model_not_loaded": 1
+          },
+          "ridge_full": {
+            "model_not_loaded": 1
+          }
+        },
+        "horizons": {
+          "15": {
+            "issued_origins": 1,
+            "scored_origins": 0,
+            "historical_scored_origins": 0,
+            "unscored_reasons": {
+              "cross_segment": 1
+            },
+            "methods": {
+              "persist": {
+                "issued": 1,
+                "scored": 0,
+                "historical_scored": 0,
+                "quality_excluded": 0,
+                "quality_exclusion_reasons": {},
+                "unscored_reasons": {
+                  "cross_segment": 1
+                },
+                "evidence_excluded": 0,
+                "coverage_numerator": 0,
+                "coverage_denominator": 1,
+                "score_fraction_denominator": 1,
+                "output_fraction": 1.0,
+                "coverage_fraction": 0.0,
+                "score_fraction_of_issued": 0.0,
+                "metrics": {
+                  "time_pooled": {
+                    "n": 0,
+                    "status": "not_covered"
+                  },
+                  "time_weighted": {
+                    "status": "not_covered"
+                  },
+                  "episodes": {},
+                  "episode_equal_macro": {
+                    "status": "not_covered"
+                  }
+                }
+              },
+              "trend30": {
+                "issued": 0,
+                "scored": 0,
+                "historical_scored": 0,
+                "quality_excluded": 0,
+                "quality_exclusion_reasons": {},
+                "unscored_reasons": {},
+                "evidence_excluded": 0,
+                "coverage_numerator": 0,
+                "coverage_denominator": 1,
+                "score_fraction_denominator": 0,
+                "output_fraction": 0.0,
+                "coverage_fraction": 0.0,
+                "score_fraction_of_issued": null,
+                "metrics": {
+                  "time_pooled": {
+                    "n": 0,
+                    "status": "not_covered"
+                  },
+                  "time_weighted": {
+                    "status": "not_covered"
+                  },
+                  "episodes": {},
+                  "episode_equal_macro": {
+                    "status": "not_covered"
+                  }
+                }
+              },
+              "ridge_tj": {
+                "issued": 0,
+                "scored": 0,
+                "historical_scored": 0,
+                "quality_excluded": 0,
+                "quality_exclusion_reasons": {},
+                "unscored_reasons": {},
+                "evidence_excluded": 0,
+                "coverage_numerator": 0,
+                "coverage_denominator": 1,
+                "score_fraction_denominator": 0,
+                "output_fraction": 0.0,
+                "coverage_fraction": 0.0,
+                "score_fraction_of_issued": null,
+                "metrics": {
+                  "time_pooled": {
+                    "n": 0,
+                    "status": "not_covered"
+                  },
+                  "time_weighted": {
+                    "status": "not_covered"
+                  },
+                  "episodes": {},
+                  "episode_equal_macro": {
+                    "status": "not_covered"
+                  }
+                }
+              },
+              "ridge_full": {
+                "issued": 0,
+                "scored": 0,
+                "historical_scored": 0,
+                "quality_excluded": 0,
+                "quality_exclusion_reasons": {},
+                "unscored_reasons": {},
+                "evidence_excluded": 0,
+                "coverage_numerator": 0,
+                "coverage_denominator": 1,
+                "score_fraction_denominator": 0,
+                "output_fraction": 0.0,
+                "coverage_fraction": 0.0,
+                "score_fraction_of_issued": null,
+                "metrics": {
+                  "time_pooled": {
+                    "n": 0,
+                    "status": "not_covered"
+                  },
+                  "time_weighted": {
+                    "status": "not_covered"
+                  },
+                  "episodes": {},
+                  "episode_equal_macro": {
+                    "status": "not_covered"
+                  }
+                }
+              }
+            }
+          },
+          "45": {
+            "issued_origins": 1,
+            "scored_origins": 0,
+            "historical_scored_origins": 0,
+            "unscored_reasons": {
+              "cross_segment": 1
+            },
+            "methods": {
+              "persist": {
+                "issued": 1,
+                "scored": 0,
+                "historical_scored": 0,
+                "quality_excluded": 0,
+                "quality_exclusion_reasons": {},
+                "unscored_reasons": {
+                  "cross_segment": 1
+                },
+                "evidence_excluded": 0,
+                "coverage_numerator": 0,
+                "coverage_denominator": 1,
+                "score_fraction_denominator": 1,
+                "output_fraction": 1.0,
+                "coverage_fraction": 0.0,
+                "score_fraction_of_issued": 0.0,
+                "metrics": {
+                  "time_pooled": {
+                    "n": 0,
+                    "status": "not_covered"
+                  },
+                  "time_weighted": {
+                    "status": "not_covered"
+                  },
+                  "episodes": {},
+                  "episode_equal_macro": {
+                    "status": "not_covered"
+                  }
+                }
+              },
+              "trend30": {
+                "issued": 0,
+                "scored": 0,
+                "historical_scored": 0,
+                "quality_excluded": 0,
+                "quality_exclusion_reasons": {},
+                "unscored_reasons": {},
+                "evidence_excluded": 0,
+                "coverage_numerator": 0,
+                "coverage_denominator": 1,
+                "score_fraction_denominator": 0,
+                "output_fraction": 0.0,
+                "coverage_fraction": 0.0,
+                "score_fraction_of_issued": null,
+                "metrics": {
+                  "time_pooled": {
+                    "n": 0,
+                    "status": "not_covered"
+                  },
+                  "time_weighted": {
+                    "status": "not_covered"
+                  },
+                  "episodes": {},
+                  "episode_equal_macro": {
+                    "status": "not_covered"
+                  }
+                }
+              },
+              "ridge_tj": {
+                "issued": 0,
+                "scored": 0,
+                "historical_scored": 0,
+                "quality_excluded": 0,
+                "quality_exclusion_reasons": {},
+                "unscored_reasons": {},
+                "evidence_excluded": 0,
+                "coverage_numerator": 0,
+                "coverage_denominator": 1,
+                "score_fraction_denominator": 0,
+                "output_fraction": 0.0,
+                "coverage_fraction": 0.0,
+                "score_fraction_of_issued": null,
+                "metrics": {
+                  "time_pooled": {
+                    "n": 0,
+                    "status": "not_covered"
+                  },
+                  "time_weighted": {
+                    "status": "not_covered"
+                  },
+                  "episodes": {},
+                  "episode_equal_macro": {
+                    "status": "not_covered"
+                  }
+                }
+              },
+              "ridge_full": {
+                "issued": 0,
+                "scored": 0,
+                "historical_scored": 0,
+                "quality_excluded": 0,
+                "quality_exclusion_reasons": {},
+                "unscored_reasons": {},
+                "evidence_excluded": 0,
+                "coverage_numerator": 0,
+                "coverage_denominator": 1,
+                "score_fraction_denominator": 0,
+                "output_fraction": 0.0,
+                "coverage_fraction": 0.0,
+                "score_fraction_of_issued": null,
+                "metrics": {
+                  "time_pooled": {
+                    "n": 0,
+                    "status": "not_covered"
+                  },
+                  "time_weighted": {
+                    "status": "not_covered"
+                  },
+                  "episodes": {},
+                  "episode_equal_macro": {
+                    "status": "not_covered"
+                  }
+                }
+              }
+            }
+          },
+          "90": {
+            "issued_origins": 1,
+            "scored_origins": 0,
+            "historical_scored_origins": 0,
+            "unscored_reasons": {
+              "cross_segment": 1
+            },
+            "methods": {
+              "persist": {
+                "issued": 1,
+                "scored": 0,
+                "historical_scored": 0,
+                "quality_excluded": 0,
+                "quality_exclusion_reasons": {},
+                "unscored_reasons": {
+                  "cross_segment": 1
+                },
+                "evidence_excluded": 0,
+                "coverage_numerator": 0,
+                "coverage_denominator": 1,
+                "score_fraction_denominator": 1,
+                "output_fraction": 1.0,
+                "coverage_fraction": 0.0,
+                "score_fraction_of_issued": 0.0,
+                "metrics": {
+                  "time_pooled": {
+                    "n": 0,
+                    "status": "not_covered"
+                  },
+                  "time_weighted": {
+                    "status": "not_covered"
+                  },
+                  "episodes": {},
+                  "episode_equal_macro": {
+                    "status": "not_covered"
+                  }
+                }
+              },
+              "trend30": {
+                "issued": 0,
+                "scored": 0,
+                "historical_scored": 0,
+                "quality_excluded": 0,
+                "quality_exclusion_reasons": {},
+                "unscored_reasons": {},
+                "evidence_excluded": 0,
+                "coverage_numerator": 0,
+                "coverage_denominator": 1,
+                "score_fraction_denominator": 0,
+                "output_fraction": 0.0,
+                "coverage_fraction": 0.0,
+                "score_fraction_of_issued": null,
+                "metrics": {
+                  "time_pooled": {
+                    "n": 0,
+                    "status": "not_covered"
+                  },
+                  "time_weighted": {
+                    "status": "not_covered"
+                  },
+                  "episodes": {},
+                  "episode_equal_macro": {
+                    "status": "not_covered"
+                  }
+                }
+              },
+              "ridge_tj": {
+                "issued": 0,
+                "scored": 0,
+                "historical_scored": 0,
+                "quality_excluded": 0,
+                "quality_exclusion_reasons": {},
+                "unscored_reasons": {},
+                "evidence_excluded": 0,
+                "coverage_numerator": 0,
+                "coverage_denominator": 1,
+                "score_fraction_denominator": 0,
+                "output_fraction": 0.0,
+                "coverage_fraction": 0.0,
+                "score_fraction_of_issued": null,
+                "metrics": {
+                  "time_pooled": {
+                    "n": 0,
+                    "status": "not_covered"
+                  },
+                  "time_weighted": {
+                    "status": "not_covered"
+                  },
+                  "episodes": {},
+                  "episode_equal_macro": {
+                    "status": "not_covered"
+                  }
+                }
+              },
+              "ridge_full": {
+                "issued": 0,
+                "scored": 0,
+                "historical_scored": 0,
+                "quality_excluded": 0,
+                "quality_exclusion_reasons": {},
+                "unscored_reasons": {},
+                "evidence_excluded": 0,
+                "coverage_numerator": 0,
+                "coverage_denominator": 1,
+                "score_fraction_denominator": 0,
+                "output_fraction": 0.0,
+                "coverage_fraction": 0.0,
+                "score_fraction_of_issued": null,
+                "metrics": {
+                  "time_pooled": {
+                    "n": 0,
+                    "status": "not_covered"
+                  },
+                  "time_weighted": {
+                    "status": "not_covered"
+                  },
+                  "episodes": {},
+                  "episode_equal_macro": {
+                    "status": "not_covered"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "issued_prediction_origins": 1,
+    "terminal_score_records": 3,
+    "matched_terminal_score_records": 3,
+    "scored_method_horizon_records": 0,
+    "historical_scored_method_horizon_records": 0,
+    "quality_excluded_method_horizon_records": 0,
+    "evidence_excluded_method_horizon_records": 0,
+    "required_input_evidence_issues": [],
+    "quality_isolations": [],
+    "evaluation_eligibility_source": "production_replay_existing_segment_isolation_and_declared_input_evidence",
+    "coverage_note": "scored/issued_origins = 当前有效评分 / 当时计划起点；score_fraction_of_issued = 当前有效评分 / 当时该方法已发预测；历史分母包含质量隔离段与缺输入证据的记录。",
+    "prediction_references": {
+      "5ab83257-27c6-4783-bc21-aec9b98559dd:1": {
+        "prediction_record_ref": "predictions.jsonl:1",
+        "origin_ref": "5ab83257-27c6-4783-bc21-aec9b98559dd/observation:4",
+        "raw_refs": [
+          "5ab83257-27c6-4783-bc21-aec9b98559dd/observation:2",
+          "5ab83257-27c6-4783-bc21-aec9b98559dd/observation:3",
+          "5ab83257-27c6-4783-bc21-aec9b98559dd/observation:4"
+        ],
+        "model_sha256": null,
+        "actual_method": "persist",
+        "origin_t": 261372.160481375
+      }
+    },
+    "scored_records": [],
+    "quality_excluded_records": [],
+    "evidence_excluded_records": []
+  },
+  "missing_required_logs": [],
+  "input_diagnostics": {
+    "kind": "diagnostic_replay_only_not_historical_predictions",
+    "platform_declaration": {
+      "platform": null,
+      "ref": "5ab83257-27c6-4783-bc21-aec9b98559dd/observation:4",
+      "evidence_status": "platform_contract_missing_or_invalid"
+    },
+    "source_period_evidence": {
+      "period_ms": 1000,
+      "basis": "operator_legacy",
+      "reason": null,
+      "ref": "5ab83257-27c6-4783-bc21-aec9b98559dd/observation:4"
+    },
+    "counts": {
+      "temperature_status_records": 1,
+      "valid_temperature_status_records": 1,
+      "new_tj_samples": 1,
+      "gpu_usable_new_samples": 1,
+      "planned_origins": 1,
+      "eligible_origins": 0,
+      "normal_auto_origins": 1,
+      "normal_curve_origins": 0
+    },
+    "control_scopes": {
+      "auto": 1
+    },
+    "control_ineligible_reasons": {},
+    "last_temperature_binding": {
+      "preferred_source": "variable",
+      "active_source": "variable",
+      "bound_variable": "agx.tj",
+      "manual_mode": false,
+      "normalized_valid": true,
+      "timestamp_ms": 1200,
+      "ref": "5ab83257-27c6-4783-bc21-aec9b98559dd/observation:3"
+    },
+    "gpu_source_status_counts": {
+      "legacy_no_independent_status": 1
+    },
+    "gpu_unavailable_reasons": {
+      "usable": 1
+    },
+    "gpu_latest": {
+      "value": 30,
+      "reason": null,
+      "source_status": "legacy_no_independent_status",
+      "age_lower_bound_ms": 0,
+      "timeout_ms": 5000,
+      "sample_interval_ms": null,
+      "device_uuid": null,
+      "valid_until": 261377.160481375,
+      "contract_valid": false,
+      "ref": "5ab83257-27c6-4783-bc21-aec9b98559dd/observation:4",
+      "observer_receive_mono_s": 261372.160481375,
+      "observer_current_valid": true,
+      "observer_current_age_lower_bound_ms": 165.31358298379928
+    },
+    "gpu_coverage": {
+      "numerator": 1,
+      "denominator": 1,
+      "fraction": 1.0
+    },
+    "named_input_coverage": {
+      "temperature.cpu [C]": {
+        "numerator": 1,
+        "denominator": 1,
+        "fraction": 1.0
+      },
+      "temperature.soc0 [C]": {
+        "numerator": 1,
+        "denominator": 1,
+        "fraction": 1.0
+      },
+      "temperature.tj [C]": {
+        "numerator": 1,
+        "denominator": 1,
+        "fraction": 1.0
+      },
+      "power.vdd_cpu_cv.current [W]": {
+        "numerator": 1,
+        "denominator": 1,
+        "fraction": 1.0
+      },
+      "power.vdd_gpu_soc.current [W]": {
+        "numerator": 1,
+        "denominator": 1,
+        "fraction": 1.0
+      },
+      "power.vin_sys_5v0.current [W]": {
+        "numerator": 1,
+        "denominator": 1,
+        "fraction": 1.0
+      }
+    },
+    "mixed_profiles": false,
+    "model_readiness": "blocked_by_identity_or_control_qualification",
+    "process_completeness": "operator_start_end_and_cooldown_evidence_required",
+    "note": "具名字段覆盖不等于平台已确认；配置绑定不等于实际来源生效；收到TJ不等于建模准备完成。此诊断未计算或替换历史预测/评分。"
+  },
+  "platform_state": {
+    "first_profile": null,
+    "mixed_profiles": false,
+    "known_scopes": [],
+    "known_contracts": [],
+    "evidence_issues": [
+      "platform_unconfirmed"
+    ]
+  },
+  "diagnostic_replay": false,
+  "operator_evidence": {
+    "present": false,
+    "records": [],
+    "note": "未登记人工任务起止；不自动推断独立过程。"
+  },
+  "observer_host": {
+    "system": "Darwin",
+    "machine": "arm64",
+    "processor": null,
+    "processor_source": "unavailable",
+    "scope": "recorded_observer_host_only"
+  },
+  "control_eligible_origins": 0,
+  "normal_curve_origins": 0,
+  "missing_required_metadata": [],
+  "run": "/Users/massif/Tianshan-thermal-observer/evidence/platform-curve-v2/tto-final-installed-verification/signals/runs/run-2026-10-12T154304.509519_0000-5ab83257",
+  "observer_stop_reason": "SIGINT",
+  "command_success": true
+}

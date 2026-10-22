@@ -1,0 +1,68 @@
+{
+  "last_evaluation": {
+    "collection_available": false,
+    "model_available": false,
+    "field_safety_available": false,
+    "execution_authorized": false,
+    "instrument_clock_ready": true,
+    "explicit_stop": false,
+    "start_allowed": false,
+    "reasons": [
+      "measurement_unusable",
+      "model_unavailable_or_state_expired",
+      "control_context_unready",
+      "current_load_authorization_absent"
+    ],
+    "observer_state": "unavailable",
+    "successful_PWM_age_s": 0.9243708329740912,
+    "measurement_current": {
+      "tj": false,
+      "power": false,
+      "last_successful_pwm": false,
+      "control_context": false
+    },
+    "source_ages_s": {
+      "tj": null,
+      "power": null,
+      "last_successful_pwm": 0.9243708329740912,
+      "control_context": 4.976831124979071
+    },
+    "source_expiry_mono_s": {
+      "tj": null,
+      "power": null,
+      "last_successful_pwm": 950208.801678208,
+      "control_context": 950209.749217916
+    },
+    "model_state_age_s": 0.039462000015191734,
+    "model_consumable_until_mono_s": 950209.681416958,
+    "safety_status": "unknown",
+    "observation_cutoff": "1c01f797-fda8-4728-a5ce-4df76559aa35/observation:193",
+    "native_quality_preserved": true,
+    "model_permission": {
+      "local_demo": true,
+      "formal_field_authorized": false,
+      "device_actions": false
+    }
+  },
+  "time_coverage": {
+    "observed_s": 60.0484503749758,
+    "measurement_usable_s": 59.440705500077456,
+    "model_usable_s": 50.379166041035205,
+    "context_ready_s": 54.96291487501003,
+    "joint_ready_s": 50.379166041035205,
+    "work_paused_s": 0.0,
+    "tj_usable_s": 59.440705500077456,
+    "rail_usable_s": 59.440705500077456,
+    "PWM_usable_s": 59.94727037497796,
+    "temp_context_usable_s": 59.94727037497796
+  },
+  "phase_seconds": {
+    "uninitialized": 0.6077448748983443,
+    "provisional": 9.061539459042251,
+    "tracking": 50.379166041035205
+  },
+  "current_measurement_model_context_ready": false,
+  "load_authorized": false,
+  "automatic_upgrade_to_mixed": false,
+  "note": "Snapshot/time coverage only. New current authorization, instrument and fresh preflight remain required; not a root cause fix."
+}

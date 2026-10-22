@@ -1,0 +1,88 @@
+{
+  "execution_id": "TTO-ID-R2-v1.0",
+  "primary_reference": "LS-fit",
+  "models": [
+    {
+      "label": "L-fit",
+      "model": "G1",
+      "archive": "inputs/greybox-v1-evidence.zip",
+      "member": "runs/main/fits/F-LS-G1/model.json",
+      "bytes": 1022,
+      "sha256": "9149d136f382a0776479b7087ce3ce3b82f33bb34a650c27b767e9e6aec8ef59",
+      "role_on_M": "diagnostic_fixed_reference"
+    },
+    {
+      "label": "L-fit",
+      "model": "G2",
+      "archive": "inputs/greybox-v1-evidence.zip",
+      "member": "runs/main/fits/F-LS-G2/model.json",
+      "bytes": 2698,
+      "sha256": "a2130d3968b02e7268231eb900f71e5b3fea777bfff73ddb3564b20048f2f02f",
+      "role_on_M": "diagnostic_fixed_reference"
+    },
+    {
+      "label": "L-fit",
+      "model": "ridge",
+      "archive": "inputs/greybox-v1-evidence.zip",
+      "member": "runs/main/fits/F-LS-ridge.json",
+      "bytes": 659305,
+      "sha256": "e325894f55a787bdf5322cc340f2941aff0328f425cdfd47c8e82891f902b545",
+      "role_on_M": "diagnostic_fixed_reference"
+    },
+    {
+      "label": "S-fit",
+      "model": "G1",
+      "archive": "inputs/greybox-v1-evidence.zip",
+      "member": "runs/main/fits/F-SL-G1/model.json",
+      "bytes": 1036,
+      "sha256": "67b8eb34efe8960f1ad35cfddd1411627e09317cd6c8004b2ad5e516acfadaf1",
+      "role_on_M": "diagnostic_fixed_reference"
+    },
+    {
+      "label": "S-fit",
+      "model": "G2",
+      "archive": "inputs/greybox-v1-evidence.zip",
+      "member": "runs/main/fits/F-SL-G2/model.json",
+      "bytes": 2906,
+      "sha256": "e6ef878cd0f294564c3152b80ec5f1593f0dd40bb5b9a9d5b3bbbac2ea2c04fd",
+      "role_on_M": "diagnostic_fixed_reference"
+    },
+    {
+      "label": "S-fit",
+      "model": "ridge",
+      "archive": "inputs/greybox-v1-evidence.zip",
+      "member": "runs/main/fits/F-SL-ridge.json",
+      "bytes": 444378,
+      "sha256": "b5f926567e09579c8cbdaa0c697d054f7b227f2298baf4ed4b52d77926790100",
+      "role_on_M": "diagnostic_fixed_reference"
+    },
+    {
+      "label": "LS-fit",
+      "model": "G1",
+      "archive": "inputs/greybox-v1-evidence.zip",
+      "member": "runs/main/fits/F-POOL-G1/model.json",
+      "bytes": 1092,
+      "sha256": "2e45f53db011f92ce74758b88ae72cccb17d7fd882d998a6da05507b46d36425",
+      "role_on_M": "primary_predeclared_reference"
+    },
+    {
+      "label": "LS-fit",
+      "model": "G2",
+      "archive": "inputs/greybox-v1-evidence.zip",
+      "member": "runs/main/fits/F-POOL-G2/model.json",
+      "bytes": 4473,
+      "sha256": "3c791275bb7172bc65031287ceb68c2d8a6e7d64ecce8a7962ac76d4745799cd",
+      "role_on_M": "primary_predeclared_reference"
+    },
+    {
+      "label": "LS-fit",
+      "model": "ridge",
+      "archive": "inputs/greybox-v1-evidence.zip",
+      "member": "runs/main/fits/F-POOL-ridge.json",
+      "bytes": 1064718,
+      "sha256": "42e96f0f3363fb61c250d1386509d2f79d28d7b6f56bfc4bab42ab2001b7d857",
+      "role_on_M": "primary_predeclared_reference"
+    }
+  ],
+  "note": "Nine JSON files: six greybox models plus three Ridge files, each containing R_TJ/R_IO heads. Do not select an old winner after viewing M."
+}

@@ -1,0 +1,46 @@
+{
+  "B0": {
+    "origin_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3337",
+    "label_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3472",
+    "prediction": 44.593,
+    "actual": 49.218,
+    "underprediction": 4.625,
+    "macro": "recovery",
+    "regime": "cooldown",
+    "context": "confirmed_normal",
+    "posthoc_only": true
+  },
+  "G2-FROZEN-RM01-v1:HOLD": {
+    "origin_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3412",
+    "label_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3546",
+    "prediction": 44.889476664079766,
+    "actual": 49.25,
+    "underprediction": 4.3605233359202344,
+    "macro": "work",
+    "regime": "continuous_short",
+    "context": "aux_observation_gap",
+    "posthoc_only": true
+  },
+  "G2-GEN-L-20261021-v1:HOLD": {
+    "origin_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3337",
+    "label_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3472",
+    "prediction": 45.03634663075967,
+    "actual": 49.218,
+    "underprediction": 4.181653369240337,
+    "macro": "recovery",
+    "regime": "cooldown",
+    "context": "confirmed_normal",
+    "posthoc_only": true
+  },
+  "G2-CAL-M-20261021-v1:HOLD": {
+    "origin_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3412",
+    "label_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3546",
+    "prediction": 43.84661364927615,
+    "actual": 49.25,
+    "underprediction": 5.403386350723849,
+    "macro": "work",
+    "regime": "continuous_short",
+    "context": "aux_observation_gap",
+    "posthoc_only": true
+  }
+}

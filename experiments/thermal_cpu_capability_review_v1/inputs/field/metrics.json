@@ -1,0 +1,49 @@
+{
+  "native_uuid": "80938521-b659-4160-a7b2-5fdfb6ebc197",
+  "accepted_packets": 27,
+  "complete_cpu_windows": 26,
+  "source_span_s": 5.200243482016958,
+  "received_span_s": 5.194233093992807,
+  "cpu_period_median_s": 0.1999988675233908,
+  "cpu_period_p95_s": 0.200157904997468,
+  "source_resources": {
+    "rss_peak_MiB": 43.48828125,
+    "read_p95_s": 0.003299554984550923,
+    "read_max_s": 0.007836262986529619,
+    "cpu_cumulative_max_pct_after5s": 1.9582106113013549
+  },
+  "stop_event": {
+    "event": "stop_sidecar_only",
+    "mono_s": 35.48711012903368,
+    "at_utc": "2026-10-20T14:03:27.290190+00:00",
+    "status": "receiver_total_resource_budget_exceeded",
+    "stage": "receive"
+  },
+  "receiver_resources_by_actual_phase": {
+    "baseline_before30": {
+      "rows": 29,
+      "cpu_single_core_mean_pct": 166.1555124789112,
+      "cpu_single_core_max_pct": 184.81274357646797,
+      "rss_peak_MiB": 73.47265625
+    },
+    "actual_sidecar": {
+      "rows": 6,
+      "cpu_single_core_mean_pct": 167.83712855303895,
+      "cpu_single_core_max_pct": 176.49174746459667,
+      "rss_peak_MiB": 73.87890625
+    },
+    "post_sidecar_stop": {
+      "rows": 24,
+      "cpu_single_core_mean_pct": 167.46213685897106,
+      "cpu_single_core_max_pct": 179.70921040233893,
+      "rss_peak_MiB": 74.21484375
+    }
+  },
+  "cause_statement": "receiver CPU exceeded frozen8% limit; baseline already high. No evidence CPU sidecar alone caused high total CPU. BLAS/threading hypothesis not tested.",
+  "cpu_online_text": "0-11",
+  "cpu_possible_text": "0-13",
+  "SC_CLK_TCK": 100,
+  "source_read_jitter_p95_s": 0.0002799598150886595,
+  "received_wire_bytes": 163590,
+  "source_stream_bytes_per_s_approx": 31494.5434753773
+}

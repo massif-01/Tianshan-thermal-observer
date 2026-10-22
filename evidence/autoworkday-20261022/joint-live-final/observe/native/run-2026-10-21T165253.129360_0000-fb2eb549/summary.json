@@ -1,0 +1,159 @@
+{
+  "stop_reason": "SIGTERM",
+  "poll_missed": 0,
+  "poll_count": 11,
+  "connection_attempts": 1,
+  "payload_oversize": 0,
+  "orin_event_count": 8,
+  "business_payload_bytes_sum": 12640,
+  "business_payload_bytes_max": 1580,
+  "poll_rtt_ms": [
+    10.181000106967986,
+    2.0465420093387365,
+    2.4084580363705754,
+    2.0107500022277236,
+    1.6383329639211297,
+    4.668000037781894,
+    0.7423330098390579,
+    0.5731669953092933,
+    0.8112499490380287,
+    0.8909999160096049,
+    0.6790419574826956
+  ],
+  "prediction_ms": [
+    2.020500018261373,
+    0.7705839816480875
+  ],
+  "rss_mib": [
+    69.140625,
+    69.515625,
+    69.59375,
+    69.78125,
+    69.828125,
+    69.90625,
+    70.296875,
+    70.5
+  ],
+  "cpu_pct_single_core": [
+    2.2656585618506733,
+    2.0191266529831706,
+    1.69522554502094,
+    1.3249784263734117,
+    1.1272037364778305,
+    1.2308575649848992,
+    0.714582581457882,
+    0.6864672471724824
+  ],
+  "elapsed_s": 8.076047000009567,
+  "queue_peak_items": 2,
+  "queue_peak_bytes": 1962,
+  "dropped": 0,
+  "quality": {
+    "boundary_socketio_connecting": 1,
+    "boundary_control_context_change": 1,
+    "boundary_stream": 1,
+    "new_samples": 8,
+    "boundary_input_boundary": 1,
+    "boundary_input_profile_change": 1,
+    "boundary_socketio_disconnected": 1,
+    "boundary_run_end": 1
+  },
+  "processing": {
+    "fan_ok": 9,
+    "temp_ok": 2,
+    "origins": 2
+  },
+  "target_host_verified": false,
+  "polling_health": {
+    "contract": "TTO-POLL-INDEPENDENT-v1",
+    "max_inflight_per_endpoint": 1,
+    "max_total_inflight_limit": 2,
+    "max_total_inflight_observed": 2,
+    "end_inflight": 0,
+    "legacy_config_max_inflight_esp32": 1,
+    "endpoints": {
+      "fan": {
+        "sent": 9,
+        "returned": 9,
+        "http_ok": 9,
+        "errors": 0,
+        "skipped": 0,
+        "cancelled": 0,
+        "peak_inflight": 1,
+        "rtt_ms": {
+          "n": 9,
+          "retained_n": 9,
+          "p50": 1.6383329639211297,
+          "p95": 7.975800079293547,
+          "min": 0.6790419574826956,
+          "max": 10.181000106967986
+        },
+        "send_interval_s": {
+          "n": 8,
+          "retained_n": 8,
+          "p50": 1.000818166474346,
+          "p95": 1.0021243163617328,
+          "min": 1.0004132920876145,
+          "max": 1.0021342909894884
+        },
+        "return_interval_s": {
+          "n": 8,
+          "retained_n": 8,
+          "p50": 1.000408188032452,
+          "p95": 1.0033779479155782,
+          "min": 0.9933814579853788,
+          "max": 1.0040046670474112
+        }
+      },
+      "temp": {
+        "sent": 2,
+        "returned": 2,
+        "http_ok": 2,
+        "errors": 0,
+        "skipped": 0,
+        "cancelled": 0,
+        "peak_inflight": 1,
+        "rtt_ms": {
+          "n": 2,
+          "retained_n": 2,
+          "p50": 1.309854502324015,
+          "p95": 1.9728732586372644,
+          "min": 0.5731669953092933,
+          "max": 2.0465420093387365
+        },
+        "send_interval_s": {
+          "n": 1,
+          "retained_n": 1,
+          "p50": 5.000311207957566,
+          "p95": 5.000311207957566,
+          "min": 5.000311207957566,
+          "max": 5.000311207957566
+        },
+        "return_interval_s": {
+          "n": 1,
+          "retained_n": 1,
+          "p50": 4.998837832943536,
+          "p95": 4.998837832943536,
+          "min": 4.998837832943536,
+          "max": 4.998837832943536
+        }
+      }
+    }
+  },
+  "diagnostic_history_contract": {
+    "max_retained_per_series": 4096,
+    "percentiles": "last4096; full raw/resource journals preserved",
+    "sample_totals": {
+      "poll_rtt_ms": 11,
+      "prediction_ms": 2,
+      "rss_mib": 8,
+      "cpu_pct_single_core": 8
+    }
+  },
+  "ended_at_utc": "2026-10-21T16:53:01.207737+00:00",
+  "observations": 29,
+  "observation_session_version": "TTO-OBSERVE-v1",
+  "native_legacy_max_s": 14400,
+  "session_max_s": 86400,
+  "session_max_bytes": 8589934592
+}

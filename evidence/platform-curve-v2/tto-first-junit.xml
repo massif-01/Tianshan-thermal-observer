@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="7" skipped="0" tests="88" time="24.916" timestamp="2026-10-12T22:25:57.322483+08:00" hostname="Massif-MacBook-Pro.local"><testcase classname="tests.test_config_storage" name="test_offline_help_doctor_and_priority" time="0.004" /><testcase classname="tests.test_config_storage" name="test_invalid_config_rejected[obj0]" time="0.001" /><testcase classname="tests.test_config_storage" name="test_invalid_config_rejected[obj1]" time="0.001" /><testcase classname="tests.test_config_storage" name="test_invalid_config_rejected[obj2]" time="0.001" /><testcase classname="tests.test_config_storage" name="test_invalid_config_rejected[obj3]" time="0.001" /><testcase classname="tests.test_config_storage" name="test_invalid_config_rejected[obj4]" time="0.001" /><testcase classname="tests.test_config_storage" name="test_invalid_config_rejected[obj5]" time="0.001" /><testcase classname="tests.test_config_storage" name="test_invalid_config_rejected[obj6]" time="0.001" /><testcase classname="tests.test_config_storage" name="test_credentials_private_and_redacted" time="0.001" /><testcase classname="tests.test_config_storage" name="test_policy_blocks_wrong_paths_methods_targets" time="0.000" /><testcase classname="tests.test_config_storage" name="test_queue_saturation_marks_gap" time="0.001" /><testcase classname="tests.test_config_storage" name="test_storage_limits_rotation_no_overwrite" time="0.007" /><testcase classname="tests.test_config_storage" name="test_lock_reentry_release" time="0.001" /><testcase classname="tests.test_config_storage" name="test_final_deployment_evidence_never_inferred" time="0.001" /><testcase classname="tests.test_failures" name="test_stale_duplicate_suspends_and_cannot_restore" time="0.000" /><testcase classname="tests.test_failures" name="test_temp_testing_manual_fault_and_unknown_duty_block_full_scope" time="0.001" /><testcase classname="tests.test_failures" name="test_binding_change_invalidates_pending_and_history" time="0.000" /><testcase classname="tests.test_failures" name="test_bounded_disconnect_storm_and_slow_api" time="0.003"><failure message="AssertionError: unit suite blocked process/service/device launch">config = {'features': {'fan_max_age_s': 2.5, 'history_s': 180, 'max_feature_columns': 64, 'missing_optional_policy': 'fallback_...ct_timeout_s': 5.0, 'follow_redirects': False, 'max_business_payload_bytes': 65536, 'max_inflight_esp32': 1, ...}, ...}
+tmp_path = PosixPath('/private/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/pytest-of-massif/pytest-38/test_bounded_disconnect_storm_0')
+
+    async def test_bounded_disconnect_storm_and_slow_api(config, tmp_path):
+        app = web.Application(); active = 0; peak = 0; requests = []
+        async def slow(request):
+            nonlocal active, peak
+            requests.append(request.path)
+            active += 1; peak = max(peak, active)
+            try:
+                await asyncio.sleep(.3)
+                return web.json_response({'code': 1})
+            finally:
+                active -= 1
+        app.router.add_get('/api/v1/fan/status', slow)
+        app.router.add_get('/api/v1/temp/status', slow)
+        runner = web.AppRunner(app); await runner.setup()
+        site = web.TCPSite(runner, '127.0.0.1', 0); await site.start()
+        origin = 'http://127.0.0.1:' + str(site._server.sockets[0].getsockname()[1])
+        config['orin']['base_url'] = config['tianshan']['base_url'] = origin
+        config['network'].update(reconnect_initial_s=.1, reconnect_max_s=.2, reconnect_max_attempts=3)
+        try:
+&gt;           path, stats = await collect(config, 3, data_root=tmp_path)
+
+tests/test_failures.py:68: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/tto/collector.py:152: in collect
+    journal = Journal(config, data_root, episode=episode, deployment=deployment, run_type=run_type or ('shadow' if model else 'collect'), model_sha256=model['sha256'] if model else None, record_schema=2)
+src/tto/storage.py:64: in __init__
+    processing_contract=CONTRACT, observer_host={'system': platform.system(), 'machine': platform.machine(), 'processor': platform.processor() or 'unknown'})
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/platform.py:959: in processor
+    return uname().processor
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/functools.py:981: in __get__
+    val = self.func(instance)
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/platform.py:783: in processor
+    return _unknown_as_blank(_Processor.get())
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/platform.py:733: in get
+    return func() or ''
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/platform.py:752: in from_subprocess
+    return subprocess.check_output(
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/subprocess.py:421: in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/subprocess.py:503: in run
+    with Popen(*popenargs, **kwargs) as process:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = (['uname', '-p'],), kwargs = {'stderr': -3, 'stdout': -1, 'text': True}
+
+    def popen(*args, **kwargs):
+&gt;       raise AssertionError('unit suite blocked process/service/device launch')
+E       AssertionError: unit suite blocked process/service/device launch
+
+tests/conftest.py:36: AssertionError</failure></testcase><testcase classname="tests.test_failures" name="test_full_disk_stops_observer_only" time="0.002"><failure message="AssertionError: unit suite blocked process/service/device launch">config = {'features': {'fan_max_age_s': 2.5, 'history_s': 180, 'max_feature_columns': 64, 'missing_optional_policy': 'fallback_...ct_timeout_s': 5.0, 'follow_redirects': False, 'max_business_payload_bytes': 65536, 'max_inflight_esp32': 1, ...}, ...}
+tmp_path = PosixPath('/private/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/pytest-of-massif/pytest-38/test_full_disk_stops_observer_0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x1092660e0&gt;
+
+    async def test_full_disk_stops_observer_only(config, tmp_path, monkeypatch):
+        from tto.storage import LimitReached
+        def fail(self, name, row):
+            raise LimitReached('injected_full_disk')
+        monkeypatch.setattr(Journal, 'append', fail)
+        config['orin']['base_url'] = config['tianshan']['base_url'] = 'http://127.0.0.1:1'
+&gt;       path, stats = await collect(config, 2, data_root=tmp_path)
+
+tests/test_failures.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/tto/collector.py:152: in collect
+    journal = Journal(config, data_root, episode=episode, deployment=deployment, run_type=run_type or ('shadow' if model else 'collect'), model_sha256=model['sha256'] if model else None, record_schema=2)
+src/tto/storage.py:64: in __init__
+    processing_contract=CONTRACT, observer_host={'system': platform.system(), 'machine': platform.machine(), 'processor': platform.processor() or 'unknown'})
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/platform.py:959: in processor
+    return uname().processor
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/functools.py:981: in __get__
+    val = self.func(instance)
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/platform.py:783: in processor
+    return _unknown_as_blank(_Processor.get())
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/platform.py:733: in get
+    return func() or ''
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/platform.py:752: in from_subprocess
+    return subprocess.check_output(
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/subprocess.py:421: in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/subprocess.py:503: in run
+    with Popen(*popenargs, **kwargs) as process:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = (['uname', '-p'],), kwargs = {'stderr': -3, 'stdout': -1, 'text': True}
+
+    def popen(*args, **kwargs):
+&gt;       raise AssertionError('unit suite blocked process/service/device launch')
+E       AssertionError: unit suite blocked process/service/device launch
+
+tests/conftest.py:36: AssertionError</failure></testcase><testcase classname="tests.test_failures" name="test_queue_drop_marker_replay_matches_live" time="0.007" /><testcase classname="tests.test_modeling" name="test_causal_asof_weighted_mean_and_no_future" time="0.001" /><testcase classname="tests.test_modeling" name="test_live_offline_features_and_frozen_predictions_equal" time="2.220" /><testcase classname="tests.test_modeling" name="test_rewriting_all_future_data_cannot_change_past_predictions" time="0.343" /><testcase classname="tests.test_modeling" name="test_test_values_do_not_change_training_coefficients" time="0.284" /><testcase classname="tests.test_modeling" name="test_raw_reference_and_temporal_leakage_rejected" time="0.148" /><testcase classname="tests.test_modeling" name="test_model_tampering_rejected[hash]" time="0.002" /><testcase classname="tests.test_modeling" name="test_model_tampering_rejected[nan]" time="0.001" /><testcase classname="tests.test_modeling" name="test_model_tampering_rejected[dimension]" time="0.002" /><testcase classname="tests.test_modeling" name="test_model_tampering_rejected[contract]" time="0.002" /><testcase classname="tests.test_modeling" name="test_model_tampering_rejected[column]" time="0.002" /><testcase classname="tests.test_modeling" name="test_missing_optional_is_unavailable_not_m1_success" time="0.114" /><testcase classname="tests.test_modeling" name="test_no_label_before_target_and_deadline" time="0.001" /><testcase classname="tests.test_modeling" name="test_episode_macro_does_not_hide_short_hard_episode" time="0.000" /><testcase classname="tests.test_modeling" name="test_frozen_test_evaluated_once_and_report_is_escaped" time="0.399" /><testcase classname="tests.test_modeling" name="test_insufficient_episodes_returns_missing_evidence" time="0.171" /><testcase classname="tests.test_modeling" name="test_value_decision_requires_independent_nonidle_wins" time="0.017" /><testcase classname="tests.test_modeling" name="test_value_decision_keeps_deployment_and_simulation_separate" time="0.000" /><testcase classname="tests.test_network" name="test_actual_socketio_heartbeat_reconnect_readonly" time="0.003"><failure message="AssertionError: unit suite blocked process/service/device launch">config = {'features': {'fan_max_age_s': 2.5, 'history_s': 180, 'max_feature_columns': 64, 'missing_optional_policy': 'fallback_...ct_timeout_s': 5.0, 'follow_redirects': False, 'max_business_payload_bytes': 65536, 'max_inflight_esp32': 1, ...}, ...}
+tmp_path = PosixPath('/private/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/pytest-of-massif/pytest-38/test_actual_socketio_heartbeat0')
+
+    async def test_actual_socketio_heartbeat_reconnect_readonly(config, tmp_path):
+        sio, runner, origin, requests = await make_server()
+        config['orin']['base_url'] = config['tianshan']['base_url'] = origin
+        connected = []
+        @sio.event
+        async def connect(sid, environ):
+            connected.append(sid)
+        async def emit():
+            seq = 0
+            while True:
+                seq += 1
+                await sio.emit('tegrastats_update', packet(seq, 40))
+                await sio.emit('model_status_update', {'private_task_text': 'DO_NOT_SAVE'})
+                if seq == 8 and connected:
+                    await sio.disconnect(connected[-1])
+                await asyncio.sleep(.1)
+        task = asyncio.create_task(emit())
+        try:
+&gt;           path, stats = await collect(config, 3.5, data_root=tmp_path)
+
+tests/test_network.py:52: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/tto/collector.py:152: in collect
+    journal = Journal(config, data_root, episode=episode, deployment=deployment, run_type=run_type or ('shadow' if model else 'collect'), model_sha256=model['sha256'] if model else None, record_schema=2)
+src/tto/storage.py:64: in __init__
+    processing_contract=CONTRACT, observer_host={'system': platform.system(), 'machine': platform.machine(), 'processor': platform.processor() or 'unknown'})
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/platform.py:959: in processor
+    return uname().processor
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/functools.py:981: in __get__
+    val = self.func(instance)
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/platform.py:783: in processor
+    return _unknown_as_blank(_Processor.get())
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/platform.py:733: in get
+    return func() or ''
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/platform.py:752: in from_subprocess
+    return subprocess.check_output(
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/subprocess.py:421: in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/subprocess.py:503: in run
+    with Popen(*popenargs, **kwargs) as process:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = (['uname', '-p'],), kwargs = {'stderr': -3, 'stdout': -1, 'text': True}
+
+    def popen(*args, **kwargs):
+&gt;       raise AssertionError('unit suite blocked process/service/device launch')
+E       AssertionError: unit suite blocked process/service/device launch
+
+tests/conftest.py:36: AssertionError</failure></testcase><testcase classname="tests.test_network" name="test_redirect_and_large_transport_response_blocked" time="0.006" /><testcase classname="tests.test_network" name="test_explicit_polling_transport" time="0.002"><failure message="AssertionError: unit suite blocked process/service/device launch">config = {'features': {'fan_max_age_s': 2.5, 'history_s': 180, 'max_feature_columns': 64, 'missing_optional_policy': 'fallback_...ct_timeout_s': 5.0, 'follow_redirects': False, 'max_business_payload_bytes': 65536, 'max_inflight_esp32': 1, ...}, ...}
+tmp_path = PosixPath('/private/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/pytest-of-massif/pytest-38/test_explicit_polling_transpor0')
+
+    async def test_explicit_polling_transport(config, tmp_path):
+        sio, runner, origin, requests = await make_server()
+        config['orin']['base_url'] = config['tianshan']['base_url'] = origin
+        config['orin']['transports'] = ['polling']
+        async def emit():
+            seq = 0
+            while True:
+                seq += 1
+                await sio.emit('tegrastats_update', packet(seq, 40))
+                await asyncio.sleep(.1)
+        task = asyncio.create_task(emit())
+        try:
+&gt;           path, stats = await collect(config, 1.3, data_root=tmp_path)
+
+tests/test_network.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/tto/collector.py:152: in collect
+    journal = Journal(config, data_root, episode=episode, deployment=deployment, run_type=run_type or ('shadow' if model else 'collect'), model_sha256=model['sha256'] if model else None, record_schema=2)
+src/tto/storage.py:64: in __init__
+    processing_contract=CONTRACT, observer_host={'system': platform.system(), 'machine': platform.machine(), 'processor': platform.processor() or 'unknown'})
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/platform.py:959: in processor
+    return uname().processor
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/functools.py:981: in __get__
+    val = self.func(instance)
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/platform.py:783: in processor
+    return _unknown_as_blank(_Processor.get())
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/platform.py:733: in get
+    return func() or ''
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/platform.py:752: in from_subprocess
+    return subprocess.check_output(
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/subprocess.py:421: in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/subprocess.py:503: in run
+    with Popen(*popenargs, **kwargs) as process:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = (['uname', '-p'],), kwargs = {'stderr': -3, 'stdout': -1, 'text': True}
+
+    def popen(*args, **kwargs):
+&gt;       raise AssertionError('unit suite blocked process/service/device launch')
+E       AssertionError: unit suite blocked process/service/device launch
+
+tests/conftest.py:36: AssertionError</failure></testcase><testcase classname="tests.test_network" name="test_oversize_socketio_frame_does_not_enter_journal" time="0.002"><failure message="AssertionError: unit suite blocked process/service/device launch">config = {'features': {'fan_max_age_s': 2.5, 'history_s': 180, 'max_feature_columns': 64, 'missing_optional_policy': 'fallback_...ct_timeout_s': 5.0, 'follow_redirects': False, 'max_business_payload_bytes': 65536, 'max_inflight_esp32': 1, ...}, ...}
+tmp_path = PosixPath('/private/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/pytest-of-massif/pytest-38/test_oversize_socketio_frame_d0')
+
+    async def test_oversize_socketio_frame_does_not_enter_journal(config, tmp_path):
+        sio, runner, origin, requests = await make_server()
+        config['orin']['base_url'] = config['tianshan']['base_url'] = origin
+        async def emit():
+            while True:
+                oversized = packet(1, 40)
+                oversized['oversize_marker'] = 'x' * 70000
+                await sio.emit('tegrastats_update', oversized)
+                await asyncio.sleep(.1)
+        task = asyncio.create_task(emit())
+        try:
+&gt;           path, stats = await collect(config, 1.5, data_root=tmp_path)
+
+tests/test_network.py:141: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/tto/collector.py:152: in collect
+    journal = Journal(config, data_root, episode=episode, deployment=deployment, run_type=run_type or ('shadow' if model else 'collect'), model_sha256=model['sha256'] if model else None, record_schema=2)
+src/tto/storage.py:64: in __init__
+    processing_contract=CONTRACT, observer_host={'system': platform.system(), 'machine': platform.machine(), 'processor': platform.processor() or 'unknown'})
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/platform.py:959: in processor
+    return uname().processor
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/functools.py:981: in __get__
+    val = self.func(instance)
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/platform.py:783: in processor
+    return _unknown_as_blank(_Processor.get())
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/platform.py:733: in get
+    return func() or ''
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/platform.py:752: in from_subprocess
+    return subprocess.check_output(
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/subprocess.py:421: in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/subprocess.py:503: in run
+    with Popen(*popenargs, **kwargs) as process:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = (['uname', '-p'],), kwargs = {'stderr': -3, 'stdout': -1, 'text': True}
+
+    def popen(*args, **kwargs):
+&gt;       raise AssertionError('unit suite blocked process/service/device launch')
+E       AssertionError: unit suite blocked process/service/device launch
+
+tests/conftest.py:36: AssertionError</failure></testcase><testcase classname="tests.test_network" name="test_slow_writer_queue_drop_is_preserved_and_bounded" time="0.002"><failure message="AssertionError: unit suite blocked process/service/device launch">config = {'features': {'fan_max_age_s': 2.5, 'history_s': 180, 'max_feature_columns': 64, 'missing_optional_policy': 'fallback_...ct_timeout_s': 5.0, 'follow_redirects': False, 'max_business_payload_bytes': 65536, 'max_inflight_esp32': 1, ...}, ...}
+tmp_path = PosixPath('/private/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/pytest-of-massif/pytest-38/test_slow_writer_queue_drop_is0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x10df52740&gt;
+
+    async def test_slow_writer_queue_drop_is_preserved_and_bounded(config, tmp_path, monkeypatch):
+        import time
+        from tto.storage import Journal
+        original = Journal.append
+        def slow(self, name, row):
+            time.sleep(.03)
+            return original(self, name, row)
+        monkeypatch.setattr(Journal, 'append', slow)
+        config['storage']['queue_max_items'] = 1
+        sio, runner, origin, requests = await make_server()
+        config['orin']['base_url'] = config['tianshan']['base_url'] = origin
+        async def emit():
+            seq = 0
+            while True:
+                seq += 1
+                await sio.emit('tegrastats_update', packet(seq, 40))
+                await asyncio.sleep(.01)
+        task = asyncio.create_task(emit())
+        try:
+&gt;           path, stats = await collect(config, 1, data_root=tmp_path)
+
+tests/test_network.py:173: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/tto/collector.py:152: in collect
+    journal = Journal(config, data_root, episode=episode, deployment=deployment, run_type=run_type or ('shadow' if model else 'collect'), model_sha256=model['sha256'] if model else None, record_schema=2)
+src/tto/storage.py:64: in __init__
+    processing_contract=CONTRACT, observer_host={'system': platform.system(), 'machine': platform.machine(), 'processor': platform.processor() or 'unknown'})
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/platform.py:959: in processor
+    return uname().processor
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/functools.py:981: in __get__
+    val = self.func(instance)
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/platform.py:783: in processor
+    return _unknown_as_blank(_Processor.get())
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/platform.py:733: in get
+    return func() or ''
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/platform.py:752: in from_subprocess
+    return subprocess.check_output(
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/subprocess.py:421: in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/subprocess.py:503: in run
+    with Popen(*popenargs, **kwargs) as process:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = (['uname', '-p'],), kwargs = {'stderr': -3, 'stdout': -1, 'text': True}
+
+    def popen(*args, **kwargs):
+&gt;       raise AssertionError('unit suite blocked process/service/device launch')
+E       AssertionError: unit suite blocked process/service/device launch
+
+tests/conftest.py:36: AssertionError</failure></testcase><testcase classname="tests.test_quality" name="test_duplicate_age_never_rejuvenates" time="0.001" /><testcase classname="tests.test_quality" name="test_identical_value_new_sequence_is_new" time="0.000" /><testcase classname="tests.test_quality" name="test_identity_conflict_quarantines_stream" time="0.000" /><testcase classname="tests.test_quality" name="test_regression_gap_epoch_and_late_callback" time="0.000" /><testcase classname="tests.test_quality" name="test_bad_meta_never_enters_history[schema_version-2]" time="0.000" /><testcase classname="tests.test_quality" name="test_bad_meta_never_enters_history[schema_version-True]" time="0.000" /><testcase classname="tests.test_quality" name="test_bad_meta_never_enters_history[sample_seq-0]" time="0.000" /><testcase classname="tests.test_quality" name="test_bad_meta_never_enters_history[sample_seq-True]" time="0.000" /><testcase classname="tests.test_quality" name="test_bad_meta_never_enters_history[fresh-False]" time="0.000" /><testcase classname="tests.test_quality" name="test_bad_meta_never_enters_history[collector_state-stopped]" time="0.000" /><testcase classname="tests.test_quality" name="test_bad_meta_never_enters_history[sample_age_ms-5000]" time="0.000" /><testcase classname="tests.test_quality" name="test_bad_meta_never_enters_history[sample_age_ms--1]" time="0.000" /><testcase classname="tests.test_quality" name="test_bad_meta_never_enters_history[time_basis-hardware]" time="0.000" /><testcase classname="tests.test_quality" name="test_bad_meta_never_enters_history[received_at-None]" time="0.000" /><testcase classname="tests.test_quality" name="test_missing_zero_and_successful_duty" time="0.000" /><testcase classname="tests.test_quality" name="test_actual_temp_contract" time="0.000" /><testcase classname="tests.test_quality" name="test_future_fan_cannot_backfill_and_duplicate_no_prediction" time="0.000" /><testcase classname="tests.test_quality" name="test_disconnect_and_stream_boundary_cancel_labels" time="0.000" /><testcase classname="tests.test_quality" name="test_utc_does_not_affect_age" time="0.000" /><testcase classname="tests.test_repair_r1" name="test_noncontiguous_reuse_rejected_at_creation_and_consumption" time="2.463" /><testcase classname="tests.test_repair_r1" name="test_adjacent_same_group_allowed_and_hand_changed_partition_rejected" time="0.923" /><testcase classname="tests.test_repair_r1" name="test_missing_time_evidence_and_overlapping_runs_are_explicit" time="0.763" /><testcase classname="tests.test_repair_r1" name="test_single_process_exploratory_purge_is_preserved" time="1.408" /><testcase classname="tests.test_repair_r1" name="test_cross_run_support_purge_checked_independently" time="0.776" /><testcase classname="tests.test_repair_r1" name="test_single_run_exploration_uses_monotonic_time_even_when_utc_jumps" time="1.482" /><testcase classname="tests.test_repair_r2" name="test_layered_same_origin_comparisons_and_formats[all]" time="3.626" /><testcase classname="tests.test_repair_r2" name="test_layered_same_origin_comparisons_and_formats[partial]" time="0.943" /><testcase classname="tests.test_repair_r2" name="test_layered_same_origin_comparisons_and_formats[none]" time="0.957" /><testcase classname="tests.test_repair_r2" name="test_layered_same_origin_comparisons_and_formats[baseline_only]" time="0.668" /><testcase classname="tests.test_repair_r2" name="test_markdown_table_has_real_lines_and_escapes_scene_pipe" time="0.000" /><testcase classname="tests.test_repair_r3" name="test_formal_cli_report_uses_saved_results_and_never_current_model" time="2.343" /><testcase classname="tests.test_repair_r3" name="test_missing_required_logs_is_explicit_not_zero_or_replay[predictions.jsonl]" time="0.108" /><testcase classname="tests.test_repair_r3" name="test_missing_required_logs_is_explicit_not_zero_or_replay[scores.jsonl]" time="0.132" /><testcase classname="tests.test_repair_r3" name="test_predictions_without_scores_are_pending_and_baseline_collect_is_distinct" time="0.463" /><testcase classname="tests.test_repair_r3" name="test_partial_fallback_never_counts_as_m1_and_scores_join_by_identity" time="0.333" /><testcase classname="tests.test_repair_r3" name="test_legacy_shadow_detected_from_saved_model_identity" time="0.218" /><testcase classname="tests.test_repair_r3b" name="test_production_journal_quality_and_formal_report[normal]" time="2.298" /><testcase classname="tests.test_repair_r3b" name="test_production_journal_quality_and_formal_report[conflict]" time="0.048" /><testcase classname="tests.test_repair_r3b" name="test_production_journal_quality_and_formal_report[conflict_then_recovery]" time="0.060" /><testcase classname="tests.test_repair_r3b" name="test_production_journal_quality_and_formal_report[sequence_regression]" time="0.060" /><testcase classname="tests.test_repair_r3b" name="test_reordered_logs_keep_quality_association" time="0.327" /><testcase classname="tests.test_repair_r3b" name="test_prediction_segment_and_raw_reference_must_match_quality" time="0.104" /><testcase classname="tests.test_repair_r3b" name="test_label_reference_is_associated_with_prediction_and_horizon" time="0.098" /><testcase classname="tests.test_repair_r4" name="test_websocket_redirect_never_sends_target_request[True]" time="0.010" /><testcase classname="tests.test_repair_r4" name="test_websocket_redirect_never_sends_target_request[False]" time="0.008" /><testcase classname="tests.test_repair_r4" name="test_redirect_failure_collect_closes_within_attempt_budget" time="0.002"><failure message="AssertionError: unit suite blocked process/service/device launch">config = {'features': {'fan_max_age_s': 2.5, 'history_s': 180, 'max_feature_columns': 64, 'missing_optional_policy': 'fallback_...ct_timeout_s': 5.0, 'follow_redirects': False, 'max_business_payload_bytes': 65536, 'max_inflight_esp32': 1, ...}, ...}
+tmp_path = PosixPath('/private/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/pytest-of-massif/pytest-38/test_redirect_failure_collect_0')
+
+    async def test_redirect_failure_collect_closes_within_attempt_budget(config, tmp_path):
+        seen = []
+        async def target(request):
+            seen.append(request.path)
+            return web.Response()
+        async def redirect(request):
+            raise web.HTTPFound('/not-authorized')
+        app = web.Application(); app.router.add_get('/socket.io/', redirect)
+        app.router.add_get('/not-authorized', target)
+        app.router.add_get('/api/v1/fan/status', redirect)
+        app.router.add_get('/api/v1/temp/status', redirect)
+        runner = web.AppRunner(app); await runner.setup()
+        site = web.TCPSite(runner, '127.0.0.1', 0); await site.start()
+        origin = f'http://127.0.0.1:{site._server.sockets[0].getsockname()[1]}'
+        config['orin']['base_url'] = config['tianshan']['base_url'] = origin
+        config['network'].update(reconnect_max_attempts=2, reconnect_initial_s=.1, reconnect_max_s=.1)
+        try:
+&gt;           path, stats = await asyncio.wait_for(collect(config, 3, data_root=tmp_path), 5)
+
+tests/test_repair_r4.py:65: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/asyncio/tasks.py:445: in wait_for
+    return fut.result()
+src/tto/collector.py:152: in collect
+    journal = Journal(config, data_root, episode=episode, deployment=deployment, run_type=run_type or ('shadow' if model else 'collect'), model_sha256=model['sha256'] if model else None, record_schema=2)
+src/tto/storage.py:64: in __init__
+    processing_contract=CONTRACT, observer_host={'system': platform.system(), 'machine': platform.machine(), 'processor': platform.processor() or 'unknown'})
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/platform.py:959: in processor
+    return uname().processor
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/functools.py:981: in __get__
+    val = self.func(instance)
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/platform.py:783: in processor
+    return _unknown_as_blank(_Processor.get())
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/platform.py:733: in get
+    return func() or ''
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/platform.py:752: in from_subprocess
+    return subprocess.check_output(
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/subprocess.py:421: in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/subprocess.py:503: in run
+    with Popen(*popenargs, **kwargs) as process:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = (['uname', '-p'],), kwargs = {'stderr': -3, 'stdout': -1, 'text': True}
+
+    def popen(*args, **kwargs):
+&gt;       raise AssertionError('unit suite blocked process/service/device launch')
+E       AssertionError: unit suite blocked process/service/device launch
+
+tests/conftest.py:36: AssertionError</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,229 @@
+{
+  "mode": "execute",
+  "command_id": "LOOPBACK-user_stop",
+  "native_run_id": "6e7c8831-c788-4540-92cd-3d69f82822b4",
+  "reason": "user_stop",
+  "elapsed_s": 18.17959345899999,
+  "time_coverage": {
+    "observed_s": 18.1340580640001,
+    "measurement_usable_s": 17.08004488100005,
+    "model_usable_s": 8.021730988999934,
+    "context_ready_s": 13.075045142999898,
+    "joint_ready_s": 8.021730988999934,
+    "work_paused_s": 0.0,
+    "tj_usable_s": 17.08004488100005,
+    "rail_usable_s": 17.08004488100005,
+    "PWM_usable_s": 18.02710781399992,
+    "temp_context_usable_s": 18.02710781399992
+  },
+  "phase_seconds": {
+    "uninitialized": 1.0540131830000519,
+    "provisional": 9.058313892000115,
+    "tracking": 8.021730988999934
+  },
+  "fan_success_intervals": {
+    "count": 18,
+    "max_s": 1.0131834469998466,
+    "over_original_2_5s": 0
+  },
+  "protocol_requests": 100,
+  "successful_requests": 100,
+  "server_completion_unknown": false,
+  "schedule_completed": false,
+  "workload_intent": "evaluate_actual_protocol_GPU_rails_not_client_slots",
+  "collector_task_identity": 140737292938896,
+  "collector_engine_instance_id": 140737270891712,
+  "observer_instances_created": 1,
+  "native_callbacks": 61,
+  "native_run_directories": 1,
+  "I02_shared_engine_instance_id": 140737270891712,
+  "I02_preprocessed_views": 61,
+  "requester_sessions_all_closed": true,
+  "requester_instances_created": 4,
+  "request_executor_instances_created": 1,
+  "own_async_tasks_remaining": 0,
+  "collector_summary": {
+    "stop_reason": "external_stop",
+    "poll_missed": 0,
+    "poll_count": 23,
+    "connection_attempts": 1,
+    "payload_oversize": 0,
+    "orin_event_count": 18,
+    "business_payload_bytes_sum": 28449,
+    "business_payload_bytes_max": 1581,
+    "poll_rtt_ms": [
+      5.249310999943191,
+      4.931024000143225,
+      5.598766000048272,
+      5.967094999959954,
+      3.111045999958151,
+      4.679276999922877,
+      4.659360000005108,
+      1.5773980001085874,
+      5.638307000026543,
+      3.666705999876285,
+      5.439036000097985,
+      5.696119000049293,
+      2.9970799998864095,
+      3.302497000049698,
+      2.6487059999453777,
+      5.5237029998806975,
+      6.69207600003574,
+      6.633035000049858,
+      1.9029150000733352,
+      1.495414999908462,
+      11.011239000026762,
+      3.008705000183909,
+      4.676787000107652
+    ],
+    "prediction_ms": [
+      3.8788700001077814,
+      2.482635999967897,
+      2.639372999965417,
+      2.825787999881868
+    ],
+    "rss_mib": [
+      83.0234375,
+      83.0234375,
+      83.02734375,
+      83.02734375,
+      83.02734375,
+      83.02734375,
+      83.02734375,
+      83.02734375,
+      83.02734375,
+      83.02734375,
+      83.02734375,
+      83.03515625,
+      83.0390625,
+      83.046875,
+      83.046875,
+      83.05078125,
+      83.09765625,
+      83.1640625
+    ],
+    "cpu_pct_single_core": [
+      4.9767489028463485,
+      4.985903350472321,
+      3.969583428212606,
+      3.990915777734477,
+      4.995343969764515,
+      3.9899247258705524,
+      3.9767474012004245,
+      4.983892811002484,
+      3.9738231236703103,
+      5.951489445241697,
+      5.96245988747596,
+      8.933548593869716,
+      9.955040577856842,
+      8.94879874104789,
+      9.971015524189848,
+      7.9805845784583544,
+      8.909107873833307,
+      10.929142326513807
+    ],
+    "elapsed_s": 18.148645879000014,
+    "queue_peak_items": 2,
+    "queue_peak_bytes": 2737,
+    "dropped": 0,
+    "quality": {
+      "boundary_socketio_connecting": 1,
+      "boundary_control_context_change": 1,
+      "boundary_stream": 1,
+      "new_samples": 18,
+      "boundary_input_boundary": 1,
+      "boundary_input_profile_change": 1,
+      "boundary_socketio_disconnected": 1,
+      "boundary_run_end": 1
+    },
+    "processing": {
+      "fan_ok": 19,
+      "temp_ok": 4,
+      "origins": 4
+    },
+    "target_host_verified": false,
+    "polling_health": {
+      "contract": "TTO-POLL-INDEPENDENT-v1",
+      "max_inflight_per_endpoint": 1,
+      "max_total_inflight_limit": 2,
+      "max_total_inflight_observed": 2,
+      "end_inflight": 0,
+      "legacy_config_max_inflight_esp32": 1,
+      "endpoints": {
+        "fan": {
+          "sent": 19,
+          "returned": 19,
+          "http_ok": 19,
+          "errors": 0,
+          "skipped": 0,
+          "cancelled": 0,
+          "peak_inflight": 1,
+          "rtt_ms": {
+            "n": 19,
+            "p50": 5.249310999943191,
+            "p95": 7.123992300034834,
+            "min": 1.495414999908462,
+            "max": 11.011239000026762
+          },
+          "send_interval_s": {
+            "n": 18,
+            "p50": 1.0046055145000992,
+            "p95": 1.0103680695000095,
+            "min": 1.0009662090001257,
+            "max": 1.0111417819998678
+          },
+          "return_interval_s": {
+            "n": 18,
+            "p50": 1.005599254000117,
+            "p95": 1.0123400808999121,
+            "min": 0.9958285889999843,
+            "max": 1.0131740720000835
+          }
+        },
+        "temp": {
+          "sent": 4,
+          "returned": 4,
+          "http_ok": 4,
+          "errors": 0,
+          "skipped": 0,
+          "cancelled": 0,
+          "peak_inflight": 1,
+          "rtt_ms": {
+            "n": 4,
+            "p50": 3.828219999945759,
+            "p95": 4.890274400122507,
+            "min": 1.9029150000733352,
+            "max": 4.931024000143225
+          },
+          "send_interval_s": {
+            "n": 3,
+            "p50": 5.005836521999981,
+            "p95": 5.006537647200093,
+            "min": 5.005150168,
+            "max": 5.006615550000106
+          },
+          "return_interval_s": {
+            "n": 3,
+            "p50": 5.004953269999987,
+            "p95": 5.005503699199858,
+            "min": 5.004056003000187,
+            "max": 5.005564857999843
+          }
+        }
+      }
+    }
+  },
+  "clock_end": {
+    "domain": "b952afb500f6:21:d8253596-aec5-44fb-be9c-be99f657c954",
+    "mono_before_s": 1639.417619802,
+    "utc": "2026-10-19T08:00:30.008013+00:00",
+    "mono_after_s": 1639.417641469,
+    "utc_clock_accuracy_s": null,
+    "host": "b952afb500f6",
+    "platform": "Linux-7.0.11-orbstack-00360-gc9bc4d96ac70-x86_64-with-glibc2.35",
+    "pid": 21
+  },
+  "control_changes": false,
+  "field_proven": false,
+  "synthetic_loopback_only": true
+}

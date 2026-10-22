@@ -1,0 +1,31 @@
+[
+  {
+    "label": "before",
+    "server_peak": {
+      "fan": 1,
+      "temp": 1,
+      "total": 1
+    },
+    "client_counters_at_end": [
+      0,
+      0
+    ],
+    "max_fan_return_gap_s": 2.5546956660000433,
+    "fan_returns": 9
+  },
+  {
+    "label": "after",
+    "server_peak": {
+      "fan": 1,
+      "temp": 1,
+      "total": 2
+    },
+    "client_counters_at_end": [
+      0,
+      2
+    ],
+    "max_fan_return_gap_s": 1.0022538599999962,
+    "fan_returns": 12
+  }
+]
+PASS: independent scheduling effect reproduced; no full Socket.IO assertion made.

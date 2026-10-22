@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/mnt/data/tto_cpu2_independent_review_20261020/envs/review313/lib/python3.13/site-packages/tto_field/cpu_cli.py", line 38, in <module>
+    if __name__=='__main__':raise SystemExit(main())
+                                             ~~~~^^
+  File "/mnt/data/tto_cpu2_independent_review_20261020/envs/review313/lib/python3.13/site-packages/tto_field/cpu_cli.py", line 27, in main
+    if a.cmd=='verify-install':print(json.dumps(verify(a.target),indent=2));return 0
+                                                ~~~~~~^^^^^^^^^^
+  File "/mnt/data/tto_cpu2_independent_review_20261020/envs/review313/lib/python3.13/site-packages/tto_field/identity.py", line 16, in verify
+    raise ValueError('field target is Linux x86_64 CPython3.10; use isolated target environment')
+ValueError: field target is Linux x86_64 CPython3.10; use isolated target environment

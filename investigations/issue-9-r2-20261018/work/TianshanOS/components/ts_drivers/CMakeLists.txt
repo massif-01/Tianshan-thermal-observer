@@ -1,0 +1,26 @@
+idf_component_register(
+    SRCS
+        "src/ts_drivers.c"
+        "src/ts_fan.c"
+        "src/ts_power.c"
+        "src/ts_power_monitor.c"
+        "src/ts_power_policy.c"
+        "src/ts_device_ctrl.c"
+        "src/ts_usb_mux.c"
+        "src/ts_temp_source.c"
+        "src/ts_compute_monitor.c"
+    INCLUDE_DIRS
+        "include"
+    REQUIRES
+        ts_core
+        ts_hal
+    PRIV_REQUIRES
+        driver
+        esp_adc
+        esp_timer
+        esp_websocket_client
+        esp_http_client
+        json
+        ts_automation
+        ts_config_pack
+)

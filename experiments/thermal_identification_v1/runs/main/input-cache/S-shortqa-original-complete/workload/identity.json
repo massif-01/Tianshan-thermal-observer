@@ -1,0 +1,38 @@
+{
+  "checked_at_utc": "2026-10-13T05:31:03.765521+00:00",
+  "host": "lpmu305",
+  "model": {
+    "id": "RM-01 VLM",
+    "object": "model",
+    "created": 1791869463,
+    "owned_by": "vllm",
+    "root": "/home/observer/models/dev/llm/Qwen3.8-27B-NVFP4/",
+    "parent": null,
+    "max_model_len": 262144,
+    "permission": [
+      {
+        "id": "modelperm-81fc087227d90f0b",
+        "object": "model_permission",
+        "created": 1791869463,
+        "allow_create_engine": false,
+        "allow_sampling": true,
+        "allow_logprobs": true,
+        "allow_search_indices": false,
+        "allow_view": true,
+        "allow_fine_tuning": false,
+        "organization": "*",
+        "group": null,
+        "is_blocking": false
+      }
+    ]
+  },
+  "metrics": {
+    "vllm:num_requests_running": 0.0,
+    "vllm:num_requests_waiting": 0.0
+  },
+  "script_sha256": "9590bd36f0c673b347233f27d6a65a8777d470783dd39875f4e6fde88e0cd6ea",
+  "questions_sha256": "fe864ad68ed2cc9553fb75c4f9e4377ff0e0be1c926f2005360cee1500d648b6",
+  "default_sampling": "temperature/top_p/template/cache not overridden",
+  "max_tokens_contract": "vLLM generation budget, all generated tokens; observed usage retained",
+  "weights_hash": "unknown"
+}

@@ -1,0 +1,45 @@
+{
+  "schema": "TTO-MAINLINE-FROZEN-REFERENCE-v1",
+  "status": "planning_reference_not_release",
+  "label": "G2-FROZEN-RM01-v1",
+  "model_sha256": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
+  "observer_spec_sha256": "2080adcf20773650299def2bb0f3ebdb9f87d8f85281d5b87a99d8b406c83c6b",
+  "observer_code_sha256": "599e292a0000697615e76a97596f2f48c7527bc82027bacca5aea0c0fe5d4a47",
+  "fit_runs": [
+    "L",
+    "M",
+    "S"
+  ],
+  "dynamic_theta": {
+    "a": 0.11481067252369034,
+    "c": 0.012174003404921066,
+    "d0": 0.00467375150888984,
+    "d1": 0.008336813700608809,
+    "b_g": 0.01837304741692581,
+    "b_c": 0.06218669600410176
+  },
+  "control_writes": false,
+  "online_parameter_training_in_pilot": false,
+  "automatic_activation": false,
+  "scope": "original configuration first; other hardware only identified exploratory shadow evaluation",
+  "horizons_s": [
+    15,
+    45,
+    90
+  ],
+  "live_predictor_not_yet_delivered_by_this_package": true,
+  "historical_result": {
+    "run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+    "role_now": "seen_development_not_new_holdout",
+    "n_45_common": 2649,
+    "G2_HOLD_MAE_C": 1.544,
+    "B0_MAE_C": 2.23,
+    "A_roll_known_future_inputs_MAE_C": 0.334,
+    "G2_HOLD_abs_error_p95_C": 10.264,
+    "G2_HOLD_max_under_C": 12.712,
+    "B0_abs_error_p95_C": 9.6,
+    "B0_max_under_C": 11.782,
+    "scores_are_historical_not_recomputed_this_turn": true
+  },
+  "review_note": "Source primary/spec keep deployable=false. Observe eligibility belongs to a separate future release and approved device window, not model file mutation."
+}

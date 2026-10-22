@@ -1,0 +1,25 @@
+{
+  "cold_starts": 1,
+  "E_range_C": [
+    33.47796906027247,
+    35.60576008240625
+  ],
+  "Ts_range_C": [
+    42.08238400814986,
+    52.83355150486541
+  ],
+  "posterior_Tf_vs_current_TJ": {
+    "n": 2706,
+    "MAE_C": 0.11597639133266682,
+    "RMSE_C": 0.21896310285390846,
+    "mean_error_C": -0.006343095617835375,
+    "P95_abs_error_C": 0.3718319263579364,
+    "P95_underprediction_C": 0.26389710655392484,
+    "max_underprediction_C": 2.0709745530607293,
+    "fraction_underprediction_gt_2C": 0.0003695491500369549
+  },
+  "posterior_temperature_feedback": true,
+  "posterior_error_is_not_forecast": true,
+  "covariance_calibrated": false,
+  "theta_updated": false
+}

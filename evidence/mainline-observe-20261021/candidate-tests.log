@@ -1,0 +1,42 @@
+....F...................                                                 [100%]
+=================================== FAILURES ===================================
+_______________ test_projection_exception_disables_model_not_raw _______________
+
+tmp_path = PosixPath('/private/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/pytest-of-massif/pytest-716/test_projection_exception_disa0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10a2c21e0>
+
+    def test_projection_exception_disables_model_not_raw(tmp_path,monkeypatch):
+        from tto_field.projection import SavedStream
+        def fail(*args):raise ValueError('owned projection injection')
+        monkeypatch.setattr(SavedStream,'feed',fail)
+        s=run_case(tmp_path,monkeypatch,FaultObserver)
+        assert s['projection_disabled'] and s['reason']=='duration' and s['native_summary']['orin_event_count']>=3 and s['valid_TJ_observed']>=3
+>       rows=[json.loads(x) for x in (tmp_path/'session/observations.jsonl').read_text().splitlines()]
+
+experiments/mainline_observe_v1/tests/test_model_isolation.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/private/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/pytest-of-massif/pytest-716/test_projection_exception_disa0/session/observations.jsonl')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/private/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/pytest-of-massif/pytest-716/test_projection_exception_disa0/session/observations.jsonl'
+
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/pathlib.py:1013: FileNotFoundError
+----------------------------- Captured stdout call -----------------------------
+已连接，正在等待第一份有效温度数据。
+本轮TTO已停止；现有风扇控制未被修改。
+=========================== short test summary info ============================
+FAILED experiments/mainline_observe_v1/tests/test_model_isolation.py::test_projection_exception_disables_model_not_raw
+1 failed, 23 passed in 19.87s

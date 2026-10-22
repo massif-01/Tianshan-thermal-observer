@@ -1,0 +1,30 @@
+* Getting build dependencies for wheel...
+running egg_info
+creating src/tegrastats_api.egg-info
+writing src/tegrastats_api.egg-info/PKG-INFO
+writing dependency_links to src/tegrastats_api.egg-info/dependency_links.txt
+writing entry points to src/tegrastats_api.egg-info/entry_points.txt
+writing requirements to src/tegrastats_api.egg-info/requires.txt
+writing top-level names to src/tegrastats_api.egg-info/top_level.txt
+writing manifest file 'src/tegrastats_api.egg-info/SOURCES.txt'
+reading manifest file 'src/tegrastats_api.egg-info/SOURCES.txt'
+adding license file 'LICENSE'
+writing manifest file 'src/tegrastats_api.egg-info/SOURCES.txt'
+WARNING `project.license` as a TOML table is deprecated
+!!
+
+        ********************************************************************************
+        Please use a simple string containing a SPDX expression for `project.license`. You can also use `project.license-files`. (Both options available on setuptools>=77.0.0).
+
+        This deprecation is overdue, please update your project and remove deprecated
+        calls to avoid build errors in the future.
+
+        See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
+        ********************************************************************************
+
+!!
+
+ERROR Unmet dependencies (checked against /private/tmp/tto-platform-curve-v2/rm-env/bin/python):
+	wheel
+		wanted: any
+		found: not installed

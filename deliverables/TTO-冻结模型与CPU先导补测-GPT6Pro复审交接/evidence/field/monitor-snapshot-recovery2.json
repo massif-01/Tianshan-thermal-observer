@@ -1,0 +1,231 @@
+{
+  "checked_at_utc": "2026-10-19T09:59:31.490867+00:00",
+  "native_run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+  "runner_alive": true,
+  "admission_rows": 10797,
+  "latest_admission": {
+    "evaluated_mono_s": 351842.472919709,
+    "scheduler_mono_s": 1096.9798438549624,
+    "at_utc": "2026-10-19T09:59:31.177050+00:00",
+    "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+    "native_run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+    "collection_available": true,
+    "model_available": true,
+    "field_safety_available": true,
+    "execution_authorized": true,
+    "instrument_clock_ready": true,
+    "explicit_stop": false,
+    "start_allowed": true,
+    "reasons": [],
+    "observer_state": "tracking",
+    "successful_PWM_age_s": 0.1562848970061168,
+    "measurement_current": {
+      "tj": true,
+      "power": true,
+      "last_successful_pwm": true,
+      "control_context": true
+    },
+    "source_ages_s": {
+      "tj": 0.48614933399949223,
+      "power": 0.48614933399949223,
+      "last_successful_pwm": 0.1562848970061168,
+      "control_context": 1.453893732978031
+    },
+    "source_expiry_mono_s": {
+      "tj": 351846.13418669,
+      "power": 351846.13418669,
+      "last_successful_pwm": 351844.816547304,
+      "control_context": 351848.518938468
+    },
+    "model_state_age_s": 0.15458965301513672,
+    "model_consumable_until_mono_s": 351844.816547304,
+    "safety_status": "fresh",
+    "observation_cutoff": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3508",
+    "native_quality_preserved": true,
+    "model_permission": {
+      "local_demo": true,
+      "formal_field_authorized": false,
+      "device_actions": false
+    }
+  },
+  "phase_events": [
+    {
+      "event": "phase_start",
+      "mono_s": 9.32121633796487,
+      "run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+      "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+      "index": 0,
+      "stage": {
+        "kind": "background",
+        "seconds": 300
+      },
+      "window_end": 309.32121633796487,
+      "recorded_at_utc": "2026-10-19T09:41:23.518819+00:00"
+    },
+    {
+      "event": "phase_end",
+      "mono_s": 309.3408491969458,
+      "run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+      "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+      "index": 0,
+      "kind": "background",
+      "elapsed_s": 300.0196328589809,
+      "recorded_at_utc": "2026-10-19T09:46:23.538377+00:00"
+    },
+    {
+      "event": "phase_start",
+      "mono_s": 309.3408491969458,
+      "run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+      "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+      "index": 1,
+      "stage": {
+        "kind": "work",
+        "concurrency": 1,
+        "seconds": 360,
+        "repeat_key": "single-anchor"
+      },
+      "window_end": 669.3408491969458,
+      "recorded_at_utc": "2026-10-19T09:46:23.538440+00:00"
+    },
+    {
+      "event": "work_start_window_closed",
+      "mono_s": 669.4338130089454,
+      "run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+      "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+      "index": 1,
+      "inflight": 1,
+      "recorded_at_utc": "2026-10-19T09:52:23.631801+00:00"
+    },
+    {
+      "event": "natural_drain_complete",
+      "mono_s": 686.0020013600006,
+      "run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+      "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+      "index": 1,
+      "recorded_at_utc": "2026-10-19T09:52:40.200188+00:00"
+    },
+    {
+      "event": "phase_end",
+      "mono_s": 686.0020013600006,
+      "run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+      "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+      "index": 1,
+      "kind": "work",
+      "elapsed_s": 376.6611521630548,
+      "recorded_at_utc": "2026-10-19T09:52:40.200279+00:00"
+    },
+    {
+      "event": "phase_start",
+      "mono_s": 686.0020013600006,
+      "run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+      "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+      "index": 2,
+      "stage": {
+        "kind": "recovery",
+        "seconds": 90
+      },
+      "window_end": 776.0020013600006,
+      "recorded_at_utc": "2026-10-19T09:52:40.200351+00:00"
+    },
+    {
+      "event": "phase_end",
+      "mono_s": 776.0245396869723,
+      "run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+      "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+      "index": 2,
+      "kind": "recovery",
+      "elapsed_s": 90.0225383269717,
+      "recorded_at_utc": "2026-10-19T09:54:10.222490+00:00"
+    },
+    {
+      "event": "phase_start",
+      "mono_s": 776.0245396869723,
+      "run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+      "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+      "index": 3,
+      "stage": {
+        "kind": "work",
+        "concurrency": 2,
+        "seconds": 270
+      },
+      "window_end": 1046.0245396869723,
+      "recorded_at_utc": "2026-10-19T09:54:10.222617+00:00"
+    },
+    {
+      "event": "work_start_window_closed",
+      "mono_s": 1046.1198764229775,
+      "run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+      "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+      "index": 3,
+      "inflight": 2,
+      "recorded_at_utc": "2026-10-19T09:58:40.317376+00:00"
+    },
+    {
+      "event": "natural_drain_complete",
+      "mono_s": 1046.8286750179832,
+      "run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+      "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+      "index": 3,
+      "recorded_at_utc": "2026-10-19T09:58:41.026230+00:00"
+    },
+    {
+      "event": "phase_end",
+      "mono_s": 1046.8286750179832,
+      "run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+      "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+      "index": 3,
+      "kind": "work",
+      "elapsed_s": 270.8041353310109,
+      "recorded_at_utc": "2026-10-19T09:58:41.026266+00:00"
+    },
+    {
+      "event": "phase_start",
+      "mono_s": 1046.8286750179832,
+      "run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+      "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+      "index": 4,
+      "stage": {
+        "kind": "recovery",
+        "seconds": 240
+      },
+      "window_end": 1286.8286750179832,
+      "recorded_at_utc": "2026-10-19T09:58:41.026296+00:00"
+    }
+  ],
+  "protocol_counts": {
+    "request_submit": 55,
+    "first_content": 55,
+    "request_end": 55
+  },
+  "unknown_request_ends": [],
+  "latest_request_end": {
+    "event": "request_end",
+    "mono_s": 1046.827476787963,
+    "at_utc": "2026-10-19T09:58:41.024591+00:00",
+    "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+    "native_run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+    "request_id": "R0054",
+    "submit_mono_s": 1029.9553537669708,
+    "submitted_at_utc": "2026-10-19T09:58:24.152470+00:00",
+    "payload_sha256": "8502df772081ad7b9093975b5dbf5801e4c780dd21f6b619d87c13ca06dd00c0",
+    "max_tokens": 256,
+    "status": "completed",
+    "server_status": "protocol_completion_observed",
+    "first_network_mono_s": 1030.3751889549894,
+    "first_content_mono_s": 1030.375398315955,
+    "finish_reason": "length",
+    "done": true,
+    "usage": {
+      "prompt_tokens": 49,
+      "total_tokens": 305,
+      "completion_tokens": 256
+    },
+    "server_request_id": "chatcmpl-b63e7fb8a51c1c10",
+    "http_status": 200,
+    "client_end_mono_s": 1046.827455971972,
+    "client_end_at_utc": "2026-10-19T09:58:41.024572+00:00",
+    "duration_s": 16.872115877980832,
+    "request_end_semantics": "client protocol completion or unknown termination; never GPU kernel end"
+  },
+  "summary": null
+}

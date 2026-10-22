@@ -1,0 +1,65 @@
+{
+  "scope": "RELEASE wheel, actual installed CLI local macOS ARM64 synthetic loopback, NOT field",
+  "pid": 53570,
+  "pid_matches_runtime": true,
+  "elapsed_s": 60.08190175006166,
+  "sidecar_start_s": 30.067727165995166,
+  "sidecar_stop_s": 60.07519012503326,
+  "sidecar_status": "native_run_ending",
+  "resources_by_actual_phase": {
+    "before": {
+      "samples": 29,
+      "cpu_mean_pct": 2.476151255011963,
+      "cpu_max_pct": 3.299489233557254,
+      "rss_max_mib": 69.578125
+    },
+    "during": {
+      "samples": 29,
+      "cpu_mean_pct": 2.4322803934638646,
+      "cpu_max_pct": 3.228790685477946,
+      "rss_max_mib": 70.4375
+    },
+    "after": {
+      "samples": 0,
+      "cpu_mean_pct": null,
+      "cpu_max_pct": null,
+      "rss_max_mib": null
+    }
+  },
+  "requester_instances": 0,
+  "native_collectors": 1,
+  "estimators": 1,
+  "own_async_tasks_remaining": 0,
+  "wire_packets": 150,
+  "states": 193,
+  "pools": [
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 1,
+      "prefix": "libscipy_openblas",
+      "filepath": "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/numpy/.dylibs/libscipy_openblas64_.dylib",
+      "version": "0.3.29",
+      "threading_layer": "pthreads",
+      "architecture": "neoversen1"
+    },
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 1,
+      "prefix": "libscipy_openblas",
+      "filepath": "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/scipy/.dylibs/libscipy_openblas.dylib",
+      "version": "0.3.28",
+      "threading_layer": "pthreads",
+      "architecture": "neoversen1"
+    }
+  ],
+  "pool_coverage": {
+    "numpy": [
+      "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/numpy/.dylibs/libscipy_openblas64_.dylib"
+    ],
+    "scipy": [
+      "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/scipy/.dylibs/libscipy_openblas.dylib"
+    ]
+  }
+}

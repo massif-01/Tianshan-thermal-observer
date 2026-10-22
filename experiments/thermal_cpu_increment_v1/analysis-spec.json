@@ -1,0 +1,81 @@
+{
+  "contract": "TTO-CPU-ACTIVITY-PREP-v1.0-model-line",
+  "version": "1.0.0",
+  "deployable": false,
+  "run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+  "data_roles": {
+    "existing_fixed_anchors": "one already analysed continuous development episode; includes calibration, descriptive stratification and in-development comparison, never new independent confirmation",
+    "2706_CPU_rows": "same episode, not a new experiment",
+    "synthetic": "interface/numerical/causality tests only; not Thor high-frequency evidence",
+    "future_12_requests": "one targeted new continuous episode; frozen check first. If inspected for thresholds/windows it becomes development; no automatic repeat"
+  },
+  "immutable": {
+    "model_sha256": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
+    "observer_spec_sha256": "2080adcf20773650299def2bb0f3ebdb9f87d8f85281d5b87a99d8b406c83c6b",
+    "comparison_spec_sha256": "9b2c5586ffbd9b3daae1bddf8dd77eaf8a40d5b6b27e5e5be864cc7b3ecb7711"
+  },
+  "candidate_budget": {
+    "activity_methods": 1,
+    "calibrations": 1,
+    "threshold_grids": 0,
+    "lag_searches": 0,
+    "core_selection": "only per-timestamp maximum of all numeric online cores; never fixed winning core",
+    "future_conversions": 1,
+    "theta_fits": 0
+  },
+  "calibration": {
+    "role": "already analysed development data, feature levels only; no temperature labels/scores used",
+    "background": "first recorded background +60 to +240 seconds",
+    "active": "first recorded single work +60 to +300 seconds",
+    "level_estimator": "median per feature; active/idle rail medians separately, no rail summation",
+    "selection": "one proposed rule; normalized on=0.25, off=0.10, low confirmation=3s fixed before scores; no score-based selection"
+  },
+  "features": {
+    "INPUT-BASE": ["gpu_pct", "gpu_W", "cpu_soc_mss_W"],
+    "INPUT-MEAN": ["gpu_pct", "gpu_W", "cpu_soc_mss_W", "cpu_mean_pct"],
+    "INPUT-CORE": ["gpu_pct", "gpu_W", "cpu_soc_mss_W", "cpu_mean_pct", "cpu_max_pct"],
+    "availability": "all required fields must be received, finite, original-valid and before their original deadlines; age is an eligibility gate, never set unknown transport delay to zero",
+    "timing": "same arrival frames and history budget across variants; retain source windows, source/read/arrival clock identities, update evidence, original refs, values and unknowns; no high-frequency TJ interpolation",
+    "old_cpu_update": "new telemetry generation is evidence of a new delivered frame, not proof of an independent CPU backend window",
+    "repeat_buffer": "same feature update identity does not renew deadline or confirm a transition; equal numeric values with new identities are retained",
+    "source_only": "no real N305 arrival means arrival-side result unavailable; source-potential results must be separately labelled"
+  },
+  "activity_rule": {
+    "score": "max over available required features of (value-idle_median)/(active_median-idle_median)",
+    "on": 0.25,
+    "off": 0.10,
+    "low_confirmation_s": 3.0,
+    "history_budget_s": 3.0,
+    "missing": "UNKNOWN immediately; no normal/idle substitution, recovery starts fresh; epoch change resets activity only, never thermal observer",
+    "initial": "UNKNOWN; one genuinely new high observation activates; one new low observation establishes IDLE when previously UNKNOWN; ACTIVE releases after 3s of supported low observations"
+  },
+  "future_input_conversion": {
+    "name": "ACTIVE-FLOOR-IDLE-RELAX30-v1",
+    "active": "independently for GPU and CPU_SOC_MSS: hold max(current observed rail, frozen active median) for each requested horizon; no assumed unseen end",
+    "idle": "each rail P(t)=idle_median+(P_current-idle_median)*exp(-t/30s)",
+    "PWM": "same conditional PWM fraction as original frozen observer at origin, held; no fabricated successful PWM",
+    "unknown": "new strategy unavailable; original HOLD remains separately reported",
+    "solver": "exact affine G2 augmented with exponential input states; no TJ feedback after origin; same current TJ, causal Ts/E, theta and state availability as sealed outputs",
+    "limits": "resident-model/domain prior, development proposal, no reliable forecast of arbitrary new starts or future task ends; no CPU extra heat term or TJ correction"
+  },
+  "temperature_evaluation": {
+    "origins": "unchanged original accepted approximately 1s sequence, original source_valid; no high-frequency origins",
+    "horizons_s": [15, 45, 90],
+    "labels": "reuse original first valid accepted TJ at/after h within +2s; same source epoch; each horizon independent",
+    "references": ["B0", "original G2-HOLD", "B1"],
+    "common": "same ref/horizon/label across all 3 candidates and references; preserve original common cohort additionally and own coverage separately",
+    "tails": ["P95 absolute", "P95 underprediction", "max underprediction", "fraction under >2C (descriptive only)"],
+    "strata": "posthoc actual submit/protocol_DONE and first arrived BASE high observation: pre-submit within 90s; submitted-not-yet-observed; observed-startup first15s; sustained; after-DONE first90s; background; short inter-request gaps retained. Never candidate features",
+    "sensitivity": "separate new tables for original origin normal/abnormal and for origins/labels whose prediction interval intersects explicit stale4682 to recovery4685; old totals remain untouched"
+  },
+  "activity_evaluation": {
+    "reference": "client request_submit/protocol_DONE only, not GPU kernel truth; four work block onsets primary, all179 request events retained as dependent secondary descriptions",
+    "metrics": ["onset delays at actual arrival", "misses and unknowns", "background active seconds/events", "repeated transitions while continuous requests", "recovery delay", "coverage and unavailable seconds"],
+    "integration": "hold previous state only to earliest required original feature deadline; rest UNKNOWN, no integration across unsupported gaps",
+    "high_frequency": "new data not yet available. At future same arrival cadence compare BASE/MEAN/CORE; additionally deterministic latest-arrived 1s downsample versus native cadence. No lag maximization, curve/video alignment or numeric deduplication",
+    "future_conclusion": "report physical timing unknown unless actual windows support it; better than GPU% alone is insufficient; no automatic retry/extra experiment"
+  },
+  "optional_event_assist": "not implemented in this one-candidate preparation; no future schedule enters features",
+  "ordinary_demand": "not modified this round; prior KF/QS/LP30/LP120 same-postprocessing descriptions retained, no new fan algorithm",
+  "permissions": {"offline": true, "self_created_loopback_tests": true, "device_access": false, "field_preflight": false, "real_requests": false, "deployment": false, "git_publication": false}
+}

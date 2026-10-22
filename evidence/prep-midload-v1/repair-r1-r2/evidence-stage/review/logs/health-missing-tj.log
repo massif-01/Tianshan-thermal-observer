@@ -1,0 +1,48 @@
+[
+  {
+    "t": 70,
+    "quality": "new_sample",
+    "accepted": true,
+    "last_actual_accepted_t": 70,
+    "current_ready": true,
+    "continuous_60s": true,
+    "abnormal": false
+  },
+  {
+    "t": 71,
+    "quality": "stale_or_missing_tj",
+    "accepted": false,
+    "last_actual_accepted_t": 70,
+    "current_ready": true,
+    "continuous_60s": true,
+    "abnormal": false
+  },
+  {
+    "t": 80,
+    "quality": "stale_or_missing_tj",
+    "accepted": false,
+    "last_actual_accepted_t": 70,
+    "current_ready": true,
+    "continuous_60s": true,
+    "abnormal": false
+  },
+  {
+    "t": 131,
+    "quality": "stale_or_missing_tj",
+    "accepted": false,
+    "last_actual_accepted_t": 70,
+    "current_ready": true,
+    "continuous_60s": true,
+    "abnormal": false
+  },
+  {
+    "t": 132,
+    "quality": "new_sample",
+    "accepted": true,
+    "last_actual_accepted_t": 132,
+    "current_ready": true,
+    "continuous_60s": true,
+    "abnormal": false
+  }
+]
+COUNTEREXAMPLE CONFIRMED: absent TJ for 61 seconds still marked ready and continuous.

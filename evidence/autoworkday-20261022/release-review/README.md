@@ -1,0 +1,1 @@
+先读总报告与一页操作卡。program/为本次实际可运行总控与冻结请求器，components/包含原样observe.2 wheel及请求线封存交付。旧大历史不递归打包。原wheel未修改、当前无现场许可。evidence/joint-live-final为实际自建测量/保护/SSE联合（测试时钟明确注入）；joint-virtual-sealed为完整虚拟24h；final-cli为真实单调钟总控背景STOP/归档。失败日志单列，未覆盖。全部SHA见清单。

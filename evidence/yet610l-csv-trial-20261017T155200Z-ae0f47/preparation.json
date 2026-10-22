@@ -1,0 +1,63 @@
+{
+  "trial_id": "yet610l-csv-trial-20261017T155200Z-ae0f47",
+  "trial_name": "仪表CSV试录",
+  "state": "prepared_waiting_for_explicit_start",
+  "prepared_at_utc": "2026-10-17T15:52:00.715004+00:00",
+  "host_timezone": "Asia/Shanghai",
+  "executing_host": {
+    "hostname": "Massif-MacBook-Pro.local",
+    "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O"
+  },
+  "prepared_monotonic_ns": 693908062091666,
+  "tto_run_id": null,
+  "tto_collection_started": false,
+  "inference_load_started": false,
+  "source_conversation": "01a13486-e0f1-7ab2-b8ce-be7f5a15527f",
+  "tool_path": "/Users/massif/Tianshan-thermal-observer/experiments/thermal_reference_v1/ref.py",
+  "tool_contract": "TTO-REF-PREP-v1.0-ADD1-REVIEW-FIX",
+  "tool_files": {
+    "experiments/thermal_reference_v1/ref.py": {
+      "bytes": 10493,
+      "sha256": "a0246f4bdf663f65fa164a3cba98bb5e7a3d3a1e2e9f890fac21de7f4d0de6cd"
+    },
+    "experiments/thermal_reference_v1/refprep/__init__.py": {
+      "bytes": 118,
+      "sha256": "7de3b42072c8882a54ff1932adcc16f033f622d0f02311effdfde89984fd3adb"
+    },
+    "experiments/thermal_reference_v1/refprep/clocks.py": {
+      "bytes": 7146,
+      "sha256": "a52121c81f8bc441172e64ad8d693e1cdd69efe8dafc4d2388c1dcc50055f96a"
+    },
+    "experiments/thermal_reference_v1/refprep/compare.py": {
+      "bytes": 16426,
+      "sha256": "7dd6f721e26db10095a911efa79204bf5a0a0e7282876758f3951ba44456206d"
+    },
+    "experiments/thermal_reference_v1/refprep/cues.py": {
+      "bytes": 9883,
+      "sha256": "5a9d95969e4bee63bc0d96c6296e5e79275ad79ab7424a41dae92e61cb7ffa83"
+    },
+    "experiments/thermal_reference_v1/refprep/files.py": {
+      "bytes": 1345,
+      "sha256": "aed1d5a0711556e8855afd279a51ba70129f132ff86323f7c953d4fb8431f71f"
+    },
+    "experiments/thermal_reference_v1/refprep/records.py": {
+      "bytes": 19908,
+      "sha256": "68e53773c34ba7d3bf7c92a64e6099d21939ebb539d916a946afff34720afe94"
+    },
+    "experiments/thermal_reference_v1/refprep/trajectory.py": {
+      "bytes": 4991,
+      "sha256": "d136545eb5557dcab1dc330074b227e36e4cdc5154e095919922ff99bc54aab3"
+    }
+  },
+  "original_csv_receiving_directory": "/Users/massif/Tianshan-thermal-observer/evidence/yet610l-csv-trial-20261017T155200Z-ae0f47/original-csv",
+  "csv_mapping": null,
+  "csv_time_format": null,
+  "instrument_clock_auto_sync": false,
+  "sync_method": "manual_approximate",
+  "sync_uncertainty_s": null,
+  "platform_message_timestamp": null,
+  "user_operation_statement": "用户计划发送试录开始/结束消息与手动按仪表开始/停止键大致同时发生；尚未执行",
+  "sample_button_time_equivalence": "unknown; button time is not automatically first/last sample time",
+  "start_event": null,
+  "end_event": null
+}

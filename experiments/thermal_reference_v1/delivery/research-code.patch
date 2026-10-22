@@ -1,0 +1,2739 @@
+diff --git a/experiments/thermal_reference_v1/README.md b/experiments/thermal_reference_v1/README.md
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_reference_v1/README.md
+@@ -0,0 +1,71 @@
++# TTO-REF-PREP-v1.0：局部表面参照工具（本地候选）
++
++本目录实际实现连续CSV/JSON导入、人工打点/迟录修订、原图关联、确定性提醒、独立时钟对齐及冻结轨迹对照。ADD1将已购买的YET-610L+K型探头、耐温聚酰亚胺胶带固定的局部表面连续记录作为主路径。通用软件已完成，真实CSV映射待1～2分钟样例，现场测温未执行；物理对应未验证。软件只交本地patch，未随文档PR发布。
++
++现在可安全重跑离线演示，不运行负载或设备入口：
++
++```sh
++python3 ref.py plan
++python3 run_offline.py --output /private/tmp/tto-reference-demo-NEW
++```
++
++在本目录运行；输出目录必须是新目录。一条入口使用本机已有pytest/Matplotlib运行时，不安装依赖或联网；在其他机器用已有Python 3.10+、pytest运行，图形另需本地Matplotlib与中文字体。核心CLI仅用Python标准库。没有Matplotlib时JSON/Markdown/HTML仍生成，图形状态明确为不可用，不伪称已画图。本轮本机已生成并目视检查图。
++
++`run_offline.py`真实调用CLI完成：计划→不可变会话→14条虚拟提醒及旧M事件回放→无数值打点→迟录追加修订→CSV/JSON与重复导入→合成对照→零外部点报告→双通道连续CSV/重复导入/探头事件与独立对照→针对性测试→SHA回读。它不运行历史模型搜索，也不把合成读数叫实测。最小真实输入已随证据提供，重跑无需旧大ZIP；可选的旧研究目标断言检查在原研究目录可用时执行，原件不改写。
++
++## 单一CLI
++
++| 命令 | 实际行为 |
++|---|---|
++| `plan` | 默认离线打印测点限制与固定计划，不决定新负载 |
++| `init-session` | 登记不可变run/site/kind/统计量/几何/仪器设置/钟域/一个参考ID；设置变化另开会话 |
++| `watch-events` | 只读指定现有本地events.jsonl；默认一次启动扫描，`--replay`虚拟回放，`--follow`仅供未来获准后的本地追加读取 |
++| `mark` | 记本地主机按键UTC/monotonic，可空数值/图片；默认不是曝光时间 |
++| `record --revise` | 迟录/更正追加revision及supersedes，原条目不覆盖；原按键时间保留 |
++| `record --capture-interval` | 交互开始至输入完成的本地主机区间；时钟不明不硬配到相机/run，非精确曝光 |
++| `import` | 默认numeric_export路径；时间/温度/单位/通道→测点显式映射，保存原CSV/SHA/行号/原值与异常台账；同文件SHA+映射不重复计数，相邻等温行保留 |
++| `session-event` | 开始/结束/校时、探头移动/重贴/松脱各自记时；探头事件之后原会话不静默恢复对照 |
++| `adapt-trajectories` | 只复制已封存的主G2、QS/LP30/LP120、原Tf与需求；读取旧资格台账，不重估状态/参数 |
++| `compare` | 合法as-of、完整时间区间范围；一次预登记背景增量；输出中文JSON/Markdown/HTML/图表 |
++
++实际参数见`python3 ref.py <命令> --help`，可复制命令见[一页操作卡](一页操作卡.md)。没有生产`tto mark`命令，没有相机SDK、RTSP、云或新服务。主路径由仪表独立连续记录，结束后一次导入，不需要十几次人工抄读。人工/红外/固定提醒代码保留备用。
++
++## ADD1连续CSV默认路径
++
++先复制`templates/contact-session.example.json`登记surface_contact、YET-610L/K型探头、同一固定位置、聚酰亚胺胶带及实际表面情况。仪器已买并确认可导出CSV；实际格式、精度、接触、探头响应仍未验证。接触式不要求IR发射率/反射/ROI，无安装照片也可完成软件。移动/重贴/松脱须追加事件并使用新会话，原会话后续原值保留，但不再当有效同位置参照。
++
++`templates/numeric-export-mapping.example.json`列名全是待替换占位符，不是YET格式推测。支持CSV编码/分隔符，时间、温度、C/F、通道列或常量；长表用channels显式路由到session/site，宽表选一个温度列并固定通道，逐通道导入。JSON同样使用显式映射。
++
++时间轴支持`timestamp`、`relative_seconds`、`sample_index`。后两种必须有第0秒的独立开始锚点、正的sample_interval_s及interval_basis；序号还必须声明index_origin。不从原行号生成缺失采样时刻，不使用mtime/导入时刻。首末独立锚点支持漂移核对，未知误差不填0。计划1秒保存，导入回执核对原CSV实际间隔/同时间/倒序/等温对，不能把采样周期称探头响应。
++
++原表保存在`imports/raw/<SHA>.<扩展名>`，映射另存，逐行台账保存CSV物理行范围、逻辑行号、原值、原采样时刻及拒绝原因，规范化输出在新store。空温度保留null，ERR/NaN等拒绝并说明原因，不补0、不插值、不按温度去重。相同原文件SHA+映射可幂等；变化值更正仍需明确revision。导出时间仅在有原始依据时填写，与采样/开始锚点/导入UTC分开。
++
++26项本地测试及20个CLI/检查调用通过。连续合成CSV240行、2通道，239条规范化记录（238个数值、1个空值），1行ERR进入拒绝台账；两通道均检测到缺失索引造成的2秒间隔，等温新行保留。所有外部值明确标合成，未宣称真实YET格式验收。软件无USB、串口、厂商上位机驱动或第二采集器。
++
++## 数据与时间合同
++
++`sessions/`固定run、局部测点、表面类型、统计量、几何/设置、时钟证据与`reference_record_id`。未知仪器、发射率/反射/ROI/精度保持null，不默认裸金属0.95。鳍片局部红外、背板、接触探头、空气探头、用户环境备注分别命名；红外对着鳍片不是测空气。24°C只属于旧M，不复制给新run。
++
++`records.jsonl`按实际写入时间追加，不回填成现场实时输入。`prompt_due_at_utc`/`prompt_emitted_at_utc`、`operator_mark_at_utc`、`measured_at_raw`或`measured_interval_raw`、`recorded_at_utc`分开。原时区、钟域、时间来源和未知不确定度都保留。UTC映射只在派生对照中，不回写原记录。mtime仅诊断；图像元数据时间原文单列，不自动当曝光。不OCR、不按伪彩颜色制造温度，也不声称已解未知辐射格式。
++
++允许带时区ISO时间、显式声明时区的本地时间、已声明钟域的数值秒。无时区且无锚点时不默认主机本地/UTC；数字表示秒，不猜相机毫秒单位。1个独立锚点只支持偏移并标漂移未验证；>=2个用首末独立锚点估计时钟比例并保留残差，锚点外不假定已知误差；未知时间误差不填0、不报精确配对。没有任何温度相关性寻优错时。
++
++`artifacts/`用内容SHA存原字节。CSV导入显式映射见`templates/import-mapping.example.json`；没有数字可只留原图。改值/时间用`record --revise`或批量行提供最新`supersedes`，不会覆盖旧记录。
++
++## 轨迹与资格
++
++`fixtures/real/`是旧M的已冻结状态/观测最小适配及原事件字段子集；不是新实测或表面温度。`fixtures/synthetic/`所有外部温度与图片/任务事件均是合成演示。三套model.json原字节另在`frozen/models/`，本轮只使用固定主模型已有输出，无重训练。
++
++外部读数不进入G2/Ts/LP或需求生成。快通道的实测TJ独立保留，不因模型缺资格一并丢掉；Tf A-long仍是TJ估计，因果Tf锚定不算预测。G2/LP30主对照，QS/LP120辅助，LP依赖同一G2的QS。
++
++as-of的合法持有区间直接引用旧封存fast-status资格台账：只有真正到达的新输入维持原资格，原始快照有效截止和每个资格来源引用均保留，没有另写质量解析器或延长旧TTL。外部时刻只取合法过去快照，记录滞后；时间区间须全段有资格且同一严格段，不跨缺口/源边界、不插值，也不在区间挑最接近温度的点。模型和真实TJ断线各按自身原资格保留。
++
++每run/测点/会话只用一个预登记背景ID，可能是热背景，不叫冷机。若该点没采到/时间不明则不自动改用另一个，增量比较不可用，绝对材料仍保留。局部表面和潜在Ts未标定，不计算“Ts准确率”、热容或风扇收益；稀疏点也不证明完整峰值和秒级时滞。未知仪表误差不能用来支持0.004°C差别的排名。
++
++## 确定性提醒（人工/红外备用，连续模式不逐点提醒）
++
++模板稀疏计划：背景开始+30/+120秒；稀疏组+180秒和实际结束+30/+120；连续组前点由已发生的前置待机开始+270秒生成，连续开始+60及实际结束+30/+120/+300。可选中等块同样用预先绑定的前置待机计时采组前点，再用实际结束+30/+120/+300。若缺少可靠前置事件/计划，不从未来开始时刻倒推“组前”。实际绑定待现场前确认，模板不是新试验授权。
++
++最多14条主提醒，间隔至少30秒，重叠合并保留所有checkpoint ID/原到期时刻；晚到/重复/旧日志启动不追赶。回放把模拟发出时刻另列，真实发出时间仍null。漏测不重排、不延长、不补跑；停止本工具只停止提醒，不控制负载。
++
++本轮仅文档授权发布。原软件/数据/模型/采集器/runner/风扇/WS/TTL/安装器都未修改，目标机、仪器、测点、物理对应与控制收益未因此验证。完成后等待独立复审。
+diff --git a/experiments/thermal_reference_v1/build_evidence.py b/experiments/thermal_reference_v1/build_evidence.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_reference_v1/build_evidence.py
+@@ -0,0 +1,70 @@
++"""Local delivery only: selected research files, code patch, member SHA, CRC. No publishing."""
++from pathlib import Path
++import argparse
++import difflib
++import hashlib
++import json
++import subprocess
++import tempfile
++import zipfile
++from refprep.files import read,write,sha,now_utc
++
++ROOT=Path(__file__).absolute().parent
++TITLE='TTO-测温记录准备与路线图同步-证据包.zip'
++
++
++def selected():
++    result=[]
++    root_suffix={'.py','.json','.md','.log','.txt'}
++    trees={'refprep','tests','templates','schemas','frozen','fixtures','maintenance','handoff','freeze-history','publication','delivery'}
++    for path in sorted(ROOT.rglob('*')):
++        if not path.is_file():continue
++        rel=path.relative_to(ROOT)
++        if any(x in rel.parts for x in ['__pycache__','.pytest_cache','pytest-cache','plot-cache']):continue
++        if len(rel.parts)==1:
++            if path.suffix in root_suffix and path.name not in ['delivery-SHA256.json'] and not path.name.startswith(('offline-attempt','offline-final','offline-v2','offline-add1','tests-attempt','prepare-sources')):result.append(path)
++        elif rel.parts[0] in trees:result.append(path)
++        elif rel.parts[:2]==('results','release-check'):result.append(path)
++    return result
++
++
++def code_patch():
++    candidates=[]
++    for path in selected():
++        rel=path.relative_to(ROOT)
++        if rel.parts[0] in ['refprep','tests','templates','schemas','maintenance'] or (
++            len(rel.parts)==1 and (path.suffix=='.py' or path.name in ['README.md','一页操作卡.md','连续测温版操作卡.md','prep-spec.json','prep-add1-spec.json','stage1-freeze.json','stage-add1-freeze.json'])):
++            candidates.append(path)
++    chunks=[]
++    for path in candidates:
++        name='experiments/thermal_reference_v1/'+str(path.relative_to(ROOT))
++        chunks.append('diff --git a/'+name+' b/'+name+'\nnew file mode 100644\n')
++        chunks.extend(difflib.unified_diff([],path.read_text().splitlines(keepends=True),fromfile='/dev/null',tofile='b/'+name))
++    dest=ROOT/'delivery/research-code.patch';dest.parent.mkdir(parents=True,exist_ok=True);dest.write_text(''.join(chunks))
++    check=Path(tempfile.mkdtemp(prefix='tto-reference-patch-check-'))
++    result=subprocess.run(['git','apply','--check',str(dest)],cwd=check,capture_output=True,text=True)
++    assert result.returncode==0,result.stderr
++    write(ROOT/'delivery/patch-check.json',dict(status='pass',method='git apply --check in an empty temporary directory',
++        files=len(candidates),patch_sha256=sha(dest),temporary_directory=str(check),publication_patch='publication/docs-only.patch separate'))
++
++
++def build(output):
++    code_patch()
++    paths=selected();payload={}
++    for path in paths:
++        name='thermal_reference_v1/'+str(path.relative_to(ROOT));payload[name]=dict(sha256=sha(path),bytes=path.stat().st_size)
++    manifest=dict(contract='TTO-REF-PREP-v1.0+ADD1-evidence',built_at_utc=now_utc(),files=payload,
++        note='Manifest excludes itself; outer ZIP SHA is delivered separately. No new external real temperature; no model refit.')
++    with zipfile.ZipFile(output,'w',zipfile.ZIP_DEFLATED,compresslevel=8) as archive:
++        for path in paths:archive.write(path,'thermal_reference_v1/'+str(path.relative_to(ROOT)))
++        archive.writestr('thermal_reference_v1/SHA256.json',json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
++    from verify_archive import verify
++    result=verify(output)
++    write(ROOT/'delivery-SHA256.json',dict(archive=Path(output).name,sha256=sha(output),bytes=Path(output).stat().st_size,
++        report_sha256=sha(ROOT/'TTO-测温记录准备与路线图同步-实施报告.md'),CRC=result['CRC'],members=result['members'],written_at_utc=now_utc()))
++    print(json.dumps(read(ROOT/'delivery-SHA256.json'),ensure_ascii=False))
++
++
++if __name__=='__main__':
++    p=argparse.ArgumentParser();p.add_argument('--output',type=Path,default=ROOT/TITLE)
++    a=p.parse_args();build(a.output)
+diff --git a/experiments/thermal_reference_v1/maintenance/original-target-test.txt b/experiments/thermal_reference_v1/maintenance/original-target-test.txt
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_reference_v1/maintenance/original-target-test.txt
+@@ -0,0 +1,10 @@
++def test_two_dimensional_export_and_anchor_not_forecast(real):
++    _,_,_,states=real
++    long=jsonlines(ROOT/'results/states-A-long.jsonl')
++    checks=read(ROOT/'results/replay-checks.json')
++    assert all(c['max_abs_Tf_replay_error_C']<=1e-10 for c in checks)
++    assert all(r['Tf']==r['sealed_Tf'] for r in long)
++    assert sum(abs(r['Tf']-r['Ts'])>.5 for r in long)>.8*len(long)
++    assert all(s['Tf_is_observation_anchor'] and not s['parameter_learning'] for s in states)
++    assert all(s['evidence']['end']<=s['t']+1e-9 for s in states)
++    assert all(s['state_truth_available'] is False for s in states+long)
+diff --git a/experiments/thermal_reference_v1/maintenance/provenance.json b/experiments/thermal_reference_v1/maintenance/provenance.json
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_reference_v1/maintenance/provenance.json
+@@ -0,0 +1,8 @@
++{
++  "original_test_file_sha256": "338f83c96cc4a61f68923056e286186292402b1bfff7f8ba4470faa0ae7f1c3c",
++  "original_target_sha256": "5c55990fa986934b92fa15764210ed995316dd4cf934f3026b022982a9fbd7de",
++  "maintained_target_sha256": "788d51c67d462a812f3ad00ce5603e137fb79746e11933312d6aa92760ef16a3",
++  "change": "Only recomputed Tf numerical == becomes abs difference <=1e-10. Original file/model/archive SHA stay exact.",
++  "source": "immutable provided slowstate test snapshot",
++  "old_research_file_modified": false
++}
+diff --git a/experiments/thermal_reference_v1/maintenance/tolerance-target-test.py.txt b/experiments/thermal_reference_v1/maintenance/tolerance-target-test.py.txt
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_reference_v1/maintenance/tolerance-target-test.py.txt
+@@ -0,0 +1,10 @@
++def test_two_dimensional_export_and_anchor_not_forecast(real):
++    _,_,_,states=real
++    long=jsonlines(ROOT/'results/states-A-long.jsonl')
++    checks=read(ROOT/'results/replay-checks.json')
++    assert all(c['max_abs_Tf_replay_error_C']<=1e-10 for c in checks)
++    assert all(abs(r['Tf']-r['sealed_Tf'])<=1e-10 for r in long)
++    assert sum(abs(r['Tf']-r['Ts'])>.5 for r in long)>.8*len(long)
++    assert all(s['Tf_is_observation_anchor'] and not s['parameter_learning'] for s in states)
++    assert all(s['evidence']['end']<=s['t']+1e-9 for s in states)
++    assert all(s['state_truth_available'] is False for s in states+long)
+diff --git a/experiments/thermal_reference_v1/plot_reference.py b/experiments/thermal_reference_v1/plot_reference.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_reference_v1/plot_reference.py
+@@ -0,0 +1,85 @@
++"""Standard Matplotlib static figures; observed surface points never joined as dense truth."""
++from pathlib import Path
++import json
++import sys
++import numpy as np
++import matplotlib
++matplotlib.use('Agg')
++import matplotlib.pyplot as plt
++from matplotlib.font_manager import fontManager,FontProperties
++
++
++def main(source,out):
++    data=json.loads(Path(source).read_text());out=Path(out)
++    for p in ['/System/Library/Fonts/Supplemental/Arial Unicode.ttf','/System/Library/Fonts/STHeiti Medium.ttc','/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc']:
++        if Path(p).exists():
++            fontManager.addfont(p);plt.rcParams['font.family']=FontProperties(fname=p).get_name();break
++    plt.rcParams['axes.unicode_minus']=False
++    sessions=list(data['sessions']) or [None]
++    fig,axes=plt.subplots(3,len(sessions),figsize=(max(9,7*len(sessions)),10),squeeze=False,sharex='col')
++    fig.suptitle('局部表面独立对照｜'+('合成数值演示，未进行现场测温' if data['summary']['status']=='synthetic_demo_only' else '外部未测；物理对应未验证' if data['summary']['status']=='not_measured' else '未经标定；不是Ts准确率'),fontsize=16)
++    for col,sid in enumerate(sessions):
++        s=data['sessions'].get(sid)
++        rows=[r for r in data['trajectory'] if s is None or r['run_id']==s['run_id']]
++        pairs=[p for p in data['paired'] if p['record']['session_id']==sid]
++        start=min((r['utc_s'] for r in rows),default=0)
++        telemetry=[r for r in data.get('measured_telemetry',[]) if s is None or r['run_id']==s['run_id']]
++        if telemetry:
++            tx=[];ty=[];prev=None
++            for r in telemetry:
++                if prev and (r['utc_s']>=prev['source_valid_until_utc_s'] or r['source_epoch']!=prev['source_epoch']):tx.append(np.nan);ty.append(np.nan)
++                tx.append(r['utc_s']-start);ty.append(r['measured_TJ_C']);prev=r
++            axes[0,col].plot(tx,ty,color='#202d3c',lw=1.2,label='实测TJ（独立保留）')
++        for key,label,color,style in [('measured_TJ_C','实测TJ','#202d3c','-'),('Tf_A_long_C','原G2 Tf：TJ估计','#ad4b34','--'),
++                ('STATE_G2_C','因果G2潜在Ts','#bb4d3c','-'),('STATE_LP30_C','同G2的QS经LP30','#167f92','-')]:
++            if key=='measured_TJ_C' and telemetry:continue
++            x=[];y=[];prev=None
++            for r in rows:
++                if prev and (prev['segment']!=r['segment'] or prev['valid_until_utc_s']<r['utc_s']):x.append(np.nan);y.append(np.nan)
++                x.append(r['utc_s']-start);y.append(r[key] if r.get(key) is not None else np.nan);prev=r
++            axes[0,col].plot(x,y,style,lw=1.3,label=label,color=color)
++        axes[0,col].set_title((s['site_id']+'｜'+s['measurement_kind']) if s else '无外部会话：已有冻结轨迹')
++        axes[0,col].set_ylabel('绝对读数/潜在状态（°C）\n未经局部表面标定')
++        for pair in pairs:
++            rec=pair['record'];v=rec['temperature_c'];timing=pair['time_alignment']
++            interval=timing.get('interval_utc_s')
++            if v is None:continue
++            if interval is None:
++                center=timing.get('center_interval_utc_s')
++                if center:axes[0,col].scatter((center[0]+center[1])/2-start,v,marker='s',color='#888',label='时间误差未知，仅材料' if '时间误差未知，仅材料' not in axes[0,col].get_legend_handles_labels()[1] else None)
++                continue
++            center=(interval[0]+interval[1])/2-start;error=(interval[1]-interval[0])/2
++            qualified=pair['model_match']['ranges'] is not None
++            label=('CSV原始采样点' if rec.get('input_path')=='numeric_export' else '局部表面人工点') if qualified else '仅保留原值：无对照资格'
++            axes[0,col].errorbar(center,v,xerr=error,fmt='o',ms=3 if rec.get('input_path')=='numeric_export' else 5,
++                color='#3d9b57' if qualified else '#bc852d',capsize=2,
++                label=label if label not in axes[0,col].get_legend_handles_labels()[1] else None)
++            if pair['delta']:
++                delta=pair['delta'];axes[1,col].errorbar(center,delta['external_delta_C'],xerr=error,fmt='o',color='#3d9b57',capsize=4)
++                for key,color in [('STATE_G2_C','#bb4d3c'),('STATE_LP30_C','#167f92')]:
++                    val=delta['models'][key]
++                    if val:
++                        a,b=val['model_delta_range_C'];axes[1,col].vlines(center,a,b,color=color,lw=3)
++                        axes[1,col].scatter(center,(a+b)/2,color=color,marker='x')
++        axes[1,col].set_ylabel('一次固定参考后的增量（°C）\n绿点=表面，红×=G2，蓝×=LP30')
++        if not any(p['delta'] for p in pairs):axes[1,col].text(.5,.5,'无合法固定参考配对\n不自动挑背景、不每阶段归零',ha='center',va='center',transform=axes[1,col].transAxes,color='#666')
++        x=[r['utc_s']-start for r in rows];y=[r['actual_successful_PWM_percent_at_state_origin'] for r in rows]
++        # Separate units; display original successful snapshots only, no new actuator command.
++        axes[2,col].scatter(x,y,s=2,color='#4a6078',label='原状态采样时的成功PWM')
++        axes[2,col].set_ylabel('原成功PWM（%）');axes[2,col].set_xlabel('距所供轨迹窗口起点（秒）；各面板独立纵轴')
++        for row in range(3):
++            if rows:axes[row,col].set_xlim(min(r['utc_s'] for r in rows)-start,max(r['utc_s'] for r in rows)-start)
++            if pairs and all(p['record'].get('input_path')=='numeric_export' for p in pairs):
++                windows=[p['time_alignment'].get('interval_utc_s') for p in pairs]
++                windows=[w for w in windows if w]
++                if windows:axes[row,col].set_xlim(min(w[0] for w in windows)-start-2,max(w[1] for w in windows)-start+2)
++            axes[row,col].grid(alpha=.18)
++            h,l=axes[row,col].get_legend_handles_labels()
++            if l:axes[row,col].legend(fontsize=8,loc='best')
++    fig.text(.5,.01,'原始外部点不插值；连续CSV面板显示导入时段，完整轨迹仍保留。横棒=时间区间，模型竖线=范围；局部表面不等于空气/整块均温/Ts。',ha='center',fontsize=9)
++    fig.tight_layout(rect=(0,.04,1,.96))
++    fig.savefig(out/'同测点对照.png',dpi=150);fig.savefig(out/'同测点对照.svg');plt.close(fig)
++    print('中文对照图已生成，外部点未插值/连成连续真值。')
++
++
++if __name__=='__main__':main(sys.argv[1],sys.argv[2])
+diff --git a/experiments/thermal_reference_v1/prep-add1-spec.json b/experiments/thermal_reference_v1/prep-add1-spec.json
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_reference_v1/prep-add1-spec.json
+@@ -0,0 +1,53 @@
++{
++  "contract": "TTO-REF-PREP-v1.0-ADD1",
++  "base_spec_sha256": "2977b8c762db9db3a82857920f6b030a935da61a450a0f4f9ff183bc5e9be894",
++  "written_at_utc": "2026-10-14T05:18:06.996437+00:00",
++  "user_confirmed": {
++    "instrument": "YET-610L",
++    "probe": "K型",
++    "CSV_export": true,
++    "attachment_material": "耐温聚酰亚胺胶带",
++    "purchased": true,
++    "planned_interval_s": 1
++  },
++  "default_path": "numeric_export",
++  "primary_kind": "surface_contact",
++  "backup_paths": [
++    "manual_points",
++    "image_evidence",
++    "sparse_event_cues"
++  ],
++  "physical_meaning": "fixed local surface; NOT outlet air, entire structure average, or directly measured Ts",
++  "import_contract": {
++    "raw_bytes_and_SHA": true,
++    "raw_row_number_and_values": true,
++    "configurable_time_temperature_unit_channel_site": true,
++    "same_temperature_new_row_is_new_sample": true,
++    "missing_or_abnormal": "row ledger; never fill zero or interpolate",
++    "relative_or_index_time": "independent start anchor + explicit interval basis; sample_index requires index_origin",
++    "clock_correction": "independent first/last anchors only; uncertainty preserved"
++  },
++  "contact_session": "run/site/probe/attachment/surface/clock immutable; move, reattach, or loose event needs new session; old session no silent resume",
++  "continuous_card_prompts": [
++    "start recording",
++    "independent start clock check",
++    "independent end clock check + stop recording",
++    "probe integrity changes"
++  ],
++  "not_implemented": [
++    "USB/serial/vendor realtime driver",
++    "second TTO collector",
++    "device access",
++    "load execution",
++    "model refit",
++    "parameter/state update from external readings",
++    "control"
++  ],
++  "acceptance_status": {
++    "generic_software": "offline synthetic checks required",
++    "real_YET_CSV_mapping": "pending 1-2 minute user sample",
++    "field_measurement": "not performed",
++    "physical_mapping": "unverified"
++  },
++  "old_model_trajectory_and_results": "exact SHA unchanged; G2/QS/LP30/LP120 independent comparison only; M24C stays old M"
++}
+diff --git a/experiments/thermal_reference_v1/prep-spec.json b/experiments/thermal_reference_v1/prep-spec.json
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_reference_v1/prep-spec.json
+@@ -0,0 +1,76 @@
++{
++  "contract": "TTO-REF-PREP-v1.0",
++  "research_model_primary_sha256": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
++  "scope": {
++    "software_local": true,
++    "issue_1_write": true,
++    "docs_only_pr": true,
++    "software_publish": false,
++    "device_access": false,
++    "new_workload": false,
++    "model_refit": false,
++    "sensor_required_for_software": false,
++    "camera_sdk_required": false
++  },
++  "supported_input_paths": [
++    "manual_points",
++    "numeric_export",
++    "image_evidence"
++  ],
++  "cue_policy": {
++    "trigger_source": "occurred_local_trial_events",
++    "model_driven": false,
++    "max_prompts": 14,
++    "minimum_spacing_s": 30,
++    "missed_policy": "record_missing_do_not_wait_or_rerun",
++    "post_group_offsets_s": [
++      30,
++      120,
++      300
++    ],
++    "sequence_status": "software_template_actual_field_plan_pending"
++  },
++  "comparison": {
++    "primary": [
++      "STATE-G2",
++      "STATE-LP30"
++    ],
++    "secondary": [
++      "STATE-QS",
++      "STATE-LP120"
++    ],
++    "model_input_from_external_reference": false,
++    "per_phase_rebaseline": false,
++    "fit_time_shift": false,
++    "fit_surface_mapping": false,
++    "sparse_gap_fill": false
++  },
++  "status_required": [
++    "software_implemented",
++    "offline_checks",
++    "issue_updated",
++    "docs_pr_created",
++    "instrument_profile_confirmed",
++    "surface_measurement_performed",
++    "physical_mapping_validated",
++    "model_refit",
++    "control_authorization"
++  ],
++  "frozen_at_utc": "2026-10-14T04:38:26.614448+00:00",
++  "implementation_choices": {
++    "session": "immutable run/site/kind/statistic/geometry/settings; changes create new session",
++    "records": "append-only revisions; separate prompt/mark/measurement/write; no timestamp from mtime",
++    "time": "explicit clock domains; independent anchors only; unknown uncertainty remains unknown",
++    "alignment": "as-of original frozen legal state; no extrapolation past original validity; interval range only if fully covered in one strict segment",
++    "reference": "one explicitly predeclared record per run/site/session; no phase rescale or fitted time shift",
++    "cues": "background +30/+120; sparse +180 and actual end +30/+120; precontinuous preceding idle +270; continuous +60 and actual end +30/+120/+300; optional medium BEFORE from separately bound preceding idle timer and actual end +30/+120/+300. Never use future phase_start to backdate a prompt.",
++    "late_cues": "never replay past due points on normal startup; grace 5s; minimum30s merges/dedup, cap14; no missed-measurement retry",
++    "model_truth": "Tf A-long is TJ estimate; causal Tf is observed anchor; Ts/LP are latent; surface reference not Ts truth",
++    "empty_measurements": "not_measured report with telemetry/coverage; physical_mapping_validated false",
++    "images": "local byte copy + SHA; no OCR/color/radiometric inference; capture metadata time separate from diagnostic mtime"
++  },
++  "implementation_addendum": {
++    "reason": "Use a genuinely causal before-medium checkpoint rather than mislabel its start boundary as before; no model, data, or comparison rule changed.",
++    "written_at_utc": "2026-10-14T04:52:41.966753+00:00"
++  }
++}
+diff --git a/experiments/thermal_reference_v1/prepare_contact_demo.py b/experiments/thermal_reference_v1/prepare_contact_demo.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_reference_v1/prepare_contact_demo.py
+@@ -0,0 +1,51 @@
++"""ADD1 synthetic generic continuous export; deliberately NOT a YET file-format emulator."""
++from pathlib import Path
++import copy
++import csv
++from refprep.files import read,write,lines,sha,now_utc
++from refprep.clocks import iso
++
++ROOT=Path(__file__).absolute().parent
++
++
++def prepare():
++    fixture=ROOT/'fixtures/contact-synthetic';fixture.mkdir(parents=True,exist_ok=True)
++    old=lines(ROOT/'fixtures/real/M-frozen.jsonl');start=old[20]['utc_s'];run=old[20]['run_id']
++    session=read(ROOT/'templates/contact-session.example.json')
++    session.update(run_id=run,session_id='SYNTH-contact-fin',site_id='SYNTH-contact-fin-site',
++                   synthetic=True,reference_record_id='contact-bg',example_only=True)
++    session['time']=dict(clock_domain='synthetic_instrument_elapsed',timezone=None,sync_anchors=[
++        dict(clock_time=0,run_utc=iso(start),uncertainty_s=.2,evidence='SYNTHETIC independent start clock check'),
++        dict(clock_time=120,run_utc=iso(start+120.012),uncertainty_s=.2,evidence='SYNTHETIC independent end clock check')])
++    write(fixture/'fin-session.json',session)
++    back=copy.deepcopy(session);back.update(session_id='SYNTH-contact-back',site_id='SYNTH-contact-back-site',reference_record_id=None)
++    back['contact']['fixed_position']='SYNTHETIC separate backplate site, not actual installation'
++    write(fixture/'back-session.json',back)
++    rows=[]
++    for i in range(121):
++        if i==75:continue  # missing sample remains missing, no row invented
++        for ch in ['A','B']:
++            value='ERR' if i==44 and ch=='A' else '' if i==52 and ch=='A' else f'{41+(i//10)*.1+(ch=="B"):.1f}'
++            rows.append(dict(sample=i,channel=ch,temperature=value,unit='C',
++                             id='contact-bg' if i==0 and ch=='A' else f'contact-{ch}-{i}'))
++    with (fixture/'generic-continuous.csv').open('w',newline='') as f:
++        writer=csv.DictWriter(f,fieldnames=['sample','channel','temperature','unit','id']);writer.writeheader();writer.writerows(rows)
++    mapping=dict(input_path='numeric_export',synthetic_only=True,
++        columns=dict(record_id='id',measured_at_raw='sample',original_value='temperature',original_unit='unit',original_channel='channel'),
++        constants=dict(synthetic=True,time_source='synthetic_instrument_sample_index',time_uncertainty_s=.1),
++        channels={'A':dict(session_id=session['session_id'],site_id=session['site_id']),
++                  'B':dict(session_id=back['session_id'],site_id=back['site_id'])},
++        time_axis=dict(mode='sample_index',index_origin=0,sample_interval_s=1,
++                       interval_basis='SYNTHETIC explicitly selected 1s setting, not actual YET evidence'),
++        exported_at_raw='SYNTHETIC export-time unknown',csv=dict(encoding='utf-8-sig',delimiter=','))
++    write(fixture/'mapping.json',mapping)
++    write(fixture/'description.json',dict(synthetic=True,not_real_YET_format=True,rows=len(rows),
++        planned_interval_s=1,deliberately_missing_index=75,rejected_value=dict(index=44,channel='A',raw='ERR'),
++        missing_numeric=dict(index=52,channel='A'),equal_adjacent_readings_are_new_samples=True,
++        start_anchor_utc=iso(start),run_id=run,ambient_temperature_c=None))
++    files={str(p.relative_to(ROOT)):sha(p) for p in sorted(fixture.glob('*')) if p.is_file()}
++    write(ROOT/'contact-source-index.json',dict(contract='TTO-REF-PREP-v1.0-ADD1',written_at_utc=now_utc(),
++        entirely_synthetic_external_data=True,real_YET_CSV_mapping_accepted=False,files=files))
++
++
++if __name__=='__main__':prepare()
+diff --git a/experiments/thermal_reference_v1/prepare_sources.py b/experiments/thermal_reference_v1/prepare_sources.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_reference_v1/prepare_sources.py
+@@ -0,0 +1,105 @@
++"""Prepare minimal real adapters and explicitly synthetic reference fixtures; no live inputs."""
++from pathlib import Path
++import ast
++import base64
++import copy
++import json
++import sys
++from refprep.files import read,write,lines,dump_lines,sha
++from refprep.clocks import iso,utc_seconds
++from refprep.cues import DEFAULT_PLAN
++from refprep.trajectory import adapt
++
++ROOT=Path(__file__).absolute().parent
++
++
++def prepare(slowstate=None,events=None):
++    slowstate=Path(slowstate) if slowstate else ROOT.parent/'thermal_slowstate_v1'
++    events=Path(events) if events else ROOT.parents[1]/'evidence/midload-024-useroverride-20261014/runner-events.jsonl'
++    real=ROOT/'fixtures/real';demo=ROOT/'fixtures/synthetic'
++    real.mkdir(parents=True,exist_ok=True);demo.mkdir(parents=True,exist_ok=True)
++    if slowstate.exists():adapt(slowstate,real/'M-frozen.jsonl','M')
++    if events.exists():
++        keys=['event','phase','kind','mono_s','occurred_at_utc','written_at_utc','actual_start_mono_s',
++              'actual_end_mono_s','duration_s','planned_end_mono_s','actual_duration_s','request_id','client_end_mono_s','reason']
++        subset=[{k:v for k,v in row.items() if k in keys} for row in lines(events)
++                if row.get('event') in ['phase_start','phase_end','request_end','schedule_end']]
++        dump_lines(real/'M-runner-events-subset.jsonl',subset)
++        write(real/'event-provenance.json',dict(original_file_sha256=sha(events),
++            subset_sha256=sha(real/'M-runner-events-subset.jsonl'),rows=len(subset),
++            fields='literal original timing/phase metadata only; no requests issued, no admission override inherited'))
++    rows=lines(real/'M-frozen.jsonl')
++    if not rows:raise ValueError('Prepare needs existing frozen M output or shipped minimal fixture')
++    run=rows[0]['run_id']
++    session=read(ROOT/'handoff/templates/reference-session.example.json')
++    session.update(run_id=run,session_id='SYNTH-fin',site_id='fin-A',synthetic=True,
++                   reference_record_id='fin-bg',example_only=True)
++    session['time']=dict(clock_domain='run_utc',timezone='+00:00',sync_basis='SYNTHETIC fixture UTC coordinates only',
++                         sync_uncertainty_s=0,sync_anchors=[])
++    write(demo/'fin-session.json',session)
++    back=copy.deepcopy(session);back.update(session_id='SYNTH-back',site_id='back-A',
++        measurement_kind='backplate_surface_ir',site_description='合成背板独立点，不合并到鳍片',reference_record_id='back-bg')
++    write(demo/'back-session.json',back)
++    marks=[rows[30],rows[1050],rows[1150],rows[1900]]
++    write(demo/'point-times.json',{k:r['utc'] for k,r in zip(['background','work','recovery','late'],marks)})
++    # A generic color image is evidence only, not radiometric temperature data.
++    (demo/'image-evidence.png').write_bytes(base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScLbtAAAAABJRU5ErkJggg=='))
++    import csv
++    with (demo/'external.csv').open('w',newline='') as f:
++        writer=csv.DictWriter(f,fieldnames=['id','session','reading','units','capture_time','uncertainty','photo','note'])
++        writer.writeheader()
++        for row in [dict(id='fin-work',session='SYNTH-fin',reading='108.5',units='F',capture_time=marks[1]['utc'],uncertainty='0',photo='',note='合成值，不是现场测温'),
++                    dict(id='fin-recovery',session='SYNTH-fin',reading='41.2',units='C',capture_time=marks[2]['utc'],uncertainty='0',photo='',note='合成值'),
++                    dict(id='fin-image-only',session='SYNTH-fin',reading='',units='C',capture_time='',uncertainty='',photo='image-evidence.png',note='只有合成图片，没有数字，不按颜色解温度')]:writer.writerow(row)
++    mapping=dict(columns=dict(record_id='id',session_id='session',original_value='reading',original_unit='units',
++        measured_at_raw='capture_time',time_uncertainty_s='uncertainty',artifact_path='photo',note='note'),
++        constants=dict(time_source='synthetic_fixture_explicit_UTC',synthetic=True))
++    write(demo/'csv-mapping.json',mapping)
++    write(demo/'external.json',[dict(id='back-bg',session='SYNTH-back',value=36.0,unit='C',time=marks[0]['utc'],uncertainty=0),
++        dict(id='back-work',session='SYNTH-back',value=37.3,unit='C',time=marks[1]['utc'],uncertainty=0)])
++    write(demo/'json-mapping.json',dict(columns=dict(record_id='id',session_id='session',original_value='value',
++        original_unit='unit',measured_at_raw='time',time_uncertainty_s='uncertainty'),
++        constants=dict(synthetic=True,time_source='synthetic_fixture_explicit_UTC')))
++    base=utc_seconds('2030-01-01T00:00:00+00:00');event_rows=[]
++    for phase,start,end,nominal in [('resident_background',0,180,180),('sparse',180,545,360),
++            ('between_groups',545,845,300),('continuous',845,1001,150),('cooldown',1001,1400,399),
++            ('optional_medium',1400,1467,60),('final_cooldown',1467,1800,333)]:
++        for event,t in [('phase_start',start),('phase_end',end)]:
++            row=dict(event=event,phase=phase,mono_s=1000+t,occurred_at_utc=iso(base+t),written_at_utc=iso(base+t),
++                     duration_s=nominal,synthetic=True)
++            row['actual_start_mono_s' if event=='phase_start' else 'actual_end_mono_s']=1000+t
++            if event=='phase_end':row['planned_end_mono_s']=1000+start+nominal
++            event_rows.append(row)
++    event_rows.append(dict(event='schedule_end',mono_s=2801,actual_end_mono_s=2801,occurred_at_utc=iso(base+1801),written_at_utc=iso(base+1801),synthetic=True))
++    dump_lines(demo/'events.jsonl',event_rows)
++    plan=copy.deepcopy(DEFAULT_PLAN);plan['run_id']='SYNTHETIC-CUE-RUN';plan['bindings']['medium']='optional_medium'
++    plan['bindings']['pre_medium']='cooldown';plan['pre_medium_offset_s']=369
++    write(demo/'cue-plan.json',plan)
++    historic=copy.deepcopy(DEFAULT_PLAN);historic['run_id']=run;historic['bindings']['medium']='M60'
++    historic['bindings']['pre_medium']='cooldown_1';historic['pre_medium_offset_s']=390
++    write(real/'M-cue-plan.json',historic)
++    # Maintenance copy of the ONE affected old test; only its numerical equality changes.
++    original=ROOT/'handoff/references/slowstate-snapshot/tests/test_slowstate.py'
++    text=original.read_text();tree=ast.parse(text)
++    node=next(n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name=='test_two_dimensional_export_and_anchor_not_forecast')
++    old='\n'.join(text.splitlines()[node.lineno-1:node.end_lineno])+'\n'
++    new=old.replace("assert all(r['Tf']==r['sealed_Tf'] for r in long)","assert all(abs(r['Tf']-r['sealed_Tf'])<=1e-10 for r in long)")
++    assert old!=new
++    maintenance=ROOT/'maintenance';maintenance.mkdir(exist_ok=True)
++    (maintenance/'original-target-test.txt').write_text(old)
++    (maintenance/'tolerance-target-test.py.txt').write_text(new)
++    write(maintenance/'provenance.json',dict(original_test_file_sha256=sha(original),
++        original_target_sha256=sha(maintenance/'original-target-test.txt'),
++        maintained_target_sha256=sha(maintenance/'tolerance-target-test.py.txt'),
++        change='Only recomputed Tf numerical == becomes abs difference <=1e-10. Original file/model/archive SHA stay exact.',
++        source='immutable provided slowstate test snapshot',old_research_file_modified=False))
++    write(ROOT/'source-index.json',dict(attachment=read(ROOT/'attachment-identity.json'),
++        original_slowstate_spec_sha256=sha(ROOT/'handoff/references/slowstate-snapshot/slowstate-spec.json'),
++        frozen_models={p.name:sha(p) for p in (ROOT/'frozen/models').glob('*.json')},
++        local_real_fixture_files={str(p.relative_to(ROOT)):sha(p) for p in real.iterdir() if p.is_file()},
++        synthetic_fixture_files={str(p.relative_to(ROOT)):sha(p) for p in demo.iterdir() if p.is_file()},
++        ambient_new_run=None,no_model_refit=True,no_device_actions=True))
++    print('Prepared minimal M adapter, original event subset and explicitly synthetic reference fixtures.')
++
++
++if __name__=='__main__':prepare(*(sys.argv[1:3]))
+diff --git a/experiments/thermal_reference_v1/ref.py b/experiments/thermal_reference_v1/ref.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_reference_v1/ref.py
+@@ -0,0 +1,141 @@
++#!/usr/bin/env python3
++"""Single local CLI: surface-reference sidecars only. Never invokes TTO or a camera."""
++from pathlib import Path
++import argparse
++import json
++import sys
++import time
++import uuid
++from refprep.files import read,write,lines,now_utc
++from refprep.records import register_session,load_session,normalize,commit_record,import_file,latest_records,session_event
++from refprep.cues import load_plan,replay_events,read_events,watch_file
++from refprep.trajectory import adapt
++from refprep.compare import compare
++
++ROOT=Path(__file__).absolute().parent
++
++
++def print_json(value):print(json.dumps(value,ensure_ascii=False,indent=2,allow_nan=False))
++
++
++def parser():
++    ap=argparse.ArgumentParser(description='TTO外部局部表面参照：离线记录/导入/对齐，零设备接口。')
++    sp=ap.add_subparsers(dest='command',required=True)
++    p=sp.add_parser('plan',help='打印测点准备与固定提醒计划；不运行试验')
++    p.add_argument('--cue-plan',type=Path)
++    p=sp.add_parser('init-session',help='登记不可变的run/测点/设置会话；未知字段保持null')
++    p.add_argument('--store',type=Path,required=True);p.add_argument('--session',type=Path,required=True)
++    p.add_argument('--run-id');p.add_argument('--session-id');p.add_argument('--site-id')
++    p=sp.add_parser('watch-events',help='只读指定本地runner事件；默认一次离线检查，--replay为虚拟时钟回放')
++    p.add_argument('--events',type=Path,required=True);p.add_argument('--cue-plan',type=Path,required=True)
++    p.add_argument('--output',type=Path,required=True)
++    mode=p.add_mutually_exclusive_group();mode.add_argument('--replay',action='store_true');mode.add_argument('--follow',action='store_true')
++    for name,helptext in [('mark','先保存按键打点，可空温度/空图片；不冒充曝光'),('record','补录/修订，或交互记录；旧记录不覆盖')]:
++        p=sp.add_parser(name,help=helptext)
++        p.add_argument('--store',type=Path,required=True);p.add_argument('--session-id',required=True)
++        p.add_argument('--record-id');p.add_argument('--revise',action='store_true')
++        p.add_argument('--value');p.add_argument('--unit',choices=['C','F'])
++        p.add_argument('--measured-at');p.add_argument('--interval-start');p.add_argument('--interval-end')
++        p.add_argument('--uncertainty-s',type=float);p.add_argument('--time-source')
++        p.add_argument('--artifact',type=Path);p.add_argument('--image-metadata-time');p.add_argument('--note')
++        p.add_argument('--cue-ledger',type=Path);p.add_argument('--checkpoint-id')
++        p.add_argument('--capture-interval',action='store_true',help='交互开始至输入完成的主机时间区间；不是精确曝光')
++    p=sp.add_parser('import',help='显式映射CSV/JSON，支持迟录/空值/原图；重复文件不增加点数')
++    p.add_argument('--store',type=Path,required=True);p.add_argument('--file',type=Path,required=True);p.add_argument('--mapping',type=Path,required=True)
++    p=sp.add_parser('session-event',help='记录开始/结束/校时及探头移动/重贴/松脱；探头变化须新会话')
++    p.add_argument('--store',type=Path,required=True);p.add_argument('--session-id',required=True)
++    p.add_argument('--type',dest='event_type',required=True,choices=['recording_start','recording_end','clock_check','probe_moved','probe_reattached','probe_loose'])
++    p.add_argument('--measured-at');p.add_argument('--uncertainty-s',type=float);p.add_argument('--note')
++    p=sp.add_parser('adapt-trajectories',help='复制已有冻结轨迹为最小对照接口；不重估状态/参数')
++    p.add_argument('--slowstate-dir',type=Path,required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--run',choices=['L','S','M'])
++    p=sp.add_parser('compare',help='合法as-of/完整时间区间对照；零测温也生成中文报告')
++    p.add_argument('--store',type=Path,required=True);p.add_argument('--trajectory',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
++    p.add_argument('--plot-python',type=Path);p.add_argument('--no-plots',action='store_true')
++    return ap
++
++
++def do_record(args):
++    start_utc=now_utc();start_mono=time.monotonic()
++    session=load_session(args.store,args.session_id)
++    record_id=args.record_id or str(uuid.uuid4())
++    prior=next((r for r in latest_records(args.store) if r['session_id']==args.session_id and r['record_id']==record_id),None)
++    if args.revise and prior is None:raise ValueError('--revise record not found')
++    if prior and not args.revise:raise ValueError('Existing record: use --revise to append a correction')
++    values={k:prior.get(k) for k in ['original_value','original_unit','measured_at_raw','measured_interval_raw',
++            'time_uncertainty_s','time_source','note','synthetic','clock_domain']} if prior else {}
++    values['record_id']=record_id
++    if args.command=='record' and args.value is None:
++        value=input('固定测点读数（留空=无数值，仅材料；默认°C）：').strip()
++        values['original_value']=value or None
++        values['original_unit']=args.unit or 'C'
++    elif args.value is not None:
++        values['original_value']=args.value;values['original_unit']=args.unit or values.get('original_unit') or 'C'
++    if args.measured_at:
++        values['measured_at_raw']=args.measured_at;values['measured_interval_raw']=None
++    if args.interval_start or args.interval_end:
++        values['measured_interval_raw']=dict(start=args.interval_start,end=args.interval_end);values['measured_at_raw']=None
++    if args.capture_interval:
++        if args.command!='record' or args.value is not None:raise ValueError('--capture-interval requires interactive record')
++        values['measured_at_raw']=None
++        values['measured_interval_raw']=dict(start=start_utc,end=now_utc())
++        profile=session.get('time',{})
++        values['clock_domain']='run_utc' if profile.get('clock_domain')=='run_utc' and profile.get('sync_basis') else 'operator_host_utc'
++        values['time_source']='operator_start_to_input_complete_interval_exposure_not_verified'
++        if args.uncertainty_s is None:values['time_uncertainty_s']=None
++    for arg,key in [('uncertainty_s','time_uncertainty_s'),('time_source','time_source'),('note','note')]:
++        if getattr(args,arg) is not None:values[key]=getattr(args,arg)
++    if args.artifact:values['artifact_path']=str(args.artifact)
++    if args.image_metadata_time:values['image_metadata_time_raw']=args.image_metadata_time
++    if args.command=='mark':
++        values.update(operator_mark_at_utc=start_utc,operator_mark_mono_s=start_mono,
++                      operator_mark_clock_domain='local_tool_host_not_automatically_run_clock')
++    if args.cue_ledger and args.checkpoint_id:
++        found=next((r for r in reversed(lines(args.cue_ledger)) if args.checkpoint_id in r['checkpoint_ids']),None)
++        if found is None:raise ValueError('Checkpoint ID not present in cue ledger')
++        values.update(checkpoint_ids=found['checkpoint_ids'],prompt_due_at_utc=found['prompt_due_at_utc'],
++                      prompt_emitted_at_utc=found['prompt_emitted_at_utc'])
++    rec=normalize(args.store,args.session_id,values,dict(operation=args.command,late_revision=bool(prior)))
++    if prior and not args.artifact:rec['artifact']=prior.get('artifact')
++    return commit_record(args.store,rec,values.get('artifact_path'),allow_revision=args.revise)
++
++
++def main(argv=None):
++    args=parser().parse_args(argv)
++    try:
++        if args.command=='plan':
++            result=dict(contract='TTO-REF-PREP-v1.0',mode='offline_plan',backup_sparse_cue_plan=load_plan(args.cue_plan),
++                default_input_path='numeric_export',continuous_mode_prompts=['开始独立记录','开始附近独立校时','结束附近独立校时及停止记录','移动/重贴/松脱时记事件并换会话'],
++                measurement_sites='主参照YET-610L+K型探头，用耐温聚酰亚胺胶带固定同一局部表面；背板另测点，人工/红外为备用',
++                preparation='用户已购买仪表与胶带；真实CSV列格式待1–2分钟试记录；接触式不要求IR发射率/反射/ROI；实际接触和探头响应未验证',
++                clocks='提醒/按键/实际拍摄或区间/写入分别保存；mtime与聊天时间不当测量时间',
++                missing='遗漏记未采，不延长、不补跑；外部测温不是全局建模前置',
++                device_access=False,workload_actions=False)
++        elif args.command=='init-session':
++            session=read(args.session)
++            for key in ['run_id','session_id','site_id']:
++                if getattr(args,key):session[key]=getattr(args,key)
++            result=register_session(args.store,session)
++        elif args.command=='watch-events':
++            if args.events.absolute()==args.output.absolute():raise ValueError('Sidecar output cannot overwrite event file')
++            plan=load_plan(args.cue_plan)
++            if args.replay:
++                state=replay_events(read_events(args.events),plan)
++                args.output.mkdir(parents=True,exist_ok=True)
++                from refprep.files import dump_lines
++                dump_lines(args.output/'reminders.jsonl',state['history'])
++                write(args.output/'replay-state.json',state)
++            else:state=watch_file(args.events,plan,args.output,follow=args.follow)
++            result=dict(mode='virtual_replay' if args.replay else 'local_file_watch' if args.follow else 'offline_startup_scan',
++                prompts=state['emitted_count'],checkpoints=len(state['history']),pending=len(state['pending']),
++                model_driven=False,workload_extended=False)
++        elif args.command in ['mark','record']:result=do_record(args)
++        elif args.command=='import':result=import_file(args.store,args.file,read(args.mapping))
++        elif args.command=='session-event':result=session_event(args.store,args.session_id,args.event_type,args.measured_at,args.uncertainty_s,args.note)
++        elif args.command=='adapt-trajectories':result=adapt(args.slowstate_dir,args.output,args.run)
++        else:result=compare(args.store,args.trajectory,args.output,args.plot_python,not args.no_plots)
++        print_json(result);return 0
++    except (ValueError,KeyError,OSError,TypeError) as error:
++        print('本地参照工具未完成：'+str(error),file=sys.stderr);return 2
++
++
++if __name__=='__main__':raise SystemExit(main())
+diff --git a/experiments/thermal_reference_v1/refprep/__init__.py b/experiments/thermal_reference_v1/refprep/__init__.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_reference_v1/refprep/__init__.py
+@@ -0,0 +1,2 @@
++"""Offline external surface references; no telemetry acquisition or device control."""
++CONTRACT = 'TTO-REF-PREP-v1.0'
+diff --git a/experiments/thermal_reference_v1/refprep/clocks.py b/experiments/thermal_reference_v1/refprep/clocks.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_reference_v1/refprep/clocks.py
+@@ -0,0 +1,123 @@
++"""Time mapping from declared clocks and independent anchors only, never temperatures."""
++import datetime as dt
++import math
++from zoneinfo import ZoneInfo
++
++
++def iso(seconds):
++    return dt.datetime.fromtimestamp(seconds, dt.timezone.utc).isoformat()
++
++
++def coordinate(raw, timezone=None):
++    """Naive camera time is a coordinate, NOT implicitly host UTC/local time."""
++    if isinstance(raw,str):
++        try:raw=float(raw)
++        except ValueError:pass
++    if isinstance(raw, (float,int)):
++        value=float(raw)
++        if not math.isfinite(value):raise ValueError('Non-finite clock coordinate')
++        return value, 'numeric_clock'
++    value=dt.datetime.fromisoformat(str(raw).replace('Z','+00:00'))
++    if value.tzinfo is None:
++        if timezone:
++            if timezone.startswith(('+','-')):
++                sign=-1 if timezone[0]=='-' else 1
++                h,m=map(int,timezone[1:].split(':'))
++                tz=dt.timezone(sign*dt.timedelta(hours=h,minutes=m))
++            else:tz=ZoneInfo(timezone)
++            value=value.replace(tzinfo=tz)
++            return value.timestamp(),'declared_timezone'
++        return value.replace(tzinfo=dt.timezone.utc).timestamp(),'naive_coordinate_not_utc'
++    return value.timestamp(),'timezone_explicit'
++
++
++def utc_seconds(raw):
++    seconds,kind=coordinate(raw)
++    if kind!='timezone_explicit':raise ValueError('UTC timestamp must include timezone')
++    return seconds
++
++
++def nonnegative(value, name):
++    if value is None or value=='':return None
++    value=float(value)
++    if not math.isfinite(value) or value<0:raise ValueError(name+' must be finite and >=0, or null')
++    return value
++
++
++def clock_map(profile, run_id, run_clock_pair=None):
++    """Return evidence-based affine mapping plus uncertainty; no fitted curve shifts."""
++    domain=profile.get('clock_domain')
++    anchors=profile.get('sync_anchors',[])
++    basis=profile.get('sync_basis')
++    if domain=='run_utc' and basis:
++        return dict(status='declared_same_run_utc',scale=1.,offset=0.,anchor_error_s=nonnegative(
++            profile.get('sync_uncertainty_s'),'sync uncertainty'),flags=[],domain=domain)
++    if domain=='run_monotonic' and basis and run_clock_pair:
++        if run_clock_pair['run_id']!=run_id:raise ValueError('Monotonic clock pair belongs to another run')
++        return dict(status='declared_same_run_monotonic',scale=1.,
++            offset=run_clock_pair['utc_s']-run_clock_pair['mono_s'],
++            anchor_error_s=nonnegative(profile.get('sync_uncertainty_s'),'sync uncertainty'),flags=[],domain=domain)
++    if not domain or not anchors:
++        return dict(status='unaligned_clock',scale=None,offset=None,anchor_error_s=None,
++                    flags=['clock_domain_or_independent_anchors_missing'],domain=domain)
++    pairs=[];kinds=[]
++    for anchor in anchors:
++        if not anchor.get('evidence'):raise ValueError('Clock anchor needs independent evidence, not temperature correlation')
++        s,kind=coordinate(anchor['clock_time'],profile.get('timezone'))
++        pairs.append((s,utc_seconds(anchor['run_utc']),nonnegative(anchor.get('uncertainty_s'),'anchor uncertainty')))
++        kinds.append(kind)
++    if len(set(kinds))!=1:raise ValueError('Clock anchors mix incompatible coordinates')
++    pairs.sort()
++    if len(pairs)==1:
++        scale=1.;offset=pairs[0][1]-pairs[0][0];flags=['single_anchor_offset_only_drift_unverified']
++    else:
++        if pairs[-1][0]<=pairs[0][0] or pairs[-1][1]<=pairs[0][1]:raise ValueError('Clock anchors must advance')
++        scale=(pairs[-1][1]-pairs[0][1])/(pairs[-1][0]-pairs[0][0])
++        offset=pairs[0][1]-scale*pairs[0][0];flags=['clock_drift_from_independent_first_last_anchors']
++    residual=max(abs(t-(scale*s+offset)) for s,t,_ in pairs)
++    bound=None if any(e is None for _,_,e in pairs) else max(e for _,_,e in pairs)+residual
++    return dict(status='offset_anchor' if len(pairs)==1 else 'affine_clock_anchors',scale=scale,offset=offset,
++                anchor_error_s=bound,residual_max_s=residual,drift_ppm=(scale-1)*1e6,
++                anchor_span=[pairs[0][0],pairs[-1][0]],anchor_coordinate_kind=kinds[0],flags=flags,domain=domain)
++
++
++def align_time(record, session, run_clock_pair=None):
++    profile=session.get('time',{})
++    mapping=clock_map(profile,record['run_id'],run_clock_pair)
++    if record.get('clock_domain')!=profile.get('clock_domain'):
++        return dict(status='measurement_clock_not_session_clock',interval_utc_s=None,mapping=mapping,
++                    flags=['operator_host_capture_needs_its_own_clock_evidence'])
++    actual=record.get('measured_at_raw')
++    interval=record.get('measured_interval_raw') or {}
++    if actual is None and not interval.get('start'):
++        return dict(status='measurement_time_unknown',interval_utc_s=None,mapping=mapping,
++                    flags=['mark_import_chat_and_mtime_are_not_measurement_time'])
++    raw=[actual,actual] if actual is not None else [interval.get('start'),interval.get('end')]
++    if any(x is None for x in raw):raise ValueError('Measurement interval needs both endpoints')
++    coords=[coordinate(x,profile.get('timezone')) for x in raw]
++    if coords[0][1]!=coords[1][1]:raise ValueError('Measurement interval mixes clock kinds')
++    if coords[1][0]<coords[0][0]:raise ValueError('Reversed measurement interval')
++    flags=list(mapping['flags'])
++    anchor_kind=mapping.get('anchor_coordinate_kind')
++    if anchor_kind and (anchor_kind=='numeric_clock')!=(coords[0][1]=='numeric_clock'):
++        return dict(status='sample_clock_coordinate_not_anchor_clock',interval_utc_s=None,mapping=mapping,
++                    flags=flags+['numeric_elapsed_and_calendar_timestamp_cannot_share_anchor_mapping'])
++    if coords[0][1]=='naive_coordinate_not_utc':flags.append('timezone_unknown')
++    if mapping['scale'] is None:
++        return dict(status='unaligned_clock',interval_utc_s=None,raw_coordinates=[c[0] for c in coords],
++                    mapping=mapping,flags=flags)
++    if mapping['domain']=='run_utc' and coords[0][1]=='naive_coordinate_not_utc':
++        return dict(status='timezone_unknown',interval_utc_s=None,mapping=mapping,flags=flags)
++    centers=[mapping['scale']*c[0]+mapping['offset'] for c in coords]
++    uncertainty=nonnegative(record.get('time_uncertainty_s'),'measurement uncertainty')
++    if uncertainty is None or mapping['anchor_error_s'] is None:
++        return dict(status='aligned_center_uncertainty_unknown',interval_utc_s=None,
++                    center_interval_utc_s=centers,mapping=mapping,flags=flags+['time_precision_unknown_not_zero'])
++    error=abs(mapping['scale'])*uncertainty+mapping['anchor_error_s']
++    if len(profile.get('sync_anchors',[]))>=2:
++        lo,hi=mapping['anchor_span']
++        if coords[0][0]<lo or coords[1][0]>hi:
++            return dict(status='outside_clock_anchor_span',interval_utc_s=None,center_interval_utc_s=centers,
++                        mapping=mapping,flags=flags+['clock_extrapolation_uncertainty_unbounded'])
++    return dict(status='bounded_time',interval_utc_s=[centers[0]-error,centers[1]+error],
++                center_interval_utc_s=centers,time_error_s=error,mapping=mapping,flags=flags)
+diff --git a/experiments/thermal_reference_v1/refprep/compare.py b/experiments/thermal_reference_v1/refprep/compare.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_reference_v1/refprep/compare.py
+@@ -0,0 +1,202 @@
++"""Independent external-reference description: as-of/ranges, never curve fitting."""
++from pathlib import Path
++from collections import Counter,defaultdict
++import bisect
++import html
++import os
++import shutil
++import subprocess
++import sys
++from .files import read,write,lines,sha,dump_lines
++from .records import latest_records,load_session
++from .clocks import align_time
++
++FIELDS=['measured_TJ_C','Tf_A_long_C','Ts_A_long_C','STATE_G2_C','STATE_LP30_C','STATE_QS_C','STATE_LP120_C',
++        'actual_successful_PWM_percent_at_state_origin']
++
++
++def asof_interval(rows,start,end):
++    """Piecewise as-of values only. Original freshness cannot be extended or crossed."""
++    if not rows:return dict(status='trajectory_run_missing',ranges=None)
++    times=[r['utc_s'] for r in rows]
++    i=bisect.bisect_right(times,start)-1
++    if i<0:return dict(status='before_first_legal_state',ranges=None)
++    first=rows[i];selected=[first]
++    if start>=first['valid_until_utc_s']:return dict(status='asof_state_expired',ranges=None)
++    cursor=start
++    while i+1<len(rows) and rows[i+1]['utc_s']<=end:
++        nxt=rows[i+1]
++        if rows[i]['valid_until_utc_s']<nxt['utc_s']:
++            return dict(status='interval_crosses_quality_gap',ranges=None)
++        if (nxt['segment'],nxt.get('source_epoch'))!=(first['segment'],first.get('source_epoch')):
++            return dict(status='interval_crosses_source_or_segment_boundary',ranges=None)
++        selected.append(nxt);i+=1;cursor=nxt['utc_s']
++    if end>=rows[i]['valid_until_utc_s']:
++        return dict(status='interval_reaches_expiry_or_missing_future_state',ranges=None)
++    ranges={}
++    for key in FIELDS:
++        values=[r.get(key) for r in selected]
++        ranges[key]=[min(values),max(values)] if all(v is not None for v in values) else None
++    assert all(r['state_input_cutoff_utc_s']<=r['utc_s'] for r in selected)
++    return dict(status='matched_asof' if start==end else 'matched_whole_interval_range',ranges=ranges,
++        source_refs=[r['ref'] for r in selected],segment=first['segment'],
++        first_asof_lag_s=start-first['utc_s'],query_interval_utc_s=[start,end],
++        method='all legal as-of values/range, never closest-temperature point or interpolation')
++
++
++def coverage(rows):
++    if not rows:return dict(rows=0,span_s=0,legal_asof_hold_s=0)
++    duration=0.;demand_duration=0.
++    for i,r in enumerate(rows):
++        next_time=rows[i+1]['utc_s'] if i+1<len(rows) else r['valid_until_utc_s']
++        valid=max(0,min(next_time,r['valid_until_utc_s'])-r['utc_s'])
++        duration+=valid
++        if r.get('offline_extra_demand') is not None:demand_duration+=valid
++    span=rows[-1]['valid_until_utc_s']-rows[0]['utc_s']
++    return dict(rows=len(rows),span_s=span,legal_asof_hold_s=duration,
++        legal_asof_fraction=duration/span if span else None,
++        demand_legal_hold_s=demand_duration,
++        population='only supplied frozen trajectory window; not whole-run historical forecast coverage')
++
++
++def pick_plot_python(explicit=None):
++    candidates=[explicit] if explicit else [sys.executable,'/private/tmp/tto-analysis-20261013-env/bin/python']
++    for value in candidates:
++        if value and Path(value).is_file():
++            r=subprocess.run([str(value),'-c','import matplotlib'],capture_output=True)
++            if r.returncode==0:return str(value)
++    return None
++
++
++def compare(store,trajectory,output,plot_python=None,draw=True):
++    store=Path(store);output=Path(output);output.mkdir(parents=True,exist_ok=True)
++    if output==store or output==Path(trajectory):raise ValueError('Report output must be separate from original inputs')
++    records=latest_records(store)
++    traj=lines(trajectory);byrun=defaultdict(list)
++    for row in traj:
++        if row.get('external_temperature_used') or row.get('parameter_learning'):raise ValueError('Trajectory is not an independent frozen reference')
++        byrun[row['run_id']].append(row)
++    for rows in byrun.values():rows.sort(key=lambda r:r['utc_s'])
++    sessions={r['session_id']:load_session(store,r['session_id']) for r in records}
++    if (store/'sessions').exists():
++        for path in sorted((store/'sessions').glob('*.json')):
++            s=read(path);sessions[s['session_id']]=s
++    joined=[]
++    events=lines(store/'session-events.jsonl')
++    for rec in records:
++        rows=byrun.get(rec['run_id'],[])
++        pair=dict(run_id=rec['run_id'],utc_s=rows[0]['utc_s'],mono_s=rows[0]['mono_s']) if rows else None
++        timing=align_time(rec,sessions[rec['session_id']],pair)
++        window=timing['interval_utc_s']
++        match=asof_interval(rows,*window) if window else dict(status=timing['status'],ranges=None)
++        for event in events:
++            if event['session_id']!=rec['session_id'] or not event['event_type'].startswith('probe_'):continue
++            event_window=align_time(event,sessions[rec['session_id']],pair)['interval_utc_s']
++            if event_window is None or (window and window[1]>=event_window[0]):
++                match=dict(status='probe_integrity_event_requires_new_session' if event_window else 'probe_event_time_unknown_session_integrity_unverified',
++                           ranges=None,event_id=event['event_id'])
++        joined.append(dict(record=rec,time_alignment=timing,model_match=match,
++                           delta=None,reference_status='not_predeclared',physical_mapping_validated=False))
++    byrecord={(x['record']['session_id'],x['record']['record_id']):x for x in joined}
++    for row in joined:
++        rec=row['record'];session=sessions[rec['session_id']]
++        ref_id=session.get('reference_record_id')
++        ref=byrecord.get((rec['session_id'],ref_id))
++        if not ref_id:continue
++        if ref is None:row['reference_status']='predeclared_reference_not_measured';continue
++        if ref['record']['temperature_c'] is None or rec['temperature_c'] is None:
++            row['reference_status']='reference_or_current_has_no_numeric_reading';continue
++        if row['model_match']['ranges'] is None or ref['model_match']['ranges'] is None:
++            row['reference_status']='reference_or_current_not_time_paired';continue
++        delta=rec['temperature_c']-ref['record']['temperature_c']
++        values={}
++        for key in ['STATE_G2_C','STATE_LP30_C','STATE_QS_C','STATE_LP120_C']:
++            a=row['model_match']['ranges'][key];b=ref['model_match']['ranges'][key]
++            if a is None or b is None:values[key]=None;continue
++            dr=[a[0]-b[1],a[1]-b[0]]
++            sign='uncertain_or_zero' if dr[0]<=0<=dr[1] or delta==0 else (
++                'same_direction' if (dr[0]>0)==(delta>0) else 'different_direction')
++            values[key]=dict(model_delta_range_C=dr,
++                external_minus_model_delta_range_C=[delta-dr[1],delta-dr[0]],
++                direction=sign,interpretation='uncalibrated descriptive difference, NOT Ts accuracy')
++        row['delta']=dict(reference_record_id=ref_id,external_delta_C=delta,models=values,
++            one_reference_per_session=True,reference_not_cold_or_equilibrium=True,
++            measurement_quality_provisional=bool(session.get('quality_limitations')),
++            temperature_uncertainty_unknown=session.get('instrument',{}).get('accuracy') is None)
++        row['reference_status']='one_fixed_reference_used'
++    numeric=[x for x in joined if x['record']['temperature_c'] is not None]
++    real=[x for x in numeric if not x['record']['synthetic']]
++    status='not_measured' if not numeric else ('synthetic_demo_only' if not real else 'descriptive_unvalidated_surface_reference')
++    summary=dict(contract='TTO-REF-PREP-v1.0',status=status,physical_mapping_validated=False,
++        surface_measurement_performed=bool(real),instrument_profile_confirmed=False,
++        instrument_selection_confirmed_by_user='YET-610L + K型探头；耐温聚酰亚胺胶带已购买',
++        real_YET_CSV_mapping_accepted=False,continuous_logging_field_verified=False,
++        model_refit=False,external_model_input=False,control_authorization='none',
++        distinct_records=len(records),history_revisions=len(lines(store/'records.jsonl')),
++        numeric_points=len(numeric),real_numeric_points=len(real),synthetic_numeric_points=len(numeric)-len(real),
++        paired_points=sum(x['model_match']['ranges'] is not None and x['record']['temperature_c'] is not None for x in joined),
++        unpaired_reasons=dict(Counter(x['model_match']['status'] for x in joined if x['model_match']['ranges'] is None)),
++        reference_statuses=dict(Counter(x['reference_status'] for x in joined)),
++        trajectory_sha256=sha(trajectory),coverage={r:coverage(rows) for r,rows in byrun.items()},
++        model_sha256=sorted({r['model_sha256'] for r in traj}),
++        sparse_peak='peak_not_directly_observed; sparse samples do not establish complete peak or second-scale lag',
++        import_quality=lines(store/'imports.jsonl'),session_events=events,
++        continuous_limit='1s target is sampling cadence, not calibrated probe response or automatically valid surface/Ts mapping',
++        ambient='only original M had user-confirmed 24C; no automatic assignment to any new run',
++        sessions={k:dict(run_id=v['run_id'],site_id=v['site_id'],measurement_kind=v['measurement_kind'],
++            statistic=v.get('geometry',{}).get('statistic'),absolute_status=v['absolute_status'],
++            quality_limitations=v.get('quality_limitations',[]),reference_record_id=v.get('reference_record_id')) for k,v in sessions.items()},
++        figures=dict(status='not_requested'))
++    dump_lines(output/'paired-points.jsonl',joined)
++    write(output/'comparison.json',summary)
++    telemetry_path=Path(trajectory).with_suffix('.telemetry.jsonl')
++    telemetry=lines(telemetry_path)
++    summary['measured_telemetry_sha256']=sha(telemetry_path) if telemetry_path.exists() else None
++    chart=dict(summary=summary,sessions=sessions,paired=joined,trajectory=traj,measured_telemetry=telemetry)
++    write(output/'chart-data.json',chart)
++    if draw:
++        exe=pick_plot_python(plot_python)
++        if exe:
++            env=os.environ.copy();env['MPLCONFIGDIR']=str(output/'plot-cache')
++            worker=Path(__file__).absolute().parent.parent/'plot_reference.py'
++            r=subprocess.run([exe,str(worker),str(output/'chart-data.json'),str(output)],env=env,capture_output=True,text=True)
++            (output/'plot.log').write_text(r.stdout+r.stderr)
++            if r.returncode:raise ValueError('Local plot failed; see plot.log')
++            summary['figures']=dict(status='generated',runtime=exe)
++        else:summary['figures']=dict(status='matplotlib_unavailable',note='JSON/Markdown/HTML report complete; plotting requires local Matplotlib only')
++    write(output/'comparison.json',summary)
++    _report(output,summary,joined)
++    return summary
++
++
++def _report(output,summary,joined):
++    reasons='；'.join(f'{k}: {v}' for k,v in summary['unpaired_reasons'].items()) or '无'
++    intro=('未取得外部数值，物理表面对应未验证。现有遥测、冻结状态和覆盖仍可读取。' if summary['status']=='not_measured' else
++           '本页所有外部数值是合成演示，没有现场测温。' if summary['status']=='synthetic_demo_only' else
++           '只做未经标定的局部表面独立对照，不称Ts准确率或真实热容验证。')
++    rows=[]
++    for row in joined:
++        rec=row['record'];m=row['model_match'];delta=row['delta']
++        rows.append([rec['record_id'],rec['session_id'],rec['measurement_kind'],str(rec['temperature_c']),
++            str(rec['measured_at_raw'] if rec['measured_at_raw'] is not None else rec['measured_interval_raw'] or '未知'),m['status'],
++            str(delta['external_delta_C']) if delta else '—',', '.join(rec['measurement_flags'])])
++    header=['记录','会话/测点','被测对象','表面读数°C','原始测量时间','配对资格','固定参考温升°C','限制']
++    md=['# 外部局部表面参照：中文对照报告',intro,
++        f"数值点{summary['numeric_points']}；真实点{summary['real_numeric_points']}；合成点{summary['synthetic_numeric_points']}；配对点{summary['paired_points']}。n是记录点，不是独立试验。",
++        '未配对原因：'+reasons,
++        'TJ是实测目标；Tf A-long是原G2的TJ估计；Ts与LP30是潜在状态。接触探头及红外均只代表所选局部表面，不是出风空气、整块结构平均温度或直接测得Ts；背板另列。',
++        '一个同run/同测点/同设置会话只使用预登记参考一次；不按阶段重置、不调时、不缩放。时间区间给完整模型范围，不挑最接近温度的点。接触式不要求IR发射率/反射/ROI，仪表精度、表面接触和探头响应仍须单列；IR备用路径不默认金属0.95。',
++        '仪表采样、记录开始锚点、导出、导入、提醒、按键各自保存。连续CSV相邻等温行不去重；缺失/异常行保留原因，不补零不插值。每秒采样不等于已标定探头响应；稀疏点不证明完整峰值。',
++        '通用软件已完成；真实YET-610L格式待样例；现场测温未执行。用户已购买仪器与胶带，不等于物理验证完成。']
++    table=['| '+' | '.join(header)+' |','| '+' | '.join(['---']*len(header))+' |']
++    table+=['| '+' | '.join(str(c).replace('|','／').replace('\n',' ') for c in row)+' |' for row in rows]
++    md.append('\n'.join(table))
++    md+=['','冻结轨迹覆盖（仅所提供窗口，原有效期未延长）：',
++         '```json',__import__('json').dumps(summary['coverage'],ensure_ascii=False,indent=2),'```',
++         '图表状态：'+summary['figures']['status']+'。',
++         '物理对应未验证；未训练模型，未改变风扇，未授予控制权。24°C只属于旧M，不复制到新过程。']
++    md+=['连续CSV导入与会话事件：','```json',__import__('json').dumps(dict(imports=summary['import_quality'],events=summary['session_events']),ensure_ascii=False,indent=2),'```']
++    (output/'中文对照报告.md').write_text('\n\n'.join(md)+'\n')
++    body=''.join('<tr>'+''.join('<td>'+html.escape(str(c))+'</td>' for c in row)+'</tr>' for row in rows)
++    figure='<img src="同测点对照.png" alt="同测点绝对读数、一次参考增量、现场PWM">' if summary['figures']['status']=='generated' else '<p>本环境未生成图；所有配对/范围/覆盖保留在JSON与表格。</p>'
++    (output/'中文对照报告.html').write_text('<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>局部表面独立对照</title><style>body{font-family:system-ui;margin:24px;line-height:1.7;color:#253348}table{border-collapse:collapse;font-size:13px}td,th{border:1px solid #ccc;padding:7px}img{max-width:100%}p{max-width:1100px}</style><h1>局部表面参照：'+html.escape(summary['status'])+'</h1><p>'+html.escape(intro)+'</p><p>三种时钟与写入记录分开；普通伪彩图不做数值解码。局部表面不等于Ts，外部点不进入模型；空测温不阻挡其他软件/建模。</p>'+figure+'<table><tr>'+''.join('<th>'+html.escape(c)+'</th>' for c in header)+'</tr>'+body+'</table><p>未配对原因：'+html.escape(reasons)+'</p><p>稀疏点不能证明完整峰值、秒级时滞或物理热容；未联网设备、未改变控制。完整模型取值范围、源引用及限制见paired-points.jsonl。</p></html>')
+diff --git a/experiments/thermal_reference_v1/refprep/cues.py b/experiments/thermal_reference_v1/refprep/cues.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_reference_v1/refprep/cues.py
+@@ -0,0 +1,173 @@
++"""Read-only local trial event adapter and deterministic, model-independent reminders."""
++from pathlib import Path
++import time
++from .files import fingerprint,now_utc,read,write,append
++from .clocks import utc_seconds,iso
++
++DEFAULT_PLAN=dict(schema='TTO-REF-CUES-v1',run_id=None,model_driven=False,max_prompts=14,
++    minimum_spacing_s=30,late_grace_s=5,background_offsets_s=[30,120],sparse_mid_s=180,
++    pre_continuous_offset_s=270,pre_medium_offset_s=270,
++    bindings=dict(background='resident_background',sparse='sparse',pre_continuous='between_groups',
++                  continuous='continuous',pre_medium=None,medium=None),
++    missing_policy='record_missing_no_wait_no_rerun',actual_field_plan_confirmed=False)
++
++
++def checkpoint_text(key):
++    name=key.split('@')[0]
++    fixed={'background-1':'背景固定计时第1点','background-2':'背景固定计时第2点',
++           'sparse-fixed-middle':'稀疏组预登记中段点','continuous-before-from-idle-timer':'连续组前：前置待机固定计时点',
++           'medium-before-from-idle-timer':'可选中等块前：前置待机固定计时点','continuous-after60':'连续组开始后约60秒'}
++    if name in fixed:return fixed[name]
++    for prefix,label in [('sparse-after','稀疏组'),('continuous-after','连续组'),('medium-after','中等块')]:
++        if name.startswith(prefix):return label+'实际结束后约'+name[len(prefix):]+'秒'
++    return name
++
++
++def load_plan(path=None):
++    plan=read(path) if path else DEFAULT_PLAN.copy()
++    if plan.get('model_driven') or plan['max_prompts']>14 or plan['minimum_spacing_s']<30:
++        raise ValueError('Cues must be event based, <=14 prompts and >=30s spacing')
++    return plan
++
++
++def read_events(path,allow_partial=False):
++    import json
++    text=Path(path).read_text(encoding='utf-8')
++    rows=text.splitlines(keepends=True)
++    if allow_partial and rows and not rows[-1].endswith('\n'):rows=rows[:-1]
++    return [json.loads(s) for s in rows if s.strip()]
++
++
++def actual_event(event):
++    kind=event.get('event')
++    if kind not in ['phase_start','phase_end','request_end','schedule_end']:return None
++    if kind in ['phase_start','phase_end'] and not event.get('phase'):raise ValueError('Phase event needs phase identity')
++    if 'occurred_at_utc' not in event or 'mono_s' not in event:raise ValueError('Event needs original UTC/monotonic pair')
++    utc=utc_seconds(event['occurred_at_utc']);mono=float(event['mono_s'])
++    key={'phase_start':'actual_start_mono_s','phase_end':'actual_end_mono_s','schedule_end':'actual_end_mono_s'}.get(kind)
++    actual=float(event.get(key,mono)) if key else mono
++    # Planned end/deadline never substitutes for an observed completion.
++    return dict(event=kind,phase=event.get('phase'),utc_s=utc+actual-mono,mono_s=actual,
++                evidence_id=fingerprint([kind,event.get('phase'),event['occurred_at_utc'],actual])[:24],
++                source_time_field=key if key and key in event else 'mono_s/occurred_at_utc')
++
++
++class CueEngine:
++    def __init__(self,plan,replay=False,state=None):
++        self.plan=plan;self.replay=replay
++        self.state=state or dict(plan_sha256=fingerprint(plan),seen=[],pending=[],history=[],emitted_count=0,last_emit_s=None)
++        if self.state['plan_sha256']!=fingerprint(plan):raise ValueError('Use a new cue sidecar for a changed plan')
++
++    def log(self,status,cue,now,**extra):
++        row=dict(status=status,checkpoint_ids=cue['checkpoint_ids'],
++            checkpoint_labels=[checkpoint_text(k) for k in cue['checkpoint_ids']],
++            prompt_due_at_utc=iso(cue['due_s']),
++            original_checkpoint_due_utc={k:iso(v) for k,v in cue['original_due'].items()},
++            prompt_emitted_at_utc=iso(now) if status=='prompt' and not self.replay else None,
++            replay_emitted_at_utc=iso(now) if status=='prompt' and self.replay else None,
++            recorded_at_utc=now_utc(),replay=self.replay,anchors=cue['anchors'],
++            does_not_control_or_extend_workload=True,**extra)
++        self.state['history'].append(row)
++        return row
++
++    def add(self,ident,event,offset,active_only=False):
++        t=event['utc_s']+offset
++        key=ident+'@'+event['evidence_id']
++        cue=dict(checkpoint_ids=[key],due_s=t,original_due={key:t},anchors=[event],
++                 active_phase=event['phase'] if active_only else None)
++        self.state['pending'].append(cue)
++        # Coalesce overlaps deterministically, retain EVERY original checkpoint and due time.
++        pending=sorted(self.state['pending'],key=lambda c:(c['due_s'],c['checkpoint_ids']))
++        merged=[]
++        for item in pending:
++            if merged and item['due_s']-merged[-1]['due_s']<self.plan['minimum_spacing_s']:
++                prior=merged[-1]
++                prior['checkpoint_ids']+=item['checkpoint_ids'];prior['original_due'].update(item['original_due'])
++                prior['anchors']+=item['anchors'];prior['due_s']=item['due_s']
++                if prior['active_phase']!=item['active_phase']:prior['active_phase']=None
++            else:merged.append(item)
++        self.state['pending']=merged
++
++    def ingest(self,row,received_s):
++        event=actual_event(row)
++        if event is None or event['evidence_id'] in self.state['seen']:return
++        self.state['seen'].append(event['evidence_id'])
++        phase=event['phase'];kind=event['event'];bindings=self.plan['bindings']
++        if kind=='phase_end':
++            keep=[]
++            for cue in self.state['pending']:
++                if cue['active_phase']==phase and cue['due_s']>event['utc_s']:
++                    self.log('not_collected_phase_ended',cue,received_s)
++                else:keep.append(cue)
++            self.state['pending']=keep
++        if kind=='phase_start':
++            if phase==bindings.get('background'):
++                for i,offset in enumerate(self.plan['background_offsets_s']):self.add(f'background-{i+1}',event,offset,True)
++            if phase==bindings.get('sparse'):self.add('sparse-fixed-middle',event,self.plan['sparse_mid_s'],True)
++            if phase==bindings.get('pre_continuous'):self.add('continuous-before-from-idle-timer',event,self.plan['pre_continuous_offset_s'],True)
++            if phase==bindings.get('pre_medium'):self.add('medium-before-from-idle-timer',event,self.plan['pre_medium_offset_s'],True)
++            if phase==bindings.get('continuous'):self.add('continuous-after60',event,60,True)
++        if kind=='phase_end':
++            if phase==bindings.get('sparse'):
++                for offset in [30,120]:self.add('sparse-after'+str(offset),event,offset)
++            if phase in [bindings.get('continuous'),bindings.get('medium')] and phase is not None:
++                prefix='continuous' if phase==bindings.get('continuous') else 'medium'
++                for offset in [30,120,300]:self.add(prefix+'-after'+str(offset),event,offset)
++        if kind=='schedule_end':
++            for cue in self.state['pending']:self.log('not_collected_trial_ended',cue,received_s)
++            self.state['pending']=[]
++
++    def advance(self,now,startup=False):
++        ready=[c for c in self.state['pending'] if c['due_s']<=now]
++        self.state['pending']=[c for c in self.state['pending'] if c['due_s']>now]
++        new=[]
++        for cue in ready:
++            if now-cue['due_s']>self.plan['late_grace_s']:
++                new.append(self.log('missed_at_startup' if startup else 'missed_late_event_no_catchup',cue,now))
++            elif self.state['last_emit_s'] is not None and now-self.state['last_emit_s']<self.plan['minimum_spacing_s']:
++                new.append(self.log('merged_into_recent_prompt',cue,now,previous_prompt_utc=iso(self.state['last_emit_s'])))
++            elif self.state['emitted_count']>=self.plan['max_prompts']:
++                new.append(self.log('not_collected_prompt_cap',cue,now))
++            else:
++                new.append(self.log('prompt',cue,now))
++                self.state['last_emit_s']=now;self.state['emitted_count']+=1
++        return new
++
++
++def replay_events(events,plan):
++    engine=CueEngine(plan,replay=True)
++    cursor=None
++    for row in events:
++        ev=actual_event(row)
++        if ev is None:continue
++        arrival=utc_seconds(row.get('arrived_at_utc',row.get('written_at_utc',row['occurred_at_utc'])))
++        cursor=max(cursor,arrival) if cursor is not None else arrival
++        while engine.state['pending'] and min(c['due_s'] for c in engine.state['pending'])<=cursor:
++            due=min(c['due_s'] for c in engine.state['pending'])
++            engine.advance(due)
++        engine.ingest(row,cursor);engine.advance(cursor)
++    # At EOF future points are pending, not fabricated as already emitted or collected.
++    return engine.state
++
++
++def watch_file(path,plan,out,follow=False):
++    out=Path(out);out.mkdir(parents=True,exist_ok=True)
++    state_path=out/'reminder-state.json'
++    engine=CueEngine(plan,state=read(state_path) if state_path.exists() else None)
++    emitted_history=len(engine.state['history']);startup=True
++    try:
++        while True:
++            now=utc_seconds(now_utc())
++            for row in read_events(path,allow_partial=follow):engine.ingest(row,now)
++            engine.advance(now,startup=startup)
++            for row in engine.state['history'][emitted_history:]:
++                append(out/'reminders.jsonl',row)
++                if row['status']=='prompt':
++                    print('测温提醒：'+'；'.join(row['checkpoint_labels'])+'。请拍/读预登记固定测点，鳍片与背板分开；来不及就记未采，不延长任务。\n引用ID：'+', '.join(row['checkpoint_ids']),flush=True)
++            emitted_history=len(engine.state['history'])
++            write(state_path,engine.state)
++            if not follow:return engine.state
++            startup=False;time.sleep(.25)
++    except KeyboardInterrupt:
++        write(state_path,engine.state)
++        return engine.state
+diff --git a/experiments/thermal_reference_v1/refprep/files.py b/experiments/thermal_reference_v1/refprep/files.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_reference_v1/refprep/files.py
+@@ -0,0 +1,43 @@
++from pathlib import Path
++import datetime as dt
++import hashlib
++import json
++
++
++def now_utc():
++    return dt.datetime.now(dt.timezone.utc).isoformat()
++
++
++def sha(path):
++    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
++
++
++def fingerprint(value):
++    return hashlib.sha256(json.dumps(value, sort_keys=True, ensure_ascii=False,
++        separators=(',', ':'), allow_nan=False).encode()).hexdigest()
++
++
++def read(path):
++    return json.loads(Path(path).read_text(encoding='utf-8'))
++
++
++def write(path, value):
++    path=Path(path);path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(value, ensure_ascii=False, indent=2, allow_nan=False)+'\n', encoding='utf-8')
++
++
++def lines(path):
++    path=Path(path)
++    return [json.loads(s) for s in path.read_text(encoding='utf-8').splitlines() if s] if path.exists() else []
++
++
++def append(path, value):
++    path=Path(path);path.parent.mkdir(parents=True, exist_ok=True)
++    with path.open('a', encoding='utf-8') as f:
++        f.write(json.dumps(value, ensure_ascii=False, separators=(',', ':'), allow_nan=False)+'\n')
++
++
++def dump_lines(path, values):
++    path=Path(path);path.parent.mkdir(parents=True, exist_ok=True)
++    with path.open('w', encoding='utf-8') as f:
++        for value in values:f.write(json.dumps(value, ensure_ascii=False, separators=(',', ':'), allow_nan=False)+'\n')
+diff --git a/experiments/thermal_reference_v1/refprep/records.py b/experiments/thermal_reference_v1/refprep/records.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_reference_v1/refprep/records.py
+@@ -0,0 +1,297 @@
++"""Immutable sessions, append-only observations/revisions, original-image content addressing."""
++from pathlib import Path
++import csv
++import json
++import math
++import shutil
++import uuid
++from .files import read,write,lines,append,sha,fingerprint,now_utc,dump_lines
++from .clocks import coordinate,nonnegative
++
++KINDS={'fin_surface_ir','backplate_surface_ir','surface_contact','inlet_air','outlet_air','ambient_user_report'}
++
++
++def identifier(value):
++    if not isinstance(value,str):raise ValueError('A nonempty string ID is required; unknown run is not a real run')
++    value=str(value)
++    if not value or '/' in value or '\\' in value or value in ['.','..']:raise ValueError('Use a simple nonempty ID')
++    return value
++
++
++def session_flags(session):
++    flags=[]
++    for key in ['model','accuracy']:
++        if session.get('instrument',{}).get(key) is None:flags.append('unknown_instrument_'+key)
++    if session['measurement_kind'].endswith('_ir'):
++        for path in [('instrument','model'),('instrument','accuracy'),('settings','emissivity'),
++                     ('settings','reflected_temperature_c'),('settings','surface_finish'),
++                     ('geometry','roi_definition'),('settings','measurement_footprint')]:
++            if session.get(path[0],{}).get(path[1]) is None:flags.append('unknown_'+path[0]+'_'+path[1])
++        flags.append('local_apparent_surface_not_air_or_whole_body')
++    if session['measurement_kind'] in ['inlet_air','outlet_air'] and session.get('instrument',{}).get('method')!='air_probe':
++        flags.append('air_probe_method_unconfirmed_not_IR_surface')
++    if session['measurement_kind']=='surface_contact':
++        flags.append('local_surface_not_air_whole_body_or_measured_Ts')
++        for key in ['surface_condition','fixed_position','attachment_method']:
++            if not session.get('contact',{}).get(key):flags.append('unknown_contact_'+key)
++        if not session.get('contact',{}).get('probe_response_calibrated'):
++            flags.append('probe_response_not_calibrated_sampling_interval_is_not_response_time')
++        if not session.get('contact',{}).get('installation_verified'):
++            flags.append('contact_installation_not_field_verified')
++    return flags
++
++
++def register_session(store, session):
++    store=Path(store)
++    for field in ['session_id','site_id','run_id']:identifier(session[field])
++    if session['measurement_kind'] not in KINDS:raise ValueError('Unknown measurement kind')
++    if session.get('model_input') or session.get('control_input'):raise ValueError('Reference may not be a model/control input')
++    if session['measurement_kind'].endswith('_ir'):
++        e=session.get('settings',{}).get('emissivity')
++        if e is not None and not 0<float(e)<=1:raise ValueError('Emissivity out of range')
++    session=dict(session, schema='TTO-EXTERNAL-REFERENCE-v1',model_input=False,control_input=False,
++                 absolute_status='unverified_apparent_surface' if session['measurement_kind'].endswith('_ir') else 'unverified_reference')
++    session['quality_limitations']=session_flags(session)
++    dest=store/'sessions'/(identifier(session['session_id'])+'.json')
++    if dest.exists():
++        if read(dest)!=session:raise ValueError('Immutable session: changed position/settings need a new session_id')
++    else:write(dest,session)
++    return session
++
++
++def load_session(store, session_id):
++    return read(Path(store)/'sessions'/(identifier(session_id)+'.json'))
++
++
++def temperature(value, unit):
++    if value is None or value=='':return None
++    value=float(value)
++    if not math.isfinite(value):raise ValueError('NaN/Infinity is not a valid temperature')
++    unit=str(unit).replace('°','').upper()
++    if unit not in ['C','F']:raise ValueError('Explicit C/F unit required')
++    return value if unit=='C' else (value-32)*5/9
++
++
++def artifact_info(store, path, copy=False, metadata_time=None):
++    if not path:return None
++    path=Path(path)
++    if not path.is_file():raise ValueError('Artifact is not a local regular file')
++    digest=sha(path)
++    rel=Path('artifacts')/(digest+path.suffix.lower())
++    if copy:
++        dest=Path(store)/rel;dest.parent.mkdir(parents=True,exist_ok=True)
++        if not dest.exists():shutil.copyfile(path,dest)
++        if sha(dest)!=digest:raise ValueError('Stored artifact differs')
++    return dict(original_path=str(path.absolute()),stored_relative_path=str(rel),sha256=digest,
++                bytes=path.stat().st_size,mtime_s_diagnostic_only=path.stat().st_mtime,
++                image_metadata_time_raw=metadata_time,numeric_decoding='not_performed',
++                color_or_OCR_temperature_inference=False)
++
++
++def normalize(store, session_id, values, provenance=None):
++    session=load_session(store,session_id)
++    for key in ['run_id','site_id','measurement_kind']:
++        if values.get(key) not in [None,'',session[key]]:raise ValueError('Record/session '+key+' mismatch')
++    value=values.get('original_value')
++    unit=values.get('original_unit')
++    temp=temperature(value,unit)
++    record_id=values.get('record_id') or None
++    art=artifact_info(store,values.get('artifact_path'),metadata_time=values.get('image_metadata_time_raw'))
++    actual=values.get('measured_at_raw')
++    if actual=='':actual=None
++    interval=values.get('measured_interval_raw') or None
++    if interval:
++        if not interval.get('start') or not interval.get('end'):raise ValueError('Both interval endpoints required')
++        a,ak=coordinate(interval['start'],session.get('time',{}).get('timezone'))
++        b,bk=coordinate(interval['end'],session.get('time',{}).get('timezone'))
++        if ak!=bk or b<a:raise ValueError('Invalid measurement interval')
++    if actual is not None:coordinate(actual,session.get('time',{}).get('timezone'))
++    if actual is not None and interval:raise ValueError('Choose timestamp OR interval, not both')
++    uncertainty=nonnegative(values.get('time_uncertainty_s'),'time uncertainty')
++    if record_id is None:
++        if actual is None and not interval and art is None:raise ValueError('Unknown-time imported row needs a record_id')
++        record_id='external-'+fingerprint([session['run_id'],session_id,session['site_id'],actual,interval,art['sha256'] if art else None])[:24]
++    identifier(record_id)
++    flags=list(session['quality_limitations'])+list(values.get('measurement_flags') or [])
++    if temp is None:flags.append('image_only_no_numeric_reading' if art else 'not_measured')
++    if actual is None and not interval:flags.append('measurement_time_unknown')
++    if uncertainty is None:flags.append('time_precision_unknown_not_zero')
++    return dict(schema='TTO-EXTERNAL-REFERENCE-v1',record_id=record_id,run_id=session['run_id'],
++        site_id=session['site_id'],session_id=session_id,measurement_kind=session['measurement_kind'],
++        statistic=session.get('geometry',{}).get('statistic'),temperature_c=temp,
++        original_value=value,original_unit=unit,measured_at_raw=actual,measured_interval_raw=interval,
++        time_source=values.get('time_source'),clock_domain=values.get('clock_domain',session.get('time',{}).get('clock_domain')),
++        time_uncertainty_s=uncertainty,
++        prompt_due_at_utc=values.get('prompt_due_at_utc'),prompt_emitted_at_utc=values.get('prompt_emitted_at_utc'),
++        checkpoint_ids=values.get('checkpoint_ids',[]),operator_mark_at_utc=values.get('operator_mark_at_utc'),
++        operator_mark_mono_s=values.get('operator_mark_mono_s'),
++        operator_mark_clock_domain=values.get('operator_mark_clock_domain'),
++        recorded_at_utc=now_utc(),artifact=art,measurement_flags=sorted(set(flags)),
++        absolute_status=session['absolute_status'],synthetic=bool(values.get('synthetic',session.get('synthetic',False))),
++        note=values.get('note'),model_input=False,control_input=False,provenance=provenance or {})
++
++
++def session_event(store,session_id,event_type,measured_at_raw=None,uncertainty_s=None,note=None):
++    """Append site-integrity evidence; a moved/loose probe never silently resumes."""
++    session=load_session(store,session_id)
++    if event_type not in ['recording_start','recording_end','clock_check','probe_moved','probe_reattached','probe_loose']:
++        raise ValueError('Unknown session event')
++    if measured_at_raw is not None:coordinate(measured_at_raw,session.get('time',{}).get('timezone'))
++    rec=dict(event_id=str(uuid.uuid4()),session_id=session_id,run_id=session['run_id'],site_id=session['site_id'],
++             event_type=event_type,measured_at_raw=measured_at_raw,
++             time_uncertainty_s=nonnegative(uncertainty_s,'event time uncertainty'),
++             clock_domain=session.get('time',{}).get('clock_domain'),recorded_at_utc=now_utc(),
++             note=note,new_session_required=event_type.startswith('probe_'),model_input=False,control_input=False)
++    append(Path(store)/'session-events.jsonl',rec)
++    return rec
++
++
++def latest_records(store):
++    current={}
++    for row in lines(Path(store)/'records.jsonl'):
++        current[(row['session_id'],row['record_id'])]=row
++    return list(current.values())
++
++
++def commit_record(store, record, artifact_path=None, allow_revision=False, index=None):
++    key=(record['session_id'],record['record_id'])
++    prior=index.get(key) if index is not None else next((r for r in latest_records(store) if (r['session_id'],r['record_id'])==key),None)
++    ignored={'recorded_at_utc','provenance','revision','revision_id','supersedes'}
++    if prior:
++        # Do not erase the original operator mark when a reading is entered later.
++        for field in ['operator_mark_at_utc','operator_mark_mono_s','operator_mark_clock_domain','prompt_due_at_utc','prompt_emitted_at_utc','checkpoint_ids']:
++            if not record.get(field):record[field]=prior.get(field)
++        a={k:v for k,v in record.items() if k not in ignored}
++        b={k:v for k,v in prior.items() if k not in ignored}
++        if a==b:return dict(status='duplicate',record=prior)
++        if not allow_revision:raise ValueError('Existing record differs; use record --revise or explicit import supersedes')
++    if artifact_path:record['artifact']=artifact_info(store,artifact_path,copy=True,
++        metadata_time=(record.get('artifact') or {}).get('image_metadata_time_raw'))
++    record=dict(record,revision=prior['revision']+1 if prior else 1,
++        revision_id=str(uuid.uuid4()),supersedes=prior['revision_id'] if prior else None)
++    append(Path(store)/'records.jsonl',record)
++    if index is not None:index[key]=record
++    return dict(status='revised' if prior else 'recorded',record=record)
++
++
++def import_file(store, path, mapping):
++    store=Path(store);path=Path(path);input_sha=sha(path);mapping_sha=fingerprint(mapping)
++    already=next((v for v in lines(Path(store)/'imports.jsonl') if v['input_sha256']==input_sha and v['mapping_sha256']==fingerprint(mapping)),None)
++    if already:return dict(status='duplicate_import',added=0,original_receipt=already)
++    # Original bytes and mapping are retained even when particular rows are unusable.
++    raw=store/'imports/raw'/(input_sha+path.suffix.lower());raw.parent.mkdir(parents=True,exist_ok=True)
++    if not raw.exists():shutil.copyfile(path,raw)
++    if sha(raw)!=input_sha:raise ValueError('Raw import archive SHA mismatch')
++    batch=input_sha+'-'+mapping_sha
++    write(store/'imports/mappings'/(mapping_sha+'.json'),mapping)
++    row_lines=[]
++    if path.suffix.lower()=='.csv':
++        with path.open(encoding=mapping.get('csv',{}).get('encoding','utf-8-sig'),newline='') as f:
++            reader=csv.DictReader(f,delimiter=mapping.get('csv',{}).get('delimiter',','))
++            rows=[];previous=reader.line_num
++            for row in reader:
++                # csv.line_num includes the header and embedded newlines; both endpoints retained.
++                start=previous+1 if rows else 2
++                rows.append(row);row_lines.append([start,reader.line_num]);previous=reader.line_num
++    else:
++        d=read(path);rows=d['records'] if isinstance(d,dict) else d
++    if not isinstance(rows,list):raise ValueError('JSON import needs a list or records list')
++    axis=mapping.get('time_axis',{});mode=axis.get('mode','timestamp')
++    if mode not in ['timestamp','relative_seconds','sample_index']:raise ValueError('Explicit supported time_axis.mode required')
++    interval=axis.get('sample_interval_s')
++    if mode in ['relative_seconds','sample_index']:
++        interval=nonnegative(interval,'sample interval')
++        if not interval or not axis.get('interval_basis'):raise ValueError('Relative/index time requires a positive interval and its independent setting/CSV basis')
++        if mode=='sample_index' and 'index_origin' not in axis:raise ValueError('Sample index requires explicit index_origin')
++    index={(r['session_id'],r['record_id']):r for r in latest_records(store)}
++    results=[];ledger=[];cadence={}
++    for i,row in enumerate(rows):
++        prov=dict(input_sha256=input_sha,input_row=i+1,csv_line_span=row_lines[i] if row_lines else None,
++                  original_row=row,raw_stored_relative_path=str(raw.relative_to(store)),mapping_sha256=mapping_sha,
++                  exported_at_raw=mapping.get('exported_at_raw'),imported_at_utc=now_utc())
++        outcome=dict(provenance=prov)
++        try:
++            values=dict(mapping.get('constants',{}))
++            for target,column in mapping['columns'].items():
++                if column not in row:raise ValueError('missing mapped column '+column)
++                values[target]=row[column]
++            channel=values.get('original_channel')
++            if mapping.get('channels') is not None:
++                route=mapping['channels'].get(str(channel))
++                if route is None:raise ValueError('unmapped channel '+str(channel))
++                values.update(route)
++            session_id=values.pop('session_id');session=load_session(store,session_id)
++            if mode in ['relative_seconds','sample_index']:
++                anchors=session.get('time',{}).get('sync_anchors',[])
++                if not any(a.get('evidence') and coordinate(a['clock_time'])[0]==0 for a in anchors):
++                    raise ValueError('relative/index time needs an independent start anchor at elapsed second 0')
++                sample_raw=values.get('measured_at_raw')
++                prov['instrument_sample_time_raw']=sample_raw
++                if sample_raw not in [None,'']:
++                    value=float(sample_raw)
++                    if not math.isfinite(value):raise ValueError('nonfinite sample clock')
++                    if mode=='sample_index':
++                        if value!=int(value):raise ValueError('sample index must be an integer')
++                        value=(value-float(axis['index_origin']))*interval
++                    if value<0:raise ValueError('sample time before declared recording start')
++                    values['measured_at_raw']=value
++            if mapping.get('input_path')=='numeric_export' and not values.get('record_id'):
++                values['record_id']='export-'+fingerprint([input_sha,i+1,session_id,channel])[:24]
++            if isinstance(values.get('measurement_flags'),str):values['measurement_flags']=[x for x in values['measurement_flags'].split(';') if x]
++            start,end=values.pop('interval_start',None),values.pop('interval_end',None)
++            if start or end:values['measured_interval_raw']=dict(start=start,end=end)
++            if values.get('artifact_path'):
++                a=Path(values['artifact_path']);values['artifact_path']=str(a if a.is_absolute() else path.parent/a)
++            # Sampling cadence is assessed from parseable source clocks, including ERR/empty-temperature rows.
++            if values.get('measured_at_raw') not in [None,'']:
++                c,kind=coordinate(values['measured_at_raw'],session.get('time',{}).get('timezone'))
++                try:cadence_temp=temperature(values.get('original_value'),values.get('original_unit'))
++                except (ValueError,TypeError):cadence_temp=None
++                key=session_id+'|'+str(channel)
++                cadence.setdefault(key,[]).append((i+1,c,kind,cadence_temp))
++            rec=normalize(store,session_id,values,prov)
++            rec['input_path']=mapping.get('input_path','manual_or_generic_import')
++            rec['original_channel']=channel
++            rec['instrument_sample_time_raw']=prov.get('instrument_sample_time_raw',values.get('measured_at_raw'))
++            if mapping.get('valid_temperature_c') and rec['temperature_c'] is not None:
++                low,high=mapping['valid_temperature_c']
++                if not low<=rec['temperature_c']<=high:raise ValueError('outside explicitly configured temperature bounds')
++            if mapping.get('input_path')=='numeric_export' and rec['measured_at_raw'] in [None,'']:
++                rec['measurement_flags'].append('instrument_sample_time_missing_not_reconstructed')
++            prior=index.get((session_id,rec['record_id']));supersedes=values.get('supersedes')
++            if supersedes and (not prior or supersedes!=prior['revision_id']):raise ValueError('supersedes must name latest revision_id')
++            result=commit_record(store,rec,values.get('artifact_path'),bool(supersedes),index)
++            results.append(result)
++            missing=[]
++            if rec['temperature_c'] is None:missing.append('missing_numeric_temperature_not_filled')
++            if rec['measured_at_raw'] in [None,''] and not rec['measured_interval_raw']:missing.append('missing_sample_time_not_filled')
++            outcome.update(status='accepted_with_missing_fields' if missing else result['status'],
++                           reasons=missing,record_id=rec['record_id'],revision_id=result['record']['revision_id'],
++                           session_id=session_id,channel=channel)
++        except (ValueError,TypeError,KeyError,OSError) as error:
++            outcome.update(status='rejected',reason=str(error))
++        ledger.append(outcome)
++    cadence_summary={}
++    for key,samples in cadence.items():
++        diffs=[b[1]-a[1] for a,b in zip(samples,samples[1:]) if a[2]==b[2]]
++        positive=sorted(d for d in diffs if d>0)
++        expected=axis.get('sample_interval_s')
++        cadence_summary[key]=dict(samples_with_time=len(samples),declared_interval_s=expected,
++            interval_basis=axis.get('interval_basis'),positive_interval_min_s=min(positive) if positive else None,
++            positive_interval_max_s=max(positive) if positive else None,
++            positive_interval_median_s=__import__('statistics').median(positive) if positive else None,
++            zero_intervals=sum(d==0 for d in diffs),reversed_intervals=sum(d<0 for d in diffs),
++            intervals_different_from_declared=sum(abs(d-float(expected))>1e-6 for d in diffs) if expected else None,
++            equal_adjacent_temperature_pairs=sum(a[3] is not None and a[3]==b[3] for a,b in zip(samples,samples[1:])),
++            conclusion='observed sampling cadence only; no missing samples filled; probe response NOT calibrated')
++    ledger_path=store/'imports/rows'/(batch+'.jsonl');dump_lines(ledger_path,ledger)
++    rejected=sum(r['status']=='rejected' for r in ledger)
++    receipt=dict(status='imported_with_issues' if rejected else 'imported',input_sha256=input_sha,mapping_sha256=mapping_sha,
++        input_name=path.name,recorded_at_utc=now_utc(),rows=len(rows),
++        added=sum(r['status']!='duplicate' for r in results),duplicates=sum(r['status']=='duplicate' for r in results),
++        rejected_rows=rejected,rows_with_missing_fields=sum(r['status']=='accepted_with_missing_fields' for r in ledger),
++        raw_stored_relative_path=str(raw.relative_to(store)),row_ledger_relative_path=str(ledger_path.relative_to(store)),
++        exported_at_raw=mapping.get('exported_at_raw'),cadence=cadence_summary,
++        revision_ids=[r['record']['revision_id'] for r in results])
++    append(Path(store)/'imports.jsonl',receipt)
++    return receipt
+diff --git a/experiments/thermal_reference_v1/refprep/trajectory.py b/experiments/thermal_reference_v1/refprep/trajectory.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_reference_v1/refprep/trajectory.py
+@@ -0,0 +1,72 @@
++"""Read-only adapter of the accepted frozen slowstate outputs. No estimator or fitter."""
++from pathlib import Path
++from .files import read,lines,sha,write,dump_lines
++from .clocks import utc_seconds
++
++PRIMARY_SHA='dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0'
++
++
++def adapt(source,output,run=None):
++    source=Path(source);output=Path(output)
++    assert sha(source/'sources/models/primary.json')==PRIMARY_SHA
++    files=['states-causal60.jsonl','states-A-long.jsonl','four-state-origins.jsonl','normal-demand-origins.jsonl',
++           'fast-status-and-demand-ledger.jsonl']
++    a_long={r['ref']:r for r in lines(source/'results'/files[1]) if r['model']=='primary'}
++    four={r['ref']:r for r in lines(source/'results'/files[2])}
++    demands={r['ref']:r for r in lines(source/'results'/files[3])}
++    # Reuse the already-frozen quality ledger. Fresh successful input arrivals may
++    # maintain qualification between state origins; they do not renew an old TTL.
++    leases={}
++    for node in lines(source/'results'/files[4]):
++        if not node['ordinary_available'] or not node.get('shape_ref'):continue
++        lease=leases.setdefault(node['shape_ref'],dict(end=node['t'],refs=[]))
++        lease['end']=max(lease['end'],node['t']+node['duration_s'])
++        lease['refs'].append(node['ref'] or node['trigger_ref'])
++    selected=[r for r in lines(source/'results'/files[0]) if r['model']=='primary' and (run is None or r['run']==run)]
++    exact_clock_pairs={(r['run'],r['t']):utc_seconds(r['utc']) for r in selected}
++    out=[]
++    for r in selected:
++        assert r['model_sha256']==PRIMARY_SHA and r['input_cutoff']<=r['t']+1e-9
++        assert four[r['ref']]['parameter_model_sha256']==PRIMARY_SHA
++        utc=utc_seconds(r['utc'])
++        deadline=min(r['source_valid_until'],r['current_input_valid_until'])
++        lease=leases.get(r['ref'])
++        end=lease['end'] if lease else deadline
++        until=exact_clock_pairs.get((r['run'],end),utc+(end-r['t']))
++        states=four[r['ref']]['states'];long=a_long.get(r['ref']);demand=demands.get(r['ref'])
++        out.append(dict(schema='TTO-FROZEN-REFERENCE-TRAJECTORY-v1',run_id=r['ref'].split('/')[0],
++            run_alias=r['run'],ref=r['ref'],segment=r['segment'],source_epoch=r['source_epoch'],
++            utc=r['utc'],utc_s=utc,mono_s=r['t'],valid_until_utc_s=until,
++            original_snapshot_valid_until_mono_s=deadline,asof_qualification_until_mono_s=end,
++            original_qualification_refs=lease['refs'] if lease else [],
++            validity_source='sealed original fast-status ledger; no new quality parser or TTL',model_sha256=PRIMARY_SHA,
++            state_input_cutoff_utc_s=utc+(r['input_cutoff']-r['t']),
++            measured_TJ_C=r['Tf'],causal_Tf_is_observed_anchor=True,
++            Tf_A_long_C=long['Tf'] if long else None,Ts_A_long_C=long['Ts'] if long else None,
++            STATE_G2_C=states['STATE-G2'],STATE_QS_C=states['STATE-QS'],
++            STATE_LP30_C=states['STATE-LP30'],STATE_LP120_C=states['STATE-LP120'],
++            actual_successful_PWM_percent_at_state_origin=r['current_inputs'][2]*100,
++            offline_extra_demand={b:v['z_output'] for b,v in demand['branches'].items()} if demand else None,
++            fan_ref=r['fan_ref'],power_ref=r['power_ref'],temp_ref=r['temp_ref'],
++            synthetic=False,external_temperature_used=False,parameter_learning=False))
++    dump_lines(output,out)
++    # Measured TJ is kept independently through periods where model state is unavailable.
++    registered=read(source/'sources/registered/data.json')
++    telemetry=[]
++    for r in registered['accepted']:
++        if run is not None and r['run']!=run:continue
++        utc=utc_seconds(r['utc'])
++        telemetry.append(dict(run_id=r['ref'].split('/')[0],run_alias=r['run'],ref=r['ref'],utc_s=utc,
++            mono_s=r['mono_s'],source_epoch=r['source_epoch'],measured_TJ_C=r['values']['tj'],
++            source_valid_until_utc_s=utc+(r['source_valid_until']-r['mono_s']),
++            actual_successful_PWM_percent_at_observation=r['values'].get('duty'),
++            control_eligible=r['control_eligible'],original_research_segment=r.get('research_segment')))
++    dump_lines(output.with_suffix('.telemetry.jsonl'),telemetry)
++    write(output.with_suffix('.provenance.json'),dict(source_contract='TTO-SLOWSTATE-v1.0',
++        primary_model_sha256=PRIMARY_SHA,source_files={n:sha(source/'results'/n) for n in files},
++        output_sha256=sha(output),output_rows=len(out),run=run,
++        measured_telemetry_file_sha256=sha(output.with_suffix('.telemetry.jsonl')),
++        original_registered_data_sha256=sha(source/'sources/registered/data.json'),
++        behavior='copy existing frozen states, no interpolation, estimation or fitting',
++        validity='sealed original current-qualification intervals including genuinely fresh arrivals; all original snapshot deadlines retained, no new TTL or interpolation'))
++    return dict(rows=len(out),output=str(output),sha256=sha(output))
+diff --git a/experiments/thermal_reference_v1/run_offline.py b/experiments/thermal_reference_v1/run_offline.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_reference_v1/run_offline.py
+@@ -0,0 +1,80 @@
++"""One offline entry for the actual CLI flow, limited tests, plots, and source readback."""
++from pathlib import Path
++import argparse
++import importlib.util
++import json
++import os
++import platform
++import resource
++import subprocess
++import sys
++import time
++from refprep.files import read,write,lines,sha
++
++ROOT=Path(__file__).absolute().parent
++
++
++def run(output):
++    output=Path(output).absolute()
++    if output.exists():raise ValueError('Use a new output directory so earlier evidence is preserved')
++    output.mkdir(parents=True)
++    env=os.environ.copy()
++    for k in ['OPENBLAS_NUM_THREADS','OMP_NUM_THREADS','MKL_NUM_THREADS','VECLIB_MAXIMUM_THREADS']:env[k]='1'
++    receipt=[];started=time.perf_counter()
++    def call(label,args,extra=None):
++        command=[sys.executable,str(ROOT/'ref.py'),*map(str,args)] if extra is None else extra
++        t=time.perf_counter()
++        result=subprocess.run(command,input=None,capture_output=True,text=True,env=env,cwd=ROOT)
++        (output/(label+'.log')).write_text(result.stdout+result.stderr)
++        receipt.append(dict(label=label,command=command,exit_code=result.returncode,wall_seconds=time.perf_counter()-t))
++        write(output/'commands.json',receipt)
++        if result.returncode:raise RuntimeError(label+' failed; '+result.stderr[-1000:])
++        return json.loads(result.stdout) if extra is None else None
++    store=output/'reference-sidecar'
++    fixture=ROOT/'fixtures/synthetic';real=ROOT/'fixtures/real'
++    call('01-plan',['plan','--cue-plan',fixture/'cue-plan.json'])
++    for name in ['fin','back']:call('02-session-'+name,['init-session','--store',store,'--session',fixture/(name+'-session.json')])
++    call('03-fixed-cues',['watch-events','--events',fixture/'events.jsonl','--cue-plan',fixture/'cue-plan.json','--output',output/'synthetic-cues','--replay'])
++    call('04-old-M-events',['watch-events','--events',real/'M-runner-events-subset.jsonl','--cue-plan',real/'M-cue-plan.json','--output',output/'M-cue-replay','--replay'])
++    call('05-mark-no-exposure',['mark','--store',store,'--session-id','SYNTH-fin','--record-id','fin-bg','--note','合成演示：先打点；不是曝光时间'])
++    times=read(fixture/'point-times.json')
++    call('06-late-revision',['record','--store',store,'--session-id','SYNTH-fin','--record-id','fin-bg','--revise',
++        '--value','41.0','--unit','C','--measured-at',times['background'],'--uncertainty-s','0','--time-source','synthetic_explicit_timestamp_not_real_measurement'])
++    call('07-csv',['import','--store',store,'--file',fixture/'external.csv','--mapping',fixture/'csv-mapping.json'])
++    call('08-duplicate-import',['import','--store',store,'--file',fixture/'external.csv','--mapping',fixture/'csv-mapping.json'])
++    call('09-json',['import','--store',store,'--file',fixture/'external.json','--mapping',fixture/'json-mapping.json'])
++    call('10-compare',['compare','--store',store,'--trajectory',real/'M-frozen.jsonl','--output',output/'synthetic-report'])
++    call('11-zero-measurements',['compare','--store',output/'zero-sidecar','--trajectory',real/'M-frozen.jsonl','--output',output/'zero-report'])
++    contact=ROOT/'fixtures/contact-synthetic';contact_store=output/'contact-sidecar'
++    for name in ['fin','back']:call('ADD1-session-'+name,['init-session','--store',contact_store,'--session',contact/(name+'-session.json')])
++    call('ADD1-continuous-import',['import','--store',contact_store,'--file',contact/'generic-continuous.csv','--mapping',contact/'mapping.json'])
++    call('ADD1-continuous-duplicate',['import','--store',contact_store,'--file',contact/'generic-continuous.csv','--mapping',contact/'mapping.json'])
++    call('ADD1-probe-event',['session-event','--store',contact_store,'--session-id','SYNTH-contact-fin','--type','probe_loose',
++        '--measured-at','90','--uncertainty-s','.5','--note','合成松脱示例，不是现场事件；之后须新会话'])
++    call('ADD1-continuous-compare',['compare','--store',contact_store,'--trajectory',real/'M-frozen.jsonl','--output',output/'contact-report'])
++    call('12-tests',[],[sys.executable,'-m','pytest','-q',str(ROOT/'tests'),'-o','cache_dir='+str(output/'pytest-cache')])
++    call('13-readback',[],[sys.executable,str(ROOT/'verify_local.py'),'--run-output',str(output)])
++    usage=resource.getrusage(resource.RUSAGE_CHILDREN)
++    write(output/'environment-resources.json',dict(python=sys.version,executable=sys.executable,platform=platform.platform(),
++        wall_seconds=time.perf_counter()-started,children_user_cpu_s=usage.ru_utime,children_system_cpu_s=usage.ru_stime,
++        children_peak_rss_native=usage.ru_maxrss,native_rss_units='bytes on macOS; KiB on Linux',
++        device_requests=0,external_software_requests=0,model_fits=0,cuda=False,production_modules_imported=False))
++    write(output/'offline-complete.json',dict(status='pass',software_implemented=True,offline_checks=True,
++        instrument_profile_confirmed=False,surface_measurement_performed=False,physical_mapping_validated=False,
++        model_refit=False,control_authorization='none',all_external_demo_values_synthetic=True,
++        default_input_path='numeric_export',user_instrument_selection_confirmed=True,
++        real_YET_CSV_mapping_accepted=False,actual_contact_installation_verified=False,
++        command_count=len(receipt),source_index_sha256=sha(ROOT/'source-index.json')))
++    print(json.dumps(dict(status='pass',output=str(output),commands=len(receipt),workload_started=False),ensure_ascii=False))
++
++
++if __name__=='__main__':
++    # A single entry uses an already available local test runtime; never pip/network.
++    if importlib.util.find_spec('pytest') is None:
++        candidates=[ROOT.parents[1]/'.venv310/bin/python',Path('/Users/massif/Tianshan-thermal-observer/.venv310/bin/python')]
++        for candidate in candidates:
++            if candidate.is_file() and subprocess.run([str(candidate),'-c','import pytest'],capture_output=True).returncode==0:
++                os.execv(str(candidate.absolute()),[str(candidate.absolute()),str(Path(__file__).absolute()),*sys.argv[1:]])
++        raise SystemExit('本地未找到pytest运行时；通用CLI仍可用。重跑检查需已有Python+pytest，不自动联网安装。')
++    p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True)
++    args=p.parse_args();run(args.output)
+diff --git a/experiments/thermal_reference_v1/schemas/record.schema.json b/experiments/thermal_reference_v1/schemas/record.schema.json
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_reference_v1/schemas/record.schema.json
+@@ -0,0 +1,169 @@
++{
++  "$schema": "https://json-schema.org/draft/2020-12/schema",
++  "title": "TTO external reference stored revision",
++  "type": "object",
++  "required": [
++    "record_id",
++    "run_id",
++    "site_id",
++    "session_id",
++    "measurement_kind",
++    "temperature_c",
++    "measured_at_raw",
++    "measured_interval_raw",
++    "time_source",
++    "clock_domain",
++    "recorded_at_utc",
++    "measurement_flags",
++    "revision_id",
++    "revision",
++    "supersedes",
++    "model_input",
++    "control_input"
++  ],
++  "properties": {
++    "record_id": {
++      "type": [
++        "string",
++        "null"
++      ]
++    },
++    "run_id": {
++      "type": [
++        "string",
++        "null"
++      ]
++    },
++    "site_id": {
++      "type": [
++        "string",
++        "null"
++      ]
++    },
++    "session_id": {
++      "type": [
++        "string",
++        "null"
++      ]
++    },
++    "measurement_kind": {
++      "type": [
++        "string",
++        "null"
++      ]
++    },
++    "original_unit": {
++      "type": [
++        "string",
++        "null"
++      ]
++    },
++    "time_source": {
++      "type": [
++        "string",
++        "null"
++      ]
++    },
++    "clock_domain": {
++      "type": [
++        "string",
++        "null"
++      ]
++    },
++    "measured_at_raw": {
++      "type": [
++        "string",
++        "number",
++        "null"
++      ]
++    },
++    "recorded_at_utc": {
++      "type": [
++        "string",
++        "null"
++      ]
++    },
++    "operator_mark_at_utc": {
++      "type": [
++        "string",
++        "null"
++      ]
++    },
++    "prompt_due_at_utc": {
++      "type": [
++        "string",
++        "null"
++      ]
++    },
++    "prompt_emitted_at_utc": {
++      "type": [
++        "string",
++        "null"
++      ]
++    },
++    "revision_id": {
++      "type": [
++        "string",
++        "null"
++      ]
++    },
++    "supersedes": {
++      "type": [
++        "string",
++        "null"
++      ]
++    },
++    "temperature_c": {
++      "type": [
++        "number",
++        "null"
++      ]
++    },
++    "original_value": {
++      "type": [
++        "string",
++        "number",
++        "null"
++      ]
++    },
++    "time_uncertainty_s": {
++      "type": [
++        "number",
++        "null"
++      ],
++      "minimum": 0
++    },
++    "measurement_flags": {
++      "type": "array",
++      "items": {
++        "type": "string"
++      }
++    },
++    "artifact": {
++      "type": [
++        "object",
++        "null"
++      ]
++    },
++    "revision": {
++      "type": "integer",
++      "minimum": 1
++    },
++    "model_input": {
++      "const": false
++    },
++    "control_input": {
++      "const": false
++    },
++    "synthetic": {
++      "type": "boolean"
++    },
++    "measured_interval_raw": {
++      "type": [
++        "object",
++        "null"
++      ]
++    }
++  },
++  "description": "Raw actual time may be unknown; derived clock alignment is saved separately, never silently replaced by mark/import/mtime."
++}
+diff --git a/experiments/thermal_reference_v1/schemas/session.schema.json b/experiments/thermal_reference_v1/schemas/session.schema.json
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_reference_v1/schemas/session.schema.json
+@@ -0,0 +1,44 @@
++{
++  "$schema": "https://json-schema.org/draft/2020-12/schema",
++  "title": "Immutable external-reference session",
++  "type": "object",
++  "required": [
++    "run_id",
++    "site_id",
++    "session_id",
++    "measurement_kind",
++    "instrument",
++    "geometry",
++    "settings",
++    "time",
++    "reference_record_id"
++  ],
++  "properties": {
++    "measurement_kind": {
++      "enum": [
++        "fin_surface_ir",
++        "backplate_surface_ir",
++        "surface_contact",
++        "inlet_air",
++        "outlet_air",
++        "ambient_user_report"
++      ]
++    },
++    "time": {
++      "type": "object"
++    },
++    "reference_record_id": {
++      "type": [
++        "string",
++        "null"
++      ]
++    },
++    "model_input": {
++      "const": false
++    },
++    "control_input": {
++      "const": false
++    }
++  },
++  "description": "Instrument/settings nulls are allowed; changing position or settings requires a new session."
++}
+diff --git a/experiments/thermal_reference_v1/stage-add1-freeze.json b/experiments/thermal_reference_v1/stage-add1-freeze.json
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_reference_v1/stage-add1-freeze.json
+@@ -0,0 +1,7 @@
++{
++  "contract": "TTO-REF-PREP-v1.0-ADD1",
++  "spec_sha256": "c8ab786f67789fd244fdc3fbcd610cd0a9da7000dac3206990346989936301c7",
++  "base_stage1_sha256": "6c18229830d7811e388e9e0d8de39d8edae6b506fe3d4f6f5477e043a8e551a2",
++  "frozen_at_utc": "2026-10-14T05:18:06.996437+00:00",
++  "authority": "direct user ADD1 steering; no model/data search change"
++}
+diff --git a/experiments/thermal_reference_v1/stage1-freeze.json b/experiments/thermal_reference_v1/stage1-freeze.json
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_reference_v1/stage1-freeze.json
+@@ -0,0 +1,14 @@
++{
++  "contract": "TTO-REF-PREP-v1.0",
++  "spec_sha256": "2977b8c762db9db3a82857920f6b030a935da61a450a0f4f9ff183bc5e9be894",
++  "frozen_at_utc": "2026-10-14T04:38:26.614448+00:00",
++  "model_sha256": {
++    "A24.json": "0649551be0360f1186c1e13c7ea827d28e89f4a000ef18da48e75e519913c246",
++    "primary.json": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
++    "old_LS.json": "3c791275bb7172bc65031287ceb68c2d8a6e7d64ecce8a7962ac76d4745799cd"
++  },
++  "model_refit": false,
++  "device_access": false,
++  "initial_spec_sha256": "c9d4c69a2ca5ea2a77b0950ddbca3230b03c2a4ee50b4810984705503009a63b",
++  "software_rule_addendum": "pre-medium causal idle timer; original freeze preserved in freeze-history"
++}
+diff --git a/experiments/thermal_reference_v1/templates/contact-session.example.json b/experiments/thermal_reference_v1/templates/contact-session.example.json
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_reference_v1/templates/contact-session.example.json
+@@ -0,0 +1,35 @@
++{
++  "schema": "TTO-EXTERNAL-REFERENCE-v1",
++  "example_only": true,
++  "run_id": "NEW-RUN-TO-BIND",
++  "session_id": "contact-fin-1",
++  "site_id": "fin-contact-A",
++  "measurement_kind": "surface_contact",
++  "site_description": "同一局部散热表面固定位置；实际位置与表面情况由用户记录",
++  "instrument": {
++    "model": "YET-610L",
++    "probe_type": "K型热电偶",
++    "purchase_confirmed_by_user": true,
++    "CSV_export_supported_confirmed_by_user": true,
++    "manufacturer": null,
++    "accuracy": null,
++    "resolution_c": null,
++    "serial_alias": null
++  },
++  "contact": {
++    "fixed_position": null,
++    "surface_condition": null,
++    "attachment_method": "耐温聚酰亚胺胶带，由用户固定感温端于同一表面位置",
++    "attachment_material_purchased_confirmed_by_user": true,
++    "installation_verified": false,
++    "probe_response_calibrated": false
++  },
++  "geometry": {"statistic": "fixed_contact_point"},
++  "settings": {"planned_record_interval_s": 1, "actual_record_interval_s": null, "interval_evidence": null},
++  "time": {"clock_domain": "instrument_elapsed", "timezone": null, "sync_anchors": []},
++  "reference_record_id": null,
++  "ambient_temperature_c": null,
++  "model_input": false,
++  "control_input": false,
++  "synthetic": false
++}
+diff --git a/experiments/thermal_reference_v1/templates/cue-plan.example.json b/experiments/thermal_reference_v1/templates/cue-plan.example.json
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_reference_v1/templates/cue-plan.example.json
+@@ -0,0 +1,25 @@
++{
++  "schema": "TTO-REF-CUES-v1",
++  "run_id": null,
++  "model_driven": false,
++  "max_prompts": 14,
++  "minimum_spacing_s": 30,
++  "late_grace_s": 5,
++  "background_offsets_s": [
++    30,
++    120
++  ],
++  "sparse_mid_s": 180,
++  "pre_continuous_offset_s": 270,
++  "pre_medium_offset_s": 270,
++  "bindings": {
++    "background": "resident_background",
++    "sparse": "sparse",
++    "pre_continuous": "between_groups",
++    "continuous": "continuous",
++    "pre_medium": null,
++    "medium": null
++  },
++  "missing_policy": "record_missing_no_wait_no_rerun",
++  "actual_field_plan_confirmed": false
++}
+diff --git a/experiments/thermal_reference_v1/templates/import-mapping.example.json b/experiments/thermal_reference_v1/templates/import-mapping.example.json
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_reference_v1/templates/import-mapping.example.json
+@@ -0,0 +1,15 @@
++{
++  "columns": {
++    "record_id": "id",
++    "measured_at_raw": "captured_at",
++    "original_value": "reading",
++    "original_unit": "unit",
++    "artifact_path": "image",
++    "time_uncertainty_s": "time_uncertainty_s"
++  },
++  "constants": {
++    "session_id": "fin-session-1",
++    "time_source": "operator_transcription",
++    "synthetic": false
++  }
++}
+diff --git a/experiments/thermal_reference_v1/templates/numeric-export-mapping.example.json b/experiments/thermal_reference_v1/templates/numeric-export-mapping.example.json
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_reference_v1/templates/numeric-export-mapping.example.json
+@@ -0,0 +1,14 @@
++{
++  "example_only": true,
++  "input_path": "numeric_export",
++  "columns": {
++    "measured_at_raw": "REPLACE_WITH_ACTUAL_TIME_COLUMN",
++    "original_value": "REPLACE_WITH_ACTUAL_TEMPERATURE_COLUMN",
++    "original_channel": "REPLACE_WITH_ACTUAL_CHANNEL_COLUMN"
++  },
++  "constants": {"original_unit": "C", "time_source": "instrument_export", "time_uncertainty_s": null, "synthetic": false},
++  "channels": {"REPLACE_WITH_ACTUAL_CHANNEL": {"session_id": "contact-fin-1", "site_id": "fin-contact-A"}},
++  "time_axis": {"mode": "relative_seconds", "sample_interval_s": 1, "interval_basis": "REPLACE_WITH_INSTRUMENT_SETTING_AND_CSV_INTERVAL_CHECK"},
++  "csv": {"encoding": "utf-8-sig", "delimiter": ","},
++  "exported_at_raw": null
++}
+diff --git a/experiments/thermal_reference_v1/templates/session.example.json b/experiments/thermal_reference_v1/templates/session.example.json
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_reference_v1/templates/session.example.json
+@@ -0,0 +1,46 @@
++{
++  "schema": "TTO-EXTERNAL-REFERENCE-v1",
++  "example_only": true,
++  "run_id": "RUN-TO-BIND",
++  "session_id": "fin-session-1",
++  "measurement_kind": "fin_surface_ir",
++  "site_id": "fin-A",
++  "site_description": "出风口内固定可见鳍片区域；待定位确认",
++  "instrument": {
++    "manufacturer": null,
++    "model": null,
++    "serial_alias": null,
++    "radiometric_export_supported": null,
++    "accuracy": null,
++    "repeatability": null,
++    "resolution_c": null
++  },
++  "geometry": {
++    "distance_m": null,
++    "view_description": null,
++    "roi_definition": null,
++    "statistic": "fixed_point",
++    "position_photo": null,
++    "airflow_unmodified": null
++  },
++  "settings": {
++    "emissivity": null,
++    "reflected_temperature_c": null,
++    "surface_finish": null,
++    "focus": null,
++    "measurement_footprint": null
++  },
++  "time": {
++    "clock_domain": null,
++    "timezone": null,
++    "sync_anchors": [],
++    "sync_basis": null,
++    "sync_uncertainty_s": null
++  },
++  "absolute_status": "unverified_apparent_surface",
++  "future_role": "validation_reference_only",
++  "model_input": false,
++  "control_input": false,
++  "reference_record_id": "fin-background-1",
++  "synthetic": false
++}
+diff --git a/experiments/thermal_reference_v1/tests/test_continuous_contact.py b/experiments/thermal_reference_v1/tests/test_continuous_contact.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_reference_v1/tests/test_continuous_contact.py
+@@ -0,0 +1,114 @@
++"""ADD1 acceptance using generic synthetic CSV; no claim about actual YET export syntax."""
++from pathlib import Path
++import copy
++import csv
++import sys
++import pytest
++
++ROOT=Path(__file__).absolute().parents[1]
++sys.path.insert(0,str(ROOT))
++from refprep.files import read,write,sha,lines
++from refprep.records import register_session,import_file,latest_records,session_event
++from refprep.clocks import align_time
++from refprep.compare import compare
++
++
++@pytest.fixture
++def contact(tmp_path):
++    store=tmp_path/'normalized';fixture=ROOT/'fixtures/contact-synthetic'
++    for site in ['fin','back']:register_session(store,read(fixture/(site+'-session.json')))
++    return store,fixture
++
++
++def test_ADD1_original_rows_equal_values_channel_mapping_and_cadence(contact):
++    store,fixture=contact;path=fixture/'generic-continuous.csv';digest=sha(path)
++    receipt=import_file(store,path,read(fixture/'mapping.json'))
++    assert receipt['rows']==240 and receipt['added']==239 and receipt['rejected_rows']==1
++    records=latest_records(store)
++    assert len(records)==239
++    assert len([r for r in records if r['temperature_c']==41])>1
++    assert {r['site_id'] for r in records}=={'SYNTH-contact-fin-site','SYNTH-contact-back-site'}
++    assert sha(store/receipt['raw_stored_relative_path'])==digest==sha(path)
++    ledger=lines(store/receipt['row_ledger_relative_path'])
++    err=next(r for r in ledger if r['status']=='rejected')
++    assert err['provenance']['original_row']['temperature']=='ERR' and err['reason']
++    assert err['provenance']['csv_line_span'][0]==err['provenance']['input_row']+1
++    missing=next(r for r in records if r['record_id']=='contact-A-52')
++    assert missing['temperature_c'] is None and missing['original_value']==''
++    assert not any(r['record_id']=='contact-A-75' for r in records)
++    bg=next(r for r in records if r['record_id']=='contact-bg')
++    assert bg['measured_at_raw']==0 and bg['instrument_sample_time_raw']=='0'
++    assert bg['provenance']['exported_at_raw']!=bg['recorded_at_utc']
++    for cadence in receipt['cadence'].values():
++        assert cadence['positive_interval_median_s']==1 and cadence['positive_interval_max_s']>=2
++        assert cadence['equal_adjacent_temperature_pairs']>50
++    again=import_file(store,path,read(fixture/'mapping.json'))
++    assert again['added']==0 and again['status']=='duplicate_import'
++    assert len(latest_records(store))==239
++
++
++def test_ADD1_relative_time_needs_anchor_and_interval_basis(contact,tmp_path):
++    store,fixture=contact;mapping=read(fixture/'mapping.json')
++    mapping['time_axis']['mode']='relative_seconds'
++    mapping['time_axis']['interval_basis']=None
++    with pytest.raises(ValueError,match='independent'):import_file(store,fixture/'generic-continuous.csv',mapping)
++    mapping['time_axis']['interval_basis']='synthetic setting'
++    session=read(fixture/'fin-session.json');session['time']['sync_anchors']=[]
++    other=tmp_path/'no-anchor';register_session(other,session)
++    mapping['channels']={'A':dict(session_id=session['session_id'],site_id=session['site_id'])}
++    result=import_file(other,fixture/'generic-continuous.csv',mapping)
++    assert result['added']==0 and result['rejected_rows']==240
++    ledger=lines(other/result['row_ledger_relative_path'])
++    assert any('independent start anchor' in r['reason'] for r in ledger)
++    assert not (other/'records.jsonl').exists()
++
++
++def test_ADD1_timestamp_and_wide_column_selection_no_value_dedup(contact,tmp_path):
++    store,fixture=contact;mapping=read(fixture/'mapping.json')
++    # Selecting a named wide temperature column needs no vendor-specific parser.
++    path=tmp_path/'wide.csv'
++    path.write_text('time,probe_A,probe_B\n1,42,43\n2,42,43\n3,42,43\n')
++    mapping['columns']=dict(measured_at_raw='time',original_value='probe_A')
++    mapping['constants'].update(session_id='SYNTH-contact-fin',original_unit='C',original_channel='A')
++    mapping.pop('channels');mapping['time_axis']['mode']='relative_seconds'
++    receipt=import_file(store,path,mapping)
++    assert receipt['added']==3 and all(r['temperature_c']==42 for r in latest_records(store))
++    assert len({r['record_id'] for r in latest_records(store)})==3
++    # Timestamp route retains actual instrument strings; independent anchors still govern alignment.
++    stamp=tmp_path/'stamps.json';write(stamp,[dict(t='2026-10-14T10:00:00+08:00',v=108.5)])
++    mapping['columns']=dict(measured_at_raw='t',original_value='v');mapping['constants']['original_unit']='F'
++    mapping['time_axis']=dict(mode='timestamp')
++    assert import_file(store,stamp,mapping)['added']==1
++    assert latest_records(store)[-1]['temperature_c']==42.5
++    session=read(store/'sessions/SYNTH-contact-fin.json')
++    assert align_time(latest_records(store)[-1],session)['status']=='sample_clock_coordinate_not_anchor_clock'
++
++
++def test_ADD1_contact_no_IR_requirements_unknown_response_and_independent_time(contact,tmp_path):
++    store,fixture=contact;mapping=read(fixture/'mapping.json')
++    import_file(store,fixture/'generic-continuous.csv',mapping)
++    session=read(store/'sessions/SYNTH-contact-fin.json')
++    assert not any('emissivity' in f or 'roi' in f or 'reflected' in f for f in session['quality_limitations'])
++    assert any('response_not_calibrated' in f for f in session['quality_limitations'])
++    record=next(r for r in latest_records(store) if r['record_id']=='contact-A-60')
++    timing=align_time(record,session)
++    assert timing['interval_utc_s'] and timing['mapping']['drift_ppm']==pytest.approx(100,abs=.01)
++    changed=copy.deepcopy(record);changed['temperature_c']=999
++    assert align_time(changed,session)==timing
++    session['time']['sync_anchors'][1]['uncertainty_s']=None
++    assert align_time(record,session)['interval_utc_s'] is None
++
++
++def test_ADD1_probe_integrity_events_require_new_session_and_leave_model_frozen(contact,tmp_path):
++    store,fixture=contact;mapping=read(fixture/'mapping.json');trajectory=ROOT/'fixtures/real/M-frozen.jsonl'
++    before=sha(trajectory);import_file(store,fixture/'generic-continuous.csv',mapping)
++    event=session_event(store,'SYNTH-contact-fin','probe_loose','90',.5,'SYNTHETIC deliberate event')
++    assert event['new_session_required']
++    result=compare(store,trajectory,tmp_path/'report',draw=False)
++    paired=lines(tmp_path/'report/paired-points.jsonl')
++    post=[r for r in paired if r['record']['session_id']=='SYNTH-contact-fin' and r['record']['measured_at_raw']>=90]
++    assert post and all(r['model_match']['ranges'] is None for r in post)
++    assert any(r['model_match']['ranges'] is not None for r in paired if r['record']['session_id']=='SYNTH-contact-back')
++    assert before==sha(trajectory) and result['status']=='synthetic_demo_only'
++    assert not result['physical_mapping_validated'] and not result['real_YET_CSV_mapping_accepted']
++    assert not result['model_refit'] and result['session_events'][0]['event_id']==event['event_id']
+diff --git a/experiments/thermal_reference_v1/tests/test_reference.py b/experiments/thermal_reference_v1/tests/test_reference.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_reference_v1/tests/test_reference.py
+@@ -0,0 +1,234 @@
++"""Finite checks for this research-sidecar behavior, not production/firmware regression."""
++from pathlib import Path
++import copy
++import io
++import json
++import socket
++import sys
++import pytest
++
++ROOT=Path(__file__).absolute().parents[1]
++sys.path.insert(0,str(ROOT))
++from refprep.files import read,write,lines,sha,dump_lines
++from refprep.records import register_session,load_session,normalize,commit_record,import_file,latest_records,temperature
++from refprep.clocks import align_time,clock_map,utc_seconds,iso
++from refprep.cues import CueEngine,DEFAULT_PLAN,replay_events,read_events,watch_file,actual_event
++from refprep.compare import compare,asof_interval
++from ref import main as cli
++
++
++@pytest.fixture
++def store(tmp_path):
++    path=tmp_path/'sidecar'
++    register_session(path,read(ROOT/'fixtures/synthetic/fin-session.json'))
++    register_session(path,read(ROOT/'fixtures/synthetic/back-session.json'))
++    return path
++
++
++def test_T01_cli_plan_and_zero_compare_no_network(tmp_path,monkeypatch,capsys):
++    def forbidden(*args,**kwargs):raise AssertionError('Network action forbidden')
++    monkeypatch.setattr(socket,'create_connection',forbidden)
++    monkeypatch.setattr(socket,'getaddrinfo',forbidden)
++    assert cli(['plan'])==0
++    result=compare(tmp_path/'empty',ROOT/'fixtures/real/M-frozen.jsonl',tmp_path/'report',draw=False)
++    assert result['status']=='not_measured' and result['real_numeric_points']==0
++    assert not result['physical_mapping_validated'] and result['coverage']
++    assert (tmp_path/'report/中文对照报告.html').exists()
++
++
++def test_T02_fixed_cues_no_model_selection_or_request_storm():
++    events=read_events(ROOT/'fixtures/synthetic/events.jsonl');plan=read(ROOT/'fixtures/synthetic/cue-plan.json')
++    a=replay_events(events,plan)
++    changed=copy.deepcopy(events)
++    for e in changed:e['imaginary_model_prediction']=999
++    b=replay_events(changed+changed,plan)
++    def signature(s):return [(r['status'],r['checkpoint_ids'],r['prompt_due_at_utc'],r['replay_emitted_at_utc']) for r in s['history']]
++    assert signature(a)==signature(b)
++    prompts=[r for r in a['history'] if r['status']=='prompt']
++    assert len(prompts)==14
++    assert all(p['prompt_emitted_at_utc'] is None and p['replay'] for p in prompts)
++    times=[utc_seconds(p['replay_emitted_at_utc']) for p in prompts]
++    assert all(b-a>=30 for a,b in zip(times,times[1:]))
++
++
++def test_T02_real_runner_uses_actual_end_and_startup_does_not_catch_up(tmp_path):
++    path=ROOT/'fixtures/real/M-runner-events-subset.jsonl'
++    plan=read(ROOT/'fixtures/real/M-cue-plan.json')
++    events=read_events(path);result=replay_events(events,plan)
++    end=next(e for e in events if e['event']=='phase_end' and e['phase']=='M60')
++    actual=actual_event(end)
++    cue=next(h for h in result['history'] if any(k.startswith('medium-after30') for k in h['checkpoint_ids']))
++    assert utc_seconds(cue['prompt_due_at_utc'])==pytest.approx(actual['utc_s']+30,abs=1e-6)
++    assert end['actual_end_mono_s']!=end['planned_end_mono_s']
++    state=watch_file(path,plan,tmp_path/'watch',follow=False)
++    assert state['emitted_count']==0
++    again=watch_file(path,plan,tmp_path/'watch',follow=False)
++    assert again['emitted_count']==0
++
++
++def test_T02_late_duplicate_merge_cap_and_early_end():
++    plan=copy.deepcopy(DEFAULT_PLAN);plan['bindings']['medium']='M'
++    engine=CueEngine(plan,replay=True)
++    def event(kind,t,phase):return dict(event=kind,phase=phase,mono_s=t,occurred_at_utc=iso(t))
++    engine.ingest(event('phase_end',100,'M'),400)
++    engine.advance(400)
++    assert engine.state['emitted_count']<=1
++    assert sum(h['status']=='missed_late_event_no_catchup' for h in engine.state['history'])>=2
++    fresh=CueEngine(plan,replay=True)
++    fresh.ingest(event('phase_start',100,'sparse'),100)
++    fresh.ingest(event('phase_end',110,'sparse'),110)
++    assert any(h['status']=='not_collected_phase_ended' for h in fresh.state['history'])
++    merge=CueEngine(plan,replay=True)
++    merge.ingest(event('phase_end',100,'sparse'),100)
++    merge.ingest(event('phase_end',110,'M'),110)
++    assert any(len(c['checkpoint_ids'])==2 for c in merge.state['pending'])
++    assert all(c['original_due'] for c in merge.state['pending'])
++
++
++def test_T03_mark_late_value_and_write_are_distinct(store,capsys):
++    assert cli(['mark','--store',str(store),'--session-id','SYNTH-fin','--record-id','late'])==0
++    first=lines(store/'records.jsonl')[0]
++    assert first['operator_mark_at_utc'] and first['measured_at_raw'] is None and first['temperature_c'] is None
++    assert cli(['record','--store',str(store),'--session-id','SYNTH-fin','--record-id','late','--revise',
++        '--value','42.1','--unit','C','--measured-at','2026-10-13T17:40:00+00:00','--uncertainty-s','2'])==0
++    history=lines(store/'records.jsonl');current=latest_records(store)
++    assert len(history)==2 and len(current)==1
++    assert history[0]==first and current[0]['supersedes']==first['revision_id']
++    assert current[0]['operator_mark_at_utc']==first['operator_mark_at_utc']
++    assert current[0]['measured_at_raw']!=current[0]['recorded_at_utc']
++
++
++def test_T03_timezones_unknown_precision_and_clock_domains(store):
++    session=load_session(store,'SYNTH-fin')
++    rec=normalize(store,'SYNTH-fin',dict(record_id='t',original_value=42,original_unit='C',
++        measured_at_raw='2026-10-14T20:00:00+08:00',time_uncertainty_s=1))
++    aligned=align_time(rec,session)
++    assert aligned['interval_utc_s']==[utc_seconds('2026-10-14T12:00:00Z')-1,utc_seconds('2026-10-14T12:00:00Z')+1]
++    rec['measured_at_raw']='2026-10-14T12:00:00'
++    session['time']['timezone']=None
++    assert align_time(rec,session)['status']=='timezone_unknown'
++    rec['measured_at_raw']='2026-10-14T12:00:00Z';rec['time_uncertainty_s']=None
++    assert align_time(rec,session)['interval_utc_s'] is None
++    rec['clock_domain']='camera-not-host'
++    assert align_time(rec,session)['status']=='measurement_clock_not_session_clock'
++    session['time']=dict(clock_domain='camera',sync_anchors=[])
++    rec['clock_domain']='camera'
++    assert align_time(rec,session)['status']=='unaligned_clock'
++
++
++def test_T03_independent_offset_drift_and_monotonic_not_temperature():
++    profile=dict(clock_domain='camera',sync_anchors=[dict(clock_time=100.,run_utc=iso(1000),uncertainty_s=.2,evidence='clock-photo-1')])
++    m=clock_map(profile,'run')
++    assert m['scale']==1 and m['offset']==900 and m['anchor_error_s']==.2
++    assert 'single_anchor_offset_only_drift_unverified' in m['flags']
++    profile['sync_anchors'].append(dict(clock_time=200.,run_utc=iso(1100.1),uncertainty_s=.3,evidence='clock-photo-2'))
++    m=clock_map(profile,'run');assert m['scale']==pytest.approx(1.001)
++    s=dict(run_id='run',time=profile);r=dict(run_id='run',clock_domain='camera',measured_at_raw=150.,time_uncertainty_s=.1,temperature_c=41)
++    a=align_time(r,s);r['temperature_c']=100
++    assert align_time(r,s)==a
++    mono=dict(clock_domain='run_monotonic',sync_basis='same host clock pair',sync_uncertainty_s=.1)
++    assert clock_map(mono,'run',dict(run_id='run',utc_s=1000,mono_s=12))['offset']==988
++
++
++@pytest.mark.parametrize('value,unit,expected',[(32,'F',0),(108.5,'F',42.5),(0,'C',0),(None,'C',None)])
++def test_T04_units_null_and_no_precision_invention(value,unit,expected):
++    assert temperature(value,unit)==expected
++
++
++@pytest.mark.parametrize('value',['NaN','Infinity',float('-inf')])
++def test_T04_nonfinite_not_normal_reading(value):
++    with pytest.raises(ValueError):temperature(value,'C')
++
++
++def test_T04_session_and_site_kind_never_silently_merge(store):
++    s=load_session(store,'SYNTH-fin');s['settings']['emissivity']=.8
++    with pytest.raises(ValueError,match='Immutable'):register_session(store,s)
++    with pytest.raises(ValueError,match='measurement_kind mismatch'):
++        normalize(store,'SYNTH-fin',dict(record_id='wrong',measurement_kind='outlet_air',original_value=42,original_unit='C'))
++    assert load_session(store,'SYNTH-fin')['settings']['emissivity'] is None
++
++
++def test_T05_generic_csv_json_duplicate_and_artifact_sha(store,tmp_path):
++    fixture=ROOT/'fixtures/synthetic'
++    image=fixture/'image-evidence.png';before=sha(image)
++    a=import_file(store,fixture/'external.csv',read(fixture/'csv-mapping.json'))
++    b=import_file(store,fixture/'external.csv',read(fixture/'csv-mapping.json'))
++    assert a['added']==3 and b['status']=='duplicate_import' and b['added']==0
++    import_file(store,fixture/'external.json',read(fixture/'json-mapping.json'))
++    records=latest_records(store);assert len(records)==5
++    assert next(r for r in records if r['record_id']=='fin-work')['temperature_c']==42.5
++    picture=next(r for r in records if r['record_id']=='fin-image-only')
++    assert picture['temperature_c'] is None and picture['artifact']['sha256']==before
++    assert sha(store/picture['artifact']['stored_relative_path'])==before==sha(image)
++    assert picture['artifact']['numeric_decoding']=='not_performed'
++    assert picture['measured_at_raw'] is None and picture['artifact']['mtime_s_diagnostic_only']
++
++
++def test_T06_image_metadata_not_exposure_and_unknown_brand_allowed(store):
++    rec=normalize(store,'SYNTH-fin',dict(record_id='photo',artifact_path=ROOT/'fixtures/synthetic/image-evidence.png',
++        image_metadata_time_raw='2026-10-14T12:00:00Z'))
++    assert rec['temperature_c'] is None and rec['measured_at_raw'] is None
++    assert rec['artifact']['image_metadata_time_raw']
++    assert 'unknown_settings_emissivity' in rec['measurement_flags']
++
++
++def test_T08_interval_range_not_best_match_and_no_gap_interpolation():
++    def row(t,end,seg='a'):
++        return dict(utc_s=t,valid_until_utc_s=end,segment=seg,source_epoch=1,state_input_cutoff_utc_s=t,ref=str(t),
++            **{k:40+t for k in ['measured_TJ_C','Tf_A_long_C','Ts_A_long_C','STATE_G2_C','STATE_LP30_C','STATE_QS_C','STATE_LP120_C','actual_successful_PWM_percent_at_state_origin']})
++    rows=[row(10,11.5),row(11,11.4),row(12.5,14)]
++    a=asof_interval(rows,10.2,11.2)
++    assert a['ranges']['STATE_G2_C']==[50,51]
++    assert asof_interval(rows,11.2,12.6)['ranges'] is None
++    assert asof_interval(rows,11.6,11.7)['status']=='asof_state_expired'
++    contiguous=[row(10,11),row(11,12,'new')]
++    assert 'boundary' in asof_interval(contiguous,10.2,11.2)['status']
++    real=lines(ROOT/'fixtures/real/M-frozen.jsonl')
++    assert asof_interval(real,real[20]['utc_s'],real[24]['utc_s'])['ranges'] is not None
++    assert all(r['original_qualification_refs'] and 'sealed original' in r['validity_source'] for r in real)
++
++
++def test_T07_T09_external_changes_do_not_change_models_or_select_new_reference(store,tmp_path):
++    trajectory=ROOT/'fixtures/real/M-frozen.jsonl';before=sha(trajectory)
++    times=read(ROOT/'fixtures/synthetic/point-times.json')
++    for ident,value,key in [('fin-bg',41,'background'),('second',42,'work')]:
++        rec=normalize(store,'SYNTH-fin',dict(record_id=ident,original_value=value,original_unit='C',
++            measured_at_raw=times[key],time_uncertainty_s=0))
++        commit_record(store,rec)
++    first=compare(store,trajectory,tmp_path/'a',draw=False)
++    values=dict(record_id='second',original_value=80,original_unit='C',measured_at_raw=times['work'],time_uncertainty_s=0)
++    commit_record(store,normalize(store,'SYNTH-fin',values),allow_revision=True)
++    second=compare(store,trajectory,tmp_path/'b',draw=False)
++    p=lines(tmp_path/'b/paired-points.jsonl')
++    assert all(v['delta']['reference_record_id']=='fin-bg' for v in p if v['delta'])
++    assert before==sha(trajectory) and first['model_sha256']==second['model_sha256']
++    assert second['physical_mapping_validated'] is False and not second['model_refit']
++
++
++def test_T03_interactive_capture_is_interval_not_exact_camera_exposure(store,monkeypatch,capsys):
++    s=read(ROOT/'fixtures/synthetic/fin-session.json');s['session_id']='unknown-camera';s['time']=dict(clock_domain='camera',sync_anchors=[])
++    register_session(store,s);monkeypatch.setattr('builtins.input',lambda prompt:'42')
++    assert cli(['record','--store',str(store),'--session-id','unknown-camera','--capture-interval'])==0
++    rec=latest_records(store)[-1]
++    assert rec['measured_interval_raw']['start']<=rec['measured_interval_raw']['end']
++    assert rec['measured_at_raw'] is None and rec['clock_domain']=='operator_host_utc'
++    assert align_time(rec,s)['interval_utc_s'] is None
++
++
++def test_T11_maintenance_only_numeric_tolerance_original_hash_strict():
++    provenance=read(ROOT/'maintenance/provenance.json')
++    original=ROOT/'handoff/references/slowstate-snapshot/tests/test_slowstate.py'
++    assert sha(original)==provenance['original_test_file_sha256']
++    old=(ROOT/'maintenance/original-target-test.txt').read_text()
++    new=(ROOT/'maintenance/tolerance-target-test.py.txt').read_text()
++    assert new==old.replace("assert all(r['Tf']==r['sealed_Tf'] for r in long)","assert all(abs(r['Tf']-r['sealed_Tf'])<=1e-10 for r in long)")
++    source=ROOT.parent/'thermal_slowstate_v1'
++    if source.exists():
++        def replay_lines(path):
++            value=lines(path)
++            if path.name=='states-A-long.jsonl':value[0]['Tf']+=1e-14  # in-memory cross-platform rounding example only
++            return value
++        ns=dict(ROOT=source,read=read,jsonlines=replay_lines)
++        exec(compile(new,'maintained-old-target','exec'),ns)
++        ns['test_two_dimensional_export_and_anchor_not_forecast']((None,None,None,lines(source/'results/states-causal60.jsonl')))
++    assert sha(original)==provenance['original_test_file_sha256']
+diff --git a/experiments/thermal_reference_v1/verify_archive.py b/experiments/thermal_reference_v1/verify_archive.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_reference_v1/verify_archive.py
+@@ -0,0 +1,29 @@
++"""Verify the evidence ZIP CRC and every member SHA; optional extraction into a new directory."""
++from pathlib import Path
++import argparse
++import hashlib
++import json
++import zipfile
++
++
++def verify(path,extract=None):
++    with zipfile.ZipFile(path) as archive:
++        assert archive.testzip() is None,'CRC mismatch'
++        manifest=json.loads(archive.read('thermal_reference_v1/SHA256.json'))
++        expected=manifest['files']
++        actual=set(archive.namelist())-{'thermal_reference_v1/SHA256.json'}
++        assert actual==set(expected),'Unlisted or missing member'
++        for name,entry in expected.items():
++            assert hashlib.sha256(archive.read(name)).hexdigest()==entry['sha256'],name
++            assert len(archive.read(name))==entry['bytes'],name
++        if extract:
++            target=Path(extract)
++            assert not target.exists(),'Use a fresh extraction directory'
++            assert all(not Path(n).is_absolute() and '..' not in Path(n).parts for n in archive.namelist())
++            target.mkdir(parents=True);archive.extractall(target)
++    return dict(status='pass',CRC='pass',members=len(expected),extracted_to=str(extract) if extract else None,
++                note='Package integrity only; not a device, instrument, model, or control validation')
++
++if __name__=='__main__':
++    p=argparse.ArgumentParser();p.add_argument('zip',type=Path);p.add_argument('--extract',type=Path)
++    a=p.parse_args();print(json.dumps(verify(a.zip,a.extract),ensure_ascii=False))
+diff --git a/experiments/thermal_reference_v1/verify_local.py b/experiments/thermal_reference_v1/verify_local.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_reference_v1/verify_local.py
+@@ -0,0 +1,79 @@
++"""Read back delivered sidecars and immutable inputs; never contacts GitHub or devices."""
++from pathlib import Path
++import argparse
++import json
++from refprep.files import read,write,lines,sha
++from refprep.records import latest_records
++
++ROOT=Path(__file__).absolute().parent
++
++
++def verify(run_output,check_originals=True):
++    run_output=Path(run_output);checks={}
++    original=read(ROOT/'handoff/SHA256.json')['files']
++    for path,entry in original.items():assert sha(ROOT/'handoff'/path)==entry['sha256'],path
++    checks['handoff_members_unchanged']=len(original)
++    index=read(ROOT/'source-index.json')
++    for group in ['local_real_fixture_files','synthetic_fixture_files']:
++        for path,digest in index[group].items():assert sha(ROOT/path)==digest,path
++    for name,digest in read(ROOT/'stage1-freeze.json')['model_sha256'].items():
++        assert sha(ROOT/'frozen/models'/name)==digest
++        assert sha(ROOT/'handoff/references/slowstate-snapshot/sources/models'/name)==digest
++    assert sha(ROOT/'prep-spec.json')==read(ROOT/'stage1-freeze.json')['spec_sha256']
++    checks['three_frozen_models_and_spec']='exact SHA match'
++    zero=read(run_output/'zero-report/comparison.json');demo=read(run_output/'synthetic-report/comparison.json')
++    assert zero['status']=='not_measured' and zero['numeric_points']==0
++    assert demo['status']=='synthetic_demo_only' and demo['real_numeric_points']==0
++    assert demo['paired_points']==5 and demo['numeric_points']==5
++    assert all(not r['physical_mapping_validated'] for r in [zero,demo])
++    checks['zero_and_synthetic_reports_correct']=True
++    history=lines(run_output/'reference-sidecar/records.jsonl');latest=latest_records(run_output/'reference-sidecar')
++    assert len(history)==7 and len(latest)==6
++    bg=[r for r in history if r['record_id']=='fin-bg']
++    assert bg[0]['measured_at_raw'] is None and bg[1]['operator_mark_at_utc']==bg[0]['operator_mark_at_utc']
++    assert bg[1]['supersedes']==bg[0]['revision_id'] and bg[1]['measured_at_raw']!=bg[1]['recorded_at_utc']
++    for r in history:
++        if r['artifact']:assert sha(run_output/'reference-sidecar'/r['artifact']['stored_relative_path'])==r['artifact']['sha256']
++    checks['append_only_late_entry_and_original_artifact_SHA']=True
++    cues=lines(run_output/'synthetic-cues/reminders.jsonl')
++    prompts=[r for r in cues if r['status']=='prompt']
++    assert len(prompts)==14 and all(r['replay'] and r['prompt_emitted_at_utc'] is None for r in prompts)
++    checks['fixed_virtual_prompts']=len(prompts)
++    paired=lines(run_output/'synthetic-report/paired-points.jsonl')
++    for r in paired:
++        assert r['record']['synthetic'] and not r['record']['model_input'] and not r['record']['control_input']
++        if r['delta']:
++            expected='fin-bg' if r['record']['session_id']=='SYNTH-fin' else 'back-bg'
++            assert r['delta']['reference_record_id']==expected
++    checks['one_reference_per_site_session_no_model_feedback']=True
++    for name in ['zero-report','synthetic-report']:
++        for suffix in ['comparison.json','paired-points.jsonl','中文对照报告.html','中文对照报告.md']:
++            assert (run_output/name/suffix).is_file()
++    checks['reports_read_back']=True
++    for path,digest in read(ROOT/'contact-source-index.json')['files'].items():assert sha(ROOT/path)==digest,path
++    assert sha(ROOT/'prep-add1-spec.json')==read(ROOT/'stage-add1-freeze.json')['spec_sha256']
++    contact=read(run_output/'contact-report/comparison.json')
++    assert contact['status']=='synthetic_demo_only' and not contact['real_YET_CSV_mapping_accepted']
++    imports=lines(run_output/'contact-sidecar/imports.jsonl');receipt=imports[0]
++    assert len(imports)==1 and receipt['rows']==240 and receipt['rejected_rows']==1 and receipt['added']==239
++    assert sha(run_output/'contact-sidecar'/receipt['raw_stored_relative_path'])==receipt['input_sha256']
++    assert contact['real_numeric_points']==0 and contact['synthetic_numeric_points']==238
++    assert contact['unpaired_reasons']['probe_integrity_event_requires_new_session']>0
++    assert all(c['positive_interval_median_s']==1 and c['positive_interval_max_s']==2 for c in receipt['cadence'].values())
++    checks['ADD1_continuous_CSV_raw_SHA_rows_channels_missing_values_and_probe_events']=True
++    if check_originals and ROOT.parent.name=='experiments':
++        repo=ROOT.parents[1]
++        protected=read(ROOT/'protected-before.json')
++        bad=[path for path,digest in protected.items() if not (repo/path).is_file() or sha(repo/path)!=digest]
++        assert not bad,bad[:20]
++        checks['protected_worktree_file_SHA_unchanged']=len(protected)
++    else:checks['protected_worktree_file_SHA_unchanged']='portable archive: original checkout not required'
++    write(run_output/'readback.json',dict(status='pass',checks=checks,physical_mapping_validated=False,
++        actual_measurement_performed=False,model_refit=False,device_actions=False))
++    print(json.dumps(dict(status='pass',checks=checks),ensure_ascii=False))
++
++
++if __name__=='__main__':
++    ap=argparse.ArgumentParser();ap.add_argument('--run-output',type=Path,required=True)
++    ap.add_argument('--skip-original-checkout',action='store_true')
++    args=ap.parse_args();verify(args.run_output,not args.skip_original_checkout)
+diff --git a/experiments/thermal_reference_v1/一页操作卡.md b/experiments/thermal_reference_v1/一页操作卡.md
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_reference_v1/一页操作卡.md
+@@ -0,0 +1,36 @@
++# 连续接触测温：一页操作卡（ADD1）
++
++**软件已完成通用离线验证；真实YET-610L CSV映射待1～2分钟样例；现场测温未执行。现在仅复审和离线演示，不启动仪表、设备或新负载。**
++
++已购买YET-610L、K型探头和耐温聚酰亚胺胶带。未来由用户将感温端固定在同一局部散热表面；记录位置、实际表面情况和固定方式。背板用另一测点/会话。无需再选购器材或以安装照作为软件开工条件。接触式不填红外发射率、反射温度、ROI；局部读数不等于空气、整块均温或直接测得Ts。
++
++**现在可运行的单一离线入口（在本研究目录）：**
++
++```sh
++python3 ref.py plan
++python3 run_offline.py --output /private/tmp/tto-reference-demo-NEW
++```
++
++输出含连续CSV合成、人工/红外备用、零测温三类报告。合成CSV不是YET真实格式，也不是现场读数。
++
++**下一次另获现场授权后的四项操作：**
++
++1. **开始独立记录。** 计划1秒保存一次，确认仪表实际设置；TTO保持原AUTO、曲线、gain、保护与既有采样。用户操作仪表，不连接N305、不运行USB/串口驱动。工具不启动负载。
++2. **记录开始锚点。** 开始附近独立核对仪表时钟与带时区的主机UTC时间；只有相对秒/序号时，记录“仪表第0秒/首序号对应的开始时间区间”和记录间隔设置依据。保留按下开始前/后的主机时间作为不确定区间；不将按键瞬间冒充第一采样时刻。能拍下时钟则关联照片，不能拍也可明确写下核对经过和误差。开始时间与仪表采样、导出、导入分开。
++3. **结束附近再次核对时钟，然后结束记录。** 保存结束锚点及误差，用独立首末锚点检查漂移；不看两条温度曲线重合程度调时。漏点不延长、不重跑。实际CSV核对中位/最小/最大间隔、倒序/同时间和缺点，1秒采样不证明探头响应已标定。
++4. **探头移动、重贴或松脱时另记事件并换测量会话。** 原会话后续值保留，暂停其独立对照资格；不静默接着算同一表面。只记录事件，不由本工具改变任务。条件不安全时停止测量并由现场人员处理，不触碰旋转部件或遮挡风道。
++
++**结束后一次交回：** 原始CSV、仪器记录间隔依据、开始/结束钟点及误差、通道/测点/固定表面说明、异常/移动记录。无需十几次抄读数，也无需逐点发聊天。实际样例到货后仅补必要映射与回归。
++
++**导入真实样例前**复制`templates/contact-session.example.json`和`templates/numeric-export-mapping.example.json`，填真实run ID、CSV列名/单位/通道→会话/测点映射及独立时钟锚点；示例占位符不是已知YET列名。新run环境温度另记，不能复制旧M的24°C。仅相对秒用`relative_seconds`，序号用`sample_index`并明确`index_origin`、`sample_interval_s`和依据；绝对采样时间用`timestamp`。宽表每次选择一个真实温度列并指定通道，分通道导入。一个会话至多预登记一个背景记录ID；未定可留null，不事后挑最贴合的参考。
++
++```sh
++python3 ref.py init-session --store ./my-sidecar --session ./my-contact-session.json
++python3 ref.py import --store ./my-sidecar --file ./original-export.csv --mapping ./my-numeric-mapping.json
++python3 ref.py session-event --store ./my-sidecar --session-id contact-fin-1 --type probe_loose --measured-at '仪表实际时钟或相对秒' --note '实际情况；时间不明则省略measured-at'
++python3 ref.py compare --store ./my-sidecar --trajectory ./same-run-frozen-trajectory.jsonl --output ./comparison-NEW
++```
++
++事件命令中的时刻是待替换说明，不是实测；不确定度另用`--uncertainty-s`，未知保持空。原CSV按SHA原字节归档，原行号/值及拒绝原因保留；规范化写新sidecar。相邻等温不去重，空值/ERR不补零，时间不明不配对。只能对同run冻结轨迹独立比较，不拿旧M冒充新run。外部温度不进入重训、状态纠偏或控制；零测温也有报告。
++
++**备用功能保留：** `mark`/`record --revise`支持人工迟录和原图关联，`watch-events --replay`支持旧事件的稀疏提醒回放；完整用法见README。连续模式不启动这些逐点提醒。本轮到交回复审停止，不部署、不实测。
+diff --git a/experiments/thermal_reference_v1/连续测温版操作卡.md b/experiments/thermal_reference_v1/连续测温版操作卡.md
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_reference_v1/连续测温版操作卡.md
+@@ -0,0 +1,36 @@
++# 连续接触测温：一页操作卡（ADD1）
++
++**软件已完成通用离线验证；真实YET-610L CSV映射待1～2分钟样例；现场测温未执行。现在仅复审和离线演示，不启动仪表、设备或新负载。**
++
++已购买YET-610L、K型探头和耐温聚酰亚胺胶带。未来由用户将感温端固定在同一局部散热表面；记录位置、实际表面情况和固定方式。背板用另一测点/会话。无需再选购器材或以安装照作为软件开工条件。接触式不填红外发射率、反射温度、ROI；局部读数不等于空气、整块均温或直接测得Ts。
++
++**现在可运行的单一离线入口（在本研究目录）：**
++
++```sh
++python3 ref.py plan
++python3 run_offline.py --output /private/tmp/tto-reference-demo-NEW
++```
++
++输出含连续CSV合成、人工/红外备用、零测温三类报告。合成CSV不是YET真实格式，也不是现场读数。
++
++**下一次另获现场授权后的四项操作：**
++
++1. **开始独立记录。** 计划1秒保存一次，确认仪表实际设置；TTO保持原AUTO、曲线、gain、保护与既有采样。用户操作仪表，不连接N305、不运行USB/串口驱动。工具不启动负载。
++2. **记录开始锚点。** 开始附近独立核对仪表时钟与带时区的主机UTC时间；只有相对秒/序号时，记录“仪表第0秒/首序号对应的开始时间区间”和记录间隔设置依据。保留按下开始前/后的主机时间作为不确定区间；不将按键瞬间冒充第一采样时刻。能拍下时钟则关联照片，不能拍也可明确写下核对经过和误差。开始时间与仪表采样、导出、导入分开。
++3. **结束附近再次核对时钟，然后结束记录。** 保存结束锚点及误差，用独立首末锚点检查漂移；不看两条温度曲线重合程度调时。漏点不延长、不重跑。实际CSV核对中位/最小/最大间隔、倒序/同时间和缺点，1秒采样不证明探头响应已标定。
++4. **探头移动、重贴或松脱时另记事件并换测量会话。** 原会话后续值保留，暂停其独立对照资格；不静默接着算同一表面。只记录事件，不由本工具改变任务。条件不安全时停止测量并由现场人员处理，不触碰旋转部件或遮挡风道。
++
++**结束后一次交回：** 原始CSV、仪器记录间隔依据、开始/结束钟点及误差、通道/测点/固定表面说明、异常/移动记录。无需十几次抄读数，也无需逐点发聊天。实际样例到货后仅补必要映射与回归。
++
++**导入真实样例前**复制`templates/contact-session.example.json`和`templates/numeric-export-mapping.example.json`，填真实run ID、CSV列名/单位/通道→会话/测点映射及独立时钟锚点；示例占位符不是已知YET列名。新run环境温度另记，不能复制旧M的24°C。仅相对秒用`relative_seconds`，序号用`sample_index`并明确`index_origin`、`sample_interval_s`和依据；绝对采样时间用`timestamp`。宽表每次选择一个真实温度列并指定通道，分通道导入。一个会话至多预登记一个背景记录ID；未定可留null，不事后挑最贴合的参考。
++
++```sh
++python3 ref.py init-session --store ./my-sidecar --session ./my-contact-session.json
++python3 ref.py import --store ./my-sidecar --file ./original-export.csv --mapping ./my-numeric-mapping.json
++python3 ref.py session-event --store ./my-sidecar --session-id contact-fin-1 --type probe_loose --measured-at '仪表实际时钟或相对秒' --note '实际情况；时间不明则省略measured-at'
++python3 ref.py compare --store ./my-sidecar --trajectory ./same-run-frozen-trajectory.jsonl --output ./comparison-NEW
++```
++
++事件命令中的时刻是待替换说明，不是实测；不确定度另用`--uncertainty-s`，未知保持空。原CSV按SHA原字节归档，原行号/值及拒绝原因保留；规范化写新sidecar。相邻等温不去重，空值/ERR不补零，时间不明不配对。只能对同run冻结轨迹独立比较，不拿旧M冒充新run。外部温度不进入重训、状态纠偏或控制；零测温也有报告。
++
++**备用功能保留：** `mark`/`record --revise`支持人工迟录和原图关联，`watch-events --replay`支持旧事件的稀疏提醒回放；完整用法见README。连续模式不启动这些逐点提醒。本轮到交回复审停止，不部署、不实测。

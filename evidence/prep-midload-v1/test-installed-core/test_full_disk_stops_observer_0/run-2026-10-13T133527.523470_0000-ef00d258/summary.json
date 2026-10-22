@@ -1,0 +1,99 @@
+{
+  "stop_reason": "LimitReached:injected_full_disk",
+  "poll_missed": 0,
+  "poll_count": 2,
+  "connection_attempts": 1,
+  "payload_oversize": 0,
+  "orin_event_count": 0,
+  "business_payload_bytes_sum": 0,
+  "business_payload_bytes_max": 0,
+  "poll_rtt_ms": [
+    4.089957976248115,
+    0.5462910048663616
+  ],
+  "prediction_ms": [],
+  "rss_mib": [],
+  "cpu_pct_single_core": [],
+  "elapsed_s": 0.012319832982029766,
+  "queue_peak_items": 3,
+  "queue_peak_bytes": 735,
+  "dropped": 0,
+  "quality": {
+    "boundary_run_end": 1
+  },
+  "processing": {},
+  "target_host_verified": false,
+  "polling_health": {
+    "contract": "TTO-POLL-INDEPENDENT-v1",
+    "max_inflight_per_endpoint": 1,
+    "max_total_inflight_limit": 2,
+    "max_total_inflight_observed": 2,
+    "end_inflight": 0,
+    "legacy_config_max_inflight_esp32": 1,
+    "endpoints": {
+      "fan": {
+        "sent": 1,
+        "returned": 1,
+        "http_ok": 0,
+        "errors": 1,
+        "skipped": 0,
+        "cancelled": 0,
+        "peak_inflight": 1,
+        "rtt_ms": {
+          "n": 1,
+          "p50": 4.089957976248115,
+          "p95": 4.089957976248115,
+          "min": 4.089957976248115,
+          "max": 4.089957976248115
+        },
+        "send_interval_s": {
+          "n": 0,
+          "p50": null,
+          "p95": null,
+          "min": null,
+          "max": null
+        },
+        "return_interval_s": {
+          "n": 0,
+          "p50": null,
+          "p95": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "temp": {
+        "sent": 1,
+        "returned": 1,
+        "http_ok": 0,
+        "errors": 1,
+        "skipped": 0,
+        "cancelled": 0,
+        "peak_inflight": 1,
+        "rtt_ms": {
+          "n": 1,
+          "p50": 0.5462910048663616,
+          "p95": 0.5462910048663616,
+          "min": 0.5462910048663616,
+          "max": 0.5462910048663616
+        },
+        "send_interval_s": {
+          "n": 0,
+          "p50": null,
+          "p95": null,
+          "min": null,
+          "max": null
+        },
+        "return_interval_s": {
+          "n": 0,
+          "p50": null,
+          "p95": null,
+          "min": null,
+          "max": null
+        }
+      }
+    }
+  },
+  "ended_at_utc": "2026-10-13T13:35:27.537504+00:00",
+  "raw_bytes": 0,
+  "observations": 0
+}

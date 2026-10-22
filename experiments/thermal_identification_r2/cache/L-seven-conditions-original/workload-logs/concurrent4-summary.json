@@ -1,0 +1,58 @@
+{
+  "started_at": "2026-10-13T04:02:06.854871+00:00",
+  "model": "RM-01 VLM",
+  "concurrency": 4,
+  "duration_target_seconds": 600,
+  "workers": {
+    "1": {
+      "requests": 3,
+      "completed": 2,
+      "characters": 14636,
+      "chunks": 4184,
+      "errors": [],
+      "last_usage": {
+        "prompt_tokens": 51,
+        "total_tokens": 3853,
+        "completion_tokens": 3802
+      }
+    },
+    "2": {
+      "requests": 4,
+      "completed": 3,
+      "characters": 13921,
+      "chunks": 4180,
+      "errors": [],
+      "last_usage": {
+        "prompt_tokens": 51,
+        "total_tokens": 1382,
+        "completion_tokens": 1331
+      }
+    },
+    "3": {
+      "requests": 4,
+      "completed": 3,
+      "characters": 14932,
+      "chunks": 4181,
+      "errors": [],
+      "last_usage": {
+        "prompt_tokens": 51,
+        "total_tokens": 2500,
+        "completion_tokens": 2449
+      }
+    },
+    "4": {
+      "requests": 4,
+      "completed": 3,
+      "characters": 14149,
+      "chunks": 4181,
+      "errors": [],
+      "last_usage": {
+        "prompt_tokens": 51,
+        "total_tokens": 2693,
+        "completion_tokens": 2642
+      }
+    }
+  },
+  "elapsed_seconds": 600.13,
+  "ended_at": "2026-10-13T04:12:06.986734+00:00"
+}

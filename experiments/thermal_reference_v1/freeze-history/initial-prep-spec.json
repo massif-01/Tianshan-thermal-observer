@@ -1,0 +1,72 @@
+{
+  "contract": "TTO-REF-PREP-v1.0",
+  "research_model_primary_sha256": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
+  "scope": {
+    "software_local": true,
+    "issue_1_write": true,
+    "docs_only_pr": true,
+    "software_publish": false,
+    "device_access": false,
+    "new_workload": false,
+    "model_refit": false,
+    "sensor_required_for_software": false,
+    "camera_sdk_required": false
+  },
+  "supported_input_paths": [
+    "manual_points",
+    "numeric_export",
+    "image_evidence"
+  ],
+  "cue_policy": {
+    "trigger_source": "occurred_local_trial_events",
+    "model_driven": false,
+    "max_prompts": 14,
+    "minimum_spacing_s": 30,
+    "missed_policy": "record_missing_do_not_wait_or_rerun",
+    "post_group_offsets_s": [
+      30,
+      120,
+      300
+    ],
+    "sequence_status": "software_template_actual_field_plan_pending"
+  },
+  "comparison": {
+    "primary": [
+      "STATE-G2",
+      "STATE-LP30"
+    ],
+    "secondary": [
+      "STATE-QS",
+      "STATE-LP120"
+    ],
+    "model_input_from_external_reference": false,
+    "per_phase_rebaseline": false,
+    "fit_time_shift": false,
+    "fit_surface_mapping": false,
+    "sparse_gap_fill": false
+  },
+  "status_required": [
+    "software_implemented",
+    "offline_checks",
+    "issue_updated",
+    "docs_pr_created",
+    "instrument_profile_confirmed",
+    "surface_measurement_performed",
+    "physical_mapping_validated",
+    "model_refit",
+    "control_authorization"
+  ],
+  "frozen_at_utc": "2026-10-14T04:38:26.614448+00:00",
+  "implementation_choices": {
+    "session": "immutable run/site/kind/statistic/geometry/settings; changes create new session",
+    "records": "append-only revisions; separate prompt/mark/measurement/write; no timestamp from mtime",
+    "time": "explicit clock domains; independent anchors only; unknown uncertainty remains unknown",
+    "alignment": "as-of original frozen legal state; no extrapolation past original validity; interval range only if fully covered in one strict segment",
+    "reference": "one explicitly predeclared record per run/site/session; no phase rescale or fitted time shift",
+    "cues": "background +30/+120; sparse +180 and actual end +30/+120; precontinuous preceding idle +270; continuous +60 and actual end +30/+120/+300; optional medium actual start boundary and actual end +30/+120/+300",
+    "late_cues": "never replay past due points on normal startup; grace 5s; minimum30s merges/dedup, cap14; no missed-measurement retry",
+    "model_truth": "Tf A-long is TJ estimate; causal Tf is observed anchor; Ts/LP are latent; surface reference not Ts truth",
+    "empty_measurements": "not_measured report with telemetry/coverage; physical_mapping_validated false",
+    "images": "local byte copy + SHA; no OCR/color/radiometric inference; capture metadata time separate from diagnostic mtime"
+  }
+}

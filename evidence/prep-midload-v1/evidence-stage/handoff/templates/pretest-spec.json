@@ -1,0 +1,160 @@
+{
+  "execution_id": "TTO-PREP-MIDLOAD-v1.0",
+  "created_on": "2026-10-13",
+  "type": "implementation_and_test_preparation_spec",
+  "not_an_implemented_tto_config": true,
+  "current_authorization": {
+    "local_code_changes": true,
+    "offline_tests_and_build": true,
+    "self_owned_loopback_tests": true,
+    "git_commit": false,
+    "git_push": false,
+    "create_pr": false,
+    "device_access": false,
+    "target_installation": false,
+    "real_inference_requests": false,
+    "real_collect_or_shadow": false,
+    "new_model_fitting": false,
+    "fan_writes": false
+  },
+  "repository": {
+    "url": "https://github.com/massif-01/Tianshan-thermal-observer",
+    "main_read_on_preparation": "a27ddb6f41c887fd9f08d4120f98d97eed31f4d0",
+    "historical_research_code_reference": "52f571acb128af44f4b06bbba049148e00fd97fb",
+    "collector_git_blob_read": "637e4571cdaa3a6f316ad24e56689dfd593a9de6",
+    "force_checkout": false
+  },
+  "collector_changes": {
+    "nominal_fan_interval_s": 1,
+    "nominal_temp_interval_s": 5,
+    "use_existing_config_values": true,
+    "fixed_post_response_sleep_replaced": true,
+    "slow_endpoints_have_independent_plans": true,
+    "max_inflight_per_endpoint": 1,
+    "max_total_esp32_inflight": 2,
+    "minimum_start_spacing": "configured_interval",
+    "missed_cycles": "skip_without_catch_up",
+    "fan_validity_s_unchanged": 2.5,
+    "source_sampling_change": false,
+    "reuse_existing_read_only_security": true,
+    "future_live_load_verified": false
+  },
+  "research_evaluation": {
+    "version": "TTO-EVAL-AVAIL-v2.0",
+    "location": "new_research_module_only",
+    "modify_production_scoring": false,
+    "preserve_old_strict_results": true,
+    "retrain_models": false,
+    "A_requires_future_inputs_complete": true,
+    "B_future_aux_gap_alone_does_not_invalidate_TJ_error": true,
+    "B_sets": [
+      "all_emitted_with_valid_truth",
+      "confirmed_normal",
+      "aux_observation_gap",
+      "observed_abnormal_or_changed"
+    ],
+    "source_conflict_and_isolation_rules_preserved": true,
+    "origin_eligibility_per_method": true,
+    "horizons_s": [
+      15,
+      45,
+      90
+    ],
+    "common_origins_per_comparison": true,
+    "coverage_is_not_model_improvement": true
+  },
+  "prospective_trial": {
+    "status": "prepare_only_not_authorized_for_live_execution",
+    "id": "TTO-MIDLOAD-DEV-v1.0",
+    "data_role": "new_development_process_not_final_confirmation",
+    "default_mode": "dry_run",
+    "live_requires_explicit_flag_and_future_authorization": true,
+    "one_collector": true,
+    "fan_mode": "auto",
+    "model_must_already_be_resident": true,
+    "no_other_known_active_workload": true,
+    "warmup_is_not_thermal_equilibrium": true,
+    "initial_read_only_check_s": 180,
+    "required_recent_continuous_inputs_s": 60,
+    "phases": [
+      {
+        "id": "resident_background",
+        "kind": "passive",
+        "duration_s": 600
+      },
+      {
+        "id": "M20",
+        "kind": "sequential_request_admission_window",
+        "duration_s": 20
+      },
+      {
+        "id": "cooldown_1",
+        "kind": "passive_after_actual_end",
+        "duration_s": 420
+      },
+      {
+        "id": "M60",
+        "kind": "sequential_request_admission_window",
+        "duration_s": 60
+      },
+      {
+        "id": "cooldown_2",
+        "kind": "passive_after_actual_end",
+        "duration_s": 600
+      },
+      {
+        "id": "M180",
+        "kind": "sequential_request_admission_window",
+        "duration_s": 180
+      },
+      {
+        "id": "final_cooldown",
+        "kind": "passive_after_actual_end",
+        "duration_s": 600
+      }
+    ],
+    "nominal_duration_s": 2480,
+    "hard_limit_s": 2700,
+    "max_inflight_inference": 1,
+    "max_request_wall_s": 30,
+    "max_natural_drain_per_block_s": 30,
+    "max_total_requests": 256,
+    "max_output_tokens_per_request": 256,
+    "supports_field_must_be_checked_from_existing_material": true,
+    "no_new_request_after_window_deadline": true,
+    "timeout_means_server_finished": false,
+    "stop_sending_on_uncertain_completion": true,
+    "keep_real_idle_gaps_and_power_history": true,
+    "ambient_temperature_default": null,
+    "ambient_missing_does_not_block_software_preparation": true,
+    "ambient_missing_limits_boundary_conclusions": true,
+    "known_safety_states_stop_new_work": [
+      "guard_active",
+      "temp_stale",
+      "fault"
+    ],
+    "operator_stop_temperature_c": null,
+    "invent_universal_thermal_limit": false,
+    "automatic_retry_whole_trial": false,
+    "automatic_server_restart": false
+  },
+  "delivery": {
+    "report": "TTO-软件修改与中等负载测试准备报告.md",
+    "evidence": "TTO-软件修改与中等负载测试准备证据包.zip",
+    "evidence_includes": [
+      "patch",
+      "needed_code_and_tests",
+      "freeze_and_coverage",
+      "offline_logs",
+      "sha256_manifest",
+      "runner",
+      "one_page_real_operation_card",
+      "candidate_installer_if_runtime_changed"
+    ],
+    "final_status": {
+      "live_validation": "not_performed",
+      "new_model_training": "not_performed",
+      "control_authorization": "none"
+    }
+  }
+}

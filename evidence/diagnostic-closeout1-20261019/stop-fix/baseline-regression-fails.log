@@ -1,0 +1,33 @@
+test_external_stop_uses_observation_time_and_drains_from_it (test_stop_clock.StopClockTests.test_external_stop_uses_observation_time_and_drains_from_it) ... ERROR
+test_missing_or_backwards_time_is_rejected (test_stop_clock.StopClockTests.test_missing_or_backwards_time_is_rejected) ... FAIL
+test_repeated_notification_keeps_first_stop_and_natural_completion (test_stop_clock.StopClockTests.test_repeated_notification_keeps_first_stop_and_natural_completion) ... ERROR
+test_tick_internal_stop_also_uses_current_time (test_stop_clock.StopClockTests.test_tick_internal_stop_also_uses_current_time) ... ok
+
+======================================================================
+ERROR: test_external_stop_uses_observation_time_and_drains_from_it (test_stop_clock.StopClockTests.test_external_stop_uses_observation_time_and_drains_from_it)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/tto-stop-clock-fix-20261019/tests/test_stop_clock.py", line 16, in test_external_stop_uses_observation_time_and_drains_from_it
+    self.s.stop('collector_exited',now=2.125)
+TypeError: Scheduler.stop() got an unexpected keyword argument 'now'
+
+======================================================================
+ERROR: test_repeated_notification_keeps_first_stop_and_natural_completion (test_stop_clock.StopClockTests.test_repeated_notification_keeps_first_stop_and_natural_completion)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/tto-stop-clock-fix-20261019/tests/test_stop_clock.py", line 26, in test_repeated_notification_keeps_first_stop_and_natural_completion
+    self.s.stop('collector_exited',now=2.125)
+TypeError: Scheduler.stop() got an unexpected keyword argument 'now'
+
+======================================================================
+FAIL: test_missing_or_backwards_time_is_rejected (test_stop_clock.StopClockTests.test_missing_or_backwards_time_is_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/tto-stop-clock-fix-20261019/tests/test_stop_clock.py", line 33, in test_missing_or_backwards_time_is_rejected
+    with self.assertRaises(TypeError):self.s.stop('collector_exited')
+AssertionError: TypeError not raised
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.001s
+
+FAILED (failures=1, errors=2)

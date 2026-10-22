@@ -1,0 +1,75 @@
+{
+  "replayed_comparison": {
+    "files": [
+      "predictions.jsonl",
+      "A-long-points.jsonl",
+      "B-metrics.json",
+      "A-roll-metrics.json",
+      "A-long-metrics.json",
+      "coverage.json",
+      "decisions.json"
+    ],
+    "rows": 4830,
+    "numeric_fields": 134518,
+    "max_abs_difference": 1.0373923942097463e-12,
+    "fits": 0
+  },
+  "independent_45_HOLD_metrics": {
+    "B0": {
+      "n": 1184,
+      "MAE_C": 0.39798564189189195,
+      "P95_absolute_C": 1.6825000000000008,
+      "max_underestimate_C": 4.625
+    },
+    "B1": {
+      "n": 1184,
+      "MAE_C": 0.7319261195577259,
+      "P95_absolute_C": 3.210651302796614,
+      "max_underestimate_C": 7.669329612592421
+    },
+    "G2-FROZEN-RM01-v1:HOLD": {
+      "n": 1184,
+      "MAE_C": 0.5743125836361699,
+      "P95_absolute_C": 2.1684837692905257,
+      "max_underestimate_C": 4.3605233359202344
+    },
+    "G2-GEN-L-20261021-v1:HOLD": {
+      "n": 1184,
+      "MAE_C": 0.6715250693120499,
+      "P95_absolute_C": 2.291832403566139,
+      "max_underestimate_C": 4.181653369240337
+    },
+    "G2-CAL-M-20261021-v1:HOLD": {
+      "n": 1184,
+      "MAE_C": 0.7861064961142474,
+      "P95_absolute_C": 2.670620612720778,
+      "max_underestimate_C": 5.403386350723849
+    },
+    "baseline-LP30": {
+      "n": 1184,
+      "MAE_C": 0.644111932388264,
+      "P95_absolute_C": 2.161141755467176,
+      "max_underestimate_C": 4.217156433475935
+    },
+    "baseline-LP120": {
+      "n": 1184,
+      "MAE_C": 0.6842244693735391,
+      "P95_absolute_C": 2.1870091117311876,
+      "max_underestimate_C": 4.436670033041189
+    }
+  },
+  "author_loopback": {
+    "predictions": 117,
+    "scored": 18,
+    "G2_independently_propagated": 15,
+    "G2_max_abs_difference": 1.4210854715202004e-14,
+    "first_qualified_labels_verified": true
+  },
+  "review_loopback": {
+    "predictions": 117,
+    "scored": 15,
+    "G2_independently_propagated": 18,
+    "G2_max_abs_difference": 1.4210854715202004e-14,
+    "first_qualified_labels_verified": true
+  }
+}

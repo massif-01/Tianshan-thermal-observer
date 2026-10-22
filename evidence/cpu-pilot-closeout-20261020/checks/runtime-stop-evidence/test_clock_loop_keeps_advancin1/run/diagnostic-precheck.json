@@ -1,0 +1,66 @@
+{
+  "last_evaluation": {
+    "collection_available": false,
+    "model_available": false,
+    "field_safety_available": false,
+    "execution_authorized": false,
+    "instrument_clock_ready": true,
+    "explicit_stop": false,
+    "start_allowed": false,
+    "reasons": [
+      "measurement_unusable",
+      "model_unavailable_or_state_expired",
+      "control_context_unready",
+      "current_load_authorization_absent"
+    ],
+    "observer_state": "uninitialized",
+    "successful_PWM_age_s": 0.1935036249924451,
+    "measurement_current": {
+      "tj": false,
+      "power": false,
+      "last_successful_pwm": true,
+      "control_context": true
+    },
+    "source_ages_s": {
+      "tj": null,
+      "power": null,
+      "last_successful_pwm": 0.1935036249924451,
+      "control_context": 0.19343370897695422
+    },
+    "source_expiry_mono_s": {
+      "tj": null,
+      "power": null,
+      "last_successful_pwm": 941005.7486175,
+      "control_context": 941010.748687416
+    },
+    "model_state_age_s": 0.19233649992384017,
+    "model_consumable_until_mono_s": 941005.748687416,
+    "safety_status": "fresh",
+    "observation_cutoff": "adb93190-3781-4641-89b8-d2b4846d247c/observation:3",
+    "native_quality_preserved": true,
+    "model_permission": {
+      "local_demo": true,
+      "formal_field_authorized": false,
+      "device_actions": false
+    }
+  },
+  "time_coverage": {
+    "observed_s": 0.20291833393275738,
+    "measurement_usable_s": 0.0,
+    "model_usable_s": 0.0,
+    "context_ready_s": 0.0,
+    "joint_ready_s": 0.0,
+    "work_paused_s": 0.0,
+    "tj_usable_s": 0.0,
+    "rail_usable_s": 0.0,
+    "PWM_usable_s": 0.10139491688460112,
+    "temp_context_usable_s": 0.10139491688460112
+  },
+  "phase_seconds": {
+    "uninitialized": 0.20291833393275738
+  },
+  "current_measurement_model_context_ready": false,
+  "load_authorized": false,
+  "automatic_upgrade_to_mixed": false,
+  "note": "Snapshot/time coverage only. New current authorization, instrument and fresh preflight remain required; not a root cause fix."
+}

@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/Users/massif/Tianshan-thermal-observer/experiments/thermal_cpu_increment_v1/verify_results.py", line 84, in <module>
+    verify(a.result.resolve(),a.output.resolve(),a.check_originals)
+  File "/Users/massif/Tianshan-thermal-observer/experiments/thermal_cpu_increment_v1/verify_results.py", line 48, in verify
+    assert a['prediction']=={k:v for k,v in b['prediction'].items() if k in a['prediction']}
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

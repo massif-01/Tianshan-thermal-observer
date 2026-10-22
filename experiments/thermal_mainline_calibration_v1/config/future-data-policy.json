@@ -1,0 +1,22 @@
+{
+  "contract": "TTO-MAINLINE-FUTURE-DATA-v1",
+  "status": "preregistered_before_any_new_observation_data; not executed",
+  "current_examples": "L/S/M/Y/fixed-anchors all previously examined development; no blind confirmation this turn",
+  "identity": ["device_id", "thermal_config_id", "actual_run_id", "observer_host_id", "boot_or_clock_domain", "model/spec/software SHA"],
+  "physical_configuration_unknowns": "retain null and reason; do not treat administrative labels as verified hardware revisions",
+  "grouping": "one physical device and thermal configuration per model/registry; duplicate field/modeling actual_run_id is one process",
+  "v1_implemented_partition": "disjoint complete actual runs only",
+  "temporal_order_for_future_use": "earlier complete approved runs for calibration; later whole processes reserved for confirmation; freeze roles and checksums before fit",
+  "same_run_business_sessions": "not implemented as automatic v1 splitting; require preregistered real session boundaries and explicit causal history handling before use; never alias adjacent seconds as independent runs",
+  "boundary_guard": {"longest_horizon_s": 90, "rule": "labels never cross an actual-run/model/config/clock boundary; remove any label extending beyond a reserved partition. Do not fill missing 90s by deleting valid 45s labels"},
+  "initialization": "past observations at each origin only; same 60s budget and E policy for every model; no future temperature or validation-wide state fitting",
+  "data_ingest": "TTO-G2-MODELING-DATA-v1 from original quality-engine evidence and unchanged R2 data_views; no vendor schema or TTL guessing",
+  "role_changes": "if new reserved data is inspected for threshold/window/model selection, record as development; do not automatically add a fresh experiment to obtain a pass",
+  "insufficient_processes": "candidate generation may proceed from approved informative calibration data, but output future_confirmation_available=false; do not fabricate a validation partition",
+  "metrics": "A-long/A-roll separate from past-only B-HOLD and B-RELAX30; 15/45/90 independently; 45 primary; common origins/labels plus full accepted-TJ denominator, background/dynamic strata and underprediction tails",
+  "candidate_decisions": "insufficient/numerically_incomplete/not_better/development_tradeoff/manual_observation_candidate. Report average and tails; no automatic activation",
+  "selection": "explicit reason and confirmation, retained rollback, next new observation session only; existing session model/state never hot switched",
+  "new_field_permission": false,
+  "control_permission": false,
+  "CPU_per_core_and_200ms_12_requests": "paused; negative results retained"
+}

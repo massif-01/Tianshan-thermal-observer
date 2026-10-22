@@ -1,0 +1,52 @@
+{
+  "run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+  "session_id": "yet610l-ch1-trial",
+  "site_id": "ch1-location-see-formal-probe-record",
+  "measurement_kind": "surface_contact",
+  "site_description": "CH1固定于散热鳍片、位置靠近出风口；沿用本轮原固定位置，不能深入的局部表面测点",
+  "instrument": {
+    "model": "YET-610L",
+    "serial_alias": "26071081",
+    "firmware_version": "2.1.0",
+    "accuracy": null
+  },
+  "contact": {
+    "fixed_position": "CH1固定于散热鳍片、位置靠近出风口；沿用本轮原固定位置，不能深入的局部表面测点",
+    "surface_condition": null,
+    "attachment_method": "专用胶带固定",
+    "installation_verified": false,
+    "probe_response_calibrated": false,
+    "installation_verification": "user_confirmation_only; physical calibration not established"
+  },
+  "geometry": {
+    "statistic": "single_probe_reading"
+  },
+  "settings": {
+    "actual_record_interval_s": 1,
+    "interval_evidence": "CSV Logging Summary + actual 2983 adjacent intervals checked below"
+  },
+  "time": {
+    "clock_domain": "instrument_local_datetime",
+    "timezone": null,
+    "sync_anchors": []
+  },
+  "reference_record_id": null,
+  "synthetic": false,
+  "model_input": false,
+  "control_input": false,
+  "probe_integrity_report": {
+    "native_run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+    "site_description": "CH1固定于散热鳍片、位置靠近出风口；沿用本轮原固定位置，不能深入的局部表面测点",
+    "attachment_method": "专用胶带固定",
+    "user_confirmation": "始终固定，三项都没有发生",
+    "user_confirmation_source": "reply to call_a22cd037ee624a63b80975c94c9a3d2b",
+    "recorded_at_utc": "2026-10-19T10:31:22.810236+00:00",
+    "message_timestamp": null,
+    "moved": false,
+    "loosened": false,
+    "instrument_clock_reset": false,
+    "reference_meaning": "local heatsink fin surface contact; not environment and not directly measured model Ts",
+    "ambient_temperature_C": null,
+    "response_calibrated": false
+  }
+}

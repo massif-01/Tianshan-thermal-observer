@@ -1,0 +1,126 @@
+{
+  "status": "historical_verified_from_local_artifacts_not_current_residency",
+  "run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+  "version": "0.2.4+closeout.2",
+  "clock": {
+    "domain": "lpmu305:580450:581592c9-4203-4cc6-817e-ed73c332431d",
+    "mono_before_s": 350745.493645926,
+    "utc": "2026-10-19T09:41:14.197777+00:00",
+    "mono_after_s": 350745.493670926,
+    "utc_clock_accuracy_s": null,
+    "host": "lpmu305",
+    "platform": "Linux-6.8.0-147-generic-x86_64-with-glibc2.39",
+    "pid": 580450
+  },
+  "inference": {
+    "base_url": "http://10.10.99.98:58000",
+    "model": "RM-01 VLM",
+    "messages": [
+      {
+        "role": "user",
+        "content": "请用中文写一篇连续、详细的科普文章，解释计算机芯片在不同负载下为什么会升温，以及散热器、风扇和环境温度各自怎样影响降温。请按自然段展开，不要输出代码。"
+      }
+    ],
+    "max_tokens": 256,
+    "request_timeout_s": 30,
+    "stream": true,
+    "sampling": {},
+    "headers_file": null,
+    "ca_file": null,
+    "confirmed_client_slots": 4,
+    "identity_evidence": {
+      "path": "/home/rm01/TTO-fixed-anchors-closeout2-20261019/preflight/readiness-preparation.json",
+      "sha256": "c0cf2ad5221422be9ae9b4a8eb2c5ea082b87da8201ba6b044d56f062774d96b",
+      "capacity_basis": "current Thor vLLM argv --max-num-seqs 4; not GPU parallelism proof",
+      "root": "/home/rm01/models/dev/llm/Qwen3.8-27B-NVFP4/",
+      "model_config_sha256": "fd29e5c031dfb051fe591bec1c6417e313be3d1d777e742a2b67de2da937a6b6"
+    }
+  },
+  "client_peak_inflight": 4,
+  "completed": 179,
+  "all_DONE_finish_usage": true,
+  "gpu_kernel_start_end": null,
+  "current_device_id": null,
+  "current_model_resident": null,
+  "current_capacity": null,
+  "source": "evidence/fixed-anchors-closeout2-20261019/actor-evidence/run",
+  "artifacts": {
+    "evidence/fixed-anchors-closeout2-20261019/actor-evidence/run/launch.json": "60de6f42b43181668b2868396c3f1b46f87e8aef4a6bacec13773e23134284b9",
+    "evidence/fixed-anchors-closeout2-20261019/actor-evidence/run/protocol.jsonl": "628f793ac98525db2c6df5b780130c63fb03c5d007bb0cfce18677d890713623",
+    "evidence/fixed-anchors-closeout2-20261019/actor-evidence/run/scheduler-events.jsonl": "0287a350acd140e94d641e028025288a892c914123fd04863dceaf7a399a2641",
+    "evidence/fixed-anchors-closeout2-20261019/actor-evidence/run/summary.json": "3c5eb75d7d6a7e50c066200883519181da655587924ba7592e927003e2989d62"
+  },
+  "historical_resident_preflight": {
+    "checked_at_utc": "2026-10-19T09:40:52.475817+00:00",
+    "known_process_conflicts": [],
+    "model_check_utc": "2026-10-19T09:40:22.013336+00:00",
+    "model": "RM-01 VLM",
+    "root": "/home/rm01/models/dev/llm/Qwen3.8-27B-NVFP4/",
+    "max_model_len": 262144,
+    "running_requests": 0,
+    "waiting_requests": 0,
+    "scope": "point-in-time preparation; executable rechecks resident/idle"
+  },
+  "historical_engine": "vLLM; version/build not established by the preflight receipt",
+  "historical_profile": {
+    "id": "fixed-anchors",
+    "role": "development",
+    "model_profile": "existing-dense-27b-confirm-before-live",
+    "same_model_within_run": true,
+    "stages": [
+      {
+        "kind": "background",
+        "seconds": 300
+      },
+      {
+        "kind": "work",
+        "concurrency": 1,
+        "seconds": 360,
+        "repeat_key": "single-anchor"
+      },
+      {
+        "kind": "recovery",
+        "seconds": 90
+      },
+      {
+        "kind": "work",
+        "concurrency": 2,
+        "seconds": 270
+      },
+      {
+        "kind": "recovery",
+        "seconds": 240
+      },
+      {
+        "kind": "work",
+        "concurrency": 4,
+        "seconds": 450
+      },
+      {
+        "kind": "recovery",
+        "seconds": 120
+      },
+      {
+        "kind": "work",
+        "concurrency": 1,
+        "seconds": 360,
+        "repeat_key": "single-anchor"
+      },
+      {
+        "kind": "final_recovery",
+        "seconds": 480
+      }
+    ],
+    "nominal_seconds": 2670,
+    "hard_limit_seconds": 3600,
+    "preparation_reserve_seconds": 300,
+    "drain_per_work_max_seconds": 90,
+    "cleanup_reserve_seconds": 120,
+    "budget": {
+      "nominal_s": 2670,
+      "work_blocks": 4,
+      "worst_reserved_s": 3450,
+      "remaining_s": 150
+    }
+  }
+}

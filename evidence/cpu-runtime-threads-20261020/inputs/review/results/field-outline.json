@@ -1,0 +1,40 @@
+{
+  "run": "80938521-b659-4160-a7b2-5fdfb6ebc197",
+  "raw_kinds": {
+    "boundary": 2,
+    "fan": 60,
+    "temp": 12,
+    "orin": 60,
+    "tick": 59
+  },
+  "state_records": 193,
+  "admission_records": 592,
+  "source_wire_records": 27,
+  "accepted_arrivals": 27,
+  "fan_errors": 0,
+  "fan_max_success_interval_s": 1.0419124710024334,
+  "protocol_requests": 0,
+  "original_summary": {
+    "observed_s": 60.00768507400062,
+    "measurement_usable_s": 59.49453874595929,
+    "model_usable_s": 50.47598356596427,
+    "context_ready_s": 54.426017730962485,
+    "joint_ready_s": 50.47598356596427,
+    "work_paused_s": 0.0,
+    "tj_usable_s": 59.49453874595929,
+    "rail_usable_s": 59.49453874595929,
+    "PWM_usable_s": 59.697751238010824,
+    "temp_context_usable_s": 59.697751238010824
+  },
+  "capability_checks": {
+    "native_delay_budget": true,
+    "complete_native": true,
+    "packets": false,
+    "clock_identified": true,
+    "cpu_measured": true,
+    "read_budget": true,
+    "jitter_budget": true,
+    "no_sidecar_trip": false,
+    "native_fan_gap": true
+  }
+}

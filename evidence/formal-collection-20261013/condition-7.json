@@ -1,0 +1,25 @@
+{
+  "record": {
+    "kind": "additional_condition_reported",
+    "observer_run_id": "f43af598-d8e1-43f2-824b-9471d35b0593",
+    "source": "human_report",
+    "verbatim": "现在多加一个工况记录，就是模型下掉，回到1的空载待机，我现在已经进入，你可以采集了",
+    "condition_id": 7,
+    "condition_label": "模型卸载后空载待机",
+    "equivalent_operating_condition_id": 1,
+    "previous_condition_id": 6,
+    "model_state_reported": "模型已下掉",
+    "reported_event_time": {
+      "description": "用户报告当前已进入模型下掉后的空载待机；卸载开始、完成及进入待机的精确时刻未提供",
+      "precision": "approximate_current_state",
+      "exact_unload_start_at_utc": null,
+      "exact_unload_end_at_utc": null,
+      "exact_idle_start_at_utc": null
+    },
+    "recorded_at_utc": "2026-10-13T03:03:37.066276+00:00",
+    "collection_continues": true,
+    "note": "Added phase 7 to distinguish post-unload idle from initial phase 1; no inference about exact unloading duration."
+  },
+  "latest_observation_received_at_utc": "2026-10-13T03:03:36.891818+00:00",
+  "expected_end_at_utc": "2026-10-13T03:29:14.931136+00:00"
+}

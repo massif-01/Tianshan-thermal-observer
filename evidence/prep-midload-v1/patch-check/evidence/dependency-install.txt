@@ -1,0 +1,120 @@
+WARNING: The directory '/Users/massif/Library/Caches/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.
+Collecting python-socketio==5.13.0
+  Downloading python_socketio-5.13.0-py3-none-any.whl.metadata (3.2 kB)
+Collecting aiohttp==3.11.18
+  Downloading aiohttp-3.11.18-cp312-cp312-macosx_11_0_arm64.whl.metadata (7.7 kB)
+Collecting psutil==7.0.0
+  Downloading psutil-7.0.0-cp36-abi3-macosx_11_0_arm64.whl.metadata (22 kB)
+Collecting numpy==2.2.6
+  Downloading numpy-2.2.6-cp312-cp312-macosx_14_0_arm64.whl.metadata (62 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 62.0/62.0 kB 293.6 kB/s eta 0:00:00
+Collecting scipy==1.15.3
+  Downloading scipy-1.15.3-cp312-cp312-macosx_14_0_arm64.whl.metadata (61 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 62.0/62.0 kB 900.5 kB/s eta 0:00:00
+Collecting scikit-learn==1.6.1
+  Downloading scikit_learn-1.6.1-cp312-cp312-macosx_12_0_arm64.whl.metadata (31 kB)
+Collecting pytest==8.3.5
+  Downloading pytest-8.3.5-py3-none-any.whl.metadata (7.6 kB)
+Collecting pytest-asyncio==0.26.0
+  Downloading pytest_asyncio-0.26.0-py3-none-any.whl.metadata (4.0 kB)
+Collecting build==1.2.2.post1
+  Downloading build-1.2.2.post1-py3-none-any.whl.metadata (6.5 kB)
+Collecting uv==0.8.22
+  Downloading uv-0.8.22-py3-none-macosx_11_0_arm64.whl.metadata (11 kB)
+Collecting bidict>=0.21.0 (from python-socketio==5.13.0)
+  Downloading bidict-0.24.1-py3-none-any.whl.metadata (8.7 kB)
+Collecting python-engineio>=4.11.0 (from python-socketio==5.13.0)
+  Downloading python_engineio-4.14.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting aiohappyeyeballs>=2.3.0 (from aiohttp==3.11.18)
+  Downloading aiohappyeyeballs-2.7.1-py3-none-any.whl.metadata (5.9 kB)
+Collecting aiosignal>=1.1.2 (from aiohttp==3.11.18)
+  Downloading aiosignal-1.4.0-py3-none-any.whl.metadata (3.7 kB)
+Collecting attrs>=17.3.0 (from aiohttp==3.11.18)
+  Downloading attrs-26.1.0-py3-none-any.whl.metadata (8.8 kB)
+Collecting frozenlist>=1.1.1 (from aiohttp==3.11.18)
+  Downloading frozenlist-1.8.0-cp312-cp312-macosx_11_0_arm64.whl.metadata (20 kB)
+Collecting multidict<7.0,>=4.5 (from aiohttp==3.11.18)
+  Downloading multidict-6.9.1-cp312-cp312-macosx_11_0_arm64.whl.metadata (5.3 kB)
+Collecting propcache>=0.2.0 (from aiohttp==3.11.18)
+  Downloading propcache-0.5.4-cp312-cp312-macosx_11_0_arm64.whl.metadata (25 kB)
+Collecting yarl<2.0,>=1.17.0 (from aiohttp==3.11.18)
+  Downloading yarl-1.25.1-cp312-cp312-macosx_11_0_arm64.whl.metadata (111 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 111.6/111.6 kB 789.8 kB/s eta 0:00:00
+Collecting joblib>=1.2.0 (from scikit-learn==1.6.1)
+  Downloading joblib-1.6.0-py3-none-any.whl.metadata (6.5 kB)
+Collecting threadpoolctl>=3.1.0 (from scikit-learn==1.6.1)
+  Downloading threadpoolctl-3.7.0-py3-none-any.whl.metadata (24 kB)
+Collecting iniconfig (from pytest==8.3.5)
+  Downloading iniconfig-2.3.1-py3-none-any.whl.metadata (2.8 kB)
+Collecting packaging (from pytest==8.3.5)
+  Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+Collecting pluggy<2,>=1.5 (from pytest==8.3.5)
+  Downloading pluggy-1.6.0-py3-none-any.whl.metadata (4.8 kB)
+Collecting pyproject_hooks (from build==1.2.2.post1)
+  Downloading pyproject_hooks-1.3.3-py3-none-any.whl.metadata (1.3 kB)
+Collecting typing-extensions>=4.2 (from aiosignal>=1.1.2->aiohttp==3.11.18)
+  Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting cloudpickle>=3.0 (from joblib>=1.2.0->scikit-learn==1.6.1)
+  Downloading cloudpickle-3.1.2-py3-none-any.whl.metadata (7.1 kB)
+Collecting simple-websocket>=0.10.0 (from python-engineio>=4.11.0->python-socketio==5.13.0)
+  Downloading simple_websocket-1.1.0-py3-none-any.whl.metadata (1.5 kB)
+Collecting idna>=2.0 (from yarl<2.0,>=1.17.0->aiohttp==3.11.18)
+  Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+Collecting wsproto (from simple-websocket>=0.10.0->python-engineio>=4.11.0->python-socketio==5.13.0)
+  Downloading wsproto-1.3.2-py3-none-any.whl.metadata (5.2 kB)
+Collecting h11<1,>=0.16.0 (from wsproto->simple-websocket>=0.10.0->python-engineio>=4.11.0->python-socketio==5.13.0)
+  Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+Downloading python_socketio-5.13.0-py3-none-any.whl (77 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 77.8/77.8 kB 1.3 MB/s eta 0:00:00
+Downloading aiohttp-3.11.18-cp312-cp312-macosx_11_0_arm64.whl (457 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 457.6/457.6 kB 856.2 kB/s eta 0:00:00
+Downloading psutil-7.0.0-cp36-abi3-macosx_11_0_arm64.whl (239 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 239.5/239.5 kB 4.0 MB/s eta 0:00:00
+Downloading numpy-2.2.6-cp312-cp312-macosx_14_0_arm64.whl (5.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.1/5.1 MB 4.0 MB/s eta 0:00:00
+Downloading scipy-1.15.3-cp312-cp312-macosx_14_0_arm64.whl (22.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 22.4/22.4 MB 14.8 MB/s eta 0:00:00
+Downloading scikit_learn-1.6.1-cp312-cp312-macosx_12_0_arm64.whl (11.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 11.2/11.2 MB 13.9 MB/s eta 0:00:00
+Downloading pytest-8.3.5-py3-none-any.whl (343 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 343.6/343.6 kB 26.0 MB/s eta 0:00:00
+Downloading pytest_asyncio-0.26.0-py3-none-any.whl (19 kB)
+Downloading build-1.2.2.post1-py3-none-any.whl (22 kB)
+Downloading uv-0.8.22-py3-none-macosx_11_0_arm64.whl (18.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 18.2/18.2 MB 18.5 MB/s eta 0:00:00
+Downloading aiohappyeyeballs-2.7.1-py3-none-any.whl (15 kB)
+Downloading aiosignal-1.4.0-py3-none-any.whl (7.5 kB)
+Downloading attrs-26.1.0-py3-none-any.whl (67 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 67.5/67.5 kB 32.2 MB/s eta 0:00:00
+Downloading bidict-0.24.1-py3-none-any.whl (36 kB)
+Downloading frozenlist-1.8.0-cp312-cp312-macosx_11_0_arm64.whl (50 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 50.4/50.4 kB 32.0 MB/s eta 0:00:00
+Downloading joblib-1.6.0-py3-none-any.whl (306 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 306.1/306.1 kB 58.1 MB/s eta 0:00:00
+Downloading multidict-6.9.1-cp312-cp312-macosx_11_0_arm64.whl (57 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 57.7/57.7 kB 169.5 MB/s eta 0:00:00
+Downloading packaging-26.3-py3-none-any.whl (129 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 130.0/130.0 kB 35.7 MB/s eta 0:00:00
+Downloading pluggy-1.6.0-py3-none-any.whl (20 kB)
+Downloading propcache-0.5.4-cp312-cp312-macosx_11_0_arm64.whl (52 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 52.5/52.5 kB 13.2 MB/s eta 0:00:00
+Downloading python_engineio-4.14.0-py3-none-any.whl (60 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 60.3/60.3 kB 74.7 MB/s eta 0:00:00
+Downloading threadpoolctl-3.7.0-py3-none-any.whl (26 kB)
+Downloading yarl-1.25.1-cp312-cp312-macosx_11_0_arm64.whl (104 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 104.3/104.3 kB 56.0 MB/s eta 0:00:00
+Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+Downloading pyproject_hooks-1.3.3-py3-none-any.whl (10 kB)
+Downloading cloudpickle-3.1.2-py3-none-any.whl (22 kB)
+Downloading idna-3.20-py3-none-any.whl (69 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 69.6/69.6 kB 109.0 MB/s eta 0:00:00
+Downloading simple_websocket-1.1.0-py3-none-any.whl (13 kB)
+Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.6/45.6 kB 30.7 MB/s eta 0:00:00
+Downloading wsproto-1.3.2-py3-none-any.whl (24 kB)
+Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+Installing collected packages: uv, typing-extensions, threadpoolctl, pyproject_hooks, psutil, propcache, pluggy, packaging, numpy, multidict, iniconfig, idna, h11, frozenlist, cloudpickle, bidict, attrs, aiohappyeyeballs, yarl, wsproto, scipy, pytest, joblib, build, aiosignal, simple-websocket, scikit-learn, pytest-asyncio, aiohttp, python-engineio, python-socketio
+Successfully installed aiohappyeyeballs-2.7.1 aiohttp-3.11.18 aiosignal-1.4.0 attrs-26.1.0 bidict-0.24.1 build-1.2.2.post1 cloudpickle-3.1.2 frozenlist-1.8.0 h11-0.16.0 idna-3.20 iniconfig-2.3.1 joblib-1.6.0 multidict-6.9.1 numpy-2.2.6 packaging-26.3 pluggy-1.6.0 propcache-0.5.4 psutil-7.0.0 pyproject_hooks-1.3.3 pytest-8.3.5 pytest-asyncio-0.26.0 python-engineio-4.14.0 python-socketio-5.13.0 scikit-learn-1.6.1 scipy-1.15.3 simple-websocket-1.1.0 threadpoolctl-3.7.0 typing-extensions-4.16.0 uv-0.8.22 wsproto-1.3.2 yarl-1.25.1
+
+[notice] A new release of pip is available: 24.0 -> 26.2.1
+[notice] To update, run: /Users/massif/Tianshan-thermal-observer/.venv/bin/python -m pip install --upgrade pip

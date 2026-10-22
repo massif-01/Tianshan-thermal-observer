@@ -1,0 +1,82 @@
+{
+  "schema": "TTO-AUTOWORKDAY-PROPOSAL-v1",
+  "status": "DESIGN_ONLY_NOT_AN_EXISTING_CLI_CONFIG",
+  "field_authorized": false,
+  "simulated_workload_real_telemetry": true,
+  "total_elapsed_seconds": 86400,
+  "health_checkpoint_seconds": 7200,
+  "max_concurrency": 1,
+  "max_submissions": 600,
+  "max_client_inflight_seconds": 18000,
+  "request_max_tokens": 256,
+  "request_protocol_budget_seconds": 30,
+  "frozen_seed_for_plan_generation": 20261022,
+  "no_catch_up": true,
+  "observer_candidate": "0.2.4+observe.2",
+  "observer_remains_read_only": true,
+  "collector_count": 1,
+  "request_executor_count": 1,
+  "requester_reads_future_schedule": true,
+  "predictor_reads_future_schedule": false,
+  "automatic_retrain": false,
+  "continuous_human_attendance_required": false,
+  "stages": [
+    {
+      "id": "background_health",
+      "start_s": 0,
+      "end_s": 7200,
+      "workload": "no_added_requests"
+    },
+    {
+      "id": "sparse_qa",
+      "start_s": 7200,
+      "end_s": 21600,
+      "workload": "single_sparse"
+    },
+    {
+      "id": "conversation_clusters",
+      "start_s": 21600,
+      "end_s": 28800,
+      "workload": "single_clusters"
+    },
+    {
+      "id": "bounded_batch",
+      "start_s": 28800,
+      "end_s": 32400,
+      "workload": "single_batch_blocks"
+    },
+    {
+      "id": "cooldown",
+      "start_s": 32400,
+      "end_s": 36000,
+      "workload": "no_added_requests"
+    },
+    {
+      "id": "long_rest",
+      "start_s": 36000,
+      "end_s": 64800,
+      "workload": "no_added_requests"
+    },
+    {
+      "id": "irregular_mix",
+      "start_s": 64800,
+      "end_s": 84600,
+      "workload": "single_mixed"
+    },
+    {
+      "id": "final_recovery",
+      "start_s": 84600,
+      "end_s": 86400,
+      "workload": "no_added_requests"
+    }
+  ],
+  "schedule_notes": {
+    "sparse_qa": "After confirmed completion, proposed wait 120..480s; never cross phase start-submit deadline.",
+    "conversation_clusters": "Proposed 4..8 serial requests with brief waits, then 480..1200s rest; fit into phase without catch-up.",
+    "bounded_batch": "Proposed issue windows of 360,540,300 seconds with gaps; each includes a bounded drain allocation.",
+    "last_new_request_latest_s": 84570,
+    "global_limits_precede_phase_plan": true,
+    "temperature_safety": "Reuse/explicitly map approved active-request safety rules; this JSON supplies no new thermal thresholds.",
+    "natural_usage_claim": "Not a statistically measured replica of the user."
+  }
+}

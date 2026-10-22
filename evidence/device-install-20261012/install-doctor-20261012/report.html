@@ -1,0 +1,119 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'"><title>TTO 采集质量报告</title><style>body{font-family:system-ui,sans-serif;max-width:1120px;margin:36px auto;padding:0 22px;color:#223029;background:#f6f8f5;line-height:1.7}h1,h2{line-height:1.3}.notice{padding:18px;background:#fff0c9;border-left:5px solid #b36c05}table{border-collapse:collapse;width:100%;background:white}td,th{border:1px solid #d4ddd6;padding:8px;text-align:left;overflow-wrap:anywhere}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#eaf0eb;padding:18px}svg{width:100%;height:auto;background:white}.good{color:#146944}details{margin:16px 0}</style><body><h1>TTO 采集质量报告</h1><p class="notice">数据暂不可用，预测已暂停；核对端点、身份和新鲜度。</p><h2>下一步</h2><p>由用户填写本机端点并运行180秒只读doctor；确认最终部署身份后，记录正常完整热过程。</p><p>接收时间近似；源年龄是下界，不含未测网络在途时间。</p><h2>采集质量</h2><table><thead><tr><th>项目</th><th>结果</th></tr></thead><tbody><tr><td>连接</td><td>有质量缺口，请查看明细</td></tr><tr><td>部署核对</td><td>现场部署未核对</td></tr><tr><td>有效新测量</td><td>0</td></tr><tr><td>重复缓存</td><td>0</td></tr><tr><td>正常AUTO起点</td><td>0</td></tr></tbody></table><h2>模型价值</h2><p>本页是采集质量报告；模型价值使用独立的分层时间留出评估报告。</p><details><summary>完整保存记录统计、原始引用及资源</summary><pre>{
+  &quot;schema_version&quot;: 1,
+  &quot;simulated&quot;: false,
+  &quot;conclusion&quot;: &quot;数据暂不可用，预测已暂停；核对端点、身份和新鲜度。&quot;,
+  &quot;deployment_status&quot;: &quot;deployment_unverified&quot;,
+  &quot;connection_reliable&quot;: &quot;needs_review&quot;,
+  &quot;quality&quot;: {
+    &quot;boundary_socketio_connecting&quot;: 1,
+    &quot;boundary_control_context_change&quot;: 1,
+    &quot;boundary_unsupported_schema&quot;: 38,
+    &quot;unsupported_schema&quot;: 38,
+    &quot;boundary_input_boundary&quot;: 38,
+    &quot;boundary_socketio_disconnected&quot;: 1,
+    &quot;boundary_run_end&quot;: 1
+  },
+  &quot;new_samples&quot;: 0,
+  &quot;duplicate_received&quot;: 0,
+  &quot;origin_count&quot;: 0,
+  &quot;normal_auto_origins&quot;: 0,
+  &quot;warm_origins&quot;: 0,
+  &quot;label_counts&quot;: {
+    &quot;15&quot;: 0,
+    &quot;45&quot;: 0,
+    &quot;90&quot;: 0
+  },
+  &quot;episode&quot;: &quot;730ebf59-3abd-439a-b446-32a01657fc99&quot;,
+  &quot;episode_evidence&quot;: null,
+  &quot;independent_episode_count&quot;: &quot;unknown_until_operator_groups_complete_processes&quot;,
+  &quot;availability&quot;: {},
+  &quot;resource&quot;: {
+    &quot;rss_mib&quot;: {
+      &quot;count&quot;: 37,
+      &quot;max&quot;: 36.44140625,
+      &quot;p95&quot;: 36.44140625,
+      &quot;p99&quot;: 36.44140625,
+      &quot;mean&quot;: 36.39168074324324
+    },
+    &quot;cpu_pct_single_core&quot;: {
+      &quot;count&quot;: 37,
+      &quot;max&quot;: 2.9968051988716695,
+      &quot;p95&quot;: 2.1978931445349263,
+      &quot;p99&quot;: 2.9958147276011764,
+      &quot;mean&quot;: 1.3493027090129195
+    },
+    &quot;prediction_ms&quot;: {
+      &quot;count&quot;: 0,
+      &quot;max&quot;: null,
+      &quot;p95&quot;: null,
+      &quot;p99&quot;: null,
+      &quot;mean&quot;: null
+    },
+    &quot;poll_rtt_ms&quot;: {
+      &quot;count&quot;: 45,
+      &quot;max&quot;: 52.61782801244408,
+      &quot;p95&quot;: 45.496077602729144,
+      &quot;p99&quot;: 51.96689552045427,
+      &quot;mean&quot;: 15.22825326731739
+    }
+  },
+  &quot;host_scope&quot;: &quot;current_host_only_not_N305&quot;,
+  &quot;poll_missed&quot;: 0,
+  &quot;dropped&quot;: 0,
+  &quot;observation_rate_hz&quot;: 3.232051076134282,
+  &quot;orin_event_rate_hz&quot;: 1.0067044335500224,
+  &quot;business_payload_bytes&quot;: {
+    &quot;maximum&quot;: 744,
+    &quot;mean&quot;: 740.6315789473684
+  },
+  &quot;asynchronous_control_temperature_differences&quot;: {
+    &quot;count&quot;: 0,
+    &quot;max_absolute_c&quot;: null,
+    &quot;first&quot;: null,
+    &quot;last&quot;: null,
+    &quot;note&quot;: &quot;异步量化与绑定路径有差别；不据此自动判错误或改绑。&quot;
+  },
+  &quot;source_status&quot;: {
+    &quot;fan_ok&quot;: 37,
+    &quot;temp_ok&quot;: 8
+  },
+  &quot;stop_reason&quot;: &quot;SIGINT&quot;,
+  &quot;next_step&quot;: &quot;由用户填写本机端点并运行180秒只读doctor；确认最终部署身份后，记录正常完整热过程。&quot;,
+  &quot;time_axis_note&quot;: &quot;接收时间近似；源年龄是下界，不含未测网络在途时间。&quot;,
+  &quot;report_type&quot;: &quot;collect&quot;,
+  &quot;recorded_results&quot;: {
+    &quot;source&quot;: &quot;persisted_predictions_and_scores&quot;,
+    &quot;logs&quot;: {
+      &quot;predictions.jsonl&quot;: {
+        &quot;present&quot;: false,
+        &quot;sha256&quot;: null,
+        &quot;record_count&quot;: null
+      },
+      &quot;scores.jsonl&quot;: {
+        &quot;present&quot;: false,
+        &quot;sha256&quot;: null,
+        &quot;record_count&quot;: null
+      }
+    },
+    &quot;missing_logs&quot;: [
+      &quot;predictions.jsonl&quot;,
+      &quot;scores.jsonl&quot;
+    ],
+    &quot;log_evidence_complete&quot;: false,
+    &quot;issues&quot;: [],
+    &quot;models&quot;: {},
+    &quot;issued_prediction_origins&quot;: null,
+    &quot;terminal_score_records&quot;: null,
+    &quot;matched_terminal_score_records&quot;: 0,
+    &quot;scored_method_horizon_records&quot;: null,
+    &quot;historical_scored_method_horizon_records&quot;: null,
+    &quot;quality_excluded_method_horizon_records&quot;: null,
+    &quot;quality_isolations&quot;: [],
+    &quot;evaluation_eligibility_source&quot;: &quot;production_replay_existing_segment_isolation&quot;,
+    &quot;coverage_note&quot;: &quot;scored/issued_origins = 当前有效评分 / 当时计划起点；score_fraction_of_issued = 当前有效评分 / 当时该方法已发预测；历史分母包含质量隔离段。&quot;,
+    &quot;prediction_references&quot;: {},
+    &quot;scored_records&quot;: [],
+    &quot;quality_excluded_records&quot;: []
+  },
+  &quot;missing_required_logs&quot;: []
+}</pre></details></body></html>

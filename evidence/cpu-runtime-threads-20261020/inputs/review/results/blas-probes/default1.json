@@ -1,0 +1,110 @@
+{
+  "scope": "independent local saved-event replay, no network/device/sidecar; not N305 performance",
+  "python": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "numpy": "2.3.5",
+  "scipy": "1.17.0",
+  "env": {
+    "OPENBLAS_NUM_THREADS": null,
+    "OMP_NUM_THREADS": null,
+    "MKL_NUM_THREADS": null,
+    "OPENBLAS_DEFAULT_NUM_THREADS": null
+  },
+  "loaded_pools": [
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 5,
+      "prefix": "libscipy_openblas",
+      "filepath": "/opt/pyvenv/lib/python3.13/site-packages/numpy.libs/libscipy_openblas64_-fdde5778.so",
+      "version": "0.3.30",
+      "threading_layer": "pthreads",
+      "architecture": "SkylakeX"
+    },
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 5,
+      "prefix": "libscipy_openblas",
+      "filepath": "/opt/pyvenv/lib/python3.13/site-packages/scipy.libs/libscipy_openblas-6cdc3b4a.so",
+      "version": "0.3.30",
+      "threading_layer": "pthreads",
+      "architecture": "SkylakeX"
+    }
+  ],
+  "events": 39,
+  "paced": true,
+  "scheduled_seconds": 12.0,
+  "wall_s": 12.000305420000018,
+  "process_cpu_s": 10.709999999999999,
+  "process_cpu_pct": 89.24772849656341,
+  "main_thread_id": 1490,
+  "thread_cpu_deltas": [
+    {
+      "tid": 1500,
+      "cpu_s": 2.67
+    },
+    {
+      "tid": 1501,
+      "cpu_s": 2.6599999999999997
+    },
+    {
+      "tid": 1502,
+      "cpu_s": 2.6599999999999997
+    },
+    {
+      "tid": 1503,
+      "cpu_s": 2.63
+    },
+    {
+      "tid": 1490,
+      "cpu_s": 0.07999999999999996
+    },
+    {
+      "tid": 1491,
+      "cpu_s": 0.0
+    },
+    {
+      "tid": 1492,
+      "cpu_s": 0.0
+    },
+    {
+      "tid": 1493,
+      "cpu_s": 0.0
+    },
+    {
+      "tid": 1494,
+      "cpu_s": 0.0
+    },
+    {
+      "tid": 1495,
+      "cpu_s": 0.0
+    },
+    {
+      "tid": 1496,
+      "cpu_s": 0.0
+    },
+    {
+      "tid": 1497,
+      "cpu_s": 0.0
+    },
+    {
+      "tid": 1498,
+      "cpu_s": 0.0
+    },
+    {
+      "tid": 1499,
+      "cpu_s": 0.0
+    }
+  ],
+  "max_abs_state_cov_diff_to_saved": 2.220446049250313e-16,
+  "phase_mismatches": [],
+  "callback_ms_p95": 7.276829199963689,
+  "callback_ms_max": 13.252305000037268,
+  "phase_counts": {
+    "uninitialized": 3,
+    "provisional": 28,
+    "tracking": 8
+  },
+  "frozen_observer_sha256": "599e292a0000697615e76a97596f2f48c7527bc82027bacca5aea0c0fe5d4a47"
+}

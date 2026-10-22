@@ -1,0 +1,47 @@
+{
+  "status": "stopped",
+  "formal_collection": true,
+  "observer_run_id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02",
+  "episode": "tto-short-qa-v1-20261013-052807",
+  "run_path": "/home/observer/TTO/runs/run-2026-10-13T052811.443181_0000-d2a7593a",
+  "session_path": "/home/observer/TTO/collection-sessions/tto-short-qa-v1-20261013-052807",
+  "launcher_pid": 417740,
+  "duration_s": 2400,
+  "collection_started_at_utc": "2026-10-13T05:28:11.445979+00:00",
+  "expected_end_at_utc": "2026-10-13T06:08:11.445979+00:00",
+  "condition_plan": [
+    {
+      "id": "pilot",
+      "label": "pilot"
+    },
+    {
+      "id": "resident-baseline",
+      "label": "resident-baseline"
+    },
+    {
+      "id": "sparse",
+      "label": "sparse"
+    },
+    {
+      "id": "between-groups",
+      "label": "between-groups"
+    },
+    {
+      "id": "continuous",
+      "label": "continuous"
+    },
+    {
+      "id": "final-cooldown",
+      "label": "final-cooldown"
+    }
+  ],
+  "active_condition": null,
+  "task_started": false,
+  "task_marker_policy": "Preserve human report verbatim and approximate event timing separately from file-write time. Task end does not stop cooldown collection.",
+  "log_path": "/home/observer/TTO/collection-sessions/tto-short-qa-v1-20261013-052807/collection.log",
+  "exit_code": 0,
+  "ended_at_utc": "2026-10-13T05:55:05.414297+00:00",
+  "stop_reason": "SIGINT",
+  "report_path": "/home/observer/TTO/reports/tto-short-qa-v1-20261013-052807",
+  "report_exit_code": 0
+}

@@ -1,0 +1,324 @@
+[
+  {
+    "label": "01-plan",
+    "command": [
+      "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/ref.py",
+      "plan",
+      "--cue-plan",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/fixtures/synthetic/cue-plan.json"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 0.040498375019524246
+  },
+  {
+    "label": "02-session-fin",
+    "command": [
+      "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/ref.py",
+      "init-session",
+      "--store",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/output/reference-sidecar",
+      "--session",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/fixtures/synthetic/fin-session.json"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 0.03127491695340723
+  },
+  {
+    "label": "02-session-back",
+    "command": [
+      "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/ref.py",
+      "init-session",
+      "--store",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/output/reference-sidecar",
+      "--session",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/fixtures/synthetic/back-session.json"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 0.031203666992951185
+  },
+  {
+    "label": "03-fixed-cues",
+    "command": [
+      "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/ref.py",
+      "watch-events",
+      "--events",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/fixtures/synthetic/events.jsonl",
+      "--cue-plan",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/fixtures/synthetic/cue-plan.json",
+      "--output",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/output/synthetic-cues",
+      "--replay"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 0.031709417002275586
+  },
+  {
+    "label": "04-old-M-events",
+    "command": [
+      "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/ref.py",
+      "watch-events",
+      "--events",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/fixtures/real/M-runner-events-subset.jsonl",
+      "--cue-plan",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/fixtures/real/M-cue-plan.json",
+      "--output",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/output/M-cue-replay",
+      "--replay"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 0.03160804201615974
+  },
+  {
+    "label": "05-mark-no-exposure",
+    "command": [
+      "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/ref.py",
+      "mark",
+      "--store",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/output/reference-sidecar",
+      "--session-id",
+      "SYNTH-fin",
+      "--record-id",
+      "fin-bg",
+      "--note",
+      "合成演示：先打点；不是曝光时间"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 0.030930250009987503
+  },
+  {
+    "label": "06-late-revision",
+    "command": [
+      "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/ref.py",
+      "record",
+      "--store",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/output/reference-sidecar",
+      "--session-id",
+      "SYNTH-fin",
+      "--record-id",
+      "fin-bg",
+      "--revise",
+      "--value",
+      "41.0",
+      "--unit",
+      "C",
+      "--measured-at",
+      "2026-10-13T17:39:19.288921+00:00",
+      "--uncertainty-s",
+      "0",
+      "--time-source",
+      "synthetic_explicit_timestamp_not_real_measurement"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 0.031117499980609864
+  },
+  {
+    "label": "07-csv",
+    "command": [
+      "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/ref.py",
+      "import",
+      "--store",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/output/reference-sidecar",
+      "--file",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/fixtures/synthetic/external.csv",
+      "--mapping",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/fixtures/synthetic/csv-mapping.json"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 0.03447845799382776
+  },
+  {
+    "label": "08-duplicate-import",
+    "command": [
+      "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/ref.py",
+      "import",
+      "--store",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/output/reference-sidecar",
+      "--file",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/fixtures/synthetic/external.csv",
+      "--mapping",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/fixtures/synthetic/csv-mapping.json"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 0.02941149997059256
+  },
+  {
+    "label": "09-json",
+    "command": [
+      "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/ref.py",
+      "import",
+      "--store",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/output/reference-sidecar",
+      "--file",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/fixtures/synthetic/external.json",
+      "--mapping",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/fixtures/synthetic/json-mapping.json"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 0.032448749989271164
+  },
+  {
+    "label": "10-compare",
+    "command": [
+      "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/ref.py",
+      "compare",
+      "--store",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/output/reference-sidecar",
+      "--trajectory",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/fixtures/real/M-frozen.jsonl",
+      "--output",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/output/synthetic-report"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 13.965877749957144
+  },
+  {
+    "label": "11-zero-measurements",
+    "command": [
+      "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/ref.py",
+      "compare",
+      "--store",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/output/zero-sidecar",
+      "--trajectory",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/fixtures/real/M-frozen.jsonl",
+      "--output",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/output/zero-report"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 13.342959792003967
+  },
+  {
+    "label": "ADD1-session-fin",
+    "command": [
+      "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/ref.py",
+      "init-session",
+      "--store",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/output/contact-sidecar",
+      "--session",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/fixtures/contact-synthetic/fin-session.json"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 0.031045124982483685
+  },
+  {
+    "label": "ADD1-session-back",
+    "command": [
+      "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/ref.py",
+      "init-session",
+      "--store",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/output/contact-sidecar",
+      "--session",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/fixtures/contact-synthetic/back-session.json"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 0.02990879100980237
+  },
+  {
+    "label": "ADD1-continuous-import",
+    "command": [
+      "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/ref.py",
+      "import",
+      "--store",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/output/contact-sidecar",
+      "--file",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/fixtures/contact-synthetic/generic-continuous.csv",
+      "--mapping",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/fixtures/contact-synthetic/mapping.json"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 0.07235637499252334
+  },
+  {
+    "label": "ADD1-continuous-duplicate",
+    "command": [
+      "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/ref.py",
+      "import",
+      "--store",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/output/contact-sidecar",
+      "--file",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/fixtures/contact-synthetic/generic-continuous.csv",
+      "--mapping",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/fixtures/contact-synthetic/mapping.json"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 0.03013929195003584
+  },
+  {
+    "label": "ADD1-probe-event",
+    "command": [
+      "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/ref.py",
+      "session-event",
+      "--store",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/output/contact-sidecar",
+      "--session-id",
+      "SYNTH-contact-fin",
+      "--type",
+      "probe_loose",
+      "--measured-at",
+      "90",
+      "--uncertainty-s",
+      ".5",
+      "--note",
+      "合成松脱示例，不是现场事件；之后须新会话"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 0.0303942920290865
+  },
+  {
+    "label": "ADD1-continuous-compare",
+    "command": [
+      "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/ref.py",
+      "compare",
+      "--store",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/output/contact-sidecar",
+      "--trajectory",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/fixtures/real/M-frozen.jsonl",
+      "--output",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/output/contact-report"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 14.35095774999354
+  },
+  {
+    "label": "12-tests",
+    "command": [
+      "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/tests",
+      "-o",
+      "cache_dir=/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/output/pytest-cache"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 0.823304083023686
+  },
+  {
+    "label": "13-readback",
+    "command": [
+      "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/expanded/thermal_reference_v1/verify_local.py",
+      "--run-output",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-reference-portable-20261014-qq9l7rqt/output"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 0.03334866702789441
+  }
+]

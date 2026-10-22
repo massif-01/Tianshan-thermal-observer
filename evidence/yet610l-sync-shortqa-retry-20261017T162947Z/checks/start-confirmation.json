@@ -1,0 +1,229 @@
+{
+  "utc": "2026-10-17T16:32:05.239879+00:00",
+  "collector": {
+    "status": "running",
+    "session_id": "yet610l-sync-shortqa-retry-20261017T162947Z",
+    "started_coordinator_utc": "2026-10-17T16:30:54.891833+00:00",
+    "clock_host": "lpmu305",
+    "deadline_mono_s": 204926.187303529,
+    "tto_version": "0.2.4",
+    "operator_override": true,
+    "explicit_policy_id": "YET-SYNC-TRANSIENT-TEMP-CONTINUE-v1",
+    "run_id": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece",
+    "run_path": "/home/rm01/TTO-sync-experiments/yet610l-sync-shortqa-retry-20261017T162947Z/collection/run-2026-10-17T163054.892751_0000-1ae9a7d7",
+    "collection_started_at_utc": "2026-10-17T16:30:54.894925+00:00"
+  },
+  "health": {
+    "current_ready": true,
+    "continuous_60s": false,
+    "abnormal": false,
+    "gaps_180s": [
+      {
+        "from_t": 202526.359587238,
+        "to_t": 202526.43127135,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:1",
+        "reasons": [
+          "unsupported_control_scope",
+          "fan_missing_or_stale",
+          "temperature_status_missing_or_stale",
+          "fan_not_enabled",
+          "fan_fault",
+          "guard_active",
+          "control_temperature_stale",
+          "successful_duty_unavailable",
+          "manual_temperature",
+          "control_temperature_invalid",
+          "active_temperature_source_untrusted",
+          "temperature_binding_unconfirmed",
+          "source_not_usable:socketio_connecting"
+        ]
+      },
+      {
+        "from_t": 202526.43127135,
+        "to_t": 202526.440533164,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:2",
+        "reasons": [
+          "temperature_status_missing_or_stale",
+          "manual_temperature",
+          "control_temperature_invalid",
+          "active_temperature_source_untrusted",
+          "temperature_binding_unconfirmed",
+          "source_not_usable:socketio_connecting"
+        ]
+      },
+      {
+        "from_t": 202526.440533164,
+        "to_t": 202526.719782131,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:3",
+        "reasons": [
+          "source_not_usable:socketio_connecting"
+        ]
+      },
+      {
+        "from_t": 202530.898887501,
+        "to_t": 202530.930959794,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:14",
+        "reasons": []
+      },
+      {
+        "from_t": 202535.903360164,
+        "to_t": 202536.030280816,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:29",
+        "reasons": []
+      },
+      {
+        "from_t": 202540.925622407,
+        "to_t": 202540.944113562,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:44",
+        "reasons": []
+      },
+      {
+        "from_t": 202542.420511564,
+        "to_t": 202542.725214134,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:51",
+        "reasons": [
+          "control_temperature_stale"
+        ]
+      },
+      {
+        "from_t": 202542.725214134,
+        "to_t": 202543.394276594,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:52",
+        "reasons": [
+          "control_temperature_stale"
+        ]
+      },
+      {
+        "from_t": 202543.394276594,
+        "to_t": 202543.427307968,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:53",
+        "reasons": [
+          "control_temperature_stale"
+        ]
+      },
+      {
+        "from_t": 202550.912665923,
+        "to_t": 202550.919751877,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:74",
+        "reasons": []
+      },
+      {
+        "from_t": 202578.459149663,
+        "to_t": 202578.741166222,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:163",
+        "reasons": [
+          "control_temperature_stale"
+        ]
+      },
+      {
+        "from_t": 202578.741166222,
+        "to_t": 202579.441231769,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:164",
+        "reasons": [
+          "control_temperature_stale"
+        ]
+      },
+      {
+        "from_t": 202583.942405945,
+        "to_t": 202584.427483739,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:178",
+        "reasons": []
+      },
+      {
+        "from_t": 202588.990370216,
+        "to_t": 202589.404014488,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:193",
+        "reasons": []
+      },
+      {
+        "from_t": 202593.967405832,
+        "to_t": 202594.404662388,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:208",
+        "reasons": []
+      }
+    ],
+    "latest": {
+      "t": 202595.75143153,
+      "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:215",
+      "complete": true,
+      "valid_until": 202597.947555499,
+      "source_valid_until": 202600.600277111,
+      "source_usable": true,
+      "source_epoch": 2,
+      "source_rejection": null,
+      "observed_abnormal": false,
+      "control_context_changed": false,
+      "control_mode": "auto",
+      "reasons": [],
+      "TJ": 44.375,
+      "source_ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:215",
+      "fan_ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:213",
+      "P_g": 1.984,
+      "P_c": 5.952,
+      "fan_age_s": 0.3038760309864301,
+      "PWM": 17,
+      "gain": 0.819374918937683,
+      "source_age_ms": 151.15441899979487,
+      "source_accepted_t": 202595.75143153,
+      "source_key": [
+        "orin-primary",
+        "50ea6d93-8f3a-4991-9211-43cc8129cb90",
+        201998
+      ],
+      "source_period_ms": 1000
+    },
+    "checked_at_mono_s": 202596.277489774,
+    "observed_span_s": 69.91790253599174,
+    "input_coverage": {
+      "complete_input_s": 65.52222221301054,
+      "unknown_input_s": 3.86962207898614,
+      "longest_continuous_s": 27.53939778599306,
+      "current_continuous_s": 1.3467691419937182,
+      "reasons_seconds": {
+        "unsupported_control_scope,fan_missing_or_stale,temperature_status_missing_or_stale,fan_not_enabled,fan_fault,guard_active,control_temperature_stale,successful_duty_unavailable,manual_temperature,control_temperature_invalid,active_temperature_source_untrusted,temperature_binding_unconfirmed,source_not_usable:socketio_connecting": 0.07168411201564595,
+        "temperature_status_missing_or_stale,manual_temperature,control_temperature_invalid,active_temperature_source_untrusted,temperature_binding_unconfirmed,source_not_usable:socketio_connecting": 0.009261813975172117,
+        "source_not_usable:socketio_connecting": 0.2792489670100622,
+        "input_validity_expired_or_source_unusable": 1.5205486759950873,
+        "control_temperature_stale": 1.9888785099901725
+      }
+    },
+    "coverage_measured_until_mono_s": 202595.75143153,
+    "native_abnormal": true,
+    "execution_stop_reasons": [],
+    "transient_temp": false,
+    "run_id": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece",
+    "clock_host": "lpmu305",
+    "collection_state": "running",
+    "valid_until_mono_s": 202597.947555499,
+    "operator_override": true,
+    "explicit_policy_id": "YET-SYNC-TRANSIENT-TEMP-CONTINUE-v1"
+  },
+  "workload": {
+    "state": "running",
+    "phase": "resident-baseline",
+    "run_id": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece",
+    "updated_at_utc": "2026-10-17T16:31:33.519335+00:00",
+    "completed_requests": 0
+  },
+  "events": [
+    {
+      "event": "workload_start",
+      "event_time_utc": "2026-10-17T16:31:33.515838+00:00",
+      "mono_s": 202564.81171829,
+      "run_id": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece",
+      "session_id": "yet610l-sync-shortqa-retry-20261017T162947Z",
+      "phase": "initializing",
+      "explicit_policy_id": "YET-SYNC-TRANSIENT-TEMP-CONTINUE-v1",
+      "deadline_utc": "2026-10-17T17:10:54.894493+00:00"
+    },
+    {
+      "event": "phase_start",
+      "event_time_utc": "2026-10-17T16:31:33.517872+00:00",
+      "mono_s": 202564.813759928,
+      "run_id": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece",
+      "session_id": "yet610l-sync-shortqa-retry-20261017T162947Z",
+      "phase": "resident-baseline",
+      "planned_seconds": 300
+    }
+  ]
+}

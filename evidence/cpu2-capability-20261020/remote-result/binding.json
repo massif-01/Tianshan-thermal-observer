@@ -1,0 +1,147 @@
+{
+  "candidate_version": "0.2.4+cpu.2",
+  "mode": "diagnose",
+  "config_sha256": "bde1d6b5afc7a79217716af087b46d08d357c08f7ac003700d382de4f3266dac",
+  "collector_source_sha256": "06d17ec5205cea268d4d42eeeb87169d3ca64c91a81acd0b4bdafe2f57e49806",
+  "observer_model_sha256": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
+  "observer_spec_sha256": "2080adcf20773650299def2bb0f3ebdb9f87d8f85281d5b87a99d8b406c83c6b",
+  "old_overrides": false,
+  "command_id": "cpu2-capability-20261020-1ca3a249-8ea9-4608-aa05-105f9aff5614",
+  "expected_binding": "agx_info.temperature.tj",
+  "firmware_identity": null,
+  "authorization": {
+    "action": "readonly-diagnostic",
+    "command_id": "cpu2-capability-20261020-1ca3a249-8ea9-4608-aa05-105f9aff5614",
+    "explicit_user_start": true,
+    "evidence": "User current permission: 允许本次独立安装、只读文件放置和一次60秒能力核对; subsequent password reconnection and N305 host key explicitly confirmed. Scope one capability only, no inference/model queries/jtop."
+  },
+  "note": "Preview creates no network clients and never opens credential headers. No device authorization is implied.",
+  "request_actor_thread": null,
+  "profile": {
+    "id": "cpu-activity-pilot-v1",
+    "stages": [
+      {
+        "kind": "background",
+        "seconds": 180
+      },
+      {
+        "kind": "work",
+        "seconds": 30,
+        "concurrency": 1
+      },
+      {
+        "kind": "recovery",
+        "seconds": 30
+      },
+      {
+        "kind": "work",
+        "seconds": 30,
+        "concurrency": 1
+      },
+      {
+        "kind": "recovery",
+        "seconds": 60
+      },
+      {
+        "kind": "work",
+        "seconds": 30,
+        "concurrency": 1
+      },
+      {
+        "kind": "recovery",
+        "seconds": 35
+      },
+      {
+        "kind": "work",
+        "seconds": 30,
+        "concurrency": 1
+      },
+      {
+        "kind": "recovery",
+        "seconds": 55
+      },
+      {
+        "kind": "work",
+        "seconds": 30,
+        "concurrency": 1
+      },
+      {
+        "kind": "recovery",
+        "seconds": 40
+      },
+      {
+        "kind": "work",
+        "seconds": 30,
+        "concurrency": 1
+      },
+      {
+        "kind": "recovery",
+        "seconds": 50
+      },
+      {
+        "kind": "work",
+        "seconds": 30,
+        "concurrency": 1
+      },
+      {
+        "kind": "work",
+        "seconds": 30,
+        "concurrency": 1
+      },
+      {
+        "kind": "work",
+        "seconds": 30,
+        "concurrency": 1
+      },
+      {
+        "kind": "work",
+        "seconds": 30,
+        "concurrency": 1
+      },
+      {
+        "kind": "work",
+        "seconds": 30,
+        "concurrency": 1
+      },
+      {
+        "kind": "work",
+        "seconds": 30,
+        "concurrency": 1
+      },
+      {
+        "kind": "final_recovery",
+        "seconds": 180
+      }
+    ],
+    "hard_limit_seconds": 1200,
+    "preparation_reserve_seconds": 60,
+    "cleanup_reserve_seconds": 120,
+    "drain_per_work_max_seconds": 30,
+    "nominal_worst_normal_s": 1170
+  },
+  "profile_sha256": "addb4b2b6c4b143fe5f666742bf8072cc6003a7b2c7763da826fbf44e3f3bb88",
+  "capability_receipt": null,
+  "capability_user_decision_evidence": null,
+  "instrument": {
+    "used": false
+  },
+  "sidecar": {
+    "transport": "existing_ssh_mux",
+    "host": "rm01@10.10.99.98",
+    "query_target_s": 0.2,
+    "existing_control_socket": "/tmp/tto-cpu2-thor-ssh",
+    "command_id": "cpu2-capability-20261020-1ca3a249-8ea9-4608-aa05-105f9aff5614",
+    "remote_python": "/home/rm01/.venvs/tegrastats-api-1.1.1-2c356a1-20261013/bin/python",
+    "remote_source_script": "/home/rm01/TTO-cpu2-source-20261020/cpu_source.py",
+    "source_script_sha256": "7f674e6913458dc73e8a677fbb46d6574812da05c5a5ba2938d126b53ca14382",
+    "remote_source_config": "/home/rm01/TTO-cpu2-source-20261020/source-config.json",
+    "source_config_sha256": "651913b5e549d5e3131bd69e261cf8f973c40f5b378641450c361f0c1787cf4a",
+    "remote_source_permission": "/home/rm01/TTO-cpu2-source-20261020/source-permission.json",
+    "note": "Fill confirmed paths and identities only after separate current permission. No credentials, SSH login setup or service changes. ProxyCommand=false prevents a new TCP authentication fallback if mux is gone."
+  },
+  "synthetic_loopback_only": false,
+  "provenance": {
+    "kind": "declared_field",
+    "source": "known N305 and Thor, independent SSH clock and hash receipts retained; not zero-latency proof"
+  }
+}

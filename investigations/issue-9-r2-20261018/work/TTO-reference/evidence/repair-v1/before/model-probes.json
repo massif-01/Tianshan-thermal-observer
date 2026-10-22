@@ -1,0 +1,275 @@
+{
+  "missing_full_model": {
+    "synthetic_only": true,
+    "three_method_matched": {
+      "persist": {
+        "time_pooled": {
+          "n": 198,
+          "mae": 1.7293785957063057,
+          "rmse": 1.9249293362945148,
+          "abs_error_p95": 2.9628348459702663,
+          "bias_mean": -0.08303914236765804,
+          "under_p95": 2.752225593446358,
+          "under_max": 3.0107173715635724,
+          "over_p95": 2.8515797701060595,
+          "over_max": 3.0646349099082926
+        },
+        "time_weighted": {
+          "mae": 1.7293785957063055,
+          "rmse": 1.9249293362945143,
+          "bias_mean": -0.08303914236765846
+        },
+        "episodes": {
+          "simulation-process-3": {
+            "n": 99,
+            "mae": 1.7276022217732814,
+            "rmse": 1.931885667114844,
+            "abs_error_p95": 2.967238898593708,
+            "bias_mean": -0.07399533326057736,
+            "under_p95": 2.7711164048843666,
+            "under_max": 3.0107173715635724,
+            "over_p95": 2.830442582877695,
+            "over_max": 3.0646349099082926
+          },
+          "simulation-process-4": {
+            "n": 99,
+            "mae": 1.73115496963933,
+            "rmse": 1.9179477752667584,
+            "abs_error_p95": 2.8866664219793554,
+            "bias_mean": -0.09208295147473856,
+            "under_p95": 2.697505172125322,
+            "under_max": 2.9024418045201017,
+            "over_p95": 2.8496189564830607,
+            "over_max": 3.059403901365556
+          }
+        },
+        "episode_equal_macro": {
+          "mae": 1.7293785957063057,
+          "rmse": 1.9249167211908014,
+          "abs_error_p95": 2.9269526602865317,
+          "bias_mean": -0.08303914236765797,
+          "under_p95": 2.7343107885048443,
+          "under_max": 2.956579588041837,
+          "over_p95": 2.8400307696803777,
+          "over_max": 3.0620194056369243
+        }
+      },
+      "trend30": {
+        "time_pooled": {
+          "n": 198,
+          "mae": 0.8745445661203355,
+          "rmse": 1.0684486436890965,
+          "abs_error_p95": 1.9911567973199196,
+          "bias_mean": -0.05867033097957547,
+          "under_p95": 1.830014362859437,
+          "under_max": 2.102632644575891,
+          "over_p95": 1.6936636373670482,
+          "over_max": 2.1363682474923493
+        },
+        "time_weighted": {
+          "mae": 0.8745445661203353,
+          "rmse": 1.0684486436890968,
+          "bias_mean": -0.058670330979575414
+        },
+        "episodes": {
+          "simulation-process-3": {
+            "n": 99,
+            "mae": 0.8714595394745983,
+            "rmse": 1.0656230295262346,
+            "abs_error_p95": 1.9661618890664072,
+            "bias_mean": -0.060701240769473995,
+            "under_p95": 1.8463275348220225,
+            "under_max": 2.045788511230441,
+            "over_p95": 1.602501334878785,
+            "over_max": 2.1336507108071743
+          },
+          "simulation-process-4": {
+            "n": 99,
+            "mae": 0.8776295927660737,
+            "rmse": 1.0712668049302516,
+            "abs_error_p95": 2.0132897518560986,
+            "bias_mean": -0.05663942118967694,
+            "under_p95": 1.80365563908518,
+            "under_max": 2.102632644575891,
+            "over_p95": 1.6858488539846836,
+            "over_max": 2.1363682474923493
+          }
+        },
+        "episode_equal_macro": {
+          "mae": 0.8745445661203359,
+          "rmse": 1.068444917228243,
+          "abs_error_p95": 1.989725820461253,
+          "bias_mean": -0.05867033097957547,
+          "under_p95": 1.824991586953601,
+          "under_max": 2.074210577903166,
+          "over_p95": 1.6441750944317344,
+          "over_max": 2.135009479149762
+        }
+      },
+      "ridge_tj": {
+        "time_pooled": {
+          "n": 198,
+          "mae": 0.29303183723102977,
+          "rmse": 0.2981855775326981,
+          "abs_error_p95": 0.3755598136501156,
+          "bias_mean": -0.29303183723102977,
+          "under_p95": 0.3755598136501156,
+          "under_max": 0.38382606807427777,
+          "over_p95": 0.0,
+          "over_max": 0
+        },
+        "time_weighted": {
+          "mae": 0.29303183723102993,
+          "rmse": 0.2981855775326981,
+          "bias_mean": -0.29303183723102993
+        },
+        "episodes": {
+          "simulation-process-3": {
+            "n": 99,
+            "mae": 0.24377419098900135,
+            "rmse": 0.24504293154299037,
+            "abs_error_p95": 0.2806716241603574,
+            "bias_mean": -0.24377419098900135,
+            "under_p95": 0.2806716241603574,
+            "under_max": 0.28570499541545047,
+            "over_p95": 0.0,
+            "over_max": 0
+          },
+          "simulation-process-4": {
+            "n": 99,
+            "mae": 0.34228948347305815,
+            "rmse": 0.3431956278827495,
+            "abs_error_p95": 0.3791034072838478,
+            "bias_mean": -0.34228948347305815,
+            "under_p95": 0.3791034072838478,
+            "under_max": 0.38382606807427777,
+            "over_p95": 0.0,
+            "over_max": 0
+          }
+        },
+        "episode_equal_macro": {
+          "mae": 0.29303183723102977,
+          "rmse": 0.29411927971286994,
+          "abs_error_p95": 0.3298875157221026,
+          "bias_mean": -0.29303183723102977,
+          "under_p95": 0.3298875157221026,
+          "under_max": 0.3347655317448641,
+          "over_p95": 0.0,
+          "over_max": 0.0
+        }
+      }
+    },
+    "missing_test_field": "vdd_gpu_soc",
+    "same_training_methods": true,
+    "all_four_intersection": {
+      "15": 0,
+      "45": 0,
+      "90": 0
+    },
+    "method45": {
+      "persist": {
+        "scorable": 270,
+        "mae": 1.6373924247076936
+      },
+      "trend30": {
+        "scorable": 266,
+        "mae": 0.9046284423548885
+      },
+      "ridge_tj": {
+        "scorable": 198,
+        "mae": 0.29303183723102977
+      },
+      "ridge_full": {
+        "scorable": 0,
+        "mae": null
+      }
+    },
+    "decision_function_with_explicit_test_flags": "证据不足：缺少足够未使用的独立测试过程或共同可评分起点。"
+  },
+  "chronological_split": {
+    "synthetic_only": true,
+    "accepted_by_frozen_split_and_check": true,
+    "run_chronology": [
+      {
+        "episode": "A",
+        "started_at_utc": "2026-01-01T00:00:00+00:00",
+        "parts": [
+          "train"
+        ]
+      },
+      {
+        "episode": "B",
+        "started_at_utc": "2026-01-02T00:00:00+00:00",
+        "parts": [
+          "train"
+        ]
+      },
+      {
+        "episode": "C",
+        "started_at_utc": "2026-01-03T00:00:00+00:00",
+        "parts": [
+          "validation"
+        ]
+      },
+      {
+        "episode": "D",
+        "started_at_utc": "2026-01-04T00:00:00+00:00",
+        "parts": [
+          "test"
+        ]
+      },
+      {
+        "episode": "E",
+        "started_at_utc": "2026-01-05T00:00:00+00:00",
+        "parts": [
+          "test"
+        ]
+      },
+      {
+        "episode": "A",
+        "started_at_utc": "2026-01-06T00:00:00+00:00",
+        "parts": [
+          "train"
+        ]
+      }
+    ],
+    "training_can_include_last_run_after_test": true
+  },
+  "shadow_reporting": {
+    "synthetic_only": true,
+    "stored_full_model_predictions": 44,
+    "stored_full_model_scores": 102,
+    "summary_unchanged_when_saved_predictions_and_scores_absent": true,
+    "summary_keys": [
+      "schema_version",
+      "simulated",
+      "conclusion",
+      "deployment_status",
+      "connection_reliable",
+      "quality",
+      "new_samples",
+      "duplicate_received",
+      "origin_count",
+      "normal_auto_origins",
+      "warm_origins",
+      "label_counts",
+      "episode",
+      "episode_evidence",
+      "independent_episode_count",
+      "availability",
+      "resource",
+      "host_scope",
+      "poll_missed",
+      "dropped",
+      "observation_rate_hz",
+      "orin_event_rate_hz",
+      "business_payload_bytes",
+      "asynchronous_control_temperature_differences",
+      "source_status",
+      "stop_reason",
+      "next_step",
+      "time_axis_note"
+    ],
+    "report_text": "# TTO 记录报告\n\n模拟演示：软件贯通，不代表实机连接或预测收益。\n\n连接：simulation_only。部署：deployment_unverified。\n\n有效新测量 400；重复接收 0；预测起点 80；正常 AUTO 起点 80。\n\n预测效果：待真实时间隔离评估。\n\n下一步：由用户填写本机端点并运行180秒只读doctor；确认最终部署身份后，记录正常完整热过程。\n\n接收时间近似；源年龄是下界，不含未测网络在途时间。\n\n资源只代表当前运行主机，目标 N305 待测。技术明细见 report.json。\n"
+  }
+}

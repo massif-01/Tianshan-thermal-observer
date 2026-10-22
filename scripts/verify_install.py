@@ -18,6 +18,8 @@ def sha(path):return hashlib.sha256(path.read_bytes()).hexdigest()
 def verify(output,wheelhouse,conda,conda_cache,bundle=None):
     output=Path(output).resolve();output.mkdir(parents=True,exist_ok=False)
     bundle=Path(bundle).resolve() if bundle else Path(__file__).resolve().parent.parent
+    version=json.loads((bundle/'install-manifest.json').read_text())['version']
+    wheel_name='tianshan_thermal_observer-'+version+'-py3-none-any.whl'
     wheelhouse=Path(wheelhouse).resolve()
     conda=Path(conda).resolve()
     conda_cache=Path(conda_cache).resolve()
@@ -37,18 +39,19 @@ def verify(output,wheelhouse,conda,conda_cache,bundle=None):
     arguments=['--prefix',str(prefix),'--offline','--offline-wheelhouse',str(wheelhouse)]
     run('success',arguments)
     identity=json.loads((prefix/'installation.json').read_text())
-    assert identity['version']=='0.1.2' and identity['non_editable'] and identity['offline_doctor_passed']
-    assert identity['wheel_sha256']==sha(bundle/'wheels/tianshan_thermal_observer-0.1.2-py3-none-any.whl')
+    assert identity['version']==version and identity['non_editable'] and identity['offline_doctor_passed']
+    assert identity['wheel_sha256']==sha(bundle/'wheels'/wheel_name)
     assert str(prefix/'conda-env') in identity['import_path']
     assert identity['environment_manager']=='conda'
     config=prefix/'config/local.json';settings=json.loads(config.read_text())
     assert settings['orin']['base_url'] is None and settings['tianshan']['base_url'] is None
     assert settings['storage']['data_root']==str(prefix/'runs')
     assert 'export CONDA_PIP_INTEROP_ENABLED=false' in (prefix/'tto').read_text()
+    package_version=version
     version=subprocess.run([str(prefix/'tto'),'--version'],env=dict(env,CONDA_PIP_INTEROP_ENABLED='true'),capture_output=True,text=True,check=True)
-    assert version.stdout.strip()=='0.1.2'
+    assert version.stdout.strip()==package_version
     (output/'launcher-version.log').write_text(version.stdout)
-    cases['success']={'passed':True,'version':'0.1.2','prefix_has_spaces':True,'non_editable':True,'wheel_files_equal_installed':True,'offline_dependencies':True,'environment_manager':'conda','config_endpoints_unset':True}
+    cases['success']={'passed':True,'version':package_version,'prefix_has_spaces':True,'non_editable':True,'wheel_files_equal_installed':True,'offline_dependencies':True,'environment_manager':'conda','config_endpoints_unset':True}
     settings['run']['default_duration_s']=60
     config.write_text(json.dumps(settings,indent=2)+'\n')
     sentinel=prefix/'runs/user-record.txt';sentinel.parent.mkdir();sentinel.write_text('synthetic user-owned record\n')
@@ -81,7 +84,7 @@ def verify(output,wheelhouse,conda,conda_cache,bundle=None):
         (tampered/directory).mkdir()
     shutil.copy2(bundle/'scripts/install_tto.py',tampered/'scripts/install_tto.py')
     shutil.copy2(bundle/'config/tto.example.json',tampered/'config/tto.example.json')
-    wheel=tampered/'wheels/tianshan_thermal_observer-0.1.2-py3-none-any.whl'
+    wheel=tampered/'wheels'/wheel_name
     wheel.write_bytes((bundle/'wheels'/wheel.name).read_bytes()+b'tampered')
     rejected=output/'tampered-prefix'
     result=subprocess.run(['sh',str(tampered/'install.sh'),'--prefix',str(rejected),'--offline-wheelhouse',str(wheelhouse)],env=env,capture_output=True,text=True,timeout=30)

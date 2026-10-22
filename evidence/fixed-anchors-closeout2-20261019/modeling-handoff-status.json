@@ -1,0 +1,30 @@
+{
+  "stage": "complete_frozen_comparison_delivered",
+  "run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+  "complete": true,
+  "report_path": "/Users/massif/Tianshan-thermal-observer/deliverables/TTO-首轮fixed-anchors冻结模型对照/TTO-首轮fixed-anchors冻结模型对照报告.md",
+  "evidence_path": "/Users/massif/Tianshan-thermal-observer/deliverables/TTO-首轮fixed-anchors冻结模型对照/TTO-首轮fixed-anchors冻结模型对照证据包.zip",
+  "evidence_sha256": "4cda82dc37f85a7e5a16fd0864439b6ebcf58d21659c981e1b309d461d4b3746",
+  "receipt_path": "/Users/massif/Tianshan-thermal-observer/deliverables/TTO-首轮fixed-anchors冻结模型对照/交付与复核回执.json",
+  "research_path": "/Users/massif/Tianshan-thermal-observer/experiments/thermal_fixed_anchors_frozen_v1",
+  "A_roll_45s_MAE_C": 0.33402919146710713,
+  "B_HOLD_45s_MAE_C": 1.5442617863693189,
+  "B0_common_45s_MAE_C": 2.2301747829369574,
+  "B_HOLD_45s_cross_stage_MAE_C": 8.871334698997341,
+  "B_HOLD_45s_max_underprediction_C": 12.711931306656723,
+  "A_long_MAE_C": 0.8882331073350891,
+  "tracking_valid_TJ": 2696,
+  "source_valid_TJ": 2706,
+  "external_surface_not_used_by_model": true,
+  "independent_replay_scientific_files": 23,
+  "tests_passed": 6,
+  "new_field_runs": 0,
+  "retrained": false,
+  "device_actions": false,
+  "sole_recommended_next_step": "有限离线因果未来输入策略对照；继续冻结状态模型，不据此启动现场",
+  "remaining_uncertainty": [
+    "absolute instrument time error unknown; 0/-3/-4s are conditional scenarios only",
+    "CH1 is one local fin surface, not true Ts",
+    "no control-benefit or future-field permission"
+  ]
+}

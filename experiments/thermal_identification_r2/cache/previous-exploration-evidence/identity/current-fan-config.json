@@ -1,0 +1,56 @@
+{
+  "read_started_at_utc": "2026-10-13T06:37:57.705176+00:00",
+  "read_ended_at_utc": "2026-10-13T06:37:57.730506+00:00",
+  "method": "GET",
+  "source": "known-board-read-only",
+  "body": {
+    "code": 0,
+    "data": {
+      "id": 0,
+      "mode": "auto",
+      "min_duty": 10,
+      "max_duty": 100,
+      "hysteresis": 2,
+      "min_interval": 5000,
+      "invert_pwm": false,
+      "curve": [
+        {
+          "temp": 30,
+          "duty": 0
+        },
+        {
+          "temp": 40,
+          "duty": 15
+        },
+        {
+          "temp": 50,
+          "duty": 20
+        },
+        {
+          "temp": 55,
+          "duty": 35
+        },
+        {
+          "temp": 60,
+          "duty": 40
+        },
+        {
+          "temp": 65,
+          "duty": 45
+        },
+        {
+          "temp": 70,
+          "duty": 50
+        },
+        {
+          "temp": 80,
+          "duty": 55
+        },
+        {
+          "temp": 90,
+          "duty": 60
+        }
+      ]
+    }
+  }
+}

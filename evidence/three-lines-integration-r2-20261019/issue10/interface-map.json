@@ -1,0 +1,76 @@
+{
+  "schema": "TTO-READONLY-STATE-R2",
+  "chosen_transport": "one ordered local JSONL stream; no extra board polls",
+  "identity": {
+    "run_id": "current episode only",
+    "config": "content hash",
+    "firmware": "readback identity, not HEAD",
+    "collector": "effective module identity",
+    "model": "frozen model hash",
+    "spec": "frozen spec hash",
+    "generated_at_mono": "snapshot generation",
+    "observed_until_mono": "latest included observation cutoff, never future",
+    "clock_domain": "local_scheduler_monotonic; cross-host clocks require explicit mapping before this consumer"
+  },
+  "measurement": {
+    "TJ": "value/raw_valid/ref/observed_at_mono/expires_at_mono from #9",
+    "rails": "GPU, CPU_SOC_MSS independent; VIN_SYS_5V0 diagnostic; never sum",
+    "successful_PWM": "successful value+source reference+true age+expiry; no renewal by observer",
+    "http_status": "request health independent from thermal measurement freshness"
+  },
+  "observer": {
+    "state": [
+      "uninitialized",
+      "provisional",
+      "tracking",
+      "degraded",
+      "unavailable"
+    ],
+    "Tf": "conditional estimate, not TJ",
+    "Ts": "latent conditional estimate, not YET surface truth",
+    "E_source": "preregistered new-run prior or past-only estimate; not ambient truth",
+    "unknown_inputs": "explicit assumption/age",
+    "range_or_uncertainty": "required for numeric readiness",
+    "evidence_ready": "#8 evidence for sustained usable output, not a new hard 60s gate",
+    "valid_until_mono": "observer validity only, cannot renew raw PWM"
+  },
+  "safety": {
+    "guard": "true/false/null; null means unknown",
+    "fault": "true/false/null",
+    "mode": "observed mode",
+    "binding": "observed binding",
+    "observed_at_mono": "real observation time",
+    "expires_at_mono": "source expiry"
+  },
+  "permission": {
+    "mode": "local_demo or formal_field",
+    "run_id": "same run",
+    "current_authorization": "explicit current-run authorization; no old M/Y override"
+  },
+  "instrument": {
+    "recording": "user confirmation",
+    "probe_fixed": "same position",
+    "start_clock_evidence": "independent instrument running-clock versus collector-host live clock, or Mac-N305 bracket",
+    "timezone": "explicit or unknown",
+    "display_resolution_s": "not clock error",
+    "uncertainty_s": "may be null; never default 0",
+    "uncertainty_declared": "unknowns explicitly recorded"
+  },
+  "upstream_status": {
+    "issue8": "mock until actual observer contract delivered and reviewed",
+    "issue9": "mock until measurement/communication candidate delivered and reviewed"
+  },
+  "field_model_comparison_requires": [
+    "integrated offline review",
+    "fresh bounded preflight proving usable observer stream",
+    "native current measurement and safety",
+    "instrument/time correspondence",
+    "explicit user start",
+    "model-only request actor"
+  ],
+  "not_required": [
+    "issue8 or issue9 closed",
+    "old contiguous 60s initialized state gate"
+  ],
+  "no_model_plan_leak": "Observer stream does not include stage plan, future requests, future rails or future PWM"
+}

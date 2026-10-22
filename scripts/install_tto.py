@@ -39,7 +39,7 @@ set -eu
 export CONDA_PIP_INTEROP_ENABLED=false
 install_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 cd "$install_dir"
-exec {conda_exe} run --no-capture-output --prefix "$install_dir/conda-env" python -m tto "$@"
+exec {conda_exe} run --no-capture-output --prefix "$install_dir/conda-env" python -I -m tto "$@"
 '''
 
 
@@ -66,12 +66,21 @@ def install(args):
     conda=Path(args.conda_exe).expanduser().resolve()
     prefix=Path(args.prefix).expanduser().resolve()
     marker=prefix/'.tto-install.json'
+    previous=None
     if prefix.exists() and any(prefix.iterdir()):
-        if not marker.is_file() or json.loads(marker.read_text()).get('version')!=version:
+        previous=json.loads(marker.read_text()) if marker.is_file() else None
+        supported={'0.1.2','0.2.0','0.2.1','0.2.2'}
+        if not previous or previous.get('version') not in supported or previous.get('installer_version') not in (1,2,3) or previous.get('environment_manager') not in (None,'venv','conda'):
             raise ValueError('目录已有其他内容，未改动：'+str(prefix)+'；请用--prefix指定新的独立目录。')
     prefix.mkdir(parents=True,exist_ok=True)
-    previous=json.loads(marker.read_text()) if marker.is_file() else None
-    marker.write_text(json.dumps({'installer_version':2,'version':version,'environment_manager':'conda'})+'\n')
+    # Ownership is recorded before environment creation so interrupted installs
+    # can resume. installation.json remains the last verified installed identity.
+    marker.write_text(json.dumps({'installer_version':3,'version':previous['version'] if previous else version,'candidate_version':version,'environment_manager':previous.get('environment_manager') if previous else 'conda','status':'installing'})+'\n')
+    installed_identity=prefix/'installation.json'
+    if installed_identity.is_file():
+        history=prefix/'installation-history';history.mkdir(exist_ok=True)
+        saved=history/(digest(installed_identity)+'.json')
+        if not saved.exists():saved.write_bytes(installed_identity.read_bytes())
     env=dict(os.environ)
     env.pop('PYTHONPATH',None);env.pop('PYTHONHOME',None)
     env.update(PIP_DISABLE_PIP_VERSION_CHECK='1',PIP_NO_INPUT='1',PIP_CACHE_DIR=str(prefix/'.cache/pip'))
@@ -112,6 +121,7 @@ def install(args):
     launcher=prefix/'tto';launcher.write_text(LAUNCHER.format(conda_exe=shlex.quote(str(conda))));launcher.chmod(0o755)
     identity.update(environment_manager='conda',environment_prefix=str(environment),conda_executable=str(conda),conda_version=subprocess.check_output([str(conda),'--version'],env=env,text=True).strip(),wheel_sha256=digest(wheel),dependency_lock_sha256=digest(bundle/'requirements-locked.txt'),config_path=str(config),checked_at_utc=datetime.now(timezone.utc).isoformat(),offline_doctor_passed=True)
     (prefix/'installation.json').write_text(json.dumps(identity,ensure_ascii=False,indent=2)+'\n')
+    marker.write_text(json.dumps({'installer_version':3,'version':version,'environment_manager':'conda','previous_version':previous.get('version') if previous else None,'status':'verified'})+'\n')
     print('\n安装完成：TTO '+version+'\n运行入口：'+str(launcher)+'\n本机配置：'+str(config)+'\n安装身份：'+str(prefix/'installation.json')+'\n未启动采集、设备连接或后台服务。',flush=True)
 
 

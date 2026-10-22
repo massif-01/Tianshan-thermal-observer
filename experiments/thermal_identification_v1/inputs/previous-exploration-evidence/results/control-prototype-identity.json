@@ -1,0 +1,73 @@
+{
+  "reference_source_sha256": "2b226d9df0e2b60204de0fc25e1c5237241763c6e71e9e3a4ee87a4b9a6b1e70",
+  "commands": [
+    [
+      "cc",
+      "-std=c11",
+      "-g",
+      "-Wall",
+      "-Wextra",
+      "-Wno-unused-function",
+      "-Wno-unused-parameter",
+      "-fsanitize=address,undefined",
+      "-I/Users/massif/Tianshan-thermal-observer/evidence/shortqa-next-20261013/sources/fan_harness/tests/fan_monitor/stubs",
+      "-I/Users/massif/Tianshan-thermal-observer/evidence/shortqa-next-20261013/sources/fan_harness/components/ts_drivers/include",
+      "-I/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-offline-control-weuyhteu",
+      "/Users/massif/Tianshan-thermal-observer/evidence/shortqa-next-20261013/scripts/control_harness.c",
+      "-lm",
+      "-o",
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-offline-control-weuyhteu/controller"
+    ],
+    [
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-offline-control-weuyhteu/controller",
+      "0",
+      "/Users/massif/Tianshan-thermal-observer/evidence/shortqa-next-20261013/results/replay-input.csv",
+      "0",
+      "0",
+      "reference-native-gain"
+    ],
+    [
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-offline-control-weuyhteu/controller",
+      "1",
+      "/Users/massif/Tianshan-thermal-observer/evidence/shortqa-next-20261013/results/replay-input.csv",
+      "0",
+      "0",
+      "release-native-gain"
+    ],
+    [
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-offline-control-weuyhteu/controller",
+      "0",
+      "/Users/massif/Tianshan-thermal-observer/evidence/shortqa-next-20261013/results/replay-input.csv",
+      "1",
+      "0",
+      "reference-fixed-gain"
+    ],
+    [
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-offline-control-weuyhteu/controller",
+      "0",
+      "/Users/massif/Tianshan-thermal-observer/evidence/shortqa-next-20261013/results/replay-input.csv",
+      "0",
+      "1",
+      "user-curve-reference-sensitivity"
+    ],
+    [
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-offline-control-weuyhteu/controller",
+      "0",
+      "fixtures"
+    ],
+    [
+      "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-offline-control-weuyhteu/controller",
+      "1",
+      "fixtures"
+    ]
+  ],
+  "firmware_commit": "88dd98079ce14d2180afef8efc41d742735568da",
+  "input": "1261 raw fan snapshots; observer receive monotonic time; no temperature plant",
+  "curve": "current read-back assumed; separate user-curve sensitivity, never historical proof",
+  "initial_state": "observed first PWM and gain, empty temperature history, no pending learning observation",
+  "fresh_report_assumption": "every valid snapshot is a new report; source report identity/timestamp missing from fan API",
+  "fixed_gain": "1.8686946630477905 held only in isolated reference-fixed-gain comparator",
+  "evidence_limit": "Counterfactual PWM on the same temperature sequence does not show that lower airflow would maintain measured temperatures.",
+  "assertions": "short/dense pulse, warming, reheat, jitter, guard, stale/recovery; original limits/demand floor, successful PWM; ASAN/UBSAN",
+  "status": "passed"
+}

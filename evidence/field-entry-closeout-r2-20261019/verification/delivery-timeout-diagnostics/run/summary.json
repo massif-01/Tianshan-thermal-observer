@@ -1,0 +1,195 @@
+{
+  "mode": "diagnose",
+  "command_id": "DIAGNOSTIC-REAL-2S-TIMEOUTS",
+  "native_run_id": "582f64f2-7b30-43cb-8937-6262c1e2256c",
+  "reason": "diagnostic_duration",
+  "elapsed_s": 9.103100498000003,
+  "time_coverage": {
+    "observed_s": 9.074841988000117,
+    "measurement_usable_s": 2.955541099000129,
+    "model_usable_s": 0.0,
+    "context_ready_s": 0.0,
+    "joint_ready_s": 0.0,
+    "work_paused_s": 0.0,
+    "tj_usable_s": 8.022738249000213,
+    "rail_usable_s": 8.022738249000213,
+    "PWM_usable_s": 2.955541099000129,
+    "temp_context_usable_s": 8.969883226000093
+  },
+  "phase_seconds": {
+    "uninitialized": 1.0521037389999037,
+    "provisional": 8.022738249000213
+  },
+  "fan_success_intervals": {
+    "count": 2,
+    "max_s": 1.0071726619999026,
+    "over_original_2_5s": 0
+  },
+  "protocol_requests": 0,
+  "successful_requests": 0,
+  "server_completion_unknown": false,
+  "schedule_completed": false,
+  "workload_intent": "evaluate_actual_protocol_GPU_rails_not_client_slots",
+  "collector_task_identity": 140737292836016,
+  "collector_engine_instance_id": 140737293079296,
+  "observer_instances_created": 1,
+  "native_callbacks": 25,
+  "native_run_directories": 1,
+  "I02_shared_engine_instance_id": 140737293079296,
+  "I02_preprocessed_views": 25,
+  "requester_sessions_all_closed": true,
+  "requester_instances_created": 0,
+  "request_executor_instances_created": 0,
+  "own_async_tasks_remaining": 0,
+  "collector_summary": {
+    "stop_reason": "duration",
+    "poll_missed": 4,
+    "poll_count": 7,
+    "connection_attempts": 1,
+    "payload_oversize": 0,
+    "orin_event_count": 8,
+    "business_payload_bytes_sum": 12640,
+    "business_payload_bytes_max": 1580,
+    "poll_rtt_ms": [
+      15.975900000285037,
+      2003.2664609998392,
+      2006.8943740002396,
+      5.952077000074496,
+      6.231409000065469,
+      6.72453500010306,
+      4.773786999976437
+    ],
+    "prediction_ms": [
+      10.745404999852326,
+      2.8354549999676237,
+      2.2302470001704933,
+      2.4242479998974886
+    ],
+    "rss_mib": [
+      90.859375,
+      91.34375,
+      92.89453125,
+      92.92578125,
+      92.94921875,
+      92.99609375,
+      92.99609375,
+      92.99609375
+    ],
+    "cpu_pct_single_core": [
+      4.99007245046495,
+      4.973586955775327,
+      7.987496891552276,
+      3.9894097806177804,
+      5.9847426407432,
+      4.987904540981769,
+      4.990244690419935,
+      4.981806239360319
+    ],
+    "elapsed_s": 9.019592629999806,
+    "queue_peak_items": 2,
+    "queue_peak_bytes": 2498,
+    "dropped": 0,
+    "quality": {
+      "boundary_socketio_connecting": 1,
+      "boundary_stream": 1,
+      "new_samples": 8,
+      "boundary_input_boundary": 4,
+      "boundary_input_profile_change": 2,
+      "boundary_fan_unavailable": 2,
+      "boundary_control_context_change": 1,
+      "boundary_normal_scope_change": 1,
+      "boundary_socketio_disconnected": 1,
+      "boundary_run_end": 1
+    },
+    "processing": {
+      "temp_ok": 2,
+      "origins": 4,
+      "fan_unavailable": 2,
+      "fan_ok": 3
+    },
+    "target_host_verified": false,
+    "polling_health": {
+      "contract": "TTO-POLL-INDEPENDENT-v1",
+      "max_inflight_per_endpoint": 1,
+      "max_total_inflight_limit": 2,
+      "max_total_inflight_observed": 2,
+      "end_inflight": 0,
+      "legacy_config_max_inflight_esp32": 1,
+      "endpoints": {
+        "fan": {
+          "sent": 5,
+          "returned": 5,
+          "http_ok": 3,
+          "errors": 2,
+          "skipped": 4,
+          "cancelled": 0,
+          "peak_inflight": 1,
+          "rtt_ms": {
+            "n": 5,
+            "p50": 6.72453500010306,
+            "p95": 2006.1687914001595,
+            "min": 4.773786999976437,
+            "max": 2006.8943740002396
+          },
+          "send_interval_s": {
+            "n": 4,
+            "p50": 2.0023397944999033,
+            "p95": 3.0027080084999853,
+            "min": 1.0015134179998313,
+            "max": 3.00353846400003
+          },
+          "return_interval_s": {
+            "n": 4,
+            "p50": 1.005023059999985,
+            "p95": 2.7024610991001277,
+            "min": 0.9995626699997047,
+            "max": 3.0016300070001307
+          }
+        },
+        "temp": {
+          "sent": 2,
+          "returned": 2,
+          "http_ok": 2,
+          "errors": 0,
+          "skipped": 0,
+          "cancelled": 0,
+          "peak_inflight": 1,
+          "rtt_ms": {
+            "n": 2,
+            "p50": 10.963988500179767,
+            "p95": 15.47470885027451,
+            "min": 5.952077000074496,
+            "max": 15.975900000285037
+          },
+          "send_interval_s": {
+            "n": 1,
+            "p50": 5.008623506000276,
+            "p95": 5.008623506000276,
+            "min": 5.008623506000276,
+            "max": 5.008623506000276
+          },
+          "return_interval_s": {
+            "n": 1,
+            "p50": 4.998599683000066,
+            "p95": 4.998599683000066,
+            "min": 4.998599683000066,
+            "max": 4.998599683000066
+          }
+        }
+      }
+    }
+  },
+  "clock_end": {
+    "domain": "f2285d813231:1:c8072cf2-11c6-4eb2-a6ff-802eb2528009",
+    "mono_before_s": 2235.257109973,
+    "utc": "2026-10-19T08:10:25.847507+00:00",
+    "mono_after_s": 2235.257165014,
+    "utc_clock_accuracy_s": null,
+    "host": "f2285d813231",
+    "platform": "Linux-7.0.11-orbstack-00360-gc9bc4d96ac70-x86_64-with-glibc2.35",
+    "pid": 1
+  },
+  "control_changes": false,
+  "field_proven": false,
+  "synthetic_loopback_only": true
+}

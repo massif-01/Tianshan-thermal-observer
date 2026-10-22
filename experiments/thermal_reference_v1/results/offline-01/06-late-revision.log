@@ -1,0 +1,50 @@
+{
+  "status": "revised",
+  "record": {
+    "schema": "TTO-EXTERNAL-REFERENCE-v1",
+    "record_id": "fin-bg",
+    "run_id": "637f114b-563b-4c35-8062-a7588a89ce1c",
+    "site_id": "fin-A",
+    "session_id": "SYNTH-fin",
+    "measurement_kind": "fin_surface_ir",
+    "statistic": "fixed_point",
+    "temperature_c": 41.0,
+    "original_value": "41.0",
+    "original_unit": "C",
+    "measured_at_raw": "2026-10-13T17:39:19.288921+00:00",
+    "measured_interval_raw": null,
+    "time_source": "synthetic_explicit_timestamp_not_real_measurement",
+    "clock_domain": "run_utc",
+    "time_uncertainty_s": 0.0,
+    "prompt_due_at_utc": null,
+    "prompt_emitted_at_utc": null,
+    "checkpoint_ids": [],
+    "operator_mark_at_utc": "2026-10-14T04:53:36.566818+00:00",
+    "operator_mark_mono_s": 395203.967678666,
+    "operator_mark_clock_domain": "local_tool_host_not_automatically_run_clock",
+    "recorded_at_utc": "2026-10-14T04:53:36.597756+00:00",
+    "artifact": null,
+    "measurement_flags": [
+      "local_apparent_surface_not_air_or_whole_body",
+      "unknown_geometry_roi_definition",
+      "unknown_instrument_accuracy",
+      "unknown_instrument_model",
+      "unknown_settings_emissivity",
+      "unknown_settings_measurement_footprint",
+      "unknown_settings_reflected_temperature_c",
+      "unknown_settings_surface_finish"
+    ],
+    "absolute_status": "unverified_apparent_surface",
+    "synthetic": true,
+    "note": "合成演示：先打点；不是曝光时间",
+    "model_input": false,
+    "control_input": false,
+    "provenance": {
+      "operation": "record",
+      "late_revision": true
+    },
+    "revision": 2,
+    "revision_id": "1e749751-2b5b-4d14-82bf-b6934a493255",
+    "supersedes": "f9ba07dd-3b3a-4708-a8b7-a7a142a2a7cd"
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "scope": "LOCAL saved events, no network/sidecar/devices; NOT N305",
+  "events": 39,
+  "numeric_fields_checked": 2146,
+  "max_abs_semantic_numeric_difference": 4.973799150320701e-14,
+  "all_semantic_fields_equal": true,
+  "phase_validity_revocation_cold_start_included": true,
+  "process_cpu_s": 32.641326848000006,
+  "wall_s": 12.005054833018221,
+  "cpu_single_core_percent": 271.89652443922716,
+  "threads": [
+    {
+      "tid": 3,
+      "cpu_s": 5.9744150000000005
+    },
+    {
+      "tid": 2,
+      "cpu_s": 5.973074
+    },
+    {
+      "tid": 4,
+      "cpu_s": 5.95399
+    },
+    {
+      "tid": 5,
+      "cpu_s": 5.91979
+    },
+    {
+      "tid": 6,
+      "cpu_s": 5.890839
+    },
+    {
+      "tid": 1,
+      "cpu_s": 0.12798999999999994
+    },
+    {
+      "tid": 8,
+      "cpu_s": 0.10841400000000001
+    },
+    {
+      "tid": 7,
+      "cpu_s": 0.09634400000000001
+    },
+    {
+      "tid": 11,
+      "cpu_s": 0.09366699999999997
+    },
+    {
+      "tid": 14,
+      "cpu_s": 0.091387
+    },
+    {
+      "tid": 12,
+      "cpu_s": 0.07637300000000002
+    },
+    {
+      "tid": 13,
+      "cpu_s": 0.06971
+    },
+    {
+      "tid": 9,
+      "cpu_s": 0.05860299999999999
+    },
+    {
+      "tid": 10,
+      "cpu_s": -0.0008029999999999982
+    }
+  ],
+  "rss_bytes": 83886080,
+  "callback_p95_s": 0.013586792047135532,
+  "callback_max_s": 0.03386120905634016,
+  "thread_pools": [
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 14,
+      "prefix": "libscipy_openblas",
+      "filepath": "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/numpy/.dylibs/libscipy_openblas64_.dylib",
+      "version": "0.3.29",
+      "threading_layer": "pthreads",
+      "architecture": "neoversen1"
+    },
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 14,
+      "prefix": "libscipy_openblas",
+      "filepath": "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/scipy/.dylibs/libscipy_openblas.dylib",
+      "version": "0.3.28",
+      "threading_layer": "pthreads",
+      "architecture": "neoversen1"
+    }
+  ],
+  "python": "3.12.3 (v3.12.3:f6650f9ad7, Apr  9 2024, 08:18:47) [Clang 13.0.0 (clang-1300.0.29.30)]",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "numpy": "2.2.6",
+  "scipy": "1.15.3",
+  "candidate_policy": false,
+  "candidate_version": "0.2.4+cpu.2",
+  "observer_sha256": "599e292a0000697615e76a97596f2f48c7527bc82027bacca5aea0c0fe5d4a47",
+  "paced": true
+}

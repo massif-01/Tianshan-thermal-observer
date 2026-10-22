@@ -1,0 +1,20 @@
+{
+  "status": "frozen_pre_field_not_derived_from_new_device_results",
+  "source_query_target_s": 0.2,
+  "source_cpu_single_core_mean_limit_percent": 5,
+  "source_cpu_window": "cumulative from process loop start, evaluated after 5s",
+  "source_rss_limit_bytes": 67108864,
+  "read_duration_stop_s": 0.1,
+  "read_duration_p95_accept_s": 0.02,
+  "deadline_jitter_p95_accept_s": 0.1,
+  "stream_bytes_per_s_limit": 102400,
+  "source_no_packet_stop_s": 1,
+  "receiver_total_cpu_single_core_limit_percent": 8,
+  "receiver_cpu_window": "each 1s native resource observation after t=35; exceed stops sidecar only",
+  "receiver_total_rss_limit_bytes": 134217728,
+  "native_callback_delay_stop_s": 0.25,
+  "native_fan_success_gap_stop_s": 2.5,
+  "reference": "existing fixed-anchors N305 CPU mean3.24%, max6.88%, RSS95.84MiB; new total caps8%/128MiB. Thor5%/64MiB conservative candidate, not measured pass",
+  "capability_qualification": "60s unique native diagnostic: first30 baseline, final30 sidecar. Pre-register p95 source read/jitter; compare native resource and delay coverage. Any stop or p95 over limit requires no load until reviewed, never relax after seeing result.",
+  "over_budget_action": "terminate side recorder, retain files; pilot stops further dispatch and uses original bounded cleanup; never change native sampling or TTL"
+}

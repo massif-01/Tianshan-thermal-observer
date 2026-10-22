@@ -1,0 +1,158 @@
+"""Independent read-only transport; cancellable startup never awaits a child in the clock loop."""
+import asyncio,base64,json,shlex,socket,time
+from pathlib import Path
+from .support import utc
+
+# Frozen before closeout tests. These intervals consume the existing run budget.
+STARTUP_BUDGET_S=3.0
+CHECK_BUDGET_S=1.0
+TERM_GRACE_S=.5
+KILL_GRACE_S=.5
+STDERR_LIMIT=4096
+LINE_LIMIT=65536
+
+class Sidecar:
+    def __init__(self,config,out,clock,pipeline,evidence,source_duration=1170):
+        self.source_duration=source_duration;self.config=config;self.out=out;self.clock=clock;self.pipeline=pipeline;self.ev=evidence
+        self.process=None;self.check_process=None;self.startup_task=None;self.reader=None
+        self.owned=[];self.stderr_tasks=[];self.status='baseline';self.stage='baseline';self.closed=False
+        self.source_started=None;self.last_arrival=None;self.last_seq=None;self.domain=None;self.bytes=0;self.started=None;self.wire_seq=0
+        boot=Path('/proc/sys/kernel/random/boot_id')
+        self.receiver_identity=dict(host=socket.gethostname(),boot_id=boot.read_text().strip() if boot.exists() else None,
+                                    clock='CLOCK_MONOTONIC',domain=clock.domain,boot_id_unknown=not boot.exists())
+    def record(self,event,**extra):
+        self.ev.append('sidecar-events.jsonl',dict(event=event,mono_s=self.clock.now(),at_utc=utc(),status=self.status,stage=self.stage,**extra))
+    async def _stderr(self,proc,stage):
+        kept=bytearray();total=0
+        try:
+            while True:
+                part=await proc.stderr.read(1024)
+                if not part:break
+                total+=len(part)
+                kept.extend(part[:max(0,STDERR_LIMIT-len(kept))])
+        finally:
+            self.ev.append('sidecar-stderr.jsonl',dict(stage=stage,child_pid=getattr(proc,'pid',None),at_utc=utc(),
+                captured_base64=base64.b64encode(kept).decode(),total_bytes=total,truncated=total>len(kept),limit_bytes=STDERR_LIMIT))
+    async def _spawn(self,argv,stage,stdout):
+        self.stage=stage
+        proc=await asyncio.create_subprocess_exec(*argv,stdout=stdout,stderr=asyncio.subprocess.PIPE,limit=LINE_LIMIT)
+        self.owned.append((stage,proc))
+        if stage=='mux_check':self.check_process=proc
+        else:self.process=proc
+        self.stderr_tasks.append(asyncio.create_task(self._stderr(proc,stage)))
+        if self.closed:self._terminate(proc)
+        return proc
+    @staticmethod
+    def _terminate(proc):
+        if proc.returncode is None:
+            try:proc.terminate()
+            except ProcessLookupError:pass
+    async def _start(self):
+        try:
+            await asyncio.wait_for(self._start_steps(),STARTUP_BUDGET_S)
+        except asyncio.TimeoutError:
+            await self.halt('startup_timeout')
+        except asyncio.CancelledError:
+            self.record('startup_cancelled');raise
+        except (OSError,ValueError) as exc:
+            self.record('startup_error',error_class=type(exc).__name__,detail=str(exc)[:512])
+            await self.halt('startup_failed')
+    async def _start_steps(self):
+        argv=self.config.get('argv')
+        if self.config.get('transport')=='existing_ssh_mux':
+            path=self.config['existing_control_socket']
+            if not Path(path).is_socket():await self.halt('existing_connection_missing');return
+            check=await self._spawn(['ssh','-S',path,'-O','check',self.config['host']],'mux_check',asyncio.subprocess.DEVNULL)
+            try:code=await asyncio.wait_for(check.wait(),CHECK_BUDGET_S)
+            except asyncio.TimeoutError:await self.halt('mux_check_timeout');return
+            self.record('child_exit',child_stage='mux_check',returncode=code,child_pid=getattr(check,'pid',None))
+            if code!=0:await self.halt('existing_connection_invalid');return
+            bootstrap="import sys,hashlib,json,runpy\np,h,c,ch,g,cmd,d=sys.argv[1:]\nif hashlib.sha256(open(p,'rb').read()).hexdigest()!=h: raise SystemExit('source SHA')\nif hashlib.sha256(open(c,'rb').read()).hexdigest()!=ch: raise SystemExit('config SHA')\nif json.load(open(g))['command_id']!=cmd: raise SystemExit('permission command')\nsys.argv=[p,'--config',c,'--permission',g,'--duration',d]\nrunpy.run_path(p,run_name='__main__')"
+            remote=[self.config['remote_python'],'-c',bootstrap,self.config['remote_source_script'],self.config['source_script_sha256'],self.config['remote_source_config'],self.config['source_config_sha256'],self.config['remote_source_permission'],self.config['command_id'],str(self.source_duration)]
+            argv=['ssh','-S',path,'-o','ControlMaster=no','-o','BatchMode=yes','-o','ProxyCommand=false',self.config['host'],shlex.join(remote)]
+        if not argv:await self.halt('missing');return
+        await self._spawn(argv,'source_start',asyncio.subprocess.PIPE)
+        if self.closed:return
+        self.source_started=self.clock.now();self.status='running';self.stage='receive';self.reader=asyncio.create_task(self.receive());self.record('started')
+    async def tick(self,now,latest):
+        if self.closed:return
+        if self.startup_task is None and now>=30:
+            self.started=now;self.status='starting';self.startup_task=asyncio.create_task(self._start());self.record('startup_scheduled',startup_budget_s=STARTUP_BUDGET_S)
+        if self.status=='starting' and now-self.started>=STARTUP_BUDGET_S:
+            await self.halt('startup_timeout')
+        if self.process and self.status=='running':
+            if self.reader and self.reader.done():await self.halt(self.status)
+            if now-(self.last_arrival if self.last_arrival is not None else self.source_started)>1:await self.halt('source_stale_or_blocked')
+            if latest:
+                if self.pipeline.fan_success_times and time.monotonic()-self.pipeline.fan_success_times[-1]>2.5:await self.halt('native_fan_gap_exceeds_original_TTL')
+                c=latest['clock']
+                if c['generated_at_mono_s']-c['observer_input_mono_s']>.25:await self.halt('native_callback_delay_budget_exceeded')
+                if time.monotonic()-c['generated_at_mono_s']>2.5:await self.halt('native_state_delay_exceeds_original_TTL')
+    def wire(self,line,received,*,truncated=False):
+        self.wire_seq+=1
+        self.ev.append('cpu-sidecar-wire.jsonl',dict(wire_seq=self.wire_seq,raw_base64=base64.b64encode(line).decode(),truncated=truncated,
+            received_at_mono_s=received,received_at_utc=utc(),receiver_domain=self.clock.domain,receiver_identity=self.receiver_identity,
+            command_id=self.config['command_id'],native_run_id=self.pipeline.run_id,stage=self.stage,analysis_qualification='raw_not_yet_validated'))
+        return self.wire_seq
+    async def receive(self):
+        current_wire=None
+        try:
+            while True:
+                try:line=await self.process.stdout.readuntil(b'\n')
+                except asyncio.IncompleteReadError as exc:
+                    if not exc.partial:break
+                    line=exc.partial
+                except asyncio.LimitOverrunError as exc:
+                    line=await self.process.stdout.readexactly(min(exc.consumed,LINE_LIMIT))
+                    current_wire=self.wire(line,time.monotonic(),truncated=True);raise ValueError('source_line_over_budget')
+                received=time.monotonic();current_wire=self.wire(line,received);self.last_arrival=self.clock.now();self.bytes+=len(line)
+                row=json.loads(line);ident=row['identity'];seq=row['seq'];domain=(ident.get('host'),ident.get('boot_id'),ident.get('source_session'),ident.get('clock'))
+                if row.get('schema')!='TTO-CPU-SOURCE-v1' or ident.get('command_id')!=self.config['command_id']:raise ValueError('identity_or_command_mismatch')
+                if self.domain is not None and (domain!=self.domain or seq<=self.last_seq):raise ValueError('source_restart_or_sequence_regression')
+                if not all(domain) or domain[-1]!='CLOCK_MONOTONIC':raise ValueError('source_clock_identity_unknown')
+                resources=row['resources'];elapsed=resources['elapsed_s']
+                self.domain=domain;self.last_seq=seq
+                self.ev.append('cpu-sidecar-arrivals.jsonl',dict(source=row,received_at_mono_s=received,received_at_utc=utc(),receiver_domain=self.clock.domain,
+                    receiver_identity=self.receiver_identity,wire_seq=current_wire,decision_generated_mono_s=time.monotonic(),clock_status='source_identified_mapping_unknown',
+                    command_id=self.config['command_id'],native_run_id=self.pipeline.run_id,evaluation_scope='arrival_side',network_latency_s=None,production_observation=False,analysis_only=True))
+                if (resources['read_duration_s']>.1 or resources['rss_bytes']>64*1024**2 or (elapsed>=5 and resources['cpu_seconds']/elapsed>.05) or
+                    (self.clock.now()-self.started>=5 and self.bytes/(self.clock.now()-self.started)>100*1024)):
+                    await self.halt('source_budget_exceeded');return
+        except (ValueError,KeyError,TypeError,UnicodeError) as exc:
+            self.record('source_rejected',wire_seq=current_wire,error_class=type(exc).__name__,detail=str(exc)[:512])
+            await self.halt('source_invalid')
+        finally:
+            if self.status=='running':self.status='source_eof';self.record('source_eof')
+            self._terminate(self.process)
+    async def resource(self,cpu_pct,rss):
+        if self.process and not self.closed and (rss>128*1024**2 or (self.clock.now()>35 and cpu_pct is not None and cpu_pct>8)):
+            await self.halt('receiver_total_resource_budget_exceeded')
+    async def halt(self,reason):
+        if self.closed:return
+        self.closed=True;self.status=reason;self.record('stop_sidecar_only')
+        if self.startup_task and self.startup_task is not asyncio.current_task() and not self.startup_task.done():self.startup_task.cancel()
+        for _,proc in self.owned:self._terminate(proc)
+    async def _reap(self,stage,proc):
+        self._terminate(proc)
+        try:await asyncio.wait_for(proc.wait(),TERM_GRACE_S)
+        except asyncio.TimeoutError:
+            if proc.returncode is None:
+                try:proc.kill()
+                except ProcessLookupError:pass
+            try:await asyncio.wait_for(proc.wait(),KILL_GRACE_S)
+            except asyncio.TimeoutError:self.record('child_cleanup_unconfirmed',child_stage=stage,child_pid=getattr(proc,'pid',None));return
+        self.record('child_exit',child_stage=stage,returncode=proc.returncode,child_pid=getattr(proc,'pid',None))
+    async def close(self):
+        await self.halt(self.status if self.status not in ('running','starting') else 'native_run_ending')
+        if self.startup_task:
+            if not self.startup_task.done():self.startup_task.cancel()
+            done,pending=await asyncio.wait([self.startup_task],timeout=TERM_GRACE_S)
+            if pending:self.record('startup_cleanup_unconfirmed')
+        await asyncio.gather(*(self._reap(stage,p) for stage,p in self.owned))
+        for task in [self.reader,*self.stderr_tasks]:
+            if task and not task.done():task.cancel()
+        tasks=[x for x in [self.reader,*self.stderr_tasks] if x]
+        if tasks:
+            _,pending=await asyncio.wait(tasks,timeout=TERM_GRACE_S)
+            if pending:self.record('reader_cleanup_unconfirmed',tasks=len(pending))
+        self.record('cleanup_finished',own_tasks_remaining=sum(not x.done() for x in [self.startup_task,*tasks] if x),unreaped_children=sum(p.returncode is None for _,p in self.owned))

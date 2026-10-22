@@ -1,0 +1,77 @@
+{
+  "three-old_manifest_format": "dict",
+  "projects-old_manifest_format": "dict",
+  "three-old": {
+    "members_verified": 4,
+    "all_match": true
+  },
+  "projects-old": {
+    "members_verified": 4,
+    "all_match": true
+  },
+  "node_contract": {
+    "count": 19,
+    "acyclic": true,
+    "all_dates_null": true,
+    "historical_done_deliveries": 4,
+    "reused_issues": [
+      1,
+      8,
+      9,
+      10
+    ],
+    "roadmap_registry_consistent": true
+  },
+  "review_scope": "document/plan/source integrity; not implementation/model/field tests",
+  "plan_budgets": [
+    {
+      "profile": "fixed-anchors",
+      "nominal_s": 2670,
+      "work_blocks": 4,
+      "budget_with_reserves_s": 3450,
+      "hard_limit_s": 3600,
+      "pass": true
+    },
+    {
+      "profile": "irregular-confirm-after-freeze",
+      "nominal_s": 2640,
+      "work_blocks": 4,
+      "budget_with_reserves_s": 3420,
+      "hard_limit_s": 3600,
+      "pass": true
+    }
+  ],
+  "remote_document_blob_readback": {
+    "docs/roadmap/PRODUCT-ROADMAP.md": {
+      "sha": "b6223e06c24615e7c58505c0cc2e634dc606bf96",
+      "matches_local": true
+    },
+    "docs/roadmap/TTO-roadmap.md": {
+      "sha": "7437d40097a5142b3ec2fdc9bc8fa7a592ff5bff",
+      "matches_local": true
+    }
+  },
+  "historical_tech_blob": {
+    "before": "b1633eda83954dc35d1848601fe10724ad08285b",
+    "archived": "b1633eda83954dc35d1848601fe10724ad08285b",
+    "same_bytes": true
+  },
+  "source_archives": {
+    "Y-independent-review-original.zip": {
+      "crc_ok": true,
+      "members": 22
+    },
+    "Y-comparison-original.zip": {
+      "crc_ok": true,
+      "members": 90
+    },
+    "TTO-0.2.4-candidate-original.zip": {
+      "crc_ok": true,
+      "members": 21
+    },
+    "M-live-original.zip": {
+      "crc_ok": true,
+      "members": 43
+    }
+  }
+}

@@ -1,0 +1,11 @@
+以下是TTO专用Goal文案，用于接续已有TTO实施会话，不新开重复写入任务。WS会话已经单独负责rm01OrinStatus。
+
+/goal 按 /Users/massif/Tianshan-thermal-observer/docs/plans/TTO-Orin-Thor-CURVE最终执行方案-20261012.md（唯一共同合同TTO-PLATFORM-CURVE-v2.0）完成TTO仓库的Orin/Thor输入适配、独立GPU新鲜度、CURVE资格、历史兼容、报告和原计划离线软件链路，完成本仓回归、候选wheel、干净非editable安装、Conda旧配置升级验证、中文说明及最小证据。
+
+仅写 /Users/massif/Tianshan-thermal-observer 的TTO代码、测试、依赖、候选和文档，不再写rm01OrinStatus代码、测试、安装器、包或说明。服务由WS会话负责；保留交接前改动，不回退，不替对方构建或宣称完成。第4节共同合同逐字同步两份方案，冻结同版fixture/SHA后消费，完成T1–T8消费者用例、TTO原88项及新增必要回归，正式Engine/Journal、report和split→train→evaluate经过验证。
+
+源周期来自新服务telemetry_meta.source_sample_interval_ms；Thor GPU独立默认1000ms，选定后端的周期/timeout在生命周期固定，缺依赖也不改平台策略。四状态、null组合、新旧判别、同key平台保护和原生调用cleanup_pending/error采用第4节，不另定字段。服务候选版本及SHA以WS交接清单为准，不写死旧1.1.0版本或旧包身份。
+
+仅本地隔离验证，不连接设备、不执行doctor --live、真实collect/shadow、部署或重启，不改天山OS/TJ绑定/风扇/源周期，不使用CUDA，不提交、推送或创建PR，不训练真实新模型。保留旧配置、模型、run、实际预测和评分；模拟结果标模拟，不造GPU 0或回填历史。
+
+范围内常规选择自行判断并持续推进。合同确需变更先同步两会话/三份方案并说明影响。各自软件候选与可复核交接完成后停止，交独立复审；对方尚未交付或实机行为待验证时如实区分，不用此类未授权验证无限延伸Goal。
