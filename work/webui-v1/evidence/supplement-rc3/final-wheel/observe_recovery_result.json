@@ -1,0 +1,72 @@
+[
+  {
+    "scenario": "source_unavailable_at_boot",
+    "connect_calls": 11,
+    "successful_connects": 1,
+    "source_recovered": true,
+    "actual_device_network_requests": 0,
+    "real_observer_lock_acquired": false,
+    "host_metrics": "actual process sampler; this is not a resource measurement",
+    "reconnect_max_attempts": 10,
+    "original_backoff_s": {
+      "reconnect_initial_s": 1.0,
+      "reconnect_max_s": 30.0
+    },
+    "lock_entries": 2,
+    "active_locks": 0,
+    "peak_active_locks": 1,
+    "source_status_at_budget": "来源暂不可达；等待退避后重新观察",
+    "run_at_budget": "1005d8946c66df6c",
+    "shared_web_stop_set": false,
+    "calls_at_budget": 10,
+    "calls_after_source_recovered": 11,
+    "run_after_recovery": "52526c143b1794a0",
+    "source_connected_flag_after_recovery": true,
+    "source_run_coroutines_still_active": 1,
+    "health_http_status_after_recovery": 200,
+    "health_after_recovery": {
+      "web": "running",
+      "version": "1.0.0rc3",
+      "pid": 96930,
+      "device_health_is_separate": true
+    },
+    "ui_observation_status_after_recovery": "正在观察",
+    "no_revival_after_stop": true,
+    "source_connected_after_stop": false
+  },
+  {
+    "scenario": "ten_successful_connections_then_disconnects",
+    "connect_calls": 11,
+    "successful_connects": 11,
+    "source_recovered": true,
+    "actual_device_network_requests": 0,
+    "real_observer_lock_acquired": false,
+    "host_metrics": "actual process sampler; this is not a resource measurement",
+    "reconnect_max_attempts": 10,
+    "original_backoff_s": {
+      "reconnect_initial_s": 1.0,
+      "reconnect_max_s": 30.0
+    },
+    "lock_entries": 2,
+    "active_locks": 0,
+    "peak_active_locks": 1,
+    "source_status_at_budget": "来源暂不可达；等待退避后重新观察",
+    "run_at_budget": "9774ea53a2fd897b",
+    "shared_web_stop_set": false,
+    "calls_at_budget": 10,
+    "calls_after_source_recovered": 11,
+    "run_after_recovery": "24082b74290c3013",
+    "source_connected_flag_after_recovery": true,
+    "source_run_coroutines_still_active": 1,
+    "health_http_status_after_recovery": 200,
+    "health_after_recovery": {
+      "web": "running",
+      "version": "1.0.0rc3",
+      "pid": 96930,
+      "device_health_is_separate": true
+    },
+    "ui_observation_status_after_recovery": "正在观察",
+    "no_revival_after_stop": true,
+    "source_connected_after_stop": false
+  }
+]

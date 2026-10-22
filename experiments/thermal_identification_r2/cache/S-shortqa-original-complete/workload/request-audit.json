@@ -1,0 +1,26 @@
+{
+  "audited_at_utc": "2026-10-13T05:50:24.507897+00:00",
+  "checks": {
+    "question_order_matches": true,
+    "all_completed": true,
+    "all_finish_reason_stop": true,
+    "all_done": true,
+    "all_usage_present": true,
+    "all_max_tokens_64": true,
+    "sparse_gaps_at_least_90s": true,
+    "continuous_gaps_at_least_10s": true
+  },
+  "pilot_requests": 1,
+  "formal_requests": 18,
+  "formal_duration_seconds_min": 1.5358447110047564,
+  "formal_duration_seconds_max": 3.1580705839733128,
+  "formal_requests_less_than_3s": 17,
+  "formal_usage_totals": {
+    "prompt_tokens": 620,
+    "completion_tokens": 461,
+    "total_tokens": 1081
+  },
+  "no_timing_cherry_picking": true,
+  "final_cooldown": "completed",
+  "flow_completed_at_utc": "2026-10-13T05:54:09.444709+00:00"
+}

@@ -1,0 +1,22 @@
+{
+  "registration": {
+    "run_id": "synthetic-cpu-interface-001",
+    "synthetic": true,
+    "field_data": false,
+    "declared_role": "synthetic_interface_verification_only",
+    "saw_new_data_for_parameter_selection": false,
+    "candidate_sha256": "89ae53229af3e84b3bae1140a1ce013d6bf16e374cd5d3ffcde6fc7d28b78831",
+    "analysis_spec_sha256": "df26198dd631a45564d88c10b7b30433ab8b272cb4cf5d3726d7be6eacbab716"
+  },
+  "effective_role": "synthetic_interface_verification_only",
+  "inputs": {
+    "experiments/thermal_cpu_increment_v1/fixtures-v2/synthetic-stream-200ms.jsonl": "8d2ccd1981e6f75b971665a102f0ebf737438f634e5d666e1d6b6d679fa94461",
+    "experiments/thermal_cpu_increment_v1/fixtures-v2/synthetic-origins-1s.jsonl": "6b4248a6db56f54d18cbe704328c18f7f8eb865424bb41f804d3920a45fcf3c4",
+    "experiments/thermal_cpu_increment_v1/fixtures-v2/synthetic-registration.json": "a17f43dea84eade31396857064fb36a39e495281366065cc82c0c30e8101eb6c"
+  },
+  "theta_fits": 0,
+  "labels_interpolated": false,
+  "device_access": false,
+  "field_time_resolution_verified_by_this_program": false,
+  "note": "declaration cannot by itself establish source timing validity; retain source windows/arrival evidence and unknowns"
+}

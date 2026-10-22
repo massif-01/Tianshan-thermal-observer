@@ -1,0 +1,277 @@
+{
+  "status": "offline_preparation_completed_not_field_test",
+  "created_at_utc": "2026-10-18T03:16:57.280537+00:00",
+  "python": "3.12.3 (v3.12.3:f6650f9ad7, Apr  9 2024, 08:18:47) [Clang 13.0.0 (clang-1300.0.29.30)]",
+  "python_executable": "/Users/massif/Tianshan-thermal-observer/.venv/bin/python",
+  "host": "macOS-27.0.1-arm64-arm-64bit",
+  "elapsed_wall_s": 7.86590862495359,
+  "calls": [
+    {
+      "name": "plan-fixed-anchors",
+      "exit_code": 0,
+      "command": [
+        "/Users/massif/Tianshan-thermal-observer/.venv/bin/python",
+        "/private/tmp/tto-mix-r2-issue10-20261018/experiments/mixed_load_r2/mix.py",
+        "plan",
+        "--profile",
+        "fixed-anchors",
+        "--output",
+        "/private/tmp/tto-mix-r2-issue10-20261018/experiments/mixed_load_r2/results/delivery-r2/fixed-anchors-plan.json"
+      ]
+    },
+    {
+      "name": "virtual-fixed-anchors",
+      "exit_code": 0,
+      "command": [
+        "/Users/massif/Tianshan-thermal-observer/.venv/bin/python",
+        "/private/tmp/tto-mix-r2-issue10-20261018/experiments/mixed_load_r2/mix.py",
+        "dry-run",
+        "--profile",
+        "fixed-anchors",
+        "--output",
+        "/private/tmp/tto-mix-r2-issue10-20261018/experiments/mixed_load_r2/results/delivery-r2/virtual-fixed-anchors",
+        "--run-id",
+        "fixed-anchors",
+        "--command-id",
+        "fixed-anchors"
+      ]
+    },
+    {
+      "name": "plan-same-plan-other-model",
+      "exit_code": 0,
+      "command": [
+        "/Users/massif/Tianshan-thermal-observer/.venv/bin/python",
+        "/private/tmp/tto-mix-r2-issue10-20261018/experiments/mixed_load_r2/mix.py",
+        "plan",
+        "--profile",
+        "same-plan-other-model",
+        "--output",
+        "/private/tmp/tto-mix-r2-issue10-20261018/experiments/mixed_load_r2/results/delivery-r2/same-plan-other-model-plan.json"
+      ]
+    },
+    {
+      "name": "virtual-same-plan-other-model",
+      "exit_code": 0,
+      "command": [
+        "/Users/massif/Tianshan-thermal-observer/.venv/bin/python",
+        "/private/tmp/tto-mix-r2-issue10-20261018/experiments/mixed_load_r2/mix.py",
+        "dry-run",
+        "--profile",
+        "same-plan-other-model",
+        "--output",
+        "/private/tmp/tto-mix-r2-issue10-20261018/experiments/mixed_load_r2/results/delivery-r2/virtual-same-plan-other-model",
+        "--run-id",
+        "same-plan-other-model",
+        "--command-id",
+        "same-plan-other-model"
+      ]
+    },
+    {
+      "name": "plan-irregular-confirm-after-freeze",
+      "exit_code": 0,
+      "command": [
+        "/Users/massif/Tianshan-thermal-observer/.venv/bin/python",
+        "/private/tmp/tto-mix-r2-issue10-20261018/experiments/mixed_load_r2/mix.py",
+        "plan",
+        "--profile",
+        "irregular-confirm-after-freeze",
+        "--output",
+        "/private/tmp/tto-mix-r2-issue10-20261018/experiments/mixed_load_r2/results/delivery-r2/irregular-confirm-after-freeze-plan.json"
+      ]
+    },
+    {
+      "name": "virtual-irregular-confirm-after-freeze",
+      "exit_code": 0,
+      "command": [
+        "/Users/massif/Tianshan-thermal-observer/.venv/bin/python",
+        "/private/tmp/tto-mix-r2-issue10-20261018/experiments/mixed_load_r2/mix.py",
+        "dry-run",
+        "--profile",
+        "irregular-confirm-after-freeze",
+        "--output",
+        "/private/tmp/tto-mix-r2-issue10-20261018/experiments/mixed_load_r2/results/delivery-r2/virtual-irregular-confirm-after-freeze",
+        "--run-id",
+        "irregular-confirm-after-freeze",
+        "--command-id",
+        "irregular-confirm-after-freeze"
+      ]
+    },
+    {
+      "name": "scenario-startup",
+      "exit_code": 0,
+      "command": [
+        "/Users/massif/Tianshan-thermal-observer/.venv/bin/python",
+        "/private/tmp/tto-mix-r2-issue10-20261018/experiments/mixed_load_r2/mix.py",
+        "dry-run",
+        "--scenario",
+        "startup",
+        "--output",
+        "/private/tmp/tto-mix-r2-issue10-20261018/experiments/mixed_load_r2/results/delivery-r2/scenario-startup",
+        "--run-id",
+        "startup",
+        "--command-id",
+        "startup"
+      ]
+    },
+    {
+      "name": "scenario-short_gap",
+      "exit_code": 0,
+      "command": [
+        "/Users/massif/Tianshan-thermal-observer/.venv/bin/python",
+        "/private/tmp/tto-mix-r2-issue10-20261018/experiments/mixed_load_r2/mix.py",
+        "dry-run",
+        "--scenario",
+        "short_gap",
+        "--output",
+        "/private/tmp/tto-mix-r2-issue10-20261018/experiments/mixed_load_r2/results/delivery-r2/scenario-short_gap",
+        "--run-id",
+        "short_gap",
+        "--command-id",
+        "short_gap"
+      ]
+    },
+    {
+      "name": "scenario-long_gap",
+      "exit_code": 0,
+      "command": [
+        "/Users/massif/Tianshan-thermal-observer/.venv/bin/python",
+        "/private/tmp/tto-mix-r2-issue10-20261018/experiments/mixed_load_r2/mix.py",
+        "dry-run",
+        "--scenario",
+        "long_gap",
+        "--output",
+        "/private/tmp/tto-mix-r2-issue10-20261018/experiments/mixed_load_r2/results/delivery-r2/scenario-long_gap",
+        "--run-id",
+        "long_gap",
+        "--command-id",
+        "long_gap"
+      ]
+    },
+    {
+      "name": "scenario-http_timeout",
+      "exit_code": 0,
+      "command": [
+        "/Users/massif/Tianshan-thermal-observer/.venv/bin/python",
+        "/private/tmp/tto-mix-r2-issue10-20261018/experiments/mixed_load_r2/mix.py",
+        "dry-run",
+        "--scenario",
+        "http_timeout",
+        "--output",
+        "/private/tmp/tto-mix-r2-issue10-20261018/experiments/mixed_load_r2/results/delivery-r2/scenario-http_timeout",
+        "--run-id",
+        "http_timeout",
+        "--command-id",
+        "http_timeout"
+      ]
+    },
+    {
+      "name": "scenario-mode_change",
+      "exit_code": 0,
+      "command": [
+        "/Users/massif/Tianshan-thermal-observer/.venv/bin/python",
+        "/private/tmp/tto-mix-r2-issue10-20261018/experiments/mixed_load_r2/mix.py",
+        "dry-run",
+        "--scenario",
+        "mode_change",
+        "--output",
+        "/private/tmp/tto-mix-r2-issue10-20261018/experiments/mixed_load_r2/results/delivery-r2/scenario-mode_change",
+        "--run-id",
+        "mode_change",
+        "--command-id",
+        "mode_change"
+      ]
+    },
+    {
+      "name": "scenario-binding_change",
+      "exit_code": 0,
+      "command": [
+        "/Users/massif/Tianshan-thermal-observer/.venv/bin/python",
+        "/private/tmp/tto-mix-r2-issue10-20261018/experiments/mixed_load_r2/mix.py",
+        "dry-run",
+        "--scenario",
+        "binding_change",
+        "--output",
+        "/private/tmp/tto-mix-r2-issue10-20261018/experiments/mixed_load_r2/results/delivery-r2/scenario-binding_change",
+        "--run-id",
+        "binding_change",
+        "--command-id",
+        "binding_change"
+      ]
+    },
+    {
+      "name": "scenario-unknown_safety",
+      "exit_code": 0,
+      "command": [
+        "/Users/massif/Tianshan-thermal-observer/.venv/bin/python",
+        "/private/tmp/tto-mix-r2-issue10-20261018/experiments/mixed_load_r2/mix.py",
+        "dry-run",
+        "--scenario",
+        "unknown_safety",
+        "--output",
+        "/private/tmp/tto-mix-r2-issue10-20261018/experiments/mixed_load_r2/results/delivery-r2/scenario-unknown_safety",
+        "--run-id",
+        "unknown_safety",
+        "--command-id",
+        "unknown_safety"
+      ]
+    },
+    {
+      "name": "scenario-unavailable_observer",
+      "exit_code": 0,
+      "command": [
+        "/Users/massif/Tianshan-thermal-observer/.venv/bin/python",
+        "/private/tmp/tto-mix-r2-issue10-20261018/experiments/mixed_load_r2/mix.py",
+        "dry-run",
+        "--scenario",
+        "unavailable_observer",
+        "--output",
+        "/private/tmp/tto-mix-r2-issue10-20261018/experiments/mixed_load_r2/results/delivery-r2/scenario-unavailable_observer",
+        "--run-id",
+        "unavailable_observer",
+        "--command-id",
+        "unavailable_observer"
+      ]
+    },
+    {
+      "name": "HTTP-normal",
+      "exit_code": 0,
+      "command": [
+        "/Users/massif/Tianshan-thermal-observer/.venv/bin/python",
+        "/private/tmp/tto-mix-r2-issue10-20261018/experiments/mixed_load_r2/mix.py",
+        "loopback",
+        "--behavior",
+        "normal",
+        "--output",
+        "/private/tmp/tto-mix-r2-issue10-20261018/experiments/mixed_load_r2/results/delivery-r2/HTTP-normal"
+      ]
+    },
+    {
+      "name": "HTTP-incomplete",
+      "exit_code": 0,
+      "command": [
+        "/Users/massif/Tianshan-thermal-observer/.venv/bin/python",
+        "/private/tmp/tto-mix-r2-issue10-20261018/experiments/mixed_load_r2/mix.py",
+        "loopback",
+        "--behavior",
+        "incomplete",
+        "--output",
+        "/private/tmp/tto-mix-r2-issue10-20261018/experiments/mixed_load_r2/results/delivery-r2/HTTP-incomplete"
+      ]
+    },
+    {
+      "name": "tests",
+      "exit_code": 0,
+      "command": [
+        "/Users/massif/Tianshan-thermal-observer/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "/private/tmp/tto-mix-r2-issue10-20261018/experiments/mixed_load_r2/tests",
+        "-v"
+      ]
+    }
+  ],
+  "network_scope": "fake HTTP/SSE loopback only; no device/API calls",
+  "field_authorized": false
+}

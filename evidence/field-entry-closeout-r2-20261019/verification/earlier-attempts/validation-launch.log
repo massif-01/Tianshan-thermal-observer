@@ -1,0 +1,15 @@
+Processing ./dist/tto_field_candidate-0.2.4+closeout.1-py3-none-any.whl
+Installing collected packages: tto-field-candidate
+Successfully installed tto-field-candidate-0.2.4+closeout.1
+Traceback (most recent call last):
+  File "/opt/candidate/bin/tto-field", line 8, in <module>
+    sys.exit(main())
+  File "/opt/candidate/lib/python3.10/site-packages/tto_field/cli.py", line 35, in main
+    print(json.dumps(verify(a.target),ensure_ascii=False,indent=2));return 0
+  File "/opt/candidate/lib/python3.10/site-packages/tto_field/identity.py", line 10, in verify
+    manifest=json.loads((root/'candidate-files.json').read_text())
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/opt/candidate/lib/python3.10/site-packages/tto_field/candidate-files.json'

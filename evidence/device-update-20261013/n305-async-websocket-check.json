@@ -1,0 +1,40 @@
+{
+  "observer_host": "10.10.99.99",
+  "endpoint": "10.10.99.98:58090",
+  "websocket_messages": 5,
+  "platform": {
+    "schema_version": 1,
+    "family": "jetson_thor",
+    "soc": "tegra264",
+    "identification_source": "device_tree_compatible",
+    "compatible": [
+      "rm01,rm01-thor",
+      "nvidia,p3834-0008",
+      "nvidia,tegra264"
+    ],
+    "gpu_backend": "nvml"
+  },
+  "gpu": {
+    "schema_version": 1,
+    "utilization_pct": 0,
+    "source": "nvml",
+    "status": "valid",
+    "sampled_at_utc": "2026-10-12T17:33:50.732505+00:00",
+    "age_at_telemetry_receive_ms": 473.87603399693035,
+    "sample_interval_ms": 1000,
+    "freshness_timeout_ms": 5000,
+    "device_uuid": "GPU-a7c66ad2-6dbb-0ab8-c1a2-37ba6dba3600"
+  },
+  "telemetry_meta": {
+    "schema_version": 1,
+    "stream_id": "23a796fe-a5c4-4ff4-84a1-705dabebb33c",
+    "sample_seq": 159,
+    "received_at": "2026-10-12T17:33:51.206381Z",
+    "sample_age_ms": 587.4723739980254,
+    "fresh": true,
+    "collector_state": "running",
+    "freshness_timeout_ms": 5000,
+    "time_basis": "collector_receive",
+    "source_sample_interval_ms": 1000
+  }
+}

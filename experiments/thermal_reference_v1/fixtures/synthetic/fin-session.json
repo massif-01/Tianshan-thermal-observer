@@ -1,0 +1,46 @@
+{
+  "schema": "TTO-EXTERNAL-REFERENCE-v1",
+  "example_only": true,
+  "run_id": "637f114b-563b-4c35-8062-a7588a89ce1c",
+  "session_id": "SYNTH-fin",
+  "measurement_kind": "fin_surface_ir",
+  "site_id": "fin-A",
+  "site_description": "出风口内固定可见鳍片区域；待定位确认",
+  "instrument": {
+    "manufacturer": null,
+    "model": null,
+    "serial_alias": null,
+    "radiometric_export_supported": null,
+    "accuracy": null,
+    "repeatability": null,
+    "resolution_c": null
+  },
+  "geometry": {
+    "distance_m": null,
+    "view_description": null,
+    "roi_definition": null,
+    "statistic": "fixed_point",
+    "position_photo": null,
+    "airflow_unmodified": null
+  },
+  "settings": {
+    "emissivity": null,
+    "reflected_temperature_c": null,
+    "surface_finish": null,
+    "focus": null,
+    "measurement_footprint": null
+  },
+  "time": {
+    "clock_domain": "run_utc",
+    "timezone": "+00:00",
+    "sync_basis": "SYNTHETIC fixture UTC coordinates only",
+    "sync_uncertainty_s": 0,
+    "sync_anchors": []
+  },
+  "absolute_status": "unverified_apparent_surface",
+  "future_role": "validation_reference_only",
+  "model_input": false,
+  "control_input": false,
+  "synthetic": true,
+  "reference_record_id": "fin-bg"
+}

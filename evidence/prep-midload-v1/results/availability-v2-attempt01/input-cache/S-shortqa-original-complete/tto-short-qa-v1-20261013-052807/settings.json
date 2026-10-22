@@ -1,0 +1,33 @@
+{
+  "episode": "tto-short-qa-v1-20261013-052807",
+  "condition_plan": [
+    {
+      "id": "pilot",
+      "label": "pilot"
+    },
+    {
+      "id": "resident-baseline",
+      "label": "resident-baseline"
+    },
+    {
+      "id": "sparse",
+      "label": "sparse"
+    },
+    {
+      "id": "between-groups",
+      "label": "between-groups"
+    },
+    {
+      "id": "continuous",
+      "label": "continuous"
+    },
+    {
+      "id": "final-cooldown",
+      "label": "final-cooldown"
+    }
+  ],
+  "authorization": "用户授权按TTO-SHORT-QA-v1.0进行一次连续采集，最多40分钟，不自动延长或重跑，不改风扇/服务/生产代码，不训练。",
+  "plan_version": "TTO-SHORT-QA-v1.0",
+  "duration_s": 2400,
+  "operations_thread_id": "01a1331a-f937-7d91-aef0-ac4f5e50bd8a"
+}

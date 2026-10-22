@@ -1,0 +1,230 @@
+{
+  "command": [
+    "/Users/massif/Tianshan-thermal-observer/evidence/prep-midload-v1/repair-r1-r2/conda-install/tto-midload",
+    "--live",
+    "--trial-config",
+    "/Users/massif/Tianshan-thermal-observer/evidence/prep-midload-v1/repair-r1-r2/test-tools-final/test_operation_card_entry_real0/trial.json",
+    "--tto-config",
+    "/Users/massif/Tianshan-thermal-observer/evidence/prep-midload-v1/repair-r1-r2/test-tools-final/test_operation_card_entry_real0/tto.json",
+    "--output-root",
+    "/Users/massif/Tianshan-thermal-observer/evidence/prep-midload-v1/repair-r1-r2/test-tools-final/test_operation_card_entry_real0/output"
+  ],
+  "returncode": 1,
+  "stdout": "正在记录背景温度，暂不运行任务。\n已连接，正在等待第一份有效温度数据。\n本轮TTO已停止；现有风扇控制未被修改。\n本轮采集已结束，风扇控制没有改动。请把这个结果包交回复核：/Users/massif/Tianshan-thermal-observer/evidence/prep-midload-v1/repair-r1-r2/test-tools-final/test_operation_card_entry_real0/output/midload-20261013T144938534346Z/trial-result.zip\n",
+  "stderr": "\nCondaError: KeyboardInterrupt\n\n",
+  "calls": [
+    "/v1/models",
+    "/metrics",
+    "/api/v1/fan/status",
+    "/api/v1/temp/status"
+  ],
+  "identity": {
+    "trial_id": "TTO-MIDLOAD-DEV-v1.0",
+    "tto_version": "0.2.4",
+    "tto_import_path": "/Users/massif/Tianshan-thermal-observer/evidence/prep-midload-v1/repair-r1-r2/conda-install/conda-env/lib/python3.10/site-packages/tto/__init__.py",
+    "tto_config": {
+      "schema_version": 1,
+      "mode": "observe_only",
+      "orin": {
+        "source_id": "orin-primary",
+        "base_url": "http://127.0.0.1:55035",
+        "socketio_path": "socket.io",
+        "namespace": "/",
+        "event": "tegrastats_update",
+        "transports": [
+          "websocket"
+        ],
+        "source_sample_interval_ms": 1000,
+        "source_interval_evidence": "owned-loopback-fixture",
+        "headers_file": null,
+        "ca_file": null
+      },
+      "tianshan": {
+        "source_id": "esp32-primary",
+        "base_url": "http://127.0.0.1:55035",
+        "fan_id": 0,
+        "fan_status_path": "/api/v1/fan/status",
+        "temp_status_path": "/api/v1/temp/status",
+        "fan_poll_interval_s": 1.0,
+        "temp_poll_interval_s": 5.0,
+        "headers_file": null,
+        "ca_file": null
+      },
+      "network": {
+        "request_timeout_s": 2.0,
+        "connect_timeout_s": 5.0,
+        "max_inflight_esp32": 1,
+        "follow_redirects": false,
+        "reconnect_initial_s": 1.0,
+        "reconnect_max_s": 30.0,
+        "reconnect_max_attempts": 10,
+        "reconnect_jitter_ratio": 0.2,
+        "max_business_payload_bytes": 65536
+      },
+      "storage": {
+        "data_root": null,
+        "chunk_bytes": 67108864,
+        "run_max_bytes": 2147483648,
+        "min_free_bytes": 1073741824,
+        "queue_max_items": 256,
+        "queue_max_bytes": 8388608,
+        "overwrite_existing": false
+      },
+      "run": {
+        "default_duration_s": 1800,
+        "max_duration_s": 14400,
+        "doctor_duration_s": 180,
+        "single_instance": true
+      },
+      "features": {
+        "schema_version": 1,
+        "time_axis": "observer_receive",
+        "history_s": 180,
+        "prediction_stride_s": 5,
+        "fan_max_age_s": 2.5,
+        "optional_train_min_availability": 0.95,
+        "max_feature_columns": 64,
+        "missing_optional_policy": "fallback_tj_or_baseline",
+        "power_current_rails": [
+          "vdd_gpu_soc",
+          "vdd_cpu_cv",
+          "vin_sys_5v0"
+        ]
+      },
+      "model": {
+        "schema_version": 1,
+        "horizons_s": [
+          15,
+          45,
+          90
+        ],
+        "primary_horizon_s": 45,
+        "methods": [
+          "persist",
+          "trend30",
+          "ridge_tj",
+          "ridge_full"
+        ],
+        "ridge_lambda_grid": [
+          0.001,
+          0.01,
+          0.1,
+          1.0
+        ],
+        "train_threads": 1,
+        "train_timeout_s": 600,
+        "online_training": false,
+        "automatic_activation": false
+      },
+      "resources": {
+        "observer_rss_target_mib": 256,
+        "observer_cpu_single_core_target_pct": 5.0,
+        "predict_all_horizons_p99_target_ms": 20.0,
+        "train_rss_limit_mib": 2048
+      },
+      "security": {
+        "business_control_writes": false,
+        "production_discovery": false,
+        "telemetry_upload": false,
+        "system_service_install": false,
+        "default_live_access": false
+      }
+    },
+    "tto_config_sha256": "cadec30309df55891cb601265058f75fa97c4196fa8a7d207d328a84641a29b1",
+    "trial_config_sha256": "14e7de49ce980f8742c5f161b050a24197cbcf82bb24cea6bbb1ecbe27f9bcaf",
+    "runner_sha256": "d37a5e034e540cfff8a00443b733983ffaeb71d95d63ae44534246de4b379630",
+    "clock_domain": "observer_host_monotonic_and_UTC; service timestamps retained in collector payload",
+    "source_sampling_changed": false,
+    "fan_control_changed": false,
+    "data_role": "new_development_process_not_independent_confirmation"
+  },
+  "summary": {
+    "status": "stopped",
+    "stop_reason": "collector_or_operator_stop",
+    "requests": 0,
+    "completed_requests": 0,
+    "elapsed_schedule_s": 0.5528288750210777,
+    "hard_limit_s": 2700,
+    "cleanup_reserved_s": 10.0,
+    "checks": [],
+    "server_request_completion": "unknown",
+    "new_model_training": "not_performed",
+    "control_authorization": "none",
+    "collection_path": "collection/run-2026-10-13T144938.586677_0000-1ea7f0da",
+    "collector_stop_reason": "SIGINT",
+    "polling_health": {
+      "contract": "TTO-POLL-INDEPENDENT-v1",
+      "max_inflight_per_endpoint": 1,
+      "max_total_inflight_limit": 2,
+      "max_total_inflight_observed": 2,
+      "end_inflight": 0,
+      "legacy_config_max_inflight_esp32": 1,
+      "endpoints": {
+        "fan": {
+          "sent": 1,
+          "returned": 1,
+          "http_ok": 1,
+          "errors": 0,
+          "skipped": 0,
+          "cancelled": 0,
+          "peak_inflight": 1,
+          "rtt_ms": {
+            "n": 1,
+            "p50": 5.346750025637448,
+            "p95": 5.346750025637448,
+            "min": 5.346750025637448,
+            "max": 5.346750025637448
+          },
+          "send_interval_s": {
+            "n": 0,
+            "p50": null,
+            "p95": null,
+            "min": null,
+            "max": null
+          },
+          "return_interval_s": {
+            "n": 0,
+            "p50": null,
+            "p95": null,
+            "min": null,
+            "max": null
+          }
+        },
+        "temp": {
+          "sent": 1,
+          "returned": 1,
+          "http_ok": 1,
+          "errors": 0,
+          "skipped": 0,
+          "cancelled": 0,
+          "peak_inflight": 1,
+          "rtt_ms": {
+            "n": 1,
+            "p50": 1.677374995779246,
+            "p95": 1.677374995779246,
+            "min": 1.677374995779246,
+            "max": 1.677374995779246
+          },
+          "send_interval_s": {
+            "n": 0,
+            "p50": null,
+            "p95": null,
+            "min": null,
+            "max": null
+          },
+          "return_interval_s": {
+            "n": 0,
+            "p50": null,
+            "p95": null,
+            "min": null,
+            "max": null
+          }
+        }
+      }
+    },
+    "output": "/Users/massif/Tianshan-thermal-observer/evidence/prep-midload-v1/repair-r1-r2/test-tools-final/test_operation_card_entry_real0/output/midload-20261013T144938534346Z",
+    "elapsed_total_s": 0.5536093340488151,
+    "live_validation": "requires_independent_review; this executable does not authorize a field run"
+  },
+  "scope": "actual installed operation-card entry; production collector; owned loopback only; passive phase stopped, no inference request"
+}

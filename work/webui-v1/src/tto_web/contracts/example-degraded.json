@@ -1,0 +1,206 @@
+{
+  "schema_version": "TTO-WEB-SNAPSHOT-v1",
+  "snapshot_seq": 2,
+  "service_epoch": "synthetic-service",
+  "run_id": "synthetic-run",
+  "source_epoch": 1,
+  "mode": "test_replay",
+  "server_time_utc": "2026-10-20T10:00:00Z",
+  "clock_domain_id": "synthetic-monotonic-domain",
+  "run_elapsed_ms": 120000,
+  "metrics": [
+    {
+      "id": "temperature.tj",
+      "label": "TJ温度",
+      "kind": "observed",
+      "unit": "°C",
+      "value": null,
+      "status": "invalid",
+      "reason_code": "source_disconnected",
+      "source_id": "fixture-source",
+      "source_ref": "synthetic/42",
+      "sample_id": "synthetic:42",
+      "received_at_utc": "2026-10-20T10:00:00Z",
+      "source_time_utc": null,
+      "as_of_elapsed_ms": 120000,
+      "age_lower_bound_ms": 150,
+      "remaining_valid_ms": 0,
+      "time_quality": "receive_approximation",
+      "last_observation": {
+        "value": 61.2,
+        "observed_at_utc": "2026-10-20T10:00:00Z"
+      }
+    },
+    {
+      "id": "fan.rpm",
+      "label": "风扇RPM",
+      "kind": "observed",
+      "unit": "RPM",
+      "value": null,
+      "status": "unverified",
+      "reason_code": "tachometer_validity_not_confirmed",
+      "source_id": "fixture-source",
+      "source_ref": "synthetic/42",
+      "sample_id": "synthetic:42",
+      "received_at_utc": "2026-10-20T10:00:00Z",
+      "source_time_utc": null,
+      "as_of_elapsed_ms": 120000,
+      "age_lower_bound_ms": 150,
+      "remaining_valid_ms": 4850,
+      "time_quality": "receive_approximation",
+      "last_observation": {
+        "value": 0,
+        "observed_at_utc": "2026-10-20T10:00:00Z"
+      }
+    }
+  ],
+  "model": {
+    "model_id": "synthetic-g2",
+    "spec_id": "synthetic-spec",
+    "phase": "degraded",
+    "Tf_C": 61.1,
+    "Ts_C": 51.2,
+    "E_C": 33.5,
+    "calibrated_confidence": null,
+    "nodes": [
+      {
+        "id": "pg",
+        "label": "GPU功率",
+        "role": "input",
+        "metric_id": "power.gpu"
+      },
+      {
+        "id": "pc",
+        "label": "CPU·SoC·MSS功率",
+        "role": "input",
+        "metric_id": "power.cpu_soc_mss"
+      },
+      {
+        "id": "u",
+        "label": "当前PWM",
+        "role": "input",
+        "metric_id": "fan.pwm.actual"
+      },
+      {
+        "id": "tj",
+        "label": "TJ观测",
+        "role": "measurement",
+        "metric_id": "temperature.tj"
+      },
+      {
+        "id": "tf",
+        "label": "快热状态 Tf",
+        "role": "estimate",
+        "state_path": "Tf_C"
+      },
+      {
+        "id": "ts",
+        "label": "慢热状态 Ts",
+        "role": "estimate",
+        "state_path": "Ts_C",
+        "note": "模型内部慢态，不是结构传感器温度"
+      },
+      {
+        "id": "forecast",
+        "label": "TJ预测参考",
+        "role": "forecast",
+        "note": "冻结G2-HOLD：15/45/90秒"
+      },
+      {
+        "id": "demand",
+        "label": "平稳需求（研究）",
+        "role": "advisory",
+        "note": "需当前合法provider；index不是PWM"
+      },
+      {
+        "id": "pwmref",
+        "label": "PWM观察建议",
+        "role": "advisory",
+        "note": "独立参考映射；无设备写权限"
+      },
+      {
+        "id": "risk",
+        "label": "当前保护反馈",
+        "role": "observed",
+        "note": "主板明确flags，不是预测过热概率"
+      }
+    ],
+    "edges": [
+      {
+        "from": "pg",
+        "to": "tf",
+        "relation": "power_input"
+      },
+      {
+        "from": "pc",
+        "to": "tf",
+        "relation": "power_input"
+      },
+      {
+        "from": "tj",
+        "to": "tf",
+        "relation": "measurement_correction",
+        "line_style": "dashed"
+      },
+      {
+        "from": "tf",
+        "to": "ts",
+        "relation": "coupling"
+      },
+      {
+        "from": "ts",
+        "to": "tf",
+        "relation": "coupling"
+      },
+      {
+        "from": "u",
+        "to": "ts",
+        "relation": "cooling_input"
+      },
+      {
+        "from": "tf",
+        "to": "forecast",
+        "relation": "prediction_input"
+      },
+      {
+        "from": "ts",
+        "to": "forecast",
+        "relation": "prediction_input"
+      },
+      {
+        "from": "ts",
+        "to": "demand",
+        "relation": "research_transform",
+        "enabled_only_when": "demand_provider_valid"
+      },
+      {
+        "from": "forecast",
+        "to": "pwmref",
+        "relation": "reference_mapping",
+        "enabled_only_when": "advisory_curve_verified"
+      }
+    ]
+  },
+  "predictions": [],
+  "advisory": {
+    "status": "withheld",
+    "provider_id": null,
+    "value_percent": null,
+    "reason": "保护或来源信息不可确认",
+    "device_write_permitted": false
+  },
+  "context": {
+    "observed_device": "合成测试设备",
+    "tto_host": "合成测试主机",
+    "task_metadata_available": false,
+    "active_requests": null,
+    "control_owner": "TianshanOS",
+    "tto_role": "read_only"
+  },
+  "health": {
+    "web_connected": true,
+    "measurement_status": "partial",
+    "protection_status": "unknown"
+  },
+  "event_cursor": "synthetic:1"
+}

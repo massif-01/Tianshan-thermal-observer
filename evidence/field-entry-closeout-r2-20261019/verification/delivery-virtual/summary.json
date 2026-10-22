@@ -1,0 +1,57 @@
+{
+  "reason": "completed",
+  "elapsed_virtual_s": 2717.0,
+  "virtual_requests": 185,
+  "peak_virtual_slots": 4,
+  "native_quality_single_engine": true,
+  "native_callbacks": 5980,
+  "actual_requests": 0,
+  "plan_bytes_unchanged": true,
+  "actual_frozen_observer": true,
+  "live_adapter_used": true,
+  "math_fits": 0,
+  "all_stages": [
+    {
+      "kind": "background",
+      "seconds": 300
+    },
+    {
+      "kind": "work",
+      "concurrency": 1,
+      "seconds": 360,
+      "repeat_key": "single-anchor"
+    },
+    {
+      "kind": "recovery",
+      "seconds": 90
+    },
+    {
+      "kind": "work",
+      "concurrency": 2,
+      "seconds": 270
+    },
+    {
+      "kind": "recovery",
+      "seconds": 240
+    },
+    {
+      "kind": "work",
+      "concurrency": 4,
+      "seconds": 450
+    },
+    {
+      "kind": "recovery",
+      "seconds": 120
+    },
+    {
+      "kind": "work",
+      "concurrency": 1,
+      "seconds": 360,
+      "repeat_key": "single-anchor"
+    },
+    {
+      "kind": "final_recovery",
+      "seconds": 480
+    }
+  ]
+}

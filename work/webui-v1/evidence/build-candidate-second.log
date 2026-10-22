@@ -1,0 +1,294 @@
+* Getting build dependencies for wheel...
+running egg_info
+writing tto_web_ui.egg-info/PKG-INFO
+writing dependency_links to tto_web_ui.egg-info/dependency_links.txt
+writing entry points to tto_web_ui.egg-info/entry_points.txt
+writing requirements to tto_web_ui.egg-info/requires.txt
+writing top-level names to tto_web_ui.egg-info/top_level.txt
+reading manifest file 'tto_web_ui.egg-info/SOURCES.txt'
+writing manifest file 'tto_web_ui.egg-info/SOURCES.txt'
+* Building wheel...
+running bdist_wheel
+running build
+running build_py
+copying src/tto_web/server.py -> build/lib/tto_web
+copying src/tto_web/adapter.py -> build/lib/tto_web
+copying src/tto_web/__init__.py -> build/lib/tto_web
+copying src/tto_web/context.py -> build/lib/tto_web
+copying src/tto_web/cli.py -> build/lib/tto_web
+copying src/tto_web/common.py -> build/lib/tto_web
+copying src/tto_web/identity.py -> build/lib/tto_web
+copying src/tto_web/source.py -> build/lib/tto_web
+copying src/tto_web/state.py -> build/lib/tto_web
+copying vendor/tto/recorded.py -> build/lib/tto
+copying vendor/tto/config.py -> build/lib/tto
+copying vendor/tto/deployment.py -> build/lib/tto
+copying vendor/tto/util.py -> build/lib/tto
+copying vendor/tto/diagnostics.py -> build/lib/tto
+copying vendor/tto/evaluation.py -> build/lib/tto
+copying vendor/tto/collector.py -> build/lib/tto
+copying vendor/tto/__init__.py -> build/lib/tto
+copying vendor/tto/features.py -> build/lib/tto
+copying vendor/tto/model.py -> build/lib/tto
+copying vendor/tto/dataset.py -> build/lib/tto
+copying vendor/tto/engine.py -> build/lib/tto
+copying vendor/tto/cli.py -> build/lib/tto
+copying vendor/tto/storage.py -> build/lib/tto
+copying vendor/tto/platform_quality.py -> build/lib/tto
+copying vendor/tto/demo.py -> build/lib/tto
+copying vendor/tto/quality.py -> build/lib/tto
+copying vendor/tto/profiles.py -> build/lib/tto
+copying vendor/tto/__main__.py -> build/lib/tto
+copying vendor/tto/report.py -> build/lib/tto
+copying vendor/tto/training.py -> build/lib/tto
+copying vendor/tto/platform_engine.py -> build/lib/tto
+copying vendor/tto_field/support.py -> build/lib/tto_field
+copying vendor/tto_field/comm_bridge.py -> build/lib/tto_field
+copying vendor/tto_field/__init__.py -> build/lib/tto_field
+copying vendor/tto_field/requester.py -> build/lib/tto_field
+copying vendor/tto_field/runtime.py -> build/lib/tto_field
+copying vendor/tto_field/cli.py -> build/lib/tto_field
+copying vendor/tto_field/gate.py -> build/lib/tto_field
+copying vendor/tto_field/scheduler.py -> build/lib/tto_field
+copying vendor/tto_field/projection.py -> build/lib/tto_field
+copying vendor/tto_field/identity.py -> build/lib/tto_field
+copying vendor/tto_field/research/observer.py -> build/lib/tto_field/research
+copying vendor/tto_field/research/__init__.py -> build/lib/tto_field/research
+copying vendor/tto_field/upstream_comm/__init__.py -> build/lib/tto_field/upstream_comm
+copying vendor/tto_field/upstream_comm/source_health.py -> build/lib/tto_field/upstream_comm
+running egg_info
+writing tto_web_ui.egg-info/PKG-INFO
+writing dependency_links to tto_web_ui.egg-info/dependency_links.txt
+writing entry points to tto_web_ui.egg-info/entry_points.txt
+writing requirements to tto_web_ui.egg-info/requires.txt
+writing top-level names to tto_web_ui.egg-info/top_level.txt
+reading manifest file 'tto_web_ui.egg-info/SOURCES.txt'
+writing manifest file 'tto_web_ui.egg-info/SOURCES.txt'
+copying src/tto_web/web-candidate-files.json -> build/lib/tto_web
+copying src/tto_web/static/index.html -> build/lib/tto_web/static
+copying src/tto_web/static/assets/index-CihPiaqU.js -> build/lib/tto_web/static/assets
+copying src/tto_web/static/assets/index-ahH46Mn_.css -> build/lib/tto_web/static/assets
+copying src/tto_web/contracts/dashboard.schema.json -> build/lib/tto_web/contracts
+copying src/tto_web/contracts/example-tracking.json -> build/lib/tto_web/contracts
+copying src/tto_web/contracts/example-matured.json -> build/lib/tto_web/contracts
+copying src/tto_web/contracts/example-waiting.json -> build/lib/tto_web/contracts
+copying src/tto_web/contracts/model-topology.json -> build/lib/tto_web/contracts
+copying src/tto_web/contracts/example-degraded.json -> build/lib/tto_web/contracts
+copying src/tto_web/contracts/dashboard.schema.json -> build/lib/tto_web/contracts
+copying src/tto_web/contracts/example-degraded.json -> build/lib/tto_web/contracts
+copying src/tto_web/contracts/example-matured.json -> build/lib/tto_web/contracts
+copying src/tto_web/contracts/example-tracking.json -> build/lib/tto_web/contracts
+copying src/tto_web/contracts/example-waiting.json -> build/lib/tto_web/contracts
+copying src/tto_web/contracts/model-topology.json -> build/lib/tto_web/contracts
+copying src/tto_web/static/index.html -> build/lib/tto_web/static
+copying src/tto_web/static/assets/index-CihPiaqU.js -> build/lib/tto_web/static/assets
+copying src/tto_web/static/assets/index-ahH46Mn_.css -> build/lib/tto_web/static/assets
+copying vendor/tto/defaults.json -> build/lib/tto
+copying vendor/tto_field/candidate-files.json -> build/lib/tto_field
+copying vendor/tto_field/research/observer-spec.json -> build/lib/tto_field/research
+copying vendor/tto_field/research/models/primary.json -> build/lib/tto_field/research/models
+copying vendor/tto_field/plans/model-profiles.json -> build/lib/tto_field/plans
+copying vendor/tto_field/plans/mix-plan.json -> build/lib/tto_field/plans
+copying vendor/tto_field/plans/execution-policy.json -> build/lib/tto_field/plans
+copying vendor/tto_field/research/observer-spec.json -> build/lib/tto_field/research
+copying vendor/tto_field/plans/execution-policy.json -> build/lib/tto_field/plans
+copying vendor/tto_field/plans/mix-plan.json -> build/lib/tto_field/plans
+copying vendor/tto_field/plans/model-profiles.json -> build/lib/tto_field/plans
+copying vendor/tto_field/research/models/primary.json -> build/lib/tto_field/research/models
+installing to build/bdist.macosx-10.9-universal2/wheel
+running install
+running install_lib
+creating build/bdist.macosx-10.9-universal2/wheel
+creating build/bdist.macosx-10.9-universal2/wheel/tto_web
+copying build/lib/tto_web/server.py -> build/bdist.macosx-10.9-universal2/wheel/./tto_web
+copying build/lib/tto_web/adapter.py -> build/bdist.macosx-10.9-universal2/wheel/./tto_web
+creating build/bdist.macosx-10.9-universal2/wheel/tto_web/contracts
+copying build/lib/tto_web/contracts/dashboard.schema.json -> build/bdist.macosx-10.9-universal2/wheel/./tto_web/contracts
+copying build/lib/tto_web/contracts/example-tracking.json -> build/bdist.macosx-10.9-universal2/wheel/./tto_web/contracts
+copying build/lib/tto_web/contracts/example-matured.json -> build/bdist.macosx-10.9-universal2/wheel/./tto_web/contracts
+copying build/lib/tto_web/contracts/example-waiting.json -> build/bdist.macosx-10.9-universal2/wheel/./tto_web/contracts
+copying build/lib/tto_web/contracts/model-topology.json -> build/bdist.macosx-10.9-universal2/wheel/./tto_web/contracts
+copying build/lib/tto_web/contracts/example-degraded.json -> build/bdist.macosx-10.9-universal2/wheel/./tto_web/contracts
+copying build/lib/tto_web/web-candidate-files.json -> build/bdist.macosx-10.9-universal2/wheel/./tto_web
+copying build/lib/tto_web/__init__.py -> build/bdist.macosx-10.9-universal2/wheel/./tto_web
+copying build/lib/tto_web/context.py -> build/bdist.macosx-10.9-universal2/wheel/./tto_web
+copying build/lib/tto_web/cli.py -> build/bdist.macosx-10.9-universal2/wheel/./tto_web
+copying build/lib/tto_web/common.py -> build/bdist.macosx-10.9-universal2/wheel/./tto_web
+creating build/bdist.macosx-10.9-universal2/wheel/tto_web/static
+copying build/lib/tto_web/static/index.html -> build/bdist.macosx-10.9-universal2/wheel/./tto_web/static
+creating build/bdist.macosx-10.9-universal2/wheel/tto_web/static/assets
+copying build/lib/tto_web/static/assets/index-CihPiaqU.js -> build/bdist.macosx-10.9-universal2/wheel/./tto_web/static/assets
+copying build/lib/tto_web/static/assets/index-ahH46Mn_.css -> build/bdist.macosx-10.9-universal2/wheel/./tto_web/static/assets
+copying build/lib/tto_web/static/assets/index-Bd7xkwhB.js -> build/bdist.macosx-10.9-universal2/wheel/./tto_web/static/assets
+copying build/lib/tto_web/identity.py -> build/bdist.macosx-10.9-universal2/wheel/./tto_web
+copying build/lib/tto_web/source.py -> build/bdist.macosx-10.9-universal2/wheel/./tto_web
+copying build/lib/tto_web/state.py -> build/bdist.macosx-10.9-universal2/wheel/./tto_web
+creating build/bdist.macosx-10.9-universal2/wheel/tto
+copying build/lib/tto/recorded.py -> build/bdist.macosx-10.9-universal2/wheel/./tto
+copying build/lib/tto/defaults.json -> build/bdist.macosx-10.9-universal2/wheel/./tto
+copying build/lib/tto/config.py -> build/bdist.macosx-10.9-universal2/wheel/./tto
+copying build/lib/tto/deployment.py -> build/bdist.macosx-10.9-universal2/wheel/./tto
+copying build/lib/tto/util.py -> build/bdist.macosx-10.9-universal2/wheel/./tto
+copying build/lib/tto/diagnostics.py -> build/bdist.macosx-10.9-universal2/wheel/./tto
+copying build/lib/tto/evaluation.py -> build/bdist.macosx-10.9-universal2/wheel/./tto
+copying build/lib/tto/collector.py -> build/bdist.macosx-10.9-universal2/wheel/./tto
+copying build/lib/tto/__init__.py -> build/bdist.macosx-10.9-universal2/wheel/./tto
+copying build/lib/tto/features.py -> build/bdist.macosx-10.9-universal2/wheel/./tto
+copying build/lib/tto/model.py -> build/bdist.macosx-10.9-universal2/wheel/./tto
+copying build/lib/tto/dataset.py -> build/bdist.macosx-10.9-universal2/wheel/./tto
+copying build/lib/tto/engine.py -> build/bdist.macosx-10.9-universal2/wheel/./tto
+copying build/lib/tto/cli.py -> build/bdist.macosx-10.9-universal2/wheel/./tto
+copying build/lib/tto/storage.py -> build/bdist.macosx-10.9-universal2/wheel/./tto
+copying build/lib/tto/platform_quality.py -> build/bdist.macosx-10.9-universal2/wheel/./tto
+copying build/lib/tto/demo.py -> build/bdist.macosx-10.9-universal2/wheel/./tto
+copying build/lib/tto/quality.py -> build/bdist.macosx-10.9-universal2/wheel/./tto
+copying build/lib/tto/profiles.py -> build/bdist.macosx-10.9-universal2/wheel/./tto
+copying build/lib/tto/__main__.py -> build/bdist.macosx-10.9-universal2/wheel/./tto
+copying build/lib/tto/report.py -> build/bdist.macosx-10.9-universal2/wheel/./tto
+copying build/lib/tto/training.py -> build/bdist.macosx-10.9-universal2/wheel/./tto
+copying build/lib/tto/platform_engine.py -> build/bdist.macosx-10.9-universal2/wheel/./tto
+creating build/bdist.macosx-10.9-universal2/wheel/tto_field
+creating build/bdist.macosx-10.9-universal2/wheel/tto_field/research
+copying build/lib/tto_field/research/observer.py -> build/bdist.macosx-10.9-universal2/wheel/./tto_field/research
+copying build/lib/tto_field/research/observer-spec.json -> build/bdist.macosx-10.9-universal2/wheel/./tto_field/research
+copying build/lib/tto_field/research/__init__.py -> build/bdist.macosx-10.9-universal2/wheel/./tto_field/research
+creating build/bdist.macosx-10.9-universal2/wheel/tto_field/research/models
+copying build/lib/tto_field/research/models/primary.json -> build/bdist.macosx-10.9-universal2/wheel/./tto_field/research/models
+copying build/lib/tto_field/support.py -> build/bdist.macosx-10.9-universal2/wheel/./tto_field
+creating build/bdist.macosx-10.9-universal2/wheel/tto_field/plans
+copying build/lib/tto_field/plans/model-profiles.json -> build/bdist.macosx-10.9-universal2/wheel/./tto_field/plans
+copying build/lib/tto_field/plans/mix-plan.json -> build/bdist.macosx-10.9-universal2/wheel/./tto_field/plans
+copying build/lib/tto_field/plans/execution-policy.json -> build/bdist.macosx-10.9-universal2/wheel/./tto_field/plans
+copying build/lib/tto_field/comm_bridge.py -> build/bdist.macosx-10.9-universal2/wheel/./tto_field
+creating build/bdist.macosx-10.9-universal2/wheel/tto_field/upstream_comm
+copying build/lib/tto_field/upstream_comm/__init__.py -> build/bdist.macosx-10.9-universal2/wheel/./tto_field/upstream_comm
+copying build/lib/tto_field/upstream_comm/source_health.py -> build/bdist.macosx-10.9-universal2/wheel/./tto_field/upstream_comm
+copying build/lib/tto_field/__init__.py -> build/bdist.macosx-10.9-universal2/wheel/./tto_field
+copying build/lib/tto_field/candidate-files.json -> build/bdist.macosx-10.9-universal2/wheel/./tto_field
+copying build/lib/tto_field/requester.py -> build/bdist.macosx-10.9-universal2/wheel/./tto_field
+copying build/lib/tto_field/runtime.py -> build/bdist.macosx-10.9-universal2/wheel/./tto_field
+copying build/lib/tto_field/cli.py -> build/bdist.macosx-10.9-universal2/wheel/./tto_field
+copying build/lib/tto_field/gate.py -> build/bdist.macosx-10.9-universal2/wheel/./tto_field
+copying build/lib/tto_field/scheduler.py -> build/bdist.macosx-10.9-universal2/wheel/./tto_field
+copying build/lib/tto_field/projection.py -> build/bdist.macosx-10.9-universal2/wheel/./tto_field
+copying build/lib/tto_field/identity.py -> build/bdist.macosx-10.9-universal2/wheel/./tto_field
+running install_egg_info
+Copying tto_web_ui.egg-info to build/bdist.macosx-10.9-universal2/wheel/./tto_web_ui-1.0.0rc1-py3.12.egg-info
+running install_scripts
+creating build/bdist.macosx-10.9-universal2/wheel/tto_web_ui-1.0.0rc1.dist-info/WHEEL
+creating '/Users/massif/Tianshan-thermal-observer/work/webui-v1/dist/.tmp-y04pwwka/tto_web_ui-1.0.0rc1-py3-none-any.whl' and adding 'build/bdist.macosx-10.9-universal2/wheel' to it
+adding 'tto/__init__.py'
+adding 'tto/__main__.py'
+adding 'tto/cli.py'
+adding 'tto/collector.py'
+adding 'tto/config.py'
+adding 'tto/dataset.py'
+adding 'tto/defaults.json'
+adding 'tto/demo.py'
+adding 'tto/deployment.py'
+adding 'tto/diagnostics.py'
+adding 'tto/engine.py'
+adding 'tto/evaluation.py'
+adding 'tto/features.py'
+adding 'tto/model.py'
+adding 'tto/platform_engine.py'
+adding 'tto/platform_quality.py'
+adding 'tto/profiles.py'
+adding 'tto/quality.py'
+adding 'tto/recorded.py'
+adding 'tto/report.py'
+adding 'tto/storage.py'
+adding 'tto/training.py'
+adding 'tto/util.py'
+adding 'tto_field/__init__.py'
+adding 'tto_field/candidate-files.json'
+adding 'tto_field/cli.py'
+adding 'tto_field/comm_bridge.py'
+adding 'tto_field/gate.py'
+adding 'tto_field/identity.py'
+adding 'tto_field/projection.py'
+adding 'tto_field/requester.py'
+adding 'tto_field/runtime.py'
+adding 'tto_field/scheduler.py'
+adding 'tto_field/support.py'
+adding 'tto_field/plans/execution-policy.json'
+adding 'tto_field/plans/mix-plan.json'
+adding 'tto_field/plans/model-profiles.json'
+adding 'tto_field/research/__init__.py'
+adding 'tto_field/research/observer-spec.json'
+adding 'tto_field/research/observer.py'
+adding 'tto_field/research/models/primary.json'
+adding 'tto_field/upstream_comm/__init__.py'
+adding 'tto_field/upstream_comm/source_health.py'
+adding 'tto_web/__init__.py'
+adding 'tto_web/adapter.py'
+adding 'tto_web/cli.py'
+adding 'tto_web/common.py'
+adding 'tto_web/context.py'
+adding 'tto_web/identity.py'
+adding 'tto_web/server.py'
+adding 'tto_web/source.py'
+adding 'tto_web/state.py'
+adding 'tto_web/web-candidate-files.json'
+adding 'tto_web/contracts/dashboard.schema.json'
+adding 'tto_web/contracts/example-degraded.json'
+adding 'tto_web/contracts/example-matured.json'
+adding 'tto_web/contracts/example-tracking.json'
+adding 'tto_web/contracts/example-waiting.json'
+adding 'tto_web/contracts/model-topology.json'
+adding 'tto_web/static/index.html'
+adding 'tto_web/static/assets/index-Bd7xkwhB.js'
+adding 'tto_web/static/assets/index-CihPiaqU.js'
+adding 'tto_web/static/assets/index-ahH46Mn_.css'
+adding 'tto_web_ui-1.0.0rc1.dist-info/METADATA'
+adding 'tto_web_ui-1.0.0rc1.dist-info/WHEEL'
+adding 'tto_web_ui-1.0.0rc1.dist-info/entry_points.txt'
+adding 'tto_web_ui-1.0.0rc1.dist-info/top_level.txt'
+adding 'tto_web_ui-1.0.0rc1.dist-info/RECORD'
+removing build/bdist.macosx-10.9-universal2/wheel
+Successfully built tto_web_ui-1.0.0rc1-py3-none-any.whl
+Ignoring scipy: markers 'sys_platform != "darwin"' don't match your environment
+Collecting aiohttp==3.11.18 (from -r /Users/massif/Tianshan-thermal-observer/work/webui-v1/requirements.runtime.lock (line 1))
+  File was already downloaded /Users/massif/Tianshan-thermal-observer/work/webui-v1/wheelhouse/aiohttp-3.11.18-cp312-cp312-macosx_11_0_arm64.whl
+Collecting aiohappyeyeballs==2.7.1 (from -r /Users/massif/Tianshan-thermal-observer/work/webui-v1/requirements.runtime.lock (line 2))
+  File was already downloaded /Users/massif/Tianshan-thermal-observer/work/webui-v1/wheelhouse/aiohappyeyeballs-2.7.1-py3-none-any.whl
+Collecting aiosignal==1.4.0 (from -r /Users/massif/Tianshan-thermal-observer/work/webui-v1/requirements.runtime.lock (line 3))
+  File was already downloaded /Users/massif/Tianshan-thermal-observer/work/webui-v1/wheelhouse/aiosignal-1.4.0-py3-none-any.whl
+Collecting async-timeout==5.0.1 (from -r /Users/massif/Tianshan-thermal-observer/work/webui-v1/requirements.runtime.lock (line 4))
+  File was already downloaded /Users/massif/Tianshan-thermal-observer/work/webui-v1/wheelhouse/async_timeout-5.0.1-py3-none-any.whl
+Collecting attrs==26.1.0 (from -r /Users/massif/Tianshan-thermal-observer/work/webui-v1/requirements.runtime.lock (line 5))
+  File was already downloaded /Users/massif/Tianshan-thermal-observer/work/webui-v1/wheelhouse/attrs-26.1.0-py3-none-any.whl
+Collecting bidict==0.23.1 (from -r /Users/massif/Tianshan-thermal-observer/work/webui-v1/requirements.runtime.lock (line 6))
+  File was already downloaded /Users/massif/Tianshan-thermal-observer/work/webui-v1/wheelhouse/bidict-0.23.1-py3-none-any.whl
+Collecting frozenlist==1.8.0 (from -r /Users/massif/Tianshan-thermal-observer/work/webui-v1/requirements.runtime.lock (line 7))
+  File was already downloaded /Users/massif/Tianshan-thermal-observer/work/webui-v1/wheelhouse/frozenlist-1.8.0-cp312-cp312-macosx_11_0_arm64.whl
+Collecting h11==0.16.0 (from -r /Users/massif/Tianshan-thermal-observer/work/webui-v1/requirements.runtime.lock (line 8))
+  File was already downloaded /Users/massif/Tianshan-thermal-observer/work/webui-v1/wheelhouse/h11-0.16.0-py3-none-any.whl
+Collecting idna==3.20 (from -r /Users/massif/Tianshan-thermal-observer/work/webui-v1/requirements.runtime.lock (line 9))
+  File was already downloaded /Users/massif/Tianshan-thermal-observer/work/webui-v1/wheelhouse/idna-3.20-py3-none-any.whl
+Collecting multidict==6.9.1 (from -r /Users/massif/Tianshan-thermal-observer/work/webui-v1/requirements.runtime.lock (line 10))
+  File was already downloaded /Users/massif/Tianshan-thermal-observer/work/webui-v1/wheelhouse/multidict-6.9.1-cp312-cp312-macosx_11_0_arm64.whl
+Collecting numpy==2.2.6 (from -r /Users/massif/Tianshan-thermal-observer/work/webui-v1/requirements.runtime.lock (line 11))
+  File was already downloaded /Users/massif/Tianshan-thermal-observer/work/webui-v1/wheelhouse/numpy-2.2.6-cp312-cp312-macosx_14_0_arm64.whl
+Collecting propcache==0.5.4 (from -r /Users/massif/Tianshan-thermal-observer/work/webui-v1/requirements.runtime.lock (line 12))
+  File was already downloaded /Users/massif/Tianshan-thermal-observer/work/webui-v1/wheelhouse/propcache-0.5.4-cp312-cp312-macosx_11_0_arm64.whl
+Collecting psutil==7.0.0 (from -r /Users/massif/Tianshan-thermal-observer/work/webui-v1/requirements.runtime.lock (line 13))
+  File was already downloaded /Users/massif/Tianshan-thermal-observer/work/webui-v1/wheelhouse/psutil-7.0.0-cp36-abi3-macosx_11_0_arm64.whl
+Collecting python-engineio==4.14.0 (from -r /Users/massif/Tianshan-thermal-observer/work/webui-v1/requirements.runtime.lock (line 14))
+  File was already downloaded /Users/massif/Tianshan-thermal-observer/work/webui-v1/wheelhouse/python_engineio-4.14.0-py3-none-any.whl
+Collecting python-socketio==5.13.0 (from -r /Users/massif/Tianshan-thermal-observer/work/webui-v1/requirements.runtime.lock (line 15))
+  File was already downloaded /Users/massif/Tianshan-thermal-observer/work/webui-v1/wheelhouse/python_socketio-5.13.0-py3-none-any.whl
+Collecting scipy==1.14.1 (from -r /Users/massif/Tianshan-thermal-observer/work/webui-v1/requirements.runtime.lock (line 16))
+  File was already downloaded /Users/massif/Tianshan-thermal-observer/work/webui-v1/wheelhouse/scipy-1.14.1-cp312-cp312-macosx_14_0_arm64.whl
+Collecting simple-websocket==1.1.0 (from -r /Users/massif/Tianshan-thermal-observer/work/webui-v1/requirements.runtime.lock (line 18))
+  File was already downloaded /Users/massif/Tianshan-thermal-observer/work/webui-v1/wheelhouse/simple_websocket-1.1.0-py3-none-any.whl
+Collecting typing-extensions==4.16.0 (from -r /Users/massif/Tianshan-thermal-observer/work/webui-v1/requirements.runtime.lock (line 19))
+  File was already downloaded /Users/massif/Tianshan-thermal-observer/work/webui-v1/wheelhouse/typing_extensions-4.16.0-py3-none-any.whl
+Collecting wsproto==1.3.2 (from -r /Users/massif/Tianshan-thermal-observer/work/webui-v1/requirements.runtime.lock (line 20))
+  File was already downloaded /Users/massif/Tianshan-thermal-observer/work/webui-v1/wheelhouse/wsproto-1.3.2-py3-none-any.whl
+Collecting yarl==1.25.1 (from -r /Users/massif/Tianshan-thermal-observer/work/webui-v1/requirements.runtime.lock (line 21))
+  File was already downloaded /Users/massif/Tianshan-thermal-observer/work/webui-v1/wheelhouse/yarl-1.25.1-cp312-cp312-macosx_11_0_arm64.whl
+Successfully downloaded aiohttp aiohappyeyeballs aiosignal async-timeout attrs bidict frozenlist h11 idna multidict numpy propcache psutil python-engineio python-socketio scipy simple-websocket typing-extensions wsproto yarl
+
+[notice] A new release of pip is available: 24.0 -> 26.2.1
+[notice] To update, run: /Users/massif/Tianshan-thermal-observer/work/webui-v1/.venv/bin/python -m pip install --upgrade pip

@@ -1,0 +1,9 @@
+..................                                                       [100%]
+=============================== warnings summary ===============================
+tests/test_boundaries.py::test_slow_display_queue_resync_is_bounded_without_source_backpressure
+  /Users/massif/Tianshan-thermal-observer/work/webui-v1/src/tto_web/server.py:75: NotAppKeyWarning: It is recommended to use web.AppKey instances for keys.
+  https://docs.aiohttp.org/en/stable/web_advanced.html#application-s-config
+    app['state']=state;app['sse_clients']=sse_clients;app['stop']=stop
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+18 passed, 1 warning in 3.56s

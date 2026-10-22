@@ -1,0 +1,10 @@
+### Ran Playwright code
+```js
+await (async (page) => { await page.evaluate(()=>scrollTo(0,0)); await page.screenshot({path:'output/playwright/source-disconnected.png',fullPage:true}); console.log(await page.locator('#notice').innerText()); })(page);
+```
+### Page
+- Page URL: http://127.0.0.1:59009/
+- Page Title: TTO 热观察台
+- Console: 79 errors, 0 warnings
+### Events
+- New console entries: .playwright-cli/console-2026-10-20T13-36-15-237Z.log#L18-L93

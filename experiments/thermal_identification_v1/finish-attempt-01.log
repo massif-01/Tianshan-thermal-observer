@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "/Users/massif/Tianshan-thermal-observer/experiments/thermal_identification_v1/run_experiment.py", line 73, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/Users/massif/Tianshan-thermal-observer/experiments/thermal_identification_v1/run_experiment.py", line 61, in main
+    for eid,target in [('F-LS',['S']),('F-SL',['L'])]:evaluate_experiment(eid,target,data,rows,out)
+                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/massif/Tianshan-thermal-observer/experiments/thermal_identification_v1/evaluation.py", line 76, in evaluate_experiment
+    contexts={m:model_context(a,segments,pool=eid=='F-POOL') for m,a in artifacts.items()}
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/massif/Tianshan-thermal-observer/experiments/thermal_identification_v1/evaluation.py", line 64, in model_context
+    calibration=estimate(model,p,segment,end,60,E=boundary.get(run),E_fallback=fallback)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/massif/Tianshan-thermal-observer/experiments/thermal_identification_v1/initialize.py", line 35, in estimate
+    X=np.array(columns).T[idx]
+      ~~~~~~~~~~~~~~~~~~~^^^^^
+IndexError: index 0 is out of bounds for axis 0 with size 0

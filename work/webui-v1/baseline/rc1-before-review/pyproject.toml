@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools==80.9.0", "wheel==0.45.1"]
+build-backend = "setuptools.build_meta"
+[project]
+name = "tto-web-ui"
+version = "1.0.0rc1"
+requires-python = ">=3.10"
+dependencies = ["aiohttp==3.11.18", "python-socketio==5.13.0", "psutil==7.0.0", "numpy==2.2.6", "scipy>=1.14.1,<1.16"]
+[project.scripts]
+tto-web = "tto_web.cli:main"
+[tool.setuptools.packages.find]
+where = ["src", "vendor"]
+[tool.setuptools.package-data]
+tto_web = ["static/**/*", "contracts/*.json", "web-candidate-files.json"]
+tto = ["defaults.json"]
+tto_field = ["research/*.json", "research/models/*.json", "plans/*.json", "candidate-files.json"]
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]

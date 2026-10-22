@@ -1,0 +1,13 @@
+primary A-long 5430 causal 5430 replay error 0.0
+old_LS A-long 5430 causal 5430 replay error 0.0
+A24 A-long 5430 causal 5430 replay error 0.0
+Traceback (most recent call last):
+  File "/Users/massif/Tianshan-thermal-observer/experiments/thermal_slowstate_v1/run_study.py", line 577, in <module>
+    main()
+  File "/Users/massif/Tianshan-thermal-observer/experiments/thermal_slowstate_v1/run_study.py", line 559, in main
+    calculate_prediction_metrics(points)
+  File "/Users/massif/Tianshan-thermal-observer/experiments/thermal_slowstate_v1/run_study.py", line 202, in calculate_prediction_metrics
+    cohort = '\n'.join(f"{r['ref']}|{h}|{r['label']['ref']}" for r in rows)
+  File "/Users/massif/Tianshan-thermal-observer/experiments/thermal_slowstate_v1/run_study.py", line 202, in <genexpr>
+    cohort = '\n'.join(f"{r['ref']}|{h}|{r['label']['ref']}" for r in rows)
+TypeError: 'NoneType' object is not subscriptable

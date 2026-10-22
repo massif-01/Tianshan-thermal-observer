@@ -1,0 +1,36 @@
+{
+  "schema": "TTO-MODEL-CANDIDATE-REPORT-v1",
+  "template_only": true,
+  "status": "not_run",
+  "candidate_model_id": null,
+  "parent_model_id": null,
+  "device_config_id": null,
+  "train_runs": [],
+  "validation_runs": [],
+  "future_confirmation_runs": [],
+  "data_already_seen_for_development": true,
+  "new_theta_fit": false,
+  "fit_budget": {
+    "starts_max": 6,
+    "max_wall_seconds": null,
+    "registered_before_fit": false
+  },
+  "metrics": {
+    "common_origin_and_label_hash": null,
+    "by_horizon": {},
+    "by_device_and_run": {},
+    "coverage": {},
+    "underprediction": {}
+  },
+  "result": {
+    "computable": null,
+    "scope_valid": null,
+    "recommended_for_observation": null,
+    "tradeoffs": [],
+    "decision": "not_evaluated",
+    "automatic_activation": false
+  },
+  "prior_model_unchanged": true,
+  "rollback_model_id": null,
+  "control_permission": false
+}

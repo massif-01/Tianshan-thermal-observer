@@ -1,0 +1,344 @@
+........F.FF..............FFFFF.FF                                       [100%]
+=================================== FAILURES ===================================
+__ test_real_cli_rapid_restart_preserves_port_conflict_and_waiting_semantics ___
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_real_cli_rapid_restart_pr0')
+
+    def test_real_cli_rapid_restart_preserves_port_conflict_and_waiting_semantics(tmp_path):
+        root=Path(__file__).parents[1];config=tmp_path/'web.json';config.write_bytes((root/'config/web.json').read_bytes())
+        env=dict(os.environ,PYTHONPATH=os.pathsep.join([str(root/'src'),str(root/'vendor')]))
+        opener=build_opener(ProxyHandler({}))
+        for iteration in range(2):
+            child=subprocess.Popen([sys.executable,'-m','tto_web.cli','serve','--config',str(config)],env=env,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
+            connection=None
+            try:
+                deadline=time.monotonic()+10
+                while True:
+>                   if child.poll() is not None:raise AssertionError(child.stderr.read())
+E                   AssertionError: Web启动失败：59009端口或本地资源不可用；未停止其他进程。
+
+tests/test_cli.py:22: AssertionError
+_ test_install_system_unit_enables_and_restarts_new_release_without_touching_old_tto _
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_install_system_unit_enabl0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f609da82950>
+
+    def test_install_system_unit_enables_and_restarts_new_release_without_touching_old_tto(tmp_path,monkeypatch):
+        source=Path(__file__).parents[1]/'tools/install.py'
+        spec=importlib.util.spec_from_file_location('web_installer_test',source);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+        root=tmp_path/'bundle';(root/'config').mkdir(parents=True);(root/'wheelhouse').mkdir()
+        (root/'config/web.json').write_text(json.dumps({'web':{'port':59009,'bind':'127.0.0.1','access_mode':'local'},'source':{},'advisory':{}}))
+        (root/'wheelhouse/tto_web_ui-1.0.0rc1-py3-none-any.whl').write_bytes(b'SYNTHETIC command construction test only')
+        (root/'requirements.runtime.lock').write_text('')
+        files={str(p.relative_to(root)):hashlib.sha256(p.read_bytes()).hexdigest() for p in root.rglob('*') if p.is_file()}
+        (root/'candidate-identities.json').write_text(json.dumps(files))
+        prefix=tmp_path/'independent Web prefix';commands=[]
+        monkeypatch.setattr(m,'wait_ready',lambda *args:commands.append(['ready-check']))
+        monkeypatch.setattr(m,'ROOT',root);monkeypatch.setattr(m,'run',lambda *args:commands.append([str(a) for a in args]))
+        monkeypatch.setattr(m.sys,'platform','linux');monkeypatch.setattr(m.os,'getuid',lambda:501)
+        monkeypatch.setattr(sys,'argv',['install.py','--prefix',str(prefix),'--service','system'])
+>       m.main()
+
+tests/test_installer.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/install.py:134: in main
+    '''.format(exe=launcher,config=config,user=('User='+getpass.getuser()+'\n') if args.service=='system' else '',target='multi-user.target' if args.service=='system' else 'default.target')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def getuser():
+        """Get the username from the environment or password database.
+    
+        First try various environment variables, then the password
+        database.  This works on Windows as long as USERNAME is set.
+    
+        """
+    
+        for name in ('LOGNAME', 'USER', 'LNAME', 'USERNAME'):
+            user = os.environ.get(name)
+            if user:
+                return user
+    
+        # If this fails, the exception will "explain" why
+        import pwd
+>       return pwd.getpwuid(os.getuid())[0]
+E       KeyError: 'getpwuid(): uid not found: 501'
+
+../../runtimes/cpython-3.10.22-linux-x86_64-gnu/lib/python3.10/getpass.py:169: KeyError
+_____________ test_service_ready_check_rejects_other_listener_pid ______________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_service_ready_check_rejec0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f609da80100>
+
+    def test_service_ready_check_rejects_other_listener_pid(tmp_path,monkeypatch):
+        import io,pytest
+        source=Path(__file__).parents[1]/'tools/install.py'
+        spec=importlib.util.spec_from_file_location('ready_installer_test',source);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+        config=tmp_path/'web.json';config.write_text(json.dumps(dict(web=dict(bind='127.0.0.1',access_mode='local'))))
+        monkeypatch.setattr(m.subprocess,'check_output',lambda *a,**k:'12345')
+        monkeypatch.setattr(m,'urlopen',lambda *a,**k:io.StringIO('{"pid":54321,"web":"running"}'))
+>       with pytest.raises(SystemExit,match='未在期限内就绪'):m.wait_ready(config,['systemctl'],timeout_s=.02)
+
+tests/test_installer.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/install.py:38: in wait_ready
+    with socket.socket(family,socket.SOCK_STREAM) as probe:probe.bind((bind,0))
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <socket.socket fd=-1, family=AddressFamily.AF_UNSPEC, type=0, proto=0>
+family = <AddressFamily.AF_INET: 2>, type = <SocketKind.SOCK_STREAM: 1>
+proto = 0, fileno = None
+
+    def __init__(self, family=-1, type=-1, proto=-1, fileno=None):
+        # For user code address family and type values are IntEnum members, but
+        # for the underlying _socket.socket they're just integers. The
+        # constructor of _socket.socket converts the given argument to an
+        # integer automatically.
+        if fileno is None:
+            if family == -1:
+                family = AF_INET
+            if type == -1:
+                type = SOCK_STREAM
+            if proto == -1:
+                proto = 0
+>       _socket.socket.__init__(self, family, type, proto, fileno)
+E       PermissionError: [Errno 1] Operation not permitted
+
+../../runtimes/cpython-3.10.22-linux-x86_64-gnu/lib/python3.10/socket.py:232: PermissionError
+_____ test_actual_observe_collector_quality_observer_http_sse_four_clients _____
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_actual_observe_collector_0')
+
+    @pytest.mark.asyncio
+    async def test_actual_observe_collector_quality_observer_http_sse_four_clients(tmp_path):
+>       async with FakeSource() as source:
+
+tests/test_service.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <producer.FakeSource object at 0x7f60994acbe0>
+
+    async def __aenter__(self):
+        self.sio=socketio.AsyncServer(async_mode='aiohttp',logger=False,engineio_logger=False)
+        app=web.Application();self.sio.attach(app)
+        @self.sio.event
+        async def connect(sid,environ):self.connections.add(sid)
+        @self.sio.event
+        async def disconnect(sid,*args):self.connections.discard(sid)
+        async def status(r):
+            kind=r.match_info['kind'];self.gets[kind]+=1
+            if self.fan_invalid and kind=='fan':return web.json_response({'code':0,'data':{'fans':[]}})
+            return web.json_response(self.producer.fan() if kind=='fan' else self.producer.temp())
+        async def forbidden(r):
+            if r.method=='POST':self.posts+=1
+            else:self.model_gets+=1
+            return web.Response(status=500)
+        app.router.add_get('/api/v1/{kind}/status',status);app.router.add_route('*','/v1/{tail:.*}',forbidden)
+        self.runner=web.AppRunner(app);await self.runner.setup();self.site=web.TCPSite(self.runner,'127.0.0.1',0);await self.site.start()
+>       self.url='http://127.0.0.1:'+str(self.site._server.sockets[0].getsockname()[1])
+E       IndexError: tuple index out of range
+
+tests/producer.py:83: IndexError
+_________ test_observe_conflict_leaves_web_available_and_zero_network __________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_observe_conflict_leaves_w0')
+
+    @pytest.mark.asyncio
+    async def test_observe_conflict_leaves_web_available_and_zero_network(tmp_path):
+>       async with FakeSource() as source:
+
+tests/test_service.py:63: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <producer.FakeSource object at 0x7f609da83eb0>
+
+    async def __aenter__(self):
+        self.sio=socketio.AsyncServer(async_mode='aiohttp',logger=False,engineio_logger=False)
+        app=web.Application();self.sio.attach(app)
+        @self.sio.event
+        async def connect(sid,environ):self.connections.add(sid)
+        @self.sio.event
+        async def disconnect(sid,*args):self.connections.discard(sid)
+        async def status(r):
+            kind=r.match_info['kind'];self.gets[kind]+=1
+            if self.fan_invalid and kind=='fan':return web.json_response({'code':0,'data':{'fans':[]}})
+            return web.json_response(self.producer.fan() if kind=='fan' else self.producer.temp())
+        async def forbidden(r):
+            if r.method=='POST':self.posts+=1
+            else:self.model_gets+=1
+            return web.Response(status=500)
+        app.router.add_get('/api/v1/{kind}/status',status);app.router.add_route('*','/v1/{tail:.*}',forbidden)
+        self.runner=web.AppRunner(app);await self.runner.setup();self.site=web.TCPSite(self.runner,'127.0.0.1',0);await self.site.start()
+>       self.url='http://127.0.0.1:'+str(self.site._server.sockets[0].getsockname()[1])
+E       IndexError: tuple index out of range
+
+tests/producer.py:83: IndexError
+__________ test_follow_registration_and_lifecycle_never_owns_producer __________
+
+publication_dir = PosixPath('/tmp/tw-197184r1')
+
+    @pytest.mark.asyncio
+    async def test_follow_registration_and_lifecycle_never_owns_producer(publication_dir):
+        config=web_config();descriptor=publication_dir/'active.json';config['source']['active_descriptor']=str(descriptor)
+        state=State(config);stop=asyncio.Event();p=Producer();
+>       async with Publication(descriptor) as publication:
+
+tests/test_service.py:74: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/tto_web/source.py:40: in __aenter__
+    self.server=await asyncio.start_unix_server(self.client,path=str(self.socket),limit=512*1024)
+../../runtimes/cpython-3.10.22-linux-x86_64-gnu/lib/python3.10/asyncio/streams.py:114: in start_unix_server
+    return await loop.create_unix_server(factory, path, **kwds)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <_UnixSelectorEventLoop running=False closed=False debug=False>
+protocol_factory = <function start_unix_server.<locals>.factory at 0x7f609947bbe0>
+path = '/tmp/tw-197184r1/publication.sock'
+
+    async def create_unix_server(
+            self, protocol_factory, path=None, *,
+            sock=None, backlog=100, ssl=None,
+            ssl_handshake_timeout=None,
+            start_serving=True):
+        if isinstance(ssl, bool):
+            raise TypeError('ssl argument must be an SSLContext or None')
+    
+        if ssl_handshake_timeout is not None and not ssl:
+            raise ValueError(
+                'ssl_handshake_timeout is only meaningful with ssl')
+    
+        if path is not None:
+            if sock is not None:
+                raise ValueError(
+                    'path and sock can not be specified at the same time')
+    
+            path = os.fspath(path)
+            sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+    
+            # Check for abstract socket. `str` and `bytes` paths are supported.
+            if path[0] not in (0, '\x00'):
+                try:
+                    if stat.S_ISSOCK(os.stat(path).st_mode):
+                        os.remove(path)
+                except FileNotFoundError:
+                    pass
+                except OSError as err:
+                    # Directory may have permissions only to create socket.
+                    logger.error('Unable to check or remove stale UNIX socket '
+                                 '%r: %r', path, err)
+    
+            try:
+>               sock.bind(path)
+E               PermissionError: [Errno 1] Operation not permitted
+
+../../runtimes/cpython-3.10.22-linux-x86_64-gnu/lib/python3.10/asyncio/unix_events.py:307: PermissionError
+______________ test_sse_resync_no_ttl_renewal_and_get_only_routes ______________
+
+    @pytest.mark.asyncio
+    async def test_sse_resync_no_ttl_renewal_and_get_only_routes():
+        config=web_config();state=State(config);p=Producer(time.monotonic()-1);state.accept(p.step(0))
+>       runner,url=await start(app_for(config,start_source=False,state=state))
+
+tests/test_service.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+app = <Application 0x7f609944a7d0>
+
+    async def start(app):
+        runner=web.AppRunner(app,shutdown_timeout=.2);await runner.setup();site=web.TCPSite(runner,'127.0.0.1',0);await site.start()
+>       return runner,'http://127.0.0.1:'+str(site._server.sockets[0].getsockname()[1])
+E       IndexError: tuple index out of range
+
+tests/test_service.py:20: IndexError
+______________ test_waiting_api_and_lan_session_access_and_logout ______________
+
+    @pytest.mark.asyncio
+    async def test_waiting_api_and_lan_session_access_and_logout():
+        config=web_config();config['web'].update(access_mode='lan',allowed_origins=['http://127.0.0.1:59009'],password_hash=password_hash('synthetic-local-only'))
+>       runner,url=await start(app_for(config,start_source=False))
+
+tests/test_service.py:110: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+app = <Application 0x7f609d7906a0>
+
+    async def start(app):
+        runner=web.AppRunner(app,shutdown_timeout=.2);await runner.setup();site=web.TCPSite(runner,'127.0.0.1',0);await site.start()
+>       return runner,'http://127.0.0.1:'+str(site._server.sockets[0].getsockname()[1])
+E       IndexError: tuple index out of range
+
+tests/test_service.py:20: IndexError
+____ test_quiet_source_expiry_is_prompt_without_rebuilding_every_timer_tick ____
+
+    @pytest.mark.asyncio
+    async def test_quiet_source_expiry_is_prompt_without_rebuilding_every_timer_tick():
+        p=Producer(time.monotonic()-12);state=State(web_config())
+        for t in range(13):state.accept(p.step(t),now=p.start+t+.001)
+        now=time.monotonic();packet=state.packet
+        next(m for m in packet['metrics'] if m['id']=='fan.pwm.actual')['_expiry']=now+.35
+        packet['consumable_until_mono_s']=now+.35
+        state.refresh(now);before=state.seq
+>       runner,url=await start(app_for(web_config(),start_source=False,state=state))
+
+tests/test_service.py:138: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+app = <Application 0x7f609da9ada0>
+
+    async def start(app):
+        runner=web.AppRunner(app,shutdown_timeout=.2);await runner.setup();site=web.TCPSite(runner,'127.0.0.1',0);await site.start()
+>       return runner,'http://127.0.0.1:'+str(site._server.sockets[0].getsockname()[1])
+E       IndexError: tuple index out of range
+
+tests/test_service.py:20: IndexError
+------------------------------ Captured log call -------------------------------
+ERROR    asyncio:base_events.py:1758 Task was destroyed but it is pending!
+task: <Task pending name='Task-16' coro=<app_for.<locals>.timer() running at /workspace/scratch/dbfa87ce72d6/review/source/TTO-WebUI-v1.0/src/tto_web/server.py:195> wait_for=<Future pending cb=[Task.task_wakeup()]>>
+ERROR    asyncio:base_events.py:1758 Task was destroyed but it is pending!
+task: <Task pending name='Task-20' coro=<app_for.<locals>.timer() running at /workspace/scratch/dbfa87ce72d6/review/source/TTO-WebUI-v1.0/src/tto_web/server.py:195> wait_for=<Future pending cb=[Task.task_wakeup()]>>
+_ test_registered_task_context_api_does_not_claim_missing_metadata_or_server_completion _
+
+    @pytest.mark.asyncio
+    async def test_registered_task_context_api_does_not_claim_missing_metadata_or_server_completion():
+        p=Producer();state=State(web_config());packet=p.step(0)
+        packet['task']={'context':dict(task_metadata_available=True,active_requests=2,client_slots=4,planned_slots=4,phase='work',task_model='SYNTHETIC registered model')}
+        state.accept(packet)
+Task was destroyed but it is pending!
+task: <Task pending name='Task-24' coro=<app_for.<locals>.timer() running at /workspace/scratch/dbfa87ce72d6/review/source/TTO-WebUI-v1.0/src/tto_web/server.py:195> wait_for=<Future pending cb=[Task.task_wakeup()]>>
+>       runner,url=await start(app_for(web_config(),start_source=False,state=state))
+
+tests/test_service.py:153: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+app = <Application 0x7f60994a4190>
+
+    async def start(app):
+        runner=web.AppRunner(app,shutdown_timeout=.2);await runner.setup();site=web.TCPSite(runner,'127.0.0.1',0);await site.start()
+>       return runner,'http://127.0.0.1:'+str(site._server.sockets[0].getsockname()[1])
+E       IndexError: tuple index out of range
+
+tests/test_service.py:20: IndexError
+=============================== warnings summary ===============================
+tests/test_boundaries.py::test_slow_display_queue_resync_is_bounded_without_source_backpressure
+tests/test_service.py::test_sse_resync_no_ttl_renewal_and_get_only_routes
+tests/test_service.py::test_waiting_api_and_lan_session_access_and_logout
+tests/test_service.py::test_quiet_source_expiry_is_prompt_without_rebuilding_every_timer_tick
+tests/test_service.py::test_registered_task_context_api_does_not_claim_missing_metadata_or_server_completion
+  /workspace/scratch/dbfa87ce72d6/review/source/TTO-WebUI-v1.0/src/tto_web/server.py:76: NotAppKeyWarning: It is recommended to use web.AppKey instances for keys.
+  https://docs.aiohttp.org/en/stable/web_advanced.html#application-s-config
+    app['state']=state;app['sse_clients']=sse_clients;app['stop']=stop
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_cli.py::test_real_cli_rapid_restart_preserves_port_conflict_and_waiting_semantics
+FAILED tests/test_installer.py::test_install_system_unit_enables_and_restarts_new_release_without_touching_old_tto
+FAILED tests/test_installer.py::test_service_ready_check_rejects_other_listener_pid
+FAILED tests/test_service.py::test_actual_observe_collector_quality_observer_http_sse_four_clients
+FAILED tests/test_service.py::test_observe_conflict_leaves_web_available_and_zero_network
+FAILED tests/test_service.py::test_follow_registration_and_lifecycle_never_owns_producer
+FAILED tests/test_service.py::test_sse_resync_no_ttl_renewal_and_get_only_routes
+FAILED tests/test_service.py::test_waiting_api_and_lan_session_access_and_logout
+FAILED tests/test_service.py::test_quiet_source_expiry_is_prompt_without_rebuilding_every_timer_tick
+FAILED tests/test_service.py::test_registered_task_context_api_does_not_claim_missing_metadata_or_server_completion
+10 failed, 24 passed, 5 warnings in 8.48s
+Task was destroyed but it is pending!
+task: <Task pending name='Task-28' coro=<app_for.<locals>.timer() running at /workspace/scratch/dbfa87ce72d6/review/source/TTO-WebUI-v1.0/src/tto_web/server.py:195> wait_for=<Future pending cb=[Task.task_wakeup()]>>

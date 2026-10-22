@@ -1,0 +1,54 @@
+{
+  "checked_at_utc": "2026-10-13T05:26:00.372565+00:00",
+  "instructions_read_completely": "/private/tmp/tto-short-qa-v1-package/01-Codex执行指令.md",
+  "api_models_ready": true,
+  "model_identity": {
+    "id": "RM-01 VLM",
+    "object": "model",
+    "created": 1791869160,
+    "owned_by": "vllm",
+    "root": "/home/rm01/models/dev/llm/Qwen3.8-27B-NVFP4/",
+    "parent": null,
+    "max_model_len": 262144,
+    "permission": [
+      {
+        "id": "modelperm-976fb4ed67fc5722",
+        "object": "model_permission",
+        "created": 1791869160,
+        "allow_create_engine": false,
+        "allow_sampling": true,
+        "allow_logprobs": true,
+        "allow_search_indices": false,
+        "allow_view": true,
+        "allow_fine_tuning": false,
+        "organization": "*",
+        "group": null,
+        "is_blocking": false
+      }
+    ]
+  },
+  "previous_model_root": "/home/rm01/models/dev/llm/Qwen3.8-27B-NVFP4/",
+  "advertised_model_root_matches_previous": true,
+  "weights_hash_verification": "unknown; API root and name match, but weight bytes not inspected",
+  "prior_local_load_processes": "none found by successful ps with rg returning no matches",
+  "previous_local_load_end_evidence": [
+    {
+      "evidence_path": "/tmp/tto-round2-single/summary.json",
+      "ended_at_utc": "2026-10-13T04:00:06.717543+00:00"
+    },
+    {
+      "evidence_path": "/tmp/tto-round2-concurrent4/summary.json",
+      "ended_at_utc": "2026-10-13T04:12:06.986734+00:00"
+    },
+    {
+      "evidence_path": "/tmp/tto-round2-concurrent16/summary.json",
+      "ended_at_utc": "2026-10-13T04:17:56.958847+00:00"
+    }
+  ],
+  "remote_prior_request_termination": "not independently verified; previous 16-request test included client timeouts; collection-side user subsequently reported model kill",
+  "other_user_tasks": "unknown; local process inspection cannot establish remote user activity",
+  "inference_requests_sent": 0,
+  "service_mutations_performed": false,
+  "next_action": "Await new TTO run/episode, deadline and scheduling instruction; external task conflicts remain unverified",
+  "readiness_scope": "models endpoint reachable; actual generation not probed"
+}

@@ -1,0 +1,64 @@
+{
+  "passed": true,
+  "cases": {
+    "success": {
+      "passed": true,
+      "version": "0.1.2",
+      "prefix_has_spaces": true,
+      "non_editable": true,
+      "wheel_files_equal_installed": true,
+      "offline_dependencies": true,
+      "environment_manager": "conda",
+      "config_endpoints_unset": true
+    },
+    "repeat": {
+      "passed": true,
+      "config_records_model_unchanged": {
+        "config/local.json": "6babe40b525e14b5f49006b90f6677f7f725aa9aa2e905264619fcbec0da55c6",
+        "runs/user-record.txt": "8a29340095d552669944515815857074d503ba5e3189b26861f282c570d39e0d",
+        "user-model.json": "16b90618e561ed77a0a4c9e5fe97e99c657deb76631e519914d8b374d18514e9"
+      }
+    },
+    "partial_bootstrap_retry": {
+      "passed": true,
+      "missing_pip_recovered": true,
+      "config_records_model_unchanged": true
+    },
+    "occupied": {
+      "passed": true,
+      "preexisting_file_unchanged": true
+    },
+    "missing_wheelhouse": {
+      "passed": true,
+      "target_not_created": true
+    },
+    "tampered_wheel": {
+      "passed": true,
+      "rejected_before_install": true
+    },
+    "no_collect": {
+      "passed": true,
+      "no_observation_run_created": true,
+      "no_device_endpoints_configured": true
+    },
+    "legacy_preserved": {
+      "passed": true,
+      "old_environment_config_model_preserved": true
+    },
+    "conda_base_unchanged": {
+      "passed": true,
+      "base_metadata_and_executables_unchanged": true,
+      "checked_files": 516,
+      "base_snapshot_sha256": "3a536e6b7aef9b89b046add25c1d3bb91f881fd17316382227aee323caa3c426"
+    },
+    "missing_conda": {
+      "passed": true,
+      "no_conda_download_or_target_created": true
+    }
+  },
+  "python": "3.12.4 | packaged by Anaconda, Inc. | (main, Jun 18 2024, 10:07:17) [Clang 14.0.6 ]",
+  "real_devices": false,
+  "target_linux_executed": false,
+  "conda_version": "conda 24.5.0",
+  "environment_python": "3.10.22 | packaged by conda-forge | (main, Oct  6 2026, 22:55:54) [Clang 19.1.7 ]"
+}

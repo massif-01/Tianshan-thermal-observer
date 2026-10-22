@@ -1,0 +1,25 @@
+{
+  "task": "TTO-SHORTQA-NEXT-v1.0",
+  "usage": "exploration/development",
+  "previously_analyzed_runs": [
+    "929742d7-6f4d-4d80-b53e-4436d45ac12c",
+    "d2a7593a-e68a-4b6f-9d4d-875fafa73c02"
+  ],
+  "formal_holdout": false,
+  "tool_test_partition": "native filename means sealed later same-process development window, not a never-used independent experiment",
+  "ridge_fits_executed": 1,
+  "scope": "short-QA selected before score inspection",
+  "other_run": "qualified plus B0/B1 summaries; no second Ridge candidate search",
+  "production_implementation_changes": false,
+  "live_loads": false,
+  "online_activation": false,
+  "old_ledger_changes": false,
+  "read_only_calls": {
+    "known_mainboard": 3,
+    "methods": [
+      "GET fan/config",
+      "GET fan/status",
+      "GET system/info"
+    ]
+  }
+}

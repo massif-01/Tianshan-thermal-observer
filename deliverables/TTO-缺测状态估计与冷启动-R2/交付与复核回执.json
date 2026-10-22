@@ -1,0 +1,30 @@
+{
+  "status": "offline model-line complete, independent review pending",
+  "issue": 8,
+  "contract": "TTO-REVIEW-R2-20261018",
+  "exported_at_utc": "2026-10-18T03:56:53.600031+00:00",
+  "authoring_checkout": "/private/tmp/tto-state-r2-20261018-i379zb9j/experiments/thermal_state_estimation_r2",
+  "branch": "research/state-estimation-r2",
+  "base_commit": "b85ccae98257c21b220d988c1afcfeae9f27c656",
+  "archive_SHA256": "ed88733fb760547c9149200bb3c2dc5eea93736b694c944549960ce2bdee42f4",
+  "archive_bytes": 95177764,
+  "members_verified": 326,
+  "tests": "17 passed; independent full entry also 17 passed",
+  "scientific_files_byte_exact": 178,
+  "runtime_sources_exact": 44,
+  "protected_originals_unchanged": 3226,
+  "Y": {
+    "valid_TJ": 1843,
+    "conditional_available": 1843,
+    "tracking": 97,
+    "degraded": 1737,
+    "provisional": 9,
+    "B_HOLD_45_MAE_C": 0.4647358309517465,
+    "B0_MAE_C": 0.3225282596530498
+  },
+  "old_strict_Y_states": 0,
+  "device_access": false,
+  "communications_or_scheduler_changed": false,
+  "git_commit_push_PR": false,
+  "final_artifact_appendix": "Independent-tested candidate versus final ZIP differ only in receipts/environment metadata; all 44 runtime sources and 178 scientific outputs confirmed identical"
+}

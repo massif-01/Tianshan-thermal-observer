@@ -1,0 +1,199 @@
+已连接，正在等待第一份有效温度数据。
+本轮TTO已停止；现有风扇控制未被修改。
+{
+  "reason": "SIGTERM",
+  "error": null,
+  "elapsed_s": 2.1135168329346925,
+  "clock_end": {
+    "domain": "Massif-MacBook-Pro.local:8293:1839b303-31e0-4616-8a51-a607f3083570",
+    "mono_before_s": 1031025.609739166,
+    "utc": "2026-10-21T13:30:38.285104+00:00",
+    "mono_after_s": 1031025.609776875,
+    "utc_clock_accuracy_s": null,
+    "host": "Massif-MacBook-Pro.local",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "pid": 8293
+  },
+  "pid": 8293,
+  "native_run_id": "3baa4fa4-1ec8-44f4-900b-051262aefde5",
+  "collector_invocation_count": 1,
+  "collector_count": 1,
+  "stateful_observer_count": 1,
+  "valid_TJ_observed": 1,
+  "model_trial": "conditional_observation",
+  "native_callbacks": 7,
+  "I02_processed_views": 7,
+  "shared_native_engine_id": 4467991056,
+  "model_errors": 0,
+  "model_dropped_frames": 0,
+  "consumer_stopped": true,
+  "Requester_count": 0,
+  "sidecar_count": 0,
+  "control_permission": false,
+  "experiment_authorization": false,
+  "scoring": {
+    "contract": "TTO-OBSERVE-SCORING-v1",
+    "publication_mode": "live",
+    "stride_s": 5,
+    "valid_TJ_denominator": 1,
+    "scheduled_origin_denominator": 1,
+    "counts": {
+      "all_valid_TJ": 1,
+      "scheduled_TJ_origins": 1,
+      "issued/G2-HOLD/15": 1,
+      "valid_predictions/G2-HOLD/15": 1,
+      "issued/B0/15": 1,
+      "valid_predictions/B0/15": 1,
+      "issued/B1/15": 1,
+      "issued/G2-HOLD/45": 1,
+      "valid_predictions/G2-HOLD/45": 1,
+      "issued/B0/45": 1,
+      "valid_predictions/B0/45": 1,
+      "issued/B1/45": 1,
+      "issued/G2-HOLD/90": 1,
+      "valid_predictions/G2-HOLD/90": 1,
+      "issued/B0/90": 1,
+      "valid_predictions/B0/90": 1,
+      "issued/B1/90": 1,
+      "unscored/source_epoch_changed": 6
+    },
+    "per_method": {},
+    "same_set_G2_B0": {},
+    "percentile": "linear interpolation at (n-1)*.95; full bounded session error arrays",
+    "error": "prediction-actual",
+    "label": "first qualified received TJ at/after target within2s, same session/epoch/domain",
+    "statistical_unit": "one session, overlapping horizons are not independent experiments",
+    "all_native_valid_TJ_denominator": 1
+  },
+  "native_summary": {
+    "stop_reason": "SIGTERM",
+    "poll_missed": 0,
+    "poll_count": 3,
+    "connection_attempts": 1,
+    "payload_oversize": 0,
+    "orin_event_count": 1,
+    "business_payload_bytes_sum": 1580,
+    "business_payload_bytes_max": 1580,
+    "poll_rtt_ms": [
+      2.8814170509576797,
+      2.6142920833081007,
+      1.5554579440504313
+    ],
+    "prediction_ms": [
+      9.81008296366781
+    ],
+    "rss_mib": [
+      69.953125
+    ],
+    "cpu_pct_single_core": [
+      2.6643482023466873
+    ],
+    "elapsed_s": 1.262846624944359,
+    "queue_peak_items": 2,
+    "queue_peak_bytes": 1959,
+    "dropped": 0,
+    "quality": {
+      "boundary_socketio_connecting": 1,
+      "boundary_control_context_change": 1,
+      "boundary_stream": 1,
+      "new_samples": 1,
+      "boundary_input_boundary": 1,
+      "boundary_input_profile_change": 1,
+      "boundary_socketio_disconnected": 1,
+      "boundary_run_end": 1
+    },
+    "processing": {
+      "fan_ok": 2,
+      "temp_ok": 1,
+      "origins": 1
+    },
+    "target_host_verified": false,
+    "polling_health": {
+      "contract": "TTO-POLL-INDEPENDENT-v1",
+      "max_inflight_per_endpoint": 1,
+      "max_total_inflight_limit": 2,
+      "max_total_inflight_observed": 2,
+      "end_inflight": 0,
+      "legacy_config_max_inflight_esp32": 1,
+      "endpoints": {
+        "fan": {
+          "sent": 2,
+          "returned": 2,
+          "http_ok": 2,
+          "errors": 0,
+          "skipped": 0,
+          "cancelled": 0,
+          "peak_inflight": 1,
+          "rtt_ms": {
+            "n": 2,
+            "retained_n": 2,
+            "p50": 2.2184374975040555,
+            "p95": 2.8151190956123173,
+            "min": 1.5554579440504313,
+            "max": 2.8814170509576797
+          },
+          "send_interval_s": {
+            "n": 1,
+            "retained_n": 1,
+            "p50": 1.0006910840747878,
+            "p95": 1.0006910840747878,
+            "min": 1.0006910840747878,
+            "max": 1.0006910840747878
+          },
+          "return_interval_s": {
+            "n": 1,
+            "retained_n": 1,
+            "p50": 0.9993651249678805,
+            "p95": 0.9993651249678805,
+            "min": 0.9993651249678805,
+            "max": 0.9993651249678805
+          }
+        },
+        "temp": {
+          "sent": 1,
+          "returned": 1,
+          "http_ok": 1,
+          "errors": 0,
+          "skipped": 0,
+          "cancelled": 0,
+          "peak_inflight": 1,
+          "rtt_ms": {
+            "n": 1,
+            "retained_n": 1,
+            "p50": 2.6142920833081007,
+            "p95": 2.6142920833081007,
+            "min": 2.6142920833081007,
+            "max": 2.6142920833081007
+          },
+          "send_interval_s": {
+            "n": 0,
+            "retained_n": 0,
+            "p50": null,
+            "p95": null,
+            "min": null,
+            "max": null
+          },
+          "return_interval_s": {
+            "n": 0,
+            "retained_n": 0,
+            "p50": null,
+            "p95": null,
+            "min": null,
+            "max": null
+          }
+        }
+      }
+    },
+    "diagnostic_history_contract": {
+      "max_retained_per_series": 4096,
+      "percentiles": "last4096; full raw/resource journals preserved",
+      "sample_totals": {
+        "poll_rtt_ms": 3,
+        "prediction_ms": 1,
+        "rss_mib": 1,
+        "cpu_pct_single_core": 1
+      }
+    }
+  },
+  "thread_policy_same_pid": true
+}

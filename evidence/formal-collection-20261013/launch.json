@@ -1,0 +1,43 @@
+{
+  "status": "running",
+  "formal_collection": true,
+  "observer_run_id": "c1a1bd6a-7854-4d08-bea7-42ea1335c0eb",
+  "episode": "rm01-six-conditions-20261013-022242",
+  "run_path": "/home/rm01/TTO/runs/run-2026-10-13T022246.369032_0000-c1a1bd6a",
+  "session_path": "/home/rm01/TTO/collection-sessions/rm01-six-conditions-20261013-022242",
+  "launcher_pid": 399299,
+  "duration_s": 1800,
+  "collection_started_at_utc": "2026-10-13T02:22:46.371313+00:00",
+  "expected_end_at_utc": "2026-10-13T02:52:46.371313+00:00",
+  "condition_plan": [
+    {
+      "id": 1,
+      "label": "空载待机"
+    },
+    {
+      "id": 2,
+      "label": "模型拉起"
+    },
+    {
+      "id": 3,
+      "label": "拉起后（有负载）待机"
+    },
+    {
+      "id": 4,
+      "label": "模型单发推理"
+    },
+    {
+      "id": 5,
+      "label": "并发推理"
+    },
+    {
+      "id": 6,
+      "label": "推理后待机"
+    }
+  ],
+  "active_condition": null,
+  "task_started": false,
+  "task_marker_policy": "Preserve human report verbatim and approximate event timing separately from file-write time. Task end does not stop cooldown collection.",
+  "log_path": "/home/rm01/TTO/collection-sessions/rm01-six-conditions-20261013-022242/collection.log"
+}
+

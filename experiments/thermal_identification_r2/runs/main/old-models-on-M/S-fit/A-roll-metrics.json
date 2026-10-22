@@ -1,0 +1,5042 @@
+[
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "all",
+    "scope": "all",
+    "value": "all",
+    "cohort_id": "70568ccb4fb423553e910248e0fab2f3d2a646625f2241d6898b54dacba75237",
+    "metrics": {
+      "G1": {
+        "n": 2351,
+        "seconds": 2357.5182904190006,
+        "mae": 0.5013203983938762,
+        "balanced_mae": 0.984662856945647,
+        "point_mae": 0.5020626452523264,
+        "rmse": 1.2321916703142308,
+        "p95_abs": 2.691644954388458,
+        "bias": 0.3230465357701311,
+        "underprediction_p95": 0.12389700090972511,
+        "underprediction_max": 4.576041848910009
+      },
+      "G2": {
+        "n": 2351,
+        "seconds": 2357.5182904190006,
+        "mae": 0.8103828393218175,
+        "balanced_mae": 1.2475763951476395,
+        "point_mae": 0.8116402382535741,
+        "rmse": 1.7035459404762947,
+        "p95_abs": 4.087005585897419,
+        "bias": 0.5684174050682962,
+        "underprediction_p95": 0.40494706276992076,
+        "underprediction_max": 3.595524845054584
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "all",
+    "scope": "run",
+    "value": "M",
+    "cohort_id": "70568ccb4fb423553e910248e0fab2f3d2a646625f2241d6898b54dacba75237",
+    "metrics": {
+      "G1": {
+        "n": 2351,
+        "seconds": 2357.5182904190006,
+        "mae": 0.5013203983938762,
+        "balanced_mae": 0.984662856945647,
+        "point_mae": 0.5020626452523264,
+        "rmse": 1.2321916703142308,
+        "p95_abs": 2.691644954388458,
+        "bias": 0.3230465357701311,
+        "underprediction_p95": 0.12389700090972511,
+        "underprediction_max": 4.576041848910009
+      },
+      "G2": {
+        "n": 2351,
+        "seconds": 2357.5182904190006,
+        "mae": 0.8103828393218175,
+        "balanced_mae": 1.2475763951476395,
+        "point_mae": 0.8116402382535741,
+        "rmse": 1.7035459404762947,
+        "p95_abs": 4.087005585897419,
+        "bias": 0.5684174050682962,
+        "underprediction_p95": 0.40494706276992076,
+        "underprediction_max": 3.595524845054584
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "all",
+    "scope": "macro",
+    "value": "background",
+    "cohort_id": "92dad78098609d026db46681a708cac2fca71ed7c96bf241a7445413d143563a",
+    "metrics": {
+      "G1": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.14841539133413342,
+        "balanced_mae": 0.14841539133413342,
+        "point_mae": 0.14853289243796464,
+        "rmse": 0.6059843454966264,
+        "p95_abs": 0.13389455638571937,
+        "bias": -0.1021224284295813,
+        "underprediction_p95": 0.12521613903779638,
+        "underprediction_max": 4.310995703770033
+      },
+      "G2": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.11011722935559219,
+        "balanced_mae": 0.11011722935559219,
+        "point_mae": 0.11032409598176719,
+        "rmse": 0.44520120150732584,
+        "p95_abs": 0.11230564472144376,
+        "bias": -0.09035523837977934,
+        "underprediction_p95": 0.11230564472144376,
+        "underprediction_max": 3.4197280072467535
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "all",
+    "scope": "macro",
+    "value": "recovery",
+    "cohort_id": "c08f6b9209cca72c5b6efea78e02e1fd302825c27a089531c52d43034592f5e1",
+    "metrics": {
+      "G1": {
+        "n": 1524,
+        "seconds": 1528.4920637200012,
+        "mae": 0.2322305392716584,
+        "balanced_mae": 0.2322305392716584,
+        "point_mae": 0.23254655221034487,
+        "rmse": 0.6431130706535388,
+        "p95_abs": 0.9021895011361403,
+        "bias": 0.06808133222916044,
+        "underprediction_p95": 0.1102982006211242,
+        "underprediction_max": 4.576041848910009
+      },
+      "G2": {
+        "n": 1524,
+        "seconds": 1528.4920637200012,
+        "mae": 0.6434587823694735,
+        "balanced_mae": 0.6434587823694735,
+        "point_mae": 0.6445429322535584,
+        "rmse": 1.4795066095726523,
+        "p95_abs": 3.59514320620983,
+        "bias": 0.5255575358671214,
+        "underprediction_p95": 0.07746630279123001,
+        "underprediction_max": 3.595524845054584
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "all",
+    "scope": "macro",
+    "value": "work",
+    "cohort_id": "56d21ad1adee91ca43338ee342a29734762ab23976d265879bb64c667791a3c9",
+    "metrics": {
+      "G1": {
+        "n": 290,
+        "seconds": 290.2640567059989,
+        "mae": 2.5733426402311492,
+        "balanced_mae": 2.5733426402311492,
+        "point_mae": 2.573055759242989,
+        "rmse": 3.0776680253471564,
+        "p95_abs": 6.527998182185751,
+        "bias": 2.4548201040345115,
+        "underprediction_p95": 0.13663691958586366,
+        "underprediction_max": 4.499911947312633
+      },
+      "G2": {
+        "n": 290,
+        "seconds": 290.2640567059989,
+        "mae": 2.9891531737178534,
+        "balanced_mae": 2.9891531737178534,
+        "point_mae": 2.988409420129382,
+        "rmse": 3.4170137629795674,
+        "p95_abs": 6.313613754585487,
+        "bias": 2.016866633034641,
+        "underprediction_p95": 2.5751310045388225,
+        "underprediction_max": 3.586170829100105
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "all",
+    "scope": "regime",
+    "value": "cooldown",
+    "cohort_id": "c08f6b9209cca72c5b6efea78e02e1fd302825c27a089531c52d43034592f5e1",
+    "metrics": {
+      "G1": {
+        "n": 1524,
+        "seconds": 1528.4920637200012,
+        "mae": 0.2322305392716584,
+        "balanced_mae": 0.2322305392716584,
+        "point_mae": 0.23254655221034487,
+        "rmse": 0.6431130706535388,
+        "p95_abs": 0.9021895011361403,
+        "bias": 0.06808133222916044,
+        "underprediction_p95": 0.1102982006211242,
+        "underprediction_max": 4.576041848910009
+      },
+      "G2": {
+        "n": 1524,
+        "seconds": 1528.4920637200012,
+        "mae": 0.6434587823694735,
+        "balanced_mae": 0.6434587823694735,
+        "point_mae": 0.6445429322535584,
+        "rmse": 1.4795066095726523,
+        "p95_abs": 3.59514320620983,
+        "bias": 0.5255575358671214,
+        "underprediction_p95": 0.07746630279123001,
+        "underprediction_max": 3.595524845054584
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "all",
+    "scope": "regime",
+    "value": "idle",
+    "cohort_id": "92dad78098609d026db46681a708cac2fca71ed7c96bf241a7445413d143563a",
+    "metrics": {
+      "G1": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.14841539133413342,
+        "balanced_mae": 0.14841539133413342,
+        "point_mae": 0.14853289243796464,
+        "rmse": 0.6059843454966264,
+        "p95_abs": 0.13389455638571937,
+        "bias": -0.1021224284295813,
+        "underprediction_p95": 0.12521613903779638,
+        "underprediction_max": 4.310995703770033
+      },
+      "G2": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.11011722935559219,
+        "balanced_mae": 0.11011722935559219,
+        "point_mae": 0.11032409598176719,
+        "rmse": 0.44520120150732584,
+        "p95_abs": 0.11230564472144376,
+        "bias": -0.09035523837977934,
+        "underprediction_p95": 0.11230564472144376,
+        "underprediction_max": 3.4197280072467535
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "all",
+    "scope": "regime",
+    "value": "midload_rise",
+    "cohort_id": "60b4f36e9536a835ce843e09df640b8fe4add43b1c169ab45b0bcee51972de3c",
+    "metrics": {
+      "G1": {
+        "n": 152,
+        "seconds": 152.0604535629991,
+        "mae": 2.178965473890362,
+        "balanced_mae": 2.178965473890362,
+        "point_mae": 2.1787382875320693,
+        "rmse": 2.8052672339387246,
+        "p95_abs": 6.1265751521429666,
+        "bias": 1.9527210338573948,
+        "underprediction_p95": 0.4701625437064925,
+        "underprediction_max": 4.499911947312633
+      },
+      "G2": {
+        "n": 152,
+        "seconds": 152.0604535629991,
+        "mae": 1.8815145310409433,
+        "balanced_mae": 1.8815145310409433,
+        "point_mae": 1.8813633625382664,
+        "rmse": 2.2324227117101936,
+        "p95_abs": 4.938952371899204,
+        "bias": 0.02554324484175444,
+        "underprediction_p95": 2.797372614343067,
+        "underprediction_max": 3.586170829100105
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "all",
+    "scope": "regime",
+    "value": "midload_sustained",
+    "cohort_id": "eebfcb4f2e6e11e8406c1aa62830f88decda7114d6486e205b772c35575e2daa",
+    "metrics": {
+      "G1": {
+        "n": 138,
+        "seconds": 138.20360314299978,
+        "mae": 3.007261651203824,
+        "balanced_mae": 3.007261651203824,
+        "point_mae": 3.007376452721682,
+        "rmse": 3.351899675034354,
+        "p95_abs": 6.689366675138869,
+        "bias": 3.007261651203824,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      },
+      "G2": {
+        "n": 138,
+        "seconds": 138.20360314299978,
+        "mae": 4.207848132163202,
+        "balanced_mae": 4.207848132163202,
+        "point_mae": 4.207764498055828,
+        "rmse": 4.363398802415917,
+        "p95_abs": 7.149862357384852,
+        "bias": 4.207848132163202,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "all",
+    "scope": "phase",
+    "value": "M180",
+    "cohort_id": "de43485dd20e7a9fe4902d74e5bbdc0b9fc304f372a12e8896a6b9bb8de78c9b",
+    "metrics": {
+      "G1": {
+        "n": 193,
+        "seconds": 193.2621205739997,
+        "mae": 2.5072592283914075,
+        "balanced_mae": 2.5072592283914075,
+        "point_mae": 2.50714879836909,
+        "rmse": 2.8392935426034045,
+        "p95_abs": 6.563292300981699,
+        "bias": 2.4280812388485504,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 4.499911947312633
+      },
+      "G2": {
+        "n": 193,
+        "seconds": 193.2621205739997,
+        "mae": 3.329931679340033,
+        "balanced_mae": 3.329931679340033,
+        "point_mae": 3.329431534893492,
+        "rmse": 3.6905241262811534,
+        "p95_abs": 7.0551755745102,
+        "bias": 2.7946181472209486,
+        "underprediction_p95": 2.26046848163502,
+        "underprediction_max": 3.586170829100105
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "all",
+    "scope": "phase",
+    "value": "M20",
+    "cohort_id": "ea14e631367239ad38af1b81309373c83cda7a8373f93159fa25187a006f04f6",
+    "metrics": {
+      "G1": {
+        "n": 32,
+        "seconds": 32.036958658,
+        "mae": 3.0526965487296556,
+        "balanced_mae": 3.0526965487296556,
+        "point_mae": 3.0529627554170196,
+        "rmse": 3.9032384724011395,
+        "p95_abs": 6.094851499392355,
+        "bias": 2.867100832273571,
+        "underprediction_p95": 0.3711106447985943,
+        "underprediction_max": 1.9707592349576117
+      },
+      "G2": {
+        "n": 32,
+        "seconds": 32.036958658,
+        "mae": 2.2303649761307733,
+        "balanced_mae": 2.2303649761307733,
+        "point_mae": 2.230308460318744,
+        "rmse": 2.2973611443018784,
+        "p95_abs": 3.132543719205346,
+        "bias": -0.06082129267507046,
+        "underprediction_p95": 2.7104825333724283,
+        "underprediction_max": 2.847503271638203
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "all",
+    "scope": "phase",
+    "value": "M60",
+    "cohort_id": "696bd5f6afc37c89815d63e3477c34cb378adea29576de5e186a55a5da80dc1c",
+    "metrics": {
+      "G1": {
+        "n": 65,
+        "seconds": 64.96497747399917,
+        "mae": 2.5335424102804995,
+        "balanced_mae": 2.5335424102804995,
+        "point_mae": 2.5324868295675045,
+        "rmse": 3.2902671185807284,
+        "p95_abs": 6.532851917642043,
+        "bias": 2.331051711107385,
+        "underprediction_p95": 0.3206575328420285,
+        "underprediction_max": 3.8799534496850896
+      },
+      "G2": {
+        "n": 65,
+        "seconds": 64.96497747399917,
+        "mae": 2.349573016194747,
+        "balanced_mae": 2.349573016194747,
+        "point_mae": 2.3490549980442603,
+        "rmse": 3.008000324622284,
+        "p95_abs": 5.97729947900269,
+        "bias": 0.7277550534206068,
+        "underprediction_p95": 2.785009106641571,
+        "underprediction_max": 3.0801125756917997
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "all",
+    "scope": "phase",
+    "value": "cooldown_1",
+    "cohort_id": "ecd9eda26848a8a5e91432bb8aaf54c27952673adc48a99c35acc543ff5ceea7",
+    "metrics": {
+      "G1": {
+        "n": 419,
+        "seconds": 420.3508936920007,
+        "mae": 0.2759107553627896,
+        "balanced_mae": 0.2759107553627896,
+        "point_mae": 0.2763705464811692,
+        "rmse": 0.7922438221380911,
+        "p95_abs": 1.2258298565964556,
+        "bias": 0.001870326883879475,
+        "underprediction_p95": 0.12127966335406057,
+        "underprediction_max": 4.488983831108861
+      },
+      "G2": {
+        "n": 419,
+        "seconds": 420.3508936920007,
+        "mae": 0.6092465064954249,
+        "balanced_mae": 0.6092465064954249,
+        "point_mae": 0.6104574143655228,
+        "rmse": 1.2350618871959798,
+        "p95_abs": 3.4398271250047556,
+        "bias": 0.40997578462729545,
+        "underprediction_p95": 0.08702789739987082,
+        "underprediction_max": 3.595524845054584
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "all",
+    "scope": "phase",
+    "value": "cooldown_2",
+    "cohort_id": "7b41b835ea3b97a72e692b518c31a3832eea7314850f69274de99d0e2aacf77b",
+    "metrics": {
+      "G1": {
+        "n": 598,
+        "seconds": 599.9166137909997,
+        "mae": 0.2339141592622565,
+        "balanced_mae": 0.2339141592622565,
+        "point_mae": 0.2342345798156303,
+        "rmse": 0.6814798763727832,
+        "p95_abs": 0.9191993755124956,
+        "bias": 0.032351359784873704,
+        "underprediction_p95": 0.12751343666844653,
+        "underprediction_max": 4.576041848910009
+      },
+      "G2": {
+        "n": 598,
+        "seconds": 599.9166137909997,
+        "mae": 0.5967256546470796,
+        "balanced_mae": 0.5967256546470796,
+        "point_mae": 0.5976988340994425,
+        "rmse": 1.4598901885966031,
+        "p95_abs": 4.232373178941773,
+        "bias": 0.4496574409986125,
+        "underprediction_p95": 0.09466841304041966,
+        "underprediction_max": 3.59298058608956
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "all",
+    "scope": "phase",
+    "value": "final_cooldown",
+    "cohort_id": "31e0add2e027b0c5af4f54e9990a76a5b8ebffa866cba69f1de980df403c9c52",
+    "metrics": {
+      "G1": {
+        "n": 507,
+        "seconds": 508.2245562370008,
+        "mae": 0.19411540052735132,
+        "balanced_mae": 0.19411540052735132,
+        "point_mae": 0.19433808257043136,
+        "rmse": 0.4201907669028057,
+        "p95_abs": 0.6809120147407135,
+        "bias": 0.16502048785268805,
+        "underprediction_p95": 0.09594770460620394,
+        "underprediction_max": 0.23504765890263712
+      },
+      "G2": {
+        "n": 507,
+        "seconds": 508.2245562370008,
+        "mae": 0.7269201971189687,
+        "balanced_mae": 0.7269201971189687,
+        "point_mae": 0.727964239336888,
+        "rmse": 1.675062115201029,
+        "p95_abs": 4.860235853849815,
+        "bias": 0.7107485487236281,
+        "underprediction_p95": 0.055249131616965735,
+        "underprediction_max": 0.188542055307785
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "all",
+    "scope": "phase",
+    "value": "resident_background",
+    "cohort_id": "92dad78098609d026db46681a708cac2fca71ed7c96bf241a7445413d143563a",
+    "metrics": {
+      "G1": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.14841539133413342,
+        "balanced_mae": 0.14841539133413342,
+        "point_mae": 0.14853289243796464,
+        "rmse": 0.6059843454966264,
+        "p95_abs": 0.13389455638571937,
+        "bias": -0.1021224284295813,
+        "underprediction_p95": 0.12521613903779638,
+        "underprediction_max": 4.310995703770033
+      },
+      "G2": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.11011722935559219,
+        "balanced_mae": 0.11011722935559219,
+        "point_mae": 0.11032409598176719,
+        "rmse": 0.44520120150732584,
+        "p95_abs": 0.11230564472144376,
+        "bias": -0.09035523837977934,
+        "underprediction_p95": 0.11230564472144376,
+        "underprediction_max": 3.4197280072467535
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "confirmed_normal",
+    "scope": "all",
+    "value": "all",
+    "cohort_id": "70568ccb4fb423553e910248e0fab2f3d2a646625f2241d6898b54dacba75237",
+    "metrics": {
+      "G1": {
+        "n": 2351,
+        "seconds": 2357.5182904190006,
+        "mae": 0.5013203983938762,
+        "balanced_mae": 0.984662856945647,
+        "point_mae": 0.5020626452523264,
+        "rmse": 1.2321916703142308,
+        "p95_abs": 2.691644954388458,
+        "bias": 0.3230465357701311,
+        "underprediction_p95": 0.12389700090972511,
+        "underprediction_max": 4.576041848910009
+      },
+      "G2": {
+        "n": 2351,
+        "seconds": 2357.5182904190006,
+        "mae": 0.8103828393218175,
+        "balanced_mae": 1.2475763951476395,
+        "point_mae": 0.8116402382535741,
+        "rmse": 1.7035459404762947,
+        "p95_abs": 4.087005585897419,
+        "bias": 0.5684174050682962,
+        "underprediction_p95": 0.40494706276992076,
+        "underprediction_max": 3.595524845054584
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "confirmed_normal",
+    "scope": "run",
+    "value": "M",
+    "cohort_id": "70568ccb4fb423553e910248e0fab2f3d2a646625f2241d6898b54dacba75237",
+    "metrics": {
+      "G1": {
+        "n": 2351,
+        "seconds": 2357.5182904190006,
+        "mae": 0.5013203983938762,
+        "balanced_mae": 0.984662856945647,
+        "point_mae": 0.5020626452523264,
+        "rmse": 1.2321916703142308,
+        "p95_abs": 2.691644954388458,
+        "bias": 0.3230465357701311,
+        "underprediction_p95": 0.12389700090972511,
+        "underprediction_max": 4.576041848910009
+      },
+      "G2": {
+        "n": 2351,
+        "seconds": 2357.5182904190006,
+        "mae": 0.8103828393218175,
+        "balanced_mae": 1.2475763951476395,
+        "point_mae": 0.8116402382535741,
+        "rmse": 1.7035459404762947,
+        "p95_abs": 4.087005585897419,
+        "bias": 0.5684174050682962,
+        "underprediction_p95": 0.40494706276992076,
+        "underprediction_max": 3.595524845054584
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "confirmed_normal",
+    "scope": "macro",
+    "value": "background",
+    "cohort_id": "92dad78098609d026db46681a708cac2fca71ed7c96bf241a7445413d143563a",
+    "metrics": {
+      "G1": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.14841539133413342,
+        "balanced_mae": 0.14841539133413342,
+        "point_mae": 0.14853289243796464,
+        "rmse": 0.6059843454966264,
+        "p95_abs": 0.13389455638571937,
+        "bias": -0.1021224284295813,
+        "underprediction_p95": 0.12521613903779638,
+        "underprediction_max": 4.310995703770033
+      },
+      "G2": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.11011722935559219,
+        "balanced_mae": 0.11011722935559219,
+        "point_mae": 0.11032409598176719,
+        "rmse": 0.44520120150732584,
+        "p95_abs": 0.11230564472144376,
+        "bias": -0.09035523837977934,
+        "underprediction_p95": 0.11230564472144376,
+        "underprediction_max": 3.4197280072467535
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "confirmed_normal",
+    "scope": "macro",
+    "value": "recovery",
+    "cohort_id": "c08f6b9209cca72c5b6efea78e02e1fd302825c27a089531c52d43034592f5e1",
+    "metrics": {
+      "G1": {
+        "n": 1524,
+        "seconds": 1528.4920637200012,
+        "mae": 0.2322305392716584,
+        "balanced_mae": 0.2322305392716584,
+        "point_mae": 0.23254655221034487,
+        "rmse": 0.6431130706535388,
+        "p95_abs": 0.9021895011361403,
+        "bias": 0.06808133222916044,
+        "underprediction_p95": 0.1102982006211242,
+        "underprediction_max": 4.576041848910009
+      },
+      "G2": {
+        "n": 1524,
+        "seconds": 1528.4920637200012,
+        "mae": 0.6434587823694735,
+        "balanced_mae": 0.6434587823694735,
+        "point_mae": 0.6445429322535584,
+        "rmse": 1.4795066095726523,
+        "p95_abs": 3.59514320620983,
+        "bias": 0.5255575358671214,
+        "underprediction_p95": 0.07746630279123001,
+        "underprediction_max": 3.595524845054584
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "confirmed_normal",
+    "scope": "macro",
+    "value": "work",
+    "cohort_id": "56d21ad1adee91ca43338ee342a29734762ab23976d265879bb64c667791a3c9",
+    "metrics": {
+      "G1": {
+        "n": 290,
+        "seconds": 290.2640567059989,
+        "mae": 2.5733426402311492,
+        "balanced_mae": 2.5733426402311492,
+        "point_mae": 2.573055759242989,
+        "rmse": 3.0776680253471564,
+        "p95_abs": 6.527998182185751,
+        "bias": 2.4548201040345115,
+        "underprediction_p95": 0.13663691958586366,
+        "underprediction_max": 4.499911947312633
+      },
+      "G2": {
+        "n": 290,
+        "seconds": 290.2640567059989,
+        "mae": 2.9891531737178534,
+        "balanced_mae": 2.9891531737178534,
+        "point_mae": 2.988409420129382,
+        "rmse": 3.4170137629795674,
+        "p95_abs": 6.313613754585487,
+        "bias": 2.016866633034641,
+        "underprediction_p95": 2.5751310045388225,
+        "underprediction_max": 3.586170829100105
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "confirmed_normal",
+    "scope": "regime",
+    "value": "cooldown",
+    "cohort_id": "c08f6b9209cca72c5b6efea78e02e1fd302825c27a089531c52d43034592f5e1",
+    "metrics": {
+      "G1": {
+        "n": 1524,
+        "seconds": 1528.4920637200012,
+        "mae": 0.2322305392716584,
+        "balanced_mae": 0.2322305392716584,
+        "point_mae": 0.23254655221034487,
+        "rmse": 0.6431130706535388,
+        "p95_abs": 0.9021895011361403,
+        "bias": 0.06808133222916044,
+        "underprediction_p95": 0.1102982006211242,
+        "underprediction_max": 4.576041848910009
+      },
+      "G2": {
+        "n": 1524,
+        "seconds": 1528.4920637200012,
+        "mae": 0.6434587823694735,
+        "balanced_mae": 0.6434587823694735,
+        "point_mae": 0.6445429322535584,
+        "rmse": 1.4795066095726523,
+        "p95_abs": 3.59514320620983,
+        "bias": 0.5255575358671214,
+        "underprediction_p95": 0.07746630279123001,
+        "underprediction_max": 3.595524845054584
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "confirmed_normal",
+    "scope": "regime",
+    "value": "idle",
+    "cohort_id": "92dad78098609d026db46681a708cac2fca71ed7c96bf241a7445413d143563a",
+    "metrics": {
+      "G1": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.14841539133413342,
+        "balanced_mae": 0.14841539133413342,
+        "point_mae": 0.14853289243796464,
+        "rmse": 0.6059843454966264,
+        "p95_abs": 0.13389455638571937,
+        "bias": -0.1021224284295813,
+        "underprediction_p95": 0.12521613903779638,
+        "underprediction_max": 4.310995703770033
+      },
+      "G2": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.11011722935559219,
+        "balanced_mae": 0.11011722935559219,
+        "point_mae": 0.11032409598176719,
+        "rmse": 0.44520120150732584,
+        "p95_abs": 0.11230564472144376,
+        "bias": -0.09035523837977934,
+        "underprediction_p95": 0.11230564472144376,
+        "underprediction_max": 3.4197280072467535
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "confirmed_normal",
+    "scope": "regime",
+    "value": "midload_rise",
+    "cohort_id": "60b4f36e9536a835ce843e09df640b8fe4add43b1c169ab45b0bcee51972de3c",
+    "metrics": {
+      "G1": {
+        "n": 152,
+        "seconds": 152.0604535629991,
+        "mae": 2.178965473890362,
+        "balanced_mae": 2.178965473890362,
+        "point_mae": 2.1787382875320693,
+        "rmse": 2.8052672339387246,
+        "p95_abs": 6.1265751521429666,
+        "bias": 1.9527210338573948,
+        "underprediction_p95": 0.4701625437064925,
+        "underprediction_max": 4.499911947312633
+      },
+      "G2": {
+        "n": 152,
+        "seconds": 152.0604535629991,
+        "mae": 1.8815145310409433,
+        "balanced_mae": 1.8815145310409433,
+        "point_mae": 1.8813633625382664,
+        "rmse": 2.2324227117101936,
+        "p95_abs": 4.938952371899204,
+        "bias": 0.02554324484175444,
+        "underprediction_p95": 2.797372614343067,
+        "underprediction_max": 3.586170829100105
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "confirmed_normal",
+    "scope": "regime",
+    "value": "midload_sustained",
+    "cohort_id": "eebfcb4f2e6e11e8406c1aa62830f88decda7114d6486e205b772c35575e2daa",
+    "metrics": {
+      "G1": {
+        "n": 138,
+        "seconds": 138.20360314299978,
+        "mae": 3.007261651203824,
+        "balanced_mae": 3.007261651203824,
+        "point_mae": 3.007376452721682,
+        "rmse": 3.351899675034354,
+        "p95_abs": 6.689366675138869,
+        "bias": 3.007261651203824,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      },
+      "G2": {
+        "n": 138,
+        "seconds": 138.20360314299978,
+        "mae": 4.207848132163202,
+        "balanced_mae": 4.207848132163202,
+        "point_mae": 4.207764498055828,
+        "rmse": 4.363398802415917,
+        "p95_abs": 7.149862357384852,
+        "bias": 4.207848132163202,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "confirmed_normal",
+    "scope": "phase",
+    "value": "M180",
+    "cohort_id": "de43485dd20e7a9fe4902d74e5bbdc0b9fc304f372a12e8896a6b9bb8de78c9b",
+    "metrics": {
+      "G1": {
+        "n": 193,
+        "seconds": 193.2621205739997,
+        "mae": 2.5072592283914075,
+        "balanced_mae": 2.5072592283914075,
+        "point_mae": 2.50714879836909,
+        "rmse": 2.8392935426034045,
+        "p95_abs": 6.563292300981699,
+        "bias": 2.4280812388485504,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 4.499911947312633
+      },
+      "G2": {
+        "n": 193,
+        "seconds": 193.2621205739997,
+        "mae": 3.329931679340033,
+        "balanced_mae": 3.329931679340033,
+        "point_mae": 3.329431534893492,
+        "rmse": 3.6905241262811534,
+        "p95_abs": 7.0551755745102,
+        "bias": 2.7946181472209486,
+        "underprediction_p95": 2.26046848163502,
+        "underprediction_max": 3.586170829100105
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "confirmed_normal",
+    "scope": "phase",
+    "value": "M20",
+    "cohort_id": "ea14e631367239ad38af1b81309373c83cda7a8373f93159fa25187a006f04f6",
+    "metrics": {
+      "G1": {
+        "n": 32,
+        "seconds": 32.036958658,
+        "mae": 3.0526965487296556,
+        "balanced_mae": 3.0526965487296556,
+        "point_mae": 3.0529627554170196,
+        "rmse": 3.9032384724011395,
+        "p95_abs": 6.094851499392355,
+        "bias": 2.867100832273571,
+        "underprediction_p95": 0.3711106447985943,
+        "underprediction_max": 1.9707592349576117
+      },
+      "G2": {
+        "n": 32,
+        "seconds": 32.036958658,
+        "mae": 2.2303649761307733,
+        "balanced_mae": 2.2303649761307733,
+        "point_mae": 2.230308460318744,
+        "rmse": 2.2973611443018784,
+        "p95_abs": 3.132543719205346,
+        "bias": -0.06082129267507046,
+        "underprediction_p95": 2.7104825333724283,
+        "underprediction_max": 2.847503271638203
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "confirmed_normal",
+    "scope": "phase",
+    "value": "M60",
+    "cohort_id": "696bd5f6afc37c89815d63e3477c34cb378adea29576de5e186a55a5da80dc1c",
+    "metrics": {
+      "G1": {
+        "n": 65,
+        "seconds": 64.96497747399917,
+        "mae": 2.5335424102804995,
+        "balanced_mae": 2.5335424102804995,
+        "point_mae": 2.5324868295675045,
+        "rmse": 3.2902671185807284,
+        "p95_abs": 6.532851917642043,
+        "bias": 2.331051711107385,
+        "underprediction_p95": 0.3206575328420285,
+        "underprediction_max": 3.8799534496850896
+      },
+      "G2": {
+        "n": 65,
+        "seconds": 64.96497747399917,
+        "mae": 2.349573016194747,
+        "balanced_mae": 2.349573016194747,
+        "point_mae": 2.3490549980442603,
+        "rmse": 3.008000324622284,
+        "p95_abs": 5.97729947900269,
+        "bias": 0.7277550534206068,
+        "underprediction_p95": 2.785009106641571,
+        "underprediction_max": 3.0801125756917997
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "confirmed_normal",
+    "scope": "phase",
+    "value": "cooldown_1",
+    "cohort_id": "ecd9eda26848a8a5e91432bb8aaf54c27952673adc48a99c35acc543ff5ceea7",
+    "metrics": {
+      "G1": {
+        "n": 419,
+        "seconds": 420.3508936920007,
+        "mae": 0.2759107553627896,
+        "balanced_mae": 0.2759107553627896,
+        "point_mae": 0.2763705464811692,
+        "rmse": 0.7922438221380911,
+        "p95_abs": 1.2258298565964556,
+        "bias": 0.001870326883879475,
+        "underprediction_p95": 0.12127966335406057,
+        "underprediction_max": 4.488983831108861
+      },
+      "G2": {
+        "n": 419,
+        "seconds": 420.3508936920007,
+        "mae": 0.6092465064954249,
+        "balanced_mae": 0.6092465064954249,
+        "point_mae": 0.6104574143655228,
+        "rmse": 1.2350618871959798,
+        "p95_abs": 3.4398271250047556,
+        "bias": 0.40997578462729545,
+        "underprediction_p95": 0.08702789739987082,
+        "underprediction_max": 3.595524845054584
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "confirmed_normal",
+    "scope": "phase",
+    "value": "cooldown_2",
+    "cohort_id": "7b41b835ea3b97a72e692b518c31a3832eea7314850f69274de99d0e2aacf77b",
+    "metrics": {
+      "G1": {
+        "n": 598,
+        "seconds": 599.9166137909997,
+        "mae": 0.2339141592622565,
+        "balanced_mae": 0.2339141592622565,
+        "point_mae": 0.2342345798156303,
+        "rmse": 0.6814798763727832,
+        "p95_abs": 0.9191993755124956,
+        "bias": 0.032351359784873704,
+        "underprediction_p95": 0.12751343666844653,
+        "underprediction_max": 4.576041848910009
+      },
+      "G2": {
+        "n": 598,
+        "seconds": 599.9166137909997,
+        "mae": 0.5967256546470796,
+        "balanced_mae": 0.5967256546470796,
+        "point_mae": 0.5976988340994425,
+        "rmse": 1.4598901885966031,
+        "p95_abs": 4.232373178941773,
+        "bias": 0.4496574409986125,
+        "underprediction_p95": 0.09466841304041966,
+        "underprediction_max": 3.59298058608956
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "confirmed_normal",
+    "scope": "phase",
+    "value": "final_cooldown",
+    "cohort_id": "31e0add2e027b0c5af4f54e9990a76a5b8ebffa866cba69f1de980df403c9c52",
+    "metrics": {
+      "G1": {
+        "n": 507,
+        "seconds": 508.2245562370008,
+        "mae": 0.19411540052735132,
+        "balanced_mae": 0.19411540052735132,
+        "point_mae": 0.19433808257043136,
+        "rmse": 0.4201907669028057,
+        "p95_abs": 0.6809120147407135,
+        "bias": 0.16502048785268805,
+        "underprediction_p95": 0.09594770460620394,
+        "underprediction_max": 0.23504765890263712
+      },
+      "G2": {
+        "n": 507,
+        "seconds": 508.2245562370008,
+        "mae": 0.7269201971189687,
+        "balanced_mae": 0.7269201971189687,
+        "point_mae": 0.727964239336888,
+        "rmse": 1.675062115201029,
+        "p95_abs": 4.860235853849815,
+        "bias": 0.7107485487236281,
+        "underprediction_p95": 0.055249131616965735,
+        "underprediction_max": 0.188542055307785
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "confirmed_normal",
+    "scope": "phase",
+    "value": "resident_background",
+    "cohort_id": "92dad78098609d026db46681a708cac2fca71ed7c96bf241a7445413d143563a",
+    "metrics": {
+      "G1": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.14841539133413342,
+        "balanced_mae": 0.14841539133413342,
+        "point_mae": 0.14853289243796464,
+        "rmse": 0.6059843454966264,
+        "p95_abs": 0.13389455638571937,
+        "bias": -0.1021224284295813,
+        "underprediction_p95": 0.12521613903779638,
+        "underprediction_max": 4.310995703770033
+      },
+      "G2": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.11011722935559219,
+        "balanced_mae": 0.11011722935559219,
+        "point_mae": 0.11032409598176719,
+        "rmse": 0.44520120150732584,
+        "p95_abs": 0.11230564472144376,
+        "bias": -0.09035523837977934,
+        "underprediction_p95": 0.11230564472144376,
+        "underprediction_max": 3.4197280072467535
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "strict_legacy",
+    "scope": "all",
+    "value": "all",
+    "cohort_id": "70568ccb4fb423553e910248e0fab2f3d2a646625f2241d6898b54dacba75237",
+    "metrics": {
+      "G1": {
+        "n": 2351,
+        "seconds": 2357.5182904190006,
+        "mae": 0.5013203983938762,
+        "balanced_mae": 0.984662856945647,
+        "point_mae": 0.5020626452523264,
+        "rmse": 1.2321916703142308,
+        "p95_abs": 2.691644954388458,
+        "bias": 0.3230465357701311,
+        "underprediction_p95": 0.12389700090972511,
+        "underprediction_max": 4.576041848910009
+      },
+      "G2": {
+        "n": 2351,
+        "seconds": 2357.5182904190006,
+        "mae": 0.8103828393218175,
+        "balanced_mae": 1.2475763951476395,
+        "point_mae": 0.8116402382535741,
+        "rmse": 1.7035459404762947,
+        "p95_abs": 4.087005585897419,
+        "bias": 0.5684174050682962,
+        "underprediction_p95": 0.40494706276992076,
+        "underprediction_max": 3.595524845054584
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "strict_legacy",
+    "scope": "run",
+    "value": "M",
+    "cohort_id": "70568ccb4fb423553e910248e0fab2f3d2a646625f2241d6898b54dacba75237",
+    "metrics": {
+      "G1": {
+        "n": 2351,
+        "seconds": 2357.5182904190006,
+        "mae": 0.5013203983938762,
+        "balanced_mae": 0.984662856945647,
+        "point_mae": 0.5020626452523264,
+        "rmse": 1.2321916703142308,
+        "p95_abs": 2.691644954388458,
+        "bias": 0.3230465357701311,
+        "underprediction_p95": 0.12389700090972511,
+        "underprediction_max": 4.576041848910009
+      },
+      "G2": {
+        "n": 2351,
+        "seconds": 2357.5182904190006,
+        "mae": 0.8103828393218175,
+        "balanced_mae": 1.2475763951476395,
+        "point_mae": 0.8116402382535741,
+        "rmse": 1.7035459404762947,
+        "p95_abs": 4.087005585897419,
+        "bias": 0.5684174050682962,
+        "underprediction_p95": 0.40494706276992076,
+        "underprediction_max": 3.595524845054584
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "strict_legacy",
+    "scope": "macro",
+    "value": "background",
+    "cohort_id": "92dad78098609d026db46681a708cac2fca71ed7c96bf241a7445413d143563a",
+    "metrics": {
+      "G1": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.14841539133413342,
+        "balanced_mae": 0.14841539133413342,
+        "point_mae": 0.14853289243796464,
+        "rmse": 0.6059843454966264,
+        "p95_abs": 0.13389455638571937,
+        "bias": -0.1021224284295813,
+        "underprediction_p95": 0.12521613903779638,
+        "underprediction_max": 4.310995703770033
+      },
+      "G2": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.11011722935559219,
+        "balanced_mae": 0.11011722935559219,
+        "point_mae": 0.11032409598176719,
+        "rmse": 0.44520120150732584,
+        "p95_abs": 0.11230564472144376,
+        "bias": -0.09035523837977934,
+        "underprediction_p95": 0.11230564472144376,
+        "underprediction_max": 3.4197280072467535
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "strict_legacy",
+    "scope": "macro",
+    "value": "recovery",
+    "cohort_id": "c08f6b9209cca72c5b6efea78e02e1fd302825c27a089531c52d43034592f5e1",
+    "metrics": {
+      "G1": {
+        "n": 1524,
+        "seconds": 1528.4920637200012,
+        "mae": 0.2322305392716584,
+        "balanced_mae": 0.2322305392716584,
+        "point_mae": 0.23254655221034487,
+        "rmse": 0.6431130706535388,
+        "p95_abs": 0.9021895011361403,
+        "bias": 0.06808133222916044,
+        "underprediction_p95": 0.1102982006211242,
+        "underprediction_max": 4.576041848910009
+      },
+      "G2": {
+        "n": 1524,
+        "seconds": 1528.4920637200012,
+        "mae": 0.6434587823694735,
+        "balanced_mae": 0.6434587823694735,
+        "point_mae": 0.6445429322535584,
+        "rmse": 1.4795066095726523,
+        "p95_abs": 3.59514320620983,
+        "bias": 0.5255575358671214,
+        "underprediction_p95": 0.07746630279123001,
+        "underprediction_max": 3.595524845054584
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "strict_legacy",
+    "scope": "macro",
+    "value": "work",
+    "cohort_id": "56d21ad1adee91ca43338ee342a29734762ab23976d265879bb64c667791a3c9",
+    "metrics": {
+      "G1": {
+        "n": 290,
+        "seconds": 290.2640567059989,
+        "mae": 2.5733426402311492,
+        "balanced_mae": 2.5733426402311492,
+        "point_mae": 2.573055759242989,
+        "rmse": 3.0776680253471564,
+        "p95_abs": 6.527998182185751,
+        "bias": 2.4548201040345115,
+        "underprediction_p95": 0.13663691958586366,
+        "underprediction_max": 4.499911947312633
+      },
+      "G2": {
+        "n": 290,
+        "seconds": 290.2640567059989,
+        "mae": 2.9891531737178534,
+        "balanced_mae": 2.9891531737178534,
+        "point_mae": 2.988409420129382,
+        "rmse": 3.4170137629795674,
+        "p95_abs": 6.313613754585487,
+        "bias": 2.016866633034641,
+        "underprediction_p95": 2.5751310045388225,
+        "underprediction_max": 3.586170829100105
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "strict_legacy",
+    "scope": "regime",
+    "value": "cooldown",
+    "cohort_id": "c08f6b9209cca72c5b6efea78e02e1fd302825c27a089531c52d43034592f5e1",
+    "metrics": {
+      "G1": {
+        "n": 1524,
+        "seconds": 1528.4920637200012,
+        "mae": 0.2322305392716584,
+        "balanced_mae": 0.2322305392716584,
+        "point_mae": 0.23254655221034487,
+        "rmse": 0.6431130706535388,
+        "p95_abs": 0.9021895011361403,
+        "bias": 0.06808133222916044,
+        "underprediction_p95": 0.1102982006211242,
+        "underprediction_max": 4.576041848910009
+      },
+      "G2": {
+        "n": 1524,
+        "seconds": 1528.4920637200012,
+        "mae": 0.6434587823694735,
+        "balanced_mae": 0.6434587823694735,
+        "point_mae": 0.6445429322535584,
+        "rmse": 1.4795066095726523,
+        "p95_abs": 3.59514320620983,
+        "bias": 0.5255575358671214,
+        "underprediction_p95": 0.07746630279123001,
+        "underprediction_max": 3.595524845054584
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "strict_legacy",
+    "scope": "regime",
+    "value": "idle",
+    "cohort_id": "92dad78098609d026db46681a708cac2fca71ed7c96bf241a7445413d143563a",
+    "metrics": {
+      "G1": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.14841539133413342,
+        "balanced_mae": 0.14841539133413342,
+        "point_mae": 0.14853289243796464,
+        "rmse": 0.6059843454966264,
+        "p95_abs": 0.13389455638571937,
+        "bias": -0.1021224284295813,
+        "underprediction_p95": 0.12521613903779638,
+        "underprediction_max": 4.310995703770033
+      },
+      "G2": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.11011722935559219,
+        "balanced_mae": 0.11011722935559219,
+        "point_mae": 0.11032409598176719,
+        "rmse": 0.44520120150732584,
+        "p95_abs": 0.11230564472144376,
+        "bias": -0.09035523837977934,
+        "underprediction_p95": 0.11230564472144376,
+        "underprediction_max": 3.4197280072467535
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "strict_legacy",
+    "scope": "regime",
+    "value": "midload_rise",
+    "cohort_id": "60b4f36e9536a835ce843e09df640b8fe4add43b1c169ab45b0bcee51972de3c",
+    "metrics": {
+      "G1": {
+        "n": 152,
+        "seconds": 152.0604535629991,
+        "mae": 2.178965473890362,
+        "balanced_mae": 2.178965473890362,
+        "point_mae": 2.1787382875320693,
+        "rmse": 2.8052672339387246,
+        "p95_abs": 6.1265751521429666,
+        "bias": 1.9527210338573948,
+        "underprediction_p95": 0.4701625437064925,
+        "underprediction_max": 4.499911947312633
+      },
+      "G2": {
+        "n": 152,
+        "seconds": 152.0604535629991,
+        "mae": 1.8815145310409433,
+        "balanced_mae": 1.8815145310409433,
+        "point_mae": 1.8813633625382664,
+        "rmse": 2.2324227117101936,
+        "p95_abs": 4.938952371899204,
+        "bias": 0.02554324484175444,
+        "underprediction_p95": 2.797372614343067,
+        "underprediction_max": 3.586170829100105
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "strict_legacy",
+    "scope": "regime",
+    "value": "midload_sustained",
+    "cohort_id": "eebfcb4f2e6e11e8406c1aa62830f88decda7114d6486e205b772c35575e2daa",
+    "metrics": {
+      "G1": {
+        "n": 138,
+        "seconds": 138.20360314299978,
+        "mae": 3.007261651203824,
+        "balanced_mae": 3.007261651203824,
+        "point_mae": 3.007376452721682,
+        "rmse": 3.351899675034354,
+        "p95_abs": 6.689366675138869,
+        "bias": 3.007261651203824,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      },
+      "G2": {
+        "n": 138,
+        "seconds": 138.20360314299978,
+        "mae": 4.207848132163202,
+        "balanced_mae": 4.207848132163202,
+        "point_mae": 4.207764498055828,
+        "rmse": 4.363398802415917,
+        "p95_abs": 7.149862357384852,
+        "bias": 4.207848132163202,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "strict_legacy",
+    "scope": "phase",
+    "value": "M180",
+    "cohort_id": "de43485dd20e7a9fe4902d74e5bbdc0b9fc304f372a12e8896a6b9bb8de78c9b",
+    "metrics": {
+      "G1": {
+        "n": 193,
+        "seconds": 193.2621205739997,
+        "mae": 2.5072592283914075,
+        "balanced_mae": 2.5072592283914075,
+        "point_mae": 2.50714879836909,
+        "rmse": 2.8392935426034045,
+        "p95_abs": 6.563292300981699,
+        "bias": 2.4280812388485504,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 4.499911947312633
+      },
+      "G2": {
+        "n": 193,
+        "seconds": 193.2621205739997,
+        "mae": 3.329931679340033,
+        "balanced_mae": 3.329931679340033,
+        "point_mae": 3.329431534893492,
+        "rmse": 3.6905241262811534,
+        "p95_abs": 7.0551755745102,
+        "bias": 2.7946181472209486,
+        "underprediction_p95": 2.26046848163502,
+        "underprediction_max": 3.586170829100105
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "strict_legacy",
+    "scope": "phase",
+    "value": "M20",
+    "cohort_id": "ea14e631367239ad38af1b81309373c83cda7a8373f93159fa25187a006f04f6",
+    "metrics": {
+      "G1": {
+        "n": 32,
+        "seconds": 32.036958658,
+        "mae": 3.0526965487296556,
+        "balanced_mae": 3.0526965487296556,
+        "point_mae": 3.0529627554170196,
+        "rmse": 3.9032384724011395,
+        "p95_abs": 6.094851499392355,
+        "bias": 2.867100832273571,
+        "underprediction_p95": 0.3711106447985943,
+        "underprediction_max": 1.9707592349576117
+      },
+      "G2": {
+        "n": 32,
+        "seconds": 32.036958658,
+        "mae": 2.2303649761307733,
+        "balanced_mae": 2.2303649761307733,
+        "point_mae": 2.230308460318744,
+        "rmse": 2.2973611443018784,
+        "p95_abs": 3.132543719205346,
+        "bias": -0.06082129267507046,
+        "underprediction_p95": 2.7104825333724283,
+        "underprediction_max": 2.847503271638203
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "strict_legacy",
+    "scope": "phase",
+    "value": "M60",
+    "cohort_id": "696bd5f6afc37c89815d63e3477c34cb378adea29576de5e186a55a5da80dc1c",
+    "metrics": {
+      "G1": {
+        "n": 65,
+        "seconds": 64.96497747399917,
+        "mae": 2.5335424102804995,
+        "balanced_mae": 2.5335424102804995,
+        "point_mae": 2.5324868295675045,
+        "rmse": 3.2902671185807284,
+        "p95_abs": 6.532851917642043,
+        "bias": 2.331051711107385,
+        "underprediction_p95": 0.3206575328420285,
+        "underprediction_max": 3.8799534496850896
+      },
+      "G2": {
+        "n": 65,
+        "seconds": 64.96497747399917,
+        "mae": 2.349573016194747,
+        "balanced_mae": 2.349573016194747,
+        "point_mae": 2.3490549980442603,
+        "rmse": 3.008000324622284,
+        "p95_abs": 5.97729947900269,
+        "bias": 0.7277550534206068,
+        "underprediction_p95": 2.785009106641571,
+        "underprediction_max": 3.0801125756917997
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "strict_legacy",
+    "scope": "phase",
+    "value": "cooldown_1",
+    "cohort_id": "ecd9eda26848a8a5e91432bb8aaf54c27952673adc48a99c35acc543ff5ceea7",
+    "metrics": {
+      "G1": {
+        "n": 419,
+        "seconds": 420.3508936920007,
+        "mae": 0.2759107553627896,
+        "balanced_mae": 0.2759107553627896,
+        "point_mae": 0.2763705464811692,
+        "rmse": 0.7922438221380911,
+        "p95_abs": 1.2258298565964556,
+        "bias": 0.001870326883879475,
+        "underprediction_p95": 0.12127966335406057,
+        "underprediction_max": 4.488983831108861
+      },
+      "G2": {
+        "n": 419,
+        "seconds": 420.3508936920007,
+        "mae": 0.6092465064954249,
+        "balanced_mae": 0.6092465064954249,
+        "point_mae": 0.6104574143655228,
+        "rmse": 1.2350618871959798,
+        "p95_abs": 3.4398271250047556,
+        "bias": 0.40997578462729545,
+        "underprediction_p95": 0.08702789739987082,
+        "underprediction_max": 3.595524845054584
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "strict_legacy",
+    "scope": "phase",
+    "value": "cooldown_2",
+    "cohort_id": "7b41b835ea3b97a72e692b518c31a3832eea7314850f69274de99d0e2aacf77b",
+    "metrics": {
+      "G1": {
+        "n": 598,
+        "seconds": 599.9166137909997,
+        "mae": 0.2339141592622565,
+        "balanced_mae": 0.2339141592622565,
+        "point_mae": 0.2342345798156303,
+        "rmse": 0.6814798763727832,
+        "p95_abs": 0.9191993755124956,
+        "bias": 0.032351359784873704,
+        "underprediction_p95": 0.12751343666844653,
+        "underprediction_max": 4.576041848910009
+      },
+      "G2": {
+        "n": 598,
+        "seconds": 599.9166137909997,
+        "mae": 0.5967256546470796,
+        "balanced_mae": 0.5967256546470796,
+        "point_mae": 0.5976988340994425,
+        "rmse": 1.4598901885966031,
+        "p95_abs": 4.232373178941773,
+        "bias": 0.4496574409986125,
+        "underprediction_p95": 0.09466841304041966,
+        "underprediction_max": 3.59298058608956
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "strict_legacy",
+    "scope": "phase",
+    "value": "final_cooldown",
+    "cohort_id": "31e0add2e027b0c5af4f54e9990a76a5b8ebffa866cba69f1de980df403c9c52",
+    "metrics": {
+      "G1": {
+        "n": 507,
+        "seconds": 508.2245562370008,
+        "mae": 0.19411540052735132,
+        "balanced_mae": 0.19411540052735132,
+        "point_mae": 0.19433808257043136,
+        "rmse": 0.4201907669028057,
+        "p95_abs": 0.6809120147407135,
+        "bias": 0.16502048785268805,
+        "underprediction_p95": 0.09594770460620394,
+        "underprediction_max": 0.23504765890263712
+      },
+      "G2": {
+        "n": 507,
+        "seconds": 508.2245562370008,
+        "mae": 0.7269201971189687,
+        "balanced_mae": 0.7269201971189687,
+        "point_mae": 0.727964239336888,
+        "rmse": 1.675062115201029,
+        "p95_abs": 4.860235853849815,
+        "bias": 0.7107485487236281,
+        "underprediction_p95": 0.055249131616965735,
+        "underprediction_max": 0.188542055307785
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 15,
+    "context": "strict_legacy",
+    "scope": "phase",
+    "value": "resident_background",
+    "cohort_id": "92dad78098609d026db46681a708cac2fca71ed7c96bf241a7445413d143563a",
+    "metrics": {
+      "G1": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.14841539133413342,
+        "balanced_mae": 0.14841539133413342,
+        "point_mae": 0.14853289243796464,
+        "rmse": 0.6059843454966264,
+        "p95_abs": 0.13389455638571937,
+        "bias": -0.1021224284295813,
+        "underprediction_p95": 0.12521613903779638,
+        "underprediction_max": 4.310995703770033
+      },
+      "G2": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.11011722935559219,
+        "balanced_mae": 0.11011722935559219,
+        "point_mae": 0.11032409598176719,
+        "rmse": 0.44520120150732584,
+        "p95_abs": 0.11230564472144376,
+        "bias": -0.09035523837977934,
+        "underprediction_p95": 0.11230564472144376,
+        "underprediction_max": 3.4197280072467535
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "all",
+    "scope": "all",
+    "value": "all",
+    "cohort_id": "b0364339f73d5992e94e9c0acdadb36b499765b822f3f923d590b7e0e6c4e52f",
+    "metrics": {
+      "G1": {
+        "n": 2291,
+        "seconds": 2297.5650597450003,
+        "mae": 1.2710071115963073,
+        "balanced_mae": 2.649896115409228,
+        "point_mae": 1.2732391012667676,
+        "rmse": 2.8054656354741807,
+        "p95_abs": 7.155331273705762,
+        "bias": 0.9474231847570945,
+        "underprediction_p95": 0.8285425785194747,
+        "underprediction_max": 4.5906568568751
+      },
+      "G2": {
+        "n": 2291,
+        "seconds": 2297.5650597450003,
+        "mae": 1.2241586392477615,
+        "balanced_mae": 2.0210545501265944,
+        "point_mae": 1.2262277914164574,
+        "rmse": 2.450499231735946,
+        "p95_abs": 6.210565659520828,
+        "bias": 0.928375227380402,
+        "underprediction_p95": 1.4921444652243991,
+        "underprediction_max": 3.6115290077620585
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "all",
+    "scope": "run",
+    "value": "M",
+    "cohort_id": "b0364339f73d5992e94e9c0acdadb36b499765b822f3f923d590b7e0e6c4e52f",
+    "metrics": {
+      "G1": {
+        "n": 2291,
+        "seconds": 2297.5650597450003,
+        "mae": 1.2710071115963073,
+        "balanced_mae": 2.649896115409228,
+        "point_mae": 1.2732391012667676,
+        "rmse": 2.8054656354741807,
+        "p95_abs": 7.155331273705762,
+        "bias": 0.9474231847570945,
+        "underprediction_p95": 0.8285425785194747,
+        "underprediction_max": 4.5906568568751
+      },
+      "G2": {
+        "n": 2291,
+        "seconds": 2297.5650597450003,
+        "mae": 1.2241586392477615,
+        "balanced_mae": 2.0210545501265944,
+        "point_mae": 1.2262277914164574,
+        "rmse": 2.450499231735946,
+        "p95_abs": 6.210565659520828,
+        "bias": 0.928375227380402,
+        "underprediction_p95": 1.4921444652243991,
+        "underprediction_max": 3.6115290077620585
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "all",
+    "scope": "macro",
+    "value": "background",
+    "cohort_id": "254999d779fc4cbb6c4bb16a53cddd4a737e2253b7afa25c53c2dd2000e6681c",
+    "metrics": {
+      "G1": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.30666976143484775,
+        "balanced_mae": 0.30666976143484775,
+        "point_mae": 0.30741158475392205,
+        "rmse": 0.9275966279996173,
+        "p95_abs": 2.956785051138053,
+        "bias": -0.12829400390169107,
+        "underprediction_p95": 2.180750650403507,
+        "underprediction_max": 4.299382919378296
+      },
+      "G2": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.22686482898020177,
+        "balanced_mae": 0.22686482898020177,
+        "point_mae": 0.2274922060947067,
+        "rmse": 0.675239615422777,
+        "p95_abs": 2.119988438818353,
+        "bias": -0.15129246640724958,
+        "underprediction_p95": 2.119988438818353,
+        "underprediction_max": 3.4376725546737887
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "all",
+    "scope": "macro",
+    "value": "recovery",
+    "cohort_id": "5e7ce1faa164cd3e8e8828d80c1368bb71f47e80e93f08ff316f9aad1b35130a",
+    "metrics": {
+      "G1": {
+        "n": 1464,
+        "seconds": 1468.538833046001,
+        "mae": 0.4553317231439151,
+        "balanced_mae": 0.4553317231439151,
+        "point_mae": 0.4560858055640447,
+        "rmse": 0.9698821248657421,
+        "p95_abs": 2.604268198597909,
+        "bias": 0.1092337980507084,
+        "underprediction_p95": 1.3627124208148251,
+        "underprediction_max": 4.5906568568751
+      },
+      "G2": {
+        "n": 1464,
+        "seconds": 1468.538833046001,
+        "mae": 0.8455499324283302,
+        "balanced_mae": 0.8455499324283302,
+        "point_mae": 0.8471463228754287,
+        "rmse": 1.7241563258854182,
+        "p95_abs": 4.0424252230235185,
+        "bias": 0.5381782513464313,
+        "underprediction_p95": 1.7910142531652946,
+        "underprediction_max": 3.6115290077620585
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "all",
+    "scope": "macro",
+    "value": "work",
+    "cohort_id": "210150351c04e12a2f921685ea48fd4facd2ec45ce77d914dd910710f6dcdfe6",
+    "metrics": {
+      "G1": {
+        "n": 290,
+        "seconds": 290.2640567059989,
+        "mae": 7.187686861648921,
+        "balanced_mae": 7.187686861648921,
+        "point_mae": 7.186900484977747,
+        "rmse": 7.47952305350841,
+        "p95_abs": 10.655804811583792,
+        "bias": 7.184741753344783,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.3650288739690666
+      },
+      "G2": {
+        "n": 290,
+        "seconds": 290.2640567059989,
+        "mae": 4.990748888971251,
+        "balanced_mae": 4.990748888971251,
+        "point_mae": 4.9893184095607515,
+        "rmse": 5.625435989417342,
+        "p95_abs": 9.260841019687568,
+        "bias": 4.906489274718167,
+        "underprediction_p95": 0.2510934899125599,
+        "underprediction_max": 1.2710939390100222
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "all",
+    "scope": "regime",
+    "value": "cooldown",
+    "cohort_id": "5e7ce1faa164cd3e8e8828d80c1368bb71f47e80e93f08ff316f9aad1b35130a",
+    "metrics": {
+      "G1": {
+        "n": 1464,
+        "seconds": 1468.538833046001,
+        "mae": 0.4553317231439151,
+        "balanced_mae": 0.4553317231439151,
+        "point_mae": 0.4560858055640447,
+        "rmse": 0.9698821248657421,
+        "p95_abs": 2.604268198597909,
+        "bias": 0.1092337980507084,
+        "underprediction_p95": 1.3627124208148251,
+        "underprediction_max": 4.5906568568751
+      },
+      "G2": {
+        "n": 1464,
+        "seconds": 1468.538833046001,
+        "mae": 0.8455499324283302,
+        "balanced_mae": 0.8455499324283302,
+        "point_mae": 0.8471463228754287,
+        "rmse": 1.7241563258854182,
+        "p95_abs": 4.0424252230235185,
+        "bias": 0.5381782513464313,
+        "underprediction_p95": 1.7910142531652946,
+        "underprediction_max": 3.6115290077620585
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "all",
+    "scope": "regime",
+    "value": "idle",
+    "cohort_id": "254999d779fc4cbb6c4bb16a53cddd4a737e2253b7afa25c53c2dd2000e6681c",
+    "metrics": {
+      "G1": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.30666976143484775,
+        "balanced_mae": 0.30666976143484775,
+        "point_mae": 0.30741158475392205,
+        "rmse": 0.9275966279996173,
+        "p95_abs": 2.956785051138053,
+        "bias": -0.12829400390169107,
+        "underprediction_p95": 2.180750650403507,
+        "underprediction_max": 4.299382919378296
+      },
+      "G2": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.22686482898020177,
+        "balanced_mae": 0.22686482898020177,
+        "point_mae": 0.2274922060947067,
+        "rmse": 0.675239615422777,
+        "p95_abs": 2.119988438818353,
+        "bias": -0.15129246640724958,
+        "underprediction_p95": 2.119988438818353,
+        "underprediction_max": 3.4376725546737887
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "all",
+    "scope": "regime",
+    "value": "midload_rise",
+    "cohort_id": "cf49ae49b0a035a2a116239f4dc50729dafcd2e05582185c16b99b5425038d44",
+    "metrics": {
+      "G1": {
+        "n": 152,
+        "seconds": 152.0604535629991,
+        "mae": 6.6080835867945344,
+        "balanced_mae": 6.6080835867945344,
+        "point_mae": 6.6085508754725,
+        "rmse": 6.9782456562407855,
+        "p95_abs": 10.243243187708144,
+        "bias": 6.602461749796372,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.3650288739690666
+      },
+      "G2": {
+        "n": 152,
+        "seconds": 152.0604535629991,
+        "mae": 3.2745622124322886,
+        "balanced_mae": 3.2745622124322886,
+        "point_mae": 3.2748187077739908,
+        "rmse": 3.9188077184232335,
+        "p95_abs": 6.888029891057789,
+        "bias": 3.1137213305559883,
+        "underprediction_p95": 0.6226101992452421,
+        "underprediction_max": 1.2710939390100222
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "all",
+    "scope": "regime",
+    "value": "midload_sustained",
+    "cohort_id": "d3925eacb492ebccd443bff2086b777272b61c3a1beff320c9208ce16f169e26",
+    "metrics": {
+      "G1": {
+        "n": 138,
+        "seconds": 138.20360314299978,
+        "mae": 7.825403497515244,
+        "balanced_mae": 7.825403497515244,
+        "point_mae": 7.823923243273384,
+        "rmse": 7.994827488660892,
+        "p95_abs": 11.139775933930721,
+        "bias": 7.825403497515244,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      },
+      "G2": {
+        "n": 138,
+        "seconds": 138.20360314299978,
+        "mae": 6.8790073605197115,
+        "balanced_mae": 6.8790073605197115,
+        "point_mae": 6.877752863702692,
+        "rmse": 7.0403944841683215,
+        "p95_abs": 9.354352033410265,
+        "bias": 6.8790073605197115,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "all",
+    "scope": "phase",
+    "value": "M180",
+    "cohort_id": "b5c8800702df40bf20427c29719ea49b423fbab2ce3244eca2672f4a91f77ddf",
+    "metrics": {
+      "G1": {
+        "n": 193,
+        "seconds": 193.2621205739997,
+        "mae": 7.045327378790881,
+        "balanced_mae": 7.045327378790881,
+        "point_mae": 7.044130217009334,
+        "rmse": 7.315284795577606,
+        "p95_abs": 11.098413355523629,
+        "bias": 7.044685460604267,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.06193437456767725
+      },
+      "G2": {
+        "n": 193,
+        "seconds": 193.2621205739997,
+        "mae": 5.444465911627184,
+        "balanced_mae": 5.444465911627184,
+        "point_mae": 5.443114585678457,
+        "rmse": 6.040609619072904,
+        "p95_abs": 9.307019862873743,
+        "bias": 5.3739645443114705,
+        "underprediction_p95": 0.03940155948729458,
+        "underprediction_max": 1.1609722197113683
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "all",
+    "scope": "phase",
+    "value": "M20",
+    "cohort_id": "edfcf698e390aaac7fdff280c57e9f4560318466ac25ce3a0e7b3648b3b07c6d",
+    "metrics": {
+      "G1": {
+        "n": 32,
+        "seconds": 32.036958658,
+        "mae": 7.242290971856786,
+        "balanced_mae": 7.242290971856786,
+        "point_mae": 7.242307558060894,
+        "rmse": 7.260094525161206,
+        "p95_abs": 7.890183924362952,
+        "bias": 7.242290971856786,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      },
+      "G2": {
+        "n": 32,
+        "seconds": 32.036958658,
+        "mae": 3.248836679578397,
+        "balanced_mae": 3.248836679578397,
+        "point_mae": 3.2489247390635194,
+        "rmse": 3.29782896401984,
+        "p95_abs": 4.042594883811752,
+        "bias": 3.248836679578397,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "all",
+    "scope": "phase",
+    "value": "M60",
+    "cohort_id": "5f055eae9b719526afadc0a74a34c489b5e59f44c319b05503a77487d594b780",
+    "metrics": {
+      "G1": {
+        "n": 65,
+        "seconds": 64.96497747399917,
+        "mae": 7.584259706301842,
+        "balanced_mae": 7.584259706301842,
+        "point_mae": 7.5835410292738,
+        "rmse": 8.04778101375581,
+        "p95_abs": 10.428700875408273,
+        "bias": 7.573010558803707,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.3650288739690666
+      },
+      "G2": {
+        "n": 65,
+        "seconds": 64.96497747399917,
+        "mae": 4.500011483365562,
+        "balanced_mae": 4.500011483365562,
+        "point_mae": 4.498702032102205,
+        "rmse": 5.242084268279701,
+        "p95_abs": 7.0261526225533215,
+        "bias": 4.333270969938657,
+        "underprediction_p95": 0.5820316978016222,
+        "underprediction_max": 1.2710939390100222
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "all",
+    "scope": "phase",
+    "value": "cooldown_1",
+    "cohort_id": "ef8fe54e5b34d3393acb08733f9b068b50cb308e41e3941d936093eabdb86afc",
+    "metrics": {
+      "G1": {
+        "n": 419,
+        "seconds": 420.3508936920007,
+        "mae": 0.5267439098030432,
+        "balanced_mae": 0.5267439098030432,
+        "point_mae": 0.5278395161440467,
+        "rmse": 1.0989527756786062,
+        "p95_abs": 3.1684463273805066,
+        "bias": -0.05823132483194702,
+        "underprediction_p95": 3.03061805790635,
+        "underprediction_max": 4.277426469639892
+      },
+      "G2": {
+        "n": 419,
+        "seconds": 420.3508936920007,
+        "mae": 0.8305435561080821,
+        "balanced_mae": 0.8305435561080821,
+        "point_mae": 0.8323273255542566,
+        "rmse": 1.4861021993106742,
+        "p95_abs": 3.8213479548690303,
+        "bias": 0.3139689252481368,
+        "underprediction_p95": 2.499402746905234,
+        "underprediction_max": 3.41750347369846
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "all",
+    "scope": "phase",
+    "value": "cooldown_2",
+    "cohort_id": "90fe6e84c634ddce6cd26530e9092903e68817f18cd9c4ee2e796ab01fe7c22f",
+    "metrics": {
+      "G1": {
+        "n": 598,
+        "seconds": 599.9166137909997,
+        "mae": 0.44529463009516546,
+        "balanced_mae": 0.44529463009516546,
+        "point_mae": 0.4459470396851035,
+        "rmse": 1.0020276372901182,
+        "p95_abs": 2.8721589323839694,
+        "bias": 0.019284842475658294,
+        "underprediction_p95": 2.181372687171346,
+        "underprediction_max": 4.5906568568751
+      },
+      "G2": {
+        "n": 598,
+        "seconds": 599.9166137909997,
+        "mae": 0.7786399527631986,
+        "balanced_mae": 0.7786399527631986,
+        "point_mae": 0.7799852726409194,
+        "rmse": 1.678315556047866,
+        "p95_abs": 4.5087740199614235,
+        "bias": 0.3974921070070722,
+        "underprediction_p95": 2.058157598202984,
+        "underprediction_max": 3.6115290077620585
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "all",
+    "scope": "phase",
+    "value": "final_cooldown",
+    "cohort_id": "5175e6a5ff5328484ede238faf700b4de826fc10bb5d7300bc0631ddb501532e",
+    "metrics": {
+      "G1": {
+        "n": 447,
+        "seconds": 448.2713255630006,
+        "mae": 0.40179995289647613,
+        "balanced_mae": 0.40179995289647613,
+        "point_mae": 0.4023904526839238,
+        "rmse": 0.7781038191291929,
+        "p95_abs": 1.6285659894173528,
+        "bias": 0.3866461146926501,
+        "underprediction_p95": 0.054004676435450684,
+        "underprediction_max": 0.15535160072175813
+      },
+      "G2": {
+        "n": 447,
+        "seconds": 448.2713255630006,
+        "mae": 0.9491665357622354,
+        "balanced_mae": 0.9491665357622354,
+        "point_mae": 0.9508856247049764,
+        "rmse": 1.9743522879515625,
+        "p95_abs": 5.624494479472797,
+        "bias": 0.9367015021800879,
+        "underprediction_p95": 0.05182352867023637,
+        "underprediction_max": 0.12306889545165944
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "all",
+    "scope": "phase",
+    "value": "resident_background",
+    "cohort_id": "254999d779fc4cbb6c4bb16a53cddd4a737e2253b7afa25c53c2dd2000e6681c",
+    "metrics": {
+      "G1": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.30666976143484775,
+        "balanced_mae": 0.30666976143484775,
+        "point_mae": 0.30741158475392205,
+        "rmse": 0.9275966279996173,
+        "p95_abs": 2.956785051138053,
+        "bias": -0.12829400390169107,
+        "underprediction_p95": 2.180750650403507,
+        "underprediction_max": 4.299382919378296
+      },
+      "G2": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.22686482898020177,
+        "balanced_mae": 0.22686482898020177,
+        "point_mae": 0.2274922060947067,
+        "rmse": 0.675239615422777,
+        "p95_abs": 2.119988438818353,
+        "bias": -0.15129246640724958,
+        "underprediction_p95": 2.119988438818353,
+        "underprediction_max": 3.4376725546737887
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "confirmed_normal",
+    "scope": "all",
+    "value": "all",
+    "cohort_id": "b0364339f73d5992e94e9c0acdadb36b499765b822f3f923d590b7e0e6c4e52f",
+    "metrics": {
+      "G1": {
+        "n": 2291,
+        "seconds": 2297.5650597450003,
+        "mae": 1.2710071115963073,
+        "balanced_mae": 2.649896115409228,
+        "point_mae": 1.2732391012667676,
+        "rmse": 2.8054656354741807,
+        "p95_abs": 7.155331273705762,
+        "bias": 0.9474231847570945,
+        "underprediction_p95": 0.8285425785194747,
+        "underprediction_max": 4.5906568568751
+      },
+      "G2": {
+        "n": 2291,
+        "seconds": 2297.5650597450003,
+        "mae": 1.2241586392477615,
+        "balanced_mae": 2.0210545501265944,
+        "point_mae": 1.2262277914164574,
+        "rmse": 2.450499231735946,
+        "p95_abs": 6.210565659520828,
+        "bias": 0.928375227380402,
+        "underprediction_p95": 1.4921444652243991,
+        "underprediction_max": 3.6115290077620585
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "confirmed_normal",
+    "scope": "run",
+    "value": "M",
+    "cohort_id": "b0364339f73d5992e94e9c0acdadb36b499765b822f3f923d590b7e0e6c4e52f",
+    "metrics": {
+      "G1": {
+        "n": 2291,
+        "seconds": 2297.5650597450003,
+        "mae": 1.2710071115963073,
+        "balanced_mae": 2.649896115409228,
+        "point_mae": 1.2732391012667676,
+        "rmse": 2.8054656354741807,
+        "p95_abs": 7.155331273705762,
+        "bias": 0.9474231847570945,
+        "underprediction_p95": 0.8285425785194747,
+        "underprediction_max": 4.5906568568751
+      },
+      "G2": {
+        "n": 2291,
+        "seconds": 2297.5650597450003,
+        "mae": 1.2241586392477615,
+        "balanced_mae": 2.0210545501265944,
+        "point_mae": 1.2262277914164574,
+        "rmse": 2.450499231735946,
+        "p95_abs": 6.210565659520828,
+        "bias": 0.928375227380402,
+        "underprediction_p95": 1.4921444652243991,
+        "underprediction_max": 3.6115290077620585
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "confirmed_normal",
+    "scope": "macro",
+    "value": "background",
+    "cohort_id": "254999d779fc4cbb6c4bb16a53cddd4a737e2253b7afa25c53c2dd2000e6681c",
+    "metrics": {
+      "G1": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.30666976143484775,
+        "balanced_mae": 0.30666976143484775,
+        "point_mae": 0.30741158475392205,
+        "rmse": 0.9275966279996173,
+        "p95_abs": 2.956785051138053,
+        "bias": -0.12829400390169107,
+        "underprediction_p95": 2.180750650403507,
+        "underprediction_max": 4.299382919378296
+      },
+      "G2": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.22686482898020177,
+        "balanced_mae": 0.22686482898020177,
+        "point_mae": 0.2274922060947067,
+        "rmse": 0.675239615422777,
+        "p95_abs": 2.119988438818353,
+        "bias": -0.15129246640724958,
+        "underprediction_p95": 2.119988438818353,
+        "underprediction_max": 3.4376725546737887
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "confirmed_normal",
+    "scope": "macro",
+    "value": "recovery",
+    "cohort_id": "5e7ce1faa164cd3e8e8828d80c1368bb71f47e80e93f08ff316f9aad1b35130a",
+    "metrics": {
+      "G1": {
+        "n": 1464,
+        "seconds": 1468.538833046001,
+        "mae": 0.4553317231439151,
+        "balanced_mae": 0.4553317231439151,
+        "point_mae": 0.4560858055640447,
+        "rmse": 0.9698821248657421,
+        "p95_abs": 2.604268198597909,
+        "bias": 0.1092337980507084,
+        "underprediction_p95": 1.3627124208148251,
+        "underprediction_max": 4.5906568568751
+      },
+      "G2": {
+        "n": 1464,
+        "seconds": 1468.538833046001,
+        "mae": 0.8455499324283302,
+        "balanced_mae": 0.8455499324283302,
+        "point_mae": 0.8471463228754287,
+        "rmse": 1.7241563258854182,
+        "p95_abs": 4.0424252230235185,
+        "bias": 0.5381782513464313,
+        "underprediction_p95": 1.7910142531652946,
+        "underprediction_max": 3.6115290077620585
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "confirmed_normal",
+    "scope": "macro",
+    "value": "work",
+    "cohort_id": "210150351c04e12a2f921685ea48fd4facd2ec45ce77d914dd910710f6dcdfe6",
+    "metrics": {
+      "G1": {
+        "n": 290,
+        "seconds": 290.2640567059989,
+        "mae": 7.187686861648921,
+        "balanced_mae": 7.187686861648921,
+        "point_mae": 7.186900484977747,
+        "rmse": 7.47952305350841,
+        "p95_abs": 10.655804811583792,
+        "bias": 7.184741753344783,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.3650288739690666
+      },
+      "G2": {
+        "n": 290,
+        "seconds": 290.2640567059989,
+        "mae": 4.990748888971251,
+        "balanced_mae": 4.990748888971251,
+        "point_mae": 4.9893184095607515,
+        "rmse": 5.625435989417342,
+        "p95_abs": 9.260841019687568,
+        "bias": 4.906489274718167,
+        "underprediction_p95": 0.2510934899125599,
+        "underprediction_max": 1.2710939390100222
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "confirmed_normal",
+    "scope": "regime",
+    "value": "cooldown",
+    "cohort_id": "5e7ce1faa164cd3e8e8828d80c1368bb71f47e80e93f08ff316f9aad1b35130a",
+    "metrics": {
+      "G1": {
+        "n": 1464,
+        "seconds": 1468.538833046001,
+        "mae": 0.4553317231439151,
+        "balanced_mae": 0.4553317231439151,
+        "point_mae": 0.4560858055640447,
+        "rmse": 0.9698821248657421,
+        "p95_abs": 2.604268198597909,
+        "bias": 0.1092337980507084,
+        "underprediction_p95": 1.3627124208148251,
+        "underprediction_max": 4.5906568568751
+      },
+      "G2": {
+        "n": 1464,
+        "seconds": 1468.538833046001,
+        "mae": 0.8455499324283302,
+        "balanced_mae": 0.8455499324283302,
+        "point_mae": 0.8471463228754287,
+        "rmse": 1.7241563258854182,
+        "p95_abs": 4.0424252230235185,
+        "bias": 0.5381782513464313,
+        "underprediction_p95": 1.7910142531652946,
+        "underprediction_max": 3.6115290077620585
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "confirmed_normal",
+    "scope": "regime",
+    "value": "idle",
+    "cohort_id": "254999d779fc4cbb6c4bb16a53cddd4a737e2253b7afa25c53c2dd2000e6681c",
+    "metrics": {
+      "G1": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.30666976143484775,
+        "balanced_mae": 0.30666976143484775,
+        "point_mae": 0.30741158475392205,
+        "rmse": 0.9275966279996173,
+        "p95_abs": 2.956785051138053,
+        "bias": -0.12829400390169107,
+        "underprediction_p95": 2.180750650403507,
+        "underprediction_max": 4.299382919378296
+      },
+      "G2": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.22686482898020177,
+        "balanced_mae": 0.22686482898020177,
+        "point_mae": 0.2274922060947067,
+        "rmse": 0.675239615422777,
+        "p95_abs": 2.119988438818353,
+        "bias": -0.15129246640724958,
+        "underprediction_p95": 2.119988438818353,
+        "underprediction_max": 3.4376725546737887
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "confirmed_normal",
+    "scope": "regime",
+    "value": "midload_rise",
+    "cohort_id": "cf49ae49b0a035a2a116239f4dc50729dafcd2e05582185c16b99b5425038d44",
+    "metrics": {
+      "G1": {
+        "n": 152,
+        "seconds": 152.0604535629991,
+        "mae": 6.6080835867945344,
+        "balanced_mae": 6.6080835867945344,
+        "point_mae": 6.6085508754725,
+        "rmse": 6.9782456562407855,
+        "p95_abs": 10.243243187708144,
+        "bias": 6.602461749796372,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.3650288739690666
+      },
+      "G2": {
+        "n": 152,
+        "seconds": 152.0604535629991,
+        "mae": 3.2745622124322886,
+        "balanced_mae": 3.2745622124322886,
+        "point_mae": 3.2748187077739908,
+        "rmse": 3.9188077184232335,
+        "p95_abs": 6.888029891057789,
+        "bias": 3.1137213305559883,
+        "underprediction_p95": 0.6226101992452421,
+        "underprediction_max": 1.2710939390100222
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "confirmed_normal",
+    "scope": "regime",
+    "value": "midload_sustained",
+    "cohort_id": "d3925eacb492ebccd443bff2086b777272b61c3a1beff320c9208ce16f169e26",
+    "metrics": {
+      "G1": {
+        "n": 138,
+        "seconds": 138.20360314299978,
+        "mae": 7.825403497515244,
+        "balanced_mae": 7.825403497515244,
+        "point_mae": 7.823923243273384,
+        "rmse": 7.994827488660892,
+        "p95_abs": 11.139775933930721,
+        "bias": 7.825403497515244,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      },
+      "G2": {
+        "n": 138,
+        "seconds": 138.20360314299978,
+        "mae": 6.8790073605197115,
+        "balanced_mae": 6.8790073605197115,
+        "point_mae": 6.877752863702692,
+        "rmse": 7.0403944841683215,
+        "p95_abs": 9.354352033410265,
+        "bias": 6.8790073605197115,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "confirmed_normal",
+    "scope": "phase",
+    "value": "M180",
+    "cohort_id": "b5c8800702df40bf20427c29719ea49b423fbab2ce3244eca2672f4a91f77ddf",
+    "metrics": {
+      "G1": {
+        "n": 193,
+        "seconds": 193.2621205739997,
+        "mae": 7.045327378790881,
+        "balanced_mae": 7.045327378790881,
+        "point_mae": 7.044130217009334,
+        "rmse": 7.315284795577606,
+        "p95_abs": 11.098413355523629,
+        "bias": 7.044685460604267,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.06193437456767725
+      },
+      "G2": {
+        "n": 193,
+        "seconds": 193.2621205739997,
+        "mae": 5.444465911627184,
+        "balanced_mae": 5.444465911627184,
+        "point_mae": 5.443114585678457,
+        "rmse": 6.040609619072904,
+        "p95_abs": 9.307019862873743,
+        "bias": 5.3739645443114705,
+        "underprediction_p95": 0.03940155948729458,
+        "underprediction_max": 1.1609722197113683
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "confirmed_normal",
+    "scope": "phase",
+    "value": "M20",
+    "cohort_id": "edfcf698e390aaac7fdff280c57e9f4560318466ac25ce3a0e7b3648b3b07c6d",
+    "metrics": {
+      "G1": {
+        "n": 32,
+        "seconds": 32.036958658,
+        "mae": 7.242290971856786,
+        "balanced_mae": 7.242290971856786,
+        "point_mae": 7.242307558060894,
+        "rmse": 7.260094525161206,
+        "p95_abs": 7.890183924362952,
+        "bias": 7.242290971856786,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      },
+      "G2": {
+        "n": 32,
+        "seconds": 32.036958658,
+        "mae": 3.248836679578397,
+        "balanced_mae": 3.248836679578397,
+        "point_mae": 3.2489247390635194,
+        "rmse": 3.29782896401984,
+        "p95_abs": 4.042594883811752,
+        "bias": 3.248836679578397,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "confirmed_normal",
+    "scope": "phase",
+    "value": "M60",
+    "cohort_id": "5f055eae9b719526afadc0a74a34c489b5e59f44c319b05503a77487d594b780",
+    "metrics": {
+      "G1": {
+        "n": 65,
+        "seconds": 64.96497747399917,
+        "mae": 7.584259706301842,
+        "balanced_mae": 7.584259706301842,
+        "point_mae": 7.5835410292738,
+        "rmse": 8.04778101375581,
+        "p95_abs": 10.428700875408273,
+        "bias": 7.573010558803707,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.3650288739690666
+      },
+      "G2": {
+        "n": 65,
+        "seconds": 64.96497747399917,
+        "mae": 4.500011483365562,
+        "balanced_mae": 4.500011483365562,
+        "point_mae": 4.498702032102205,
+        "rmse": 5.242084268279701,
+        "p95_abs": 7.0261526225533215,
+        "bias": 4.333270969938657,
+        "underprediction_p95": 0.5820316978016222,
+        "underprediction_max": 1.2710939390100222
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "confirmed_normal",
+    "scope": "phase",
+    "value": "cooldown_1",
+    "cohort_id": "ef8fe54e5b34d3393acb08733f9b068b50cb308e41e3941d936093eabdb86afc",
+    "metrics": {
+      "G1": {
+        "n": 419,
+        "seconds": 420.3508936920007,
+        "mae": 0.5267439098030432,
+        "balanced_mae": 0.5267439098030432,
+        "point_mae": 0.5278395161440467,
+        "rmse": 1.0989527756786062,
+        "p95_abs": 3.1684463273805066,
+        "bias": -0.05823132483194702,
+        "underprediction_p95": 3.03061805790635,
+        "underprediction_max": 4.277426469639892
+      },
+      "G2": {
+        "n": 419,
+        "seconds": 420.3508936920007,
+        "mae": 0.8305435561080821,
+        "balanced_mae": 0.8305435561080821,
+        "point_mae": 0.8323273255542566,
+        "rmse": 1.4861021993106742,
+        "p95_abs": 3.8213479548690303,
+        "bias": 0.3139689252481368,
+        "underprediction_p95": 2.499402746905234,
+        "underprediction_max": 3.41750347369846
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "confirmed_normal",
+    "scope": "phase",
+    "value": "cooldown_2",
+    "cohort_id": "90fe6e84c634ddce6cd26530e9092903e68817f18cd9c4ee2e796ab01fe7c22f",
+    "metrics": {
+      "G1": {
+        "n": 598,
+        "seconds": 599.9166137909997,
+        "mae": 0.44529463009516546,
+        "balanced_mae": 0.44529463009516546,
+        "point_mae": 0.4459470396851035,
+        "rmse": 1.0020276372901182,
+        "p95_abs": 2.8721589323839694,
+        "bias": 0.019284842475658294,
+        "underprediction_p95": 2.181372687171346,
+        "underprediction_max": 4.5906568568751
+      },
+      "G2": {
+        "n": 598,
+        "seconds": 599.9166137909997,
+        "mae": 0.7786399527631986,
+        "balanced_mae": 0.7786399527631986,
+        "point_mae": 0.7799852726409194,
+        "rmse": 1.678315556047866,
+        "p95_abs": 4.5087740199614235,
+        "bias": 0.3974921070070722,
+        "underprediction_p95": 2.058157598202984,
+        "underprediction_max": 3.6115290077620585
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "confirmed_normal",
+    "scope": "phase",
+    "value": "final_cooldown",
+    "cohort_id": "5175e6a5ff5328484ede238faf700b4de826fc10bb5d7300bc0631ddb501532e",
+    "metrics": {
+      "G1": {
+        "n": 447,
+        "seconds": 448.2713255630006,
+        "mae": 0.40179995289647613,
+        "balanced_mae": 0.40179995289647613,
+        "point_mae": 0.4023904526839238,
+        "rmse": 0.7781038191291929,
+        "p95_abs": 1.6285659894173528,
+        "bias": 0.3866461146926501,
+        "underprediction_p95": 0.054004676435450684,
+        "underprediction_max": 0.15535160072175813
+      },
+      "G2": {
+        "n": 447,
+        "seconds": 448.2713255630006,
+        "mae": 0.9491665357622354,
+        "balanced_mae": 0.9491665357622354,
+        "point_mae": 0.9508856247049764,
+        "rmse": 1.9743522879515625,
+        "p95_abs": 5.624494479472797,
+        "bias": 0.9367015021800879,
+        "underprediction_p95": 0.05182352867023637,
+        "underprediction_max": 0.12306889545165944
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "confirmed_normal",
+    "scope": "phase",
+    "value": "resident_background",
+    "cohort_id": "254999d779fc4cbb6c4bb16a53cddd4a737e2253b7afa25c53c2dd2000e6681c",
+    "metrics": {
+      "G1": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.30666976143484775,
+        "balanced_mae": 0.30666976143484775,
+        "point_mae": 0.30741158475392205,
+        "rmse": 0.9275966279996173,
+        "p95_abs": 2.956785051138053,
+        "bias": -0.12829400390169107,
+        "underprediction_p95": 2.180750650403507,
+        "underprediction_max": 4.299382919378296
+      },
+      "G2": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.22686482898020177,
+        "balanced_mae": 0.22686482898020177,
+        "point_mae": 0.2274922060947067,
+        "rmse": 0.675239615422777,
+        "p95_abs": 2.119988438818353,
+        "bias": -0.15129246640724958,
+        "underprediction_p95": 2.119988438818353,
+        "underprediction_max": 3.4376725546737887
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "strict_legacy",
+    "scope": "all",
+    "value": "all",
+    "cohort_id": "b0364339f73d5992e94e9c0acdadb36b499765b822f3f923d590b7e0e6c4e52f",
+    "metrics": {
+      "G1": {
+        "n": 2291,
+        "seconds": 2297.5650597450003,
+        "mae": 1.2710071115963073,
+        "balanced_mae": 2.649896115409228,
+        "point_mae": 1.2732391012667676,
+        "rmse": 2.8054656354741807,
+        "p95_abs": 7.155331273705762,
+        "bias": 0.9474231847570945,
+        "underprediction_p95": 0.8285425785194747,
+        "underprediction_max": 4.5906568568751
+      },
+      "G2": {
+        "n": 2291,
+        "seconds": 2297.5650597450003,
+        "mae": 1.2241586392477615,
+        "balanced_mae": 2.0210545501265944,
+        "point_mae": 1.2262277914164574,
+        "rmse": 2.450499231735946,
+        "p95_abs": 6.210565659520828,
+        "bias": 0.928375227380402,
+        "underprediction_p95": 1.4921444652243991,
+        "underprediction_max": 3.6115290077620585
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "strict_legacy",
+    "scope": "run",
+    "value": "M",
+    "cohort_id": "b0364339f73d5992e94e9c0acdadb36b499765b822f3f923d590b7e0e6c4e52f",
+    "metrics": {
+      "G1": {
+        "n": 2291,
+        "seconds": 2297.5650597450003,
+        "mae": 1.2710071115963073,
+        "balanced_mae": 2.649896115409228,
+        "point_mae": 1.2732391012667676,
+        "rmse": 2.8054656354741807,
+        "p95_abs": 7.155331273705762,
+        "bias": 0.9474231847570945,
+        "underprediction_p95": 0.8285425785194747,
+        "underprediction_max": 4.5906568568751
+      },
+      "G2": {
+        "n": 2291,
+        "seconds": 2297.5650597450003,
+        "mae": 1.2241586392477615,
+        "balanced_mae": 2.0210545501265944,
+        "point_mae": 1.2262277914164574,
+        "rmse": 2.450499231735946,
+        "p95_abs": 6.210565659520828,
+        "bias": 0.928375227380402,
+        "underprediction_p95": 1.4921444652243991,
+        "underprediction_max": 3.6115290077620585
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "strict_legacy",
+    "scope": "macro",
+    "value": "background",
+    "cohort_id": "254999d779fc4cbb6c4bb16a53cddd4a737e2253b7afa25c53c2dd2000e6681c",
+    "metrics": {
+      "G1": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.30666976143484775,
+        "balanced_mae": 0.30666976143484775,
+        "point_mae": 0.30741158475392205,
+        "rmse": 0.9275966279996173,
+        "p95_abs": 2.956785051138053,
+        "bias": -0.12829400390169107,
+        "underprediction_p95": 2.180750650403507,
+        "underprediction_max": 4.299382919378296
+      },
+      "G2": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.22686482898020177,
+        "balanced_mae": 0.22686482898020177,
+        "point_mae": 0.2274922060947067,
+        "rmse": 0.675239615422777,
+        "p95_abs": 2.119988438818353,
+        "bias": -0.15129246640724958,
+        "underprediction_p95": 2.119988438818353,
+        "underprediction_max": 3.4376725546737887
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "strict_legacy",
+    "scope": "macro",
+    "value": "recovery",
+    "cohort_id": "5e7ce1faa164cd3e8e8828d80c1368bb71f47e80e93f08ff316f9aad1b35130a",
+    "metrics": {
+      "G1": {
+        "n": 1464,
+        "seconds": 1468.538833046001,
+        "mae": 0.4553317231439151,
+        "balanced_mae": 0.4553317231439151,
+        "point_mae": 0.4560858055640447,
+        "rmse": 0.9698821248657421,
+        "p95_abs": 2.604268198597909,
+        "bias": 0.1092337980507084,
+        "underprediction_p95": 1.3627124208148251,
+        "underprediction_max": 4.5906568568751
+      },
+      "G2": {
+        "n": 1464,
+        "seconds": 1468.538833046001,
+        "mae": 0.8455499324283302,
+        "balanced_mae": 0.8455499324283302,
+        "point_mae": 0.8471463228754287,
+        "rmse": 1.7241563258854182,
+        "p95_abs": 4.0424252230235185,
+        "bias": 0.5381782513464313,
+        "underprediction_p95": 1.7910142531652946,
+        "underprediction_max": 3.6115290077620585
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "strict_legacy",
+    "scope": "macro",
+    "value": "work",
+    "cohort_id": "210150351c04e12a2f921685ea48fd4facd2ec45ce77d914dd910710f6dcdfe6",
+    "metrics": {
+      "G1": {
+        "n": 290,
+        "seconds": 290.2640567059989,
+        "mae": 7.187686861648921,
+        "balanced_mae": 7.187686861648921,
+        "point_mae": 7.186900484977747,
+        "rmse": 7.47952305350841,
+        "p95_abs": 10.655804811583792,
+        "bias": 7.184741753344783,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.3650288739690666
+      },
+      "G2": {
+        "n": 290,
+        "seconds": 290.2640567059989,
+        "mae": 4.990748888971251,
+        "balanced_mae": 4.990748888971251,
+        "point_mae": 4.9893184095607515,
+        "rmse": 5.625435989417342,
+        "p95_abs": 9.260841019687568,
+        "bias": 4.906489274718167,
+        "underprediction_p95": 0.2510934899125599,
+        "underprediction_max": 1.2710939390100222
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "strict_legacy",
+    "scope": "regime",
+    "value": "cooldown",
+    "cohort_id": "5e7ce1faa164cd3e8e8828d80c1368bb71f47e80e93f08ff316f9aad1b35130a",
+    "metrics": {
+      "G1": {
+        "n": 1464,
+        "seconds": 1468.538833046001,
+        "mae": 0.4553317231439151,
+        "balanced_mae": 0.4553317231439151,
+        "point_mae": 0.4560858055640447,
+        "rmse": 0.9698821248657421,
+        "p95_abs": 2.604268198597909,
+        "bias": 0.1092337980507084,
+        "underprediction_p95": 1.3627124208148251,
+        "underprediction_max": 4.5906568568751
+      },
+      "G2": {
+        "n": 1464,
+        "seconds": 1468.538833046001,
+        "mae": 0.8455499324283302,
+        "balanced_mae": 0.8455499324283302,
+        "point_mae": 0.8471463228754287,
+        "rmse": 1.7241563258854182,
+        "p95_abs": 4.0424252230235185,
+        "bias": 0.5381782513464313,
+        "underprediction_p95": 1.7910142531652946,
+        "underprediction_max": 3.6115290077620585
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "strict_legacy",
+    "scope": "regime",
+    "value": "idle",
+    "cohort_id": "254999d779fc4cbb6c4bb16a53cddd4a737e2253b7afa25c53c2dd2000e6681c",
+    "metrics": {
+      "G1": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.30666976143484775,
+        "balanced_mae": 0.30666976143484775,
+        "point_mae": 0.30741158475392205,
+        "rmse": 0.9275966279996173,
+        "p95_abs": 2.956785051138053,
+        "bias": -0.12829400390169107,
+        "underprediction_p95": 2.180750650403507,
+        "underprediction_max": 4.299382919378296
+      },
+      "G2": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.22686482898020177,
+        "balanced_mae": 0.22686482898020177,
+        "point_mae": 0.2274922060947067,
+        "rmse": 0.675239615422777,
+        "p95_abs": 2.119988438818353,
+        "bias": -0.15129246640724958,
+        "underprediction_p95": 2.119988438818353,
+        "underprediction_max": 3.4376725546737887
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "strict_legacy",
+    "scope": "regime",
+    "value": "midload_rise",
+    "cohort_id": "cf49ae49b0a035a2a116239f4dc50729dafcd2e05582185c16b99b5425038d44",
+    "metrics": {
+      "G1": {
+        "n": 152,
+        "seconds": 152.0604535629991,
+        "mae": 6.6080835867945344,
+        "balanced_mae": 6.6080835867945344,
+        "point_mae": 6.6085508754725,
+        "rmse": 6.9782456562407855,
+        "p95_abs": 10.243243187708144,
+        "bias": 6.602461749796372,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.3650288739690666
+      },
+      "G2": {
+        "n": 152,
+        "seconds": 152.0604535629991,
+        "mae": 3.2745622124322886,
+        "balanced_mae": 3.2745622124322886,
+        "point_mae": 3.2748187077739908,
+        "rmse": 3.9188077184232335,
+        "p95_abs": 6.888029891057789,
+        "bias": 3.1137213305559883,
+        "underprediction_p95": 0.6226101992452421,
+        "underprediction_max": 1.2710939390100222
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "strict_legacy",
+    "scope": "regime",
+    "value": "midload_sustained",
+    "cohort_id": "d3925eacb492ebccd443bff2086b777272b61c3a1beff320c9208ce16f169e26",
+    "metrics": {
+      "G1": {
+        "n": 138,
+        "seconds": 138.20360314299978,
+        "mae": 7.825403497515244,
+        "balanced_mae": 7.825403497515244,
+        "point_mae": 7.823923243273384,
+        "rmse": 7.994827488660892,
+        "p95_abs": 11.139775933930721,
+        "bias": 7.825403497515244,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      },
+      "G2": {
+        "n": 138,
+        "seconds": 138.20360314299978,
+        "mae": 6.8790073605197115,
+        "balanced_mae": 6.8790073605197115,
+        "point_mae": 6.877752863702692,
+        "rmse": 7.0403944841683215,
+        "p95_abs": 9.354352033410265,
+        "bias": 6.8790073605197115,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "strict_legacy",
+    "scope": "phase",
+    "value": "M180",
+    "cohort_id": "b5c8800702df40bf20427c29719ea49b423fbab2ce3244eca2672f4a91f77ddf",
+    "metrics": {
+      "G1": {
+        "n": 193,
+        "seconds": 193.2621205739997,
+        "mae": 7.045327378790881,
+        "balanced_mae": 7.045327378790881,
+        "point_mae": 7.044130217009334,
+        "rmse": 7.315284795577606,
+        "p95_abs": 11.098413355523629,
+        "bias": 7.044685460604267,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.06193437456767725
+      },
+      "G2": {
+        "n": 193,
+        "seconds": 193.2621205739997,
+        "mae": 5.444465911627184,
+        "balanced_mae": 5.444465911627184,
+        "point_mae": 5.443114585678457,
+        "rmse": 6.040609619072904,
+        "p95_abs": 9.307019862873743,
+        "bias": 5.3739645443114705,
+        "underprediction_p95": 0.03940155948729458,
+        "underprediction_max": 1.1609722197113683
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "strict_legacy",
+    "scope": "phase",
+    "value": "M20",
+    "cohort_id": "edfcf698e390aaac7fdff280c57e9f4560318466ac25ce3a0e7b3648b3b07c6d",
+    "metrics": {
+      "G1": {
+        "n": 32,
+        "seconds": 32.036958658,
+        "mae": 7.242290971856786,
+        "balanced_mae": 7.242290971856786,
+        "point_mae": 7.242307558060894,
+        "rmse": 7.260094525161206,
+        "p95_abs": 7.890183924362952,
+        "bias": 7.242290971856786,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      },
+      "G2": {
+        "n": 32,
+        "seconds": 32.036958658,
+        "mae": 3.248836679578397,
+        "balanced_mae": 3.248836679578397,
+        "point_mae": 3.2489247390635194,
+        "rmse": 3.29782896401984,
+        "p95_abs": 4.042594883811752,
+        "bias": 3.248836679578397,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "strict_legacy",
+    "scope": "phase",
+    "value": "M60",
+    "cohort_id": "5f055eae9b719526afadc0a74a34c489b5e59f44c319b05503a77487d594b780",
+    "metrics": {
+      "G1": {
+        "n": 65,
+        "seconds": 64.96497747399917,
+        "mae": 7.584259706301842,
+        "balanced_mae": 7.584259706301842,
+        "point_mae": 7.5835410292738,
+        "rmse": 8.04778101375581,
+        "p95_abs": 10.428700875408273,
+        "bias": 7.573010558803707,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.3650288739690666
+      },
+      "G2": {
+        "n": 65,
+        "seconds": 64.96497747399917,
+        "mae": 4.500011483365562,
+        "balanced_mae": 4.500011483365562,
+        "point_mae": 4.498702032102205,
+        "rmse": 5.242084268279701,
+        "p95_abs": 7.0261526225533215,
+        "bias": 4.333270969938657,
+        "underprediction_p95": 0.5820316978016222,
+        "underprediction_max": 1.2710939390100222
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "strict_legacy",
+    "scope": "phase",
+    "value": "cooldown_1",
+    "cohort_id": "ef8fe54e5b34d3393acb08733f9b068b50cb308e41e3941d936093eabdb86afc",
+    "metrics": {
+      "G1": {
+        "n": 419,
+        "seconds": 420.3508936920007,
+        "mae": 0.5267439098030432,
+        "balanced_mae": 0.5267439098030432,
+        "point_mae": 0.5278395161440467,
+        "rmse": 1.0989527756786062,
+        "p95_abs": 3.1684463273805066,
+        "bias": -0.05823132483194702,
+        "underprediction_p95": 3.03061805790635,
+        "underprediction_max": 4.277426469639892
+      },
+      "G2": {
+        "n": 419,
+        "seconds": 420.3508936920007,
+        "mae": 0.8305435561080821,
+        "balanced_mae": 0.8305435561080821,
+        "point_mae": 0.8323273255542566,
+        "rmse": 1.4861021993106742,
+        "p95_abs": 3.8213479548690303,
+        "bias": 0.3139689252481368,
+        "underprediction_p95": 2.499402746905234,
+        "underprediction_max": 3.41750347369846
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "strict_legacy",
+    "scope": "phase",
+    "value": "cooldown_2",
+    "cohort_id": "90fe6e84c634ddce6cd26530e9092903e68817f18cd9c4ee2e796ab01fe7c22f",
+    "metrics": {
+      "G1": {
+        "n": 598,
+        "seconds": 599.9166137909997,
+        "mae": 0.44529463009516546,
+        "balanced_mae": 0.44529463009516546,
+        "point_mae": 0.4459470396851035,
+        "rmse": 1.0020276372901182,
+        "p95_abs": 2.8721589323839694,
+        "bias": 0.019284842475658294,
+        "underprediction_p95": 2.181372687171346,
+        "underprediction_max": 4.5906568568751
+      },
+      "G2": {
+        "n": 598,
+        "seconds": 599.9166137909997,
+        "mae": 0.7786399527631986,
+        "balanced_mae": 0.7786399527631986,
+        "point_mae": 0.7799852726409194,
+        "rmse": 1.678315556047866,
+        "p95_abs": 4.5087740199614235,
+        "bias": 0.3974921070070722,
+        "underprediction_p95": 2.058157598202984,
+        "underprediction_max": 3.6115290077620585
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "strict_legacy",
+    "scope": "phase",
+    "value": "final_cooldown",
+    "cohort_id": "5175e6a5ff5328484ede238faf700b4de826fc10bb5d7300bc0631ddb501532e",
+    "metrics": {
+      "G1": {
+        "n": 447,
+        "seconds": 448.2713255630006,
+        "mae": 0.40179995289647613,
+        "balanced_mae": 0.40179995289647613,
+        "point_mae": 0.4023904526839238,
+        "rmse": 0.7781038191291929,
+        "p95_abs": 1.6285659894173528,
+        "bias": 0.3866461146926501,
+        "underprediction_p95": 0.054004676435450684,
+        "underprediction_max": 0.15535160072175813
+      },
+      "G2": {
+        "n": 447,
+        "seconds": 448.2713255630006,
+        "mae": 0.9491665357622354,
+        "balanced_mae": 0.9491665357622354,
+        "point_mae": 0.9508856247049764,
+        "rmse": 1.9743522879515625,
+        "p95_abs": 5.624494479472797,
+        "bias": 0.9367015021800879,
+        "underprediction_p95": 0.05182352867023637,
+        "underprediction_max": 0.12306889545165944
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 45,
+    "context": "strict_legacy",
+    "scope": "phase",
+    "value": "resident_background",
+    "cohort_id": "254999d779fc4cbb6c4bb16a53cddd4a737e2253b7afa25c53c2dd2000e6681c",
+    "metrics": {
+      "G1": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.30666976143484775,
+        "balanced_mae": 0.30666976143484775,
+        "point_mae": 0.30741158475392205,
+        "rmse": 0.9275966279996173,
+        "p95_abs": 2.956785051138053,
+        "bias": -0.12829400390169107,
+        "underprediction_p95": 2.180750650403507,
+        "underprediction_max": 4.299382919378296
+      },
+      "G2": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.22686482898020177,
+        "balanced_mae": 0.22686482898020177,
+        "point_mae": 0.2274922060947067,
+        "rmse": 0.675239615422777,
+        "p95_abs": 2.119988438818353,
+        "bias": -0.15129246640724958,
+        "underprediction_p95": 2.119988438818353,
+        "underprediction_max": 3.4376725546737887
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "all",
+    "scope": "all",
+    "value": "all",
+    "cohort_id": "c94a757facb504e4ff6f8cc479957c973931a466a74b704ebfc8a978ca48ab2d",
+    "metrics": {
+      "G1": {
+        "n": 2201,
+        "seconds": 2207.436112069001,
+        "mae": 2.1776518133854834,
+        "balanced_mae": 4.279085328466958,
+        "point_mae": 2.181926708702885,
+        "rmse": 4.487152889780143,
+        "p95_abs": 11.885061233451658,
+        "bias": 1.8472535380843271,
+        "underprediction_p95": 1.1901558542769237,
+        "underprediction_max": 4.499492238913753
+      },
+      "G2": {
+        "n": 2201,
+        "seconds": 2207.436112069001,
+        "mae": 1.7705035618227956,
+        "balanced_mae": 3.0133813775337037,
+        "point_mae": 1.7738653348192548,
+        "rmse": 3.3133770688030033,
+        "p95_abs": 8.271595079783808,
+        "bias": 1.4570317669177277,
+        "underprediction_p95": 1.6626667004621751,
+        "underprediction_max": 3.6303193231539623
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "all",
+    "scope": "run",
+    "value": "M",
+    "cohort_id": "c94a757facb504e4ff6f8cc479957c973931a466a74b704ebfc8a978ca48ab2d",
+    "metrics": {
+      "G1": {
+        "n": 2201,
+        "seconds": 2207.436112069001,
+        "mae": 2.1776518133854834,
+        "balanced_mae": 4.279085328466958,
+        "point_mae": 2.181926708702885,
+        "rmse": 4.487152889780143,
+        "p95_abs": 11.885061233451658,
+        "bias": 1.8472535380843271,
+        "underprediction_p95": 1.1901558542769237,
+        "underprediction_max": 4.499492238913753
+      },
+      "G2": {
+        "n": 2201,
+        "seconds": 2207.436112069001,
+        "mae": 1.7705035618227956,
+        "balanced_mae": 3.0133813775337037,
+        "point_mae": 1.7738653348192548,
+        "rmse": 3.3133770688030033,
+        "p95_abs": 8.271595079783808,
+        "bias": 1.4570317669177277,
+        "underprediction_p95": 1.6626667004621751,
+        "underprediction_max": 3.6303193231539623
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "all",
+    "scope": "macro",
+    "value": "background",
+    "cohort_id": "4e3ce926d58e085233f3c3b444b8b71300b444767d753a6959dc0dbf2ed6286d",
+    "metrics": {
+      "G1": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.6956766927995681,
+        "balanced_mae": 0.6956766927995681,
+        "point_mae": 0.6972825424856252,
+        "rmse": 1.6473360618989645,
+        "p95_abs": 4.678311807966194,
+        "bias": 0.2579537008808065,
+        "underprediction_p95": 2.1673109726969835,
+        "underprediction_max": 4.376564964988326
+      },
+      "G2": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.46235142540393886,
+        "balanced_mae": 0.46235142540393886,
+        "point_mae": 0.4635025514324639,
+        "rmse": 1.0530986861322367,
+        "p95_abs": 2.910914663804432,
+        "bias": 0.06921537426526592,
+        "underprediction_p95": 2.13512941204536,
+        "underprediction_max": 3.457371301197931
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "all",
+    "scope": "macro",
+    "value": "recovery",
+    "cohort_id": "2882fce5870df471c96ce4f09234a9c31cbcbc195d6869d2397665fe217a4be1",
+    "metrics": {
+      "G1": {
+        "n": 1374,
+        "seconds": 1378.4098853700016,
+        "mae": 0.8344092157024336,
+        "balanced_mae": 0.8344092157024336,
+        "point_mae": 0.8361797590116739,
+        "rmse": 1.722152897279173,
+        "p95_abs": 3.6859418629970406,
+        "bias": 0.47638472638252544,
+        "underprediction_p95": 1.5959847805312926,
+        "underprediction_max": 4.499492238913753
+      },
+      "G2": {
+        "n": 1374,
+        "seconds": 1378.4098853700016,
+        "mae": 1.0746272255860798,
+        "balanced_mae": 1.0746272255860798,
+        "point_mae": 1.0769153719382345,
+        "rmse": 1.9831495544701712,
+        "p95_abs": 5.0872055214864655,
+        "bias": 0.7262822715409373,
+        "underprediction_p95": 1.9288318565097389,
+        "underprediction_max": 3.6303193231539623
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "all",
+    "scope": "macro",
+    "value": "work",
+    "cohort_id": "e90140db1517e1c15c15922946585081af482fb09026e270574dd91f5caa53aa",
+    "metrics": {
+      "G1": {
+        "n": 290,
+        "seconds": 290.2640567059989,
+        "mae": 11.307170076898872,
+        "balanced_mae": 11.307170076898872,
+        "point_mae": 11.307134385028373,
+        "rmse": 11.575863569377363,
+        "p95_abs": 16.22885111670994,
+        "bias": 11.307170076898872,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      },
+      "G2": {
+        "n": 290,
+        "seconds": 290.2640567059989,
+        "mae": 7.503165481611093,
+        "balanced_mae": 7.503165481611093,
+        "point_mae": 7.502396588878666,
+        "rmse": 7.9218325295343135,
+        "p95_abs": 11.741649472752371,
+        "bias": 7.503165481611093,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "all",
+    "scope": "regime",
+    "value": "cooldown",
+    "cohort_id": "2882fce5870df471c96ce4f09234a9c31cbcbc195d6869d2397665fe217a4be1",
+    "metrics": {
+      "G1": {
+        "n": 1374,
+        "seconds": 1378.4098853700016,
+        "mae": 0.8344092157024336,
+        "balanced_mae": 0.8344092157024336,
+        "point_mae": 0.8361797590116739,
+        "rmse": 1.722152897279173,
+        "p95_abs": 3.6859418629970406,
+        "bias": 0.47638472638252544,
+        "underprediction_p95": 1.5959847805312926,
+        "underprediction_max": 4.499492238913753
+      },
+      "G2": {
+        "n": 1374,
+        "seconds": 1378.4098853700016,
+        "mae": 1.0746272255860798,
+        "balanced_mae": 1.0746272255860798,
+        "point_mae": 1.0769153719382345,
+        "rmse": 1.9831495544701712,
+        "p95_abs": 5.0872055214864655,
+        "bias": 0.7262822715409373,
+        "underprediction_p95": 1.9288318565097389,
+        "underprediction_max": 3.6303193231539623
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "all",
+    "scope": "regime",
+    "value": "idle",
+    "cohort_id": "4e3ce926d58e085233f3c3b444b8b71300b444767d753a6959dc0dbf2ed6286d",
+    "metrics": {
+      "G1": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.6956766927995681,
+        "balanced_mae": 0.6956766927995681,
+        "point_mae": 0.6972825424856252,
+        "rmse": 1.6473360618989645,
+        "p95_abs": 4.678311807966194,
+        "bias": 0.2579537008808065,
+        "underprediction_p95": 2.1673109726969835,
+        "underprediction_max": 4.376564964988326
+      },
+      "G2": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.46235142540393886,
+        "balanced_mae": 0.46235142540393886,
+        "point_mae": 0.4635025514324639,
+        "rmse": 1.0530986861322367,
+        "p95_abs": 2.910914663804432,
+        "bias": 0.06921537426526592,
+        "underprediction_p95": 2.13512941204536,
+        "underprediction_max": 3.457371301197931
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "all",
+    "scope": "regime",
+    "value": "midload_rise",
+    "cohort_id": "d21c3950fd08ee8c4d85d3a2ea10acd3362fdf0910bce44f7838270ab7e81110",
+    "metrics": {
+      "G1": {
+        "n": 152,
+        "seconds": 152.0604535629991,
+        "mae": 10.063038669210036,
+        "balanced_mae": 10.063038669210036,
+        "point_mae": 10.06393190862267,
+        "rmse": 10.21161764692684,
+        "p95_abs": 12.026902279409036,
+        "bias": 10.063038669210036,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      },
+      "G2": {
+        "n": 152,
+        "seconds": 152.0604535629991,
+        "mae": 5.533158683245494,
+        "balanced_mae": 5.533158683245494,
+        "point_mae": 5.5340234242639825,
+        "rmse": 5.727478170160188,
+        "p95_abs": 7.290022301356045,
+        "bias": 5.533158683245494,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "all",
+    "scope": "regime",
+    "value": "midload_sustained",
+    "cohort_id": "2d75dc0c02044e51e0ad572e87ed6f135396b11aceaf292f87b845611d3280bd",
+    "metrics": {
+      "G1": {
+        "n": 138,
+        "seconds": 138.20360314299978,
+        "mae": 12.67604311524787,
+        "balanced_mae": 12.67604311524787,
+        "point_mae": 12.676458851794075,
+        "rmse": 12.911401781507013,
+        "p95_abs": 16.68525175177843,
+        "bias": 12.67604311524787,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      },
+      "G2": {
+        "n": 138,
+        "seconds": 138.20360314299978,
+        "mae": 9.670693103678289,
+        "balanced_mae": 9.670693103678289,
+        "point_mae": 9.670459784686141,
+        "rmse": 9.783143954051639,
+        "p95_abs": 11.83820662792088,
+        "bias": 9.670693103678289,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "all",
+    "scope": "phase",
+    "value": "M180",
+    "cohort_id": "08a417576527f27cc4b949eca95f25ca670858fd08bbd576076ec0e67bc745b9",
+    "metrics": {
+      "G1": {
+        "n": 193,
+        "seconds": 193.2621205739997,
+        "mae": 12.21573530438528,
+        "balanced_mae": 12.21573530438528,
+        "point_mae": 12.216120774564022,
+        "rmse": 12.421442509223374,
+        "p95_abs": 16.61147210915296,
+        "bias": 12.21573530438528,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      },
+      "G2": {
+        "n": 193,
+        "seconds": 193.2621205739997,
+        "mae": 8.387022446561323,
+        "balanced_mae": 8.387022446561323,
+        "point_mae": 8.386559946915774,
+        "rmse": 8.755488738465615,
+        "p95_abs": 11.802104930164282,
+        "bias": 8.387022446561323,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "all",
+    "scope": "phase",
+    "value": "M20",
+    "cohort_id": "8ca2f66b6e905214289e6a41b6b95b9858a830455b81d7719b00e2af9cc6c917",
+    "metrics": {
+      "G1": {
+        "n": 32,
+        "seconds": 32.036958658,
+        "mae": 7.5154177915416795,
+        "balanced_mae": 7.5154177915416795,
+        "point_mae": 7.515398258311329,
+        "rmse": 7.530725238625714,
+        "p95_abs": 8.186769344259528,
+        "bias": 7.5154177915416795,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      },
+      "G2": {
+        "n": 32,
+        "seconds": 32.036958658,
+        "mae": 3.7840522636505223,
+        "balanced_mae": 3.7840522636505223,
+        "point_mae": 3.784094286582323,
+        "rmse": 3.7969611919659476,
+        "p95_abs": 4.255307135282993,
+        "bias": 3.7840522636505223,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "all",
+    "scope": "phase",
+    "value": "M60",
+    "cohort_id": "19ebfc26e1d152d7a0e7f3fa8a69a9016c6cc98efc5ecd00dacc3f5131f256d1",
+    "metrics": {
+      "G1": {
+        "n": 65,
+        "seconds": 64.96497747399917,
+        "mae": 10.47418231271294,
+        "balanced_mae": 10.47418231271294,
+        "point_mae": 10.474844890790918,
+        "rmse": 10.571193021175322,
+        "p95_abs": 12.129633072661429,
+        "bias": 10.47418231271294,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      },
+      "G2": {
+        "n": 65,
+        "seconds": 64.96497747399917,
+        "mae": 6.707860119689968,
+        "balanced_mae": 6.707860119689968,
+        "point_mae": 6.707660366914373,
+        "rmse": 6.7255604810430185,
+        "p95_abs": 7.280622216129113,
+        "bias": 6.707860119689968,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "all",
+    "scope": "phase",
+    "value": "cooldown_1",
+    "cohort_id": "de272358c441120fccc83e9dda6f40ae374dedf579f1dc353cd0531474f555c9",
+    "metrics": {
+      "G1": {
+        "n": 419,
+        "seconds": 420.3508936920007,
+        "mae": 1.1303242642103517,
+        "balanced_mae": 1.1303242642103517,
+        "point_mae": 1.1330120323950101,
+        "rmse": 2.38530148027123,
+        "p95_abs": 7.6449326369422455,
+        "bias": 0.56386997260068,
+        "underprediction_p95": 3.010275914436183,
+        "underprediction_max": 4.304939573068268
+      },
+      "G2": {
+        "n": 419,
+        "seconds": 420.3508936920007,
+        "mae": 1.1588410312083508,
+        "balanced_mae": 1.1588410312083508,
+        "point_mae": 1.1615677047713042,
+        "rmse": 1.9368860735152955,
+        "p95_abs": 4.273171218170756,
+        "bias": 0.616684329130511,
+        "underprediction_p95": 2.3739481668497957,
+        "underprediction_max": 3.436583071335832
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "all",
+    "scope": "phase",
+    "value": "cooldown_2",
+    "cohort_id": "9bc5717fae56ef38966de6956ce364f4015189a33fbeac1afc407ea207630cd9",
+    "metrics": {
+      "G1": {
+        "n": 598,
+        "seconds": 599.9166137909997,
+        "mae": 0.7197314871880816,
+        "balanced_mae": 0.7197314871880816,
+        "point_mae": 0.7210991094384537,
+        "rmse": 1.4278361607931356,
+        "p95_abs": 3.6853861196041966,
+        "bias": 0.2965407024342879,
+        "underprediction_p95": 2.1994610775952883,
+        "underprediction_max": 4.499492238913753
+      },
+      "G2": {
+        "n": 598,
+        "seconds": 599.9166137909997,
+        "mae": 0.8888483621378087,
+        "balanced_mae": 0.8888483621378087,
+        "point_mae": 0.8904792661722928,
+        "rmse": 1.7662089127506106,
+        "p95_abs": 4.694595766604713,
+        "bias": 0.4707735340319469,
+        "underprediction_p95": 2.0814187409462033,
+        "underprediction_max": 3.6303193231539623
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "all",
+    "scope": "phase",
+    "value": "final_cooldown",
+    "cohort_id": "665ab2d6a8a6ce47767ff55f6f046244bd476a1511af7389a2cdd47c52d4183f",
+    "metrics": {
+      "G1": {
+        "n": 357,
+        "seconds": 358.1423778870012,
+        "mae": 0.6791885996512909,
+        "balanced_mae": 0.6791885996512909,
+        "point_mae": 0.6805649295919766,
+        "rmse": 1.1496900323491386,
+        "p95_abs": 2.662081261293407,
+        "bias": 0.6749563582695133,
+        "underprediction_p95": 0.005442651986056912,
+        "underprediction_max": 0.10175660955552246
+      },
+      "G2": {
+        "n": 357,
+        "seconds": 358.1423778870012,
+        "mae": 1.2869798621771538,
+        "balanced_mae": 1.2869798621771538,
+        "point_mae": 1.2898550464227643,
+        "rmse": 2.346961160521666,
+        "p95_abs": 6.411827155178997,
+        "bias": 1.2829143317165492,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.09251669095402093
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "all",
+    "scope": "phase",
+    "value": "resident_background",
+    "cohort_id": "4e3ce926d58e085233f3c3b444b8b71300b444767d753a6959dc0dbf2ed6286d",
+    "metrics": {
+      "G1": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.6956766927995681,
+        "balanced_mae": 0.6956766927995681,
+        "point_mae": 0.6972825424856252,
+        "rmse": 1.6473360618989645,
+        "p95_abs": 4.678311807966194,
+        "bias": 0.2579537008808065,
+        "underprediction_p95": 2.1673109726969835,
+        "underprediction_max": 4.376564964988326
+      },
+      "G2": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.46235142540393886,
+        "balanced_mae": 0.46235142540393886,
+        "point_mae": 0.4635025514324639,
+        "rmse": 1.0530986861322367,
+        "p95_abs": 2.910914663804432,
+        "bias": 0.06921537426526592,
+        "underprediction_p95": 2.13512941204536,
+        "underprediction_max": 3.457371301197931
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "confirmed_normal",
+    "scope": "all",
+    "value": "all",
+    "cohort_id": "c94a757facb504e4ff6f8cc479957c973931a466a74b704ebfc8a978ca48ab2d",
+    "metrics": {
+      "G1": {
+        "n": 2201,
+        "seconds": 2207.436112069001,
+        "mae": 2.1776518133854834,
+        "balanced_mae": 4.279085328466958,
+        "point_mae": 2.181926708702885,
+        "rmse": 4.487152889780143,
+        "p95_abs": 11.885061233451658,
+        "bias": 1.8472535380843271,
+        "underprediction_p95": 1.1901558542769237,
+        "underprediction_max": 4.499492238913753
+      },
+      "G2": {
+        "n": 2201,
+        "seconds": 2207.436112069001,
+        "mae": 1.7705035618227956,
+        "balanced_mae": 3.0133813775337037,
+        "point_mae": 1.7738653348192548,
+        "rmse": 3.3133770688030033,
+        "p95_abs": 8.271595079783808,
+        "bias": 1.4570317669177277,
+        "underprediction_p95": 1.6626667004621751,
+        "underprediction_max": 3.6303193231539623
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "confirmed_normal",
+    "scope": "run",
+    "value": "M",
+    "cohort_id": "c94a757facb504e4ff6f8cc479957c973931a466a74b704ebfc8a978ca48ab2d",
+    "metrics": {
+      "G1": {
+        "n": 2201,
+        "seconds": 2207.436112069001,
+        "mae": 2.1776518133854834,
+        "balanced_mae": 4.279085328466958,
+        "point_mae": 2.181926708702885,
+        "rmse": 4.487152889780143,
+        "p95_abs": 11.885061233451658,
+        "bias": 1.8472535380843271,
+        "underprediction_p95": 1.1901558542769237,
+        "underprediction_max": 4.499492238913753
+      },
+      "G2": {
+        "n": 2201,
+        "seconds": 2207.436112069001,
+        "mae": 1.7705035618227956,
+        "balanced_mae": 3.0133813775337037,
+        "point_mae": 1.7738653348192548,
+        "rmse": 3.3133770688030033,
+        "p95_abs": 8.271595079783808,
+        "bias": 1.4570317669177277,
+        "underprediction_p95": 1.6626667004621751,
+        "underprediction_max": 3.6303193231539623
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "confirmed_normal",
+    "scope": "macro",
+    "value": "background",
+    "cohort_id": "4e3ce926d58e085233f3c3b444b8b71300b444767d753a6959dc0dbf2ed6286d",
+    "metrics": {
+      "G1": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.6956766927995681,
+        "balanced_mae": 0.6956766927995681,
+        "point_mae": 0.6972825424856252,
+        "rmse": 1.6473360618989645,
+        "p95_abs": 4.678311807966194,
+        "bias": 0.2579537008808065,
+        "underprediction_p95": 2.1673109726969835,
+        "underprediction_max": 4.376564964988326
+      },
+      "G2": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.46235142540393886,
+        "balanced_mae": 0.46235142540393886,
+        "point_mae": 0.4635025514324639,
+        "rmse": 1.0530986861322367,
+        "p95_abs": 2.910914663804432,
+        "bias": 0.06921537426526592,
+        "underprediction_p95": 2.13512941204536,
+        "underprediction_max": 3.457371301197931
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "confirmed_normal",
+    "scope": "macro",
+    "value": "recovery",
+    "cohort_id": "2882fce5870df471c96ce4f09234a9c31cbcbc195d6869d2397665fe217a4be1",
+    "metrics": {
+      "G1": {
+        "n": 1374,
+        "seconds": 1378.4098853700016,
+        "mae": 0.8344092157024336,
+        "balanced_mae": 0.8344092157024336,
+        "point_mae": 0.8361797590116739,
+        "rmse": 1.722152897279173,
+        "p95_abs": 3.6859418629970406,
+        "bias": 0.47638472638252544,
+        "underprediction_p95": 1.5959847805312926,
+        "underprediction_max": 4.499492238913753
+      },
+      "G2": {
+        "n": 1374,
+        "seconds": 1378.4098853700016,
+        "mae": 1.0746272255860798,
+        "balanced_mae": 1.0746272255860798,
+        "point_mae": 1.0769153719382345,
+        "rmse": 1.9831495544701712,
+        "p95_abs": 5.0872055214864655,
+        "bias": 0.7262822715409373,
+        "underprediction_p95": 1.9288318565097389,
+        "underprediction_max": 3.6303193231539623
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "confirmed_normal",
+    "scope": "macro",
+    "value": "work",
+    "cohort_id": "e90140db1517e1c15c15922946585081af482fb09026e270574dd91f5caa53aa",
+    "metrics": {
+      "G1": {
+        "n": 290,
+        "seconds": 290.2640567059989,
+        "mae": 11.307170076898872,
+        "balanced_mae": 11.307170076898872,
+        "point_mae": 11.307134385028373,
+        "rmse": 11.575863569377363,
+        "p95_abs": 16.22885111670994,
+        "bias": 11.307170076898872,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      },
+      "G2": {
+        "n": 290,
+        "seconds": 290.2640567059989,
+        "mae": 7.503165481611093,
+        "balanced_mae": 7.503165481611093,
+        "point_mae": 7.502396588878666,
+        "rmse": 7.9218325295343135,
+        "p95_abs": 11.741649472752371,
+        "bias": 7.503165481611093,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "confirmed_normal",
+    "scope": "regime",
+    "value": "cooldown",
+    "cohort_id": "2882fce5870df471c96ce4f09234a9c31cbcbc195d6869d2397665fe217a4be1",
+    "metrics": {
+      "G1": {
+        "n": 1374,
+        "seconds": 1378.4098853700016,
+        "mae": 0.8344092157024336,
+        "balanced_mae": 0.8344092157024336,
+        "point_mae": 0.8361797590116739,
+        "rmse": 1.722152897279173,
+        "p95_abs": 3.6859418629970406,
+        "bias": 0.47638472638252544,
+        "underprediction_p95": 1.5959847805312926,
+        "underprediction_max": 4.499492238913753
+      },
+      "G2": {
+        "n": 1374,
+        "seconds": 1378.4098853700016,
+        "mae": 1.0746272255860798,
+        "balanced_mae": 1.0746272255860798,
+        "point_mae": 1.0769153719382345,
+        "rmse": 1.9831495544701712,
+        "p95_abs": 5.0872055214864655,
+        "bias": 0.7262822715409373,
+        "underprediction_p95": 1.9288318565097389,
+        "underprediction_max": 3.6303193231539623
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "confirmed_normal",
+    "scope": "regime",
+    "value": "idle",
+    "cohort_id": "4e3ce926d58e085233f3c3b444b8b71300b444767d753a6959dc0dbf2ed6286d",
+    "metrics": {
+      "G1": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.6956766927995681,
+        "balanced_mae": 0.6956766927995681,
+        "point_mae": 0.6972825424856252,
+        "rmse": 1.6473360618989645,
+        "p95_abs": 4.678311807966194,
+        "bias": 0.2579537008808065,
+        "underprediction_p95": 2.1673109726969835,
+        "underprediction_max": 4.376564964988326
+      },
+      "G2": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.46235142540393886,
+        "balanced_mae": 0.46235142540393886,
+        "point_mae": 0.4635025514324639,
+        "rmse": 1.0530986861322367,
+        "p95_abs": 2.910914663804432,
+        "bias": 0.06921537426526592,
+        "underprediction_p95": 2.13512941204536,
+        "underprediction_max": 3.457371301197931
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "confirmed_normal",
+    "scope": "regime",
+    "value": "midload_rise",
+    "cohort_id": "d21c3950fd08ee8c4d85d3a2ea10acd3362fdf0910bce44f7838270ab7e81110",
+    "metrics": {
+      "G1": {
+        "n": 152,
+        "seconds": 152.0604535629991,
+        "mae": 10.063038669210036,
+        "balanced_mae": 10.063038669210036,
+        "point_mae": 10.06393190862267,
+        "rmse": 10.21161764692684,
+        "p95_abs": 12.026902279409036,
+        "bias": 10.063038669210036,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      },
+      "G2": {
+        "n": 152,
+        "seconds": 152.0604535629991,
+        "mae": 5.533158683245494,
+        "balanced_mae": 5.533158683245494,
+        "point_mae": 5.5340234242639825,
+        "rmse": 5.727478170160188,
+        "p95_abs": 7.290022301356045,
+        "bias": 5.533158683245494,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "confirmed_normal",
+    "scope": "regime",
+    "value": "midload_sustained",
+    "cohort_id": "2d75dc0c02044e51e0ad572e87ed6f135396b11aceaf292f87b845611d3280bd",
+    "metrics": {
+      "G1": {
+        "n": 138,
+        "seconds": 138.20360314299978,
+        "mae": 12.67604311524787,
+        "balanced_mae": 12.67604311524787,
+        "point_mae": 12.676458851794075,
+        "rmse": 12.911401781507013,
+        "p95_abs": 16.68525175177843,
+        "bias": 12.67604311524787,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      },
+      "G2": {
+        "n": 138,
+        "seconds": 138.20360314299978,
+        "mae": 9.670693103678289,
+        "balanced_mae": 9.670693103678289,
+        "point_mae": 9.670459784686141,
+        "rmse": 9.783143954051639,
+        "p95_abs": 11.83820662792088,
+        "bias": 9.670693103678289,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "confirmed_normal",
+    "scope": "phase",
+    "value": "M180",
+    "cohort_id": "08a417576527f27cc4b949eca95f25ca670858fd08bbd576076ec0e67bc745b9",
+    "metrics": {
+      "G1": {
+        "n": 193,
+        "seconds": 193.2621205739997,
+        "mae": 12.21573530438528,
+        "balanced_mae": 12.21573530438528,
+        "point_mae": 12.216120774564022,
+        "rmse": 12.421442509223374,
+        "p95_abs": 16.61147210915296,
+        "bias": 12.21573530438528,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      },
+      "G2": {
+        "n": 193,
+        "seconds": 193.2621205739997,
+        "mae": 8.387022446561323,
+        "balanced_mae": 8.387022446561323,
+        "point_mae": 8.386559946915774,
+        "rmse": 8.755488738465615,
+        "p95_abs": 11.802104930164282,
+        "bias": 8.387022446561323,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "confirmed_normal",
+    "scope": "phase",
+    "value": "M20",
+    "cohort_id": "8ca2f66b6e905214289e6a41b6b95b9858a830455b81d7719b00e2af9cc6c917",
+    "metrics": {
+      "G1": {
+        "n": 32,
+        "seconds": 32.036958658,
+        "mae": 7.5154177915416795,
+        "balanced_mae": 7.5154177915416795,
+        "point_mae": 7.515398258311329,
+        "rmse": 7.530725238625714,
+        "p95_abs": 8.186769344259528,
+        "bias": 7.5154177915416795,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      },
+      "G2": {
+        "n": 32,
+        "seconds": 32.036958658,
+        "mae": 3.7840522636505223,
+        "balanced_mae": 3.7840522636505223,
+        "point_mae": 3.784094286582323,
+        "rmse": 3.7969611919659476,
+        "p95_abs": 4.255307135282993,
+        "bias": 3.7840522636505223,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "confirmed_normal",
+    "scope": "phase",
+    "value": "M60",
+    "cohort_id": "19ebfc26e1d152d7a0e7f3fa8a69a9016c6cc98efc5ecd00dacc3f5131f256d1",
+    "metrics": {
+      "G1": {
+        "n": 65,
+        "seconds": 64.96497747399917,
+        "mae": 10.47418231271294,
+        "balanced_mae": 10.47418231271294,
+        "point_mae": 10.474844890790918,
+        "rmse": 10.571193021175322,
+        "p95_abs": 12.129633072661429,
+        "bias": 10.47418231271294,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      },
+      "G2": {
+        "n": 65,
+        "seconds": 64.96497747399917,
+        "mae": 6.707860119689968,
+        "balanced_mae": 6.707860119689968,
+        "point_mae": 6.707660366914373,
+        "rmse": 6.7255604810430185,
+        "p95_abs": 7.280622216129113,
+        "bias": 6.707860119689968,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "confirmed_normal",
+    "scope": "phase",
+    "value": "cooldown_1",
+    "cohort_id": "de272358c441120fccc83e9dda6f40ae374dedf579f1dc353cd0531474f555c9",
+    "metrics": {
+      "G1": {
+        "n": 419,
+        "seconds": 420.3508936920007,
+        "mae": 1.1303242642103517,
+        "balanced_mae": 1.1303242642103517,
+        "point_mae": 1.1330120323950101,
+        "rmse": 2.38530148027123,
+        "p95_abs": 7.6449326369422455,
+        "bias": 0.56386997260068,
+        "underprediction_p95": 3.010275914436183,
+        "underprediction_max": 4.304939573068268
+      },
+      "G2": {
+        "n": 419,
+        "seconds": 420.3508936920007,
+        "mae": 1.1588410312083508,
+        "balanced_mae": 1.1588410312083508,
+        "point_mae": 1.1615677047713042,
+        "rmse": 1.9368860735152955,
+        "p95_abs": 4.273171218170756,
+        "bias": 0.616684329130511,
+        "underprediction_p95": 2.3739481668497957,
+        "underprediction_max": 3.436583071335832
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "confirmed_normal",
+    "scope": "phase",
+    "value": "cooldown_2",
+    "cohort_id": "9bc5717fae56ef38966de6956ce364f4015189a33fbeac1afc407ea207630cd9",
+    "metrics": {
+      "G1": {
+        "n": 598,
+        "seconds": 599.9166137909997,
+        "mae": 0.7197314871880816,
+        "balanced_mae": 0.7197314871880816,
+        "point_mae": 0.7210991094384537,
+        "rmse": 1.4278361607931356,
+        "p95_abs": 3.6853861196041966,
+        "bias": 0.2965407024342879,
+        "underprediction_p95": 2.1994610775952883,
+        "underprediction_max": 4.499492238913753
+      },
+      "G2": {
+        "n": 598,
+        "seconds": 599.9166137909997,
+        "mae": 0.8888483621378087,
+        "balanced_mae": 0.8888483621378087,
+        "point_mae": 0.8904792661722928,
+        "rmse": 1.7662089127506106,
+        "p95_abs": 4.694595766604713,
+        "bias": 0.4707735340319469,
+        "underprediction_p95": 2.0814187409462033,
+        "underprediction_max": 3.6303193231539623
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "confirmed_normal",
+    "scope": "phase",
+    "value": "final_cooldown",
+    "cohort_id": "665ab2d6a8a6ce47767ff55f6f046244bd476a1511af7389a2cdd47c52d4183f",
+    "metrics": {
+      "G1": {
+        "n": 357,
+        "seconds": 358.1423778870012,
+        "mae": 0.6791885996512909,
+        "balanced_mae": 0.6791885996512909,
+        "point_mae": 0.6805649295919766,
+        "rmse": 1.1496900323491386,
+        "p95_abs": 2.662081261293407,
+        "bias": 0.6749563582695133,
+        "underprediction_p95": 0.005442651986056912,
+        "underprediction_max": 0.10175660955552246
+      },
+      "G2": {
+        "n": 357,
+        "seconds": 358.1423778870012,
+        "mae": 1.2869798621771538,
+        "balanced_mae": 1.2869798621771538,
+        "point_mae": 1.2898550464227643,
+        "rmse": 2.346961160521666,
+        "p95_abs": 6.411827155178997,
+        "bias": 1.2829143317165492,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.09251669095402093
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "confirmed_normal",
+    "scope": "phase",
+    "value": "resident_background",
+    "cohort_id": "4e3ce926d58e085233f3c3b444b8b71300b444767d753a6959dc0dbf2ed6286d",
+    "metrics": {
+      "G1": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.6956766927995681,
+        "balanced_mae": 0.6956766927995681,
+        "point_mae": 0.6972825424856252,
+        "rmse": 1.6473360618989645,
+        "p95_abs": 4.678311807966194,
+        "bias": 0.2579537008808065,
+        "underprediction_p95": 2.1673109726969835,
+        "underprediction_max": 4.376564964988326
+      },
+      "G2": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.46235142540393886,
+        "balanced_mae": 0.46235142540393886,
+        "point_mae": 0.4635025514324639,
+        "rmse": 1.0530986861322367,
+        "p95_abs": 2.910914663804432,
+        "bias": 0.06921537426526592,
+        "underprediction_p95": 2.13512941204536,
+        "underprediction_max": 3.457371301197931
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "strict_legacy",
+    "scope": "all",
+    "value": "all",
+    "cohort_id": "c94a757facb504e4ff6f8cc479957c973931a466a74b704ebfc8a978ca48ab2d",
+    "metrics": {
+      "G1": {
+        "n": 2201,
+        "seconds": 2207.436112069001,
+        "mae": 2.1776518133854834,
+        "balanced_mae": 4.279085328466958,
+        "point_mae": 2.181926708702885,
+        "rmse": 4.487152889780143,
+        "p95_abs": 11.885061233451658,
+        "bias": 1.8472535380843271,
+        "underprediction_p95": 1.1901558542769237,
+        "underprediction_max": 4.499492238913753
+      },
+      "G2": {
+        "n": 2201,
+        "seconds": 2207.436112069001,
+        "mae": 1.7705035618227956,
+        "balanced_mae": 3.0133813775337037,
+        "point_mae": 1.7738653348192548,
+        "rmse": 3.3133770688030033,
+        "p95_abs": 8.271595079783808,
+        "bias": 1.4570317669177277,
+        "underprediction_p95": 1.6626667004621751,
+        "underprediction_max": 3.6303193231539623
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "strict_legacy",
+    "scope": "run",
+    "value": "M",
+    "cohort_id": "c94a757facb504e4ff6f8cc479957c973931a466a74b704ebfc8a978ca48ab2d",
+    "metrics": {
+      "G1": {
+        "n": 2201,
+        "seconds": 2207.436112069001,
+        "mae": 2.1776518133854834,
+        "balanced_mae": 4.279085328466958,
+        "point_mae": 2.181926708702885,
+        "rmse": 4.487152889780143,
+        "p95_abs": 11.885061233451658,
+        "bias": 1.8472535380843271,
+        "underprediction_p95": 1.1901558542769237,
+        "underprediction_max": 4.499492238913753
+      },
+      "G2": {
+        "n": 2201,
+        "seconds": 2207.436112069001,
+        "mae": 1.7705035618227956,
+        "balanced_mae": 3.0133813775337037,
+        "point_mae": 1.7738653348192548,
+        "rmse": 3.3133770688030033,
+        "p95_abs": 8.271595079783808,
+        "bias": 1.4570317669177277,
+        "underprediction_p95": 1.6626667004621751,
+        "underprediction_max": 3.6303193231539623
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "strict_legacy",
+    "scope": "macro",
+    "value": "background",
+    "cohort_id": "4e3ce926d58e085233f3c3b444b8b71300b444767d753a6959dc0dbf2ed6286d",
+    "metrics": {
+      "G1": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.6956766927995681,
+        "balanced_mae": 0.6956766927995681,
+        "point_mae": 0.6972825424856252,
+        "rmse": 1.6473360618989645,
+        "p95_abs": 4.678311807966194,
+        "bias": 0.2579537008808065,
+        "underprediction_p95": 2.1673109726969835,
+        "underprediction_max": 4.376564964988326
+      },
+      "G2": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.46235142540393886,
+        "balanced_mae": 0.46235142540393886,
+        "point_mae": 0.4635025514324639,
+        "rmse": 1.0530986861322367,
+        "p95_abs": 2.910914663804432,
+        "bias": 0.06921537426526592,
+        "underprediction_p95": 2.13512941204536,
+        "underprediction_max": 3.457371301197931
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "strict_legacy",
+    "scope": "macro",
+    "value": "recovery",
+    "cohort_id": "2882fce5870df471c96ce4f09234a9c31cbcbc195d6869d2397665fe217a4be1",
+    "metrics": {
+      "G1": {
+        "n": 1374,
+        "seconds": 1378.4098853700016,
+        "mae": 0.8344092157024336,
+        "balanced_mae": 0.8344092157024336,
+        "point_mae": 0.8361797590116739,
+        "rmse": 1.722152897279173,
+        "p95_abs": 3.6859418629970406,
+        "bias": 0.47638472638252544,
+        "underprediction_p95": 1.5959847805312926,
+        "underprediction_max": 4.499492238913753
+      },
+      "G2": {
+        "n": 1374,
+        "seconds": 1378.4098853700016,
+        "mae": 1.0746272255860798,
+        "balanced_mae": 1.0746272255860798,
+        "point_mae": 1.0769153719382345,
+        "rmse": 1.9831495544701712,
+        "p95_abs": 5.0872055214864655,
+        "bias": 0.7262822715409373,
+        "underprediction_p95": 1.9288318565097389,
+        "underprediction_max": 3.6303193231539623
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "strict_legacy",
+    "scope": "macro",
+    "value": "work",
+    "cohort_id": "e90140db1517e1c15c15922946585081af482fb09026e270574dd91f5caa53aa",
+    "metrics": {
+      "G1": {
+        "n": 290,
+        "seconds": 290.2640567059989,
+        "mae": 11.307170076898872,
+        "balanced_mae": 11.307170076898872,
+        "point_mae": 11.307134385028373,
+        "rmse": 11.575863569377363,
+        "p95_abs": 16.22885111670994,
+        "bias": 11.307170076898872,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      },
+      "G2": {
+        "n": 290,
+        "seconds": 290.2640567059989,
+        "mae": 7.503165481611093,
+        "balanced_mae": 7.503165481611093,
+        "point_mae": 7.502396588878666,
+        "rmse": 7.9218325295343135,
+        "p95_abs": 11.741649472752371,
+        "bias": 7.503165481611093,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "strict_legacy",
+    "scope": "regime",
+    "value": "cooldown",
+    "cohort_id": "2882fce5870df471c96ce4f09234a9c31cbcbc195d6869d2397665fe217a4be1",
+    "metrics": {
+      "G1": {
+        "n": 1374,
+        "seconds": 1378.4098853700016,
+        "mae": 0.8344092157024336,
+        "balanced_mae": 0.8344092157024336,
+        "point_mae": 0.8361797590116739,
+        "rmse": 1.722152897279173,
+        "p95_abs": 3.6859418629970406,
+        "bias": 0.47638472638252544,
+        "underprediction_p95": 1.5959847805312926,
+        "underprediction_max": 4.499492238913753
+      },
+      "G2": {
+        "n": 1374,
+        "seconds": 1378.4098853700016,
+        "mae": 1.0746272255860798,
+        "balanced_mae": 1.0746272255860798,
+        "point_mae": 1.0769153719382345,
+        "rmse": 1.9831495544701712,
+        "p95_abs": 5.0872055214864655,
+        "bias": 0.7262822715409373,
+        "underprediction_p95": 1.9288318565097389,
+        "underprediction_max": 3.6303193231539623
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "strict_legacy",
+    "scope": "regime",
+    "value": "idle",
+    "cohort_id": "4e3ce926d58e085233f3c3b444b8b71300b444767d753a6959dc0dbf2ed6286d",
+    "metrics": {
+      "G1": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.6956766927995681,
+        "balanced_mae": 0.6956766927995681,
+        "point_mae": 0.6972825424856252,
+        "rmse": 1.6473360618989645,
+        "p95_abs": 4.678311807966194,
+        "bias": 0.2579537008808065,
+        "underprediction_p95": 2.1673109726969835,
+        "underprediction_max": 4.376564964988326
+      },
+      "G2": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.46235142540393886,
+        "balanced_mae": 0.46235142540393886,
+        "point_mae": 0.4635025514324639,
+        "rmse": 1.0530986861322367,
+        "p95_abs": 2.910914663804432,
+        "bias": 0.06921537426526592,
+        "underprediction_p95": 2.13512941204536,
+        "underprediction_max": 3.457371301197931
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "strict_legacy",
+    "scope": "regime",
+    "value": "midload_rise",
+    "cohort_id": "d21c3950fd08ee8c4d85d3a2ea10acd3362fdf0910bce44f7838270ab7e81110",
+    "metrics": {
+      "G1": {
+        "n": 152,
+        "seconds": 152.0604535629991,
+        "mae": 10.063038669210036,
+        "balanced_mae": 10.063038669210036,
+        "point_mae": 10.06393190862267,
+        "rmse": 10.21161764692684,
+        "p95_abs": 12.026902279409036,
+        "bias": 10.063038669210036,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      },
+      "G2": {
+        "n": 152,
+        "seconds": 152.0604535629991,
+        "mae": 5.533158683245494,
+        "balanced_mae": 5.533158683245494,
+        "point_mae": 5.5340234242639825,
+        "rmse": 5.727478170160188,
+        "p95_abs": 7.290022301356045,
+        "bias": 5.533158683245494,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "strict_legacy",
+    "scope": "regime",
+    "value": "midload_sustained",
+    "cohort_id": "2d75dc0c02044e51e0ad572e87ed6f135396b11aceaf292f87b845611d3280bd",
+    "metrics": {
+      "G1": {
+        "n": 138,
+        "seconds": 138.20360314299978,
+        "mae": 12.67604311524787,
+        "balanced_mae": 12.67604311524787,
+        "point_mae": 12.676458851794075,
+        "rmse": 12.911401781507013,
+        "p95_abs": 16.68525175177843,
+        "bias": 12.67604311524787,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      },
+      "G2": {
+        "n": 138,
+        "seconds": 138.20360314299978,
+        "mae": 9.670693103678289,
+        "balanced_mae": 9.670693103678289,
+        "point_mae": 9.670459784686141,
+        "rmse": 9.783143954051639,
+        "p95_abs": 11.83820662792088,
+        "bias": 9.670693103678289,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "strict_legacy",
+    "scope": "phase",
+    "value": "M180",
+    "cohort_id": "08a417576527f27cc4b949eca95f25ca670858fd08bbd576076ec0e67bc745b9",
+    "metrics": {
+      "G1": {
+        "n": 193,
+        "seconds": 193.2621205739997,
+        "mae": 12.21573530438528,
+        "balanced_mae": 12.21573530438528,
+        "point_mae": 12.216120774564022,
+        "rmse": 12.421442509223374,
+        "p95_abs": 16.61147210915296,
+        "bias": 12.21573530438528,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      },
+      "G2": {
+        "n": 193,
+        "seconds": 193.2621205739997,
+        "mae": 8.387022446561323,
+        "balanced_mae": 8.387022446561323,
+        "point_mae": 8.386559946915774,
+        "rmse": 8.755488738465615,
+        "p95_abs": 11.802104930164282,
+        "bias": 8.387022446561323,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "strict_legacy",
+    "scope": "phase",
+    "value": "M20",
+    "cohort_id": "8ca2f66b6e905214289e6a41b6b95b9858a830455b81d7719b00e2af9cc6c917",
+    "metrics": {
+      "G1": {
+        "n": 32,
+        "seconds": 32.036958658,
+        "mae": 7.5154177915416795,
+        "balanced_mae": 7.5154177915416795,
+        "point_mae": 7.515398258311329,
+        "rmse": 7.530725238625714,
+        "p95_abs": 8.186769344259528,
+        "bias": 7.5154177915416795,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      },
+      "G2": {
+        "n": 32,
+        "seconds": 32.036958658,
+        "mae": 3.7840522636505223,
+        "balanced_mae": 3.7840522636505223,
+        "point_mae": 3.784094286582323,
+        "rmse": 3.7969611919659476,
+        "p95_abs": 4.255307135282993,
+        "bias": 3.7840522636505223,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "strict_legacy",
+    "scope": "phase",
+    "value": "M60",
+    "cohort_id": "19ebfc26e1d152d7a0e7f3fa8a69a9016c6cc98efc5ecd00dacc3f5131f256d1",
+    "metrics": {
+      "G1": {
+        "n": 65,
+        "seconds": 64.96497747399917,
+        "mae": 10.47418231271294,
+        "balanced_mae": 10.47418231271294,
+        "point_mae": 10.474844890790918,
+        "rmse": 10.571193021175322,
+        "p95_abs": 12.129633072661429,
+        "bias": 10.47418231271294,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      },
+      "G2": {
+        "n": 65,
+        "seconds": 64.96497747399917,
+        "mae": 6.707860119689968,
+        "balanced_mae": 6.707860119689968,
+        "point_mae": 6.707660366914373,
+        "rmse": 6.7255604810430185,
+        "p95_abs": 7.280622216129113,
+        "bias": 6.707860119689968,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.0
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "strict_legacy",
+    "scope": "phase",
+    "value": "cooldown_1",
+    "cohort_id": "de272358c441120fccc83e9dda6f40ae374dedf579f1dc353cd0531474f555c9",
+    "metrics": {
+      "G1": {
+        "n": 419,
+        "seconds": 420.3508936920007,
+        "mae": 1.1303242642103517,
+        "balanced_mae": 1.1303242642103517,
+        "point_mae": 1.1330120323950101,
+        "rmse": 2.38530148027123,
+        "p95_abs": 7.6449326369422455,
+        "bias": 0.56386997260068,
+        "underprediction_p95": 3.010275914436183,
+        "underprediction_max": 4.304939573068268
+      },
+      "G2": {
+        "n": 419,
+        "seconds": 420.3508936920007,
+        "mae": 1.1588410312083508,
+        "balanced_mae": 1.1588410312083508,
+        "point_mae": 1.1615677047713042,
+        "rmse": 1.9368860735152955,
+        "p95_abs": 4.273171218170756,
+        "bias": 0.616684329130511,
+        "underprediction_p95": 2.3739481668497957,
+        "underprediction_max": 3.436583071335832
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "strict_legacy",
+    "scope": "phase",
+    "value": "cooldown_2",
+    "cohort_id": "9bc5717fae56ef38966de6956ce364f4015189a33fbeac1afc407ea207630cd9",
+    "metrics": {
+      "G1": {
+        "n": 598,
+        "seconds": 599.9166137909997,
+        "mae": 0.7197314871880816,
+        "balanced_mae": 0.7197314871880816,
+        "point_mae": 0.7210991094384537,
+        "rmse": 1.4278361607931356,
+        "p95_abs": 3.6853861196041966,
+        "bias": 0.2965407024342879,
+        "underprediction_p95": 2.1994610775952883,
+        "underprediction_max": 4.499492238913753
+      },
+      "G2": {
+        "n": 598,
+        "seconds": 599.9166137909997,
+        "mae": 0.8888483621378087,
+        "balanced_mae": 0.8888483621378087,
+        "point_mae": 0.8904792661722928,
+        "rmse": 1.7662089127506106,
+        "p95_abs": 4.694595766604713,
+        "bias": 0.4707735340319469,
+        "underprediction_p95": 2.0814187409462033,
+        "underprediction_max": 3.6303193231539623
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "strict_legacy",
+    "scope": "phase",
+    "value": "final_cooldown",
+    "cohort_id": "665ab2d6a8a6ce47767ff55f6f046244bd476a1511af7389a2cdd47c52d4183f",
+    "metrics": {
+      "G1": {
+        "n": 357,
+        "seconds": 358.1423778870012,
+        "mae": 0.6791885996512909,
+        "balanced_mae": 0.6791885996512909,
+        "point_mae": 0.6805649295919766,
+        "rmse": 1.1496900323491386,
+        "p95_abs": 2.662081261293407,
+        "bias": 0.6749563582695133,
+        "underprediction_p95": 0.005442651986056912,
+        "underprediction_max": 0.10175660955552246
+      },
+      "G2": {
+        "n": 357,
+        "seconds": 358.1423778870012,
+        "mae": 1.2869798621771538,
+        "balanced_mae": 1.2869798621771538,
+        "point_mae": 1.2898550464227643,
+        "rmse": 2.346961160521666,
+        "p95_abs": 6.411827155178997,
+        "bias": 1.2829143317165492,
+        "underprediction_p95": 0.0,
+        "underprediction_max": 0.09251669095402093
+      }
+    }
+  },
+  {
+    "mode": "A",
+    "layer": "known_input_only",
+    "h": 90,
+    "context": "strict_legacy",
+    "scope": "phase",
+    "value": "resident_background",
+    "cohort_id": "4e3ce926d58e085233f3c3b444b8b71300b444767d753a6959dc0dbf2ed6286d",
+    "metrics": {
+      "G1": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.6956766927995681,
+        "balanced_mae": 0.6956766927995681,
+        "point_mae": 0.6972825424856252,
+        "rmse": 1.6473360618989645,
+        "p95_abs": 4.678311807966194,
+        "bias": 0.2579537008808065,
+        "underprediction_p95": 2.1673109726969835,
+        "underprediction_max": 4.376564964988326
+      },
+      "G2": {
+        "n": 537,
+        "seconds": 538.7621699930005,
+        "mae": 0.46235142540393886,
+        "balanced_mae": 0.46235142540393886,
+        "point_mae": 0.4635025514324639,
+        "rmse": 1.0530986861322367,
+        "p95_abs": 2.910914663804432,
+        "bias": 0.06921537426526592,
+        "underprediction_p95": 2.13512941204536,
+        "underprediction_max": 3.457371301197931
+      }
+    }
+  }
+]

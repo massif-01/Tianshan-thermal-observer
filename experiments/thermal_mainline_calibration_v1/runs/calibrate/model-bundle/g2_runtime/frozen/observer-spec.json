@@ -1,0 +1,181 @@
+{
+  "contract": "TTO-MAINLINE-CANDIDATE-OBSERVER-v1",
+  "deployable": false,
+  "scope": "new candidate only; not activated or control qualified",
+  "dynamic_model": "frozen G2; augmented boundary state E, no theta update",
+  "model_sha256": "7bf6472053e798d80a49b26a5e7fb14458087392a35704d2f7c12173813fe85e",
+  "dynamic": {
+    "a": 0.5148641747653312,
+    "c": 0.044119421176807866,
+    "d0": 0.004069605890859186,
+    "d1": 0.010698164013891584,
+    "b_g": 0.04082713792083579,
+    "b_c": 0.2055387365485118
+  },
+  "data_roles": {
+    "M": "development masking; dynamics already fit on L+M+S, not held-out validation",
+    "Y": "candidate frozen before new replay; development replay, no physical Ts truth",
+    "synthetic": "known Tf/Ts/E truth; fixed theta and explicit sensor/noise assumptions"
+  },
+  "prior": {
+    "E_mean_C": 35.28589118494435,
+    "Ts_minus_E_mean_C": 7.545232699745185,
+    "E_std_C": 10.0,
+    "Ts_minus_E_std_C": 8.0,
+    "E_bounds_C": [
+      -10.0,
+      60.0
+    ],
+    "Ts_bounds_C": [
+      -20.0,
+      120.0
+    ],
+    "origin": "Only frozen L/S nuisance entries; never E_M, Ts_M, new-run prefix or YET/ambient",
+    "interpretation": "broad engineering prior, not measured equilibrium or calibrated probability"
+  },
+  "methods": [
+    "AUGMENTED-KF",
+    "CONDITIONAL-HOLD",
+    "OLD60"
+  ],
+  "numerical": {
+    "propagation": "exact affine matrix exponential on actual irregular dt",
+    "covariance": "exact Van Loan discretization; Joseph TJ update; symmetric covariance",
+    "TJ_noise_std_C": 0.2,
+    "process_std_C_per_sqrt_s": [
+      0.1,
+      0.025,
+      0.005
+    ],
+    "PWM_unknown_range": [
+      0.0,
+      1.0
+    ],
+    "power_unknown_relative_std": 0.3,
+    "uncertainty": "internal assumed-model covariance and 2-standard-deviation scale, NOT a calibrated 95% interval",
+    "covariance_includes_theta_or_clock_error": false,
+    "posterior_projection": "original E/Ts bounds; record unconstrained values and projection, never tracking while projected"
+  },
+  "input_policy": {
+    "fan_raw_TTL_s": 2.5,
+    "temp_raw_TTL_s": 7.5,
+    "power_and_TJ_TTL": "original source age/freshness only",
+    "fan_assumption": "last successful fraction held conditionally; startup uses 0.5 with full [0,1] range",
+    "fan_max_actual_age_s": 15.0,
+    "power_or_TJ_max_actual_age_s": 10.0,
+    "control_context_max_actual_age_s": 15.0,
+    "long_gap": "stop public Tf/Ts/E; discard internal state, next fresh TJ/rails cold-start from registered prior",
+    "source_epoch": "reset on raw stream/connection/lifecycle or genuine source-invalid boundary; never task phase",
+    "explicit_guard_fault_or_nonAUTO": "public observer unavailable; raw risk remains visible; never normal",
+    "stale_normalized_or_binding": "degraded, preserve conditional thermal history, no normal/tracking claim",
+    "HTTP_timeout": "observational unknown, conditional propagation without renewing successful PWM"
+  },
+  "phase_gates": {
+    "min_TJ_updates_for_tracking": 10,
+    "max_tracking_std_C": [
+      0.5,
+      2.0,
+      8.0
+    ],
+    "max_output_std_C": [
+      8.0,
+      25.0,
+      20.0
+    ],
+    "normal_context_stable_s": 5.0,
+    "expected_mode": "auto",
+    "expected_binding": "agx_info.temperature.tj",
+    "finite_is_tracking": false,
+    "tracking_is_field_safety_permission": false
+  },
+  "masks": {
+    "selection": "times/event kinds only, never hidden PWM/thermal values or full-M state",
+    "M_cold": [
+      [
+        0.0,
+        12.0
+      ]
+    ],
+    "M_single": [
+      [
+        180.0,
+        186.0
+      ]
+    ],
+    "M_cluster": "copy first 60s Y timeout timing block with >=2 failed fan polls; each exposure [failure-1s,next successful fan), translated to M+300s",
+    "M_transition": "[-2,+6] seconds around first runner work-block start, from recorded event timing only",
+    "M_long": [
+      [
+        600.0,
+        660.0
+      ]
+    ],
+    "projection": "replace whole masked fan response by payload=null/offline_mask; no derived full-input quality/state enters observer"
+  },
+  "evaluation": {
+    "horizons_s": [
+      15,
+      45,
+      90
+    ],
+    "label_tolerance_s": 2.0,
+    "origins": "every valid accepted TJ, not old five-second starts",
+    "forecast_Tf_anchor": "same current real TJ for all methods; filtered Tf reported separately",
+    "B": "HOLD two current rails and known/declared conditional PWM; no future inputs/TJ/end markers",
+    "A": "recorded future two rails and successful PWM within original TTL, no future TJ update; omit when actual future input path unavailable",
+    "A_contract": "R2 physical-input diagnostic, stratify observed context; retain original strict results separately, do not silently rename old scores",
+    "comparisons": "pairwise/common origin+horizon+label refs with cohort SHA; also each method own coverage and all-valid-TJ denominator",
+    "tails": "P95/max positive underprediction; fraction underpredicting >2C is description, not safety threshold",
+    "real_Ts": "difference to separately run unmasked M reference only, never true error",
+    "surface": "not read by new observer/evaluator, no clock fitting or external score",
+    "phase_boundaries_reset": false
+  },
+  "synthetic": {
+    "seed": 20261018,
+    "duration_s": 600,
+    "dt_s": 1.0,
+    "true_E_C": [
+      30.0,
+      40.0
+    ],
+    "true_Ts_minus_E_C": 8.0,
+    "mask_intervals_s": [
+      [
+        0,
+        12
+      ],
+      [
+        150,
+        156
+      ],
+      [
+        260,
+        320
+      ]
+    ],
+    "truth_solver": "independent scipy solve_ivp, no reuse of KF numerical step for truth",
+    "report": "Tf/Ts/E true errors and empirical internal-scale inclusion; not real Ts accuracy"
+  },
+  "budgets": {
+    "candidate_configurations": 1,
+    "naive_configurations": 1,
+    "theta_fits": 0,
+    "optimization_search": 0,
+    "max_study_wall_s": 600,
+    "CPU_BLAS_threads": 1,
+    "CUDA": false
+  },
+  "interface": {
+    "transport": "local read-only JSONL, no extra poll/service",
+    "groups": [
+      "identity",
+      "measurement",
+      "observer",
+      "safety",
+      "permission"
+    ],
+    "field_use": "research_only; external surface never enters state",
+    "permission": "local_demo=true, formal_field_authorized=false, device_actions=false"
+  },
+  "source_rule": "all input archives and old outputs immutable; new masks/spec/results only; no commit/push/software PR"
+}

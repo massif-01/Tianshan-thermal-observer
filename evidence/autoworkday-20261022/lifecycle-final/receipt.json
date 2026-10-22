@@ -1,0 +1,51 @@
+{
+  "scope": "Real supervisor CLI, frozen 24h plan, user STOP during background; no time scaling.",
+  "summary": {
+    "load_result": "incomplete",
+    "reason": "user_stop",
+    "error": null,
+    "driver": {
+      "reason": "user_stop",
+      "submissions": 0,
+      "scheduled_opportunities": 386,
+      "not_submitted_opportunities": 386,
+      "schedule_window_completed": false,
+      "all_planned_requests_protocol_completed": false,
+      "protocol_completed": 0,
+      "skipped_opportunities": 0,
+      "client_inflight_seconds": 0.0,
+      "actual_elapsed_s": 13.164778042002581,
+      "requester_closed": true,
+      "unknown_server_end": false,
+      "gpu_busy_seconds": null,
+      "collector_instances_created": 0,
+      "thermal_observer_instances_created": 0,
+      "requester_instances_supplied": 1,
+      "plan_sha256": "14ed7fedbda1eec0d50a36e0dd3becd6b618820f616a231c394b87bfa603b69f",
+      "observer_session_id": "3d5e0bdf-f18c-48d9-ab13-4cb4c8212282",
+      "native_run_id": "6f81f6c4-ebb1-408f-b900-93f819e92db7",
+      "device_id": "lifecycle-owned",
+      "config_sha256": "5b2aea3818615e7d19dc40dcba1418f63fcd07283d5e1485da0d91db7558233a",
+      "clock_domain": "observer-relative:3d5e0bdf-f18c-48d9-ab13-4cb4c8212282"
+    },
+    "archive": {
+      "returncode": 0,
+      "stdout": "{\n  \"archive\": \"/Users/massif/Tianshan-thermal-observer/evidence/autoworkday-20261022/lifecycle-final/run/observe.zip\",\n  \"sha256\": \"404dcae410a4e86977fa18218a707b8ec2f799e37b26000e0e9cfba49c9f5b27\",\n  \"bytes\": 60006,\n  \"files_verified\": 21\n}\n",
+      "stderr": null
+    },
+    "observer_returncode": 0,
+    "elapsed_s": 15.27114758407697,
+    "observer_session_id": "3d5e0bdf-f18c-48d9-ab13-4cb4c8212282",
+    "model_training": false,
+    "collector_count": 1,
+    "request_executor_count": 1,
+    "field": false,
+    "actual_ending_utc": "2026-10-21T16:51:18.907866+00:00"
+  },
+  "requests": 0,
+  "model_queries": 0,
+  "one_native_run": true,
+  "original_wheel_unchanged": true,
+  "independent_read_and_load_grants": true,
+  "no_interactive_confirmation": true
+}

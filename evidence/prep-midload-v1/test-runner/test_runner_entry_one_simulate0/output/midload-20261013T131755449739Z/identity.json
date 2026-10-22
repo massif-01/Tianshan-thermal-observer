@@ -1,0 +1,120 @@
+{
+  "trial_id": "TTO-MIDLOAD-DEV-v1.0",
+  "tto_version": "0.2.3",
+  "tto_import_path": "/Users/massif/Tianshan-thermal-observer/evidence/prep-midload-v1/candidate/src/tto/__init__.py",
+  "tto_config": {
+    "schema_version": 1,
+    "mode": "observe_only",
+    "orin": {
+      "source_id": "orin-primary",
+      "base_url": "http://127.0.0.1:57043",
+      "socketio_path": "socket.io",
+      "namespace": "/",
+      "event": "tegrastats_update",
+      "transports": [
+        "websocket"
+      ],
+      "source_sample_interval_ms": 1000,
+      "source_interval_evidence": "owned synthetic loopback",
+      "headers_file": null,
+      "ca_file": null
+    },
+    "tianshan": {
+      "source_id": "esp32-primary",
+      "base_url": "http://127.0.0.1:57043",
+      "fan_id": 0,
+      "fan_status_path": "/api/v1/fan/status",
+      "temp_status_path": "/api/v1/temp/status",
+      "fan_poll_interval_s": 1.0,
+      "temp_poll_interval_s": 5.0,
+      "headers_file": null,
+      "ca_file": null
+    },
+    "network": {
+      "request_timeout_s": 2.0,
+      "connect_timeout_s": 5.0,
+      "max_inflight_esp32": 1,
+      "follow_redirects": false,
+      "reconnect_initial_s": 1.0,
+      "reconnect_max_s": 30.0,
+      "reconnect_max_attempts": 10,
+      "reconnect_jitter_ratio": 0.2,
+      "max_business_payload_bytes": 65536
+    },
+    "storage": {
+      "data_root": null,
+      "chunk_bytes": 67108864,
+      "run_max_bytes": 2147483648,
+      "min_free_bytes": 1073741824,
+      "queue_max_items": 256,
+      "queue_max_bytes": 8388608,
+      "overwrite_existing": false
+    },
+    "run": {
+      "default_duration_s": 1800,
+      "max_duration_s": 14400,
+      "doctor_duration_s": 180,
+      "single_instance": true
+    },
+    "features": {
+      "schema_version": 1,
+      "time_axis": "observer_receive",
+      "history_s": 180,
+      "prediction_stride_s": 5,
+      "fan_max_age_s": 2.5,
+      "optional_train_min_availability": 0.95,
+      "max_feature_columns": 64,
+      "missing_optional_policy": "fallback_tj_or_baseline",
+      "power_current_rails": [
+        "vdd_gpu_soc",
+        "vdd_cpu_cv",
+        "vin_sys_5v0"
+      ]
+    },
+    "model": {
+      "schema_version": 1,
+      "horizons_s": [
+        15,
+        45,
+        90
+      ],
+      "primary_horizon_s": 45,
+      "methods": [
+        "persist",
+        "trend30",
+        "ridge_tj",
+        "ridge_full"
+      ],
+      "ridge_lambda_grid": [
+        0.001,
+        0.01,
+        0.1,
+        1.0
+      ],
+      "train_threads": 1,
+      "train_timeout_s": 600,
+      "online_training": false,
+      "automatic_activation": false
+    },
+    "resources": {
+      "observer_rss_target_mib": 256,
+      "observer_cpu_single_core_target_pct": 5.0,
+      "predict_all_horizons_p99_target_ms": 20.0,
+      "train_rss_limit_mib": 2048
+    },
+    "security": {
+      "business_control_writes": false,
+      "production_discovery": false,
+      "telemetry_upload": false,
+      "system_service_install": false,
+      "default_live_access": false
+    }
+  },
+  "tto_config_sha256": "d0404a2456696d6ea793bf0e10231416d23e38a4ea7ccabc2a2a8bf62f1fa01c",
+  "trial_config_sha256": "fa07def3a95900ea3c9b9c962fcad809a71dfbef186f46097d2612c2aec4252f",
+  "runner_sha256": "4eb57da6a3b11338ddd59c785b4915a1ea38121e8f898ecfb45776483767bc87",
+  "clock_domain": "observer_host_monotonic_and_UTC; service timestamps retained in collector payload",
+  "source_sampling_changed": false,
+  "fan_control_changed": false,
+  "data_role": "new_development_process_not_independent_confirmation"
+}

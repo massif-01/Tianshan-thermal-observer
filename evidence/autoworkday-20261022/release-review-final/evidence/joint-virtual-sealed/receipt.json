@@ -1,0 +1,52 @@
+{
+  "scope": "Whole virtual window: real Runner+Requester+event Adapter wired to the new Health gate. Synthetic measurement fixture, no physical time/temperature claim.",
+  "checkpoint": [
+    {
+      "elapsed_s": 7200,
+      "software_healthy": true,
+      "active_allowed": true,
+      "active_reasons": [],
+      "resource_stop": null,
+      "model_score_used": false,
+      "human_confirmation_required": false
+    }
+  ],
+  "summary": {
+    "reason": "completed",
+    "submissions": 386,
+    "scheduled_opportunities": 386,
+    "not_submitted_opportunities": 0,
+    "schedule_window_completed": true,
+    "all_planned_requests_protocol_completed": true,
+    "protocol_completed": 386,
+    "skipped_opportunities": 0,
+    "client_inflight_seconds": 1158.0,
+    "actual_elapsed_s": 86400,
+    "requester_closed": true,
+    "unknown_server_end": false,
+    "gpu_busy_seconds": null,
+    "collector_instances_created": 0,
+    "thermal_observer_instances_created": 0,
+    "requester_instances_supplied": 1,
+    "plan_sha256": "14ed7fedbda1eec0d50a36e0dd3becd6b618820f616a231c394b87bfa603b69f",
+    "observer_session_id": "synthetic-session",
+    "native_run_id": "synthetic-native",
+    "device_id": "synthetic-device",
+    "config_sha256": "config",
+    "clock_domain": "synthetic-virtual-domain"
+  },
+  "stage_counts": {
+    "background_health": 0,
+    "sparse_qa": 49,
+    "conversation_clusters": 42,
+    "bounded_batch": 114,
+    "cooldown": 0,
+    "long_rest": 0,
+    "irregular_mix": 181,
+    "final_recovery": 0
+  },
+  "single_requester": true,
+  "second_collector": false,
+  "predictor_received_future_schedule": false,
+  "human_required": false
+}

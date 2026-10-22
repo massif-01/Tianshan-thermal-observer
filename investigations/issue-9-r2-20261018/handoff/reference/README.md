@@ -1,0 +1,3 @@
+# 只读内容快照
+
+issues与roadmap为本轮修订内容，原始远程地址及文档候选commit见根目录publication-receipt.json。Markdown内部相对链接按仓库原路径解读，本包不复制整个仓库；打开固定GitHub候选链接可查看完整相对引用。先回读更晚远程/本地工作，不能用快照覆盖他人新进展。这里是执行依据，不是现场或Projects落地证据。

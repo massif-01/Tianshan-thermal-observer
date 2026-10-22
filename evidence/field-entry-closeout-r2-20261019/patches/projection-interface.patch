@@ -1,0 +1,56 @@
+--- accepted/stream.py
++++ candidate/projection.py
+@@ -2,8 +2,7 @@
+ from pathlib import Path
+ import copy, hashlib, json, sys
+ 
+-ROOT = Path(__file__).resolve().parent
+-sys.path.insert(0, str(ROOT / 'vendor'))
++ROOT = Path(__file__).resolve().parent / 'research'
+ from tto.config import load_config, merge, validate
+ from tto.engine import engine_for
+ 
+@@ -34,7 +33,7 @@
+ 
+ 
+ class SavedStream:
+-    def __init__(self, manifest, spec):
++    def __init__(self, manifest, spec, engine):
+         self.manifest, self.spec = manifest, spec
+         c = load_config(environ={})
+         saved = copy.deepcopy(manifest['config'])
+@@ -42,7 +41,8 @@
+             saved[section]['headers_file'] = saved[section]['ca_file'] = None
+         merge(c, saved)
+         validate(c)
+-        self.engine = engine_for(c, record_schema=2)
++        self.engine = engine
++        self.previous_boundary_gaps = 0
+         self.tj = self.power = self.fan = self.temp = None
+         self.source_identity = None
+         self.epoch = 0
+@@ -50,13 +50,14 @@
+         self.context_supported_until = None
+         self.quality = []
+ 
+-    def feed(self, raw):
++    def feed(self, raw, processed):
+         t = raw['mono_s']
+         if self.start is None:
+             self.start = t
+         e = self.engine
+-        previous_gap = e.q.counts['boundary_long_gap']
+-        out = e.process(raw)
++        previous_gap = self.previous_boundary_gaps
++        out = processed
++        self.previous_boundary_gaps = e.q.counts['boundary_long_gap']
+         q = out['quality']
+         reset = raw['kind'] == 'boundary'
+         reason = raw.get('reason') if reset else None
+@@ -141,6 +142,3 @@
+                     measurement=dict(tj=tj, power=power, last_successful_pwm=fan, control_context=temp), safety=safety)
+ 
+ 
+-def make_frames(rows, manifest, spec):
+-    adapter = SavedStream(manifest, spec)
+-    return [adapter.feed(r) for r in rows], adapter.quality

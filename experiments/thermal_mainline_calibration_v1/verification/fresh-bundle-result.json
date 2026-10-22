@@ -1,0 +1,78 @@
+{
+  "status": "passed",
+  "theta_fits": 0,
+  "note": "Same retained candidates; all point identities and numerical outputs reproduced",
+  "checks": [
+    {
+      "file": "predictions.jsonl",
+      "original_sha256": "448ca5778cca65cbe215844b2b91ee5a1ce5284b0160b7adcd38f27842dc7b88",
+      "replay_sha256": "448ca5778cca65cbe215844b2b91ee5a1ce5284b0160b7adcd38f27842dc7b88",
+      "values_compared_to_1e_8_C": true
+    },
+    {
+      "file": "A-long-points.jsonl",
+      "original_sha256": "047839e0add542c16ddbeae3c931ab57dc060e8b14961d95822ae8f5d05b187e",
+      "replay_sha256": "047839e0add542c16ddbeae3c931ab57dc060e8b14961d95822ae8f5d05b187e",
+      "values_compared_to_1e_8_C": true
+    },
+    {
+      "file": "B-metrics.json",
+      "original_sha256": "fcfe78b334ff8414364256d9ab796439267305a4d7018e2b4d01243fecd42e86",
+      "replay_sha256": "fcfe78b334ff8414364256d9ab796439267305a4d7018e2b4d01243fecd42e86",
+      "values_compared_to_1e_8_C": true
+    },
+    {
+      "file": "A-roll-metrics.json",
+      "original_sha256": "88530eb7a6fbb3bebcf7488ee1c0730869e20a8416cb4e57094d66ff2d1f9e44",
+      "replay_sha256": "88530eb7a6fbb3bebcf7488ee1c0730869e20a8416cb4e57094d66ff2d1f9e44",
+      "values_compared_to_1e_8_C": true
+    },
+    {
+      "file": "A-long-metrics.json",
+      "original_sha256": "360e6005ff88af101459475cadd8eff817b57042e9c69272adc2491d35a46f6a",
+      "replay_sha256": "360e6005ff88af101459475cadd8eff817b57042e9c69272adc2491d35a46f6a",
+      "values_compared_to_1e_8_C": true
+    },
+    {
+      "file": "coverage.json",
+      "original_sha256": "4b6cfee4b412df1f8a78dbc57b7f450268fbc52206978196dbb5639ae59c6a6b",
+      "replay_sha256": "4b6cfee4b412df1f8a78dbc57b7f450268fbc52206978196dbb5639ae59c6a6b",
+      "values_compared_to_1e_8_C": true
+    },
+    {
+      "file": "decisions.json",
+      "original_sha256": "f5d0444107a6fb48ccdcb2b69d91ec18fbb9e744402f1c869a4829bfa3dfe21c",
+      "replay_sha256": "f5d0444107a6fb48ccdcb2b69d91ec18fbb9e744402f1c869a4829bfa3dfe21c",
+      "values_compared_to_1e_8_C": true
+    }
+  ],
+  "control_permission": false,
+  "device_access": false,
+  "network_clients": 0,
+  "extracted_from_zip": true,
+  "source_patch_apply_checks": [
+    {
+      "argv": [
+        "git",
+        "apply",
+        "--check",
+        "/private/tmp/tto-mainline-fresh-bundle-20261021-v1/experiments/thermal_mainline_calibration_v1/source.patch"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "apply",
+        "/private/tmp/tto-mainline-fresh-bundle-20261021-v1/experiments/thermal_mainline_calibration_v1/source.patch"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "source_patch_files": 50,
+  "trial_zip_sha256": "7be952bbfeb584e8331e4fbb56493c78636667ddec4302fa794b49103919e97f"
+}

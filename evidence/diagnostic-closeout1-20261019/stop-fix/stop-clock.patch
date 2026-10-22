@@ -1,0 +1,191 @@
+--- a/src/tto_field/scheduler.py
++++ b/src/tto_field/scheduler.py
+@@ -20,13 +20,15 @@
+     def emit(self,event,**kw):self.events.append(dict(event=event,mono_s=self.now,run_id=self.run_id,command_id=self.command_id,**kw))
+     @property
+     def terminal(self):return self.state=='terminal'
+-    def stop(self,reason):
++    def stop(self,reason,*,now):
++        if now<self.now:raise ValueError('monotonic clock moved backwards')
++        self.now=float(now)
+         if self.reason is None:
+             self.reason=reason;self.stopping_at=self.now;self.state='stopping';self.emit('stop_new_requests',reason=reason)
+     def next_phase(self):
+         if self.index>=0:self.emit('phase_end',index=self.index,kind=self.profile['stages'][self.index]['kind'],elapsed_s=self.now-self.phase_start)
+         self.index+=1
+-        if self.index>=len(self.profile['stages']):self.stop('completed');return
++        if self.index>=len(self.profile['stages']):self.stop('completed',now=self.now);return
+         self.phase_start=self.now;stage=self.profile['stages'][self.index];self.window_end=self.now+stage['seconds'];self.state='stage'
+         self.emit('phase_start',index=self.index,stage=stage,window_end=self.window_end)
+     def tick(self,now,snapshot,completed=(),user_stop=False):
+@@ -38,19 +40,19 @@
+             submitted=self.pending.pop(ident);result=dict(submitted,**result);self.requests.append(result)
+             self.emit('request_end',result=result)
+             if result['status']!='completed':
+-                self.unknown_requests.append(ident);self.stop('request_termination_unknown')
++                self.unknown_requests.append(ident);self.stop('request_termination_unknown',now=self.now)
+         gate=readiness(snapshot,self.now,self.run_id,self.formal)
+-        if user_stop:self.stop('user_stop')
+-        if gate['explicit_stop']:self.stop('explicit_protection_or_mode_binding')
++        if user_stop:self.stop('user_stop',now=self.now)
++        if gate['explicit_stop']:self.stop('explicit_protection_or_mode_binding',now=self.now)
+         hard=self.profile['hard_limit_seconds'];cleanup=self.profile['cleanup_reserve_seconds']
+-        if self.now>=hard-cleanup:self.stop('hard_budget_cleanup_boundary')
++        if self.now>=hard-cleanup:self.stop('hard_budget_cleanup_boundary',now=self.now)
+         if self.state not in ('prepare','stopping','terminal'):
+             if gate['start_allowed']:self.unready_since=None
+             else:
+                 if self.unready_since is None:self.unready_since=self.now;self.emit('input_unready',layers=gate)
+-                if self.now-self.unready_since>=self.policy['max_data_unready_seconds']:self.stop('data_or_observer_unavailable_too_long')
++                if self.now-self.unready_since>=self.policy['max_data_unready_seconds']:self.stop('data_or_observer_unavailable_too_long',now=self.now)
+         if self.state=='prepare':
+-            if self.now>self.profile['preparation_reserve_seconds']:self.stop('preparation_budget_exhausted')
++            if self.now>self.profile['preparation_reserve_seconds']:self.stop('preparation_budget_exhausted',now=self.now)
+             elif gate['start_allowed']:self.emit('preparation_ready',layers=gate);self.next_phase()
+         if self.state=='stage':
+             stage=self.profile['stages'][self.index]
+@@ -61,7 +63,7 @@
+                 occupied={v['slot'] for v in self.pending.values()}
+                 for slot in range(stage['concurrency']):
+                     if slot in occupied:continue
+-                    if self.submitted>=self.policy['max_total_requests']:self.stop('request_count_cap');break
++                    if self.submitted>=self.policy['max_total_requests']:self.stop('request_count_cap',now=self.now);break
+                     self.submitted+=1;ident=f'R{self.submitted:04d}'
+                     row=dict(request_id=ident,slot=slot,stage_index=self.index,submit_mono_s=self.now,
+                              timeout_s=min(self.policy['max_request_seconds'],30),repeat_key=stage.get('repeat_key'))
+@@ -69,7 +71,7 @@
+                 self.peak=max(self.peak,len(self.pending))
+         if self.state=='drain':
+             if not self.pending:self.emit('natural_drain_complete',index=self.index);self.next_phase()
+-            elif self.now-self.window_end>=self.profile['drain_per_work_max_seconds']:self.stop('drain_deadline_unknown')
++            elif self.now-self.window_end>=self.profile['drain_per_work_max_seconds']:self.stop('drain_deadline_unknown',now=self.now)
+         if self.state=='stopping':
+             max_drain=self.profile['drain_per_work_max_seconds']
+             if self.pending and (self.now>=hard-cleanup or self.now-self.stopping_at>=max_drain):
+--- a/src/tto_field/runtime.py
++++ b/src/tto_field/runtime.py
+@@ -193,8 +193,8 @@
+                     if scheduler is None and pipeline.run_id:
+                         scheduler=Scheduler(chosen,dict(max_data_unready_seconds=60,max_request_seconds=60,max_total_requests=4096),pipeline.run_id,binding['command_id'],formal=True)
+                     if scheduler is not None:
+-                        if native_task.done():scheduler.stop('collector_exited')
+-                        if stop.is_set():scheduler.stop('collector_or_signal_stop')
++                        if native_task.done():scheduler.stop('collector_exited',now=now)
++                        if stop.is_set():scheduler.stop('collector_or_signal_stop',now=now)
+                         completed=[]
+                         for ident,task in list(tasks.items()):
+                             if task.done():
+--- a/src/tto_field/__init__.py
++++ b/src/tto_field/__init__.py
+@@ -1 +1 @@
+-__version__ = "0.2.4+closeout.1"
++__version__ = "0.2.4+closeout.2"
+--- a/src/tto_field/candidate-files.json
++++ b/src/tto_field/candidate-files.json
+@@ -1,5 +1,5 @@
+ {
+-  "version": "0.2.4+closeout.1",
++  "version": "0.2.4+closeout.2",
+   "files": {
+     "tto/__init__.py": "672cde4b34710368c9ecba08ed361a47ef4a7c1f4ed5863a338bcde29549e700",
+     "tto/__main__.py": "79ee6f134c5c5193377cf9b189cbdcc3e2095e49ba9cec310114441c15a917c4",
+@@ -24,7 +24,7 @@
+     "tto/storage.py": "cda8d22444a0e1fe5fc2f1fa86b73cb4e3f9be4e76edb3cf265520b3285143ec",
+     "tto/training.py": "c8f0d6c83587b18c8a527e9d84e222276ee1bd0edc8e69a828dd1ed33a2de773",
+     "tto/util.py": "0a33bb268e7817ddd19b6ae81562c50e1fdd08a9cdb3fa08f8f2dd3fbb252f16",
+-    "tto_field/__init__.py": "3a81937cc0d1982146773d8d60f3227d32f624679813c00b1b23ad20a63cb953",
++    "tto_field/__init__.py": "3c185e4e6e1280eb9f9fced7a19bc555dad14a7abfce6d370ba1b46764e3ec97",
+     "tto_field/cli.py": "e81ca7e714568e08e841b291ba9bcbb2019f1c67a0d747dfd90ba139bd92c649",
+     "tto_field/comm_bridge.py": "50f7297b066057323c9a46ffc8713e0a799432ffce95567db5f89b62f2fbe5d1",
+     "tto_field/gate.py": "ef4b08c99ec70c893e9a89db9be2af6334ff5a5c4f9f568998bc8a3929c5592a",
+@@ -38,8 +38,8 @@
+     "tto_field/research/models/primary.json": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
+     "tto_field/research/observer-spec.json": "2080adcf20773650299def2bb0f3ebdb9f87d8f85281d5b87a99d8b406c83c6b",
+     "tto_field/research/observer.py": "599e292a0000697615e76a97596f2f48c7527bc82027bacca5aea0c0fe5d4a47",
+-    "tto_field/runtime.py": "f9f270792614f60c6f0abb480090b57d6b5eaed68110dacac2327a4a8f030432",
+-    "tto_field/scheduler.py": "95a9f6814ab885f3a7fd1c7544f6c5727e81d09a956b1b1ef0a142e055df024e",
++    "tto_field/runtime.py": "624bec7885b80a90eb10b154e18985a3b0c1d9e285b7a456dfa7deb9522d4141",
++    "tto_field/scheduler.py": "f9c16e9a26c0d322a2df7b9105cc6823ef9c2b1ef156a2764c8076dd02229b05",
+     "tto_field/support.py": "4f27123760854de2ef87b6074ee94757af61730968e14b56cfe646a99e8f9440",
+     "tto_field/upstream_comm/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "tto_field/upstream_comm/source_health.py": "a64753f8dc04801701e352899235a7a2e8ad326097e2b676553181fc8c11d595"
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -4,7 +4,7 @@
+ 
+ [project]
+ name = "tto-field-candidate"
+-version = "0.2.4+closeout.1"
++version = "0.2.4+closeout.2"
+ description = "Isolated RM-01 read-only diagnostic and fixed-anchors experiment candidate"
+ requires-python = ">=3.10,<3.13"
+ dependencies = ["aiohttp==3.11.18", "python-socketio==5.13.0", "psutil==7.0.0", "numpy==2.2.6", "scipy==1.15.3"]
+--- a/tools/seal_candidate.py
++++ b/tools/seal_candidate.py
+@@ -4,5 +4,5 @@
+ root=Path(__file__).resolve().parents[1];src=root/'src';files={}
+ for p in sorted(src.rglob('*')):
+  if p.is_file() and '__pycache__' not in p.parts and p.suffix in ('.py','.json') and p.name!='candidate-files.json':files[str(p.relative_to(src))]=hashlib.sha256(p.read_bytes()).hexdigest()
+-(src/'tto_field/candidate-files.json').write_text(json.dumps(dict(version='0.2.4+closeout.1',files=files),indent=2)+'\n')
++(src/'tto_field/candidate-files.json').write_text(json.dumps(dict(version='0.2.4+closeout.2',files=files),indent=2)+'\n')
+ print('Sealed',len(files),'source/data files')
+--- a/tests/test_stop_clock.py
++++ b/tests/test_stop_clock.py
+@@ -0,0 +1,41 @@
++"""Deterministic clock regression for external stop, with no device or inference."""
++import unittest
++from unittest.mock import patch
++from tto_field.scheduler import Scheduler
++
++class StopClockTests(unittest.TestCase):
++    def setUp(self):
++        self.gate=patch('tto_field.scheduler.readiness',return_value={'explicit_stop':False,'start_allowed':True})
++        self.gate.start();self.addCleanup(self.gate.stop)
++        p=dict(stages=[dict(kind='work',seconds=20,concurrency=1)],hard_limit_seconds=60,
++               cleanup_reserve_seconds=5,preparation_reserve_seconds=10,drain_per_work_max_seconds=3)
++        self.s=Scheduler(p,dict(max_request_seconds=30,max_total_requests=10,max_data_unready_seconds=60),'RUN','COMMAND')
++        a,_=self.s.tick(2.,None);self.assertEqual(len(a),1)
++        self.ident=a[0]['request_id']
++    def test_external_stop_uses_observation_time_and_drains_from_it(self):
++        self.s.stop('collector_exited',now=2.125)
++        self.assertEqual(self.s.stopping_at,2.125)
++        stop=next(e for e in self.s.events if e['event']=='stop_new_requests')
++        self.assertEqual(stop['mono_s'],2.125)
++        self.assertLess(self.s.pending[self.ident]['submit_mono_s'],stop['mono_s'])
++        a,_=self.s.tick(5.124,None);self.assertEqual(a,[]);self.assertIn(self.ident,self.s.pending)
++        a,_=self.s.tick(5.125,None);self.assertEqual(a,[dict(kind='cancel_client',request_id=self.ident)])
++        self.assertTrue(self.s.terminal)
++        self.assertEqual([e['mono_s'] for e in self.s.events],sorted(e['mono_s'] for e in self.s.events))
++    def test_repeated_notification_keeps_first_stop_and_natural_completion(self):
++        self.s.stop('collector_exited',now=2.125)
++        self.s.stop('collector_or_signal_stop',now=2.2)
++        self.assertEqual(self.s.stopping_at,2.125);self.assertEqual(self.s.reason,'collector_exited')
++        a,_=self.s.tick(2.3,None,[dict(request_id=self.ident,status='completed')])
++        self.assertEqual(a,[]);self.assertTrue(self.s.terminal);self.assertFalse(self.s.unknown_requests)
++        self.assertEqual(sum(e['event']=='stop_new_requests' for e in self.s.events),1)
++    def test_missing_or_backwards_time_is_rejected(self):
++        with self.assertRaises(TypeError):self.s.stop('collector_exited')
++        with self.assertRaisesRegex(ValueError,'monotonic'):self.s.stop('collector_exited',now=1.9)
++        self.assertIsNone(self.s.reason)
++    def test_tick_internal_stop_also_uses_current_time(self):
++        self.s.tick(2.125,None,user_stop=True)
++        self.assertEqual(self.s.stopping_at,2.125)
++        self.assertEqual(next(e for e in self.s.events if e['event']=='stop_new_requests')['mono_s'],2.125)
++
++if __name__=='__main__':unittest.main()
+--- a/tests/check_exit_under_load.py
++++ b/tests/check_exit_under_load.py
+@@ -18,9 +18,12 @@
+   e=[json.loads(x) for x in (out/'run/scheduler-events.jsonl').read_text().splitlines()]
+   stopped=next(x['mono_s'] for x in e if x['event']=='stop_new_requests')
+   assert not any(x['event']=='request_submit' and x['mono_s']>=stopped for x in e)
++  assert [x['mono_s'] for x in e]==sorted(x['mono_s'] for x in e)
++  protocol=[json.loads(x) for x in (out/'run/protocol.jsonl').read_text().splitlines()]
++  assert not any(x['event']=='request_submit' and x['submit_mono_s']>=stopped for x in protocol)
+   assert server.posts>0 and r['reason'] in ('collector_exited','collector_or_signal_stop')
+   assert r['own_async_tasks_remaining']==0 and r['requester_sessions_all_closed'] and r['collector_summary']['polling_health']['end_inflight']==0
+-  write(out/'verification.json',dict(actual_loopback_requests=server.posts,reason=r['reason'],no_scheduler_submissions_after_stop=True,
++  write(out/'verification.json',dict(actual_loopback_requests=server.posts,reason=r['reason'],no_scheduler_submissions_after_stop=True,no_protocol_submissions_after_stop=True,scheduler_events_monotonic=True,
+         native_poll_inflight_end=0,requester_sessions_all_closed=True,own_async_tasks_remaining=0))
+  print('Actual collector exit under loopback load drains and closes; no later submission')
+ if __name__=='__main__':asyncio.run(main(Path(sys.argv[1])))

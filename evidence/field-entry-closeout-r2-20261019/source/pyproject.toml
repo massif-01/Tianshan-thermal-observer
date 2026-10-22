@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools==80.9.0", "wheel==0.45.1"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tto-field-candidate"
+version = "0.2.4+closeout.1"
+description = "Isolated RM-01 read-only diagnostic and fixed-anchors experiment candidate"
+requires-python = ">=3.10,<3.13"
+dependencies = ["aiohttp==3.11.18", "python-socketio==5.13.0", "psutil==7.0.0", "numpy==2.2.6", "scipy==1.15.3"]
+
+[project.scripts]
+tto-field = "tto_field.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+tto = ["defaults.json"]
+tto_field = ["*.json", "research/*.json", "research/models/*.json", "plans/*.json"]

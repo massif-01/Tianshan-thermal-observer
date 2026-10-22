@@ -1,0 +1,184 @@
+[
+  {
+    "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQWg",
+    "name": "Status",
+    "dataType": "SINGLE_SELECT",
+    "options": [
+      {
+        "id": "f75ad846",
+        "name": "Todo",
+        "color": "GREEN",
+        "description": "This item hasn't been started"
+      },
+      {
+        "id": "47fc9ee4",
+        "name": "In Progress",
+        "color": "YELLOW",
+        "description": "This is actively being worked on"
+      },
+      {
+        "id": "98236657",
+        "name": "Done",
+        "color": "PURPLE",
+        "description": "This has been completed"
+      },
+      {
+        "id": "7ad14503",
+        "name": "Blocked",
+        "color": "RED",
+        "description": "真实外部阻断；Later不等于Blocked"
+      }
+    ]
+  },
+  {
+    "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQoY",
+    "name": "Phase",
+    "dataType": "SINGLE_SELECT",
+    "options": [
+      {
+        "id": "0e95db5f",
+        "name": "P0",
+        "color": "GRAY",
+        "description": ""
+      },
+      {
+        "id": "3110df48",
+        "name": "P1",
+        "color": "GRAY",
+        "description": ""
+      },
+      {
+        "id": "ad68b8f4",
+        "name": "P2",
+        "color": "GRAY",
+        "description": ""
+      },
+      {
+        "id": "e07063e3",
+        "name": "P3",
+        "color": "GRAY",
+        "description": ""
+      },
+      {
+        "id": "8d000284",
+        "name": "P4",
+        "color": "GRAY",
+        "description": ""
+      },
+      {
+        "id": "1f7d8194",
+        "name": "P5",
+        "color": "GRAY",
+        "description": ""
+      },
+      {
+        "id": "2525e6db",
+        "name": "P6",
+        "color": "GRAY",
+        "description": ""
+      },
+      {
+        "id": "649da9e2",
+        "name": "P7",
+        "color": "GRAY",
+        "description": ""
+      },
+      {
+        "id": "41271fb8",
+        "name": "Control",
+        "color": "GRAY",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQ-8",
+    "name": "Horizon",
+    "dataType": "SINGLE_SELECT",
+    "options": [
+      {
+        "id": "f59e7052",
+        "name": "Now",
+        "color": "GRAY",
+        "description": ""
+      },
+      {
+        "id": "83e9003e",
+        "name": "Next",
+        "color": "GRAY",
+        "description": ""
+      },
+      {
+        "id": "beebca67",
+        "name": "Later",
+        "color": "GRAY",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRAA",
+    "name": "Kind",
+    "dataType": "SINGLE_SELECT",
+    "options": [
+      {
+        "id": "6752f2b0",
+        "name": "Overview",
+        "color": "GRAY",
+        "description": ""
+      },
+      {
+        "id": "de7d8720",
+        "name": "Delivery",
+        "color": "GRAY",
+        "description": ""
+      },
+      {
+        "id": "b60f56c8",
+        "name": "Task",
+        "color": "GRAY",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRBU",
+    "name": "Priority",
+    "dataType": "SINGLE_SELECT",
+    "options": [
+      {
+        "id": "39e65c7a",
+        "name": "High",
+        "color": "GRAY",
+        "description": ""
+      },
+      {
+        "id": "2ea5dcc7",
+        "name": "Normal",
+        "color": "GRAY",
+        "description": ""
+      },
+      {
+        "id": "0f58e08e",
+        "name": "Low",
+        "color": "GRAY",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "id": "PVTF_lAHOCoNcq84BnjKJzhmHRCQ",
+    "name": "Responsible chat",
+    "dataType": "TEXT"
+  },
+  {
+    "id": "PVTF_lAHOCoNcq84BnjKJzhmHRCU",
+    "name": "Start date",
+    "dataType": "DATE"
+  },
+  {
+    "id": "PVTF_lAHOCoNcq84BnjKJzhmHRCY",
+    "name": "Target date",
+    "dataType": "DATE"
+  }
+]

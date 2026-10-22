@@ -1,0 +1,639 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tto:web:snapshot:1.0",
+  "title": "TTO Web public snapshot v1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "snapshot_seq",
+    "service_epoch",
+    "run_id",
+    "source_epoch",
+    "mode",
+    "server_time_utc",
+    "clock_domain_id",
+    "run_elapsed_ms",
+    "metrics",
+    "model",
+    "predictions",
+    "advisory",
+    "context",
+    "health",
+    "event_cursor"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "TTO-WEB-SNAPSHOT-v1"
+    },
+    "snapshot_seq": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "service_epoch": {
+      "type": "string"
+    },
+    "run_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "source_epoch": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "mode": {
+      "enum": [
+        "live",
+        "waiting",
+        "ended",
+        "test_replay"
+      ]
+    },
+    "server_time_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "clock_domain_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "run_elapsed_ms": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "metrics": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/metric"
+      }
+    },
+    "model": {
+      "type": "object",
+      "required": [
+        "model_id",
+        "spec_id",
+        "phase",
+        "Tf_C",
+        "Ts_C",
+        "E_C",
+        "calibrated_confidence",
+        "nodes",
+        "edges"
+      ],
+      "properties": {
+        "model_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "spec_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "phase": {
+          "enum": [
+            "uninitialized",
+            "provisional",
+            "tracking",
+            "degraded",
+            "unavailable",
+            "not_loaded"
+          ]
+        },
+        "Tf_C": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "Ts_C": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "E_C": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "calibrated_confidence": {
+          "type": "null"
+        },
+        "nodes": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "edges": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "remaining_valid_ms": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "predictions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/forecast"
+      }
+    },
+    "advisory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "provider_id",
+        "value_percent",
+        "reason",
+        "device_write_permitted"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "available",
+            "not_configured",
+            "unavailable",
+            "withheld",
+            "out_of_domain"
+          ]
+        },
+        "provider_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "value_percent": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 100
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "device_write_permitted": {
+          "const": false
+        },
+        "remaining_valid_ms": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "not_configured",
+                  "unavailable",
+                  "withheld",
+                  "out_of_domain"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value_percent": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "context": {
+      "type": "object",
+      "required": [
+        "observed_device",
+        "tto_host",
+        "task_metadata_available",
+        "active_requests",
+        "control_owner",
+        "tto_role"
+      ],
+      "properties": {
+        "observed_device": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tto_host": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "task_metadata_available": {
+          "type": "boolean"
+        },
+        "active_requests": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "control_owner": {
+          "const": "TianshanOS"
+        },
+        "tto_role": {
+          "const": "read_only"
+        }
+      },
+      "additionalProperties": false
+    },
+    "health": {
+      "type": "object",
+      "required": [
+        "web_connected",
+        "measurement_status",
+        "protection_status"
+      ],
+      "properties": {
+        "web_connected": {
+          "type": "boolean"
+        },
+        "measurement_status": {
+          "enum": [
+            "valid",
+            "partial",
+            "unavailable",
+            "waiting"
+          ]
+        },
+        "protection_status": {
+          "enum": [
+            "no_reported_protection",
+            "active",
+            "unknown"
+          ]
+        },
+        "protection_remaining_valid_ms": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "event_cursor": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "$defs": {
+    "metric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "label",
+        "kind",
+        "unit",
+        "value",
+        "status",
+        "reason_code",
+        "source_id",
+        "source_ref",
+        "sample_id",
+        "received_at_utc",
+        "source_time_utc",
+        "as_of_elapsed_ms",
+        "age_lower_bound_ms",
+        "remaining_valid_ms",
+        "time_quality",
+        "last_observation"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "observed",
+            "derived",
+            "estimate",
+            "forecast",
+            "advisory",
+            "configured"
+          ]
+        },
+        "unit": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "value": {
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "null"
+          ]
+        },
+        "status": {
+          "enum": [
+            "valid",
+            "stale",
+            "invalid",
+            "unknown",
+            "not_supported",
+            "not_configured",
+            "unverified",
+            "conditional"
+          ]
+        },
+        "reason_code": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sample_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "received_at_utc": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "source_time_utc": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "as_of_elapsed_ms": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "age_lower_bound_ms": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "remaining_valid_ms": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "time_quality": {
+          "enum": [
+            "same_clock",
+            "mapped",
+            "receive_approximation",
+            "unknown"
+          ]
+        },
+        "last_observation": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "required": [
+                "value",
+                "observed_at_utc"
+              ],
+              "properties": {
+                "value": {
+                  "type": [
+                    "number",
+                    "string",
+                    "boolean"
+                  ]
+                },
+                "observed_at_utc": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "additionalProperties": false
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "stale",
+                  "invalid",
+                  "unknown",
+                  "not_supported",
+                  "not_configured",
+                  "unverified"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "forecast": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "prediction_id",
+        "run_id",
+        "source_epoch",
+        "model_id",
+        "spec_id",
+        "scenario",
+        "horizon_s",
+        "origin_elapsed_ms",
+        "issued_elapsed_ms",
+        "target_elapsed_ms",
+        "input_cutoff_elapsed_ms",
+        "value_C",
+        "phase_at_origin",
+        "evidence_mode",
+        "status",
+        "observed_C",
+        "error_C"
+      ],
+      "properties": {
+        "prediction_id": {
+          "type": "string"
+        },
+        "run_id": {
+          "type": "string"
+        },
+        "source_epoch": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "model_id": {
+          "type": "string"
+        },
+        "spec_id": {
+          "type": "string"
+        },
+        "scenario": {
+          "const": "HOLD"
+        },
+        "horizon_s": {
+          "enum": [
+            15,
+            45,
+            90
+          ]
+        },
+        "origin_elapsed_ms": {
+          "type": "number",
+          "minimum": 0
+        },
+        "issued_elapsed_ms": {
+          "type": "number",
+          "minimum": 0
+        },
+        "target_elapsed_ms": {
+          "type": "number",
+          "minimum": 0
+        },
+        "input_cutoff_elapsed_ms": {
+          "type": "number",
+          "minimum": 0
+        },
+        "value_C": {
+          "type": "number"
+        },
+        "phase_at_origin": {
+          "enum": [
+            "tracking",
+            "degraded"
+          ]
+        },
+        "evidence_mode": {
+          "enum": [
+            "issued_online",
+            "test_replay"
+          ]
+        },
+        "status": {
+          "enum": [
+            "pending",
+            "matched",
+            "missing_label",
+            "late_publication",
+            "not_comparable"
+          ]
+        },
+        "observed_C": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "error_C": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "settled_elapsed_ms": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "pending",
+                  "missing_label",
+                  "late_publication",
+                  "not_comparable"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "observed_C": {
+                "type": "null"
+              },
+              "error_C": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

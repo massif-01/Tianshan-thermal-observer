@@ -1,0 +1,126 @@
+{
+  "audit_scope": "Thor adaptation review only; no production source changes in this review",
+  "collection": {
+    "run_id": "7113c960-2306-443c-b3ba-002dbfeb08d5",
+    "started_at_utc": "2026-10-12T11:39:43.641157+00:00",
+    "ended_at_utc": "2026-10-12T11:43:00.192619+00:00",
+    "elapsed_s": 196.54426103300648,
+    "stop_reason": "SIGINT",
+    "observations": 628,
+    "orin_events": 196,
+    "prediction_origins": 38,
+    "normal_auto_origins": 0,
+    "human_task_markers_reported": false,
+    "remote_local_sha256_equal": true
+  },
+  "resolved_deployment_issue": "Latest cloned source was not the package used by service override; actual venv updated to source commit ca690bdf and service restarted under prior explicit authorization. This is separate from remaining Thor adaptation gaps.",
+  "official_sources": [
+    "https://docs.nvidia.com/jetson/archives/r38.2/DeveloperGuide/SD/PlatformPowerAndPerformance/JetsonThor.html#gpu-management-tool",
+    "https://docs.nvidia.com/deploy/nvidia-smi/index.html",
+    "https://forums.developer.nvidia.com/t/missing-gpu-utilization-gr3d-in-tegrastats-on-jetpack-7-0-thor/347333"
+  ],
+  "findings": [
+    {
+      "id": "GPU_BACKEND",
+      "priority": "high",
+      "component": "rm01OrinStatus parser / snapshot; TTO quality",
+      "evidence": [
+        "parser.py:309 only matches GR3D_FREQ N%",
+        "Thor raw frames captured in thor-raw-tegrastats.txt have no GPU utilization token",
+        "thor-nvml-probe.json successfully returns NVIDIA Thor utilization via existing pynvml"
+      ],
+      "impact": "GPU utilization absent in service payload and all TTO features",
+      "proposal": "Keep tegrastats for existing Orin. Add Thor NVML GPU utilization with explicit percent field, separate clock units, provider and sample time. Attach an immutable sampled GPU value when committing a new telemetry sample; never change GPU payload under the same stream_id/sample_seq. Failure or stale provider is missing, not zero. TTO reads new field with provider/time qualification; retain legacy Orin compatibility. Identify platform from device-tree compatible (verified Thor nvidia,tegra264), record capabilities, and publish platform/provider identity for TTO; do not rely on hostname or user manual platform selection.",
+      "acceptance": "Controlled existing user workload: compare NVML and service at aligned times; distinguish missing from zero; cached retransmits do not trigger identity_conflict; provider failure does not stop TJ collection."
+    },
+    {
+      "id": "POWER_RAILS",
+      "priority": "high",
+      "component": "TTO quality.py:6,24; features.py:9",
+      "evidence": [
+        "Thor service preserves vdd_gpu,vdd_cpu_soc_mss,vin_sys_5v0",
+        "TTO only consumes vdd_gpu_soc,vdd_cpu_cv,vin_sys_5v0",
+        "power_current_rails config exists but is not used by numbers()"
+      ],
+      "impact": "Two real Thor rails are retained raw but omitted from features",
+      "proposal": "Define explicit Thor feature columns for the real rail identities and W conversion; keep raw mW/current/average. Do not alias Thor combined rails to Orin rails or add them into an invented total. Keep Orin profile.",
+      "acceptance": "Recorded-frame replay exactly converts mW to W for each named rail; unknown rails remain in raw data; no RAM/SWAP power entries; changed profile rejects incompatible frozen models."
+    },
+    {
+      "id": "TEMPERATURE_GROUPS",
+      "priority": "medium",
+      "component": "TTO quality.py:12; features.py:9",
+      "evidence": [
+        "Thor provides soc012,soc345; TTO looks for soc0,soc1,soc2",
+        "TJ/CPU/GPU temperatures already preserved and consumed"
+      ],
+      "impact": "Two measured grouped sensors are omitted from features",
+      "proposal": "Add Thor grouped sensor feature names with their actual meaning. Do not split one grouped reading into invented individual SoC sensors. Preserve current TJ target.",
+      "acceptance": "Recorded-frame replay preserves exact grouped values; missing stays missing; CPU/GPU/TJ extraction unchanged."
+    },
+    {
+      "id": "CONTROL_SCOPE",
+      "priority": "blocking for current model-evaluation scope",
+      "component": "TTO engine.py:174-178; TianshanOS ts_fan.h / ts_fan.c",
+      "evidence": [
+        "All 194 fan observations are mode=curve",
+        "All 38 prediction origins normal_auto=false, duty/gain unavailable",
+        "Firmware AUTO adaptive and CURVE hysteresis are separate branches"
+      ],
+      "impact": "This round can verify raw acquisition and produce baseline references, but cannot train/evaluate under current normal-AUTO contract",
+      "proposal": "User requires current motherboard-controlled CURVE mode. Add explicit CURVE eligibility while keeping AUTO classification separate. Use valid successful duty and history for CURVE; controller_gain is AUTO-specific in examined firmware and must not remain a mandatory CURVE feature. Keep manual/fault/stale exclusions and scope-change boundaries. Do not change motherboard mode.",
+      "acceptance": "AUTO/CURVE/manual/fault/stale fixtures classify correctly; scope changes create boundaries; saved baseline remains immutable."
+    },
+    {
+      "id": "FEATURE_PROFILE",
+      "priority": "high before modeling",
+      "component": "TTO features.py / storage.py / dataset.py:88 / model.py:14",
+      "evidence": [
+        "Current feature_schema=1 and ALL_COLUMNS count is 54",
+        "Adding two Thor power groups and two temperature groups naively adds 12 columns and exceeds the hard 64-column limit",
+        "Dataset checks common source period; model gates do not explicitly identify hardware profile"
+      ],
+      "impact": "Naive field addition can break feature dimension and permit unsuitable platform/control-scope mixing",
+      "proposal": "Small explicit Orin and Thor feature profiles with source/platform identity carried through run, dataset and frozen model. Define schema migration and reject incompatible model/profile combinations. Select per-platform groups, do not blindly append a global union or arbitrarily increase the limit.",
+      "acceptance": "Each supported profile fits the declared limit; legacy profile behavior preserved; cross-profile model use and unintended dataset mixing rejected."
+    },
+    {
+      "id": "REPORT_READINESS",
+      "priority": "medium",
+      "component": "TTO report.py:35-39 / storage.py:55",
+      "evidence": [
+        "Report conclusion says software usable and suggests split/evaluate although normal_auto_origins=0",
+        "host_scope hardcoded current_host_only_not_N305 while actual observer is verified N305",
+        "Current provenance deployment_unverified; no firmware installation identity independently verified"
+      ],
+      "impact": "Acquisition success can be mistaken for evaluation readiness; host and deployment qualification incomplete",
+      "proposal": "Report connection/usable measurements separately from feature coverage/control-scope eligibility/model readiness. Record evidenced host/platform and package identity; keep firmware/deployment evidence gaps explicit. Tailor next step to actual blockers.",
+      "acceptance": "This preserved run clearly reports accepted TJ data, missing optional inputs, CURVE exclusion and no model-validation claim; current-host proof does not imply other-device or firmware qualification."
+    }
+  ],
+  "implementation_order": [
+    "Confirm control-scope acceptance and small explicit platform input contract",
+    "Adapt monitoring GPU provider and preserve atomic sample identity; keep raw rail/sensor names",
+    "Adapt TTO extraction/features/profile eligibility and reports",
+    "Replay preserved frames offline; verify existing Orin compatibility and failure paths",
+    "Install a separately identified candidate; rerun 180-second live doctor, workload/cooling collection and observed resource checks"
+  ],
+  "verification_limits": "No workload GPU-utilization response, modified-code tests, new model training or model accuracy validation performed in this audit.",
+  "clarified_requirements": {
+    "fan_control_owner": "Independent RM-01 motherboard; current CURVE mode must be preserved",
+    "platform_selection": "rm01OrinStatus must automatically identify Orin vs Thor and publish evidenced identity/capabilities; TTO consumes this identity",
+    "observed_thor_identity": {
+      "compatible": [
+        "rm01,rm01-thor",
+        "nvidia,p3834-0008",
+        "nvidia,tegra264"
+      ],
+      "model": "RM01-Thor V1.0 CVB"
+    },
+    "change_ownership": {
+      "rm01OrinStatus": "Platform identification, GPU provider selection, telemetry identities/units/times; preserve raw sensor and rail names",
+      "TTO": "Consume declared platform profile, support CURVE evaluation contract and actual successful PWM, separate AUTO-specific gain requirement, bind models/datasets to platform and control scope",
+      "TianshanOS": "Preserve existing fan control and CURVE configuration; no firmware change requested"
+    }
+  }
+}

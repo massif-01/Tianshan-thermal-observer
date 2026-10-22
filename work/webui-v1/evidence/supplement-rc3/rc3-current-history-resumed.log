@@ -1,0 +1,6 @@
+### Result
+{"currentCohortResumed":true,"score":"MAE\n— °C\n绝对误差P95\n— °C\n最大低估\n— °C\n匹配 / 应到期\n0 / 0"}
+### Ran Playwright code
+```js
+await (async (page) => { await page.waitForFunction(() => document.querySelectorAll('#score b').length === 4); const score=await page.locator('#score').innerText(); if(score.includes('777.123')) throw Error('foreign result survived'); await page.screenshot({path:'output/playwright/rc3-current-history-resumed.png',fullPage:true}); return {currentCohortResumed:true,score}; })(page);
+```

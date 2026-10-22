@@ -1,0 +1,72 @@
+.....................FF....                                              [100%]
+=================================== FAILURES ===================================
+_____ test_actual_observe_collector_quality_observer_http_sse_four_clients _____
+
+tmp_path = PosixPath('/private/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/pytest-of-massif/pytest-606/test_actual_observe_collector_0')
+
+    @pytest.mark.asyncio
+    async def test_actual_observe_collector_quality_observer_http_sse_four_clients(tmp_path):
+        async with FakeSource() as source:
+            config=web_config();c=native_config(source.url);path=tmp_path/'native.json';atomic_json(path,c)
+            config['source'].update(mode='observe',observation_config=str(path))
+            state=State(config);stop=asyncio.Event();task=asyncio.create_task(observe(config,state,stop))
+            runner,url=await start(app_for(config,start_source=False,state=state))
+            try:
+                async with aiohttp.ClientSession(headers={'Host':'127.0.0.1:59009'}) as client:
+                    await asyncio.sleep(3.3)
+                    # Each browser is only an SSE client. Native request counters remain time-based.
+                    streams=[await client.get(url+'/api/v1/stream') for _ in range(4)]
+                    for response in streams:
+                        body=await asyncio.wait_for(response.content.readuntil(b'\n\n'),2)
+                        assert b'TTO-WEB-SNAPSHOT-v1' in body
+                    r=await client.get(url+'/api/v1/stream');assert r.status==503;await r.release()
+                    await asyncio.sleep(3.1)
+                    snapshot=await (await client.get(url+'/api/v1/snapshot')).json()
+>                   assert snapshot['mode']=='test_replay'
+E                   AssertionError: assert 'waiting' == 'test_replay'
+E                     
+E                     - test_replay
+E                     + waiting
+
+tests/test_service.py:41: AssertionError
+_________ test_observe_conflict_leaves_web_available_and_zero_network __________
+
+tmp_path = PosixPath('/private/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/pytest-of-massif/pytest-606/test_observe_conflict_leaves_w0')
+
+    @pytest.mark.asyncio
+    async def test_observe_conflict_leaves_web_available_and_zero_network(tmp_path):
+        async with FakeSource() as source:
+            config=web_config();path=tmp_path/'native.json';atomic_json(path,native_config(source.url));config['source'].update(mode='observe',observation_config=str(path))
+            state=State(config);stop=asyncio.Event()
+>           with InstanceLock():await observe(config,state,stop)
+
+tests/test_service.py:66: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <tto.storage.InstanceLock object at 0x1125fa5a0>
+
+    def __enter__(self):
+        self.fd = os.open(self.path, os.O_CREAT | os.O_RDWR | getattr(os, 'O_NOFOLLOW', 0), 0o600)
+        try:
+            fcntl.flock(self.fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            os.close(self.fd)
+            self.fd = None
+>           raise ValueError('另一个TTO观察进程正在运行。') from None
+E           ValueError: 另一个TTO观察进程正在运行。
+
+vendor/tto/storage.py:29: ValueError
+=============================== warnings summary ===============================
+tests/test_boundaries.py::test_slow_display_queue_resync_is_bounded_without_source_backpressure
+tests/test_service.py::test_actual_observe_collector_quality_observer_http_sse_four_clients
+tests/test_service.py::test_sse_resync_no_ttl_renewal_and_get_only_routes
+tests/test_service.py::test_waiting_api_and_lan_session_access_and_logout
+  /Users/massif/Tianshan-thermal-observer/work/webui-v1/src/tto_web/server.py:75: NotAppKeyWarning: It is recommended to use web.AppKey instances for keys.
+  https://docs.aiohttp.org/en/stable/web_advanced.html#application-s-config
+    app['state']=state;app['sse_clients']=sse_clients;app['stop']=stop
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_service.py::test_actual_observe_collector_quality_observer_http_sse_four_clients
+FAILED tests/test_service.py::test_observe_conflict_leaves_web_available_and_zero_network
+2 failed, 25 passed, 1 deselected, 4 warnings in 11.72s

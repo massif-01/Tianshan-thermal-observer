@@ -1,0 +1,57 @@
+{
+  "independent_workspace": "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-pro-review-independent-5xtob89r",
+  "candidate_zip_sha256": "f805fa59da18059d00c82e3b7cb5a1c9a561c8142c27826e900f1cf552ce8532",
+  "CRC_all_members_passed": true,
+  "commands": [
+    {
+      "argv": [
+        "verify_handoff.py"
+      ],
+      "returncode": 0,
+      "stdout": "{\"payload_files_verified\": 511, \"nested_original_indexes\": {\"field\": 332, \"modeling\": 136}, \"same_run_and_frozen_identity\": true, \"supplement_is_offline_only\": true}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "evidence/modeling/verify.py"
+      ],
+      "returncode": 0,
+      "stdout": "{\"payload_members_verified\": 136, \"frozen_identity_and_same_run_link\": true}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "tools/recompute_supplement.py",
+        "--output",
+        "/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/tto-pro-review-independent-5xtob89r/analysis-replay"
+      ],
+      "returncode": 0,
+      "stdout": "{\"rows\": 2706, \"outputs\": 4, \"new_field_runs\": 0, \"theta_fits\": 0}\n",
+      "stderr": ""
+    }
+  ],
+  "derived_supplement_files_byte_exact": 4,
+  "files": [
+    {
+      "name": "cpu-memory-time-summary.json",
+      "sha256": "74e9ce71c69a3c6ab9017aaf83d2c572707aa66686db01c0447099778ce1c185"
+    },
+    {
+      "name": "cpu-per-core-observations.csv",
+      "sha256": "eb8f3711af8278e3a5a13a934280b705c4bb460f2c64a0a7c7cf544bc6eb34e0"
+    },
+    {
+      "name": "existing-outcome-extract.json",
+      "sha256": "6adfd85df42d40437902cf80bfe9f58cbc1a1b077f11d7769d3db851c029e7de"
+    },
+    {
+      "name": "source-valid-cohort.json",
+      "sha256": "add77e60a0b5422add214ab78eeefec106c8791358e877bcbd1f3af5ae446076"
+    }
+  ],
+  "current_frozen_model_original_index_verified": true,
+  "new_live_runs": 0,
+  "new_theta_fits": 0,
+  "note": "Independent extraction validates this handoff and four descriptive files. Existing six model tests/23 scientific replay files are preserved original evidence, not claimed as newly executed here.",
+  "finalization": "Final bundle adds this receipt/log; source/scientific payload members are verified unchanged against the candidate manifest."
+}

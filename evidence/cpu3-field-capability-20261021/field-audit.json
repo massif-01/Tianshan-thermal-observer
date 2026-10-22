@@ -1,0 +1,62 @@
+{
+  "native_run_id": "ed9de51d-7cb3-4a60-9be4-5ee5ba238a1a",
+  "pid": 12283,
+  "same_pid_verified": true,
+  "files_checked": 31,
+  "all_recorded_SHA_pass": true,
+  "elapsed_s": 60.05023471299501,
+  "reason": "diagnostic_duration",
+  "sidecar_status": "native_fan_gap_exceeds_original_TTL",
+  "sidecar_interval_s": [
+    30.02949678899313,
+    34.80680701699748
+  ],
+  "sidecar_duration_s": 4.777310228004353,
+  "resources_by_actual_phase": {
+    "before": {
+      "samples": 29,
+      "cpu_valid_intervals": 28,
+      "cpu_mean_pct": 2.9824411205065977,
+      "cpu_max_pct": 4.912063999439589,
+      "rss_max_mib": 73.6015625,
+      "cpu_over8_count": 0
+    },
+    "during": {
+      "samples": 5,
+      "cpu_valid_intervals": 5,
+      "cpu_mean_pct": 3.925774514512008,
+      "cpu_max_pct": 5.888840283942558,
+      "rss_max_mib": 73.984375,
+      "cpu_over8_count": 0
+    },
+    "after": {
+      "samples": 25,
+      "cpu_valid_intervals": 25,
+      "cpu_mean_pct": 3.1445321981781706,
+      "cpu_max_pct": 4.914696256007495,
+      "rss_max_mib": 74.47265625,
+      "cpu_over8_count": 0
+    }
+  },
+  "source": {
+    "packets": 24,
+    "wire": 24,
+    "complete_cpu_windows": 23,
+    "rss_max_mib": 43.55078125,
+    "cpu_singlecore_pct_max_after5s": null,
+    "source_elapsed_last_s": 4.60348121599236,
+    "source_cpu_cumulative_s": 0.08937082699999999,
+    "read_max_s": 0.0076554360130103305,
+    "source_stop_reasons": []
+  },
+  "fan_success_intervals": {
+    "count": 47,
+    "max_s": 2.679092544989544,
+    "over_original_2_5s": 12
+  },
+  "unique_collector": 1,
+  "unique_observer": 1,
+  "requesters": 0,
+  "protocol_requests": 0,
+  "own_async_tasks_remaining": 0
+}

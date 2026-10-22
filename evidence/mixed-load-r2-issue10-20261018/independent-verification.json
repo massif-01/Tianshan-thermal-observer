@@ -1,0 +1,24 @@
+{
+  "status": "passed",
+  "verified_archive_sha256": "c068ff39e7b579923cfe4d2461f4bee0a77590dd3523112df19896beebb61255",
+  "archive_member_hashes_verified": 219,
+  "independent_directory": "/private/tmp/tto-mix-r2-independent-po4te689",
+  "full_17_step_entrypoint_replayed": true,
+  "targeted_tests": "28 passed, no skips",
+  "selected_virtual_summaries_exactly_equal": true,
+  "field_device_connections": 0,
+  "real_model_requests": 0,
+  "replay_executable": "existing local Python3.12 venv; no installation",
+  "final_computation_files_match_verified_archive": [
+    "contracts.py",
+    "scheduler.py",
+    "drivers.py",
+    "fixtures.py",
+    "mix.py",
+    "fake_http.py",
+    "run_offline.py",
+    "tests/test_r2.py",
+    "execution-policy.json",
+    "inputs/mix-plan.json"
+  ]
+}

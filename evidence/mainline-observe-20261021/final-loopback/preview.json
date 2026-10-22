@@ -1,0 +1,38 @@
+{
+  "candidate_version": "0.2.4+observe.1",
+  "action": "readonly-observe",
+  "registration": {
+    "device_id": "SYNTHETIC-DEVICE",
+    "thermal_config_id": "SYNTHETIC-THERMAL",
+    "observer_host_id": "Massif-MacBook-Pro.local",
+    "session_id": "ac5503a6-7e15-4a94-a793-666093da9124",
+    "expected_platform": {
+      "family": "jetson_thor",
+      "soc": "tegra264"
+    }
+  },
+  "duration_s": 65.0,
+  "config_sha256": "c4ae9f2efd1b2b4b97fd33995a1b7455e7b9c322c25acc3a4c5a08a6f90e251d",
+  "permission_required": true,
+  "network_clients_created": 0,
+  "Requester_count": 0,
+  "CPU_sidecar": false,
+  "prediction_mode": "G2-HOLD/B0/B1; real receive-anchor, actual publication",
+  "control_permission": false,
+  "grant_template": {
+    "action": "readonly-observe",
+    "candidate_version": "0.2.4+observe.1",
+    "candidate_manifest_sha256": "d6de6b97370fbca02102a7af784a590958116c8db6696339a2da8c2918d0ee18",
+    "model_manifest_sha256": "a43cd5d111f169408d71f3fe008e0c03119bb9e4f0dc1ffd63d2f79c5f8834c9",
+    "device_id": "SYNTHETIC-DEVICE",
+    "thermal_config_id": "SYNTHETIC-THERMAL",
+    "session_id": "ac5503a6-7e15-4a94-a793-666093da9124",
+    "config_sha256": "c4ae9f2efd1b2b4b97fd33995a1b7455e7b9c322c25acc3a4c5a08a6f90e251d",
+    "max_duration_s": 65.0,
+    "session_max_bytes": 8589934592,
+    "explicit_user_start": false,
+    "evidence": null,
+    "not_before_utc": null,
+    "expires_at_utc": null
+  }
+}

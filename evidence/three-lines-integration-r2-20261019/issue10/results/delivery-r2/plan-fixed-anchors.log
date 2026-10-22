@@ -1,0 +1,102 @@
+{
+  "profile": {
+    "id": "fixed-anchors",
+    "role": "development",
+    "model_profile": "existing-dense-27b-confirm-before-live",
+    "same_model_within_run": true,
+    "stages": [
+      {
+        "kind": "background",
+        "seconds": 300
+      },
+      {
+        "kind": "work",
+        "concurrency": 1,
+        "seconds": 360,
+        "repeat_key": "single-anchor"
+      },
+      {
+        "kind": "recovery",
+        "seconds": 90
+      },
+      {
+        "kind": "work",
+        "concurrency": 2,
+        "seconds": 270
+      },
+      {
+        "kind": "recovery",
+        "seconds": 240
+      },
+      {
+        "kind": "work",
+        "concurrency": 4,
+        "seconds": 450
+      },
+      {
+        "kind": "recovery",
+        "seconds": 120
+      },
+      {
+        "kind": "work",
+        "concurrency": 1,
+        "seconds": 360,
+        "repeat_key": "single-anchor"
+      },
+      {
+        "kind": "final_recovery",
+        "seconds": 480
+      }
+    ],
+    "nominal_seconds": 2670,
+    "hard_limit_seconds": 3600,
+    "preparation_reserve_seconds": 300,
+    "drain_per_work_max_seconds": 90,
+    "cleanup_reserve_seconds": 120,
+    "budget": {
+      "nominal_s": 2670,
+      "work_blocks": 4,
+      "worst_reserved_s": 3450,
+      "remaining_s": 150
+    }
+  },
+  "request_policy": {
+    "max_concurrency": 4,
+    "max_total_requests": 4096,
+    "max_request_seconds": 60,
+    "budget_kind": "start_window_then_natural_drain",
+    "unknown_termination": "stop_new_requests_record_server_state_unknown",
+    "payload_policy": "reuse_existing_confirmed_payload_then_freeze_no_new_live_pilot_now",
+    "no_model_plan_leak": true
+  },
+  "irregular_seed": 61018010,
+  "schedule_origin": "explicit list from supplied mix-plan; no thermal selection",
+  "model_configuration": {
+    "model_id": "RM-01 VLM",
+    "reported_root": "/home/rm01/models/dev/llm/Qwen3.8-27B-NVFP4/",
+    "quantization_reported": "NVFP4 (historical root only)",
+    "engine": "vLLM (historical API)",
+    "payload": {
+      "model": "RM-01 VLM",
+      "messages": [
+        {
+          "role": "user",
+          "content": "请用中文写一篇连续、详细的科普文章，解释计算机芯片在不同负载下为什么会升温，以及散热器、风扇和环境温度各自怎样影响降温。请按自然段展开，不要输出代码。"
+        }
+      ],
+      "stream": true
+    },
+    "sampling": {},
+    "max_tokens": 256,
+    "request_timeout_s": 30,
+    "requested_max_concurrency": 4,
+    "confirmed_service_capacity": null,
+    "context_history": "each request independent; no accumulated conversation",
+    "template": "server default; exact template identity unknown",
+    "cache_policy": "server default; cache-hit counts unknown",
+    "weights_sha256": null,
+    "ready_for_live": false
+  },
+  "offline_only": true,
+  "field_authorized": false
+}

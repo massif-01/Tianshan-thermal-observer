@@ -1,0 +1,502 @@
+{
+  "before": {
+    "trace": [
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 337584.208031875
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 337584.269093833,
+        "status": 200
+      },
+      {
+        "endpoint": "temp",
+        "event": "sent",
+        "t": 337584.269771458
+      },
+      {
+        "endpoint": "temp",
+        "event": "return",
+        "t": 337586.070455333,
+        "status": 200
+      },
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 337586.075020833
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 337586.1359735,
+        "status": 200
+      },
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 337587.140819916
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 337587.201196083,
+        "status": 200
+      },
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 337588.20428625
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 337588.265410375,
+        "status": 200
+      },
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 337589.268018625
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 337589.32915775,
+        "status": 200
+      },
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 337590.332167208
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 337590.393895125,
+        "status": 200
+      },
+      {
+        "endpoint": "temp",
+        "event": "sent",
+        "t": 337591.074427625
+      },
+      {
+        "endpoint": "temp",
+        "event": "return",
+        "t": 337592.875703833,
+        "status": 200
+      },
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 337592.877563083
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 337592.938172208,
+        "status": 200
+      }
+    ],
+    "peak": {
+      "fan": 1,
+      "temp": 1,
+      "total": 1
+    },
+    "summary": {
+      "stop_reason": "duration",
+      "poll_missed": 1,
+      "poll_count": 9,
+      "connection_attempts": 1,
+      "payload_oversize": 0,
+      "orin_event_count": 9,
+      "business_payload_bytes_sum": 10378,
+      "business_payload_bytes_max": 1154,
+      "poll_rtt_ms": [
+        69.85966599313542,
+        1803.0281249666587,
+        65.24791597621515,
+        63.12200002139434,
+        63.25025000842288,
+        62.889707973226905,
+        66.06845802161843,
+        1802.9298330075108,
+        62.07049998920411
+      ],
+      "prediction_ms": [
+        1.6875420114956796,
+        1.7282079788856208,
+        1.0470420238561928
+      ],
+      "rss_mib": [
+        58.359375,
+        58.671875,
+        58.75,
+        58.75,
+        58.75,
+        58.75,
+        58.78125,
+        58.796875,
+        58.796875
+      ],
+      "cpu_pct_single_core": [
+        0.8603843018300898,
+        1.8943494826523541,
+        1.550039536182249,
+        1.2030591707326932,
+        1.092201433423142,
+        1.1721239359194204,
+        1.562266312798839,
+        0.9088137911732797,
+        1.3031958420306704
+      ],
+      "elapsed_s": 9.40373083302984,
+      "queue_peak_items": 2,
+      "queue_peak_bytes": 1386,
+      "dropped": 0,
+      "quality": {
+        "boundary_socketio_connecting": 1,
+        "boundary_stream": 1,
+        "new_samples": 9,
+        "boundary_input_boundary": 2,
+        "boundary_input_profile_change": 1,
+        "boundary_control_context_change": 1,
+        "boundary_normal_scope_change": 1,
+        "boundary_socketio_disconnected": 1,
+        "boundary_run_end": 1
+      },
+      "processing": {
+        "fan_ok": 7,
+        "origins": 3,
+        "temp_ok": 2
+      },
+      "target_host_verified": false
+    },
+    "fan_return_times": [
+      337584.269447166,
+      337586.1378165,
+      337587.2024405,
+      337588.266242416,
+      337589.329666708,
+      337590.397006166,
+      337592.938649875
+    ],
+    "fan_return_gaps": [
+      1.8683693339698948,
+      1.0646240000496618,
+      1.0638019159669057,
+      1.0634242920204997,
+      1.0673394579789601,
+      2.5416437090025283
+    ]
+  },
+  "after": {
+    "trace": [
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 337593.613322291
+      },
+      {
+        "endpoint": "temp",
+        "event": "sent",
+        "t": 337593.6133555
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 337593.674436625,
+        "status": 200
+      },
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 337594.616574791
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 337594.678000791,
+        "status": 200
+      },
+      {
+        "endpoint": "temp",
+        "event": "return",
+        "t": 337595.414616625,
+        "status": 200
+      },
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 337595.616048291
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 337595.677303041,
+        "status": 200
+      },
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 337596.618306708
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 337596.67933775,
+        "status": 200
+      },
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 337597.618519375
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 337597.679614,
+        "status": 200
+      },
+      {
+        "endpoint": "temp",
+        "event": "sent",
+        "t": 337598.613716083
+      },
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 337598.619191291
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 337598.68016025,
+        "status": 200
+      },
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 337599.6201535
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 337599.681355833,
+        "status": 200
+      },
+      {
+        "endpoint": "temp",
+        "event": "return",
+        "t": 337600.415141958,
+        "status": 200
+      },
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 337600.620545875
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 337600.681772125,
+        "status": 200
+      },
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 337601.621446375
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 337601.682632541,
+        "status": 200
+      },
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 337602.622928958
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 337602.68423675,
+        "status": 200
+      }
+    ],
+    "peak": {
+      "fan": 1,
+      "temp": 1,
+      "total": 2
+    },
+    "summary": {
+      "stop_reason": "duration",
+      "poll_missed": 0,
+      "poll_count": 12,
+      "connection_attempts": 1,
+      "payload_oversize": 0,
+      "orin_event_count": 9,
+      "business_payload_bytes_sum": 10378,
+      "business_payload_bytes_max": 1154,
+      "poll_rtt_ms": [
+        63.528583967126906,
+        66.85437500709668,
+        1803.3197909826413,
+        63.55354096740484,
+        65.3532919823192,
+        62.61991697829217,
+        62.55433295154944,
+        63.415917044039816,
+        1803.3442499581724,
+        63.38858400704339,
+        62.90087499655783,
+        63.32012498751283
+      ],
+      "prediction_ms": [
+        4.311375028919429,
+        1.0405000066384673,
+        1.0180000099353492
+      ],
+      "rss_mib": [
+        58.921875,
+        58.9375,
+        58.953125,
+        58.953125,
+        58.953125,
+        58.953125,
+        58.953125,
+        58.953125,
+        58.96875
+      ],
+      "cpu_pct_single_core": [
+        0.933068550128765,
+        1.8065802154295711,
+        1.1762440011659636,
+        1.1820191460416523,
+        1.181915039376009,
+        1.2248078451392117,
+        1.3584561960280885,
+        1.12281391642138,
+        1.0640564652880484
+      ],
+      "elapsed_s": 9.404049667005893,
+      "queue_peak_items": 1,
+      "queue_peak_bytes": 1280,
+      "dropped": 0,
+      "quality": {
+        "boundary_socketio_connecting": 1,
+        "boundary_stream": 1,
+        "new_samples": 9,
+        "boundary_input_boundary": 2,
+        "boundary_input_profile_change": 1,
+        "boundary_control_context_change": 1,
+        "boundary_normal_scope_change": 1,
+        "boundary_socketio_disconnected": 1,
+        "boundary_run_end": 1
+      },
+      "processing": {
+        "fan_ok": 10,
+        "origins": 3,
+        "temp_ok": 2
+      },
+      "target_host_verified": false,
+      "polling_health": {
+        "contract": "TTO-POLL-INDEPENDENT-v1",
+        "max_inflight_per_endpoint": 1,
+        "max_total_inflight_limit": 2,
+        "max_total_inflight_observed": 2,
+        "end_inflight": 0,
+        "legacy_config_max_inflight_esp32": 1,
+        "endpoints": {
+          "fan": {
+            "sent": 10,
+            "returned": 10,
+            "http_ok": 10,
+            "errors": 0,
+            "skipped": 0,
+            "cancelled": 0,
+            "peak_inflight": 1,
+            "rtt_ms": {
+              "n": 10,
+              "p50": 63.402250525541604,
+              "p95": 66.17888764594682,
+              "min": 62.55433295154944,
+              "max": 66.85437500709668
+            },
+            "send_interval_s": {
+              "n": 9,
+              "p50": 1.000799040950369,
+              "p95": 1.002744633203838,
+              "min": 1.0003362499992363,
+              "max": 1.002844250004273
+            },
+            "return_interval_s": {
+              "n": 9,
+              "p50": 1.0005504579748958,
+              "p95": 1.0054600082337857,
+              "min": 0.9971543749561533,
+              "max": 1.0061700410442427
+            }
+          },
+          "temp": {
+            "sent": 2,
+            "returned": 2,
+            "http_ok": 2,
+            "errors": 0,
+            "skipped": 0,
+            "cancelled": 0,
+            "peak_inflight": 1,
+            "rtt_ms": {
+              "n": 2,
+              "p50": 1803.3320204704069,
+              "p95": 1803.3430270093959,
+              "min": 1803.3197909826413,
+              "max": 1803.3442499581724
+            },
+            "send_interval_s": {
+              "n": 1,
+              "p50": 5.000681916018948,
+              "p95": 5.000681916018948,
+              "min": 5.000681916018948,
+              "max": 5.000681916018948
+            },
+            "return_interval_s": {
+              "n": 1,
+              "p50": 5.000706374994479,
+              "p95": 5.000706374994479,
+              "min": 5.000706374994479,
+              "max": 5.000706374994479
+            }
+          }
+        }
+      }
+    },
+    "fan_return_times": [
+      337593.674949958,
+      337594.681124708,
+      337595.678277875,
+      337596.682673291,
+      337597.680271375,
+      337598.680822583,
+      337599.682486625,
+      337600.68287075,
+      337601.683321125,
+      337602.68513925
+    ],
+    "fan_return_gaps": [
+      1.006174749985803,
+      0.9971531670307741,
+      1.0043954160064459,
+      0.9975980839808472,
+      1.0005512079806067,
+      1.001664042007178,
+      1.000384125043638,
+      1.0004503749660216,
+      1.0018181250197813
+    ]
+  }
+}

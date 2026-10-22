@@ -1,0 +1,45 @@
+{
+  "dataset": "/Users/massif/Tianshan-thermal-observer/experiments/thermal_mainline_calibration_v1/inputs/dataset.json",
+  "dataset_sha256": "8fe3635550cb99f116f49017982a0d5d94335729c8b9804fe931a87d623b0c9c",
+  "solver_spec": "/Users/massif/Tianshan-thermal-observer/experiments/thermal_mainline_calibration_v1/config/solver-spec.json",
+  "solver_spec_sha256": "813d104943fd0c1bd6907c185c3b3b6f7c19cbb0519a6712fc5647ae34cad5f4",
+  "device_id": "RM01-reference-LSM",
+  "thermal_config_id": "RM01-original-development-config-unverified-revision",
+  "validation_runs": [
+    "S"
+  ],
+  "future_confirmation_runs": [],
+  "all_data_seen": true,
+  "data_role": "development_example",
+  "full_run_partition_only": true,
+  "operation": "generate",
+  "model_id": "G2-GEN-L-20261021-v1",
+  "train_runs": [
+    "L"
+  ],
+  "parent_model_id": "G2-FROZEN-RM01-v1",
+  "runtime_profile": "offline_macos_accelerate_v1",
+  "job_file_sha256": "b5ca90afe9ccec5d61fad466e4ac0cccdb294404831822dfa0285556a8e058b6",
+  "parent_manifest": "/Users/massif/Tianshan-thermal-observer/experiments/thermal_mainline_calibration_v1/baseline/frozen-model-manifest.json",
+  "parent_manifest_sha256": "a43cd5d111f169408d71f3fe008e0c03119bb9e4f0dc1ffd63d2f79c5f8834c9",
+  "actual_run_ids": {
+    "L": "929742d7-6f4d-4d80-b53e-4436d45ac12c",
+    "S": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02"
+  },
+  "legacy_sources": {
+    "common.py": "62b8ec1a34892028119a2c3b3ccaf69387ab6511b97bb108364bd146f1a6bf69",
+    "greybox.py": "8a05128393b38ce32d236e58d1c3dbee34cf0e66f524976bf69ad5d5b5bd7fe4",
+    "propagate.c": "45ad1be491dd6e1c70e3502f9c8db073df8f98173c6d57898d949fa42aeeef33",
+    "initialize.py": "6d35f9a9c09c527050ef367855364f4f057c76724d465d6acaec311c89e80834",
+    "ridge_reference.py": "f9a320fb52956cfe8451f6ce44c2532434fafef87847e31586d662bb307bec90",
+    "data_views.py": "ef3c18e022a35dd4529cdb4846d469e9edcd206d144db91759a4d15ae1659b91",
+    "scoring.py": "7201ff185eb129b8614d8a3fd90e9cb2bd359461287dbe556dd79536240c4eec",
+    "slow_core.py": "4f76a506febfdfd362e82b8bd65248ed1647edc482f24222b70e85a54845d3ea"
+  },
+  "fit_execution_code_sha256": {
+    "worker.py": "88da4e65cf08c6946f543157a285b4d332b8090fb51de6ee89cbd574da98c642",
+    "util.py": "f77de04108d4d3a3ce263d5403ac7e5a93766af0a183529ae625957dfa7029c4",
+    "offline_runtime.py": "4cf117069ec9a9422fe4b6c6e444962b6841faec172d457fb3bc03b8da2497eb",
+    "__init__.py": "8140894423d5dd3bfa67ab82add4e6ec9d65473548c3974601ba4103e391ad55"
+  }
+}

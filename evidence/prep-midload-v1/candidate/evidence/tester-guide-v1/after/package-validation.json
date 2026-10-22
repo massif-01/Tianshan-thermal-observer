@@ -1,0 +1,39 @@
+{
+  "purpose": "测试者中文说明书交付",
+  "software_version": "0.1.2",
+  "package": "/Users/massif/Tianshan-thermal-observer/deliverables/TTO-v1-测试者使用包.zip",
+  "package_sha256": "909dcfe181d8007869cbd41c00c4245a1c08b412ebfd0dfbfd57b3e19feafbee",
+  "package_bytes": 106106,
+  "package_files": 31,
+  "clean_extraction_verified": true,
+  "original_conda_package_members_unchanged": true,
+  "protected_source_wheel_installer_and_previous_artifacts_unchanged": true,
+  "local_document_links_verified": [
+    "TTO第一次测试操作卡.md",
+    "TTO测试记录模板.md",
+    "TTO测试者使用说明.md"
+  ],
+  "document_cli_commands_checked": 12,
+  "actual_offline_commands": [
+    "--version",
+    "doctor_without_live",
+    "report_from_synthetic_run"
+  ],
+  "real_device_connection_executed": false,
+  "browser_check": {
+    "desktop": {
+      "viewport": 1360,
+      "height": 960,
+      "screenshot": "output/playwright/tester-guide-desktop-final.png"
+    },
+    "mobile": {
+      "viewport": 390,
+      "height": 844,
+      "page_width": 390,
+      "body_width": 390,
+      "screenshot": "output/playwright/tester-guide-mobile.png"
+    }
+  },
+  "new_software_regression_run": false,
+  "regression_note": "本轮只改文档；未重跑不变的软件和安装器回归。当前软件及安装器保留此前证据，不将本次文档检查称为实机验证。"
+}

@@ -1,0 +1,13 @@
+primary A-long 5430 causal 5430 replay error 0.0
+old_LS A-long 5430 causal 5430 replay error 0.0
+A24 A-long 5430 causal 5430 replay error 0.0
+Traceback (most recent call last):
+  File "/Users/massif/Tianshan-thermal-observer/experiments/thermal_slowstate_v1/run_study.py", line 581, in <module>
+    main()
+  File "/Users/massif/Tianshan-thermal-observer/experiments/thermal_slowstate_v1/run_study.py", line 565, in main
+    demand_metrics(data,demand,ledger)
+  File "/Users/massif/Tianshan-thermal-observer/experiments/thermal_slowstate_v1/run_study.py", line 412, in demand_metrics
+    events = events_for_runs(data)
+  File "/Users/massif/Tianshan-thermal-observer/experiments/thermal_slowstate_v1/run_study.py", line 391, in events_for_runs
+    if ph['macro'] == 'work':
+KeyError: 'macro'

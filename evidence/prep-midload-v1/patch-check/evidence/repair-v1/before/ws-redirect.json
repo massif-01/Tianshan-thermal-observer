@@ -1,0 +1,12 @@
+{
+  "aiohttp_version": "3.11.18",
+  "real_network_scope": "two_loopback_servers_only",
+  "esp_get": "redirect_blocked",
+  "ws_followed_cross_origin": true,
+  "target_requests": [
+    {
+      "path": "/not-authorized",
+      "x_fixture_token": "nonsecret-fixture"
+    }
+  ]
+}

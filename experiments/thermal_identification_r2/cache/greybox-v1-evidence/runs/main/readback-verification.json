@@ -1,0 +1,33 @@
+{
+  "checked_at": "2026-10-13T09:41:40.535417+00:00",
+  "freeze_verified": true,
+  "direction_models_unchanged": true,
+  "checks": [
+    {
+      "experiment": "F-LS",
+      "forecast_rows": 4818,
+      "independent_expm_cases": 350,
+      "max_abs_expm_difference": 3.552713678800501e-14,
+      "all_cohorts_recomputed": true
+    },
+    {
+      "experiment": "F-SL",
+      "forecast_rows": 7524,
+      "independent_expm_cases": 534,
+      "max_abs_expm_difference": 4.298783551348606e-11,
+      "all_cohorts_recomputed": true
+    },
+    {
+      "experiment": "F-POOL",
+      "forecast_rows": 12342,
+      "independent_expm_cases": 882,
+      "max_abs_expm_difference": 1.2789769243681803e-13,
+      "all_cohorts_recomputed": true
+    }
+  ],
+  "retained_45_labels_without_90_across_experiment_views": 990,
+  "main_attempts": 36,
+  "nested_attempts": 1,
+  "control_authorization": "none",
+  "target_validation": "not_performed"
+}

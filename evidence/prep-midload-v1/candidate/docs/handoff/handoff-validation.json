@@ -1,0 +1,14 @@
+{
+  "checks": {
+    "json_valid": true,
+    "main_frontmatter": true,
+    "balanced_main_code_fences": true,
+    "all_source_keys_present": true,
+    "config_horizons_match": true,
+    "no_live_endpoint_defaults": true,
+    "no_fake_final_candidate": true,
+    "main_utf8_readback": true,
+    "reference_originals_equal": true
+  },
+  "scope": "Document/config consistency only. Not TTO software validation."
+}

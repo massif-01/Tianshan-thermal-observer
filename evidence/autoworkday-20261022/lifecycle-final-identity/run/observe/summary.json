@@ -1,0 +1,250 @@
+{
+  "reason": "SIGTERM",
+  "error": null,
+  "elapsed_s": 15.118945166934282,
+  "clock_end": {
+    "domain": "Massif-MacBook-Pro.local:27500:0fceca40-64d7-4d5f-a29a-591c44b4c5d9",
+    "mono_before_s": 1043429.3706815,
+    "utc": "2026-10-21T16:57:22.120556+00:00",
+    "mono_after_s": 1043429.370702291,
+    "utc_clock_accuracy_s": null,
+    "host": "Massif-MacBook-Pro.local",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "pid": 27500
+  },
+  "pid": 27500,
+  "native_run_id": "81c627b3-a76b-4be1-a12e-25f4bc797202",
+  "collector_invocation_count": 1,
+  "collector_count": 1,
+  "stateful_observer_count": 1,
+  "valid_TJ_observed": 14,
+  "model_trial": "conditional_observation",
+  "native_callbacks": 48,
+  "I02_processed_views": 48,
+  "projection_diagnostics": {
+    "retain_history": false,
+    "retained": 0,
+    "quality_seen": 14,
+    "complete_quality_stream": "observations"
+  },
+  "shared_native_engine_id": 4426788272,
+  "projection_disabled": false,
+  "model_errors": 0,
+  "model_dropped_frames": 0,
+  "consumer_stopped": true,
+  "Requester_count": 0,
+  "sidecar_count": 0,
+  "control_permission": false,
+  "experiment_authorization": false,
+  "scoring": {
+    "contract": "TTO-OBSERVE-SCORING-v1",
+    "publication_mode": "live",
+    "stride_s": 5,
+    "valid_TJ_denominator": 14,
+    "scheduled_origin_denominator": 3,
+    "counts": {
+      "all_valid_TJ": 14,
+      "scheduled_TJ_origins": 3,
+      "issued/G2-HOLD/15": 3,
+      "valid_predictions/G2-HOLD/15": 3,
+      "issued/B0/15": 3,
+      "valid_predictions/B0/15": 3,
+      "issued/B1/15": 3,
+      "issued/G2-HOLD/45": 3,
+      "valid_predictions/G2-HOLD/45": 3,
+      "issued/B0/45": 3,
+      "valid_predictions/B0/45": 3,
+      "issued/B1/45": 3,
+      "issued/G2-HOLD/90": 3,
+      "valid_predictions/G2-HOLD/90": 3,
+      "issued/B0/90": 3,
+      "valid_predictions/B0/90": 3,
+      "issued/B1/90": 3,
+      "valid_predictions/B1/15": 1,
+      "valid_predictions/B1/45": 1,
+      "valid_predictions/B1/90": 1,
+      "unscored/source_epoch_changed": 21
+    },
+    "per_method": {},
+    "same_set_G2_B0": {},
+    "percentile": "linear interpolation at (n-1)*.95; full bounded session error arrays",
+    "error": "prediction-actual",
+    "label": "first qualified received TJ at/after target within2s, same session/epoch/domain",
+    "statistical_unit": "one session, overlapping horizons are not independent experiments",
+    "all_native_valid_TJ_denominator": 14
+  },
+  "native_summary": {
+    "stop_reason": "SIGTERM",
+    "poll_missed": 0,
+    "poll_count": 18,
+    "connection_attempts": 1,
+    "payload_oversize": 0,
+    "orin_event_count": 14,
+    "business_payload_bytes_sum": 22125,
+    "business_payload_bytes_max": 1581,
+    "poll_rtt_ms": [
+      2.8859999729320407,
+      2.677417011000216,
+      2.4406659649685025,
+      2.2765829926356673,
+      2.025541034527123,
+      1.5475000254809856,
+      1.9930839771404862,
+      2.2899999748915434,
+      6.549125071614981,
+      1.2720830272883177,
+      1.3239170657470822,
+      5.1390830194577575,
+      1.2447918998077512,
+      1.2229999992996454,
+      1.3896669261157513,
+      2.1126249339431524,
+      3.089957986958325,
+      2.5868749944493175
+    ],
+    "prediction_ms": [
+      9.13854199461639,
+      0.7744999602437019,
+      1.0367920622229576
+    ],
+    "rss_mib": [
+      69.765625,
+      70.03125,
+      70.140625,
+      70.25,
+      70.265625,
+      70.3125,
+      70.421875,
+      70.4375,
+      70.484375,
+      70.515625,
+      70.53125,
+      70.546875,
+      70.546875,
+      70.609375
+    ],
+    "cpu_pct_single_core": [
+      2.361441773155247,
+      1.4696787193121068,
+      1.6036320455257833,
+      1.8130091328772433,
+      1.2485424481388152,
+      1.4929530893763854,
+      1.5695550330203867,
+      1.0502752255374082,
+      1.396791769546687,
+      2.10670372213591,
+      1.2067022025708338,
+      1.4183137453076682,
+      1.8260415443796583,
+      1.3557676363426487
+    ],
+    "elapsed_s": 14.242257916019298,
+    "queue_peak_items": 2,
+    "queue_peak_bytes": 1964,
+    "dropped": 0,
+    "quality": {
+      "boundary_socketio_connecting": 1,
+      "boundary_control_context_change": 1,
+      "boundary_stream": 1,
+      "new_samples": 14,
+      "boundary_input_boundary": 1,
+      "boundary_input_profile_change": 1,
+      "boundary_socketio_disconnected": 1,
+      "boundary_run_end": 1
+    },
+    "processing": {
+      "fan_ok": 15,
+      "temp_ok": 3,
+      "origins": 3
+    },
+    "target_host_verified": false,
+    "polling_health": {
+      "contract": "TTO-POLL-INDEPENDENT-v1",
+      "max_inflight_per_endpoint": 1,
+      "max_total_inflight_limit": 2,
+      "max_total_inflight_observed": 2,
+      "end_inflight": 0,
+      "legacy_config_max_inflight_esp32": 1,
+      "endpoints": {
+        "fan": {
+          "sent": 15,
+          "returned": 15,
+          "http_ok": 15,
+          "errors": 0,
+          "skipped": 0,
+          "cancelled": 0,
+          "peak_inflight": 1,
+          "rtt_ms": {
+            "n": 15,
+            "retained_n": 15,
+            "p50": 2.2765829926356673,
+            "p95": 5.562095635104923,
+            "min": 1.2229999992996454,
+            "max": 6.549125071614981
+          },
+          "send_interval_s": {
+            "n": 14,
+            "retained_n": 14,
+            "p50": 1.001397249987349,
+            "p95": 1.002503756264923,
+            "min": 1.0003611670108512,
+            "max": 1.002638875041157
+          },
+          "return_interval_s": {
+            "n": 14,
+            "retained_n": 14,
+            "p50": 1.0013043750077486,
+            "p95": 1.0050084438407794,
+            "min": 0.9969062909949571,
+            "max": 1.005296582938172
+          }
+        },
+        "temp": {
+          "sent": 3,
+          "returned": 3,
+          "http_ok": 3,
+          "errors": 0,
+          "skipped": 0,
+          "cancelled": 0,
+          "peak_inflight": 1,
+          "rtt_ms": {
+            "n": 3,
+            "retained_n": 3,
+            "p50": 1.9930839771404862,
+            "p95": 2.608983707614243,
+            "min": 1.2447918998077512,
+            "max": 2.677417011000216
+          },
+          "send_interval_s": {
+            "n": 2,
+            "retained_n": 2,
+            "p50": 5.001463333552238,
+            "p95": 5.001870096154744,
+            "min": 5.0010113751050085,
+            "max": 5.001915291999467
+          },
+          "return_interval_s": {
+            "n": 2,
+            "retained_n": 2,
+            "p50": 5.000747020996641,
+            "p95": 5.0011250020295845,
+            "min": 5.000327042071149,
+            "max": 5.001166999922134
+          }
+        }
+      }
+    },
+    "diagnostic_history_contract": {
+      "max_retained_per_series": 4096,
+      "percentiles": "last4096; full raw/resource journals preserved",
+      "sample_totals": {
+        "poll_rtt_ms": 18,
+        "prediction_ms": 3,
+        "rss_mib": 14,
+        "cpu_pct_single_core": 14
+      }
+    }
+  },
+  "thread_policy_same_pid": true
+}

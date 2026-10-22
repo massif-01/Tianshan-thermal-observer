@@ -1,0 +1,136 @@
+{
+  "title": "TTO state read-only R2, offline research delivery",
+  "type": "object",
+  "required": [
+    "schema",
+    "identity",
+    "generated_at_mono_s",
+    "generated_clock_domain",
+    "observed_through_ref",
+    "measurement",
+    "observer",
+    "safety",
+    "permission"
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "schema": {
+      "const": "TTO-STATE-READONLY-R2-v1"
+    },
+    "identity": {
+      "type": "object",
+      "required": [
+        "run_id",
+        "config_sha256",
+        "firmware_identity",
+        "collector_source_sha256",
+        "model_sha256",
+        "spec_sha256",
+        "source_epoch"
+      ]
+    },
+    "measurement": {
+      "type": "object",
+      "required": [
+        "tj",
+        "power",
+        "last_successful_pwm",
+        "control_context"
+      ]
+    },
+    "observer": {
+      "type": "object",
+      "required": [
+        "phase",
+        "available",
+        "Tf_C",
+        "Ts_C",
+        "E_C",
+        "E_source",
+        "unknown_input_assumptions",
+        "uncertainty",
+        "reasons"
+      ],
+      "properties": {
+        "phase": {
+          "enum": [
+            "uninitialized",
+            "provisional",
+            "tracking",
+            "degraded",
+            "unavailable"
+          ]
+        },
+        "available": {
+          "type": "boolean"
+        },
+        "Tf_C": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "Ts_C": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "E_C": {
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "required": [
+        "guard",
+        "fault",
+        "mode",
+        "binding",
+        "fan_fresh",
+        "binding_fresh",
+        "confirmed_normal_now"
+      ],
+      "properties": {
+        "guard": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "fault": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "confirmed_normal_now": {
+          "type": "boolean"
+        }
+      }
+    },
+    "permission": {
+      "type": "object",
+      "required": [
+        "local_demo",
+        "formal_field_authorized",
+        "device_actions"
+      ],
+      "properties": {
+        "local_demo": {
+          "const": true
+        },
+        "formal_field_authorized": {
+          "const": false
+        },
+        "device_actions": {
+          "const": false
+        }
+      }
+    }
+  }
+}

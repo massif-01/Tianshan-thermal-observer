@@ -1,0 +1,42 @@
+{
+  "schema_version": 2,
+  "run_id": "35a7618f-5b64-4ed9-9aa8-35c47814adb0",
+  "input_contract": {
+    "schema_version": 2,
+    "processing_contract": "TTO-PLATFORM-CURVE-v2.0",
+    "platform_schema": 1,
+    "family": "jetson_thor",
+    "soc": "tegra264",
+    "gpu_backend": "nvml",
+    "gpu_schema": 1,
+    "source_period_ms": 1000,
+    "source_period_basis": "wire_telemetry_meta",
+    "gpu_period_ms": 1000,
+    "gpu_timeout_ms": 5000,
+    "units": {
+      "temperature": "C",
+      "power": "W",
+      "gpu_busy": "percent",
+      "cpu_freq": "MHz",
+      "duty": "logical_percent"
+    }
+  },
+  "input_contract_sha256": "4cd2cc3cee46318724fda157a2e7e0a33de979525dedcb8cf3c6f471e32c42d2",
+  "identification_ref": "35a7618f-5b64-4ed9-9aa8-35c47814adb0/observation:3",
+  "source_period_evidence": {
+    "period_ms": 1000,
+    "basis": "wire_telemetry_meta",
+    "reason": null,
+    "ref": "35a7618f-5b64-4ed9-9aa8-35c47814adb0/observation:3"
+  },
+  "platform_evidence": {
+    "schema_version": 1,
+    "family": "jetson_thor",
+    "soc": "tegra264",
+    "gpu_backend": "nvml",
+    "identification_source": "device_tree_compatible",
+    "compatible": [
+      "nvidia,tegra264"
+    ]
+  }
+}

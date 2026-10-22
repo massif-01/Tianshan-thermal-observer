@@ -1,0 +1,30 @@
+{
+  "contract": "TTO-CPU-PREP-CLOSE-v1.0-R1",
+  "adapter_version": "cpu-arrival-bridge-1.0.0",
+  "owner": "model line; only adapter from actual field files to frozen activity inputs",
+  "activity_and_thermal_parameters": "original candidate.json and analysis-spec.json byte-exact; no search/refit",
+  "time": {
+    "event_availability": "actual receiver decision_generated_mono_s; original received_at retained; native features available no earlier than actual state generated_at_mono_s",
+    "source_windows": "Thor CPU count/read windows remain on identified Thor clock; never subtract from N305 clock without a mapping",
+    "CPU_support": "arrival-side research only, at most1s after actual received_at, available no earlier than decision_generated, using existing sidecar no-arrival budget. This is NOT source age or a production TTL change",
+    "transport_latency": "null if unknown, never0",
+    "temperature_origins": "one per original accepted TJ, at actual saved state generation/decision; original measurement receive time retained separately. No backdating state to raw receive. Original old-run scores untouched; same decision origins/labels for all branches",
+    "labels": "original approximately1s TJ answers only; unchanged frozen15/45/90,+2s,per-horizon lookup on qualified decision origins",
+    "decimation": "select last already-arrived200ms-window record each1s; delivery cadence only, NOT reconstruction of a true1s CPU counter window"
+  },
+  "CPU": {
+    "formula": "all current online cores, same previous/current raw read pair; total=sum first8 counter deltas; busy=total-idle-iowait; guest not added twice; unweighted mean and maximum",
+    "invalid": "latest missing raw/count fields, explicit incomplete CPU, counter decrease/zero delta, changed online set, source identity change, source sequence regression, source/receiver timing invalid or transport stop revokes both CPU summaries immediately",
+    "recovery": "later valid complete window, matching current identity, fresh real update; never search backwards for older valid",
+    "online": "online set change invalidates that transition window; later stable complete actual online set may recover; retain all possible/online statuses, never silently subset cores",
+    "identity": "source host/boot/session/seq and actual source read window, not numeric value; same values from legal new windows retained"
+  },
+  "native": {
+    "inputs": "same-run manifest/native UUID+command and saved native state generation evidence; do not rerun I02 or observer",
+    "GPU_rails": "original source ref/sequence and original expiry; repeated CPU arrivals do not renew source identity, available_at, or expiry",
+    "source_query_GPU_rails": "diagnostics only when independent window/generation unknown; no invented generation_id",
+    "epoch": "native epoch change revokes old CPU and coarse eligibility; no thermal reset added by this adapter",
+    "safety": "original safety/conditional PWM kept; activity is never normal control or field permission"
+  },
+  "boundaries": {"offline_only": true,"network_clients":0,"device_actions":false,"deployable":false,"model_fits":0,"parameter_search":0,"old_scores_rewritten":false}
+}

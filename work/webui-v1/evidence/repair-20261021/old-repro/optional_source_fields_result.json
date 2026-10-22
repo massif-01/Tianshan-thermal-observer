@@ -1,0 +1,50 @@
+[
+  {
+    "case": "fan_data_null",
+    "web_hook_enabled": false,
+    "native_processing_returned": true,
+    "native_fan_invalidated": true,
+    "native_tj_accepted": null,
+    "callbacks_before": 29,
+    "field_callback": "raised",
+    "error": "ValueError: field_projection_failed:AttributeError",
+    "cause": "AttributeError: 'NoneType' object has no attribute 'get'",
+    "callbacks_after": 29
+  },
+  {
+    "case": "fan_data_null",
+    "web_hook_enabled": true,
+    "native_processing_returned": true,
+    "native_fan_invalidated": true,
+    "native_tj_accepted": null,
+    "callbacks_before": 29,
+    "field_callback": "raised",
+    "error": "ValueError: field_projection_failed:AttributeError",
+    "cause": "AttributeError: 'NoneType' object has no attribute 'get'",
+    "callbacks_after": 29
+  },
+  {
+    "case": "memory_null",
+    "web_hook_enabled": false,
+    "native_processing_returned": true,
+    "native_fan_invalidated": false,
+    "native_tj_accepted": true,
+    "callbacks_before": 29,
+    "field_callback": "returned",
+    "error": null,
+    "cause": null,
+    "callbacks_after": 30
+  },
+  {
+    "case": "memory_null",
+    "web_hook_enabled": true,
+    "native_processing_returned": true,
+    "native_fan_invalidated": false,
+    "native_tj_accepted": true,
+    "callbacks_before": 29,
+    "field_callback": "raised",
+    "error": "ValueError: field_projection_failed:AttributeError",
+    "cause": "AttributeError: 'NoneType' object has no attribute 'get'",
+    "callbacks_after": 29
+  }
+]

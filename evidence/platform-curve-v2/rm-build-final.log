@@ -1,0 +1,91 @@
+* Getting build dependencies for wheel...
+running egg_info
+writing src/tegrastats_api.egg-info/PKG-INFO
+writing dependency_links to src/tegrastats_api.egg-info/dependency_links.txt
+writing entry points to src/tegrastats_api.egg-info/entry_points.txt
+writing requirements to src/tegrastats_api.egg-info/requires.txt
+writing top-level names to src/tegrastats_api.egg-info/top_level.txt
+reading manifest file 'src/tegrastats_api.egg-info/SOURCES.txt'
+adding license file 'LICENSE'
+writing manifest file 'src/tegrastats_api.egg-info/SOURCES.txt'
+WARNING `project.license` as a TOML table is deprecated
+!!
+
+        ********************************************************************************
+        Please use a simple string containing a SPDX expression for `project.license`. You can also use `project.license-files`. (Both options available on setuptools>=77.0.0).
+
+        This deprecation is overdue, please update your project and remove deprecated
+        calls to avoid build errors in the future.
+
+        See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
+        ********************************************************************************
+
+!!
+* Building wheel...
+running bdist_wheel
+running build
+running build_py
+copying src/tegrastats_api/server.py -> build/lib/tegrastats_api
+copying src/tegrastats_api/config.py -> build/lib/tegrastats_api
+copying src/tegrastats_api/platform_gpu.py -> build/lib/tegrastats_api
+copying src/tegrastats_api/__init__.py -> build/lib/tegrastats_api
+copying src/tegrastats_api/parser.py -> build/lib/tegrastats_api
+copying src/tegrastats_api/cli.py -> build/lib/tegrastats_api
+copying src/tegrastats_api/model_monitor.py -> build/lib/tegrastats_api
+running egg_info
+writing src/tegrastats_api.egg-info/PKG-INFO
+writing dependency_links to src/tegrastats_api.egg-info/dependency_links.txt
+writing entry points to src/tegrastats_api.egg-info/entry_points.txt
+writing requirements to src/tegrastats_api.egg-info/requires.txt
+writing top-level names to src/tegrastats_api.egg-info/top_level.txt
+reading manifest file 'src/tegrastats_api.egg-info/SOURCES.txt'
+adding license file 'LICENSE'
+writing manifest file 'src/tegrastats_api.egg-info/SOURCES.txt'
+copying src/tegrastats_api/py.typed -> build/lib/tegrastats_api
+installing to build/bdist.macosx-11.0-arm64/wheel
+running install
+running install_lib
+creating build/bdist.macosx-11.0-arm64/wheel
+creating build/bdist.macosx-11.0-arm64/wheel/tegrastats_api
+copying build/lib/tegrastats_api/server.py -> build/bdist.macosx-11.0-arm64/wheel/./tegrastats_api
+copying build/lib/tegrastats_api/config.py -> build/bdist.macosx-11.0-arm64/wheel/./tegrastats_api
+copying build/lib/tegrastats_api/platform_gpu.py -> build/bdist.macosx-11.0-arm64/wheel/./tegrastats_api
+copying build/lib/tegrastats_api/__init__.py -> build/bdist.macosx-11.0-arm64/wheel/./tegrastats_api
+copying build/lib/tegrastats_api/parser.py -> build/bdist.macosx-11.0-arm64/wheel/./tegrastats_api
+copying build/lib/tegrastats_api/cli.py -> build/bdist.macosx-11.0-arm64/wheel/./tegrastats_api
+copying build/lib/tegrastats_api/model_monitor.py -> build/bdist.macosx-11.0-arm64/wheel/./tegrastats_api
+copying build/lib/tegrastats_api/py.typed -> build/bdist.macosx-11.0-arm64/wheel/./tegrastats_api
+running install_egg_info
+Copying src/tegrastats_api.egg-info to build/bdist.macosx-11.0-arm64/wheel/./tegrastats_api-1.1.0-py3.10.egg-info
+running install_scripts
+creating build/bdist.macosx-11.0-arm64/wheel/tegrastats_api-1.1.0.dist-info/WHEEL
+creating '/private/tmp/tto-platform-curve-v2/rm-build-final/.tmp-c63ojg2p/tegrastats_api-1.1.0-py3-none-any.whl' and adding 'build/bdist.macosx-11.0-arm64/wheel' to it
+adding 'tegrastats_api/__init__.py'
+adding 'tegrastats_api/cli.py'
+adding 'tegrastats_api/config.py'
+adding 'tegrastats_api/model_monitor.py'
+adding 'tegrastats_api/parser.py'
+adding 'tegrastats_api/platform_gpu.py'
+adding 'tegrastats_api/py.typed'
+adding 'tegrastats_api/server.py'
+adding 'tegrastats_api-1.1.0.dist-info/licenses/LICENSE'
+adding 'tegrastats_api-1.1.0.dist-info/METADATA'
+adding 'tegrastats_api-1.1.0.dist-info/WHEEL'
+adding 'tegrastats_api-1.1.0.dist-info/entry_points.txt'
+adding 'tegrastats_api-1.1.0.dist-info/top_level.txt'
+adding 'tegrastats_api-1.1.0.dist-info/RECORD'
+removing build/bdist.macosx-11.0-arm64/wheel
+WARNING `project.license` as a TOML table is deprecated
+!!
+
+        ********************************************************************************
+        Please use a simple string containing a SPDX expression for `project.license`. You can also use `project.license-files`. (Both options available on setuptools>=77.0.0).
+
+        This deprecation is overdue, please update your project and remove deprecated
+        calls to avoid build errors in the future.
+
+        See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
+        ********************************************************************************
+
+!!
+Successfully built tegrastats_api-1.1.0-py3-none-any.whl

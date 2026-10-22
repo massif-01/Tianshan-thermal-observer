@@ -1,0 +1,28 @@
+{
+  "status": "pass",
+  "cases": {
+    "synthetic-report": {
+      "records": 6,
+      "numeric": 5,
+      "paired": 5
+    },
+    "contact-report": {
+      "records": 239,
+      "numeric": 238,
+      "paired": 207
+    },
+    "zero-report": {
+      "records": 0,
+      "numeric": 0,
+      "paired": 0
+    }
+  },
+  "temperature_time_model_range_reference_and_qualification_equal": true,
+  "excluded_run_specific_fields": [
+    "new write/import/mark timestamps",
+    "revision/event UUIDs; event semantics verified separately",
+    "output paths"
+  ],
+  "original_accepted_archive_unchanged": true,
+  "original_delivery_report_unchanged": true
+}

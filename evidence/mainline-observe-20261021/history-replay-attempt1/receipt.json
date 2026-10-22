@@ -1,0 +1,130 @@
+{
+  "scope": "recorded causal replay, not live; no fitting/new field scores",
+  "native_run_id": "ed9de51d-7cb3-4a60-9be4-5ee5ba238a1a",
+  "records": 181,
+  "semantic_numeric_fields": 10391,
+  "max_abs_frozen_state_difference": 1.9895196601282805e-13,
+  "publication_mode": "replay",
+  "replay_issued_analysis_clock": "original receive clock plus measured local computation cost; actual wall issue recorded separately",
+  "scoring": {
+    "contract": "TTO-OBSERVE-SCORING-v1",
+    "publication_mode": "replay",
+    "stride_s": 5,
+    "valid_TJ_denominator": 60,
+    "scheduled_origin_denominator": 12,
+    "counts": {
+      "all_valid_TJ": 60,
+      "scheduled_TJ_origins": 12,
+      "issued/G2-HOLD/15": 12,
+      "valid_predictions/G2-HOLD/15": 12,
+      "issued/B0/15": 12,
+      "valid_predictions/B0/15": 12,
+      "issued/B1/15": 12,
+      "issued/G2-HOLD/45": 12,
+      "valid_predictions/G2-HOLD/45": 12,
+      "issued/B0/45": 12,
+      "valid_predictions/B0/45": 12,
+      "issued/B1/45": 12,
+      "issued/G2-HOLD/90": 12,
+      "valid_predictions/G2-HOLD/90": 12,
+      "issued/B0/90": 12,
+      "valid_predictions/B0/90": 12,
+      "issued/B1/90": 12,
+      "valid_predictions/B1/15": 10,
+      "valid_predictions/B1/45": 10,
+      "valid_predictions/B1/90": 10,
+      "scored": 32,
+      "unscored/source_epoch_changed": 70
+    },
+    "per_method": {
+      "G2-HOLD/15": {
+        "n": 9,
+        "MAE_C": 0.22184476640230363,
+        "bias_C": 0.21227578079858883,
+        "P95_absolute_C": 1.0553994843508727,
+        "P95_underestimate_C": 0.024031731518552125,
+        "max_underestimate_C": 0.03403778715932759
+      },
+      "B0/15": {
+        "n": 9,
+        "MAE_C": 0.038333333333332414,
+        "bias_C": -0.017444444444443263,
+        "P95_absolute_C": 0.0815999999999974,
+        "P95_underestimate_C": 0.0815999999999974,
+        "max_underestimate_C": 0.09399999999999409
+      },
+      "B1/15": {
+        "n": 7,
+        "MAE_C": 0.07877626250931513,
+        "bias_C": -0.04719342758422381,
+        "P95_absolute_C": 0.22140702368872794,
+        "P95_underestimate_C": 0.22140702368872794,
+        "max_underestimate_C": 0.28133042694271637
+      },
+      "G2-HOLD/45": {
+        "n": 3,
+        "MAE_C": 0.6016198624484966,
+        "bias_C": 0.6012575607418285,
+        "P95_absolute_C": 1.4675523202694014,
+        "P95_underestimate_C": 0.0004891073040020899,
+        "max_underestimate_C": 0.0005434525600023221
+      },
+      "B0/45": {
+        "n": 3,
+        "MAE_C": 0.0730000000000004,
+        "bias_C": -0.05233333333332979,
+        "P95_absolute_C": 0.17229999999999632,
+        "P95_underestimate_C": 0.16919999999999574,
+        "max_underestimate_C": 0.18799999999999528
+      },
+      "B1/45": {
+        "n": 1,
+        "MAE_C": 0.7499912808281692,
+        "bias_C": -0.7499912808281692,
+        "P95_absolute_C": 0.7499912808281692,
+        "P95_underestimate_C": 0.7499912808281692,
+        "max_underestimate_C": 0.7499912808281692
+      }
+    },
+    "same_set_G2_B0": {
+      "G2-HOLD/15": {
+        "n": 9,
+        "MAE_C": 0.22184476640230363,
+        "bias_C": 0.21227578079858883,
+        "P95_absolute_C": 1.0553994843508727,
+        "P95_underestimate_C": 0.024031731518552125,
+        "max_underestimate_C": 0.03403778715932759
+      },
+      "B0/15": {
+        "n": 9,
+        "MAE_C": 0.038333333333332414,
+        "bias_C": -0.017444444444443263,
+        "P95_absolute_C": 0.0815999999999974,
+        "P95_underestimate_C": 0.0815999999999974,
+        "max_underestimate_C": 0.09399999999999409
+      },
+      "G2-HOLD/45": {
+        "n": 3,
+        "MAE_C": 0.6016198624484966,
+        "bias_C": 0.6012575607418285,
+        "P95_absolute_C": 1.4675523202694014,
+        "P95_underestimate_C": 0.0004891073040020899,
+        "max_underestimate_C": 0.0005434525600023221
+      },
+      "B0/45": {
+        "n": 3,
+        "MAE_C": 0.0730000000000004,
+        "bias_C": -0.05233333333332979,
+        "P95_absolute_C": 0.17229999999999632,
+        "P95_underestimate_C": 0.16919999999999574,
+        "max_underestimate_C": 0.18799999999999528
+      }
+    },
+    "percentile": "linear interpolation at (n-1)*.95; full bounded session error arrays",
+    "error": "prediction-actual",
+    "label": "first qualified received TJ at/after target within2s, same session/epoch/domain",
+    "statistical_unit": "one session, overlapping horizons are not independent experiments"
+  },
+  "source_manifest": "/Users/massif/Tianshan-thermal-observer/evidence/cpu3-field-capability-20261021/remote-result/run/native/run-2026-10-21T105221.419257_0000-ed9de51d/manifest.json",
+  "source_manifest_sha256": "fbe90653c4958782f7aeec731e67117673f5da255aa6997e882f008493cd1b2f"
+}

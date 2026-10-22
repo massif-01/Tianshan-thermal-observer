@@ -1,0 +1,238 @@
+......................F..........                                        [100%]
+=================================== FAILURES ===================================
+_________________ test_contract_examples_and_actual_snapshots __________________
+
+    def test_contract_examples_and_actual_snapshots():
+        jsonschema=pytest.importorskip('jsonschema')
+        schema=json.loads((Path(__file__).parents[1]/'requirements/contracts/dashboard.schema.json').read_text())
+        for path in (Path(__file__).parents[1]/'requirements/contracts').glob('example-*.json'):jsonschema.validate(json.loads(path.read_text()),schema)
+>       p,s,packet=ready(12);jsonschema.validate(s.snapshot(),schema);s.disconnect();jsonschema.validate(s.snapshot(),schema)
+
+tests/test_semantics.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+instance = {'advisory': {'device_write_permitted': False, 'provider_id': None, 'reason': '暂无可用建议映射', 'remaining_valid_ms': 0.0, ....': 'TianshanOS', 'observed_device': 'SYNTHETIC-THOR', 'task_metadata_available': False, ...}, 'event_cursor': '3', ...}
+schema = {'$defs': {'forecast': {'additionalProperties': False, 'allOf': [{'if': {'properties': {...}}, 'then': {'properties': ...n:tto:web:snapshot:1.0', '$schema': 'https://json-schema.org/draft/2020-12/schema', 'additionalProperties': False, ...}
+cls = <class 'jsonschema.validators.Draft202012Validator'>, args = ()
+kwargs = {}
+validator = Draft202012Validator(schema={'$defs': {'forecast': {'additionalProperties': False, 'allOf': [{'if': {'properties': {.....web:snapshot:1.0', '$schema': 'https://json...020-12/schema', 'additionalProperties': False, ...}, format_checker=None)
+error = <ValidationError: "Additional properties are not allowed ('remaining_valid_ms' was unexpected)">
+
+    def validate(instance, schema, cls=None, *args, **kwargs):  # noqa: D417
+        """
+        Validate an instance under the given schema.
+    
+            >>> validate([2, 3, 4], {"maxItems": 2})
+            Traceback (most recent call last):
+                ...
+            ValidationError: [2, 3, 4] is too long
+    
+        :func:`~jsonschema.validators.validate` will first verify that the
+        provided schema is itself valid, since not doing so can lead to less
+        obvious error messages and fail in less obvious or consistent ways.
+    
+        If you know you have a valid schema already, especially
+        if you intend to validate multiple instances with
+        the same schema, you likely would prefer using the
+        `jsonschema.protocols.Validator.validate` method directly on a
+        specific validator (e.g. ``Draft202012Validator.validate``).
+    
+    
+        Arguments:
+    
+            instance:
+    
+                The instance to validate
+    
+            schema:
+    
+                The schema to validate with
+    
+            cls (jsonschema.protocols.Validator):
+    
+                The class that will be used to validate the instance.
+    
+        If the ``cls`` argument is not provided, two things will happen
+        in accordance with the specification. First, if the schema has a
+        :kw:`$schema` keyword containing a known meta-schema [#]_ then the
+        proper validator will be used. The specification recommends that
+        all schemas contain :kw:`$schema` properties for this reason. If no
+        :kw:`$schema` property is found, the default validator class is the
+        latest released draft.
+    
+        Any other provided positional and keyword arguments will be passed
+        on when instantiating the ``cls``.
+    
+        Raises:
+    
+            `jsonschema.exceptions.ValidationError`:
+    
+                if the instance is invalid
+    
+            `jsonschema.exceptions.SchemaError`:
+    
+                if the schema itself is invalid
+    
+        .. rubric:: Footnotes
+        .. [#] known by a validator registered with
+            `jsonschema.validators.validates`
+    
+        """
+        if cls is None:
+            cls = validator_for(schema)
+    
+        cls.check_schema(schema)
+        validator = cls(schema, *args, **kwargs)
+        error = exceptions.best_match(validator.iter_errors(instance))
+        if error is not None:
+>           raise error
+E           jsonschema.exceptions.ValidationError: Additional properties are not allowed ('remaining_valid_ms' was unexpected)
+E           
+E           Failed validating 'additionalProperties' in schema['properties']['model']:
+E               {'type': 'object',
+E                'required': ['model_id',
+E                             'spec_id',
+E                             'phase',
+E                             'Tf_C',
+E                             'Ts_C',
+E                             'E_C',
+E                             'calibrated_confidence',
+E                             'nodes',
+E                             'edges'],
+E                'properties': {'model_id': {'type': ['string', 'null']},
+E                               'spec_id': {'type': ['string', 'null']},
+E                               'phase': {'enum': ['uninitialized',
+E                                                  'provisional',
+E                                                  'tracking',
+E                                                  'degraded',
+E                                                  'unavailable',
+E                                                  'not_loaded']},
+E                               'Tf_C': {'type': ['number', 'null']},
+E                               'Ts_C': {'type': ['number', 'null']},
+E                               'E_C': {'type': ['number', 'null']},
+E                               'calibrated_confidence': {'type': 'null'},
+E                               'nodes': {'type': 'array', 'items': {'type': 'object'}},
+E                               'edges': {'type': 'array',
+E                                         'items': {'type': 'object'}}},
+E                'additionalProperties': False}
+E           
+E           On instance['model']:
+E               {'model_id': 'dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0',
+E                'spec_id': '2080adcf20773650299def2bb0f3ebdb9f87d8f85281d5b87a99d8b406c83c6b',
+E                'phase': 'tracking',
+E                'Tf_C': 44.301479105273536,
+E                'Ts_C': 40.76984702460319,
+E                'E_C': 33.96651290061882,
+E                'calibrated_confidence': None,
+E                'nodes': [{'id': 'pg',
+E                           'label': 'GPU功率',
+E                           'role': 'input',
+E                           'metric_id': 'power.gpu',
+E                           'status': 'valid'},
+E                          {'id': 'pc',
+E                           'label': 'CPU·SoC·MSS功率',
+E                           'role': 'input',
+E                           'metric_id': 'power.cpu_soc_mss',
+E                           'status': 'valid'},
+E                          {'id': 'u',
+E                           'label': '当前PWM',
+E                           'role': 'input',
+E                           'metric_id': 'fan.pwm.actual',
+E                           'status': 'valid'},
+E                          {'id': 'tj',
+E                           'label': 'TJ观测',
+E                           'role': 'measurement',
+E                           'metric_id': 'temperature.tj',
+E                           'status': 'valid'},
+E                          {'id': 'tf',
+E                           'label': '快热状态 Tf',
+E                           'role': 'estimate',
+E                           'state_path': 'Tf_C',
+E                           'status': 'valid'},
+E                          {'id': 'ts',
+E                           'label': '慢热状态 Ts',
+E                           'role': 'estimate',
+E                           'state_path': 'Ts_C',
+E                           'note': '模型内部慢态，不是结构传感器温度',
+E                           'status': 'valid'},
+E                          {'id': 'forecast',
+E                           'label': 'TJ预测参考',
+E                           'role': 'forecast',
+E                           'note': '冻结G2-HOLD：15/45/90秒',
+E                           'status': 'valid'},
+E                          {'id': 'demand',
+E                           'label': '平稳需求（研究）',
+E                           'role': 'advisory',
+E                           'note': '需当前合法provider；index不是PWM',
+E                           'status': 'unknown'},
+E                          {'id': 'pwmref',
+E                           'label': 'PWM观察建议',
+E                           'role': 'advisory',
+E                           'note': '独立参考映射；无设备写权限',
+E                           'status': 'unknown'},
+E                          {'id': 'risk',
+E                           'label': '当前保护反馈',
+E                           'role': 'observed',
+E                           'note': '主板明确flags，不是预测过热概率',
+E                           'status': 'valid'}],
+E                'edges': [{'from': 'pg',
+E                           'to': 'tf',
+E                           'relation': 'power_input',
+E                           'animate_allowed': True},
+E                          {'from': 'pc',
+E                           'to': 'tf',
+E                           'relation': 'power_input',
+E                           'animate_allowed': True},
+E                          {'from': 'tj',
+E                           'to': 'tf',
+E                           'relation': 'measurement_correction',
+E                           'line_style': 'dashed',
+E                           'animate_allowed': True},
+E                          {'from': 'tf',
+E                           'to': 'ts',
+E                           'relation': 'coupling',
+E                           'animate_allowed': True},
+E                          {'from': 'ts',
+E                           'to': 'tf',
+E                           'relation': 'coupling',
+E                           'animate_allowed': True},
+E                          {'from': 'u',
+E                           'to': 'ts',
+E                           'relation': 'cooling_input',
+E                           'animate_allowed': True},
+E                          {'from': 'tf',
+E                           'to': 'forecast',
+E                           'relation': 'prediction_input',
+E                           'animate_allowed': True},
+E                          {'from': 'ts',
+E                           'to': 'forecast',
+E                           'relation': 'prediction_input',
+E                           'animate_allowed': True},
+E                          {'from': 'ts',
+E                           'to': 'demand',
+E                           'relation': 'research_transform',
+E                           'enabled_only_when': 'demand_provider_valid',
+E                           'animate_allowed': False},
+E                          {'from': 'forecast',
+E                           'to': 'pwmref',
+E                           'relation': 'reference_mapping',
+E                           'enabled_only_when': 'advisory_curve_verified',
+E                           'animate_allowed': False}],
+E                'remaining_valid_ms': 2489.999999990687}
+
+.venv/lib/python3.12/site-packages/jsonschema/validators.py:1332: ValidationError
+=============================== warnings summary ===============================
+tests/test_boundaries.py::test_slow_display_queue_resync_is_bounded_without_source_backpressure
+tests/test_service.py::test_actual_observe_collector_quality_observer_http_sse_four_clients
+tests/test_service.py::test_sse_resync_no_ttl_renewal_and_get_only_routes
+tests/test_service.py::test_waiting_api_and_lan_session_access_and_logout
+tests/test_service.py::test_quiet_source_expiry_is_prompt_without_rebuilding_every_timer_tick
+tests/test_service.py::test_registered_task_context_api_does_not_claim_missing_metadata_or_server_completion
+  /Users/massif/Tianshan-thermal-observer/work/webui-v1/src/tto_web/server.py:76: NotAppKeyWarning: It is recommended to use web.AppKey instances for keys.
+  https://docs.aiohttp.org/en/stable/web_advanced.html#application-s-config
+    app['state']=state;app['sse_clients']=sse_clients;app['stop']=stop
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_semantics.py::test_contract_examples_and_actual_snapshots
+1 failed, 32 passed, 6 warnings in 13.64s

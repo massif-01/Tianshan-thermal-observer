@@ -1,0 +1,684 @@
+{
+  "schema_version": 1,
+  "dataset_sha256": "f7f6152d402d226bfe0f637d2aeaa13ba533ab6d40c405b84792f3910c2bde68",
+  "scope": "same_thermal_process_time_extrapolation",
+  "simulated": false,
+  "independence": "unconfirmed",
+  "partitions": {
+    "train": [
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:1",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:2",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:3",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:4",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:5",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:6",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:7",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:8",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:9",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:10",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:11",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:12",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:13",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:14",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:15",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:16",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:17",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:18",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:19",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:20",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:21",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:22",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:23",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:24",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:25",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:26",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:27",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:28",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:29",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:30",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:31",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:32",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:33",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:34",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:35",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:36",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:37",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:38",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:39",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:40",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:41",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:42",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:43",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:44",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:45",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:46",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:47",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:48",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:49",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:50",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:51",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:52",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:53",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:54",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:55",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:56",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:57",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:58",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:59",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:60",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:61",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:62",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:63",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:64",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:65",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:66",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:67",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:68",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:69",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:70",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:71",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:72",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:73",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:74",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:75",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:76",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:77",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:78",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:79",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:80",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:81",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:82",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:83",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:84",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:85",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:86",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:87",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:88",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:89",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:90",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:91",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:92",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:93",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:94",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:95",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:96",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:97",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:98",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:99",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:100",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:101",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:102",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:103",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:104",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:105",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:106",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:107",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:108",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:109",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:110",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:111",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:112",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:113",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:114",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:115",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:116",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:117",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:118",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:119",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:120",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:121",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:122",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:123",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:124",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:125",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:126",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:127",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:128",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:129",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:130",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:131",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:132",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:133",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:134",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:135",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:136",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:137",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:138",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:139",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:140",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:141",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:142",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:143",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:144",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:145",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:146",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:147",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:148",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:149",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:150",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:151",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:152",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:153",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:154",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:155",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:156",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:157",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:158",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:159",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:160",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:161",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:162",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:163",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:164",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:165",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:166",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:167",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:168",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:169",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:170",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:171",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:172",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:173",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:174",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:175",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:176"
+    ],
+    "validation": [
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:232",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:233",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:234",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:235",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:236",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:237",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:238",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:239",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:240",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:241"
+    ],
+    "test": [
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:297",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:298",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:299",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:300",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:301",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:302",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:303",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:304",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:305",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:306",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:307",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:308",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:309",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:310",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:311",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:312",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:313",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:314",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:315",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:316",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:317",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:318",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:319",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:320",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:321",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:322",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:323",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:324",
+      "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:325"
+    ]
+  },
+  "discarded": [
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:177",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:178",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:179",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:180",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:181",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:182",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:183",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:184",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:185",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:186",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:187",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:188",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:189",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:190",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:191",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:192",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:193",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:194",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:195",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:196",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:197",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:198",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:199",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:200",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:201",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:202",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:203",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:204",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:205",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:206",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:207",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:208",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:209",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:210",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:211",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:212",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:213",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:214",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:215",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:216",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:217",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:218",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:219",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:220",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:221",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:222",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:223",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:224",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:225",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:226",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:227",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:228",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:229",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:230",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:231",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:242",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:243",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:244",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:245",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:246",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:247",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:248",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:249",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:250",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:251",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:252",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:253",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:254",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:255",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:256",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:257",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:258",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:259",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:260",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:261",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:262",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:263",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:264",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:265",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:266",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:267",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:268",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:269",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:270",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:271",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:272",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:273",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:274",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:275",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:276",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:277",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:278",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:279",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:280",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:281",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:282",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:283",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:284",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:285",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:286",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:287",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:288",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:289",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:290",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:291",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:292",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:293",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:294",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:295",
+      "reason": "purge_support_crosses_partition"
+    },
+    {
+      "id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02:296",
+      "reason": "purge_support_crosses_partition"
+    }
+  ],
+  "sources": {
+    "d2a7593a-e68a-4b6f-9d4d-875fafa73c02": {
+      "observations-0001.jsonl": "121341bbccef3bb5bd34e2f5b327ebb4eb4f342d745cc26004d9c6061409c707",
+      "input-profile.json": "bd04efe3dfedec26576471b24459a57d5e539d49f87e33906b45a2e6bdcf5c34"
+    }
+  },
+  "episodes_order": [
+    "tto-short-qa-v1-20261013-052807"
+  ],
+  "reference_contract": "TTO-PLAN-v1.0",
+  "test_use_policy": "one sealed evaluation; any tuning afterwards needs new unused test processes",
+  "sha256": "94905ad5a591ed0acef226a5652a58a3b50e238004f8d59add72db005d893704"
+}

@@ -1,0 +1,45 @@
+{
+  "rows": 5319,
+  "result": "all present values exact; one terminal-boundary TJ retention difference separately preserved",
+  "counts": {
+    "collection_available": 4351,
+    "model_available": 5290,
+    "field_safety_available": 289,
+    "start_allowed": 289
+  },
+  "phase_counts": {
+    "uninitialized": 3,
+    "provisional": 25,
+    "degraded": 5001,
+    "tracking": 289,
+    "unavailable": 1
+  },
+  "raw_firmware": null,
+  "formal_allowed": 0,
+  "clock": "explicit offline virtual replay; not live binding",
+  "checks": [
+    "same_observation_count",
+    "all_5319_cutoffs_identity_PWM_and_present_TJ_rails_exact",
+    "single_terminal_boundary_TJ_retention_difference_preserved",
+    "formal_authorization_never_promoted_5319",
+    "expired_PWM_never_admitted_from_finite_observer",
+    "actual_observer_stream_drives_demo_gate",
+    "no_new_snapshot_no_model_expiry_or_measurement_renewal",
+    "explicit_guard",
+    "explicit_fault",
+    "explicit_mode",
+    "explicit_enabled",
+    "explicit_manual_mode",
+    "explicit_binding",
+    "explicit_active_source",
+    "unknown_guard_is_not_false",
+    "cross_run_rejected",
+    "cross_clock_rejected",
+    "future_snapshot_rejected",
+    "finite_is_not_ready_uninitialized",
+    "finite_is_not_ready_provisional",
+    "finite_is_not_ready_unavailable",
+    "real_Y_readonly_replay_exercised_scheduler",
+    "one_replay_run_identity"
+  ]
+}

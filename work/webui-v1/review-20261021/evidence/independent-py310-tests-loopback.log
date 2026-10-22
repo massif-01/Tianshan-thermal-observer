@@ -1,0 +1,63 @@
+..........F.......................                                       [100%]
+=================================== FAILURES ===================================
+_ test_install_system_unit_enables_and_restarts_new_release_without_touching_old_tto _
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1/test_install_system_unit_enabl0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f38d54c4640>
+
+    def test_install_system_unit_enables_and_restarts_new_release_without_touching_old_tto(tmp_path,monkeypatch):
+        source=Path(__file__).parents[1]/'tools/install.py'
+        spec=importlib.util.spec_from_file_location('web_installer_test',source);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+        root=tmp_path/'bundle';(root/'config').mkdir(parents=True);(root/'wheelhouse').mkdir()
+        (root/'config/web.json').write_text(json.dumps({'web':{'port':59009,'bind':'127.0.0.1','access_mode':'local'},'source':{},'advisory':{}}))
+        (root/'wheelhouse/tto_web_ui-1.0.0rc1-py3-none-any.whl').write_bytes(b'SYNTHETIC command construction test only')
+        (root/'requirements.runtime.lock').write_text('')
+        files={str(p.relative_to(root)):hashlib.sha256(p.read_bytes()).hexdigest() for p in root.rglob('*') if p.is_file()}
+        (root/'candidate-identities.json').write_text(json.dumps(files))
+        prefix=tmp_path/'independent Web prefix';commands=[]
+        monkeypatch.setattr(m,'wait_ready',lambda *args:commands.append(['ready-check']))
+        monkeypatch.setattr(m,'ROOT',root);monkeypatch.setattr(m,'run',lambda *args:commands.append([str(a) for a in args]))
+        monkeypatch.setattr(m.sys,'platform','linux');monkeypatch.setattr(m.os,'getuid',lambda:501)
+        monkeypatch.setattr(sys,'argv',['install.py','--prefix',str(prefix),'--service','system'])
+>       m.main()
+
+tests/test_installer.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/install.py:134: in main
+    '''.format(exe=launcher,config=config,user=('User='+getpass.getuser()+'\n') if args.service=='system' else '',target='multi-user.target' if args.service=='system' else 'default.target')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def getuser():
+        """Get the username from the environment or password database.
+    
+        First try various environment variables, then the password
+        database.  This works on Windows as long as USERNAME is set.
+    
+        """
+    
+        for name in ('LOGNAME', 'USER', 'LNAME', 'USERNAME'):
+            user = os.environ.get(name)
+            if user:
+                return user
+    
+        # If this fails, the exception will "explain" why
+        import pwd
+>       return pwd.getpwuid(os.getuid())[0]
+E       KeyError: 'getpwuid(): uid not found: 501'
+
+../../runtimes/cpython-3.10.22-linux-x86_64-gnu/lib/python3.10/getpass.py:169: KeyError
+=============================== warnings summary ===============================
+tests/test_boundaries.py::test_slow_display_queue_resync_is_bounded_without_source_backpressure
+tests/test_service.py::test_actual_observe_collector_quality_observer_http_sse_four_clients
+tests/test_service.py::test_sse_resync_no_ttl_renewal_and_get_only_routes
+tests/test_service.py::test_waiting_api_and_lan_session_access_and_logout
+tests/test_service.py::test_quiet_source_expiry_is_prompt_without_rebuilding_every_timer_tick
+tests/test_service.py::test_registered_task_context_api_does_not_claim_missing_metadata_or_server_completion
+  /workspace/scratch/dbfa87ce72d6/review/source/TTO-WebUI-v1.0/src/tto_web/server.py:76: NotAppKeyWarning: It is recommended to use web.AppKey instances for keys.
+  https://docs.aiohttp.org/en/stable/web_advanced.html#application-s-config
+    app['state']=state;app['sse_clients']=sse_clients;app['stop']=stop
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_installer.py::test_install_system_unit_enables_and_restarts_new_release_without_touching_old_tto
+1 failed, 33 passed, 6 warnings in 18.13s

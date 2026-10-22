@@ -1,0 +1,1750 @@
+[
+  {
+    "path": "/api/v1/system/info",
+    "sent_at_utc": "2026-10-13T16:50:30.432703+00:00",
+    "http_status": 200,
+    "body": {
+      "code": 0,
+      "data": {
+        "app": {
+          "name": "TianShanOS",
+          "version": "0.6.2+028e6330.10132311",
+          "idf_version": "v5.5.2",
+          "compile_time": "23:12:05",
+          "compile_date": "Oct 13 2026"
+        },
+        "chip": {
+          "model": "ESP32-S3",
+          "cores": 2,
+          "revision": 2,
+          "features": [
+            "WiFi",
+            "BLE"
+          ]
+        },
+        "flash_size": 16777216,
+        "uptime_ms": 4529772
+      }
+    },
+    "received_at_utc": "2026-10-13T16:50:30.482555+00:00"
+  },
+  {
+    "path": "/api/v1/log/stats",
+    "sent_at_utc": "2026-10-13T16:50:30.482573+00:00",
+    "http_status": 200,
+    "body": {
+      "code": 0,
+      "data": {
+        "bufferCapacity": 500,
+        "bufferCount": 500,
+        "totalCaptured": 435,
+        "dropped": 160,
+        "espLogCaptureEnabled": true,
+        "currentLevel": 3,
+        "currentLevelName": "INFO"
+      }
+    },
+    "received_at_utc": "2026-10-13T16:50:30.498426+00:00"
+  },
+  {
+    "path": "/api/v1/log/list?limit=200",
+    "sent_at_utc": "2026-10-13T16:50:30.498462+00:00",
+    "http_status": 200,
+    "body": {
+      "code": 0,
+      "data": {
+        "logs": [
+          {
+            "timestamp": 1291,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_fan",
+            "message": "Restored fan 0: mode=2, duty=18%, curve=9 pts",
+            "task": "main"
+          },
+          {
+            "timestamp": 2355,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_service",
+            "message": "Service 'drivers' started in 169 ms",
+            "task": "main"
+          },
+          {
+            "timestamp": 2360,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_service",
+            "message": "Starting service: led",
+            "task": "main"
+          },
+          {
+            "timestamp": 2364,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_services",
+            "message": "Initializing LED service...",
+            "task": "main"
+          },
+          {
+            "timestamp": 1311,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "led_cc",
+            "message": "Loaded config from NVS",
+            "task": "main"
+          },
+          {
+            "timestamp": 1315,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "led_cc",
+            "message": "Color correction initialized (enabled=true)",
+            "task": "main"
+          },
+          {
+            "timestamp": 1321,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_led",
+            "message": "LED subsystem initialized",
+            "task": "main"
+          },
+          {
+            "timestamp": 2384,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_services",
+            "message": "Starting LED service...",
+            "task": "main"
+          },
+          {
+            "timestamp": 1330,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "led_preset",
+            "message": "Touch LED: using hardcoded GPIO 45",
+            "task": "main"
+          },
+          {
+            "timestamp": 1335,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "led_driver",
+            "message": "Using RMT backend for 1 LEDs on GPIO 45",
+            "task": "main"
+          },
+          {
+            "timestamp": 1343,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "led_driver",
+            "message": "LED driver initialized: 'led_touch' - GPIO 45, 1 LEDs",
+            "task": "main"
+          },
+          {
+            "timestamp": 1349,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_led",
+            "message": "Created LED device 'led_touch' with 1 LEDs",
+            "task": "main"
+          },
+          {
+            "timestamp": 1356,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "led_preset",
+            "message": "Touch LED initialized: 1 LEDs on GPIO 45",
+            "task": "main"
+          },
+          {
+            "timestamp": 1362,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "led_preset",
+            "message": "Board LED: using hardcoded GPIO 42",
+            "task": "main"
+          },
+          {
+            "timestamp": 1368,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "led_driver",
+            "message": "Using RMT backend for 28 LEDs on GPIO 42",
+            "task": "main"
+          },
+          {
+            "timestamp": 1376,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "led_driver",
+            "message": "LED driver initialized: 'led_board' - GPIO 42, 28 LEDs",
+            "task": "main"
+          },
+          {
+            "timestamp": 1382,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_led",
+            "message": "Created LED device 'led_board' with 28 LEDs",
+            "task": "main"
+          },
+          {
+            "timestamp": 1388,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "led_preset",
+            "message": "Board LED initialized: 28 LEDs on GPIO 42",
+            "task": "main"
+          },
+          {
+            "timestamp": 1395,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "led_preset",
+            "message": "Matrix LED: pin_manager returned GPIO 9",
+            "task": "main"
+          },
+          {
+            "timestamp": 1401,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "led_driver",
+            "message": "Using SPI backend for 1024 LEDs on GPIO 9",
+            "task": "main"
+          },
+          {
+            "timestamp": 1439,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "led_driver",
+            "message": "LED driver initialized: 'led_matrix' - GPIO 9, 1024 LEDs",
+            "task": "main"
+          },
+          {
+            "timestamp": 1440,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_led",
+            "message": "Created LED device 'led_matrix' with 1024 LEDs",
+            "task": "main"
+          },
+          {
+            "timestamp": 1443,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "led_preset",
+            "message": "Matrix LED initialized: 32x32 on GPIO 9",
+            "task": "main"
+          },
+          {
+            "timestamp": 1449,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "led_preset",
+            "message": "Loading LED boot configurations...",
+            "task": "main"
+          },
+          {
+            "timestamp": 1462,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "led_preset",
+            "message": "Restored touch: animation=pulse, speed=50, brightness=80",
+            "task": "main"
+          },
+          {
+            "timestamp": 1464,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "led_preset",
+            "message": "Restored board: animation=comet, speed=80, brightness=60",
+            "task": "main"
+          },
+          {
+            "timestamp": 1472,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "led_preset",
+            "message": "Image file not ready, scheduling delayed load: /sdcard/Cat Pixel Sticker - Find & Share on GIPHY.gif",
+            "task": "main"
+          },
+          {
+            "timestamp": 2541,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_service",
+            "message": "Service 'led' started in 177 ms",
+            "task": "main"
+          },
+          {
+            "timestamp": 2546,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_service",
+            "message": "Starting service: storage",
+            "task": "main"
+          },
+          {
+            "timestamp": 2550,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_services",
+            "message": "Initializing storage service...",
+            "task": "main"
+          },
+          {
+            "timestamp": 1498,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_storage",
+            "message": "Storage subsystem initialized",
+            "task": "main"
+          },
+          {
+            "timestamp": 2560,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_services",
+            "message": "Starting storage service...",
+            "task": "main"
+          },
+          {
+            "timestamp": 1506,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "storage_spiffs",
+            "message": "Mounting SPIFFS at /spiffs (partition: storage)",
+            "task": "main"
+          },
+          {
+            "timestamp": 1548,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "storage_spiffs",
+            "message": "SPIFFS mounted: 474641 total, 0 used, 474641 free",
+            "task": "main"
+          },
+          {
+            "timestamp": 2607,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_services",
+            "message": "SPIFFS mounted at /spiffs",
+            "task": "main"
+          },
+          {
+            "timestamp": 1549,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "storage_sd",
+            "message": "Good: /sdcard not in FATFS s_fat_ctxs[] (info returned ESP_ERR_INVALID_STATE)",
+            "task": "main"
+          },
+          {
+            "timestamp": 1559,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "storage_sd",
+            "message": "Mounting SD card at /sdcard (mode: 2, freq: 20000 kHz)",
+            "task": "main"
+          },
+          {
+            "timestamp": 1572,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "storage_sd",
+            "message": "SD GPIO: CMD=15, CLK=16, D0=4, D1=5, D2=6, D3=7",
+            "task": "main"
+          },
+          {
+            "timestamp": 1617,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "storage_sd",
+            "message": "SD card mounted:",
+            "task": "main"
+          },
+          {
+            "timestamp": 1618,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "storage_sd",
+            "message": "  Name: Biwin",
+            "task": "main"
+          },
+          {
+            "timestamp": 1618,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "storage_sd",
+            "message": "  Type: SDHC/SDXC",
+            "task": "main"
+          },
+          {
+            "timestamp": 1619,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "storage_sd",
+            "message": "  Speed: default",
+            "task": "main"
+          },
+          {
+            "timestamp": 1624,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "storage_sd",
+            "message": "  Size: 59638MB",
+            "task": "main"
+          },
+          {
+            "timestamp": 1628,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_power_policy",
+            "message": "SD card mounted, syncing power policy config...",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2705,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_pack",
+            "message": "Loaded plain config: /sdcard/config/power_policy.json (181 bytes)",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2695,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_services",
+            "message": "SD card mounted at /sdcard",
+            "task": "main"
+          },
+          {
+            "timestamp": 2696,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config",
+            "message": "Saving configuration...",
+            "task": "Tmr Svc"
+          },
+          {
+            "timestamp": 1649,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_power_policy",
+            "message": "SD: low_voltage_threshold = 12.60V",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2717,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config",
+            "message": "Saved configuration to backend 1",
+            "task": "Tmr Svc"
+          },
+          {
+            "timestamp": 1658,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_power_policy",
+            "message": "SD: recovery_voltage_threshold = 18.00V",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2722,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config",
+            "message": "Configuration saved",
+            "task": "Tmr Svc"
+          },
+          {
+            "timestamp": 1670,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_power_policy",
+            "message": "SD: shutdown_delay_sec = 300",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 1679,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_power_policy",
+            "message": "SD: recovery_hold_sec = 5",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 1684,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_power_policy",
+            "message": "SD: fan_stop_delay_sec = 60",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 1690,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_power_policy",
+            "message": "SD: enabled_on_boot = true",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 1701,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_power_policy",
+            "message": "Loaded power policy config from SD card",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 1707,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_power_policy",
+            "message": "Config loaded from SD card, syncing to NVS",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2773,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config",
+            "message": "Saving configuration...",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2708,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_recovery",
+            "message": "Checking for SD card recovery...",
+            "task": "main"
+          },
+          {
+            "timestamp": 2783,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config",
+            "message": "Saved configuration to backend 1",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2784,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config",
+            "message": "Configuration saved",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2785,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_file",
+            "message": "SD card mounted, loading configuration files...",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2794,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_file",
+            "message": "Loading configuration files from: /sdcard/config",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2805,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_file",
+            "message": "Skipping fan.json (encrypted version exists)",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2806,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_file",
+            "message": "Loading: dhcp.json",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2808,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_json",
+            "message": "Loading JSON config: /sdcard/config/dhcp.json",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2818,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_json",
+            "message": "JSON config loaded successfully",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2820,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_file",
+            "message": "Loading: wifi.json",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2824,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_json",
+            "message": "Loading JSON config: /sdcard/config/wifi.json",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2834,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_json",
+            "message": "JSON config loaded successfully",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2835,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_file",
+            "message": "Loading: led.json",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2839,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_json",
+            "message": "Loading JSON config: /sdcard/config/led.json",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2848,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_json",
+            "message": "JSON config loaded successfully",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2850,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_file",
+            "message": "Loading: device.json",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2854,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_json",
+            "message": "Loading JSON config: /sdcard/config/device.json",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2864,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_json",
+            "message": "JSON config loaded successfully",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2866,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_file",
+            "message": "Loading: system.json",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2869,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_json",
+            "message": "Loading JSON config: /sdcard/config/system.json",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2880,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_json",
+            "message": "JSON config loaded successfully",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2871,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_recovery",
+            "message": "Recovery manifest: version=0.6.2+028e6330.10132311, armed=0, force=0, firmware=TianShanOS.bin, www=www.bin",
+            "task": "main"
+          },
+          {
+            "timestamp": 2893,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_file",
+            "message": "Loading: ui_widgets.json",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2893,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_recovery",
+            "message": "Recovery manifest is not armed, skipping boot-time recovery",
+            "task": "main"
+          },
+          {
+            "timestamp": 2904,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_json",
+            "message": "Loading JSON config: /sdcard/config/ui_widgets.json",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2915,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_json",
+            "message": "JSON config loaded successfully",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2920,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_file",
+            "message": "Loading: power_policy.json",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2924,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_json",
+            "message": "Loading JSON config: /sdcard/config/power_policy.json",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2910,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_services",
+            "message": "Recovery check passed",
+            "task": "main"
+          },
+          {
+            "timestamp": 2935,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_json",
+            "message": "JSON config loaded successfully",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2943,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_file",
+            "message": "Loading: led_color_correction.json",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2932,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_service",
+            "message": "Service 'storage' started in 381 ms",
+            "task": "main"
+          },
+          {
+            "timestamp": 2947,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_json",
+            "message": "Loading JSON config: /sdcard/config/led_color_correction.json",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2960,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_json",
+            "message": "JSON config loaded successfully",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2951,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_service",
+            "message": "=== Phase 4: NETWORK ===",
+            "task": "main"
+          },
+          {
+            "timestamp": 2964,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_file",
+            "message": "Loaded 8 JSON configs, skipped 7 (found 1 .tscfg files for deferred loading)",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2977,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_file",
+            "message": "Configuration files loaded successfully",
+            "task": "ts_event"
+          },
+          {
+            "timestamp": 2964,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_service",
+            "message": "Starting 1 services in phase NETWORK",
+            "task": "main"
+          },
+          {
+            "timestamp": 2983,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_service",
+            "message": "Starting service: network",
+            "task": "main"
+          },
+          {
+            "timestamp": 2990,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_services",
+            "message": "Initializing network service...",
+            "task": "main"
+          },
+          {
+            "timestamp": 1933,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_net_mgr",
+            "message": "Initializing network manager...",
+            "task": "main"
+          },
+          {
+            "timestamp": 1940,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_net_mgr",
+            "message": "Configuration loaded from NVS",
+            "task": "main"
+          },
+          {
+            "timestamp": 1945,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_net_mgr",
+            "message": "Ethernet pins: MOSI=11 MISO=13 SCLK=12 CS=10 INT=38 RST=39",
+            "task": "main"
+          },
+          {
+            "timestamp": 1952,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_eth",
+            "message": "Initializing Ethernet (W5500)",
+            "task": "main"
+          },
+          {
+            "timestamp": 1958,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_eth",
+            "message": "Created Ethernet netif with DHCP server mode",
+            "task": "main"
+          },
+          {
+            "timestamp": 1968,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_eth",
+            "message": "  Device IP: 10.10.99.97",
+            "task": "main"
+          },
+          {
+            "timestamp": 1969,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_eth",
+            "message": "  Gateway:   10.10.99.100",
+            "task": "main"
+          },
+          {
+            "timestamp": 1973,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_eth",
+            "message": "  Netmask:   255.255.255.0",
+            "task": "main"
+          },
+          {
+            "timestamp": 1999,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_eth",
+            "message": "Ethernet MAC: 30:ed:a0:1c:4f:37",
+            "task": "main"
+          },
+          {
+            "timestamp": 3064,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "",
+            "message": "30:ed:a0:1c:4f:37",
+            "task": "main"
+          },
+          {
+            "timestamp": 3065,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "",
+            "message": "ethernet attached to netif",
+            "task": "main"
+          },
+          {
+            "timestamp": 2010,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_eth",
+            "message": "DHCP lease range configured: 10.10.99.100 - 10.10.99.103",
+            "task": "main"
+          },
+          {
+            "timestamp": 2017,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_eth",
+            "message": "DHCP DNS server configured: 8.8.8.8",
+            "task": "main"
+          },
+          {
+            "timestamp": 2023,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_eth",
+            "message": "Ethernet initialized",
+            "task": "main"
+          },
+          {
+            "timestamp": 2027,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_net_mgr",
+            "message": "Ethernet initialized, MAC: 30:ed:a0:1c:4f:37",
+            "task": "main"
+          },
+          {
+            "timestamp": 2034,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_net_mgr",
+            "message": "Network manager initialized",
+            "task": "main"
+          },
+          {
+            "timestamp": 2042,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_dhcps",
+            "message": "Initializing DHCP server...",
+            "task": "main"
+          },
+          {
+            "timestamp": 2044,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_dhcps",
+            "message": "DHCP event task started",
+            "task": "dhcp_evt"
+          },
+          {
+            "timestamp": 2049,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_dhcps",
+            "message": "No saved config, using defaults",
+            "task": "main"
+          },
+          {
+            "timestamp": 2055,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_dhcps",
+            "message": "DHCP server initialized (event queue enabled)",
+            "task": "main"
+          },
+          {
+            "timestamp": 3120,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_services",
+            "message": "Starting network service...",
+            "task": "main"
+          },
+          {
+            "timestamp": 2066,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_net_mgr",
+            "message": "Starting Ethernet...",
+            "task": "main"
+          },
+          {
+            "timestamp": 2071,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_net_mgr",
+            "message": "Using static IP: 10.10.99.97",
+            "task": "main"
+          },
+          {
+            "timestamp": 2089,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_net_mgr",
+            "message": "Ethernet started",
+            "task": "sys_evt"
+          },
+          {
+            "timestamp": 2089,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_eth",
+            "message": "Ethernet started",
+            "task": "sys_evt"
+          },
+          {
+            "timestamp": 2090,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_net_mgr",
+            "message": "Ethernet started, waiting for link...",
+            "task": "main"
+          },
+          {
+            "timestamp": 3152,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_time_sync",
+            "message": "Timezone set to: CST-8",
+            "task": "main"
+          },
+          {
+            "timestamp": 3156,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_time_sync",
+            "message": "Time sync module initialized",
+            "task": "main"
+          },
+          {
+            "timestamp": 3160,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_time_sync",
+            "message": "NTP server 1: 10.10.99.99",
+            "task": "main"
+          },
+          {
+            "timestamp": 3165,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_time_sync",
+            "message": "NTP server 2: 10.10.99.98",
+            "task": "main"
+          },
+          {
+            "timestamp": 3174,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_time_sync",
+            "message": "NTP server 3: 10.10.99.100",
+            "task": "main"
+          },
+          {
+            "timestamp": 3175,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_time_sync",
+            "message": "Starting NTP sync with primary: 10.10.99.99, secondary: 10.10.99.98",
+            "task": "main"
+          },
+          {
+            "timestamp": 3182,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_time_sync",
+            "message": "NTP synchronization started (retry enabled for unreliable servers)",
+            "task": "main"
+          },
+          {
+            "timestamp": 2131,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_device",
+            "message": "LPMU startup detection: waiting for network...",
+            "task": "lpmu_detect"
+          },
+          {
+            "timestamp": 2138,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_device",
+            "message": "LPMU startup detection task started",
+            "task": "main"
+          },
+          {
+            "timestamp": 3202,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_service",
+            "message": "Service 'network' started in 212 ms",
+            "task": "main"
+          },
+          {
+            "timestamp": 3211,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_service",
+            "message": "=== Phase 5: SECURITY ===",
+            "task": "main"
+          },
+          {
+            "timestamp": 3212,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_service",
+            "message": "Starting 1 services in phase SECURITY",
+            "task": "main"
+          },
+          {
+            "timestamp": 3217,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_service",
+            "message": "Starting service: security",
+            "task": "main"
+          },
+          {
+            "timestamp": 3221,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_services",
+            "message": "Initializing security service...",
+            "task": "main"
+          },
+          {
+            "timestamp": 3229,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "",
+            "message": "NVS has 2 hosts, will load from SD card in background",
+            "task": "main"
+          },
+          {
+            "timestamp": 3233,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "",
+            "message": "SSH hosts config initialized (SD card loading deferred)",
+            "task": "main"
+          },
+          {
+            "timestamp": 3262,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_ssh_cmd_cfg",
+            "message": "NVS has 2 commands, will load from SD card in background",
+            "task": "main"
+          },
+          {
+            "timestamp": 3262,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_ssh_cmd_cfg",
+            "message": "SSH commands config initialized (SD card loading deferred)",
+            "task": "main"
+          },
+          {
+            "timestamp": 2207,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_security",
+            "message": "Security subsystem initialized",
+            "task": "main"
+          },
+          {
+            "timestamp": 3271,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_known_hosts",
+            "message": "Known hosts module initialized",
+            "task": "main"
+          },
+          {
+            "timestamp": 3433,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_cert",
+            "message": "Initialized, status: activated, has_key=1, has_cert=1",
+            "task": "main"
+          },
+          {
+            "timestamp": 3434,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "pki_client",
+            "message": "PKI client initialized, server=10.10.99.100:57443, device_id=TIANSHAN-DEVICE-001",
+            "task": "main"
+          },
+          {
+            "timestamp": 3438,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_services",
+            "message": "Certificate status: activated, time validity: valid",
+            "task": "main"
+          },
+          {
+            "timestamp": 3445,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_pack",
+            "message": "Config pack system initialized, device fingerprint: 4078e899eaf468c4...",
+            "task": "main"
+          },
+          {
+            "timestamp": 3453,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_file",
+            "message": "Loading encrypted configuration files from: /sdcard/config",
+            "task": "main"
+          },
+          {
+            "timestamp": 3472,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_file",
+            "message": "Loading encrypted: fan.tscfg",
+            "task": "main"
+          },
+          {
+            "timestamp": 2504,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "led_image",
+            "message": "GIF: 480x480, 3 frames detected",
+            "task": "esp_timer"
+          },
+          {
+            "timestamp": 3959,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config",
+            "message": "Saving configuration...",
+            "task": "Tmr Svc"
+          },
+          {
+            "timestamp": 3975,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config",
+            "message": "Saved configuration to backend 1",
+            "task": "Tmr Svc"
+          },
+          {
+            "timestamp": 3976,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config",
+            "message": "Configuration saved",
+            "task": "Tmr Svc"
+          },
+          {
+            "timestamp": 3033,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "led_image",
+            "message": "GIF loaded: 480x480, 3 frame(s)",
+            "task": "esp_timer"
+          },
+          {
+            "timestamp": 3073,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "led_image",
+            "message": "GIF animation started: 3 frames",
+            "task": "esp_timer"
+          },
+          {
+            "timestamp": 3073,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "led_preset",
+            "message": "Delayed restored matrix: animation=/sdcard/Cat Pixel Sticker - Find & Share on GIPHY.gif (3 frames)",
+            "task": "esp_timer"
+          },
+          {
+            "timestamp": 3079,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "led_layer",
+            "message": "Layer effect set: type=24",
+            "task": "esp_timer"
+          },
+          {
+            "timestamp": 3084,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "led_preset",
+            "message": "Applied filter 'posterize' to matrix",
+            "task": "esp_timer"
+          },
+          {
+            "timestamp": 4735,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_file",
+            "message": "Loaded encrypted config: fan.tscfg (signer: TIANSHAN-DEVICE-001)",
+            "task": "main"
+          },
+          {
+            "timestamp": 4737,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_config_file",
+            "message": "Encrypted configs: 1 loaded, 0 failed",
+            "task": "main"
+          },
+          {
+            "timestamp": 4738,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_service",
+            "message": "Service 'security' started in 1517 ms",
+            "task": "main"
+          },
+          {
+            "timestamp": 4743,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_service",
+            "message": "=== Phase 6: SERVICE ===",
+            "task": "main"
+          },
+          {
+            "timestamp": 4747,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_service",
+            "message": "Starting 3 services in phase SERVICE",
+            "task": "main"
+          },
+          {
+            "timestamp": 4752,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_service",
+            "message": "Starting service: automation",
+            "task": "main"
+          },
+          {
+            "timestamp": 4756,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_services",
+            "message": "Initializing automation service...",
+            "task": "main"
+          },
+          {
+            "timestamp": 4761,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_automation",
+            "message": "Initializing automation engine v1.0.0",
+            "task": "main"
+          },
+          {
+            "timestamp": 4776,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_source_mgr",
+            "message": "Initializing source manager (max 16)",
+            "task": "main"
+          },
+          {
+            "timestamp": 4777,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_source_mgr",
+            "message": "Source manager initialized (loading deferred)",
+            "task": "main"
+          },
+          {
+            "timestamp": 4778,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_rule_engine",
+            "message": "Initializing rule engine (max 32 rules)",
+            "task": "main"
+          },
+          {
+            "timestamp": 4784,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_rule_engine",
+            "message": "Rule engine initialized (loading deferred)",
+            "task": "main"
+          },
+          {
+            "timestamp": 4790,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_action_mgr",
+            "message": "Initializing action manager",
+            "task": "main"
+          },
+          {
+            "timestamp": 4796,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_action_mgr",
+            "message": "Action executor task started (DRAM stack)",
+            "task": "action_exec"
+          },
+          {
+            "timestamp": 4801,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_action_mgr",
+            "message": "Action manager initialized (loading deferred)",
+            "task": "main"
+          },
+          {
+            "timestamp": 4848,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_automation",
+            "message": "Loading config from: /sdcard/config/automation.json",
+            "task": "main"
+          },
+          {
+            "timestamp": 4852,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_ssh_cmd_cfg",
+            "message": "Pre-creating variables for all SSH commands",
+            "task": "main"
+          },
+          {
+            "timestamp": 3811,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_power_policy",
+            "message": "Registered 8 automation variables for power policy",
+            "task": "main"
+          },
+          {
+            "timestamp": 4870,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_automation",
+            "message": "Automation engine initialized",
+            "task": "main"
+          },
+          {
+            "timestamp": 4872,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_services",
+            "message": "Starting automation service...",
+            "task": "main"
+          },
+          {
+            "timestamp": 4876,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_source_mgr",
+            "message": "Starting all data sources",
+            "task": "main"
+          },
+          {
+            "timestamp": 4090,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_net_mgr",
+            "message": "Ethernet link up",
+            "task": "sys_evt"
+          },
+          {
+            "timestamp": 4091,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_net_mgr",
+            "message": "Ethernet IP (static/DHCPS): 10.10.99.97",
+            "task": "sys_evt"
+          },
+          {
+            "timestamp": 4091,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_net",
+            "message": "mDNS disabled by config",
+            "task": "sys_evt"
+          },
+          {
+            "timestamp": 4095,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_eth",
+            "message": "Ethernet link up",
+            "task": "sys_evt"
+          },
+          {
+            "timestamp": 4099,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_eth",
+            "message": "Ethernet MAC: 30:ed:a0:1c:4f:37",
+            "task": "sys_evt"
+          },
+          {
+            "timestamp": 5208,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_source_mgr",
+            "message": "Network ready, starting external sources",
+            "task": "main"
+          },
+          {
+            "timestamp": 5208,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_automation",
+            "message": "Automation task started",
+            "task": "ts_auto"
+          },
+          {
+            "timestamp": 5208,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_services",
+            "message": "Automation engine running: 0 sources, 0 rules, 15 variables",
+            "task": "main"
+          },
+          {
+            "timestamp": 5214,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_service",
+            "message": "Service 'automation' started in 457 ms",
+            "task": "main"
+          },
+          {
+            "timestamp": 5219,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_service",
+            "message": "Starting service: https",
+            "task": "main"
+          },
+          {
+            "timestamp": 5224,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_https",
+            "message": "HTTPS server deinitialized",
+            "task": "https_coord"
+          },
+          {
+            "timestamp": 5228,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_https",
+            "message": "HTTPS server initialized (port=443, mTLS=required)",
+            "task": "https_coord"
+          },
+          {
+            "timestamp": 5234,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_https_api",
+            "message": "Registering permission test endpoints...",
+            "task": "https_coord"
+          },
+          {
+            "timestamp": 5239,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_https",
+            "message": "Registered endpoint: GET / (min_role=anonymous)",
+            "task": "https_coord"
+          },
+          {
+            "timestamp": 5245,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_https",
+            "message": "Registered endpoint: GET /api/auth/whoami (min_role=viewer)",
+            "task": "https_coord"
+          },
+          {
+            "timestamp": 5252,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_https",
+            "message": "Registered endpoint: GET /api/test/viewer (min_role=viewer)",
+            "task": "https_coord"
+          },
+          {
+            "timestamp": 5264,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_https",
+            "message": "Registered endpoint: GET /api/test/operator (min_role=operator)",
+            "task": "https_coord"
+          },
+          {
+            "timestamp": 4198,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_dhcps",
+            "message": "Starting DHCP server on ethernet...",
+            "task": "dhcp_start"
+          },
+          {
+            "timestamp": 5271,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_https",
+            "message": "Registered endpoint: GET /api/test/admin (min_role=admin)",
+            "task": "https_coord"
+          },
+          {
+            "timestamp": 5251,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_service",
+            "message": "Service 'https' started in 27 ms",
+            "task": "main"
+          }
+        ],
+        "total": 200,
+        "offset": 0,
+        "returned": 200,
+        "bufferCapacity": 500,
+        "bufferCount": 500
+      }
+    },
+    "received_at_utc": "2026-10-13T16:50:30.673563+00:00"
+  },
+  {
+    "path": "/api/v1/temp/bind",
+    "sent_at_utc": "2026-10-13T16:50:30.673608+00:00",
+    "http_status": 200,
+    "body": {
+      "code": 0,
+      "data": {
+        "bound_variable": "agx_info.temperature.tj",
+        "bound_variables": [
+          {
+            "name": "agx_info.temperature.tj",
+            "weight": 1,
+            "value": 46.21799850463867,
+            "last_change_ms": 4529123,
+            "last_update_ms": 4529123,
+            "age_ms": 854,
+            "stale": false,
+            "valid": true
+          }
+        ],
+        "bound_valid_count": 1,
+        "bound_total_count": 1,
+        "bound_valid_weight": 1,
+        "bound_total_weight": 1,
+        "partial_stale": false,
+        "weighted_temp_c": 46.21799850463867,
+        "active_source": "variable",
+        "temperature_c": 46.2,
+        "valid": true
+      }
+    },
+    "received_at_utc": "2026-10-13T16:50:30.689322+00:00"
+  },
+  {
+    "path": "/api/v1/temp/sources",
+    "sent_at_utc": "2026-10-13T16:50:30.689363+00:00",
+    "http_status": 200,
+    "body": {
+      "code": 0,
+      "data": {
+        "initialized": true,
+        "active_source": "variable",
+        "current_temp_01c": 462,
+        "current_temp_c": 46.2,
+        "current_timestamp_ms": 4529123,
+        "current_valid": true,
+        "manual_mode": false,
+        "variable_partial_stale": false,
+        "variable_valid_count": 1,
+        "variable_total_count": 1,
+        "variable_valid_weight": 1,
+        "variable_total_weight": 1,
+        "provider_count": 2,
+        "providers": [
+          {
+            "name": "default",
+            "type": "default",
+            "active": true,
+            "valid": false,
+            "stale": false,
+            "last_value_01c": 250,
+            "last_value_c": 25,
+            "last_update_ms": 0,
+            "age_ms": null,
+            "update_count": 0
+          },
+          {
+            "name": "agx_cpu",
+            "type": "agx",
+            "active": false,
+            "valid": false,
+            "stale": true,
+            "last_value_01c": 250,
+            "last_value_c": 25,
+            "last_update_ms": 0,
+            "age_ms": null,
+            "update_count": 0
+          }
+        ]
+      }
+    },
+    "received_at_utc": "2026-10-13T16:50:30.707207+00:00"
+  }
+]

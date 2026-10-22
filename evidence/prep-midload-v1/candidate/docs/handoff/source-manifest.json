@@ -1,0 +1,33 @@
+{
+  "plan": "TTO-PLAN-v1.0",
+  "created_date": "2026-10-10",
+  "artifact_kind": "implementation_handoff_not_code",
+  "historical_inputs": [
+    {
+      "container_filename": "rm01OrinStatus-数据可靠性修复-证据包(1).zip",
+      "extracted_member": "docs/WS_DATA_V1.md",
+      "output": "reference/WS_DATA_V1-此前候选合同.md",
+      "archive_sha256": "e0bc8a817129aaaecf3dcc8a6d8ca0f17157c6a68c41adff2bf8156717a9acc8"
+    },
+    {
+      "container_filename": "rm01OrinStatus-部署前两项收尾-Codex执行指令.md",
+      "output": "reference/WS-DATA-CLOSEOUT-v1.0-原要求.md",
+      "sha256": "8aad728aced7f9042f11a8eccf2183d6c4a93a72ba92d411ee2ae8768841442f"
+    }
+  ],
+  "last_ws_closeout_status": "user_reports_completed_not_independently_reviewed_in_this_delivery",
+  "tianshan_reference_commit": "050757bb8046206797804ba5edc110ae3244bf17",
+  "ws_original_reference_commit": "4a765acc2ffe2a46135851f7b225c2856336cb9f",
+  "actual_final_ws_deployment_identity": null,
+  "tests_run_in_this_delivery": [
+    "handoff_json_and_cross_reference_checks_only"
+  ],
+  "not_performed": [
+    "TTO_implementation",
+    "latest_F1_F2_code_review",
+    "model_training",
+    "device_connection",
+    "deployment",
+    "hardware_test"
+  ]
+}

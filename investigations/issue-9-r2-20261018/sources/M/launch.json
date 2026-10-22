@@ -1,0 +1,26 @@
+{
+  "recorded_at_utc": "2026-10-13T17:38:12.925218+00:00",
+  "trial_path": "/home/rm01/TTO-midload-useroverride-20261014/trials/midload-20261013T173747161101Z",
+  "trial_created_timestamp_utc": "2026-10-13T17:37:47.161101Z",
+  "actual_schedule_start_utc": "2026-10-13T17:37:47.320421+00:00",
+  "schedule_start_time_semantics": "First phase_start from runner log; not inferred from file write",
+  "runner_pid": 14537,
+  "wrapper_pid": 14519,
+  "collector_pid": 14537,
+  "collector_process_semantics": "Async collector task in same runner process",
+  "collector_run_id": "637f114b-563b-4c35-8062-a7588a89ce1c",
+  "collector_started_at_utc": "2026-10-13T17:37:47.322920+00:00",
+  "stop_control": "Front session 88342 retained; reverify PID14537 command then one SIGINT; never terminate model service",
+  "single_new_runner": true,
+  "operator_override": true,
+  "initiating_chat_id": "01a1331a-f937-7d91-aef0-ac4f5e50bd8a",
+  "initiating_action": "This chat executed the new tto-midload --live launcher over existing SSH socket; no direct separate inference calls",
+  "foreground_exec_session_id": 88342,
+  "action_evidence": {
+    "exec_chunk_id": "6070f5",
+    "launcher": "/home/rm01/TTO-midload-useroverride-20261014/tto-midload",
+    "mode": "--live",
+    "runner_pid": 14537
+  },
+  "responsibility": "This chat controls runner and all its automatic model requests; TTO chat reads and archives only"
+}

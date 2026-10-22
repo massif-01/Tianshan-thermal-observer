@@ -1,0 +1,22 @@
+# 合成/未配置示例；不是现场配置，没有设备地址或授权
+web:
+  port: 59009
+  bind: 127.0.0.1
+  access_mode: local
+  public_update_hz: 1
+  heartbeat_seconds: 5
+  history_seconds: 3600
+  max_clients: 4
+  client_queue_depth: 8
+  max_events: 1000
+source:
+  mode: follow
+  active_descriptor: null
+  observation_config: null
+model:
+  provider: frozen_g2_hold
+  horizons_s: [15, 45, 90]
+  model_manifest: null
+advisory:
+  provider: null
+  curve_manifest: null

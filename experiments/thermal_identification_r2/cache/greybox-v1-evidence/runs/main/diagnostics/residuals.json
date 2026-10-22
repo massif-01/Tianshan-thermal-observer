@@ -1,0 +1,1422 @@
+[
+  {
+    "experiment": "F-LS",
+    "model": "G1",
+    "correlations": {
+      "vin_sys_5v0": -0.5195117147354061,
+      "gain": -0.38435043797865626,
+      "temp_cpu": -0.8830499486085738,
+      "temp_gpu": -0.9223342885701769,
+      "temp_soc012": -0.8442980542648795,
+      "temp_soc345": -0.9141147827038363,
+      "duty": 0.11616280237772028,
+      "vdd_gpu": -0.5189695130781763,
+      "vdd_cpu_soc_mss": -0.5196865531890428
+    },
+    "autocorrelation": {
+      "1": {
+        "n_pairs": 1186,
+        "correlation": 0.8845138274075204
+      },
+      "5": {
+        "n_pairs": 1170,
+        "correlation": 0.6458700560993295
+      },
+      "15": {
+        "n_pairs": 1130,
+        "correlation": 0.6729282012596711
+      },
+      "45": {
+        "n_pairs": 1010,
+        "correlation": 0.6269328222359689
+      },
+      "90": {
+        "n_pairs": 830,
+        "correlation": 0.611663144704586
+      }
+    },
+    "by_hotspot": {
+      "temp_gpu": {
+        "n": 1190,
+        "mae": 0.9375195267800547,
+        "bias": 0.850743078639027
+      }
+    },
+    "hotspot_switch_error": {
+      "n": 0,
+      "mae": null
+    },
+    "largest_errors": [
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:528",
+        "utc": "2026-10-13T05:31:07.028885+00:00",
+        "run": "S",
+        "regime": "isolated_pulse",
+        "error_C": -3.4163352700114444,
+        "truth": 49.343,
+        "prediction": 45.92666472998856
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:525",
+        "utc": "2026-10-13T05:31:06.027970+00:00",
+        "run": "S",
+        "regime": "isolated_pulse",
+        "error_C": -2.5578942367538247,
+        "truth": 48.343,
+        "prediction": 45.78510576324618
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3397",
+        "utc": "2026-10-13T05:47:05.909607+00:00",
+        "run": "S",
+        "regime": "continuous_short",
+        "error_C": -2.345420879101603,
+        "truth": 48.875,
+        "prediction": 46.5295791208984
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1351",
+        "utc": "2026-10-13T05:35:42.285350+00:00",
+        "run": "S",
+        "regime": "isolated_pulse",
+        "error_C": -2.268848158420333,
+        "truth": 48.093,
+        "prediction": 45.82415184157967
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3359",
+        "utc": "2026-10-13T05:46:52.896015+00:00",
+        "run": "S",
+        "regime": "continuous_short",
+        "error_C": -2.2348583232936576,
+        "truth": 48.156,
+        "prediction": 45.92114167670634
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3472",
+        "utc": "2026-10-13T05:47:30.932985+00:00",
+        "run": "S",
+        "regime": "continuous_short",
+        "error_C": -1.9756091324492573,
+        "truth": 49.218,
+        "prediction": 47.242390867550746
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3395",
+        "utc": "2026-10-13T05:47:04.908511+00:00",
+        "run": "S",
+        "regime": "continuous_short",
+        "error_C": -1.9183094541031593,
+        "truth": 48.218,
+        "prediction": 46.299690545896844
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3434",
+        "utc": "2026-10-13T05:47:17.920402+00:00",
+        "run": "S",
+        "regime": "continuous_short",
+        "error_C": -1.9066009956348822,
+        "truth": 48.718,
+        "prediction": 46.81139900436512
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2421",
+        "utc": "2026-10-13T05:41:39.608129+00:00",
+        "run": "S",
+        "regime": "cooldown",
+        "error_C": 1.8492456277250895,
+        "truth": 43.937,
+        "prediction": 45.78624562772509
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2280",
+        "utc": "2026-10-13T05:40:52.567511+00:00",
+        "run": "S",
+        "regime": "cooldown",
+        "error_C": 1.8444073089743185,
+        "truth": 44.125,
+        "prediction": 45.96940730897432
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2348",
+        "utc": "2026-10-13T05:41:15.590186+00:00",
+        "run": "S",
+        "regime": "cooldown",
+        "error_C": 1.8320156109875754,
+        "truth": 44.0,
+        "prediction": 45.832015610987575
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2333",
+        "utc": "2026-10-13T05:41:10.584915+00:00",
+        "run": "S",
+        "regime": "cooldown",
+        "error_C": 1.8222437205679256,
+        "truth": 44.031,
+        "prediction": 45.853243720567924
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2403",
+        "utc": "2026-10-13T05:41:33.604382+00:00",
+        "run": "S",
+        "regime": "cooldown",
+        "error_C": 1.821826899496756,
+        "truth": 43.968,
+        "prediction": 45.78982689949676
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2415",
+        "utc": "2026-10-13T05:41:37.606466+00:00",
+        "run": "S",
+        "regime": "cooldown",
+        "error_C": 1.819871287481888,
+        "truth": 43.968,
+        "prediction": 45.78787128748189
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2433",
+        "utc": "2026-10-13T05:41:43.612198+00:00",
+        "run": "S",
+        "regime": "cooldown",
+        "error_C": 1.815715634043059,
+        "truth": 43.968,
+        "prediction": 45.78371563404306
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2436",
+        "utc": "2026-10-13T05:41:44.613135+00:00",
+        "run": "S",
+        "regime": "cooldown",
+        "error_C": 1.8150237095497062,
+        "truth": 43.968,
+        "prediction": 45.78302370954971
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2306",
+        "utc": "2026-10-13T05:41:01.575963+00:00",
+        "run": "S",
+        "regime": "cooldown",
+        "error_C": 1.8098565217269496,
+        "truth": 44.093,
+        "prediction": 45.90285652172695
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2343",
+        "utc": "2026-10-13T05:41:13.588039+00:00",
+        "run": "S",
+        "regime": "cooldown",
+        "error_C": 1.809134330240326,
+        "truth": 44.031,
+        "prediction": 45.840134330240325
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2325",
+        "utc": "2026-10-13T05:41:07.581466+00:00",
+        "run": "S",
+        "regime": "cooldown",
+        "error_C": 1.805966520772131,
+        "truth": 44.062,
+        "prediction": 45.86796652077213
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2346",
+        "utc": "2026-10-13T05:41:14.589026+00:00",
+        "run": "S",
+        "regime": "cooldown",
+        "error_C": 1.805045515237417,
+        "truth": 44.031,
+        "prediction": 45.836045515237416
+      }
+    ]
+  },
+  {
+    "experiment": "F-LS",
+    "model": "G2",
+    "correlations": {
+      "vin_sys_5v0": -0.39567811646080375,
+      "gain": -0.19744558457571545,
+      "temp_cpu": -0.6569131979599199,
+      "temp_gpu": -0.6905421397180596,
+      "temp_soc012": -0.6242824307832514,
+      "temp_soc345": -0.6856793863669096,
+      "duty": 0.34956847808606706,
+      "vdd_gpu": -0.3799199000977688,
+      "vdd_cpu_soc_mss": -0.39633455567006753
+    },
+    "autocorrelation": {
+      "1": {
+        "n_pairs": 1186,
+        "correlation": 0.8672460632832789
+      },
+      "5": {
+        "n_pairs": 1170,
+        "correlation": 0.6139105341189812
+      },
+      "15": {
+        "n_pairs": 1130,
+        "correlation": 0.6837271884443302
+      },
+      "45": {
+        "n_pairs": 1010,
+        "correlation": 0.6846693096892184
+      },
+      "90": {
+        "n_pairs": 830,
+        "correlation": 0.6603431525961615
+      }
+    },
+    "by_hotspot": {
+      "temp_gpu": {
+        "n": 1190,
+        "mae": 0.878221854388833,
+        "bias": 0.8186037457990571
+      }
+    },
+    "hotspot_switch_error": {
+      "n": 0,
+      "mae": null
+    },
+    "largest_errors": [
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:528",
+        "utc": "2026-10-13T05:31:07.028885+00:00",
+        "run": "S",
+        "regime": "isolated_pulse",
+        "error_C": -2.9239295370382408,
+        "truth": 49.343,
+        "prediction": 46.41907046296176
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2463",
+        "utc": "2026-10-13T05:41:53.620134+00:00",
+        "run": "S",
+        "regime": "isolated_pulse",
+        "error_C": 2.8847177022905655,
+        "truth": 44.75,
+        "prediction": 47.634717702290565
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2460",
+        "utc": "2026-10-13T05:41:52.619353+00:00",
+        "run": "S",
+        "regime": "isolated_pulse",
+        "error_C": 2.8092522796973967,
+        "truth": 45.0,
+        "prediction": 47.8092522796974
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2465",
+        "utc": "2026-10-13T05:41:54.621090+00:00",
+        "run": "S",
+        "regime": "isolated_pulse",
+        "error_C": 2.7933548026108994,
+        "truth": 44.656,
+        "prediction": 47.4493548026109
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2183",
+        "utc": "2026-10-13T05:40:20.533208+00:00",
+        "run": "S",
+        "regime": "isolated_pulse",
+        "error_C": 2.6686083173851642,
+        "truth": 45.031,
+        "prediction": 47.69960831738516
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2190",
+        "utc": "2026-10-13T05:40:22.534876+00:00",
+        "run": "S",
+        "regime": "isolated_pulse",
+        "error_C": 2.6215516927580182,
+        "truth": 44.75,
+        "prediction": 47.37155169275802
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2467",
+        "utc": "2026-10-13T05:41:55.622005+00:00",
+        "run": "S",
+        "regime": "isolated_pulse",
+        "error_C": 2.6157180099849526,
+        "truth": 44.656,
+        "prediction": 47.27171800998495
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2186",
+        "utc": "2026-10-13T05:40:21.533539+00:00",
+        "run": "S",
+        "regime": "isolated_pulse",
+        "error_C": 2.6144607526597596,
+        "truth": 44.937,
+        "prediction": 47.55146075265976
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2181",
+        "utc": "2026-10-13T05:40:19.532434+00:00",
+        "run": "S",
+        "regime": "isolated_pulse",
+        "error_C": 2.513695562460043,
+        "truth": 45.25,
+        "prediction": 47.76369556246004
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2193",
+        "utc": "2026-10-13T05:40:23.537320+00:00",
+        "run": "S",
+        "regime": "isolated_pulse",
+        "error_C": 2.5114655752446566,
+        "truth": 44.687,
+        "prediction": 47.198465575244654
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2456",
+        "utc": "2026-10-13T05:41:51.618449+00:00",
+        "run": "S",
+        "regime": "isolated_pulse",
+        "error_C": 2.4376759307280835,
+        "truth": 45.406,
+        "prediction": 47.84367593072808
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:525",
+        "utc": "2026-10-13T05:31:06.027970+00:00",
+        "run": "S",
+        "regime": "isolated_pulse",
+        "error_C": -2.41688482353662,
+        "truth": 48.343,
+        "prediction": 45.926115176463384
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2196",
+        "utc": "2026-10-13T05:40:24.538550+00:00",
+        "run": "S",
+        "regime": "isolated_pulse",
+        "error_C": 2.361818472285698,
+        "truth": 44.687,
+        "prediction": 47.048818472285696
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1908",
+        "utc": "2026-10-13T05:38:48.457348+00:00",
+        "run": "S",
+        "regime": "isolated_pulse",
+        "error_C": 2.349116796446424,
+        "truth": 44.937,
+        "prediction": 47.28611679644642
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1911",
+        "utc": "2026-10-13T05:38:49.458237+00:00",
+        "run": "S",
+        "regime": "isolated_pulse",
+        "error_C": 2.3405670026702055,
+        "truth": 44.812,
+        "prediction": 47.1525670026702
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2198",
+        "utc": "2026-10-13T05:40:25.539664+00:00",
+        "run": "S",
+        "regime": "isolated_pulse",
+        "error_C": 2.263214219131406,
+        "truth": 44.656,
+        "prediction": 46.919214219131405
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1913",
+        "utc": "2026-10-13T05:38:50.459137+00:00",
+        "run": "S",
+        "regime": "isolated_pulse",
+        "error_C": 2.250043989366368,
+        "truth": 44.75,
+        "prediction": 47.00004398936637
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2201",
+        "utc": "2026-10-13T05:40:26.540708+00:00",
+        "run": "S",
+        "regime": "isolated_pulse",
+        "error_C": 2.1818942816970406,
+        "truth": 44.625,
+        "prediction": 46.80689428169704
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2205",
+        "utc": "2026-10-13T05:40:27.541810+00:00",
+        "run": "S",
+        "regime": "isolated_pulse",
+        "error_C": 2.1164750779268573,
+        "truth": 44.593,
+        "prediction": 46.70947507792686
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3485",
+        "utc": "2026-10-13T05:47:34.937359+00:00",
+        "run": "S",
+        "regime": "continuous_short",
+        "error_C": 2.1070361109234312,
+        "truth": 45.843,
+        "prediction": 47.950036110923435
+      }
+    ]
+  },
+  {
+    "experiment": "F-SL",
+    "model": "G1",
+    "correlations": {
+      "vin_sys_5v0": 0.5089386964896693,
+      "gain": 0.39121740114673864,
+      "temp_cpu": 0.7755859405636683,
+      "temp_gpu": 0.7616604904551799,
+      "temp_soc012": 0.7881773890445887,
+      "temp_soc345": 0.7653732182774858,
+      "duty": 0.44822615278611344,
+      "vdd_gpu": 0.5395562088728895,
+      "vdd_cpu_soc_mss": 0.5318532831849655
+    },
+    "autocorrelation": {
+      "1": {
+        "n_pairs": 1850,
+        "correlation": 0.9998878632392492
+      },
+      "5": {
+        "n_pairs": 1823,
+        "correlation": 0.9993519393870867
+      },
+      "15": {
+        "n_pairs": 1753,
+        "correlation": 0.9968388565257121
+      },
+      "45": {
+        "n_pairs": 1544,
+        "correlation": 0.9797803132470623
+      },
+      "90": {
+        "n_pairs": 1229,
+        "correlation": 0.9256076678479664
+      }
+    },
+    "by_hotspot": {
+      "temp_cpu": {
+        "n": 15,
+        "mae": 1.7230527218937841,
+        "bias": 0.9272580065840496
+      },
+      "temp_cpu|temp_gpu": {
+        "n": 1,
+        "mae": 2.9507317370933634,
+        "bias": 2.9507317370933634
+      },
+      "temp_gpu": {
+        "n": 1842,
+        "mae": 24.83316343729161,
+        "bias": 24.7508486177455
+      }
+    },
+    "hotspot_switch_error": {
+      "n": 6,
+      "mae": 6.786947778362843
+    },
+    "largest_errors": [
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5505",
+        "utc": "2026-10-13T04:12:15.330375+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 62.489848136963104,
+        "truth": 62.125,
+        "prediction": 124.6148481369631
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5518",
+        "utc": "2026-10-13T04:12:19.333752+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 62.474033028023385,
+        "truth": 61.062,
+        "prediction": 123.53603302802338
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5514",
+        "utc": "2026-10-13T04:12:18.332540+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 62.45824378351311,
+        "truth": 61.343,
+        "prediction": 123.80124378351312
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5511",
+        "utc": "2026-10-13T04:12:17.332044+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 62.44529497181266,
+        "truth": 61.625,
+        "prediction": 124.07029497181266
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5508",
+        "utc": "2026-10-13T04:12:16.331231+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 62.436128914223694,
+        "truth": 61.906,
+        "prediction": 124.3421289142237
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5502",
+        "utc": "2026-10-13T04:12:14.329157+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 62.4233568015332,
+        "truth": 62.468,
+        "prediction": 124.8913568015332
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5498",
+        "utc": "2026-10-13T04:12:13.328352+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 62.420911640084825,
+        "truth": 62.75,
+        "prediction": 125.17091164008482
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5521",
+        "utc": "2026-10-13T04:12:20.334555+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 62.39676635449938,
+        "truth": 60.875,
+        "prediction": 123.27176635449938
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5524",
+        "utc": "2026-10-13T04:12:21.335187+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 62.385007932801926,
+        "truth": 60.625,
+        "prediction": 123.01000793280193
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5495",
+        "utc": "2026-10-13T04:12:12.328593+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 62.32608732108881,
+        "truth": 63.125,
+        "prediction": 125.4510873210888
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5527",
+        "utc": "2026-10-13T04:12:22.336826+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 62.31513879097824,
+        "truth": 60.437,
+        "prediction": 122.75213879097824
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5530",
+        "utc": "2026-10-13T04:12:23.337610+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 62.277288135320376,
+        "truth": 60.218,
+        "prediction": 122.49528813532038
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5534",
+        "utc": "2026-10-13T04:12:24.338424+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 62.17864325603621,
+        "truth": 60.062,
+        "prediction": 122.24064325603621
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5492",
+        "utc": "2026-10-13T04:12:11.327529+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 62.17319016049993,
+        "truth": 63.562,
+        "prediction": 125.73519016049993
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5537",
+        "utc": "2026-10-13T04:12:25.339266+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 62.17268876384439,
+        "truth": 59.812,
+        "prediction": 121.98468876384439
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5489",
+        "utc": "2026-10-13T04:12:10.326730+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 62.11100978449128,
+        "truth": 63.906,
+        "prediction": 126.01700978449128
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5540",
+        "utc": "2026-10-13T04:12:26.340047+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 62.1101168600339,
+        "truth": 59.625,
+        "prediction": 121.7351168600339
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5546",
+        "utc": "2026-10-13T04:12:28.341780+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 61.98871959947384,
+        "truth": 59.25,
+        "prediction": 121.23871959947384
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5543",
+        "utc": "2026-10-13T04:12:27.340848+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 61.98752789854501,
+        "truth": 59.5,
+        "prediction": 121.48752789854501
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5550",
+        "utc": "2026-10-13T04:12:29.342453+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 61.80372037151999,
+        "truth": 59.187,
+        "prediction": 120.99072037151998
+      }
+    ]
+  },
+  {
+    "experiment": "F-SL",
+    "model": "G2",
+    "correlations": {
+      "vin_sys_5v0": 0.4579728999346098,
+      "gain": 0.3905137053576173,
+      "temp_cpu": 0.7375794672301897,
+      "temp_gpu": 0.7220246240267605,
+      "temp_soc012": 0.7508509090154094,
+      "temp_soc345": 0.72637225096633,
+      "duty": 0.38630787917078035,
+      "vdd_gpu": 0.48877982718841995,
+      "vdd_cpu_soc_mss": 0.48154315530297626
+    },
+    "autocorrelation": {
+      "1": {
+        "n_pairs": 1850,
+        "correlation": 0.9997068728048415
+      },
+      "5": {
+        "n_pairs": 1823,
+        "correlation": 0.9989298344324643
+      },
+      "15": {
+        "n_pairs": 1753,
+        "correlation": 0.9952214138204889
+      },
+      "45": {
+        "n_pairs": 1544,
+        "correlation": 0.969521453049009
+      },
+      "90": {
+        "n_pairs": 1229,
+        "correlation": 0.8901094918028065
+      }
+    },
+    "by_hotspot": {
+      "temp_cpu": {
+        "n": 15,
+        "mae": 1.462099734826691,
+        "bias": 0.0317341451363499
+      },
+      "temp_cpu|temp_gpu": {
+        "n": 1,
+        "mae": 1.7647057290113253,
+        "bias": 1.7647057290113253
+      },
+      "temp_gpu": {
+        "n": 1842,
+        "mae": 13.845113718942702,
+        "bias": 13.740322231770737
+      }
+    },
+    "hotspot_switch_error": {
+      "n": 6,
+      "mae": 3.7921123451997913
+    },
+    "largest_errors": [
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5482",
+        "utc": "2026-10-13T04:12:08.325130+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 38.81197256346471,
+        "truth": 65.25,
+        "prediction": 104.0619725634647
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5518",
+        "utc": "2026-10-13T04:12:19.333752+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 38.6732240814526,
+        "truth": 61.062,
+        "prediction": 99.7352240814526
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5524",
+        "utc": "2026-10-13T04:12:21.335187+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 38.65960711864868,
+        "truth": 60.625,
+        "prediction": 99.28460711864868
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5521",
+        "utc": "2026-10-13T04:12:20.334555+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 38.633355663081545,
+        "truth": 60.875,
+        "prediction": 99.50835566308155
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5527",
+        "utc": "2026-10-13T04:12:22.336826+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 38.62518117662525,
+        "truth": 60.437,
+        "prediction": 99.06218117662524
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5530",
+        "utc": "2026-10-13T04:12:23.337610+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 38.6242927436719,
+        "truth": 60.218,
+        "prediction": 98.8422927436719
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5514",
+        "utc": "2026-10-13T04:12:18.332540+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 38.62156050817248,
+        "truth": 61.343,
+        "prediction": 99.96456050817248
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5511",
+        "utc": "2026-10-13T04:12:17.332044+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 38.57155486331,
+        "truth": 61.625,
+        "prediction": 100.19655486331
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5537",
+        "utc": "2026-10-13T04:12:25.339266+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 38.56746108302444,
+        "truth": 59.812,
+        "prediction": 98.37946108302444
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5540",
+        "utc": "2026-10-13T04:12:26.340047+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 38.56669549781532,
+        "truth": 59.625,
+        "prediction": 98.19169549781532
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5534",
+        "utc": "2026-10-13T04:12:24.338424+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 38.56176466191478,
+        "truth": 60.062,
+        "prediction": 98.62376466191478
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5505",
+        "utc": "2026-10-13T04:12:15.330375+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 38.54013539919954,
+        "truth": 62.125,
+        "prediction": 100.66513539919954
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5508",
+        "utc": "2026-10-13T04:12:16.331231+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 38.524318644797994,
+        "truth": 61.906,
+        "prediction": 100.43031864479799
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5546",
+        "utc": "2026-10-13T04:12:28.341780+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 38.49258489859744,
+        "truth": 59.25,
+        "prediction": 97.74258489859744
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5543",
+        "utc": "2026-10-13T04:12:27.340848+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 38.48023930529203,
+        "truth": 59.5,
+        "prediction": 97.98023930529203
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5502",
+        "utc": "2026-10-13T04:12:14.329157+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 38.434974743343474,
+        "truth": 62.468,
+        "prediction": 100.90297474334348
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5498",
+        "utc": "2026-10-13T04:12:13.328352+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 38.39559763663081,
+        "truth": 62.75,
+        "prediction": 101.14559763663081
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5556",
+        "utc": "2026-10-13T04:12:31.344343+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 38.36214456608232,
+        "truth": 58.75,
+        "prediction": 97.11214456608232
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5550",
+        "utc": "2026-10-13T04:12:29.342453+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 38.3443652320486,
+        "truth": 59.187,
+        "prediction": 97.5313652320486
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5495",
+        "utc": "2026-10-13T04:12:12.328593+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 38.262919240849826,
+        "truth": 63.125,
+        "prediction": 101.38791924084983
+      }
+    ]
+  },
+  {
+    "experiment": "F-POOL",
+    "model": "G1",
+    "correlations": {
+      "vin_sys_5v0": -0.439955637156361,
+      "gain": -0.3181494848574724,
+      "temp_cpu": -0.25801924719710995,
+      "temp_gpu": -0.27837657553484196,
+      "temp_soc012": -0.2462625550912922,
+      "temp_soc345": -0.26951148371664707,
+      "duty": -0.47935438932311913,
+      "vdd_gpu": -0.4603055960940889,
+      "vdd_cpu_soc_mss": -0.43687351750449893
+    },
+    "autocorrelation": {
+      "1": {
+        "n_pairs": 3036,
+        "correlation": 0.9787429257247204
+      },
+      "5": {
+        "n_pairs": 2993,
+        "correlation": 0.9238312163346765
+      },
+      "15": {
+        "n_pairs": 2883,
+        "correlation": 0.8437336196444937
+      },
+      "45": {
+        "n_pairs": 2554,
+        "correlation": 0.5447905716367898
+      },
+      "90": {
+        "n_pairs": 2059,
+        "correlation": 0.19449986778829562
+      }
+    },
+    "by_hotspot": {
+      "temp_cpu": {
+        "n": 15,
+        "mae": 0.34254172525874743,
+        "bias": 0.06787714712673203
+      },
+      "temp_cpu|temp_gpu": {
+        "n": 1,
+        "mae": 0.35563955781177015,
+        "bias": -0.35563955781177015
+      },
+      "temp_gpu": {
+        "n": 3032,
+        "mae": 0.9120546957144594,
+        "bias": -0.2729255127081504
+      }
+    },
+    "hotspot_switch_error": {
+      "n": 6,
+      "mae": 1.1797998837645132
+    },
+    "largest_errors": [
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:3632",
+        "utc": "2026-10-13T04:02:26.834365+00:00",
+        "run": "L",
+        "regime": "long_rise",
+        "error_C": -6.092905688616348,
+        "truth": 60.718,
+        "prediction": 54.625094311383656
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:3619",
+        "utc": "2026-10-13T04:02:22.830452+00:00",
+        "run": "L",
+        "regime": "long_rise",
+        "error_C": -6.018268357988184,
+        "truth": 59.937,
+        "prediction": 53.918731642011814
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:3609",
+        "utc": "2026-10-13T04:02:19.826581+00:00",
+        "run": "L",
+        "regime": "long_rise",
+        "error_C": -5.463427070101808,
+        "truth": 58.781,
+        "prediction": 53.31757292989819
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:3622",
+        "utc": "2026-10-13T04:02:23.831299+00:00",
+        "run": "L",
+        "regime": "long_rise",
+        "error_C": -5.332896020107988,
+        "truth": 59.437,
+        "prediction": 54.10410397989201
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5817",
+        "utc": "2026-10-13T04:13:53.408068+00:00",
+        "run": "L",
+        "regime": "long_rise",
+        "error_C": -5.329430180277555,
+        "truth": 66.093,
+        "prediction": 60.76356981972245
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:3612",
+        "utc": "2026-10-13T04:02:20.827369+00:00",
+        "run": "L",
+        "regime": "long_rise",
+        "error_C": -5.228955500747681,
+        "truth": 58.75,
+        "prediction": 53.52104449925232
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:3587",
+        "utc": "2026-10-13T04:02:12.819099+00:00",
+        "run": "L",
+        "regime": "long_rise",
+        "error_C": -5.225125571009627,
+        "truth": 56.937,
+        "prediction": 51.71187442899037
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:3600",
+        "utc": "2026-10-13T04:02:16.822900+00:00",
+        "run": "L",
+        "regime": "long_rise",
+        "error_C": -5.176924060359468,
+        "truth": 57.843,
+        "prediction": 52.666075939640535
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:3635",
+        "utc": "2026-10-13T04:02:27.835130+00:00",
+        "run": "L",
+        "regime": "long_rise",
+        "error_C": -5.150315179183757,
+        "truth": 59.937,
+        "prediction": 54.78668482081624
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:3590",
+        "utc": "2026-10-13T04:02:13.819813+00:00",
+        "run": "L",
+        "regime": "long_rise",
+        "error_C": -5.130713385946841,
+        "truth": 57.093,
+        "prediction": 51.96228661405316
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:3596",
+        "utc": "2026-10-13T04:02:15.821758+00:00",
+        "run": "L",
+        "regime": "long_rise",
+        "error_C": -5.094218027819913,
+        "truth": 57.531,
+        "prediction": 52.436781972180086
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:3648",
+        "utc": "2026-10-13T04:02:31.837918+00:00",
+        "run": "L",
+        "regime": "long_rise",
+        "error_C": -5.074628958735268,
+        "truth": 60.468,
+        "prediction": 55.393371041264736
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:3644",
+        "utc": "2026-10-13T04:02:30.837118+00:00",
+        "run": "L",
+        "regime": "long_rise",
+        "error_C": -5.041233020337813,
+        "truth": 60.281,
+        "prediction": 55.239766979662186
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5721",
+        "utc": "2026-10-13T04:13:23.384138+00:00",
+        "run": "L",
+        "regime": "long_rise",
+        "error_C": -5.034798753395975,
+        "truth": 64.937,
+        "prediction": 59.90220124660402
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:3606",
+        "utc": "2026-10-13T04:02:18.825487+00:00",
+        "run": "L",
+        "regime": "long_rise",
+        "error_C": -5.018926459484746,
+        "truth": 58.125,
+        "prediction": 53.106073540515254
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:3670",
+        "utc": "2026-10-13T04:02:38.845036+00:00",
+        "run": "L",
+        "regime": "long_rise",
+        "error_C": -5.011017121012934,
+        "truth": 61.375,
+        "prediction": 56.363982878987066
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:3603",
+        "utc": "2026-10-13T04:02:17.823787+00:00",
+        "run": "L",
+        "regime": "long_rise",
+        "error_C": -4.985813319440176,
+        "truth": 57.875,
+        "prediction": 52.889186680559824
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:3628",
+        "utc": "2026-10-13T04:02:25.832556+00:00",
+        "run": "L",
+        "regime": "long_rise",
+        "error_C": -4.958991527237465,
+        "truth": 59.406,
+        "prediction": 54.44700847276253
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5900",
+        "utc": "2026-10-13T04:14:19.426427+00:00",
+        "run": "L",
+        "regime": "long_sustained",
+        "error_C": -4.9384453385385285,
+        "truth": 66.156,
+        "prediction": 61.21755466146148
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:3660",
+        "utc": "2026-10-13T04:02:35.840897+00:00",
+        "run": "L",
+        "regime": "long_rise",
+        "error_C": -4.927043460341807,
+        "truth": 60.906,
+        "prediction": 55.97895653965819
+      }
+    ]
+  },
+  {
+    "experiment": "F-POOL",
+    "model": "G2",
+    "correlations": {
+      "vin_sys_5v0": -0.15211981171231012,
+      "gain": -0.06424495569956248,
+      "temp_cpu": 0.007048218674730179,
+      "temp_gpu": -0.012078695033219896,
+      "temp_soc012": 0.017475127115118637,
+      "temp_soc345": -0.002120544561783779,
+      "duty": 0.04261991304174034,
+      "vdd_gpu": -0.15833754644091344,
+      "vdd_cpu_soc_mss": -0.14220392203285337
+    },
+    "autocorrelation": {
+      "1": {
+        "n_pairs": 3036,
+        "correlation": 0.8255777398441925
+      },
+      "5": {
+        "n_pairs": 2993,
+        "correlation": 0.4376968559677558
+      },
+      "15": {
+        "n_pairs": 2883,
+        "correlation": 0.22026413885250287
+      },
+      "45": {
+        "n_pairs": 2554,
+        "correlation": -0.032524660164993426
+      },
+      "90": {
+        "n_pairs": 2059,
+        "correlation": 0.12581294449312477
+      }
+    },
+    "by_hotspot": {
+      "temp_cpu": {
+        "n": 15,
+        "mae": 0.5841609652517472,
+        "bias": -0.5841609652517472
+      },
+      "temp_cpu|temp_gpu": {
+        "n": 1,
+        "mae": 0.2746318180417404,
+        "bias": 0.2746318180417404
+      },
+      "temp_gpu": {
+        "n": 3032,
+        "mae": 0.2826810243872383,
+        "bias": -0.04080714941156067
+      }
+    },
+    "hotspot_switch_error": {
+      "n": 6,
+      "mae": 0.9060840873376274
+    },
+    "largest_errors": [
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5486",
+        "utc": "2026-10-13T04:12:09.326137+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 3.755461697009167,
+        "truth": 64.5,
+        "prediction": 68.25546169700917
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5482",
+        "utc": "2026-10-13T04:12:08.325130+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 3.663082634691989,
+        "truth": 65.25,
+        "prediction": 68.91308263469199
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5489",
+        "utc": "2026-10-13T04:12:10.326730+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 3.6303416565097635,
+        "truth": 63.906,
+        "prediction": 67.53634165650976
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5645",
+        "utc": "2026-10-13T04:12:59.366429+00:00",
+        "run": "L",
+        "regime": "long_rise",
+        "error_C": -3.590013736013404,
+        "truth": 60.375,
+        "prediction": 56.784986263986596
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5641",
+        "utc": "2026-10-13T04:12:58.365425+00:00",
+        "run": "L",
+        "regime": "long_rise",
+        "error_C": -3.5668236500115,
+        "truth": 59.718,
+        "prediction": 56.1511763499885
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:3195",
+        "utc": "2026-10-13T04:00:09.717224+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 3.4096146844646427,
+        "truth": 62.937,
+        "prediction": 66.34661468446464
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:528",
+        "utc": "2026-10-13T05:31:07.028885+00:00",
+        "run": "S",
+        "regime": "isolated_pulse",
+        "error_C": -3.40584777021418,
+        "truth": 49.343,
+        "prediction": 45.93715222978582
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5492",
+        "utc": "2026-10-13T04:12:11.327529+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 3.289771384147926,
+        "truth": 63.562,
+        "prediction": 66.85177138414792
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3359",
+        "utc": "2026-10-13T05:46:52.896015+00:00",
+        "run": "S",
+        "regime": "continuous_short",
+        "error_C": -3.2650641034952983,
+        "truth": 48.156,
+        "prediction": 44.8909358965047
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:3192",
+        "utc": "2026-10-13T04:00:08.716582+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 3.2447639938435984,
+        "truth": 63.781,
+        "prediction": 67.0257639938436
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:3577",
+        "utc": "2026-10-13T04:02:09.816714+00:00",
+        "run": "L",
+        "regime": "long_rise",
+        "error_C": -3.212157976815732,
+        "truth": 55.375,
+        "prediction": 52.16284202318427
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:1401",
+        "utc": "2026-10-13T03:50:13.162308+00:00",
+        "run": "L",
+        "regime": "long_rise",
+        "error_C": -3.1716771760152938,
+        "truth": 52.343,
+        "prediction": 49.17132282398471
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:3198",
+        "utc": "2026-10-13T04:00:10.719098+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 3.1531140067271366,
+        "truth": 62.5,
+        "prediction": 65.65311400672714
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:3580",
+        "utc": "2026-10-13T04:02:10.816718+00:00",
+        "run": "L",
+        "regime": "long_rise",
+        "error_C": -3.1243316687372342,
+        "truth": 55.906,
+        "prediction": 52.781668331262765
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:1399",
+        "utc": "2026-10-13T03:50:12.161550+00:00",
+        "run": "L",
+        "regime": "long_rise",
+        "error_C": -3.108168124960727,
+        "truth": 51.625,
+        "prediction": 48.51683187503927
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:1393",
+        "utc": "2026-10-13T03:50:10.160447+00:00",
+        "run": "L",
+        "regime": "long_rise",
+        "error_C": -3.0876147173541924,
+        "truth": 50.375,
+        "prediction": 47.28738528264581
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5495",
+        "utc": "2026-10-13T04:12:12.328593+00:00",
+        "run": "L",
+        "regime": "cooldown",
+        "error_C": 3.080596984338598,
+        "truth": 63.125,
+        "prediction": 66.2055969843386
+      },
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1351",
+        "utc": "2026-10-13T05:35:42.285350+00:00",
+        "run": "S",
+        "regime": "isolated_pulse",
+        "error_C": -3.046645052420388,
+        "truth": 48.093,
+        "prediction": 45.046354947579616
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:1404",
+        "utc": "2026-10-13T03:50:14.163289+00:00",
+        "run": "L",
+        "regime": "long_rise",
+        "error_C": -3.0403854362789033,
+        "truth": 52.843,
+        "prediction": 49.8026145637211
+      },
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:5648",
+        "utc": "2026-10-13T04:13:00.367049+00:00",
+        "run": "L",
+        "regime": "long_rise",
+        "error_C": -3.0083504092526283,
+        "truth": 60.468,
+        "prediction": 57.459649590747375
+      }
+    ]
+  }
+]

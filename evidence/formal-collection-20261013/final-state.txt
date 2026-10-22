@@ -1,0 +1,67 @@
+{
+  "status": "stopped",
+  "formal_collection": true,
+  "observer_run_id": "f43af598-d8e1-43f2-824b-9471d35b0593",
+  "episode": "rm01-six-conditions-20261013-022242",
+  "run_path": "/home/rm01/TTO/runs/run-2026-10-13T025914.928847_0000-f43af598",
+  "session_path": "/home/rm01/TTO/collection-sessions/rm01-six-conditions-20261013-022242-cooldown-025911",
+  "launcher_pid": 402924,
+  "duration_s": 1800,
+  "collection_started_at_utc": "2026-10-13T02:59:14.931136+00:00",
+  "expected_end_at_utc": "2026-10-13T03:29:14.931136+00:00",
+  "condition_plan": [
+    {
+      "id": 1,
+      "label": "空载待机"
+    },
+    {
+      "id": 2,
+      "label": "模型拉起"
+    },
+    {
+      "id": 3,
+      "label": "拉起后（有负载）待机"
+    },
+    {
+      "id": 4,
+      "label": "模型单发推理"
+    },
+    {
+      "id": 5,
+      "label": "并发推理"
+    },
+    {
+      "id": 6,
+      "label": "推理后待机"
+    },
+    {
+      "id": 7,
+      "label": "模型卸载后空载待机",
+      "equivalent_operating_condition_id": 1
+    }
+  ],
+  "active_condition": 7,
+  "task_started": false,
+  "task_marker_policy": "Preserve human report verbatim and approximate event timing separately from file-write time. Task end does not stop cooldown collection.",
+  "log_path": "/home/rm01/TTO/collection-sessions/rm01-six-conditions-20261013-022242-cooldown-025911/collection.log",
+  "active_condition_label": "模型卸载后空载待机",
+  "previous_run_id": "c1a1bd6a-7854-4d08-bea7-42ea1335c0eb",
+  "previous_run_path": "/home/rm01/TTO/runs/run-2026-10-13T022246.369032_0000-c1a1bd6a",
+  "previous_collection_ended_at_utc": "2026-10-13T02:52:46.386363+00:00",
+  "reported_concurrent_inference_completed_at_local": "2026-10-13T10:56:35.734+08:00",
+  "control_mode_operator_label": "TTI智能模式",
+  "operator_intends_constant_control_mode": true,
+  "equivalent_operating_condition": 1,
+  "last_condition_recorded_at_utc": "2026-10-13T03:03:37.066276+00:00",
+  "exit_code": 1,
+  "ended_at_utc": "2026-10-13T03:05:20.193016+00:00",
+  "stop_reason": "SIGINT",
+  "report_path": "/home/rm01/TTO/reports/rm01-six-conditions-20261013-022242-cooldown-025911",
+  "report_exit_code": 0
+}
+{
+  "ended_at_utc": "2026-10-13T03:05:20.193016+00:00",
+  "stop_reason": "SIGINT",
+  "elapsed_s": 365.2549069460074,
+  "observations": 1164
+}

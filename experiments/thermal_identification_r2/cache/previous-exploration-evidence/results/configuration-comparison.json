@@ -1,0 +1,114 @@
+{
+  "rows": [
+    {
+      "field": "30C",
+      "user": 0,
+      "current": 0,
+      "historical": null,
+      "verdict": "一致"
+    },
+    {
+      "field": "40C",
+      "user": 10,
+      "current": 15,
+      "historical": null,
+      "verdict": "差异"
+    },
+    {
+      "field": "50C",
+      "user": 15,
+      "current": 20,
+      "historical": null,
+      "verdict": "差异"
+    },
+    {
+      "field": "55C",
+      "user": 25,
+      "current": 35,
+      "historical": null,
+      "verdict": "差异"
+    },
+    {
+      "field": "60C",
+      "user": 35,
+      "current": 40,
+      "historical": null,
+      "verdict": "差异"
+    },
+    {
+      "field": "65C",
+      "user": 40,
+      "current": 45,
+      "historical": null,
+      "verdict": "差异"
+    },
+    {
+      "field": "70C",
+      "user": 45,
+      "current": 50,
+      "historical": null,
+      "verdict": "差异"
+    },
+    {
+      "field": "80C",
+      "user": 50,
+      "current": 55,
+      "historical": null,
+      "verdict": "差异"
+    },
+    {
+      "field": "90C",
+      "user": 60,
+      "current": 60,
+      "historical": null,
+      "verdict": "一致"
+    },
+    {
+      "field": "min_duty",
+      "user": 10,
+      "current": 10,
+      "historical": null,
+      "verdict": "一致"
+    },
+    {
+      "field": "max_duty",
+      "user": 100,
+      "current": 100,
+      "historical": null,
+      "verdict": "一致"
+    },
+    {
+      "field": "hysteresis",
+      "user": 2,
+      "current": 2,
+      "historical": null,
+      "verdict": "一致"
+    },
+    {
+      "field": "min_interval",
+      "user": 1000,
+      "current": 5000,
+      "historical": null,
+      "verdict": "差异"
+    }
+  ],
+  "historical_curve": "not recorded/proven",
+  "gain": "runtime multiplier, separately recorded; not a curve field",
+  "latest_user_clarification": {
+    "recorded_at_utc": "2026-10-13T07:25:13.799772+00:00",
+    "file_bytes": 636,
+    "sha256": "8a1972d3244ed83de2cf9a999cc42d4265744b4bda949cabbb7e37a83b9a1f31",
+    "byte_equal_to_package_reference": true,
+    "initial_user_statement": "用户称此文件为已导入天山OS的标准曲线，并询问AUTO是否基于同一基础曲线。",
+    "correction": "用户随后检查本机Thor曲线，确认40°C为15%，说明此前可能弄错文件；要求继续。",
+    "latest_authoritative_meaning": "此前JSON不再视为这台Thor应该生效的标准，不认定当前配置错误，不应用该文件。",
+    "confirmed_current_point": {
+      "temp_c": 40,
+      "duty_pct": 15
+    },
+    "historical_import_time": null,
+    "historical_curve_bytes_proven": false,
+    "precision": "recorded_at is statement capture time, not historical import/application time"
+  },
+  "classification": "Earlier JSON belongs to another curve; user confirmed current Thor 40C=15. Not classified as current device configuration fault."
+}

@@ -1,0 +1,229 @@
+已连接，正在等待第一份有效温度数据。
+本轮TTO已停止；现有风扇控制未被修改。
+{
+  "reason": "SIGTERM",
+  "error": null,
+  "elapsed_s": 9.165238042012788,
+  "clock_end": {
+    "domain": "Massif-MacBook-Pro.local:26450:ac90441b-1ed2-42d2-90c7-d6ff968e10bb",
+    "mono_before_s": 1042894.722281,
+    "utc": "2026-10-21T16:48:27.469475+00:00",
+    "mono_after_s": 1042894.722305791,
+    "utc_clock_accuracy_s": null,
+    "host": "Massif-MacBook-Pro.local",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "pid": 26450
+  },
+  "pid": 26450,
+  "native_run_id": "7769c655-6628-4d07-b22e-d994d26198ce",
+  "collector_invocation_count": 1,
+  "collector_count": 1,
+  "stateful_observer_count": 1,
+  "valid_TJ_observed": 8,
+  "model_trial": "conditional_observation",
+  "native_callbacks": 29,
+  "I02_processed_views": 29,
+  "projection_diagnostics": {
+    "retain_history": false,
+    "retained": 0,
+    "quality_seen": 8,
+    "complete_quality_stream": "observations"
+  },
+  "shared_native_engine_id": 4451166512,
+  "projection_disabled": false,
+  "model_errors": 0,
+  "model_dropped_frames": 0,
+  "consumer_stopped": true,
+  "Requester_count": 0,
+  "sidecar_count": 0,
+  "control_permission": false,
+  "experiment_authorization": false,
+  "scoring": {
+    "contract": "TTO-OBSERVE-SCORING-v1",
+    "publication_mode": "live",
+    "stride_s": 5,
+    "valid_TJ_denominator": 8,
+    "scheduled_origin_denominator": 2,
+    "counts": {
+      "all_valid_TJ": 8,
+      "scheduled_TJ_origins": 2,
+      "issued/G2-HOLD/15": 2,
+      "valid_predictions/G2-HOLD/15": 2,
+      "issued/B0/15": 2,
+      "valid_predictions/B0/15": 2,
+      "issued/B1/15": 2,
+      "issued/G2-HOLD/45": 2,
+      "valid_predictions/G2-HOLD/45": 2,
+      "issued/B0/45": 2,
+      "valid_predictions/B0/45": 2,
+      "issued/B1/45": 2,
+      "issued/G2-HOLD/90": 2,
+      "valid_predictions/G2-HOLD/90": 2,
+      "issued/B0/90": 2,
+      "valid_predictions/B0/90": 2,
+      "issued/B1/90": 2,
+      "unscored/source_epoch_changed": 12
+    },
+    "per_method": {},
+    "same_set_G2_B0": {},
+    "percentile": "linear interpolation at (n-1)*.95; full bounded session error arrays",
+    "error": "prediction-actual",
+    "label": "first qualified received TJ at/after target within2s, same session/epoch/domain",
+    "statistical_unit": "one session, overlapping horizons are not independent experiments",
+    "all_native_valid_TJ_denominator": 8
+  },
+  "native_summary": {
+    "stop_reason": "SIGTERM",
+    "poll_missed": 0,
+    "poll_count": 11,
+    "connection_attempts": 1,
+    "payload_oversize": 0,
+    "orin_event_count": 8,
+    "business_payload_bytes_sum": 12640,
+    "business_payload_bytes_max": 1580,
+    "poll_rtt_ms": [
+      2.773249987512827,
+      1.916416920721531,
+      3.5886670229956508,
+      2.37391609698534,
+      2.1414170041680336,
+      2.605666988529265,
+      3.3470409689471126,
+      2.4085829500108957,
+      1.2361250119283795,
+      2.398707903921604,
+      1.8114589620381594
+    ],
+    "prediction_ms": [
+      10.03416592720896,
+      2.818875014781952
+    ],
+    "rss_mib": [
+      69.46875,
+      69.734375,
+      69.921875,
+      69.96875,
+      69.96875,
+      70.046875,
+      70.078125,
+      70.09375
+    ],
+    "cpu_pct_single_core": [
+      2.7071957463083915,
+      1.6880587978316521,
+      2.260206267989646,
+      1.5601773753782557,
+      2.1852924315664857,
+      2.6282964186196205,
+      1.428150877204569,
+      1.7552954517861588
+    ],
+    "elapsed_s": 8.080199665972032,
+    "queue_peak_items": 2,
+    "queue_peak_bytes": 1965,
+    "dropped": 0,
+    "quality": {
+      "boundary_socketio_connecting": 1,
+      "boundary_control_context_change": 1,
+      "boundary_stream": 1,
+      "new_samples": 8,
+      "boundary_input_boundary": 1,
+      "boundary_input_profile_change": 1,
+      "boundary_socketio_disconnected": 1,
+      "boundary_run_end": 1
+    },
+    "processing": {
+      "fan_ok": 9,
+      "temp_ok": 2,
+      "origins": 2
+    },
+    "target_host_verified": false,
+    "polling_health": {
+      "contract": "TTO-POLL-INDEPENDENT-v1",
+      "max_inflight_per_endpoint": 1,
+      "max_total_inflight_limit": 2,
+      "max_total_inflight_observed": 2,
+      "end_inflight": 0,
+      "legacy_config_max_inflight_esp32": 1,
+      "endpoints": {
+        "fan": {
+          "sent": 9,
+          "returned": 9,
+          "http_ok": 9,
+          "errors": 0,
+          "skipped": 0,
+          "cancelled": 0,
+          "peak_inflight": 1,
+          "rtt_ms": {
+            "n": 9,
+            "retained_n": 9,
+            "p50": 2.398707903921604,
+            "p95": 3.262500208802521,
+            "min": 1.2361250119283795,
+            "max": 3.5886670229956508
+          },
+          "send_interval_s": {
+            "n": 8,
+            "retained_n": 8,
+            "p50": 1.000916895980481,
+            "p95": 1.0016717994934878,
+            "min": 1.0005119170527905,
+            "max": 1.0016955410828814
+          },
+          "return_interval_s": {
+            "n": 8,
+            "retained_n": 8,
+            "p50": 1.0011991044739261,
+            "p95": 1.002299899852369,
+            "min": 0.9996891660848632,
+            "max": 1.0026158329565078
+          }
+        },
+        "temp": {
+          "sent": 2,
+          "returned": 2,
+          "http_ok": 2,
+          "errors": 0,
+          "skipped": 0,
+          "cancelled": 0,
+          "peak_inflight": 1,
+          "rtt_ms": {
+            "n": 2,
+            "retained_n": 2,
+            "p50": 2.6317289448343217,
+            "p95": 3.2755097665358335,
+            "min": 1.916416920721531,
+            "max": 3.3470409689471126
+          },
+          "send_interval_s": {
+            "n": 1,
+            "retained_n": 1,
+            "p50": 5.00233416701667,
+            "p95": 5.00233416701667,
+            "min": 5.00233416701667,
+            "max": 5.00233416701667
+          },
+          "return_interval_s": {
+            "n": 1,
+            "retained_n": 1,
+            "p50": 5.003764791064896,
+            "p95": 5.003764791064896,
+            "min": 5.003764791064896,
+            "max": 5.003764791064896
+          }
+        }
+      }
+    },
+    "diagnostic_history_contract": {
+      "max_retained_per_series": 4096,
+      "percentiles": "last4096; full raw/resource journals preserved",
+      "sample_totals": {
+        "poll_rtt_ms": 11,
+        "prediction_ms": 2,
+        "rss_mib": 8,
+        "cpu_pct_single_core": 8
+      }
+    }
+  },
+  "thread_policy_same_pid": true
+}

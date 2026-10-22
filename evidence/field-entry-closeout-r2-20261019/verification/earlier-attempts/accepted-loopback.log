@@ -1,0 +1,23 @@
+START diagnose
+已连接，正在等待第一份有效温度数据。
+本轮TTO已停止；现有风扇控制未被修改。
+PASS diagnose
+START normal
+已连接，正在等待第一份有效温度数据。
+本轮TTO已停止；现有风扇控制未被修改。
+Traceback (most recent call last):
+  File "/work/tests/run_loopback.py", line 78, in <module>
+    root=Path(sys.argv[1]);asyncio.run(main(root,sys.argv[2:] or ['diagnose','normal','disconnect','short_gap','guard','user_stop','unknown']))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/work/tests/run_loopback.py", line 74, in main
+    receipts.append(await check(root/scenario,scenario));print('PASS',scenario,flush=True)
+  File "/work/tests/run_loopback.py", line 42, in check
+    result=await run(c,b,mode,out,duration=12 if scenario=='disconnect' else 9,
+  File "/evidence/offline-installed-final/lib/python3.10/site-packages/tto_field/runtime.py", line 278, in run
+    if error:raise error
+  File "/evidence/offline-installed-final/lib/python3.10/site-packages/tto_field/runtime.py", line 213, in run
+    if scheduler.index>=0 and scheduler.profile['stages'][scheduler.index]['kind']=='final_recovery' and not clock_reminder_sent and now>=scheduler.window_end-120:
+IndexError: list index out of range

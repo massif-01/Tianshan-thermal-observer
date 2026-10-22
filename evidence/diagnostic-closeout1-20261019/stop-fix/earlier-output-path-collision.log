@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/src/tests/check_exit_under_load.py", line 29, in <module>
+    if __name__=='__main__':asyncio.run(main(Path(sys.argv[1])))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/src/tests/check_exit_under_load.py", line 10, in main
+    out.mkdir()
+  File "/usr/lib/python3.10/pathlib.py", line 1175, in mkdir
+    self._accessor.mkdir(self, mode)
+FileExistsError: [Errno 17] File exists: '/evidence/target-active-exit'

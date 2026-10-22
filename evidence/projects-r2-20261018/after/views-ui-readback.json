@@ -1,0 +1,41 @@
+{
+  "source": "cua_repl Safari AX, authenticated massif-01, actual saved views",
+  "observed_utc": "2026-10-18T03:06:00.122279+00:00",
+  "views": [
+    {
+      "url": "https://github.com/users/massif-01/projects/3/views/2",
+      "name": "执行状态",
+      "filter": "-kind:Overview",
+      "matching_items": 18,
+      "columns": [
+        "Todo",
+        "In Progress",
+        "Done",
+        "Blocked"
+      ],
+      "filter_errors": []
+    },
+    {
+      "url": "https://github.com/users/massif-01/projects/3/views/4",
+      "name": "未排期",
+      "filter": "no:start-date no:target-date",
+      "matching_items": 19,
+      "filter_errors": [],
+      "unsaved_changes_visible": false
+    },
+    {
+      "url": "https://github.com/users/massif-01/projects/3/views/1",
+      "name": "产品路线",
+      "filter": "",
+      "layout": "TABLE_LAYOUT",
+      "group_by": "Phase",
+      "sort_by": [
+        "Horizon ASC",
+        "Priority ASC"
+      ],
+      "show_hierarchy": false,
+      "unsaved_changes_visible": false,
+      "evidence": "Fresh AX menu: Group by: Phase; Sort by: Horizon (ascending), Priority (ascending); Show hierarchy off; no Save view / Discard controls."
+    }
+  ]
+}

@@ -1,0 +1,245 @@
+[
+  {
+    "path": "/api/v1/log/list?limit=200&tag=ts_source_mgr",
+    "sent_at_utc": "2026-10-13T16:52:20.846540+00:00",
+    "http_status": 200,
+    "body": {
+      "code": 0,
+      "data": {
+        "logs": [
+          {
+            "timestamp": 4776,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_source_mgr",
+            "message": "Initializing source manager (max 16)",
+            "task": "main"
+          },
+          {
+            "timestamp": 4777,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_source_mgr",
+            "message": "Source manager initialized (loading deferred)",
+            "task": "main"
+          },
+          {
+            "timestamp": 4876,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_source_mgr",
+            "message": "Starting all data sources",
+            "task": "main"
+          },
+          {
+            "timestamp": 5208,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_source_mgr",
+            "message": "Network ready, starting external sources",
+            "task": "main"
+          },
+          {
+            "timestamp": 7277,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_source_mgr",
+            "message": "Deferred source loading started",
+            "task": "src_load"
+          },
+          {
+            "timestamp": 7347,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_source_mgr",
+            "message": "Loaded 1 sources from directory: /sdcard/config/sources",
+            "task": "src_load"
+          },
+          {
+            "timestamp": 7359,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_source_mgr",
+            "message": "Loaded 1 sources from SD card directory",
+            "task": "src_load"
+          },
+          {
+            "timestamp": 7411,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_source_mgr",
+            "message": "Exported 1 sources to directory: /sdcard/config/sources",
+            "task": "src_load"
+          },
+          {
+            "timestamp": 7441,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_source_mgr",
+            "message": "Saved 1 sources to NVS and SD card",
+            "task": "src_load"
+          },
+          {
+            "timestamp": 7453,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_source_mgr",
+            "message": "Deferred source loading complete: 1 sources",
+            "task": "src_load"
+          },
+          {
+            "timestamp": 7465,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_source_mgr",
+            "message": "Starting loaded data sources...",
+            "task": "src_load"
+          },
+          {
+            "timestamp": 7479,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_source_mgr",
+            "message": "Starting all data sources",
+            "task": "src_load"
+          },
+          {
+            "timestamp": 7490,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_source_mgr",
+            "message": "Network ready, starting external sources",
+            "task": "src_load"
+          },
+          {
+            "timestamp": 7491,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_source_mgr",
+            "message": "Starting Socket.IO source: agx_info",
+            "task": "src_load"
+          },
+          {
+            "timestamp": 7503,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_source_mgr",
+            "message": "SIO [agx_info] connection started",
+            "task": "src_load"
+          }
+        ],
+        "total": 15,
+        "offset": 0,
+        "returned": 15,
+        "bufferCapacity": 500,
+        "bufferCount": 500
+      }
+    },
+    "received_at_utc": "2026-10-13T16:52:20.903935+00:00"
+  },
+  {
+    "path": "/api/v1/log/list?limit=200&tag=ts_temp_source",
+    "sent_at_utc": "2026-10-13T16:52:20.903958+00:00",
+    "http_status": 200,
+    "body": {
+      "code": 0,
+      "data": {
+        "logs": [],
+        "total": 0,
+        "offset": 0,
+        "returned": 0,
+        "bufferCapacity": 500,
+        "bufferCount": 500
+      }
+    },
+    "received_at_utc": "2026-10-13T16:52:20.921281+00:00"
+  },
+  {
+    "path": "/api/v1/log/list?limit=200&tag=ts_fan",
+    "sent_at_utc": "2026-10-13T16:52:20.921321+00:00",
+    "http_status": 200,
+    "body": {
+      "code": 0,
+      "data": {
+        "logs": [
+          {
+            "timestamp": 1291,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "ts_fan",
+            "message": "Restored fan 0: mode=2, duty=18%, curve=9 pts",
+            "task": "main"
+          }
+        ],
+        "total": 1,
+        "offset": 0,
+        "returned": 1,
+        "bufferCapacity": 500,
+        "bufferCount": 500
+      }
+    },
+    "received_at_utc": "2026-10-13T16:52:20.939523+00:00"
+  },
+  {
+    "path": "/api/v1/log/list?limit=200&keyword=websocket",
+    "sent_at_utc": "2026-10-13T16:52:20.939565+00:00",
+    "http_status": 200,
+    "body": {
+      "code": 0,
+      "data": {
+        "logs": [
+          {
+            "timestamp": 6163,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "webui_ws",
+            "message": "Initializing WebSocket with Terminal support",
+            "task": "main"
+          },
+          {
+            "timestamp": 6186,
+            "level": 3,
+            "levelName": "INFO",
+            "tag": "webui_ws",
+            "message": "WebSocket handler registered at /ws",
+            "task": "main"
+          }
+        ],
+        "total": 2,
+        "offset": 0,
+        "returned": 2,
+        "bufferCapacity": 500,
+        "bufferCount": 500
+      }
+    },
+    "received_at_utc": "2026-10-13T16:52:20.959020+00:00"
+  },
+  {
+    "path": "/api/v1/automation/sources/list",
+    "sent_at_utc": "2026-10-13T16:52:20.959059+00:00",
+    "http_status": 200,
+    "body": {
+      "code": 0,
+      "data": {
+        "sources": [
+          {
+            "id": "agx_info",
+            "label": "AGX_info",
+            "type": "socketio",
+            "enabled": true,
+            "connected": true,
+            "auto_discover": true,
+            "update_mode": "realtime",
+            "poll_interval_ms": 0,
+            "last_value": "{\"timestamp\":\"2026-10-13T16:52:20.832051Z\",\"c...(1626)",
+            "last_update_ms": 4640020,
+            "mappings": [],
+            "mapping_count": 0
+          }
+        ],
+        "count": 1
+      }
+    },
+    "received_at_utc": "2026-10-13T16:52:20.976067+00:00"
+  }
+]

@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+  File "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/psutil/_psosx.py", line 347, in wrapper
+    return fun(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/psutil/_psosx.py", line 539, in threads
+    rawlist = cext.proc_threads(self.pid)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] assume access denied (originated from task_for_pid)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/massif/Tianshan-thermal-observer/experiments/cpu_runtime_threads_v1/scripts/replay_probe.py", line 18, in <module>
+    binding=json.loads((a.run/'launch.json').read_text())['binding'];clock=Clock();ev=Evidence(out);pipe=Pipeline(out,cfg,binding,'diagnose',clock,ev);engine=engine_for(cfg,record_schema=manifest['record_schema']);proc=psutil.Process();before={t.id:t.user_time+t.system_time for t in proc.threads()};ct=proc.cpu_times();w0=time.monotonic();calls=[];maxdiff=0.;checks=0
+                                                                                                                                                                                                                                                                                            ^^^^^^^^^^^^^^
+  File "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/psutil/__init__.py", line 937, in threads
+    return self._proc.threads()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/psutil/_psosx.py", line 353, in wrapper
+    raise AccessDenied(pid, name) from err
+psutil.AccessDenied: (pid=50691)

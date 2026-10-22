@@ -1,0 +1,561 @@
+{
+  "before": {
+    "trace": [
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 344157.093254166
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 344157.154334625,
+        "status": 200
+      },
+      {
+        "endpoint": "temp",
+        "event": "sent",
+        "t": 344157.155143083
+      },
+      {
+        "endpoint": "temp",
+        "event": "return",
+        "t": 344158.956207166,
+        "status": 200
+      },
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 344158.956809208
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 344159.017320833,
+        "status": 200
+      },
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 344160.019072333
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 344160.080133875,
+        "status": 200
+      },
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 344161.081920958
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 344161.142966208,
+        "status": 200
+      },
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 344162.146314666
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 344162.207467375,
+        "status": 200
+      },
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 344163.210012208
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 344163.271068875,
+        "status": 200
+      },
+      {
+        "endpoint": "temp",
+        "event": "sent",
+        "t": 344163.957922375
+      },
+      {
+        "endpoint": "temp",
+        "event": "return",
+        "t": 344165.759042208,
+        "status": 200
+      },
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 344165.760480333
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 344165.821566625,
+        "status": 200
+      },
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 344166.823996291
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 344166.885396666,
+        "status": 200
+      }
+    ],
+    "peak": {
+      "fan": 1,
+      "temp": 1,
+      "total": 1
+    },
+    "summary": {
+      "stop_reason": "duration",
+      "poll_missed": 2,
+      "poll_count": 10,
+      "connection_attempts": 1,
+      "payload_oversize": 0,
+      "orin_event_count": 10,
+      "business_payload_bytes_sum": 11533,
+      "business_payload_bytes_max": 1154,
+      "poll_rtt_ms": [
+        1067.5572089967318,
+        1801.8042499898002,
+        61.126750020775944,
+        61.71300000278279,
+        61.765791033394635,
+        63.50466702133417,
+        62.31066701002419,
+        1802.2087089484558,
+        62.41750001208857,
+        64.79924998711795
+      ],
+      "prediction_ms": [
+        0.7454589940607548,
+        0.3559999749995768,
+        0.37004100158810616
+      ],
+      "rss_mib": [
+        49.546875,
+        49.609375,
+        49.625,
+        49.625,
+        49.640625,
+        49.6875,
+        49.6875,
+        49.734375,
+        49.734375,
+        49.734375
+      ],
+      "cpu_pct_single_core": [
+        0.6092017711811054,
+        0.497678798665223,
+        0.37239886927907623,
+        0.30023439716090516,
+        0.6298841413611622,
+        1.3981451952867654,
+        0.6599758044309221,
+        0.5536308791714708,
+        1.0481125827407765,
+        1.3169442899871064
+      ],
+      "elapsed_s": 11.40745237498777,
+      "queue_peak_items": 1,
+      "queue_peak_bytes": 1280,
+      "dropped": 0,
+      "quality": {
+        "boundary_socketio_connecting": 1,
+        "boundary_stream": 1,
+        "new_samples": 10,
+        "boundary_input_boundary": 2,
+        "boundary_input_profile_change": 1,
+        "boundary_control_context_change": 1,
+        "boundary_normal_scope_change": 1,
+        "boundary_socketio_disconnected": 1,
+        "boundary_run_end": 1
+      },
+      "processing": {
+        "fan_ok": 8,
+        "origins": 3,
+        "temp_ok": 2
+      },
+      "target_host_verified": false
+    },
+    "fan_return_times": [
+      344157.154666833,
+      344159.017610125,
+      344160.080428958,
+      344161.143288708,
+      344162.208100583,
+      344163.271603,
+      344165.822130291,
+      344166.887844208
+    ],
+    "fan_return_gaps": [
+      1.8629432920133695,
+      1.0628188329865225,
+      1.062859750003554,
+      1.0648118749959394,
+      1.0635024170042016,
+      2.5505272910231724,
+      1.065713916963432
+    ]
+  },
+  "after": {
+    "trace": [
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 344167.515169041
+      },
+      {
+        "endpoint": "temp",
+        "event": "sent",
+        "t": 344167.515300625
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 344167.576295708,
+        "status": 200
+      },
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 344168.510565166
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 344168.571692375,
+        "status": 200
+      },
+      {
+        "endpoint": "temp",
+        "event": "return",
+        "t": 344169.316431416,
+        "status": 200
+      },
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 344169.510686166
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 344169.57181825,
+        "status": 200
+      },
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 344170.511846208
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 344170.57405625,
+        "status": 200
+      },
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 344171.511623916
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 344171.572687,
+        "status": 200
+      },
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 344172.513680958
+      },
+      {
+        "endpoint": "temp",
+        "event": "sent",
+        "t": 344172.514672208
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 344172.573956166,
+        "status": 200
+      },
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 344173.514206
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 344173.575553875,
+        "status": 200
+      },
+      {
+        "endpoint": "temp",
+        "event": "return",
+        "t": 344174.315861333,
+        "status": 200
+      },
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 344174.514880416
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 344174.576179125,
+        "status": 200
+      },
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 344175.514688
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 344175.575736208,
+        "status": 200
+      },
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 344176.514875625
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 344176.575914041,
+        "status": 200
+      },
+      {
+        "endpoint": "temp",
+        "event": "sent",
+        "t": 344177.514842333
+      },
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 344177.514894666
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 344177.575982958,
+        "status": 200
+      },
+      {
+        "endpoint": "fan",
+        "event": "sent",
+        "t": 344178.515546916
+      },
+      {
+        "endpoint": "fan",
+        "event": "return",
+        "t": 344178.576609041,
+        "status": 200
+      },
+      {
+        "endpoint": "temp",
+        "event": "return",
+        "t": 344179.315942208,
+        "status": 200
+      }
+    ],
+    "peak": {
+      "fan": 1,
+      "temp": 1,
+      "total": 2
+    },
+    "summary": {
+      "stop_reason": "duration",
+      "poll_missed": 0,
+      "poll_count": 14,
+      "connection_attempts": 1,
+      "payload_oversize": 0,
+      "orin_event_count": 11,
+      "business_payload_bytes_sum": 12686,
+      "business_payload_bytes_max": 1154,
+      "poll_rtt_ms": [
+        67.88849999429658,
+        62.27524997666478,
+        1802.9742909711786,
+        62.21987499156967,
+        63.62425000406802,
+        61.67958298465237,
+        62.369792023673654,
+        64.10704099107534,
+        1802.7338330284692,
+        63.5083339875564,
+        61.653041979297996,
+        61.559249996207654,
+        61.4947919966653,
+        61.57233298290521
+      ],
+      "prediction_ms": [
+        1.232457987498492,
+        0.44587498996406794,
+        1.2960419990122318
+      ],
+      "rss_mib": [
+        50.65625,
+        50.65625,
+        50.671875,
+        50.6875,
+        50.6875,
+        50.6875,
+        50.703125,
+        50.703125,
+        50.703125,
+        50.703125,
+        50.703125
+      ],
+      "cpu_pct_single_core": [
+        2.1968401465544893,
+        0.8497030812952492,
+        0.8565037434585469,
+        0.8705917693461889,
+        0.4782455779332336,
+        1.250094883857836,
+        1.6109915709162386,
+        1.3423909222711703,
+        0.3571217910207824,
+        0.3647544515798621,
+        0.36893310567046256
+      ],
+      "elapsed_s": 11.402586291951593,
+      "queue_peak_items": 2,
+      "queue_peak_bytes": 1280,
+      "dropped": 0,
+      "quality": {
+        "boundary_socketio_connecting": 1,
+        "boundary_stream": 1,
+        "new_samples": 11,
+        "boundary_input_boundary": 2,
+        "boundary_input_profile_change": 1,
+        "boundary_control_context_change": 1,
+        "boundary_normal_scope_change": 1,
+        "boundary_socketio_disconnected": 1,
+        "boundary_run_end": 1
+      },
+      "processing": {
+        "fan_ok": 12,
+        "origins": 3,
+        "temp_ok": 2
+      },
+      "target_host_verified": false,
+      "polling_health": {
+        "contract": "TTO-POLL-INDEPENDENT-v1",
+        "max_inflight_per_endpoint": 1,
+        "max_total_inflight_limit": 2,
+        "max_total_inflight_observed": 2,
+        "end_inflight": 0,
+        "legacy_config_max_inflight_esp32": 1,
+        "endpoints": {
+          "fan": {
+            "sent": 12,
+            "returned": 12,
+            "http_ok": 12,
+            "errors": 0,
+            "skipped": 0,
+            "cancelled": 0,
+            "peak_inflight": 1,
+            "rtt_ms": {
+              "n": 12,
+              "p50": 62.247562484117225,
+              "p95": 65.8086975425249,
+              "min": 61.4947919966653,
+              "max": 67.88849999429658
+            },
+            "send_interval_s": {
+              "n": 11,
+              "p50": 1.00055858399719,
+              "p95": 1.0011173539678566,
+              "min": 1.000146834005136,
+              "max": 1.0012339999666438
+            },
+            "return_interval_s": {
+              "n": 11,
+              "p50": 1.000091459020041,
+              "p95": 1.0024323119723704,
+              "min": 0.9953237909940071,
+              "max": 1.002459540963173
+            }
+          },
+          "temp": {
+            "sent": 3,
+            "returned": 2,
+            "http_ok": 2,
+            "errors": 0,
+            "skipped": 0,
+            "cancelled": 1,
+            "peak_inflight": 1,
+            "rtt_ms": {
+              "n": 2,
+              "p50": 1802.854061999824,
+              "p95": 1802.962268074043,
+              "min": 1802.7338330284692,
+              "max": 1802.9742909711786
+            },
+            "send_interval_s": {
+              "n": 2,
+              "p50": 5.000322041509207,
+              "p95": 5.00042569139041,
+              "min": 5.000206874974538,
+              "max": 5.000437208043877
+            },
+            "return_interval_s": {
+              "n": 1,
+              "p50": 4.999966417031828,
+              "p95": 4.999966417031828,
+              "min": 4.999966417031828,
+              "max": 4.999966417031828
+            }
+          }
+        }
+      }
+    },
+    "fan_return_times": [
+      344167.57693875,
+      344168.572262833,
+      344169.572354083,
+      344170.57476125,
+      344171.572997625,
+      344172.57492525,
+      344173.577387791,
+      344174.577421625,
+      344175.576024208,
+      344176.576156166,
+      344177.576244458,
+      344178.576880666
+    ],
+    "fan_return_gaps": [
+      0.9953240830218419,
+      1.0000912499963306,
+      1.0024071669904515,
+      0.998236374987755,
+      1.001927625038661,
+      1.0024625409860164,
+      1.0000338340178132,
+      0.9986025829566643,
+      1.0001319579896517,
+      1.0000882919994183,
+      1.000636208045762
+    ]
+  }
+}

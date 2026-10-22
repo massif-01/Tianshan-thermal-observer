@@ -1,0 +1,154 @@
+{
+  "snapshot_seq": 32,
+  "service_epoch": "6ebf727f-f840-4811-abe1-55a75de8be63",
+  "run_id": "744ee2c55b275fec",
+  "source_epoch": 0,
+  "model_id": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
+  "spec_id": "2080adcf20773650299def2bb0f3ebdb9f87d8f85281d5b87a99d8b406c83c6b",
+  "series": [
+    {
+      "id": "temperature.tj",
+      "label": "实测结温（模型采样对齐）",
+      "kind": "observed",
+      "unit": "°C",
+      "alignment_group": "tj_model",
+      "time_basis": "tj_sample",
+      "anchor_metric_id": "temperature.tj",
+      "estimate_stage": null,
+      "sampling": "actual_samples",
+      "original_points": 2,
+      "returned_points": 2,
+      "soft_budget_exceeded": false,
+      "points": [
+        {
+          "t": 29000.0,
+          "value": 44.3,
+          "status": "valid",
+          "sample_id": "0:744ee2c55b275fec:3433f650167ae390",
+          "received_at_utc": "2026-10-21T14:42:20.414920+00:00",
+          "source_ref": "744ee2c55b275fec:3433f650167ae390",
+          "phase_at_sample": "tracking",
+          "reason_code": null
+        },
+        {
+          "t": 30000.0,
+          "value": 44.3,
+          "status": "valid",
+          "sample_id": "0:744ee2c55b275fec:4324f483f4901a64",
+          "received_at_utc": "2026-10-21T14:42:20.417955+00:00",
+          "source_ref": "744ee2c55b275fec:4324f483f4901a64",
+          "phase_at_sample": "tracking",
+          "reason_code": null
+        }
+      ]
+    },
+    {
+      "id": "model.Tf_C",
+      "label": "快热状态估计",
+      "kind": "estimate",
+      "unit": "°C",
+      "alignment_group": "tj_model",
+      "time_basis": "tj_sample",
+      "anchor_metric_id": "temperature.tj",
+      "estimate_stage": "posterior",
+      "sampling": "actual_samples",
+      "original_points": 2,
+      "returned_points": 2,
+      "soft_budget_exceeded": false,
+      "points": [
+        {
+          "t": 29000.0,
+          "value": 44.30122325256106,
+          "status": "valid",
+          "sample_id": "0:744ee2c55b275fec:3433f650167ae390",
+          "received_at_utc": "2026-10-21T14:42:20.414920+00:00",
+          "source_ref": "744ee2c55b275fec:3433f650167ae390",
+          "phase_at_sample": "tracking",
+          "reason_code": null
+        },
+        {
+          "t": 30000.0,
+          "value": 44.3011700537187,
+          "status": "valid",
+          "sample_id": "0:744ee2c55b275fec:4324f483f4901a64",
+          "received_at_utc": "2026-10-21T14:42:20.417955+00:00",
+          "source_ref": "744ee2c55b275fec:4324f483f4901a64",
+          "phase_at_sample": "tracking",
+          "reason_code": null
+        }
+      ]
+    },
+    {
+      "id": "model.Ts_C",
+      "label": "慢热状态估计",
+      "kind": "estimate",
+      "unit": "°C",
+      "alignment_group": "tj_model",
+      "time_basis": "tj_sample",
+      "anchor_metric_id": "temperature.tj",
+      "estimate_stage": "posterior",
+      "sampling": "actual_samples",
+      "original_points": 2,
+      "returned_points": 2,
+      "soft_budget_exceeded": false,
+      "points": [
+        {
+          "t": 29000.0,
+          "value": 40.76614738063794,
+          "status": "valid",
+          "sample_id": "0:744ee2c55b275fec:3433f650167ae390",
+          "received_at_utc": "2026-10-21T14:42:20.414920+00:00",
+          "source_ref": "744ee2c55b275fec:3433f650167ae390",
+          "phase_at_sample": "tracking",
+          "reason_code": null
+        },
+        {
+          "t": 30000.0,
+          "value": 40.76578562942588,
+          "status": "valid",
+          "sample_id": "0:744ee2c55b275fec:4324f483f4901a64",
+          "received_at_utc": "2026-10-21T14:42:20.417955+00:00",
+          "source_ref": "744ee2c55b275fec:4324f483f4901a64",
+          "phase_at_sample": "tracking",
+          "reason_code": null
+        }
+      ]
+    },
+    {
+      "id": "model.E_C",
+      "label": "等效边界估计",
+      "kind": "estimate",
+      "unit": "°C",
+      "alignment_group": "tj_model",
+      "time_basis": "tj_sample",
+      "anchor_metric_id": "temperature.tj",
+      "estimate_stage": "posterior",
+      "sampling": "actual_samples",
+      "original_points": 2,
+      "returned_points": 2,
+      "soft_budget_exceeded": false,
+      "points": [
+        {
+          "t": 29000.0,
+          "value": 33.76967885066633,
+          "status": "valid",
+          "sample_id": "0:744ee2c55b275fec:3433f650167ae390",
+          "received_at_utc": "2026-10-21T14:42:20.414920+00:00",
+          "source_ref": "744ee2c55b275fec:3433f650167ae390",
+          "phase_at_sample": "tracking",
+          "reason_code": null
+        },
+        {
+          "t": 30000.0,
+          "value": 33.762940387906355,
+          "status": "valid",
+          "sample_id": "0:744ee2c55b275fec:4324f483f4901a64",
+          "received_at_utc": "2026-10-21T14:42:20.417955+00:00",
+          "source_ref": "744ee2c55b275fec:4324f483f4901a64",
+          "phase_at_sample": "tracking",
+          "reason_code": null
+        }
+      ]
+    }
+  ]
+}

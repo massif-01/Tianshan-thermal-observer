@@ -1,0 +1,38 @@
+{
+  "id": "COMM-R2-ISSUE9",
+  "recorded_at_utc": "2026-10-18T03:08:30.417519+00:00",
+  "issue": 9,
+  "local_scope_complete": true,
+  "field_root_cause_confirmed": false,
+  "field_fixed": false,
+  "candidate_role": "diagnostics only; no latency/TTL/lock/control changes",
+  "baseline_collector_sha256": "d08c1f0b6187831e728420094137afa070f328d9b0252f3662a992443b2b0b5b",
+  "candidate_collector_sha256": "4c696d3a63cef96d255e0e6e0fd5f56754727a2647801653ed373f0aede22563",
+  "patch": "collector-diagnostics.patch",
+  "tests": {
+    "baseline": 8,
+    "candidate": 8,
+    "failures": 0,
+    "loopback_only": true
+  },
+  "source_health": "analysis/source-health-Y.jsonl",
+  "source_health_raw_valid_not_extended": true,
+  "unknown_safety_is_null": true,
+  "offline_integration_ready": true,
+  "formal_load_permission": false,
+  "issues_to_keep_open": [
+    9
+  ],
+  "next_evidence": "Matched firmware identity + same-window transport phases/TCP/server stage times",
+  "observer_owned_by_issue8": true,
+  "no_second_collector": true,
+  "not_performed": [
+    "field connection",
+    "deployment",
+    "firmware build/flash",
+    "inference requests",
+    "model development",
+    "git commit/push/PR",
+    "GitHub write"
+  ]
+}

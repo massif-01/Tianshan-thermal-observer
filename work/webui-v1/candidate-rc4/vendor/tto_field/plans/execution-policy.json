@@ -1,0 +1,14 @@
+{
+  "schema": "TTO-MIX-SCHEDULING-POLICY-R2",
+  "unready_grace_seconds": 60,
+  "meaning": "Bounded scheduler pause for current input/observer unavailability; not a raw TTL change and not a contiguous 60s initialization gate",
+  "work_window_extends_while_unready": false,
+  "natural_drain_max_seconds": 90,
+  "transport_request_max_seconds": 30,
+  "mix_plan_request_ceiling_seconds": 60,
+  "why_request_timeout_is_30": "Unmodified accepted 0.2.4 requester caps protocol wait at 30s; below supplied 60s maximum, do not extend parser or infer server end",
+  "why_unready_grace_is_60": "A finite preparation default shorter than the 90s drain reserve; only bounds scheduling pauses and needs freeze in the future reviewed field policy",
+  "accepted_observer_states_for_formal_comparison": ["tracking", "degraded_with_declared_range_assumptions_and_evidence_ready"],
+  "old_M_or_Y_override": false,
+  "live_execute_in_this_candidate": "disabled; only a command/binding template is delivered, real #8/#9 integrated review and field authorization are still needed"
+}

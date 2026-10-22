@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "simulated": false,
+  "conclusion": "数据暂不可用，预测已暂停；核对端点、身份和新鲜度。",
+  "deployment_status": "deployment_unverified",
+  "connection_reliable": "needs_review",
+  "quality": {
+    "boundary_socketio_connecting": 1,
+    "boundary_control_context_change": 1,
+    "boundary_unsupported_schema": 38,
+    "unsupported_schema": 38,
+    "boundary_input_boundary": 38,
+    "boundary_socketio_disconnected": 1,
+    "boundary_run_end": 1
+  },
+  "new_samples": 0,
+  "duplicate_received": 0,
+  "origin_count": 0,
+  "normal_auto_origins": 0,
+  "warm_origins": 0,
+  "label_counts": {
+    "15": 0,
+    "45": 0,
+    "90": 0
+  },
+  "episode": "730ebf59-3abd-439a-b446-32a01657fc99",
+  "episode_evidence": null,
+  "independent_episode_count": "unknown_until_operator_groups_complete_processes",
+  "availability": {},
+  "resource": {
+    "rss_mib": {
+      "count": 37,
+      "max": 36.44140625,
+      "p95": 36.44140625,
+      "p99": 36.44140625,
+      "mean": 36.39168074324324
+    },
+    "cpu_pct_single_core": {
+      "count": 37,
+      "max": 2.9968051988716695,
+      "p95": 2.1978931445349263,
+      "p99": 2.9958147276011764,
+      "mean": 1.3493027090129195
+    },
+    "prediction_ms": {
+      "count": 0,
+      "max": null,
+      "p95": null,
+      "p99": null,
+      "mean": null
+    },
+    "poll_rtt_ms": {
+      "count": 45,
+      "max": 52.61782801244408,
+      "p95": 45.496077602729144,
+      "p99": 51.96689552045427,
+      "mean": 15.22825326731739
+    }
+  },
+  "host_scope": "current_host_only_not_N305",
+  "poll_missed": 0,
+  "dropped": 0,
+  "observation_rate_hz": 3.232051076134282,
+  "orin_event_rate_hz": 1.0067044335500224,
+  "business_payload_bytes": {
+    "maximum": 744,
+    "mean": 740.6315789473684
+  },
+  "asynchronous_control_temperature_differences": {
+    "count": 0,
+    "max_absolute_c": null,
+    "first": null,
+    "last": null,
+    "note": "异步量化与绑定路径有差别；不据此自动判错误或改绑。"
+  },
+  "source_status": {
+    "fan_ok": 37,
+    "temp_ok": 8
+  },
+  "stop_reason": "SIGINT",
+  "next_step": "由用户填写本机端点并运行180秒只读doctor；确认最终部署身份后，记录正常完整热过程。",
+  "time_axis_note": "接收时间近似；源年龄是下界，不含未测网络在途时间。",
+  "report_type": "collect",
+  "recorded_results": {
+    "source": "persisted_predictions_and_scores",
+    "logs": {
+      "predictions.jsonl": {
+        "present": false,
+        "sha256": null,
+        "record_count": null
+      },
+      "scores.jsonl": {
+        "present": false,
+        "sha256": null,
+        "record_count": null
+      }
+    },
+    "missing_logs": [
+      "predictions.jsonl",
+      "scores.jsonl"
+    ],
+    "log_evidence_complete": false,
+    "issues": [],
+    "models": {},
+    "issued_prediction_origins": null,
+    "terminal_score_records": null,
+    "matched_terminal_score_records": 0,
+    "scored_method_horizon_records": null,
+    "historical_scored_method_horizon_records": null,
+    "quality_excluded_method_horizon_records": null,
+    "quality_isolations": [],
+    "evaluation_eligibility_source": "production_replay_existing_segment_isolation",
+    "coverage_note": "scored/issued_origins = 当前有效评分 / 当时计划起点；score_fraction_of_issued = 当前有效评分 / 当时该方法已发预测；历史分母包含质量隔离段。",
+    "prediction_references": {},
+    "scored_records": [],
+    "quality_excluded_records": []
+  },
+  "missing_required_logs": []
+}

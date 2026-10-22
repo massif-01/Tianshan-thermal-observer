@@ -1,0 +1,19 @@
+{
+  "spec": "COMM-SOURCE-HEALTH-R2-I02-v1",
+  "rows": 5319,
+  "interface_identity_updates": 5319,
+  "semantic_differences": [
+    {
+      "observation_ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:5319",
+      "path": "measurement.TJ_and_rails.raw_valid",
+      "before": true,
+      "after": false
+    }
+  ],
+  "historical_TJ_rails_values_refs_times_TTL_preserved": true,
+  "all_PWM_safety_observer_permission_fields_unchanged": true,
+  "tests_passed": 6,
+  "runtime_or_collector_patch_changed": false,
+  "device_access": false,
+  "deployment": false
+}

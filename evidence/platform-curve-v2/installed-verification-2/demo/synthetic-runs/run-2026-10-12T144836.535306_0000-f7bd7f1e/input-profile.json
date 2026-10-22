@@ -1,0 +1,34 @@
+{
+  "schema_version": 2,
+  "run_id": "f7bd7f1e-f429-4079-8198-ed94c1b926be",
+  "input_contract": {
+    "schema_version": 2,
+    "processing_contract": "TTO-PLATFORM-CURVE-v2.0",
+    "platform_schema": 1,
+    "family": "jetson_orin",
+    "soc": "tegra234",
+    "gpu_backend": "tegrastats",
+    "gpu_schema": 1,
+    "source_period_ms": 1000,
+    "gpu_period_ms": 1000,
+    "units": {
+      "temperature": "C",
+      "power": "W",
+      "gpu_busy": "percent",
+      "cpu_freq": "MHz",
+      "duty": "logical_percent"
+    }
+  },
+  "input_contract_sha256": "d039ef4ed5c63fde69e05734349c354e790076482914b7bb4e78674eeeffa664",
+  "identification_ref": "f7bd7f1e-f429-4079-8198-ed94c1b926be/observation:3",
+  "platform_evidence": {
+    "schema_version": 1,
+    "family": "jetson_orin",
+    "soc": "tegra234",
+    "gpu_backend": "tegrastats",
+    "compatible": [
+      "nvidia,tegra234"
+    ],
+    "identification_source": "device_tree_compatible"
+  }
+}

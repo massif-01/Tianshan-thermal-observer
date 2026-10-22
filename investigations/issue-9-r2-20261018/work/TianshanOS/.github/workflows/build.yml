@@ -1,0 +1,323 @@
+name: TianShanOS Build
+
+on:
+  push:
+    branches: [main, develop]
+    tags:
+      - 'v*'  # 版本标签触发
+  pull_request:
+    branches: [main, develop]
+  release:
+    types: [published]  # 手动发布 Release 时也自动构建并上传 bin
+  workflow_dispatch:  # 允许手动触发
+
+permissions:
+  contents: read
+
+concurrency:
+  group: firmware-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  IDF_VERSION: v5.5.2
+  TARGET: esp32s3
+
+jobs:
+  changes:
+    name: Check scope
+    runs-on: ubuntu-latest
+    outputs:
+      run_full: ${{ steps.scope.outputs.run_full }}
+      publish_release: ${{ steps.scope.outputs.publish_release }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python3 -m unittest discover -s tests/ci -p 'test_*.py'
+      - run: python3 tests/release/test_release.py
+      - name: Select checks and release eligibility
+        id: scope
+        run: python3 tools/ci/check_profile.py
+
+  web-tests:
+    needs: changes
+    if: needs.changes.outputs.run_full == 'true'
+    name: WebUI regression tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: tests/prompts/package-lock.json
+      - run: npm ci --prefix tests/prompts
+      - run: npm test --prefix tests/prompts
+      - run: python3 tests/release/test_web_minify.py
+      - name: Install Chrome for actual-page regressions
+        working-directory: tests/prompts
+        run: npx playwright install --with-deps chrome
+      - run: npm run test:browser --prefix tests/prompts
+      - name: Offline xterm and vendor regressions
+        run: npm run test:xterm --prefix tests/prompts
+        env:
+          OFFLINE_RESULTS: ${{ runner.temp }}/xterm-source
+
+  runtime-tests:
+    needs: changes
+    if: needs.changes.outputs.run_full == 'true'
+    name: Runtime and fan regression tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python3 -m pip install -r tests/certificate/requirements.txt
+      - name: Fetch matching ESP-IDF cJSON and MbedTLS sources for host tests
+        run: |
+          export IDF_PATH="$RUNNER_TEMP/runtime-idf"
+          echo "IDF_PATH=$IDF_PATH" >> "$GITHUB_ENV"
+          git clone --depth 1 --branch "$IDF_VERSION" --filter=blob:none --sparse https://github.com/espressif/esp-idf.git "$IDF_PATH"
+          git -C "$IDF_PATH" sparse-checkout set components/json components/mbedtls
+          git -C "$IDF_PATH" submodule update --init --recursive --depth 1 components/json/cJSON components/mbedtls/mbedtls
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: bash tests/runtime/run_all.sh
+      - run: bash tests/ws_subscriptions/run_operation_adapter.sh
+      - name: Current WebSocket and lifecycle regressions
+        run: |
+          bash tests/ws_subscriptions/run_host.sh
+          bash tests/ws_subscriptions/run_reviewer.sh
+          bash tests/ws_subscriptions/run_f1_f2.sh
+      - run: bash tests/fan_monitor/run_host.sh
+      - name: Fan output and decay regressions
+        run: |
+          python3 tests/fan_review/run_host.py --check --cjson-dir "$IDF_PATH/components/json/cJSON" --output "$RUNNER_TEMP/fan-review.jsonl"
+          node tests/fan_review/test_ui.cjs "$RUNNER_TEMP/fan-review.jsonl"
+          python3 tests/fan_decay/run_host.py --csv "$RUNNER_TEMP/fan-decay.csv"
+          node tests/fan_decay/test_ui.cjs
+      - name: Certificate and current service-stop regressions
+        run: |
+          cmake -S "$IDF_PATH/components/mbedtls/mbedtls" -B "$RUNNER_TEMP/mbedtls" -DENABLE_TESTING=OFF -DENABLE_PROGRAMS=OFF
+          cmake --build "$RUNNER_TEMP/mbedtls" --parallel 2
+          CERT_TEST_PYTHON=python3 CERT_TEST_BUILD="$RUNNER_TEMP/certificate-tests" CERT_MBEDTLS_BUILD="$RUNNER_TEMP/mbedtls" bash tests/certificate/run_host.sh
+
+  build:
+    needs: changes
+    if: needs.changes.outputs.run_full == 'true'
+    name: Build ESP32-S3 Firmware
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      commit: ${{ steps.version.outputs.commit }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 完整历史用于版本号生成
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Cache ESP-IDF
+        uses: actions/cache@v4
+        id: cache-idf
+        with:
+          path: |
+            ~/esp/esp-idf
+            ~/.espressif/tools
+            ~/.espressif/dist
+          # Python virtual environments embed runner/interpreter paths. Cache
+          # reusable tools only; create the active Python environment per run.
+          key: esp-idf-tools-${{ env.IDF_VERSION }}-${{ runner.os }}-v1
+          restore-keys: |
+            esp-idf-tools-${{ env.IDF_VERSION }}-${{ runner.os }}-
+
+      - name: Install ESP-IDF tools and matching Python environment
+        run: |
+          mkdir -p ~/esp
+          if [ ! -d ~/esp/esp-idf ]; then
+            git clone -b ${{ env.IDF_VERSION }} --depth 1 --recursive https://github.com/espressif/esp-idf.git ~/esp/esp-idf
+          fi
+          cd ~/esp/esp-idf
+          # Cached tools may have been installed with a different Python.
+          # install.sh creates/checks the environment for the active Python.
+          ./install.sh ${{ env.TARGET }}
+
+      - name: Setup ESP-IDF environment
+        run: |
+          source ~/esp/esp-idf/export.sh
+          echo "IDF_PATH=$IDF_PATH" >> $GITHUB_ENV
+          echo "$IDF_PATH/tools" >> $GITHUB_PATH
+
+      - name: Cache build directory
+        uses: actions/cache@v4
+        with:
+          path: build
+          key: build-${{ env.TARGET }}-${{ hashFiles('**/CMakeLists.txt', '**/Kconfig*', 'sdkconfig.defaults') }}
+          restore-keys: |
+            build-${{ env.TARGET }}-
+
+      - name: Set target
+        run: |
+          source ~/esp/esp-idf/export.sh
+          # The repository tracks release artifacts under build/, but that
+          # checkout is not a complete CMake build tree. Remove it before
+          # idf.py set-target, otherwise ESP-IDF refuses its implicit fullclean.
+          rm -rf build
+          idf.py set-target ${{ env.TARGET }}
+
+      - name: Build firmware
+        run: |
+          source ~/esp/esp-idf/export.sh
+          # 使用 --fresh 确保版本号更新
+          rm -f build/CMakeCache.txt
+          idf.py build
+
+      - name: Get version info
+        id: version
+        run: |
+          python3 - <<'PYTHON'
+          import json, os, subprocess
+          from pathlib import Path
+          version = json.loads(Path('build/project_description.json').read_text())['project_version']
+          if not version:
+              raise ValueError('Build version is empty')
+          commit = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f'version={version}\ncommit={commit}\n')
+          print('Build version:', version, 'commit:', commit)
+          PYTHON
+
+      - name: Print build size
+        run: |
+          source ~/esp/esp-idf/export.sh
+          idf.py size
+
+      - name: Verify this build flashes its Web image
+        run: python3 tools/ci/check_web_artifacts.py --build-dir build
+
+      - name: Upload built Web resources
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-assets-${{ github.sha }}
+          path: build/esp-idf/ts_webui/web_optimized/
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload firmware artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: tianshanos-firmware-${{ steps.version.outputs.version || github.sha }}
+          path: |
+            build/*.bin
+            build/bootloader/bootloader.bin
+            build/partition_table/partition-table.bin
+            build/flasher_args.json
+          retention-days: 30
+
+      - name: Upload full build (for debugging)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-debug-${{ github.sha }}
+          path: |
+            build/compile_commands.json
+            build/project_description.json
+            build/config/sdkconfig.h
+          retention-days: 7
+
+  web-artifacts:
+    name: Built WebUI smoke test
+    needs: [changes, build]
+    if: needs.changes.outputs.run_full == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: tests/prompts/package-lock.json
+      - run: npm ci --prefix tests/prompts
+      - name: Set emitted Web directory
+        run: echo "PROJECT_WEB_ROOT=$RUNNER_TEMP/built-web" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: web-assets-${{ github.sha }}
+          path: ${{ runner.temp }}/built-web
+      - run: python3 tools/ci/check_web_artifacts.py --web-root "$PROJECT_WEB_ROOT"
+      - name: Install Chrome
+        working-directory: tests/prompts
+        run: npx playwright install --with-deps chrome
+      - name: Load the emitted WebUI and verify resource failures block it
+        run: node --test tests/prompts/xterm-offline.test.cjs tests/ci/test_web_resource_failure.cjs
+        env:
+          OFFLINE_RESULTS: ${{ runner.temp }}/xterm-built
+
+  ci-gate:
+    name: CI Gate
+    needs: [changes, web-tests, runtime-tests, build, web-artifacts]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Decide using the selected results
+        if: ${{ always() && !cancelled() }}
+        run: python3 tools/ci/check_gate.py
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+          RUN_CANCELLED: 'false'
+      - name: Reject cancellation at the final decision
+        if: ${{ always() && cancelled() }}
+        run: |
+          echo "CI Gate failed: workflow cancelled at the final decision" >&2
+          exit 1
+
+  # main keeps automatic version-based publication; PR/dispatch/fork never publish.
+  release:
+    name: Create or Update Release
+    needs: [changes, build, ci-gate]
+    if: ${{ !cancelled() && needs.changes.outputs.publish_release == 'true' && needs.build.result == 'success' && needs['ci-gate'].result == 'success' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.build.outputs.commit }}
+          fetch-depth: 0
+      - uses: actions/download-artifact@v4
+        with:
+          name: tianshanos-firmware-${{ needs.build.outputs.version }}
+          path: firmware
+      - name: Validate version, release state and this build's tag
+        id: preflight
+        run: python3 tools/ci/check_release_state.py
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BUILD_VERSION: ${{ needs.build.outputs.version }}
+          BUILD_COMMIT: ${{ needs.build.outputs.commit }}
+      - name: Create or upload the release assets
+        if: steps.preflight.outputs.skip_release == 'false'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.preflight.outputs.tag }}
+          name: ${{ steps.preflight.outputs.tag }}
+          files: |
+            firmware/**/*.bin
+            firmware/**/flasher_args.json
+          fail_on_unmatched_files: true
+          target_commitish: ${{ needs.build.outputs.commit }}
+          body_path: docs/releases/${{ steps.preflight.outputs.tag }}.md
+          generate_release_notes: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

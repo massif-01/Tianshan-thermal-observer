@@ -1,0 +1,56 @@
+{
+  "counterexamples": [
+    {
+      "case": "joint_tj_kind",
+      "rc5": "accepted",
+      "rc6": "rejected",
+      "errors": [
+        {
+          "path": [
+            "series",
+            0,
+            "kind"
+          ],
+          "message": "'observed' was expected"
+        }
+      ]
+    },
+    {
+      "case": "joint_tj_stage",
+      "rc5": "accepted",
+      "rc6": "rejected",
+      "errors": [
+        {
+          "path": [
+            "series",
+            0,
+            "estimate_stage"
+          ],
+          "message": "'posterior' is not of type 'null'"
+        }
+      ]
+    },
+    {
+      "case": "numeric_sample_id",
+      "rc5": "accepted",
+      "rc6": "rejected",
+      "errors": [
+        {
+          "path": [
+            "series",
+            1,
+            "points",
+            1,
+            "sample_id"
+          ],
+          "message": "None is not of type 'string'"
+        }
+      ]
+    }
+  ],
+  "normal_examples_passed": [
+    "series-example-gap.json",
+    "series-example-new-epoch.json",
+    "series-example-tracking.json"
+  ]
+}

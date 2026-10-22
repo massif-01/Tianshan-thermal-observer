@@ -1,0 +1,52 @@
+{
+  "capabilities": {
+    "gpu_reader": {
+      "cleanup_required": true,
+      "error_class": null,
+      "errors": 0,
+      "history_capacity": 6,
+      "missed": 0,
+      "period_count": 230,
+      "period_ms_last": 1000.0151869899128,
+      "period_ms_max": 1001.9719339907169,
+      "read_ms_max": 7.710552017670125,
+      "reads": 231,
+      "running": true,
+      "sample_interval_ms": 1000,
+      "state": "valid"
+    },
+    "gpu_sample_interval_ms": 1000,
+    "platform": {
+      "compatible": [
+        "rm01,rm01-thor",
+        "nvidia,p3834-0008",
+        "nvidia,tegra264"
+      ],
+      "family": "jetson_thor",
+      "gpu_backend": "nvml",
+      "identification_source": "device_tree_compatible",
+      "schema_version": 1,
+      "soc": "tegra264"
+    },
+    "previous_gpu_cleanup": null,
+    "source_sample_interval_ms": 1000
+  },
+  "connected_clients": 0,
+  "package_version": "1.1.1",
+  "parser_file": "/home/rm01/.venvs/tegrastats-api-1.1.1-2c356a1-20261013/lib/python3.12/site-packages/tegrastats_api/parser.py",
+  "service": "tegrastats-api",
+  "status": "healthy",
+  "telemetry_meta": {
+    "collector_state": "running",
+    "fresh": true,
+    "freshness_timeout_ms": 5000,
+    "received_at": "2026-10-12T17:35:01.407666Z",
+    "sample_age_ms": 545.8563669817522,
+    "sample_seq": 229,
+    "schema_version": 1,
+    "source_sample_interval_ms": 1000,
+    "stream_id": "23a796fe-a5c4-4ff4-84a1-705dabebb33c",
+    "time_basis": "collector_receive"
+  },
+  "timestamp": "2026-10-12T17:35:01.953504Z"
+}

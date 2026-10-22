@@ -1,0 +1,25 @@
+
+==================================== ERRORS ====================================
+___________________ ERROR collecting tests/test_failures.py ____________________
+ImportError while importing test module '/Users/massif/Tianshan-thermal-observer/evidence/prep-midload-v1/candidate/tests/test_failures.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+tests/test_failures.py:12: in <module>
+    from conftest import aux, record
+E   ImportError: cannot import name 'aux' from 'conftest' (/Users/massif/Tianshan-thermal-observer/evidence/prep-midload-v1/candidate/scripts/thermal_trials/tests/conftest.py)
+____________________ ERROR collecting tests/test_quality.py ____________________
+ImportError while importing test module '/Users/massif/Tianshan-thermal-observer/evidence/prep-midload-v1/candidate/tests/test_quality.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/private/tmp/tto-python-runtime/cpython-3.10.18-macos-aarch64-none/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+tests/test_quality.py:5: in <module>
+    from conftest import record, aux
+E   ImportError: cannot import name 'record' from 'conftest' (/Users/massif/Tianshan-thermal-observer/evidence/prep-midload-v1/candidate/scripts/thermal_trials/tests/conftest.py)
+=========================== short test summary info ============================
+ERROR tests/test_failures.py
+ERROR tests/test_quality.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 2 errors during collection !!!!!!!!!!!!!!!!!!!!
+2 errors in 4.60s

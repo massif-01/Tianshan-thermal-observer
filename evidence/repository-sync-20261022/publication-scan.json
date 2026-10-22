@@ -1,0 +1,13 @@
+{
+  "scanned_streams": 27425,
+  "findings": [
+    {
+      "path": "investigations/issue-9-r2-20261018/work/TianshanOS/docs/TROUBLESHOOTING.md",
+      "kind": "private_key",
+      "count": 3,
+      "match_sha256": "8bcac7908eb950419537b91e19adc83ce2c9cbfdacf4f81157fdadfec11f7017",
+      "match_length": 31
+    }
+  ],
+  "review": "Only hit was documentation displaying PEM header names; no complete private key block. No credential changes or redactions made."
+}

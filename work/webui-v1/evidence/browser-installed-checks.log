@@ -1,0 +1,50 @@
+### Result
+{"metrics":10,"nodes":10,"nonRealtime":"本地回放样例（非实时设备）","collapsed":true,"pauseStable":true,"horizon15":true,"horizon90":true,"nodeDetail":true,"coreFields":2,"reducedMotion":true,"narrowNoPageOverflow":true,"cdeNarrow":true,"fullscreen":true}
+### Ran Playwright code
+```js
+await (async (page) => {
+  await page.waitForFunction(() => document.querySelector('#link')?.textContent === 'Web已连接');
+  await page.setViewportSize({width:1440,height:1100});
+  await page.waitForTimeout(1500);
+  const checks={metrics:await page.locator('#metrics .metric').count(),nodes:await page.locator('#topology g.node').count()};
+  if(checks.metrics!==10||checks.nodes!==10)throw new Error('missing metrics/nodes');
+  checks.nonRealtime=await page.locator('#mode').innerText();
+  checks.collapsed=await page.locator('#health').evaluate(e=>!e.open)&&await page.locator('#events').evaluate(e=>!e.open)&&await page.locator('#fields').evaluate(e=>!e.open);
+  if(!checks.collapsed)throw new Error('drawers expanded by default');
+  await page.getByRole('button',{name:'暂停画面',exact:true}).click();
+  const freeze=await page.locator('#contextRows').innerText();
+  await page.waitForTimeout(1300);
+  checks.pauseStable=freeze===await page.locator('#contextRows').innerText();
+  if(!checks.pauseStable)throw new Error('pause did not freeze display');
+  await page.getByRole('button',{name:'恢复实时',exact:true}).click();
+  await page.getByLabel('预测时距').selectOption('15');await page.waitForTimeout(1000);
+  checks.horizon15=(await page.locator('#comparisonStatus').innerText()).includes('+15秒');
+  await page.getByLabel('预测时距').selectOption('90');await page.waitForTimeout(1000);
+  checks.horizon90=(await page.locator('#comparisonStatus').innerText()).includes('+90秒');
+  await page.getByLabel('预测时距').selectOption('45');
+  await page.getByRole('button',{name:'慢热状态 Ts',exact:true}).click();
+  await page.waitForFunction(()=>document.querySelector('#nodeText')?.textContent?.includes('模型内部慢态'));
+  checks.nodeDetail=true;
+  await page.locator('#nodeDetails summary').click();
+  await page.locator('#fields summary').click();await page.getByLabel('字段搜索').fill('cpu.cores.0');
+  checks.coreFields=await page.locator('#fieldRows tr').count();
+  if(checks.coreFields!==2)throw new Error('core field search failed');
+  await page.getByLabel('字段搜索').fill('');await page.locator('#fields summary').click();
+  await page.locator('.settings summary').click();await page.getByLabel('减少动效').check();
+  checks.reducedMotion=await page.locator('body').evaluate(e=>e.classList.contains('reduced-motion'));
+  await page.locator('.settings summary').click();await page.evaluate(()=>window.scrollTo(0,0));
+  await page.screenshot({path:'output/playwright/1440-final.png',fullPage:true});
+  await page.setViewportSize({width:1920,height:1080});await page.waitForTimeout(500);
+  await page.screenshot({path:'output/playwright/1920-final.png',fullPage:true});
+  await page.setViewportSize({width:390,height:844});await page.waitForTimeout(500);
+  checks.narrowNoPageOverflow=await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+1);
+  checks.cdeNarrow=await page.locator('#model').isVisible()&&await page.locator('#compare').isVisible()&&await page.locator('#context').isVisible();
+  await page.screenshot({path:'output/playwright/390-final.png',fullPage:true});
+  if(!checks.narrowNoPageOverflow||!checks.cdeNarrow)throw new Error('narrow layout failed');
+  await page.setViewportSize({width:1440,height:1100});await page.getByRole('button',{name:'全屏',exact:true}).click();
+  checks.fullscreen=await page.evaluate(()=>!!document.fullscreenElement);await page.evaluate(()=>document.exitFullscreen());
+  for(const [key,value] of Object.entries(checks)){if(typeof value==="boolean"&&!value)throw new Error("failed "+key);}
+  return checks;
+}
+)(page);
+```

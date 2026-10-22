@@ -1,0 +1,61 @@
+{
+  "status": "stopped",
+  "formal_collection": true,
+  "observer_run_id": "929742d7-6f4d-4d80-b53e-4436d45ac12c",
+  "episode": "rm01-seven-conditions-1h-20261013-034232",
+  "run_path": "/home/rm01/TTO/runs/run-2026-10-13T034236.007283_0000-929742d7",
+  "session_path": "/home/rm01/TTO/collection-sessions/rm01-seven-conditions-1h-20261013-034232",
+  "launcher_pid": 407246,
+  "duration_s": 3600,
+  "collection_started_at_utc": "2026-10-13T03:42:36.009572+00:00",
+  "expected_end_at_utc": "2026-10-13T04:42:36.009572+00:00",
+  "condition_plan": [
+    {
+      "id": 1,
+      "label": "空载待机"
+    },
+    {
+      "id": 2,
+      "label": "模型拉起"
+    },
+    {
+      "id": 3,
+      "label": "拉起后（有负载）待机"
+    },
+    {
+      "id": 4,
+      "label": "模型单发推理"
+    },
+    {
+      "id": 5,
+      "label": "并发推理"
+    },
+    {
+      "id": 6,
+      "label": "推理后待机"
+    },
+    {
+      "id": 7,
+      "label": "模型kill后空载待机"
+    }
+  ],
+  "active_condition": 7,
+  "active_condition_label": "模型kill后空载待机",
+  "control_mode_operator_label": "TTI智能模式",
+  "operations_thread_id": "01a1331a-f937-7d91-aef0-ac4f5e50bd8a",
+  "task_started": false,
+  "task_marker_policy": "Preserve human report verbatim and approximate event timing separately from file-write time. Task end does not stop cooldown collection.",
+  "log_path": "/home/rm01/TTO/collection-sessions/rm01-seven-conditions-1h-20261013-034232/collection.log",
+  "last_condition_recorded_at_utc": "2026-10-13T04:22:21.733636+00:00",
+  "model_loaded_completed_at_utc": "2026-10-13T03:48:58+00:00",
+  "last_inference_ended_at_utc": "2026-10-13T04:17:56.958847+00:00",
+  "concurrency_requested": 16,
+  "active_workload_evidence": "/tmp/tto-round2-concurrent16/run.log",
+  "model_resident": false,
+  "inference_requests_active": false,
+  "exit_code": 0,
+  "ended_at_utc": "2026-10-13T04:24:52.386170+00:00",
+  "stop_reason": "SIGINT",
+  "report_path": "/home/rm01/TTO/reports/rm01-seven-conditions-1h-20261013-034232",
+  "report_exit_code": 0
+}

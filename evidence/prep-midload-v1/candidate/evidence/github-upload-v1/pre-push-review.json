@@ -1,0 +1,32 @@
+{
+  "decision": "可以推送",
+  "requested_repo": "massif-01/Tianshan-thermal-observer",
+  "visibility": "private",
+  "branch": "main",
+  "scope": "当前完整TTO项目：源码、测试、文档、安装包、交付产物与历史离线证据；忽略本地环境、缓存和凭据",
+  "staged_project_file_count": 1832,
+  "staged_project_bytes": 2361087042,
+  "regression": {
+    "command": ".venv310/bin/python -m pytest -q tests --junitxml=evidence/github-upload-v1/junit.xml",
+    "python": "3.10.18",
+    "tests": 88,
+    "failures": 0,
+    "errors": 0,
+    "network_scope": "test-created loopback only"
+  },
+  "current_source_equals_0_1_2_wheel": true,
+  "archive_scan": {
+    "archives": 11,
+    "text_members": 1899,
+    "credential_pattern_hits": 0
+  },
+  "credential_like_url_hits": "仅测试反例http://user:password@localhost及其历史副本",
+  "real_devices_connected": false,
+  "hardware_deployment_executed": false,
+  "residual_limit": "此上传验证不证明真实设备预测效果、N305实机安装或现场部署。",
+  "whitespace_check": {
+    "production_source_tests_installer_readme": "passed",
+    "full_project": "历史交接Markdown的双空格换行、原始补丁上下文及旧日志含空白提示；为保留证据身份未改写",
+    "warnings_log": "diff-check-original-evidence.txt"
+  }
+}

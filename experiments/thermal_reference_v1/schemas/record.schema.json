@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TTO external reference stored revision",
+  "type": "object",
+  "required": [
+    "record_id",
+    "run_id",
+    "site_id",
+    "session_id",
+    "measurement_kind",
+    "temperature_c",
+    "measured_at_raw",
+    "measured_interval_raw",
+    "time_source",
+    "clock_domain",
+    "recorded_at_utc",
+    "measurement_flags",
+    "revision_id",
+    "revision",
+    "supersedes",
+    "model_input",
+    "control_input"
+  ],
+  "properties": {
+    "record_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "run_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "site_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "session_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "measurement_kind": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "original_unit": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "time_source": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "clock_domain": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "measured_at_raw": {
+      "type": [
+        "string",
+        "number",
+        "null"
+      ]
+    },
+    "recorded_at_utc": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "operator_mark_at_utc": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "prompt_due_at_utc": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "prompt_emitted_at_utc": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "revision_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "supersedes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "temperature_c": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "original_value": {
+      "type": [
+        "string",
+        "number",
+        "null"
+      ]
+    },
+    "time_uncertainty_s": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "measurement_flags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "artifact": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "model_input": {
+      "const": false
+    },
+    "control_input": {
+      "const": false
+    },
+    "synthetic": {
+      "type": "boolean"
+    },
+    "measured_interval_raw": {
+      "type": [
+        "object",
+        "null"
+      ]
+    }
+  },
+  "description": "Raw actual time may be unknown; derived clock alignment is saved separately, never silently replaced by mark/import/mtime."
+}

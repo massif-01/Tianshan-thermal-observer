@@ -1,0 +1,15 @@
+{
+  "posthoc_descriptive": true,
+  "reason": "Separate within-stage response from predictions crossing known retrospective stage boundaries",
+  "strata": [
+    "same stage versus crossing",
+    "first60 / middle / last60 seconds at origin",
+    "observed future context",
+    "two recorded single-lane blocks at +60 through +300 seconds"
+  ],
+  "forecast_recomputed": false,
+  "models_selected": false,
+  "parameters_changed": false,
+  "clock_selected": false,
+  "extra_field_runs": 0
+}

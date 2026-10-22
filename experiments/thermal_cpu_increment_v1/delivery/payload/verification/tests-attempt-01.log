@@ -1,0 +1,20 @@
+..............F                                                          [100%]
+=================================== FAILURES ===================================
+____ test_loopback_explicit_permission_and_actual_arrival_and_unknown_clock ____
+
+    def test_loopback_explicit_permission_and_actual_arrival_and_unknown_clock():
+        c,f=load_candidate()
+        with pytest.raises(PermissionError):make_server(Processor(c,f),allow_loopback=False)
+        with pytest.raises(ValueError,match='loopback'):make_server(Processor(c,f),allow_loopback=True,host='0.0.0.0')
+        srv=make_server(Processor(c,f),allow_loopback=True)
+        thread=threading.Thread(target=srv.serve_forever,kwargs={'poll_interval':.01},daemon=True);thread.start()
+        try:
+            now=time.monotonic();x=frame(now,active=True)
+            x['ingress_clock_id']='local_monotonic_current_boot'
+>           with http.client.HTTPConnection(*srv.server_address,timeout=3) as conn:
+E           TypeError: 'HTTPConnection' object does not support the context manager protocol
+
+experiments/thermal_cpu_increment_v1/tests/test_activity.py:110: TypeError
+=========================== short test summary info ============================
+FAILED experiments/thermal_cpu_increment_v1/tests/test_activity.py::test_loopback_explicit_permission_and_actual_arrival_and_unknown_clock
+1 failed, 14 passed in 0.84s

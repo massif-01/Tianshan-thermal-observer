@@ -1,0 +1,98 @@
+[
+  {
+    "index": 0,
+    "name": "0-background",
+    "start": 1792402883.518819,
+    "end": 1792403183.538377,
+    "stage": {
+      "kind": "background",
+      "seconds": 300
+    }
+  },
+  {
+    "index": 1,
+    "name": "1-work",
+    "start": 1792403183.53844,
+    "end": 1792403560.200279,
+    "stage": {
+      "kind": "work",
+      "concurrency": 1,
+      "seconds": 360,
+      "repeat_key": "single-anchor"
+    }
+  },
+  {
+    "index": 2,
+    "name": "2-recovery",
+    "start": 1792403560.200351,
+    "end": 1792403650.22249,
+    "stage": {
+      "kind": "recovery",
+      "seconds": 90
+    }
+  },
+  {
+    "index": 3,
+    "name": "3-work",
+    "start": 1792403650.222617,
+    "end": 1792403921.026266,
+    "stage": {
+      "kind": "work",
+      "concurrency": 2,
+      "seconds": 270
+    }
+  },
+  {
+    "index": 4,
+    "name": "4-recovery",
+    "start": 1792403921.026296,
+    "end": 1792404161.069879,
+    "stage": {
+      "kind": "recovery",
+      "seconds": 240
+    }
+  },
+  {
+    "index": 5,
+    "name": "5-work",
+    "start": 1792404161.070003,
+    "end": 1792404623.593709,
+    "stage": {
+      "kind": "work",
+      "concurrency": 4,
+      "seconds": 450
+    }
+  },
+  {
+    "index": 6,
+    "name": "6-recovery",
+    "start": 1792404623.593742,
+    "end": 1792404743.657266,
+    "stage": {
+      "kind": "recovery",
+      "seconds": 120
+    }
+  },
+  {
+    "index": 7,
+    "name": "7-work",
+    "start": 1792404743.657336,
+    "end": 1792405108.738636,
+    "stage": {
+      "kind": "work",
+      "concurrency": 1,
+      "seconds": 360,
+      "repeat_key": "single-anchor"
+    }
+  },
+  {
+    "index": 8,
+    "name": "8-final_recovery",
+    "start": 1792405108.738668,
+    "end": 1792405588.751753,
+    "stage": {
+      "kind": "final_recovery",
+      "seconds": 480
+    }
+  }
+]

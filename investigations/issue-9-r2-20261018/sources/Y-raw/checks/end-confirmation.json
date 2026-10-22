@@ -1,0 +1,114 @@
+{
+  "checked_at_utc": "2026-10-17T17:02:31.297568+00:00",
+  "state": {
+    "status": "stopped",
+    "reason": "workload_completed",
+    "ended_coordinator_utc": "2026-10-17T17:01:42.882826+00:00",
+    "elapsed_s": 1847.991415822995,
+    "run_id": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece"
+  },
+  "workload": {
+    "status": "completed",
+    "run_id": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece",
+    "ended_at_utc": "2026-10-17T17:01:42.656709+00:00",
+    "requests": 18,
+    "usage_by_request": {
+      "S01": {
+        "prompt_tokens": 35,
+        "total_tokens": 57,
+        "completion_tokens": 22
+      },
+      "S02": {
+        "prompt_tokens": 36,
+        "total_tokens": 65,
+        "completion_tokens": 29
+      },
+      "S03": {
+        "prompt_tokens": 35,
+        "total_tokens": 63,
+        "completion_tokens": 28
+      },
+      "S04": {
+        "prompt_tokens": 31,
+        "total_tokens": 57,
+        "completion_tokens": 26
+      },
+      "S05": {
+        "prompt_tokens": 34,
+        "total_tokens": 60,
+        "completion_tokens": 26
+      },
+      "S06": {
+        "prompt_tokens": 35,
+        "total_tokens": 63,
+        "completion_tokens": 28
+      },
+      "D01": {
+        "prompt_tokens": 37,
+        "total_tokens": 58,
+        "completion_tokens": 21
+      },
+      "D02": {
+        "prompt_tokens": 34,
+        "total_tokens": 58,
+        "completion_tokens": 24
+      },
+      "D03": {
+        "prompt_tokens": 33,
+        "total_tokens": 61,
+        "completion_tokens": 28
+      },
+      "D04": {
+        "prompt_tokens": 33,
+        "total_tokens": 56,
+        "completion_tokens": 23
+      },
+      "D05": {
+        "prompt_tokens": 33,
+        "total_tokens": 55,
+        "completion_tokens": 22
+      },
+      "D06": {
+        "prompt_tokens": 36,
+        "total_tokens": 66,
+        "completion_tokens": 30
+      },
+      "D07": {
+        "prompt_tokens": 35,
+        "total_tokens": 59,
+        "completion_tokens": 24
+      },
+      "D08": {
+        "prompt_tokens": 35,
+        "total_tokens": 58,
+        "completion_tokens": 23
+      },
+      "D09": {
+        "prompt_tokens": 35,
+        "total_tokens": 63,
+        "completion_tokens": 28
+      },
+      "D10": {
+        "prompt_tokens": 35,
+        "total_tokens": 56,
+        "completion_tokens": 21
+      },
+      "D11": {
+        "prompt_tokens": 33,
+        "total_tokens": 66,
+        "completion_tokens": 33
+      },
+      "D12": {
+        "prompt_tokens": 35,
+        "total_tokens": 67,
+        "completion_tokens": 32
+      }
+    },
+    "collector_control": "none; coordinator owns collector",
+    "operator_override": true,
+    "explicit_policy_id": "YET-SYNC-TRANSIENT-TEMP-CONTINUE-v1",
+    "old_M_policy_inherited": false
+  },
+  "collector_ended_at_utc": "2026-10-17T17:01:42.848212+00:00",
+  "collector_stop_reason": "external_stop"
+}

@@ -1,0 +1,925 @@
+/**
+ * TianshanOS API Client
+ * 
+ * 统一的 Core API 调用客户端，支持所有已注册的 API 端点
+ */
+
+// 开发模式配置：如果通过本地代理（如 VS Code Live Server）访问，
+// 需要设置 ESP32 的实际 IP 地址
+// 生产环境下留空，将自动使用 window.location.host
+const DEV_ESP32_HOST = '';  // 例如: '192.168.0.152' 或 '192.168.1.100:80'
+
+// 获取实际的 API 主机地址
+function getApiHost() {
+    // 如果设置了开发模式主机，使用它
+    if (DEV_ESP32_HOST) {
+        return DEV_ESP32_HOST;
+    }
+    // 检测是否是本地开发环境（localhost 或 127.0.0.1）
+    const host = window.location.host;
+    if (host.startsWith('localhost') || host.startsWith('127.0.0.1')) {
+        console.debug('WebUI running on localhost - WebSocket/API may not work. Set DEV_ESP32_HOST in api.js if needed.');
+    }
+    return host;
+}
+
+const API_BASE = '/api/v1';
+
+// 获取完整的 API URL（支持开发模式跨域）
+function getApiUrl(endpoint) {
+    const host = getApiHost();
+    // 如果是开发模式（设置了 DEV_ESP32_HOST），使用完整 URL
+    if (DEV_ESP32_HOST) {
+        const protocol = window.location.protocol;
+        return `${protocol}//${host}${API_BASE}${endpoint}`;
+    }
+    // 生产环境使用相对路径
+    return `${API_BASE}${endpoint}`;
+}
+
+// Keep REST business failures as returned envelopes. Strict consumers opt in below.
+function apiErrorReason(result) {
+    for (const value of [result?.rawMessage, result?.error, result?.message]) {
+        if (typeof value === 'string' && value.trim()) return value.trim();
+    }
+    return '';
+}
+function apiErrorMessage(result, operation = '') {
+    const raw = apiErrorReason(result);
+    const reasons = {
+        'Invalid credentials': 'credentials', 'Invalid username or password': 'credentials', 'Old password is incorrect': 'oldPassword',
+        'SD card not mounted': 'sdUnavailable', 'SD card already mounted': 'sdMounted',
+        'File not found': 'fileMissing', 'Directory not found': 'directoryMissing',
+        'Source file not found': 'fileMissing', 'Cannot delete root directory': 'rootDirectory',
+        'Failed to stat file': 'fileInfo', 'Memory allocation failed': 'memory',
+        'Request timeout': 'timeout', 'Failed to fetch': 'connection',
+        'service_delete_protected': 'serviceDeleteProtected'
+    };
+    const codes = ['unknownError', 'invalidInput', 'notFound', 'permission', 'busy', 'timeout',
+        'memory', 'internal', 'unsupported', 'hardware', 'connection', 'auth'];
+    const names = {INVALID_ARG:1, NOT_FOUND:2, NO_PERMISSION:3, BUSY:4, TIMEOUT:5,
+        NO_MEM:6, INTERNAL:7, NOT_SUPPORTED:8, HARDWARE:9, CONNECTION:10, AUTH:11};
+    const code = typeof result?.code === 'number' ? result.code : names[result?.code];
+    const key = result?.kind === 'timeout' ? (result.uncertain ? 'resultUnknown' : 'timeout')
+        : result?.kind === 'network' ? (result.uncertain ? 'resultUnknown' : 'connection')
+        : result?.kind === 'format' ? (result.uncertain ? 'resultUnknown' : 'invalidResponse')
+        : reasons[raw] || codes[code] || 'unknownError';
+    const message = t('promptRepair.' + key);
+    // Unknown backend text remains diagnostic detail, not the entire user explanation.
+    const detail = raw && !reasons[raw] ? '\n' + t('promptRepair.details', {detail: raw}) : '';
+    return message + detail;
+}
+class ApiOperationError extends Error {
+    constructor(result, operation = '', metadata = {}) {
+        super(apiErrorMessage({...result, ...metadata}, operation));
+        this.name = 'ApiOperationError';
+        this.code = result?.code;
+        this.rawMessage = apiErrorReason(result);
+        this.data = result?.data;
+        this.operation = operation;
+        this.httpStatus = result?.httpStatus;
+        Object.assign(this, metadata);
+    }
+}
+function requireApiSuccess(result, operation = '') {
+    if (!result || result.code !== 0 || (result.httpStatus && result.httpStatus >= 400)) {
+        throw new ApiOperationError(result, operation);
+    }
+    return result;
+}
+// A problem the page found by itself (nothing was sent, or an answer cannot be used): carries a catalogue reason for describeFailure.
+function pageFailure(token, params = {}) {
+    return Object.assign(new Error(token), {name: 'PageFailure', failureToken: token, failureParams: params});
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// User-facing failure text:  "<what failed>: <why>. <what to do next>"
+//   op      key under failure.ops, e.g. 'rule.enable' (.failed, or .unknown when the outcome is not confirmed)
+//   params  values for the {name} / {host} ... placeholders of the operation and reason texts
+//   result  API envelope {code, error | rawMessage, data};  error  an ApiOperationError;  token  a reason the UI detected itself (an error made by pageFailure(token, params) carries one)
+//   write   true for an operation that changes something: an exception without an answer is then "unconfirmed"
+// The device reports the reason as a stable token in `error` (e.g. 'execution_busy'); the texts live in the language packs
+// (failure.reasons.<token>.{why,hint}). A device text the catalogue does not know never reaches the user: it falls back to an
+// honest generic reason chosen by the error class, and the original text is kept in the folded details.
+// ---------------------------------------------------------------------------------------------------------------------
+const FAILURE_LEGACY_TEXT = {   // English texts the device sends without a reason token
+    'Memory allocation failed': 'no_memory', 'Rule not found': 'rule_not_found', 'Request timeout': 'timeout', 'Failed to fetch': 'network_lost',
+    'SD card not mounted': 'sd_unavailable',
+    'Invalid username or password': 'credentials_invalid', 'Invalid credentials': 'credentials_invalid', 'Account locked due to too many failed attempts': 'account_locked',
+    'Password must be 4-64 characters': 'password_length', 'Old password is incorrect': 'old_password_wrong', 'Root permission required': 'root_required',
+    'Missing token': 'auth_required', 'Invalid or expired token': 'auth_required', 'Session expired': 'auth_required',
+    'Cannot delete root directory': 'root_directory_protected', 'File not found': 'file_not_found', 'Source file not found': 'file_not_found', 'Directory not found': 'directory_not_found',
+    'SD card already mounted': 'sd_already_mounted', 'Failed to mount SD card': 'sd_mount_failed', 'Failed to unmount SD card': 'sd_unmount_failed',
+    'Failed to create directory': 'storage_failed', 'Failed to rename': 'storage_failed', 'Failed to delete': 'storage_failed',
+    'USB MUX not configured': 'usb_mux_unconfigured', 'WiFi STA not connected': 'wifi_sta_not_connected',
+    'Too many curve points': 'fan_curve_too_many', 'Invalid duty limits (0-100, min <= max)': 'fan_limits_invalid',
+    'Too many variables (max 8)': 'temp_too_many_variables', 'Each variable needs a name': 'temp_name_missing', 'At least one variable must have a positive weight': 'temp_weight_required',
+    'No private key exists. Generate key pair first.': 'cert_no_keypair', 'Key pair already exists. Use force=true to overwrite.': 'cert_keypair_exists', 'No certificate installed': 'cert_not_installed',
+    'CSR fields must be strings': 'csr_invalid', 'Export requires Developer device (OU=Developer)': 'pack_not_allowed', 'Key not found': 'key_not_found',
+    'Device not found': 'led_device_not_found', 'Effect not found': 'led_effect_not_found', 'Filter not found': 'led_filter_not_found', 'Font not found': 'led_font_not_found',
+    'Image only supported on matrix': 'led_matrix_only', 'QR code only supported on matrix': 'led_matrix_only', 'Text only supported on matrix': 'led_matrix_only',
+    'Text too long for QR code': 'qr_text_too_long', 'Failed to load image': 'led_image_unreadable', 'Failed to load background image': 'led_image_unreadable',
+    '无可用回滚分区': 'ota_no_rollback', '缺少 url 参数且未设置 OTA 服务器': 'ota_server_not_set', 'URL 格式无效': 'url_invalid', 'URL 过长': 'url_invalid', '文件不存在': 'file_not_found', '内存不足': 'no_memory', 'WWW OTA 已在运行': 'busy'
+};
+const FAILURE_LEGACY_PREFIX = [['AP config requires', 'ap_mode_required'], ['AP stations requires', 'ap_mode_required'], ['WiFi scan requires', 'sta_mode_required'], ['CSR device ID must fit', 'csr_invalid']];
+const legacyToken = raw => FAILURE_LEGACY_TEXT[raw] || (FAILURE_LEGACY_PREFIX.find(([prefix]) => raw.startsWith(prefix)) || [])[1];
+const FAILURE_CODE_TOKEN = {1: 'invalid_request', 2: 'not_found', 3: 'no_permission', 4: 'busy', 5: 'timeout', 6: 'no_memory',
+    7: 'no_detail', 8: 'not_supported', 9: 'hardware_failed', 10: 'target_unreachable', 11: 'auth_required'};
+const FAILURE_CODE_NAME = {INVALID_ARG: 1, NOT_FOUND: 2, NO_PERMISSION: 3, BUSY: 4, TIMEOUT: 5, NO_MEM: 6, INTERNAL: 7,
+    NOT_SUPPORTED: 8, HARDWARE: 9, CONNECTION: 10, AUTH: 11};
+const FAILURE_UNCONFIRMED = new Set(['result_unknown', 'commit_unknown']);
+function describeFailure({op, phase = 'failed', params = {}, result = null, error = null, token = null, endpoint = '', write} = {}) {
+    const ready = typeof i18n !== 'undefined' && typeof t === 'function';
+    // numbers the device sends in `data` (e.g. an HTTP status) can fill the placeholders of the reason's text; the caller's params win
+    const body = result?.data ?? error?.data;   // an error made from an answer carries the answer's data
+    const sent = Object.fromEntries(Object.entries(body && typeof body === 'object' ? body : {}).filter(([, value]) => typeof value === 'number'));
+    params = {...error?.failureParams, ...sent, ...params};
+    const has = (key, values = params) => ready && i18n.complete(key, values);
+    const anything = new Proxy({}, {get: () => 'x'});
+    const exists = key => ready && i18n.complete(key, anything);   // the text exists, whatever its placeholders need
+    const raw = String((error ? error.rawMessage : apiErrorReason(result || {})) || '').trim();
+    const rawCode = error ? error.code : result?.code;
+    const numeric = typeof rawCode === 'number' ? rawCode : FAILURE_CODE_NAME[rawCode];
+    const part = key => !exists(key) || has(key);              // a part that exists must also be fillable from `params`
+    const known = tok => !!tok && /^[a-z][a-z0-9_]*$/.test(tok) &&
+        (exists(`failure.reasons.${tok}.why`) || exists(`failure.reasons.${tok}.hint`)) &&
+        part(`failure.reasons.${tok}.why`) && part(`failure.reasons.${tok}.hint`);
+    // Every failed request is an ApiOperationError; any other exception comes from the page's own code.
+    const pageError = !!error && error.name !== 'ApiOperationError';
+    let tok = token || error?.failureToken || null;
+    // (a request the page sends as GET can still change something: the caller says so with `write`)
+    // write: true = changes something (unconfirmed when no answer came); false = a read or a test even if it was sent as POST; unset = by the request method
+    const writeMayHaveHappened = write === true || (write === undefined && error?.uncertain);
+    if (!tok && error?.kind) tok = writeMayHaveHappened ? 'result_unknown' : ({network: 'network_lost', timeout: 'timeout', format: 'invalid_response'})[error.kind];
+    // A write that ended in an exception without an answer from the device may or may not have happened.
+    if (!tok && write && error && !(typeof error.code === 'number' && error.code !== 0)) tok = 'result_unknown';
+    if (!tok && pageError) tok = 'page_error';
+    if (!tok && known(raw)) tok = raw;
+    if (!tok && known(legacyToken(raw))) tok = legacyToken(raw);
+    if (!tok) tok = FAILURE_CODE_TOKEN[numeric] || 'no_detail';
+    if (!known(tok)) tok = 'no_detail';                          // e.g. a reason text whose placeholders the caller could not fill
+    const unconfirmed = FAILURE_UNCONFIRMED.has(tok);
+    const kind = unconfirmed ? 'unknown' : phase;   // phase: 'failed', or 'blocked' when nothing was sent
+    const actionKey = [`failure.ops.${op}.${kind}`, `failure.ops.${op}.failed`, `failure.ops.generic.${unconfirmed ? 'unknown' : 'failed'}`].find(key => has(key));
+    const action = actionKey ? t(actionKey, params) : '';
+    const why = !unconfirmed && has(`failure.reasons.${tok}.why`) ? t(`failure.reasons.${tok}.why`, params) : '';
+    const hint = has(`failure.reasons.${tok}.hint`) ? t(`failure.reasons.${tok}.hint`, params) : '';
+    let message = '';
+    if (action) {
+        message = why ? (hint ? t('failure.format', {action, why, hint}) : t('failure.formatNoHint', {action, why}))
+            : (hint ? t('failure.formatUnknown', {action, hint}) : action);
+    }
+    if (!message) message = ready ? apiErrorMessage({...(result || {}), rawMessage: raw, code: rawCode}, endpoint) : raw || 'Operation failed';   // language pack not usable
+    const line = (label, value) => value ? t('failure.details.line', {label: t(`failure.details.${label}`), value}) : '';
+    const device = raw && raw !== tok ? raw : '';
+    const detail = device || (typeof body?.detail === 'string' ? body.detail : '');
+    const stage = typeof body?.stage === 'string' ? body.stage : '';
+    // the name of the call, the same way everywhere: storage.mkdir (not /storage/mkdir, not storageMkdir)
+    const api = String(endpoint || error?.operation || '').replace(/^\/+/, '').replace(/\//g, '.').replace(/([a-z0-9])([A-Z])/g, (_, a, b) => a + '.' + b.toLowerCase());
+    const page = pageError && !error.failureToken && typeof error.message === 'string' ? error.message : '';
+    // Details are for whoever has to look into it: a reason the page worked out by itself (nothing was sent) has none.
+    const lines = !ready || !(api || detail || stage || page) ? [] : [
+        line('code', tok), line('api', api), line('device', detail), line('stage', stage), line('page', page),
+        line('time', new Date().toLocaleTimeString([], {hour12: false}))
+    ].filter(Boolean);
+    return {message, details: lines.join('\n'), token: tok, uncertain: unconfirmed, raw};
+}
+
+class TianShanAPI {
+    constructor() {
+        // 从 localStorage 恢复 token（注意 key 是 ts_token）
+        this.token = localStorage.getItem('ts_token');
+        this.username = localStorage.getItem('ts_username');
+        this.level = localStorage.getItem('ts_level');
+        
+        // 检查 token 是否过期
+        const expires = localStorage.getItem('ts_expires');
+        if (expires && Date.now() > parseInt(expires)) {
+            // Token 已过期，清除
+            console.log('Token expired, clearing...');
+            this.clearAuth();
+        }
+    }
+
+    clearAuth() {
+        this.token = null;
+        this.username = null;
+        this.level = null;
+        this.passwordChanged = null;
+        localStorage.removeItem('ts_token');
+        localStorage.removeItem('ts_username');
+        localStorage.removeItem('ts_level');
+        localStorage.removeItem('ts_expires');
+    }
+    
+    // Only the latest generation is retained; no credentials or key material.
+    recordKeyGeneration(stage, fields = {}, requestId = this.keyGenerationTrace?.requestId) {
+        const trace = this.keyGenerationTrace;
+        if (!trace || trace.requestId !== requestId) return;
+        if (trace.events.length < 32) trace.events.push({stage, at: Date.now(), ...fields});
+    }
+
+    /**
+     * 通用 API 请求方法
+     */
+    async request(endpoint, method = 'GET', data = null, timeout = 30000) {
+        const headers = {
+            'Content-Type': 'application/json'
+        };
+        
+        if (this.token) {
+            headers['Authorization'] = `Bearer ${this.token}`;
+        }
+        
+        // 创建超时控制器
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), timeout);
+        
+        const options = {
+            method,
+            headers,
+            signal: controller.signal
+        };
+        
+        if (data && method !== 'GET') {
+            options.body = JSON.stringify(data);
+            // 调试：打印请求体大小
+            console.debug(`API ${method} ${endpoint}: body size = ${options.body.length} bytes`);
+        }
+        
+        let httpStatus;
+        const keyRequestId = endpoint === '/key/generate' && method === 'POST' ? data?.request_id : null;
+        const traceKey = (stage, fields) => {
+            if (keyRequestId) this.recordKeyGeneration(stage, fields, keyRequestId);
+        };
+        traceKey('fetch_start');
+        try {
+            const response = await fetch(getApiUrl(endpoint), options);
+            httpStatus = response.status;
+            traceKey('response_headers', {httpStatus});
+            const text = await response.text();
+            traceKey('response_body', {length: text.length});
+            let json;
+            try {
+                json = JSON.parse(text);
+            } catch (parseErr) {
+                if (keyRequestId) throw parseErr;
+                if (!response.ok) throw new ApiOperationError({error: text}, endpoint, {httpStatus: response.status});
+                // 响应可能被 WebSocket 等数据污染（如 ~{"type"...），尝试从某处解析出带 code 的 API 格式
+                if (parseErr instanceof SyntaxError && text) {
+                    let idx = 0;
+                    while ((idx = text.indexOf('{', idx)) >= 0) {
+                        try {
+                            const parsed = JSON.parse(text.slice(idx));
+                            if (parsed != null && typeof parsed === 'object' && 'code' in parsed) {
+                                json = parsed;
+                                break;
+                            }
+                        } catch (_) {}
+                        idx += 1;
+                    }
+                    if (json === undefined) throw parseErr;
+                } else {
+                    throw parseErr;
+                }
+            }
+            
+            traceKey('response_parsed', {code: typeof json?.code === 'number' ? json.code : null, generated: json?.data?.generated === true});
+            // 返回 JSON 响应，即使是错误码也返回（让调用者决定如何处理）
+            if (!response.ok) throw new ApiOperationError(json, endpoint, {httpStatus: response.status});
+            const logoutResponse = endpoint === '/auth/logout' && method === 'POST';
+            if (!json || typeof json !== 'object' || Array.isArray(json) ||
+                (logoutResponse ? json.success !== true : !('code' in json))) {
+                throw new ApiOperationError({}, endpoint, {kind: 'format', uncertain: method !== 'GET', httpStatus: response.status});
+            }
+            json.httpStatus = response.status;
+            if (!logoutResponse && json.code !== 0) {
+                json.rawMessage = apiErrorReason(json);
+                json.message = apiErrorMessage(json, endpoint);
+            }
+
+            const isAuthEndpoint = endpoint === '/auth/login' || endpoint === '/auth/logout';
+            if (!isAuthEndpoint && json && json.code === 'AUTH') {
+                this.clearAuth();
+                const message = typeof window.t === 'function'
+                    ? window.t('login.sessionExpired')
+                    : '登录已过期，请重新登录';
+                json.message = message;
+                window.dispatchEvent(new CustomEvent('authExpired', { detail: { message } }));
+            }
+            
+            return json;
+        } catch (error) {
+            traceKey('request_error', {kind: controller.signal.aborted ? 'timeout' : error.kind || (error instanceof SyntaxError ? 'format' : httpStatus >= 400 ? 'http' : 'network'), httpStatus});
+            if (error instanceof ApiOperationError) throw error;
+            const kind = controller.signal.aborted ? 'timeout' : error instanceof SyntaxError ? 'format' : 'network';
+            throw new ApiOperationError({message: error.message}, endpoint, {kind, uncertain: method !== 'GET', httpStatus});
+        } finally {
+            clearTimeout(timeoutId);
+        }
+    }
+
+    /**
+     * 调用 Core API（将端点名转为 URL 路径）
+     * 例如: call('system.info') -> GET /api/v1/system/info
+     */
+    async call(apiName, params = null, method = null) {
+        let endpoint = '/' + apiName.replace(/\./g, '/');
+        
+        // 自动判断方法：有参数且非查询类用 POST
+        if (!method) {
+            const isQuery = apiName.includes('.list') || apiName.includes('.status') || 
+                           apiName.includes('.info') || apiName.includes('.get') ||
+                           apiName.includes('.version') || apiName.includes('.partitions') ||
+                           apiName.includes('.progress') || apiName.includes('.stats');
+            method = (params && !isQuery) ? 'POST' : 'GET';
+        }
+        
+        // GET 请求时，将 params 转为 query string
+        if (method === 'GET' && params) {
+            const queryParams = new URLSearchParams();
+            for (const [key, value] of Object.entries(params)) {
+                if (value !== null && value !== undefined && value !== '') {
+                    queryParams.append(key, value);
+                }
+            }
+            const queryString = queryParams.toString();
+            if (queryString) {
+                endpoint += '?' + queryString;
+            }
+            params = null;  // GET 请求不发送 body
+        }
+        
+        return this.request(endpoint, method, params);
+    }
+    
+    // =====================================================================
+    //                         认证 API
+    // =====================================================================
+    
+    async login(username, password) {
+        const result = await this.call('auth.login', { username, password }, 'POST');
+        if (result.code === 0 && (typeof result.data?.token !== 'string' || !result.data.token)) {
+            throw new ApiOperationError({}, 'auth.login', {kind: 'format'});
+        }
+        if (result.code === 0 && result.data?.token) {
+            this.token = result.data.token;
+            this.username = result.data.username;
+            this.level = result.data.level;
+            this.passwordChanged = result.data.password_changed;
+            localStorage.setItem('ts_token', result.data.token);
+            localStorage.setItem('ts_username', result.data.username);
+            localStorage.setItem('ts_level', result.data.level);
+            localStorage.setItem('ts_expires', Date.now() + (result.data.expires_in * 1000));
+        }
+        return result;
+    }
+    
+    async logout() {
+        // request() captures Authorization before local credentials are cleared.
+        const pending = this.token ? this.call('auth.logout', {token: this.token}, 'POST') : null;
+        this.clearAuth();
+        try {
+            if (pending) {
+                await pending;
+                return {localCleared: true, serverConfirmed: true};
+            }
+            return {localCleared: true, serverConfirmed: false};
+        } catch (error) {
+            return {localCleared: true, serverConfirmed: false, error};
+        }
+    }
+
+    async checkAuthStatus() {
+        if (!this.token) return { valid: false };
+        const result = await this.call('auth.status', { token: this.token }, 'POST');
+        if ((result.success || result.code === 0 || result.code === 'OK') && result.data) {
+            return result.data;
+        }
+        return { valid: false };
+    }
+    
+    async changePassword(oldPassword, newPassword) {
+        return this.call('auth.change_password', {
+            token: this.token,
+            old_password: oldPassword,
+            new_password: newPassword
+        }, 'POST');
+    }
+
+    async setAdminPassword(newPassword) {
+        return this.call('auth.admin.set_password', {
+            token: this.token,
+            new_password: newPassword
+        }, 'POST');
+    }
+
+    async setRootPassword(newPassword) {
+        return this.call('auth.root.set_password', {
+            token: this.token,
+            new_password: newPassword
+        }, 'POST');
+    }
+
+    async resetAdminPassword() {
+        return this.call('auth.admin.reset_password', {
+            token: this.token
+        }, 'POST');
+    }
+    
+    isLoggedIn() {
+        if (!this.token) {
+            // 尝试从 localStorage 恢复
+            const savedToken = localStorage.getItem('ts_token');
+            const expires = localStorage.getItem('ts_expires');
+            const parsed = expires ? parseInt(expires) : NaN;
+            const now = Date.now();
+            const valid = savedToken && expires && now < parsed;
+            if (valid) {
+                this.token = savedToken;
+                this.username = localStorage.getItem('ts_username');
+                this.level = localStorage.getItem('ts_level');
+                return true;
+            }
+            return false;
+        }
+        // 检查是否过期
+        const expires = localStorage.getItem('ts_expires');
+        const parsed = expires ? parseInt(expires) : NaN;
+        const expired = expires && Date.now() >= parsed;
+        if (expired) {
+            this.clearAuth();
+            return false;
+        }
+        return true;
+    }
+    
+    getUsername() {
+        return this.username || localStorage.getItem('ts_username');
+    }
+    
+    getLevel() {
+        return this.level || localStorage.getItem('ts_level');
+    }
+    
+    /**
+     * 检查是否有 root 权限（可访问终端、自动化、指令）
+     */
+    isRoot() {
+        return this.getLevel() === 'root';
+    }
+    
+    /**
+     * 检查是否是 admin 用户
+     */
+    isAdmin() {
+        const level = this.getLevel();
+        return level === 'admin' || level === 'root';
+    }
+    
+    // =====================================================================
+    //                         系统 API (system.*)
+    // =====================================================================
+    
+    async getSystemInfo() { return this.call('system.info'); }
+    async getMemoryInfo() { return this.call('system.memory'); }
+    async getMemoryDetail() { return this.call('system.memory_detail'); }
+    async getTasks() { return this.call('system.tasks'); }
+    async reboot(delay = 0) { return this.call('system.reboot', { delay }, 'POST'); }
+    
+    // =====================================================================
+    //                         时间 API (time.*)
+    // =====================================================================
+    
+    async timeInfo() { return this.call('time.info'); }
+    async timeSync(timestampMs) { return this.call('time.sync', { timestamp_ms: timestampMs }, 'POST'); }
+    async timeSetNtp(server, index = 0) { return this.call('time.set_ntp', { server, index }, 'POST'); }
+    async timeSetTimezone(timezone) { return this.call('time.set_timezone', { timezone }, 'POST'); }
+    async timeForceSync() { return this.call('time.force_sync', null, 'POST'); }
+    
+    // =====================================================================
+    //                         配置 API (config.*)
+    // =====================================================================
+    
+    // 基础配置
+    async configGet(key) { return this.call('config.get', { key }); }
+    async configSet(key, value, persist = false) { return this.call('config.set', { key, value, persist }, 'POST'); }
+    async configDelete(key) { return this.call('config.delete', { key }, 'POST'); }
+    async configList(prefix = '') { return this.call('config.list', prefix ? { prefix } : null); }
+    async configSave() { return this.call('config.save', null, 'POST'); }
+    
+    // 模块化配置
+    async configModuleList() { return this.call('config.module.list'); }
+    async configModuleShow(module) { return this.call('config.module.show', { module }); }
+    async configModuleSet(module, key, value) { return this.call('config.module.set', { module, key, value }, 'POST'); }
+    async configModuleSave(module = null) { return this.call('config.module.save', module ? { module } : null, 'POST'); }
+    async configModuleReset(module, persist = true) { return this.call('config.module.reset', { module, persist }, 'POST'); }
+    async configSync() { return this.call('config.sync', null, 'POST'); }
+    
+    // =====================================================================
+    //                         服务 API (service.*)
+    // =====================================================================
+    
+    async serviceList() { return this.call('service.list'); }
+    async serviceStatus(name) { return this.call('service.status', { name }); }
+    async serviceStart(name) { return this.call('service.start', { name }, 'POST'); }
+    async serviceStop(name) { return this.call('service.stop', { name }, 'POST'); }
+    async serviceRestart(name) { return this.call('service.restart', { name }, 'POST'); }
+    
+    // =====================================================================
+    //                         LED API (led.*)
+    // =====================================================================
+    
+    async ledList() { return this.call('led.list'); }
+    async ledBrightness(device, brightness) { return this.call('led.brightness', { device, brightness }, 'POST'); }
+    async ledClear(device) { return this.call('led.clear', { device }, 'POST'); }
+    async ledSet(device, index, color) { return this.call('led.set', { device, index, color }, 'POST'); }
+    async ledFill(device, color) { return this.call('led.fill', { device, color }, 'POST'); }
+    async ledEffectList(device = null) { return this.call('led.effect.list', device ? { device } : null); }
+    async ledEffectStart(device, effect, params = {}) { return this.call('led.effect.start', { device, effect, ...params }, 'POST'); }
+    async ledEffectStop(device) { return this.call('led.effect.stop', { device }, 'POST'); }
+    async ledColorParse(color) { return this.call('led.color.parse', { color }); }
+    async ledFilterList() { return this.call('led.filter.list'); }
+    async ledFilterStart(device, filter, speed = 50) { return this.call('led.filter.start', { device, filter, speed }, 'POST'); }
+    async ledFilterStop(device) { return this.call('led.filter.stop', { device }, 'POST'); }
+    async ledSave(device) { return this.call('led.save', { device }, 'POST'); }
+    
+    // Matrix-specific LED APIs
+    async ledImage(path, device = 'matrix', center = 'image') { return this.call('led.image', { device, path, center }, 'POST'); }
+    async ledQrcode(text, options = {}) { return this.call('led.qrcode', { device: 'matrix', text, ...options }, 'POST'); }
+    async ledText(text, options = {}) { return this.call('led.text', { device: 'matrix', text, ...options }, 'POST'); }
+    async ledTextStop(device = 'matrix') { return this.call('led.text.stop', { device }, 'POST'); }
+    
+    // Color Correction APIs
+    async ledColorCorrectionGet() { return this.call('led.color_correction.get'); }
+    async ledColorCorrectionSet(config) { return this.call('led.color_correction.set', config, 'POST'); }
+    async ledColorCorrectionReset() { return this.call('led.color_correction.reset', null, 'POST'); }
+    async ledColorCorrectionExport() { return this.call('led.color_correction.export', null, 'POST'); }
+    async ledColorCorrectionImport() { return this.call('led.color_correction.import', null, 'POST'); }
+    
+    // =====================================================================
+    //                         网络 API (network.*, dhcp.*, nat.*)
+    // =====================================================================
+    
+    // 综合网络状态 (包含 ethernet, wifi_sta, wifi_ap)
+    async networkStatus() { return this.call('network.status'); }
+    async lpmuAccessStart(sudoPassword) { return this.call('network.lpmu_access.start', { sudo_password: sudoPassword }, 'POST'); }
+    async lpmuAccessStatus() { return this.call('network.lpmu_access.status'); }
+    async lpmuAccessLog(runId, offset = 0) { return this.call('network.lpmu_access.log', { run_id: runId, offset }, 'GET'); }
+    
+    // WiFi 相关
+    async wifiMode(mode = null) { 
+        return mode ? this.call('network.wifi.mode', { mode }, 'POST') : this.call('network.wifi.mode'); 
+    }
+    async wifiScan() { return this.call('network.wifi.scan'); }
+    async wifiConnect(ssid, password) { return this.call('network.wifi.connect', { ssid, password }, 'POST'); }
+    async wifiDisconnect() { return this.call('network.wifi.disconnect', null, 'POST'); }
+    async wifiApConfig(ssid, password = '', channel = 6, hidden = false) { 
+        return this.call('network.wifi.ap.config', { ssid, password, channel, hidden }, 'POST'); 
+    }
+    async wifiApStations() { return this.call('network.wifi.ap.stations'); }
+    
+    // 以太网
+    async ethStatus() { return this.call('network.eth.status'); }
+    
+    // 主机名
+    async hostname(name = null) { 
+        return name ? this.call('network.hostname', { hostname: name }, 'POST') : this.call('network.hostname'); 
+    }
+    
+    // DHCP 服务器
+    async dhcpStatus(iface = null) { return this.call('dhcp.status', iface ? { interface: iface } : null); }
+    async dhcpClients(iface = null) { return this.call('dhcp.clients', iface ? { interface: iface } : null); }
+    async dhcpStart(iface = 'ap') { return this.call('dhcp.start', { interface: iface }, 'POST'); }
+    async dhcpStop(iface = 'ap') { return this.call('dhcp.stop', { interface: iface }, 'POST'); }
+    
+    // NAT 网关
+    async natStatus() { return this.call('nat.status'); }
+    async natEnable() { return this.call('nat.enable', null, 'POST'); }
+    async natDisable() { return this.call('nat.disable', null, 'POST'); }
+    async natSave() { return this.call('nat.save', null, 'POST'); }
+    
+    // =====================================================================
+    //                         设备 API (device.*, monitor.*, fan.*)
+    // =====================================================================
+    
+    async deviceStatus(name = null) { return this.call('device.status', name ? { name } : null); }
+    async devicePower(name, on) { return this.call('device.power', { name, on }, 'POST'); }
+    async deviceReset(name) { return this.call('device.reset', { name }, 'POST'); }
+    async agxStatus() { return this.call('monitor.status'); }
+    async agxData() { return this.call('monitor.data'); }
+    async fanStatus(id = null) { return this.call('fan.status', id !== null ? { id } : null); }
+    async fanSet(id, duty) { return this.call('fan.set', { id, duty }, 'POST'); }
+    async fanMode(id, mode) { return this.call('fan.mode', { id, mode }, 'POST'); }
+    
+    // =====================================================================
+    //                         电源 API (power.*)
+    // =====================================================================
+    
+    async powerStatus() { return this.call('power.status'); }
+    async powerVoltage(channel = null) { return this.call('power.voltage', channel !== null ? { channel } : null); }
+    async powerStats() { return this.call('power.stats'); }
+    async powerProtectionStatus() { return this.call('power.protection.status'); }
+    async powerProtectionSet(config) { return this.call('power.protection.set', config, 'POST'); }
+    async powerProtectionConfig() { return this.call('power.protection.config'); }
+    
+    // =====================================================================
+    //                         存储/GPIO/温度 API
+    // =====================================================================
+    
+    async storageStatus() { return this.call('storage.status'); }
+    async storageMount() { return this.call('storage.mount', null, 'POST'); }
+    async storageUnmount() { return this.call('storage.unmount', null, 'POST'); }
+    async storageList(path = '/sdcard') { return this.call('storage.list', { path }, 'POST'); }
+    async storageRead(path) { return this.call('storage.read', { path }, 'POST'); }
+    async storageDelete(path) { return this.call('storage.delete', { path }, 'POST'); }
+    async storageMkdir(path) { return this.call('storage.mkdir', { path }, 'POST'); }
+    async storageRename(from, to) { return this.call('storage.rename', { from, to }, 'POST'); }
+    async storageInfo(path) { return this.call('storage.info', { path }, 'POST'); }
+    
+    /**
+     * 下载文件
+     * @param {string} path - 文件路径 (如 /sdcard/test.txt)
+     * @returns {Promise<Blob>} 文件内容
+     */
+    async fileDownload(path) {
+        const url = `${API_BASE}/file/download?path=${encodeURIComponent(path)}`;
+        const response = await fetch(url, {
+            headers: this.token ? { 'Authorization': `Bearer ${this.token}` } : {}
+        });
+        if (!response.ok) {
+            const error = await response.json().catch(() => ({ message: 'Download failed' }));
+            throw new ApiOperationError(error, 'file.download', {httpStatus: response.status});
+        }
+        return response.blob();
+    }
+    
+    /**
+     * 上传文件
+     * @param {string} path - 目标路径 (如 /sdcard/uploads/file.txt)
+     * @param {File|Blob|ArrayBuffer} content - 文件内容
+     * @returns {Promise<Object>} 上传结果
+     */
+    async fileUpload(path, content) {
+        const url = `${API_BASE}/file/upload?path=${encodeURIComponent(path)}`;
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: this.token ? { 'Authorization': `Bearer ${this.token}` } : {},
+            body: content
+        });
+        const json = await response.json();
+        if (!response.ok || json.status !== 'uploaded' || (json.code !== undefined && json.code !== 0)) {
+            throw new ApiOperationError(json, 'file.upload', {httpStatus: response.status});
+        }
+        return json;
+    }
+    
+    async gpioList() { return this.call('gpio.list'); }
+    async gpioInfo(pin) { return this.call('gpio.info', { pin }); }
+    async tempStatus() { return this.call('temp.status'); }
+    
+    // =====================================================================
+    //                         SSH/SFTP API
+    // =====================================================================
+    
+    // SSH 测试连接 - 支持密码或密钥认证
+    // options: { trust_new: bool, accept_changed: bool }
+    async sshTest(host, user, auth, port = 22, options = {}) { 
+        const params = { host, user, port };
+        if (typeof auth === 'string') {
+            params.password = auth;  // 兼容旧调用方式
+        } else if (auth.password) {
+            params.password = auth.password;
+        } else if (auth.keyid) {
+            params.keyid = auth.keyid;
+        }
+        // 主机指纹验证参数
+        params.trust_new = options.trust_new ?? false;      // 新主机必须明确确认指纹
+        params.confirmed_fingerprint = options.confirmed_fingerprint;
+        params.accept_changed = options.accept_changed ?? false; // 指纹变化是否接受（默认 false）
+        return this.call('ssh.test', params, 'POST'); 
+    }
+    
+    // SSH 执行命令 - 支持密码或密钥认证
+    // options: { trust_new: bool, accept_changed: bool }
+    async sshExec(host, user, auth, command, port = 22, options = {}) { 
+        const params = { host, user, command, port };
+        if (typeof auth === 'string') {
+            params.password = auth;  // 兼容旧调用方式
+        } else if (auth.password) {
+            params.password = auth.password;
+        } else if (auth.keyid) {
+            params.keyid = auth.keyid;
+        }
+        // 主机指纹验证参数
+        params.trust_new = options.trust_new ?? false;
+        params.confirmed_fingerprint = options.confirmed_fingerprint;
+        params.accept_changed = options.accept_changed ?? false;
+        return this.call('ssh.exec', params, 'POST'); 
+    }
+    
+    // 部署公钥 - options: { trust_new, accept_changed }
+    async sshCopyid(host, user, password, keyid, port = 22, verify = true, options = {}) { 
+        return this.call('ssh.copyid', { 
+            host, user, password, keyid, port, verify,
+            trust_new: options.trust_new ?? true, // 部署沿用 0.5.1：首次自动信任新主机
+            confirmed_fingerprint: options.confirmed_fingerprint,
+            accept_changed: options.accept_changed ?? false
+        }, 'POST'); 
+    }
+    
+    // 撤销公钥 - options: { trust_new, accept_changed }
+    async sshRevoke(host, user, password, keyid, port = 22, options = {}) { 
+        return this.call('ssh.revoke', { 
+            host, user, password, keyid, port,
+            trust_new: options.trust_new ?? false,
+            confirmed_fingerprint: options.confirmed_fingerprint,
+            accept_changed: options.accept_changed ?? false
+        }, 'POST'); 
+    }
+    async sshKeygen(id, type = 'ecdsa', comment = '') { return this.call('ssh.keygen', { id, type, comment }, 'POST'); }
+    async sftpLs(host, user, password, path, port = 22) { return this.call('sftp.ls', { host, user, password, path, port }, 'POST'); }
+    
+    // =====================================================================
+    //                         Key Management API
+    // =====================================================================
+    
+    async keyList() { return this.call('key.list'); }
+    async keyInfo(id) { return this.call('key.info', { id }); }
+    async keyGenerate(id, type = 'rsa2048', comment = '', exportable = false, alias = '', hidden = false) { 
+        const request_id = 'kg-' + Date.now().toString(36) + '-' + (this.keyGenerationSequence = (this.keyGenerationSequence || 0) + 1).toString(36);
+        this.keyGenerationTrace = {requestId: request_id, id, events: []};
+        this.recordKeyGeneration('submit');
+        return this.call('key.generate', { id, type, comment, exportable, alias, hidden, request_id }, 'POST');
+    }
+    async keyDelete(id) { return this.call('key.delete', { id }, 'POST'); }
+    async keyExport(id) { return this.call('key.export', { id }); }
+    async keyExportPrivate(id) { return this.call('key.exportPrivate', { id }, 'POST'); }
+    
+    // =====================================================================
+    //                         Known Hosts API
+    // =====================================================================
+    
+    async hostsList() { return this.call('hosts.list'); }
+    async hostsInfo(host, port = 22) { return this.call('hosts.info', { host, port }); }
+    async hostsRemove(host, port = 22) { return this.call('hosts.remove', { host, port }, 'POST'); }
+    async hostsUpdate(host, port = 22) { return this.call('hosts.update', { host, port }, 'POST'); }
+    async hostsClear() { return this.call('hosts.clear', {}, 'POST'); }
+    
+    // =====================================================================
+    //                    Certificate (PKI) Management API
+    // =====================================================================
+    
+    /** 获取 HTTPS 证书 PKI 状态 */
+    async certStatus() { return this.call('cert.status'); }
+    
+    /** 生成 ECDSA P-256 密钥对 */
+    async certGenerateKeypair(force = false) { 
+        return this.call('cert.generate_keypair', { force }, 'POST'); 
+    }
+    
+    /** 生成证书签名请求 (CSR) */
+    async certGenerateCSR(opts = {}) { 
+        return this.call('cert.generate_csr', opts, 'POST'); 
+    }
+    
+    /** 安装签发的证书 */
+    async certInstall(certPem) { 
+        return this.call('cert.install', { cert_pem: certPem }, 'POST'); 
+    }
+    
+    /** 安装 CA 证书链 */
+    async certInstallCA(caPem) { 
+        return this.call('cert.install_ca', { ca_pem: caPem }, 'POST'); 
+    }
+    
+    /** 获取设备证书 PEM */
+    async certGetCertificate() { 
+        return this.call('cert.get_certificate'); 
+    }
+    
+    /** 删除所有 PKI 凭证（需要 confirm=true） */
+    async certDelete() { 
+        return this.call('cert.delete', { confirm: true }, 'POST'); 
+    }
+    
+    // =====================================================================
+    //                      Config Pack API
+    // =====================================================================
+    
+    /** 获取配置包系统信息 */
+    async configPackInfo() { 
+        return this.call('config.pack.info'); 
+    }
+    
+    /** 导出设备证书（供他人加密配置给本设备） */
+    async configPackExportCert() { 
+        return this.call('config.pack.export_cert'); 
+    }
+    
+    /** 验证 .tscfg 配置包签名 */
+    async configPackVerify(content = null, path = null) { 
+        const params = {};
+        if (content) params.content = content;
+        if (path) params.path = path;
+        return this.call('config.pack.verify', params, 'POST'); 
+    }
+    
+    /** 导入并解密 .tscfg 配置包 */
+    async configPackImport(content = null, path = null, apply = false) { 
+        const params = { apply };
+        if (content) params.content = content;
+        if (path) params.path = path;
+        return this.call('config.pack.import', params, 'POST'); 
+    }
+    
+    /** 导出配置为加密 .tscfg（仅 Developer 设备可用） */
+    async configPackExport(name, content, recipientCert, description = null, savePath = null) { 
+        const params = { 
+            name, 
+            content,
+            recipient_cert: recipientCert
+        };
+        if (description) params.description = description;
+        if (savePath) params.save_path = savePath;
+        return this.call('config.pack.export', params, 'POST'); 
+    }
+    
+    /** 列出目录中的 .tscfg 文件 */
+    async configPackList(path = '/sdcard/config') { 
+        return this.call('config.pack.list', { path }); 
+    }
+}
+
+// =========================================================================
+//                         WebSocket Client
+// =========================================================================
+
+class TianShanWS {
+    constructor(onMessage, onConnect, onDisconnect) {
+        this.ws = null;
+        this.onMessage = onMessage;
+        this.onConnect = onConnect;
+        this.onDisconnect = onDisconnect;
+        this.reconnectDelay = 1000;
+        this.shouldReconnect = true;
+    }
+    
+    connect() {
+        const host = getApiHost();
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const url = `${protocol}//${host}/ws`;
+        
+        try {
+            this.ws = new WebSocket(url);
+            
+            this.ws.onopen = () => {
+                console.log('WebSocket connected');
+                this.reconnectDelay = 1000;
+                this.send({ type: 'subscribe', events: ['*'] });
+                if (this.onConnect) this.onConnect();
+            };
+            
+            this.ws.onmessage = (event) => {
+                try {
+                    const msg = JSON.parse(event.data);
+                    if (this.onMessage) this.onMessage(msg);
+                } catch (e) {
+                    console.error('WebSocket parse error:', e);
+                }
+            };
+            
+            this.ws.onclose = () => {
+                console.log('WebSocket disconnected');
+                if (this.onDisconnect) this.onDisconnect();
+                if (this.shouldReconnect) {
+                    setTimeout(() => this.connect(), this.reconnectDelay);
+                    this.reconnectDelay = Math.min(this.reconnectDelay * 2, 30000);
+                }
+            };
+            
+            this.ws.onerror = (error) => console.error('WebSocket error:', error);
+        } catch (e) {
+            console.error('WebSocket connect failed:', e);
+        }
+    }
+    
+    disconnect() {
+        this.shouldReconnect = false;
+        if (this.ws) { this.ws.close(); this.ws = null; }
+    }
+    
+    send(data) {
+        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+            this.ws.send(JSON.stringify(data));
+        }
+    }
+    
+    // 暴露 readyState 属性，供日志页面检查连接状态
+    get readyState() {
+        return this.ws ? this.ws.readyState : WebSocket.CLOSED;
+    }
+}
+
+// 全局实例
+const api = new TianShanAPI();

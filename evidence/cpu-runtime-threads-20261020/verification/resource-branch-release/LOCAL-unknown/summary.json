@@ -1,0 +1,182 @@
+{
+  "mode": "diagnose",
+  "command_id": "LOCAL-unknown",
+  "native_run_id": "92bb16e4-ad87-4336-92c9-cc81a5bf25fe",
+  "reason": "diagnostic_duration",
+  "elapsed_s": 60.30170900002122,
+  "time_coverage": {
+    "observed_s": 32.21262833662331,
+    "measurement_usable_s": 0.0,
+    "model_usable_s": 0.0,
+    "context_ready_s": 0.0,
+    "joint_ready_s": 0.0,
+    "work_paused_s": 0.0,
+    "tj_usable_s": 0.0,
+    "rail_usable_s": 0.0,
+    "PWM_usable_s": 0.0,
+    "temp_context_usable_s": 0.0
+  },
+  "phase_seconds": {
+    "uninitialized": 8.257289672270417,
+    "provisional": 23.955338664352894
+  },
+  "fan_success_intervals": {
+    "count": 4,
+    "max_s": 1.002757417038083,
+    "over_original_2_5s": 0
+  },
+  "protocol_requests": 0,
+  "successful_requests": 0,
+  "server_completion_unknown": false,
+  "schedule_completed": false,
+  "workload_intent": "evaluate_actual_protocol_GPU_rails_not_client_slots",
+  "collector_task_identity": 4427991360,
+  "collector_engine_instance_id": 4428138784,
+  "observer_instances_created": 1,
+  "native_callbacks": 16,
+  "native_run_directories": 1,
+  "I02_shared_engine_instance_id": 4428138784,
+  "I02_preprocessed_views": 16,
+  "requester_sessions_all_closed": true,
+  "cpu_pilot_profile": true,
+  "sidecar_status": "baseline_receiver_resources_unavailable",
+  "requester_instances_created": 0,
+  "request_executor_instances_created": 0,
+  "own_async_tasks_remaining": 0,
+  "collector_summary": {
+    "stop_reason": "external_stop",
+    "poll_missed": 0,
+    "poll_count": 6,
+    "connection_attempts": 1,
+    "payload_oversize": 0,
+    "orin_event_count": 4,
+    "business_payload_bytes_sum": 6320,
+    "business_payload_bytes_max": 1580,
+    "poll_rtt_ms": [
+      2.5879580061882734,
+      1.7926250584423542,
+      4.10791696049273,
+      4.987500025890768,
+      5.632791086100042,
+      5.274208961054683
+    ],
+    "prediction_ms": [
+      5.0613750936463475
+    ],
+    "rss_mib": [
+      79.703125,
+      79.78125,
+      79.796875,
+      79.828125
+    ],
+    "cpu_pct_single_core": [
+      2.990855107042173,
+      3.085631040211027,
+      3.7158987262447285,
+      3.6451183922689445
+    ],
+    "elapsed_s": 4.029679167084396,
+    "queue_peak_items": 2,
+    "queue_peak_bytes": 1948,
+    "dropped": 0,
+    "quality": {
+      "boundary_socketio_connecting": 1,
+      "boundary_control_context_change": 1,
+      "boundary_stream": 1,
+      "new_samples": 4,
+      "boundary_input_boundary": 1,
+      "boundary_input_profile_change": 1,
+      "boundary_socketio_disconnected": 1,
+      "boundary_run_end": 1
+    },
+    "processing": {
+      "fan_ok": 5,
+      "temp_ok": 1,
+      "origins": 1
+    },
+    "target_host_verified": false,
+    "polling_health": {
+      "contract": "TTO-POLL-INDEPENDENT-v1",
+      "max_inflight_per_endpoint": 1,
+      "max_total_inflight_limit": 2,
+      "max_total_inflight_observed": 2,
+      "end_inflight": 0,
+      "legacy_config_max_inflight_esp32": 1,
+      "endpoints": {
+        "fan": {
+          "sent": 5,
+          "returned": 5,
+          "http_ok": 5,
+          "errors": 0,
+          "skipped": 0,
+          "cancelled": 0,
+          "peak_inflight": 1,
+          "rtt_ms": {
+            "n": 5,
+            "p50": 4.987500025890768,
+            "p95": 5.56107466109097,
+            "min": 2.5879580061882734,
+            "max": 5.632791086100042
+          },
+          "send_interval_s": {
+            "n": 4,
+            "p50": 1.0009174785227515,
+            "p95": 1.0016415543213952,
+            "min": 1.0004080419894308,
+            "max": 1.0017132919747382
+          },
+          "return_interval_s": {
+            "n": 4,
+            "p50": 1.0018231040448882,
+            "p95": 1.0027306811767631,
+            "min": 1.000241333968006,
+            "max": 1.002754999906756
+          }
+        },
+        "temp": {
+          "sent": 1,
+          "returned": 1,
+          "http_ok": 1,
+          "errors": 0,
+          "skipped": 0,
+          "cancelled": 0,
+          "peak_inflight": 1,
+          "rtt_ms": {
+            "n": 1,
+            "p50": 1.7926250584423542,
+            "p95": 1.7926250584423542,
+            "min": 1.7926250584423542,
+            "max": 1.7926250584423542
+          },
+          "send_interval_s": {
+            "n": 0,
+            "p50": null,
+            "p95": null,
+            "min": null,
+            "max": null
+          },
+          "return_interval_s": {
+            "n": 0,
+            "p50": null,
+            "p95": null,
+            "min": null,
+            "max": null
+          }
+        }
+      }
+    }
+  },
+  "clock_end": {
+    "domain": "Massif-MacBook-Pro.local:53478:efc226ad-550f-4614-887c-da02ba2bc397",
+    "mono_before_s": 951408.87295325,
+    "utc": "2026-10-20T15:23:41.588954+00:00",
+    "mono_after_s": 951408.872958125,
+    "utc_clock_accuracy_s": null,
+    "host": "Massif-MacBook-Pro.local",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "pid": 53478
+  },
+  "control_changes": false,
+  "field_proven": false,
+  "synthetic_loopback_only": true
+}

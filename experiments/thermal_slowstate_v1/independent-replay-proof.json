@@ -1,0 +1,184 @@
+{
+  "status": "pass",
+  "tested_archive_sha256": "c06f94da08df63812b5184a170fa17dcd6f9d1e80566fa6f8041a164ea240ec3",
+  "extracted_to": "/private/tmp/tto-slowstate-independent-7h8cpe38",
+  "archive_CRC": "pass",
+  "entry_returncode": 0,
+  "wall_seconds": 42.597568915982265,
+  "scientific_output_files": [
+    {
+      "file": "results/ablation-replay-check.json",
+      "sha256": "38c1f541310d6df80ead99aa6e13d035a7fa1adaa0c19d6bbac5b73e4a39cd80",
+      "identical": true
+    },
+    {
+      "file": "results/accepted-demand-availability.jsonl",
+      "sha256": "b248b58f1c6e0146be46780b1b6413f7408d1cc2d6bf40303e3d872c94bb1bb3",
+      "identical": true
+    },
+    {
+      "file": "results/combined-drive-diagnostics.json",
+      "sha256": "351e630abe446ed17ecc3de20838509278cecbb91340a1594b480603785fbc4d",
+      "identical": true
+    },
+    {
+      "file": "results/combined-drive.jsonl",
+      "sha256": "c493cecf30fc798096586f26390c71fd7741c0ff3d054e847b05e3a303dd2749",
+      "identical": true
+    },
+    {
+      "file": "results/coverage.json",
+      "sha256": "97453d01802c7977cb29a37c7ac449d1800baba5c16de263bdeeae60ff66c8bb",
+      "identical": true
+    },
+    {
+      "file": "results/demand-signal-metrics.json",
+      "sha256": "24996cb7913d2d18e328c9b88a231d685a034901798b14e36fd09fce4aa9cbb7",
+      "identical": true
+    },
+    {
+      "file": "results/event-temperature-metrics.json",
+      "sha256": "719296cd7b86d22e680411d9000ba82203e7879ebfc42c3472e8a2ff1ced0265",
+      "identical": true
+    },
+    {
+      "file": "results/fast-status-and-demand-ledger.jsonl",
+      "sha256": "59fca95f93ffb75fbc3bc27041e12eeb50f1f4dc70c9c3aaad0ee21073f9d201",
+      "identical": true
+    },
+    {
+      "file": "results/four-branch-predictions.jsonl",
+      "sha256": "cef7ad559e899ef12c9cf4e53d39aee78d8d71b82805a781e3303b3dddc35009",
+      "identical": true
+    },
+    {
+      "file": "results/four-state-origins.jsonl",
+      "sha256": "199f14322c2d9562ce70ed586e2725eb4834299cb0cef7dda879fbb723c41826",
+      "identical": true
+    },
+    {
+      "file": "results/frozen-model-state-sensitivity.json",
+      "sha256": "4e2059a8297216665d712e5cb7849091979aecf0422f95e19a8873bb6ad965e0",
+      "identical": true
+    },
+    {
+      "file": "results/normal-demand-origins.jsonl",
+      "sha256": "3f60b272c9161689e9a2c91400788c103020ef264cf6bf02ffa46cd53e709ebb",
+      "identical": true
+    },
+    {
+      "file": "results/original-Tf-peak-errors.json",
+      "sha256": "0f08cc67ca6deb911e03bcbaf8840e46b17b8903e2b2d1ea8b1a1c28217eff00",
+      "identical": true
+    },
+    {
+      "file": "results/phase-boundary-audit.json",
+      "sha256": "da571db849e227bb4f778d7ffd8b6725284b55c5c581e35775bc82e0cfdc479c",
+      "identical": true
+    },
+    {
+      "file": "results/post-task-tail-metrics.json",
+      "sha256": "495668df61294fa58868b91576f0c8eb129eaf0be49fa40d6b557b63b103fe70",
+      "identical": true
+    },
+    {
+      "file": "results/prefix-and-unit-initialization-sensitivity.json",
+      "sha256": "f159c4ff6c94091f94fa56c38eaa667f261f44f53b578577ded1dabab0b0a04e",
+      "identical": true
+    },
+    {
+      "file": "results/replay-checks.json",
+      "sha256": "5181c4b220eeebc01502d84a5f14324518b6c99b8b86aff44d1ac3a109871593",
+      "identical": true
+    },
+    {
+      "file": "results/risk-invalidation-audit.json",
+      "sha256": "c4bf691eab30795f80363c89fe9731d3af6bec696cf2fa017d22bffb7c14a3a1",
+      "identical": true
+    },
+    {
+      "file": "results/rolling-jumps.jsonl",
+      "sha256": "e0a17c43d74cd6574b9b60c6f4a168ac707aec0ad28fb56cb18f3145508a53ab",
+      "identical": true
+    },
+    {
+      "file": "results/state-window-diagnostics.json",
+      "sha256": "1db6c25a1623d2563c3832f5eba8caa6d5ffa461ee22989f204decd7ee4b52c3",
+      "identical": true
+    },
+    {
+      "file": "results/states-A-long.jsonl",
+      "sha256": "37491b0a3720a353d3a88233347e93bda3e479afdc3cd918f7ab3948f4f4700b",
+      "identical": true
+    },
+    {
+      "file": "results/states-causal60.jsonl",
+      "sha256": "0bb560bf4632149905228078529e91ca23c1058e1218f41db967027d208c1fcc",
+      "identical": true
+    },
+    {
+      "file": "results/temperature-metrics.json",
+      "sha256": "7bd0b7cff67ebad0d2e61ebb468e4df9569fc4832e0ee235fd389dbd7c2e1a89",
+      "identical": true
+    }
+  ],
+  "entry_receipt": {
+    "runtime": "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+    "plot_runtime": "/private/tmp/tto-analysis-20261013-env/bin/python",
+    "stages": [
+      {
+        "stage": "prepare",
+        "exit_code": 0,
+        "wall_seconds": 0.6304489580215886
+      },
+      {
+        "stage": "compute",
+        "exit_code": 0,
+        "wall_seconds": 15.721595915965736
+      },
+      {
+        "stage": "tests",
+        "exit_code": 0,
+        "wall_seconds": 2.655584916996304
+      },
+      {
+        "stage": "plots",
+        "exit_code": 0,
+        "wall_seconds": 21.031572500010952
+      },
+      {
+        "stage": "readback",
+        "exit_code": 0,
+        "wall_seconds": 1.554949791985564
+      },
+      {
+        "stage": "report",
+        "exit_code": 0,
+        "wall_seconds": 0.48881541698938236
+      }
+    ]
+  },
+  "extracted_readback": {
+    "status": "pass",
+    "checks": {
+      "immutable_source_member_hashes": 41,
+      "historical_private_vs_shared_identity_preserved": true,
+      "stages_match_frozen_spec": true,
+      "independent_per_run_metric_cells": 276,
+      "all_causal_states_prefix_only": 16290,
+      "abnormal_nodes_null_immediately": 29,
+      "whole_run_availability_seconds": {
+        "L": 1860.0801144010038,
+        "S": 1188.1028419780196,
+        "M": 2387.5925690740005
+      },
+      "four_chinese_figure_classes": true,
+      "protected_original_files_unchanged": "original checkout absent; immutable copied source hashes checked"
+    },
+    "deployable": false,
+    "scope": "offline research only; no device/control/sound/safety acceptance"
+  },
+  "note": "Resources, timestamps and report absolute local image links are environment-dependent; scientific files match byte for byte.",
+  "original_dynamic_refits": 0,
+  "device_or_network_actions": false
+}

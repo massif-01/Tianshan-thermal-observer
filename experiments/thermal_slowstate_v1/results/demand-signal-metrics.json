@@ -1,0 +1,4142 @@
+[
+  {
+    "run": "L",
+    "group": "whole-run",
+    "branches": {
+      "STATE-G2": {
+        "total_seconds": 2536.203914821992,
+        "available_seconds": 1860.0801144010038,
+        "unavailable_seconds": 676.1238004209881,
+        "available_fraction": 0.7334111044977063,
+        "unavailable_reason_seconds": {
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.036531183985061944,
+          "temperature_status_missing_or_stale;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.049410945997806266,
+          "original_60s_history_unavailable": 656.2535992169869,
+          "known_input_validity_expired": 7.61524270902737,
+          "fan_missing_or_stale": 1.7628700659843162,
+          "unsupported_control_scope;fan_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable": 4.358824085997185,
+          "unsupported_control_scope;fan_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;control_temperature_invalid;active_temperature_source_untrusted": 0.858089323999593,
+          "control_temperature_invalid;active_temperature_source_untrusted": 4.1769610840128735,
+          "control_temperature_stale": 1.012271804996999,
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed;source_identity_changed": 0.0
+        },
+        "z_raw": {
+          "min": -0.5885595877258311,
+          "max": 0.5807888635215306,
+          "amplitude": 1.1693484512473615,
+          "weighted_mean": -0.005947279540022591,
+          "total_variation": 3.9508041588912897,
+          "significant_reversals": 9
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.5807888635215306,
+          "amplitude": 0.5807888635215306,
+          "weighted_mean": 0.08175197844902628,
+          "total_variation": 1.9627848962957752,
+          "significant_reversals": 2
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.5645394072198797,
+          "amplitude": 0.5645394072198797,
+          "weighted_mean": 0.07917100525641096,
+          "total_variation": 1.2701344229414875,
+          "significant_reversals": 2
+        },
+        "lower_clipped_s": 780.8023605209892,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 787.8088932700048,
+        "at_one_target_s": 0
+      },
+      "STATE-QS": {
+        "total_seconds": 2536.203914821992,
+        "available_seconds": 1860.0801144010038,
+        "unavailable_seconds": 676.1238004209881,
+        "available_fraction": 0.7334111044977063,
+        "unavailable_reason_seconds": {
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.036531183985061944,
+          "temperature_status_missing_or_stale;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.049410945997806266,
+          "original_60s_history_unavailable": 656.2535992169869,
+          "known_input_validity_expired": 7.61524270902737,
+          "fan_missing_or_stale": 1.7628700659843162,
+          "unsupported_control_scope;fan_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable": 4.358824085997185,
+          "unsupported_control_scope;fan_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;control_temperature_invalid;active_temperature_source_untrusted": 0.858089323999593,
+          "control_temperature_invalid;active_temperature_source_untrusted": 4.1769610840128735,
+          "control_temperature_stale": 1.012271804996999,
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed;source_identity_changed": 0.0
+        },
+        "z_raw": {
+          "min": -0.7757065219802441,
+          "max": 0.6743326371639433,
+          "amplitude": 1.4500391591441875,
+          "weighted_mean": -0.037702417597713325,
+          "total_variation": 16.607130593070675,
+          "significant_reversals": 216
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.6743326371639433,
+          "amplitude": 0.6743326371639433,
+          "weighted_mean": 0.08269815201549283,
+          "total_variation": 8.275289776802403,
+          "significant_reversals": 126
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.6709975042164359,
+          "amplitude": 0.6709975042164359,
+          "weighted_mean": 0.08674892984909527,
+          "total_variation": 2.726917857138468,
+          "significant_reversals": 26
+        },
+        "lower_clipped_s": 962.9631325699738,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 983.9814307849738,
+        "at_one_target_s": 0
+      },
+      "STATE-LP30": {
+        "total_seconds": 2536.203914821992,
+        "available_seconds": 1860.0801144010038,
+        "unavailable_seconds": 676.1238004209881,
+        "available_fraction": 0.7334111044977063,
+        "unavailable_reason_seconds": {
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.036531183985061944,
+          "temperature_status_missing_or_stale;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.049410945997806266,
+          "original_60s_history_unavailable": 656.2535992169869,
+          "known_input_validity_expired": 7.61524270902737,
+          "fan_missing_or_stale": 1.7628700659843162,
+          "unsupported_control_scope;fan_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable": 4.358824085997185,
+          "unsupported_control_scope;fan_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;control_temperature_invalid;active_temperature_source_untrusted": 0.858089323999593,
+          "control_temperature_invalid;active_temperature_source_untrusted": 4.1769610840128735,
+          "control_temperature_stale": 1.012271804996999,
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed;source_identity_changed": 0.0
+        },
+        "z_raw": {
+          "min": -0.6872829817454033,
+          "max": 0.6175716540287255,
+          "amplitude": 1.3048546357741286,
+          "weighted_mean": -0.03552467277155503,
+          "total_variation": 3.1394061097101695,
+          "significant_reversals": 3
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.6175716540287255,
+          "amplitude": 0.6175716540287255,
+          "weighted_mean": 0.0728096960228059,
+          "total_variation": 1.2331195169286033,
+          "significant_reversals": 1
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.6012585359666446,
+          "amplitude": 0.6012585359666446,
+          "weighted_mean": 0.07128777763162646,
+          "total_variation": 1.1154410731047157,
+          "significant_reversals": 1
+        },
+        "lower_clipped_s": 853.8708217729873,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 860.8773545220029,
+        "at_one_target_s": 0
+      },
+      "STATE-LP120": {
+        "total_seconds": 2536.203914821992,
+        "available_seconds": 1860.0801144010038,
+        "unavailable_seconds": 676.1238004209881,
+        "available_fraction": 0.7334111044977063,
+        "unavailable_reason_seconds": {
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.036531183985061944,
+          "temperature_status_missing_or_stale;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.049410945997806266,
+          "original_60s_history_unavailable": 656.2535992169869,
+          "known_input_validity_expired": 7.61524270902737,
+          "fan_missing_or_stale": 1.7628700659843162,
+          "unsupported_control_scope;fan_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable": 4.358824085997185,
+          "unsupported_control_scope;fan_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;control_temperature_invalid;active_temperature_source_untrusted": 0.858089323999593,
+          "control_temperature_invalid;active_temperature_source_untrusted": 4.1769610840128735,
+          "control_temperature_stale": 1.012271804996999,
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed;source_identity_changed": 0.0
+        },
+        "z_raw": {
+          "min": -0.4274389536519777,
+          "max": 0.41698713739507054,
+          "amplitude": 0.8444260910470482,
+          "weighted_mean": -0.04255968510330216,
+          "total_variation": 1.7827559765539214,
+          "significant_reversals": 3
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.41698713739507054,
+          "amplitude": 0.41698713739507054,
+          "weighted_mean": 0.03916675993369047,
+          "total_variation": 0.8007459593939259,
+          "significant_reversals": 1
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.40345993926208906,
+          "amplitude": 0.40345993926208906,
+          "weighted_mean": 0.0375911587417395,
+          "total_variation": 0.7139180988418897,
+          "significant_reversals": 1
+        },
+        "lower_clipped_s": 899.5446345859964,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 906.551167335012,
+        "at_one_target_s": 0
+      }
+    }
+  },
+  {
+    "run": "L",
+    "group": "phase-1",
+    "branches": {
+      "STATE-G2": {
+        "total_seconds": 227.8275784109719,
+        "available_seconds": 167.1971293449751,
+        "unavailable_seconds": 60.6304490659968,
+        "available_fraction": 0.7338757252792847,
+        "unavailable_reason_seconds": {
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.036531183985061944,
+          "temperature_status_missing_or_stale;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.049410945997806266,
+          "original_60s_history_unavailable": 60.54450693601393
+        },
+        "z_raw": {
+          "min": -1.1799718805605154e-06,
+          "max": 0.01493880459366892,
+          "amplitude": 0.01493998456554948,
+          "weighted_mean": 0.005875733394680418,
+          "total_variation": 0.07577785934288242,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.01493880459366892,
+          "amplitude": 0.01493880459366892,
+          "weighted_mean": 0.005875740457161568,
+          "total_variation": 0.0757754993991213,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 1.0007243339787237,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 2.00225374798174,
+        "at_one_target_s": 0
+      },
+      "STATE-QS": {
+        "total_seconds": 227.8275784109719,
+        "available_seconds": 167.1971293449751,
+        "unavailable_seconds": 60.6304490659968,
+        "available_fraction": 0.7338757252792847,
+        "unavailable_reason_seconds": {
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.036531183985061944,
+          "temperature_status_missing_or_stale;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.049410945997806266,
+          "original_60s_history_unavailable": 60.54450693601393
+        },
+        "z_raw": {
+          "min": -0.01030365852912496,
+          "max": 0.06321546974015532,
+          "amplitude": 0.07351912826928028,
+          "weighted_mean": 0.00036973718063173513,
+          "total_variation": 0.7006508714469218,
+          "significant_reversals": 2
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.06321546974015532,
+          "amplitude": 0.06321546974015532,
+          "weighted_mean": 0.0022441733458868664,
+          "total_variation": 0.39326205018121746,
+          "significant_reversals": 2
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.06321546974015532,
+          "amplitude": 0.06321546974015532,
+          "weighted_mean": 0.001621622760402789,
+          "total_variation": 0.09656356029004745,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 93.0809420979931,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 101.09048783098115,
+        "at_one_target_s": 0
+      },
+      "STATE-LP30": {
+        "total_seconds": 227.8275784109719,
+        "available_seconds": 167.1971293449751,
+        "unavailable_seconds": 60.6304490659968,
+        "available_fraction": 0.7338757252792847,
+        "unavailable_reason_seconds": {
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.036531183985061944,
+          "temperature_status_missing_or_stale;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.049410945997806266,
+          "original_60s_history_unavailable": 60.54450693601393
+        },
+        "z_raw": {
+          "min": 0.0,
+          "max": 0.014519207156084235,
+          "amplitude": 0.014519207156084235,
+          "weighted_mean": 0.005687673050519724,
+          "total_variation": 0.021556238595069027,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.014519207156084235,
+          "amplitude": 0.014519207156084235,
+          "weighted_mean": 0.005687673050519724,
+          "total_variation": 0.021556238595069027,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 0,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 1.0015294140030164,
+        "at_one_target_s": 0
+      },
+      "STATE-LP120": {
+        "total_seconds": 227.8275784109719,
+        "available_seconds": 167.1971293449751,
+        "unavailable_seconds": 60.6304490659968,
+        "available_fraction": 0.7338757252792847,
+        "unavailable_reason_seconds": {
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.036531183985061944,
+          "temperature_status_missing_or_stale;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.049410945997806266,
+          "original_60s_history_unavailable": 60.54450693601393
+        },
+        "z_raw": {
+          "min": 0.0,
+          "max": 0.010131751084828267,
+          "amplitude": 0.010131751084828267,
+          "weighted_mean": 0.004603441490841954,
+          "total_variation": 0.010156616143780894,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.010131751084828267,
+          "amplitude": 0.010131751084828267,
+          "weighted_mean": 0.004603441490841954,
+          "total_variation": 0.010156616143780894,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 0,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 1.0015294140030164,
+        "at_one_target_s": 0
+      }
+    }
+  },
+  {
+    "run": "L",
+    "group": "phase-2",
+    "branches": {
+      "STATE-G2": {
+        "total_seconds": 154.0,
+        "available_seconds": 7.201419140008511,
+        "unavailable_seconds": 146.7985808599915,
+        "available_fraction": 0.046762461948107216,
+        "unavailable_reason_seconds": {
+          "known_input_validity_expired": 3.769720794982277,
+          "fan_missing_or_stale": 0.3542759749980178,
+          "original_60s_history_unavailable": 135.45621284400113,
+          "unsupported_control_scope;fan_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable": 2.1833208379975986,
+          "unsupported_control_scope;fan_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;control_temperature_invalid;active_temperature_source_untrusted": 0.858089323999593,
+          "control_temperature_invalid;active_temperature_source_untrusted": 4.1769610840128735
+        },
+        "z_raw": {
+          "min": 0.01493880459366892,
+          "max": 0.020839204792541467,
+          "amplitude": 0.005900400198872547,
+          "weighted_mean": 0.01796115292543079,
+          "total_variation": 0.006649180682188675,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.01493880459366892,
+          "max": 0.020839204792541467,
+          "amplitude": 0.005900400198872547,
+          "weighted_mean": 0.01796115292543079,
+          "total_variation": 0.006649180682188675,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.020839204792541467,
+          "amplitude": 0.020839204792541467,
+          "weighted_mean": 0.0006743382356394594,
+          "total_variation": 0.020839204792541467,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 0,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 0,
+        "at_one_target_s": 0
+      },
+      "STATE-QS": {
+        "total_seconds": 154.0,
+        "available_seconds": 7.201419140008511,
+        "unavailable_seconds": 146.7985808599915,
+        "available_fraction": 0.046762461948107216,
+        "unavailable_reason_seconds": {
+          "known_input_validity_expired": 3.769720794982277,
+          "fan_missing_or_stale": 0.3542759749980178,
+          "original_60s_history_unavailable": 135.45621284400113,
+          "unsupported_control_scope;fan_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable": 2.1833208379975986,
+          "unsupported_control_scope;fan_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;control_temperature_invalid;active_temperature_source_untrusted": 0.858089323999593,
+          "control_temperature_invalid;active_temperature_source_untrusted": 4.1769610840128735
+        },
+        "z_raw": {
+          "min": 0.0066778390902769045,
+          "max": 0.06321546974015532,
+          "amplitude": 0.05653763064987842,
+          "weighted_mean": 0.041317376361143,
+          "total_variation": 0.11912379318496065,
+          "significant_reversals": 1
+        },
+        "z_target": {
+          "min": 0.0066778390902769045,
+          "max": 0.06321546974015532,
+          "amplitude": 0.05653763064987842,
+          "weighted_mean": 0.041317376361143,
+          "total_variation": 0.11912379318496065,
+          "significant_reversals": 1
+        },
+        "z_output": {
+          "min": 0.04652401323203108,
+          "max": 0.06321546974015532,
+          "amplitude": 0.016691456508124244,
+          "weighted_mean": 0.05571327307709363,
+          "total_variation": 0.016691456508124244,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 0,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 0,
+        "at_one_target_s": 0
+      },
+      "STATE-LP30": {
+        "total_seconds": 154.0,
+        "available_seconds": 7.201419140008511,
+        "unavailable_seconds": 146.7985808599915,
+        "available_fraction": 0.046762461948107216,
+        "unavailable_reason_seconds": {
+          "known_input_validity_expired": 3.769720794982277,
+          "fan_missing_or_stale": 0.3542759749980178,
+          "original_60s_history_unavailable": 135.45621284400113,
+          "unsupported_control_scope;fan_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable": 2.1833208379975986,
+          "unsupported_control_scope;fan_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;control_temperature_invalid;active_temperature_source_untrusted": 0.858089323999593,
+          "control_temperature_invalid;active_temperature_source_untrusted": 4.1769610840128735
+        },
+        "z_raw": {
+          "min": 0.014519207156084235,
+          "max": 0.02151559440053106,
+          "amplitude": 0.006996387244446824,
+          "weighted_mean": 0.018643840637003698,
+          "total_variation": 0.007326842208887997,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.014519207156084235,
+          "max": 0.02151559440053106,
+          "amplitude": 0.006996387244446824,
+          "weighted_mean": 0.018643840637003698,
+          "total_variation": 0.007326842208887997,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.02052555638725977,
+          "amplitude": 0.02052555638725977,
+          "weighted_mean": 0.006371153500420399,
+          "total_variation": 0.02052555638725977,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 0,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 0,
+        "at_one_target_s": 0
+      },
+      "STATE-LP120": {
+        "total_seconds": 154.0,
+        "available_seconds": 7.201419140008511,
+        "unavailable_seconds": 146.7985808599915,
+        "available_fraction": 0.046762461948107216,
+        "unavailable_reason_seconds": {
+          "known_input_validity_expired": 3.769720794982277,
+          "fan_missing_or_stale": 0.3542759749980178,
+          "original_60s_history_unavailable": 135.45621284400113,
+          "unsupported_control_scope;fan_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable": 2.1833208379975986,
+          "unsupported_control_scope;fan_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;control_temperature_invalid;active_temperature_source_untrusted": 0.858089323999593,
+          "control_temperature_invalid;active_temperature_source_untrusted": 4.1769610840128735
+        },
+        "z_raw": {
+          "min": 0.010131751084828267,
+          "max": 0.012525613505403044,
+          "amplitude": 0.0023938624205747765,
+          "weighted_mean": 0.011433305621229866,
+          "total_variation": 0.0023938624205747765,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.010131751084828267,
+          "max": 0.012525613505403044,
+          "amplitude": 0.0023938624205747765,
+          "weighted_mean": 0.011433305621229866,
+          "total_variation": 0.0023938624205747765,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 0,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 0,
+        "at_one_target_s": 0
+      }
+    }
+  },
+  {
+    "run": "L",
+    "group": "phase-3",
+    "branches": {
+      "STATE-G2": {
+        "total_seconds": 68.61199998855591,
+        "available_seconds": 2.456767159543233,
+        "unavailable_seconds": 66.15523282901268,
+        "available_fraction": 0.0358066688036059,
+        "unavailable_reason_seconds": {
+          "original_60s_history_unavailable": 66.1107049510174,
+          "known_input_validity_expired": 0.044527877995278686
+        },
+        "z_raw": {
+          "min": -0.001704644029895519,
+          "max": 0.0,
+          "amplitude": 0.001704644029895519,
+          "weighted_mean": -0.0007285952546907265,
+          "total_variation": 0.001704644029895519,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 1.4558198775339406,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 2.456767159543233,
+        "at_one_target_s": 0
+      },
+      "STATE-QS": {
+        "total_seconds": 68.61199998855591,
+        "available_seconds": 2.456767159543233,
+        "unavailable_seconds": 66.15523282901268,
+        "available_fraction": 0.0358066688036059,
+        "unavailable_reason_seconds": {
+          "original_60s_history_unavailable": 66.1107049510174,
+          "known_input_validity_expired": 0.044527877995278686
+        },
+        "z_raw": {
+          "min": -0.0020568250557815304,
+          "max": 0.0,
+          "amplitude": 0.0020568250557815304,
+          "weighted_mean": -0.0012188240099128185,
+          "total_variation": 0.0020568250557815304,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 1.4558198775339406,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 2.456767159543233,
+        "at_one_target_s": 0
+      },
+      "STATE-LP30": {
+        "total_seconds": 68.61199998855591,
+        "available_seconds": 2.456767159543233,
+        "unavailable_seconds": 66.15523282901268,
+        "available_fraction": 0.0358066688036059,
+        "unavailable_reason_seconds": {
+          "original_60s_history_unavailable": 66.1107049510174,
+          "known_input_validity_expired": 0.044527877995278686
+        },
+        "z_raw": {
+          "min": -0.0006210946110208227,
+          "max": 0.0,
+          "amplitude": 0.0006210946110208227,
+          "weighted_mean": -0.00022966199835719085,
+          "total_variation": 0.0006210946110208227,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 1.4558198775339406,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 2.456767159543233,
+        "at_one_target_s": 0
+      },
+      "STATE-LP120": {
+        "total_seconds": 68.61199998855591,
+        "available_seconds": 2.456767159543233,
+        "unavailable_seconds": 66.15523282901268,
+        "available_fraction": 0.0358066688036059,
+        "unavailable_reason_seconds": {
+          "original_60s_history_unavailable": 66.1107049510174,
+          "known_input_validity_expired": 0.044527877995278686
+        },
+        "z_raw": {
+          "min": -0.0003481867105158187,
+          "max": 0.0,
+          "amplitude": 0.0003481867105158187,
+          "weighted_mean": -0.00013220280487381868,
+          "total_variation": 0.0003481867105158187,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 1.4558198775339406,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 2.456767159543233,
+        "at_one_target_s": 0
+      }
+    }
+  },
+  {
+    "run": "L",
+    "group": "phase-4",
+    "branches": {
+      "STATE-G2": {
+        "total_seconds": 600.1050000190735,
+        "available_seconds": 442.39875192407635,
+        "unavailable_seconds": 157.70624809499714,
+        "available_fraction": 0.7372022427908704,
+        "unavailable_reason_seconds": {
+          "known_input_validity_expired": 2.7143426150723826,
+          "fan_missing_or_stale": 0.8641045139811467,
+          "original_60s_history_unavailable": 154.1278009659436
+        },
+        "z_raw": {
+          "min": -0.00320538677821105,
+          "max": 0.5807888635215306,
+          "amplitude": 0.5839942502997416,
+          "weighted_mean": 0.21359607946730472,
+          "total_variation": 0.9968753301345975,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.5807888635215306,
+          "amplitude": 0.5807888635215306,
+          "weighted_mean": 0.2136106985313916,
+          "total_variation": 0.992169200608071,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.5645394072198797,
+          "amplitude": 0.5645394072198797,
+          "weighted_mean": 0.20509348997744287,
+          "total_variation": 0.796485756558198,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 3.548448418470798,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 5.5501611504587345,
+        "at_one_target_s": 0
+      },
+      "STATE-QS": {
+        "total_seconds": 600.1050000190735,
+        "available_seconds": 442.39875192407635,
+        "unavailable_seconds": 157.70624809499714,
+        "available_fraction": 0.7372022427908704,
+        "unavailable_reason_seconds": {
+          "known_input_validity_expired": 2.7143426150723826,
+          "fan_missing_or_stale": 0.8641045139811467,
+          "original_60s_history_unavailable": 154.1278009659436
+        },
+        "z_raw": {
+          "min": -0.02116722047567592,
+          "max": 0.6743326371639433,
+          "amplitude": 0.6954998576396192,
+          "weighted_mean": 0.2720283639379342,
+          "total_variation": 4.110174440471026,
+          "significant_reversals": 66
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.6743326371639433,
+          "amplitude": 0.6743326371639433,
+          "weighted_mean": 0.2723937288219575,
+          "total_variation": 3.9341943652454447,
+          "significant_reversals": 63
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.6709975042164359,
+          "amplitude": 0.6709975042164359,
+          "weighted_mean": 0.27314907600723976,
+          "total_variation": 1.5505684206607555,
+          "significant_reversals": 8
+        },
+        "lower_clipped_s": 19.56505650744657,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 25.569894407031825,
+        "at_one_target_s": 0
+      },
+      "STATE-LP30": {
+        "total_seconds": 600.1050000190735,
+        "available_seconds": 442.39875192407635,
+        "unavailable_seconds": 157.70624809499714,
+        "available_fraction": 0.7372022427908704,
+        "unavailable_reason_seconds": {
+          "known_input_validity_expired": 2.7143426150723826,
+          "fan_missing_or_stale": 0.8641045139811467,
+          "original_60s_history_unavailable": 154.1278009659436
+        },
+        "z_raw": {
+          "min": -0.0015789911291939518,
+          "max": 0.6175716540287255,
+          "amplitude": 0.6191506451579194,
+          "weighted_mean": 0.22960790107163334,
+          "total_variation": 0.8587446522345956,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.6175716540287255,
+          "amplitude": 0.6175716540287255,
+          "weighted_mean": 0.22961710247090283,
+          "total_variation": 0.8562077645872286,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.6012585359666446,
+          "amplitude": 0.6012585359666446,
+          "weighted_mean": 0.2203943956391486,
+          "total_variation": 0.8272940639580626,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 3.548448418470798,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 5.5501611504587345,
+        "at_one_target_s": 0
+      },
+      "STATE-LP120": {
+        "total_seconds": 600.1050000190735,
+        "available_seconds": 442.39875192407635,
+        "unavailable_seconds": 157.70624809499714,
+        "available_fraction": 0.7372022427908704,
+        "unavailable_reason_seconds": {
+          "known_input_validity_expired": 2.7143426150723826,
+          "fan_missing_or_stale": 0.8641045139811467,
+          "original_60s_history_unavailable": 154.1278009659436
+        },
+        "z_raw": {
+          "min": -0.0008856341237581944,
+          "max": 0.41698713739507054,
+          "amplitude": 0.41787277151882873,
+          "weighted_mean": 0.13110616374667672,
+          "total_variation": 0.5989811184249304,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.41698713739507054,
+          "amplitude": 0.41698713739507054,
+          "weighted_mean": 0.1311113549114584,
+          "total_variation": 0.5975580368879299,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.40345993926208906,
+          "amplitude": 0.40345993926208906,
+          "weighted_mean": 0.12203407618409777,
+          "total_variation": 0.5661228100812273,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 3.548448418470798,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 5.5501611504587345,
+        "at_one_target_s": 0
+      }
+    }
+  },
+  {
+    "run": "L",
+    "group": "phase-I1",
+    "branches": {
+      "STATE-G2": {
+        "total_seconds": 120.13700008392334,
+        "available_seconds": 120.13700008392334,
+        "unavailable_seconds": 0.0,
+        "available_fraction": 1.0,
+        "unavailable_reason_seconds": {},
+        "z_raw": {
+          "min": -0.5856791893361624,
+          "max": 0.005971329329151587,
+          "amplitude": 0.5916505186653139,
+          "weighted_mean": -0.3262250646400989,
+          "total_variation": 0.6328617060575754,
+          "significant_reversals": 2
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.005971329329151587,
+          "amplitude": 0.005971329329151587,
+          "weighted_mean": 0.00010670444617857488,
+          "total_variation": 0.005971329329151587,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 117.13676970053348,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 117.13676970053348,
+        "at_one_target_s": 0
+      },
+      "STATE-QS": {
+        "total_seconds": 120.13700008392334,
+        "available_seconds": 120.13700008392334,
+        "unavailable_seconds": 0.0,
+        "available_fraction": 1.0,
+        "unavailable_reason_seconds": {},
+        "z_raw": {
+          "min": -0.7757065219802441,
+          "max": 0.0,
+          "amplitude": 0.7757065219802441,
+          "weighted_mean": -0.609842157459489,
+          "total_variation": 0.8973657704811699,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 119.13717217554222,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 120.13700008392334,
+        "at_one_target_s": 0
+      },
+      "STATE-LP30": {
+        "total_seconds": 120.13700008392334,
+        "available_seconds": 120.13700008392334,
+        "unavailable_seconds": 0.0,
+        "available_fraction": 1.0,
+        "unavailable_reason_seconds": {},
+        "z_raw": {
+          "min": -0.6836539484617141,
+          "max": 0.0062539761847325796,
+          "amplitude": 0.6899079246464467,
+          "weighted_mean": -0.41345498783858964,
+          "total_variation": 0.6903916293326844,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.0062539761847325796,
+          "amplitude": 0.0062539761847325796,
+          "weighted_mean": 0.00011807625114485928,
+          "total_variation": 0.006737680870970309,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 117.13676970053348,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 117.13676970053348,
+        "at_one_target_s": 0
+      },
+      "STATE-LP120": {
+        "total_seconds": 120.13700008392334,
+        "available_seconds": 120.13700008392334,
+        "unavailable_seconds": 0.0,
+        "available_fraction": 1.0,
+        "unavailable_reason_seconds": {},
+        "z_raw": {
+          "min": -0.38707180799086627,
+          "max": 0.003068453596262799,
+          "amplitude": 0.39014026158712906,
+          "weighted_mean": -0.18538077014847862,
+          "total_variation": 0.3903864522017741,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.003068453596262799,
+          "amplitude": 0.003068453596262799,
+          "weighted_mean": 7.270701152153415e-05,
+          "total_variation": 0.0033146442109078583,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 116.13490105353412,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 116.13490105353412,
+        "at_one_target_s": 0
+      }
+    }
+  },
+  {
+    "run": "L",
+    "group": "phase-5a",
+    "branches": {
+      "STATE-G2": {
+        "total_seconds": 600.1319999694824,
+        "available_seconds": 538.868313433486,
+        "unavailable_seconds": 61.263686535996385,
+        "available_fraction": 0.8979163141790277,
+        "unavailable_reason_seconds": {
+          "control_temperature_stale": 1.012271804996999,
+          "original_60s_history_unavailable": 60.251414730999386
+        },
+        "z_raw": {
+          "min": -0.5885595877258311,
+          "max": 0.22785499582553612,
+          "amplitude": 0.8164145835513672,
+          "weighted_mean": -0.042923154555806274,
+          "total_variation": 0.9436952323089235,
+          "significant_reversals": 2
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.22785499582553612,
+          "amplitude": 0.22785499582553612,
+          "weighted_mean": 0.09424161709030211,
+          "total_variation": 0.5299497466203105,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.21209409820252886,
+          "amplitude": 0.21209409820252886,
+          "weighted_mean": 0.08849200334942928,
+          "total_variation": 0.21209409820252886,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 172.90361271245638,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 173.9044615124585,
+        "at_one_target_s": 0
+      },
+      "STATE-QS": {
+        "total_seconds": 600.1319999694824,
+        "available_seconds": 538.868313433486,
+        "unavailable_seconds": 61.263686535996385,
+        "available_fraction": 0.8979163141790277,
+        "unavailable_reason_seconds": {
+          "control_temperature_stale": 1.012271804996999,
+          "original_60s_history_unavailable": 60.251414730999386
+        },
+        "z_raw": {
+          "min": -0.7757065219802441,
+          "max": 0.1960412149663277,
+          "amplitude": 0.9717477369465719,
+          "weighted_mean": -0.07433802031234492,
+          "total_variation": 5.4732396716895595,
+          "significant_reversals": 82
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.1960412149663277,
+          "amplitude": 0.1960412149663277,
+          "weighted_mean": 0.05951477296881606,
+          "total_variation": 3.320719304262042,
+          "significant_reversals": 54
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.1951363176518439,
+          "amplitude": 0.1951363176518439,
+          "weighted_mean": 0.06199297129412325,
+          "total_variation": 0.8154154348725142,
+          "significant_reversals": 14
+        },
+        "lower_clipped_s": 175.9068478854897,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 178.90849275651271,
+        "at_one_target_s": 0
+      },
+      "STATE-LP30": {
+        "total_seconds": 600.1319999694824,
+        "available_seconds": 538.868313433486,
+        "unavailable_seconds": 61.263686535996385,
+        "available_fraction": 0.8979163141790277,
+        "unavailable_reason_seconds": {
+          "control_temperature_stale": 1.012271804996999,
+          "original_60s_history_unavailable": 60.251414730999386
+        },
+        "z_raw": {
+          "min": -0.6872829817454033,
+          "max": 0.15948629016892113,
+          "amplitude": 0.8467692719143244,
+          "weighted_mean": -0.09132812224730523,
+          "total_variation": 0.5637754904635478,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.15948629016892113,
+          "amplitude": 0.15948629016892113,
+          "weighted_mean": 0.05760853469541845,
+          "total_variation": 0.17628355351175812,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.14251931364275022,
+          "amplitude": 0.14251931364275022,
+          "weighted_mean": 0.05098417028473331,
+          "total_variation": 0.14251931364275022,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 172.90361271245638,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 173.9044615124585,
+        "at_one_target_s": 0
+      },
+      "STATE-LP120": {
+        "total_seconds": 600.1319999694824,
+        "available_seconds": 538.868313433486,
+        "unavailable_seconds": 61.263686535996385,
+        "available_fraction": 0.8979163141790277,
+        "unavailable_reason_seconds": {
+          "control_temperature_stale": 1.012271804996999,
+          "original_60s_history_unavailable": 60.251414730999386
+        },
+        "z_raw": {
+          "min": -0.4274389536519777,
+          "max": 0.09256283761990432,
+          "amplitude": 0.5200017912718821,
+          "weighted_mean": -0.10756991618988129,
+          "total_variation": 0.20882862383310435,
+          "significant_reversals": 1
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.09256283761990432,
+          "amplitude": 0.09256283761990432,
+          "weighted_mean": 0.022689015233670735,
+          "total_variation": 0.09301364087678506,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.08107950176047467,
+          "amplitude": 0.08107950176047467,
+          "weighted_mean": 0.01760501696577785,
+          "total_variation": 0.08107950176047467,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 230.94941744045354,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 231.95026624045568,
+        "at_one_target_s": 0
+      }
+    }
+  },
+  {
+    "run": "L",
+    "group": "phase-I2",
+    "branches": {
+      "STATE-G2": {
+        "total_seconds": 49.85899996757507,
+        "available_seconds": 49.85899996757507,
+        "unavailable_seconds": 0.0,
+        "available_fraction": 1.0,
+        "unavailable_reason_seconds": {},
+        "z_raw": {
+          "min": -0.13421269866399968,
+          "max": 0.22785499582553612,
+          "amplitude": 0.3620676944895358,
+          "weighted_mean": 0.0512138161126045,
+          "total_variation": 0.3620676944895359,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.22785499582553612,
+          "amplitude": 0.22785499582553612,
+          "weighted_mean": 0.07775956537711913,
+          "total_variation": 0.22785499582553614,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.011933870602732587,
+          "max": 0.21209409820252886,
+          "amplitude": 0.20016022759979626,
+          "weighted_mean": 0.09130025324330471,
+          "total_variation": 0.2001602275997963,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 18.496560761588626,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 18.496560761588626,
+        "at_one_target_s": 0
+      },
+      "STATE-QS": {
+        "total_seconds": 49.85899996757507,
+        "available_seconds": 49.85899996757507,
+        "unavailable_seconds": 0.0,
+        "available_fraction": 1.0,
+        "unavailable_reason_seconds": {},
+        "z_raw": {
+          "min": -0.5165604944426263,
+          "max": 0.18442564644142861,
+          "amplitude": 0.700986140884055,
+          "weighted_mean": -0.3448038485197226,
+          "total_variation": 0.7284666302449622,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.18442564644142861,
+          "amplitude": 0.18442564644142861,
+          "weighted_mean": 0.004344498274293926,
+          "total_variation": 0.18442564644142861,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.01468618988918583,
+          "max": 0.16481005438929017,
+          "amplitude": 0.15012386450010434,
+          "weighted_mean": 0.044332931888754826,
+          "total_variation": 0.15012386450010434,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 48.51986872559064,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 48.51986872559064,
+        "at_one_target_s": 0
+      },
+      "STATE-LP30": {
+        "total_seconds": 49.85899996757507,
+        "available_seconds": 49.85899996757507,
+        "unavailable_seconds": 0.0,
+        "available_fraction": 1.0,
+        "unavailable_reason_seconds": {},
+        "z_raw": {
+          "min": -0.28338861192544657,
+          "max": 0.16014281961945756,
+          "amplitude": 0.44353143154490415,
+          "weighted_mean": -0.06059246304500845,
+          "total_variation": 0.44486996397980505,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.16014281961945756,
+          "amplitude": 0.16014281961945756,
+          "weighted_mean": 0.03409826159488362,
+          "total_variation": 0.1614813520543585,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.017417174526106975,
+          "max": 0.14251931364275022,
+          "amplitude": 0.12510213911664325,
+          "weighted_mean": 0.05091172404511185,
+          "total_variation": 0.12510213911664325,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 31.505732327583246,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 31.505732327583246,
+        "at_one_target_s": 0
+      },
+      "STATE-LP120": {
+        "total_seconds": 49.85899996757507,
+        "available_seconds": 49.85899996757507,
+        "unavailable_seconds": 0.0,
+        "available_fraction": 1.0,
+        "unavailable_reason_seconds": {},
+        "z_raw": {
+          "min": -0.06729562912734081,
+          "max": 0.09343599823692586,
+          "amplitude": 0.16073162736426666,
+          "weighted_mean": 0.023685007130490036,
+          "total_variation": 0.16160478798128824,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.09343599823692586,
+          "amplitude": 0.09343599823692586,
+          "weighted_mean": 0.03535303797555833,
+          "total_variation": 0.09430915885394739,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.014363714760286929,
+          "max": 0.08107950176047467,
+          "amplitude": 0.06671578700018774,
+          "weighted_mean": 0.04595028004800772,
+          "total_variation": 0.06671578700018774,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 17.495808969601057,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 17.495808969601057,
+        "at_one_target_s": 0
+      }
+    }
+  },
+  {
+    "run": "L",
+    "group": "phase-5b",
+    "branches": {
+      "STATE-G2": {
+        "total_seconds": 300.11299991607666,
+        "available_seconds": 289.4114171983965,
+        "unavailable_seconds": 10.70158271768014,
+        "available_fraction": 0.9643414889702455,
+        "unavailable_reason_seconds": {
+          "known_input_validity_expired": 0.6176857499813195,
+          "fan_missing_or_stale": 0.07732897301320918,
+          "original_60s_history_unavailable": 10.00656799468561
+        },
+        "z_raw": {
+          "min": -0.2336612051155292,
+          "max": 0.05692150835616019,
+          "amplitude": 0.2905827134716894,
+          "weighted_mean": -0.0884631793550451,
+          "total_variation": 0.6517529834033279,
+          "significant_reversals": 2
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.05692150835616019,
+          "amplitude": 0.05692150835616019,
+          "weighted_mean": 0.006145250128104313,
+          "total_variation": 0.12399508054932301,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.011933870602732587,
+          "max": 0.05248900639115561,
+          "amplitude": 0.04055513578842303,
+          "weighted_mean": 0.014818960666095601,
+          "total_variation": 0.04055513578842303,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 226.71262133540586,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 226.71262133540586,
+        "at_one_target_s": 0
+      },
+      "STATE-QS": {
+        "total_seconds": 300.11299991607666,
+        "available_seconds": 289.4114171983965,
+        "unavailable_seconds": 10.70158271768014,
+        "available_fraction": 0.9643414889702455,
+        "unavailable_reason_seconds": {
+          "known_input_validity_expired": 0.6176857499813195,
+          "fan_missing_or_stale": 0.07732897301320918,
+          "original_60s_history_unavailable": 10.00656799468561
+        },
+        "z_raw": {
+          "min": -0.5165604944426263,
+          "max": 0.06944119848795864,
+          "amplitude": 0.5860016929305849,
+          "weighted_mean": -0.1612103358466235,
+          "total_variation": 3.8219107323588246,
+          "significant_reversals": 61
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.06944119848795864,
+          "amplitude": 0.06944119848795864,
+          "weighted_mean": 0.0012388648758026035,
+          "total_variation": 0.3235646174873076,
+          "significant_reversals": 3
+        },
+        "z_output": {
+          "min": 0.012141276996014248,
+          "max": 0.04550866609603593,
+          "amplitude": 0.03336738910002168,
+          "weighted_mean": 0.01461711582388475,
+          "total_variation": 0.09755512030692212,
+          "significant_reversals": 2
+        },
+        "lower_clipped_s": 264.74860367237125,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 264.74860367237125,
+        "at_one_target_s": 0
+      },
+      "STATE-LP30": {
+        "total_seconds": 300.11299991607666,
+        "available_seconds": 289.4114171983965,
+        "unavailable_seconds": 10.70158271768014,
+        "available_fraction": 0.9643414889702455,
+        "unavailable_reason_seconds": {
+          "known_input_validity_expired": 0.6176857499813195,
+          "fan_missing_or_stale": 0.07732897301320918,
+          "original_60s_history_unavailable": 10.00656799468561
+        },
+        "z_raw": {
+          "min": -0.3115389599575863,
+          "max": 0.0035260851003307892,
+          "amplitude": 0.3150650450579171,
+          "weighted_mean": -0.18170185946930034,
+          "total_variation": 0.360622320426108,
+          "significant_reversals": 1
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.0035260851003307892,
+          "amplitude": 0.0035260851003307892,
+          "weighted_mean": 2.2870402172110338e-05,
+          "total_variation": 0.0035260851003307892,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.017417174526106975,
+          "max": 0.017417174526106975,
+          "amplitude": 0.0,
+          "weighted_mean": 0.017417174526106968,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 286.771617108403,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 286.771617108403,
+        "at_one_target_s": 0
+      },
+      "STATE-LP120": {
+        "total_seconds": 300.11299991607666,
+        "available_seconds": 289.4114171983965,
+        "unavailable_seconds": 10.70158271768014,
+        "available_fraction": 0.9643414889702455,
+        "unavailable_reason_seconds": {
+          "known_input_validity_expired": 0.6176857499813195,
+          "fan_missing_or_stale": 0.07732897301320918,
+          "original_60s_history_unavailable": 10.00656799468561
+        },
+        "z_raw": {
+          "min": -0.21837051317191722,
+          "max": -0.06729562912734081,
+          "amplitude": 0.15107488404457642,
+          "weighted_mean": -0.17000475749519356,
+          "total_variation": 0.2628725015523394,
+          "significant_reversals": 1
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.014363714760286929,
+          "max": 0.014363714760286929,
+          "amplitude": 0.0,
+          "weighted_mean": 0.014363714760286932,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 289.4114171983965,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 289.4114171983965,
+        "at_one_target_s": 0
+      }
+    }
+  },
+  {
+    "run": "L",
+    "group": "phase-6",
+    "branches": {
+      "STATE-G2": {
+        "total_seconds": 264.77500009536743,
+        "available_seconds": 140.08965127301053,
+        "unavailable_seconds": 124.6853488223569,
+        "available_fraction": 0.529089420158824,
+        "unavailable_reason_seconds": {
+          "original_60s_history_unavailable": 121.57371929936926,
+          "known_input_validity_expired": 0.46896567099611275,
+          "fan_missing_or_stale": 0.4671606039919425,
+          "unsupported_control_scope;fan_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable": 2.175503247999586
+        },
+        "z_raw": {
+          "min": -0.2205403777631659,
+          "max": 0.0,
+          "amplitude": 0.2205403777631659,
+          "weighted_mean": -0.13539811857024117,
+          "total_variation": 0.2206337792838667,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 139.0893394720042,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 140.08965127301053,
+        "at_one_target_s": 0
+      },
+      "STATE-QS": {
+        "total_seconds": 264.77500009536743,
+        "available_seconds": 140.08965127301053,
+        "unavailable_seconds": 124.6853488223569,
+        "available_fraction": 0.529089420158824,
+        "unavailable_reason_seconds": {
+          "original_60s_history_unavailable": 121.57371929936926,
+          "known_input_validity_expired": 0.46896567099611275,
+          "fan_missing_or_stale": 0.4671606039919425,
+          "unsupported_control_scope;fan_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable": 2.175503247999586
+        },
+        "z_raw": {
+          "min": -0.13503840141155407,
+          "max": 0.0,
+          "amplitude": 0.13503840141155407,
+          "weighted_mean": -0.07993452702572836,
+          "total_variation": 0.42387586226481827,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 139.0893394720042,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 140.08965127301053,
+        "at_one_target_s": 0
+      },
+      "STATE-LP30": {
+        "total_seconds": 264.77500009536743,
+        "available_seconds": 140.08965127301053,
+        "unavailable_seconds": 124.6853488223569,
+        "available_fraction": 0.529089420158824,
+        "unavailable_reason_seconds": {
+          "original_60s_history_unavailable": 121.57371929936926,
+          "known_input_validity_expired": 0.46896567099611275,
+          "fan_missing_or_stale": 0.4671606039919425,
+          "unsupported_control_scope;fan_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable": 2.175503247999586
+        },
+        "z_raw": {
+          "min": -0.1518136879240913,
+          "max": 0.0,
+          "amplitude": 0.1518136879240913,
+          "weighted_mean": -0.08681466062210988,
+          "total_variation": 0.1518136879240913,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 139.0893394720042,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 140.08965127301053,
+        "at_one_target_s": 0
+      },
+      "STATE-LP120": {
+        "total_seconds": 264.77500009536743,
+        "available_seconds": 140.08965127301053,
+        "unavailable_seconds": 124.6853488223569,
+        "available_fraction": 0.529089420158824,
+        "unavailable_reason_seconds": {
+          "original_60s_history_unavailable": 121.57371929936926,
+          "known_input_validity_expired": 0.46896567099611275,
+          "fan_missing_or_stale": 0.4671606039919425,
+          "unsupported_control_scope;fan_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable": 2.175503247999586
+        },
+        "z_raw": {
+          "min": -0.12093766601025849,
+          "max": 0.0,
+          "amplitude": 0.12093766601025849,
+          "weighted_mean": -0.060662985977500326,
+          "total_variation": 0.12093766601025849,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 139.0893394720042,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 140.08965127301053,
+        "at_one_target_s": 0
+      }
+    }
+  },
+  {
+    "run": "L",
+    "group": "phase-7",
+    "branches": {
+      "STATE-G2": {
+        "total_seconds": 150.6433363709657,
+        "available_seconds": 102.4606648760091,
+        "unavailable_seconds": 48.182671494956594,
+        "available_fraction": 0.6801539805497623,
+        "unavailable_reason_seconds": {
+          "original_60s_history_unavailable": 48.182671494956594,
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed;source_identity_changed": 0
+        },
+        "z_raw": {
+          "min": -0.04559016057602037,
+          "max": 0.0002099316410365759,
+          "amplitude": 0.04580009221705694,
+          "weighted_mean": -0.022728026943118988,
+          "total_variation": 0.05878574915849556,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.0002099316410365759,
+          "amplitude": 0.0002099316410365759,
+          "weighted_mean": 2.050986137474607e-06,
+          "total_variation": 0.0004198632820731518,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 100.45846390901715,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 101.45964662902406,
+        "at_one_target_s": 0
+      },
+      "STATE-QS": {
+        "total_seconds": 150.6433363709657,
+        "available_seconds": 102.4606648760091,
+        "unavailable_seconds": 48.182671494956594,
+        "available_fraction": 0.6801539805497623,
+        "unavailable_reason_seconds": {
+          "original_60s_history_unavailable": 48.182671494956594,
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed;source_identity_changed": 0
+        },
+        "z_raw": {
+          "min": -0.045441776077165486,
+          "max": 0.0,
+          "amplitude": 0.045441776077165486,
+          "weighted_mean": -0.02403065122516179,
+          "total_variation": 0.3302659958726593,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 101.4594821560022,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 102.4606648760091,
+        "at_one_target_s": 0
+      },
+      "STATE-LP30": {
+        "total_seconds": 150.6433363709657,
+        "available_seconds": 102.4606648760091,
+        "unavailable_seconds": 48.182671494956594,
+        "available_fraction": 0.6801539805497623,
+        "unavailable_reason_seconds": {
+          "original_60s_history_unavailable": 48.182671494956594,
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed;source_identity_changed": 0
+        },
+        "z_raw": {
+          "min": -0.03968418993435989,
+          "max": 0.0,
+          "amplitude": 0.03968418993435989,
+          "weighted_mean": -0.020369434829489552,
+          "total_variation": 0.03968418993435989,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 101.4594821560022,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 102.4606648760091,
+        "at_one_target_s": 0
+      },
+      "STATE-LP120": {
+        "total_seconds": 150.6433363709657,
+        "available_seconds": 102.4606648760091,
+        "unavailable_seconds": 48.182671494956594,
+        "available_fraction": 0.6801539805497623,
+        "unavailable_reason_seconds": {
+          "original_60s_history_unavailable": 48.182671494956594,
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed;source_identity_changed": 0
+        },
+        "z_raw": {
+          "min": -0.02624616127535475,
+          "max": 0.0,
+          "amplitude": 0.02624616127535475,
+          "weighted_mean": -0.012312511291565444,
+          "total_variation": 0.02624616127535475,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 101.4594821560022,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 102.4606648760091,
+        "at_one_target_s": 0
+      }
+    }
+  },
+  {
+    "run": "S",
+    "group": "whole-run",
+    "branches": {
+      "STATE-G2": {
+        "total_seconds": 1613.7888460860122,
+        "available_seconds": 1188.1028419780196,
+        "unavailable_seconds": 425.68600410799263,
+        "available_fraction": 0.7362195152479668,
+        "unavailable_reason_seconds": {
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.0390502380032558,
+          "temperature_status_missing_or_stale;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.048935884988168254,
+          "original_60s_history_unavailable": 411.0866067619063,
+          "known_input_validity_expired": 7.415734714013524,
+          "fan_missing_or_stale": 4.103271808067802,
+          "control_temperature_stale": 2.757884354010457,
+          "fan_missing_or_stale;control_temperature_stale": 0.23452034700312652,
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed;source_identity_changed": 0.0
+        },
+        "z_raw": {
+          "min": -0.13654639537178426,
+          "max": 0.09711365597661867,
+          "amplitude": 0.23366005134840293,
+          "weighted_mean": -0.02040113025775289,
+          "total_variation": 1.0089992510995152,
+          "significant_reversals": 12
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.09711365597661867,
+          "amplitude": 0.09711365597661867,
+          "weighted_mean": 0.010192937278534502,
+          "total_variation": 0.3253090564078441,
+          "significant_reversals": 1
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.08450331713297743,
+          "amplitude": 0.08450331713297743,
+          "weighted_mean": 0.007825847951395046,
+          "total_variation": 0.13322442794104178,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 614.2831568729889,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 618.2864666759851,
+        "at_one_target_s": 0
+      },
+      "STATE-QS": {
+        "total_seconds": 1613.7888460860122,
+        "available_seconds": 1188.1028419780196,
+        "unavailable_seconds": 425.68600410799263,
+        "available_fraction": 0.7362195152479668,
+        "unavailable_reason_seconds": {
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.0390502380032558,
+          "temperature_status_missing_or_stale;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.048935884988168254,
+          "original_60s_history_unavailable": 411.0866067619063,
+          "known_input_validity_expired": 7.415734714013524,
+          "fan_missing_or_stale": 4.103271808067802,
+          "control_temperature_stale": 2.757884354010457,
+          "fan_missing_or_stale;control_temperature_stale": 0.23452034700312652,
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed;source_identity_changed": 0.0
+        },
+        "z_raw": {
+          "min": -0.07483182315932524,
+          "max": 0.2858332030361879,
+          "amplitude": 0.36066502619551316,
+          "weighted_mean": 0.0007130700468836813,
+          "total_variation": 8.22790754849687,
+          "significant_reversals": 18
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.2858332030361879,
+          "amplitude": 0.2858332030361879,
+          "weighted_mean": 0.016549526470639907,
+          "total_variation": 6.262113662052596,
+          "significant_reversals": 17
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.17253973538663037,
+          "amplitude": 0.17253973538663037,
+          "weighted_mean": 0.021866496857180413,
+          "total_variation": 1.734055572220985,
+          "significant_reversals": 17
+        },
+        "lower_clipped_s": 557.2291178930027,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 568.2399284989806,
+        "at_one_target_s": 0
+      },
+      "STATE-LP30": {
+        "total_seconds": 1613.7888460860122,
+        "available_seconds": 1188.1028419780196,
+        "unavailable_seconds": 425.68600410799263,
+        "available_fraction": 0.7362195152479668,
+        "unavailable_reason_seconds": {
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.0390502380032558,
+          "temperature_status_missing_or_stale;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.048935884988168254,
+          "original_60s_history_unavailable": 411.0866067619063,
+          "known_input_validity_expired": 7.415734714013524,
+          "fan_missing_or_stale": 4.103271808067802,
+          "control_temperature_stale": 2.757884354010457,
+          "fan_missing_or_stale;control_temperature_stale": 0.23452034700312652,
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed;source_identity_changed": 0.0
+        },
+        "z_raw": {
+          "min": -0.09237837261093276,
+          "max": 0.10215213715614695,
+          "amplitude": 0.1945305097670797,
+          "weighted_mean": -0.014948104199207987,
+          "total_variation": 0.5409250100800099,
+          "significant_reversals": 6
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.10215213715614695,
+          "amplitude": 0.10215213715614695,
+          "weighted_mean": 0.010799623403796567,
+          "total_variation": 0.1990269702670993,
+          "significant_reversals": 1
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.08270112651525707,
+          "amplitude": 0.08270112651525707,
+          "weighted_mean": 0.008489119805395252,
+          "total_variation": 0.11171894636553384,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 585.2601744189742,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 589.2634842219704,
+        "at_one_target_s": 0
+      },
+      "STATE-LP120": {
+        "total_seconds": 1613.7888460860122,
+        "available_seconds": 1188.1028419780196,
+        "unavailable_seconds": 425.68600410799263,
+        "available_fraction": 0.7362195152479668,
+        "unavailable_reason_seconds": {
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.0390502380032558,
+          "temperature_status_missing_or_stale;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.048935884988168254,
+          "original_60s_history_unavailable": 411.0866067619063,
+          "known_input_validity_expired": 7.415734714013524,
+          "fan_missing_or_stale": 4.103271808067802,
+          "control_temperature_stale": 2.757884354010457,
+          "fan_missing_or_stale;control_temperature_stale": 0.23452034700312652,
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed;source_identity_changed": 0.0
+        },
+        "z_raw": {
+          "min": -0.08007801902679361,
+          "max": 0.054996706702097956,
+          "amplitude": 0.13507472572889156,
+          "weighted_mean": -0.013841730643830822,
+          "total_variation": 0.21771377278337378,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.054996706702097956,
+          "amplitude": 0.054996706702097956,
+          "weighted_mean": 0.00503007027481691,
+          "total_variation": 0.07908327190830136,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.04077375636967133,
+          "amplitude": 0.04077375636967133,
+          "weighted_mean": 0.0024938790458106084,
+          "total_variation": 0.04077375636967133,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 625.2960811889789,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 629.2993909919751,
+        "at_one_target_s": 0
+      }
+    }
+  },
+  {
+    "run": "S",
+    "group": "phase-pilot",
+    "branches": {
+      "STATE-G2": {
+        "total_seconds": 3.6341490745544434,
+        "available_seconds": 3.6341490745544434,
+        "unavailable_seconds": 0.0,
+        "available_fraction": 1.0,
+        "unavailable_reason_seconds": {},
+        "z_raw": {
+          "min": 0.008952214424888184,
+          "max": 0.019130821006957177,
+          "amplitude": 0.010178606582068993,
+          "weighted_mean": 0.012063487022743064,
+          "total_variation": 0.010178606582068993,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.008952214424888184,
+          "max": 0.019130821006957177,
+          "amplitude": 0.010178606582068993,
+          "weighted_mean": 0.012063487022743064,
+          "total_variation": 0.010178606582068993,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 0,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 0,
+        "at_one_target_s": 0
+      },
+      "STATE-QS": {
+        "total_seconds": 3.6341490745544434,
+        "available_seconds": 3.6341490745544434,
+        "unavailable_seconds": 0.0,
+        "available_fraction": 1.0,
+        "unavailable_reason_seconds": {},
+        "z_raw": {
+          "min": -0.0042740402493443245,
+          "max": 0.206425493158428,
+          "amplitude": 0.21069953340777234,
+          "weighted_mean": 0.08094165903029651,
+          "total_variation": 0.21069953340777234,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.206425493158428,
+          "amplitude": 0.206425493158428,
+          "weighted_mean": 0.08124615977782325,
+          "total_variation": 0.206425493158428,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.1001335527660558,
+          "amplitude": 0.1001335527660558,
+          "weighted_mean": 0.03781899970984903,
+          "total_variation": 0.1001335527660558,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 0.25891218736069277,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 0.25891218736069277,
+        "at_one_target_s": 0
+      },
+      "STATE-LP30": {
+        "total_seconds": 3.6341490745544434,
+        "available_seconds": 3.6341490745544434,
+        "unavailable_seconds": 0.0,
+        "available_fraction": 1.0,
+        "unavailable_reason_seconds": {},
+        "z_raw": {
+          "min": 0.006071043245903951,
+          "max": 0.012988705047560245,
+          "amplitude": 0.006917661801656295,
+          "weighted_mean": 0.007301920325582627,
+          "total_variation": 0.0070952113863860695,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.006071043245903951,
+          "max": 0.012988705047560245,
+          "amplitude": 0.006917661801656295,
+          "weighted_mean": 0.007301920325582627,
+          "total_variation": 0.0070952113863860695,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 0,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 0,
+        "at_one_target_s": 0
+      },
+      "STATE-LP120": {
+        "total_seconds": 3.6341490745544434,
+        "available_seconds": 3.6341490745544434,
+        "unavailable_seconds": 0.0,
+        "available_fraction": 1.0,
+        "unavailable_reason_seconds": {},
+        "z_raw": {
+          "min": 0.004067209517543091,
+          "max": 0.00590469249616703,
+          "amplitude": 0.0018374829786239385,
+          "weighted_mean": 0.004406455481689002,
+          "total_variation": 0.0018560407665162868,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.004067209517543091,
+          "max": 0.00590469249616703,
+          "amplitude": 0.0018374829786239385,
+          "weighted_mean": 0.004406455481689002,
+          "total_variation": 0.0018560407665162868,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 0,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 0,
+        "at_one_target_s": 0
+      }
+    }
+  },
+  {
+    "run": "S",
+    "group": "phase-resident-baseline",
+    "branches": {
+      "STATE-G2": {
+        "total_seconds": 180.00250482559204,
+        "available_seconds": 134.30264531759894,
+        "unavailable_seconds": 45.6998595079931,
+        "available_fraction": 0.746115424603271,
+        "unavailable_reason_seconds": {
+          "known_input_validity_expired": 0.7922117420239374,
+          "original_60s_history_unavailable": 44.30316168899299,
+          "fan_missing_or_stale": 0.6044860769761726
+        },
+        "z_raw": {
+          "min": -0.0580856317445523,
+          "max": 0.020494969634507497,
+          "amplitude": 0.0785806013790598,
+          "weighted_mean": -0.02738634520990386,
+          "total_variation": 0.14639020365004915,
+          "significant_reversals": 2
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.020494969634507497,
+          "amplitude": 0.020494969634507497,
+          "weighted_mean": 0.0019422205244015943,
+          "total_variation": 0.022088545428859872,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.020122432716460283,
+          "amplitude": 0.020122432716460283,
+          "weighted_mean": 0.013092127142601306,
+          "total_variation": 0.028465521441547282,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 111.65583556899219,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 111.65583556899219,
+        "at_one_target_s": 0
+      },
+      "STATE-QS": {
+        "total_seconds": 180.00250482559204,
+        "available_seconds": 134.30264531759894,
+        "unavailable_seconds": 45.6998595079931,
+        "available_fraction": 0.746115424603271,
+        "unavailable_reason_seconds": {
+          "known_input_validity_expired": 0.7922117420239374,
+          "original_60s_history_unavailable": 44.30316168899299,
+          "fan_missing_or_stale": 0.6044860769761726
+        },
+        "z_raw": {
+          "min": -0.07483182315932524,
+          "max": 0.206425493158428,
+          "amplitude": 0.28125731631775325,
+          "weighted_mean": -0.04567300446065434,
+          "total_variation": 0.6850869940990474,
+          "significant_reversals": 1
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.206425493158428,
+          "amplitude": 0.206425493158428,
+          "weighted_mean": 0.001406422601637096,
+          "total_variation": 0.206425493158428,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.01673765071585271,
+          "max": 0.1001335527660558,
+          "amplitude": 0.08339590205020309,
+          "weighted_mean": 0.0199239033067974,
+          "total_variation": 0.08339590205020309,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 132.6739897399966,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 132.6739897399966,
+        "at_one_target_s": 0
+      },
+      "STATE-LP30": {
+        "total_seconds": 180.00250482559204,
+        "available_seconds": 134.30264531759894,
+        "unavailable_seconds": 45.6998595079931,
+        "available_fraction": 0.746115424603271,
+        "unavailable_reason_seconds": {
+          "known_input_validity_expired": 0.7922117420239374,
+          "original_60s_history_unavailable": 44.30316168899299,
+          "fan_missing_or_stale": 0.6044860769761726
+        },
+        "z_raw": {
+          "min": -0.04291155013739854,
+          "max": 0.020676907533399458,
+          "amplitude": 0.06358845767079799,
+          "weighted_mean": -0.029021333396533757,
+          "total_variation": 0.0803936628813893,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.020676907533399458,
+          "amplitude": 0.020676907533399458,
+          "weighted_mean": 0.001418917620137742,
+          "total_variation": 0.028365110019238672,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.020676907533399458,
+          "amplitude": 0.020676907533399458,
+          "weighted_mean": 0.01305664056533294,
+          "total_variation": 0.029017819850276773,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 118.66165395997814,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 118.66165395997814,
+        "at_one_target_s": 0
+      },
+      "STATE-LP120": {
+        "total_seconds": 180.00250482559204,
+        "available_seconds": 134.30264531759894,
+        "unavailable_seconds": 45.6998595079931,
+        "available_fraction": 0.746115424603271,
+        "unavailable_reason_seconds": {
+          "known_input_validity_expired": 0.7922117420239374,
+          "original_60s_history_unavailable": 44.30316168899299,
+          "fan_missing_or_stale": 0.6044860769761726
+        },
+        "z_raw": {
+          "min": -0.023743062632838274,
+          "max": 0.00802475646711045,
+          "amplitude": 0.031767819099948726,
+          "weighted_mean": -0.012307102061295335,
+          "total_variation": 0.03388788307089217,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.00802475646711045,
+          "amplitude": 0.00802475646711045,
+          "weighted_mean": 0.0008509552666123541,
+          "total_variation": 0.01014482043805387,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 110.65503311899374,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 110.65503311899374,
+        "at_one_target_s": 0
+      }
+    }
+  },
+  {
+    "run": "S",
+    "group": "phase-sparse",
+    "branches": {
+      "STATE-G2": {
+        "total_seconds": 463.25008392333984,
+        "available_seconds": 439.44229662325233,
+        "unavailable_seconds": 23.80778730008751,
+        "available_fraction": 0.9486070523755646,
+        "unavailable_reason_seconds": {
+          "original_60s_history_unavailable": 23.80778730008751
+        },
+        "z_raw": {
+          "min": -0.13654639537178426,
+          "max": 0.0,
+          "amplitude": 0.13654639537178426,
+          "weighted_mean": -0.07252206720362568,
+          "total_variation": 0.5284773320817127,
+          "significant_reversals": 9
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 438.44140355824493,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 439.44229662325233,
+        "at_one_target_s": 0
+      },
+      "STATE-QS": {
+        "total_seconds": 463.25008392333984,
+        "available_seconds": 439.44229662325233,
+        "unavailable_seconds": 23.80778730008751,
+        "available_fraction": 0.9486070523755646,
+        "unavailable_reason_seconds": {
+          "original_60s_history_unavailable": 23.80778730008751
+        },
+        "z_raw": {
+          "min": -0.06857521675298699,
+          "max": 0.24041790860860032,
+          "amplitude": 0.3089931253615873,
+          "weighted_mean": -0.021491799740107127,
+          "total_variation": 3.3020869721469914,
+          "significant_reversals": 8
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.24041790860860032,
+          "amplitude": 0.24041790860860032,
+          "weighted_mean": 0.006290754491899016,
+          "total_variation": 2.0793679054448213,
+          "significant_reversals": 8
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.11347011270434991,
+          "amplitude": 0.11347011270434991,
+          "weighted_mean": 0.01694418936025597,
+          "total_variation": 0.780767019286352,
+          "significant_reversals": 8
+        },
+        "lower_clipped_s": 357.323873439047,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 360.3269928790396,
+        "at_one_target_s": 0
+      },
+      "STATE-LP30": {
+        "total_seconds": 463.25008392333984,
+        "available_seconds": 439.44229662325233,
+        "unavailable_seconds": 23.80778730008751,
+        "available_fraction": 0.9486070523755646,
+        "unavailable_reason_seconds": {
+          "original_60s_history_unavailable": 23.80778730008751
+        },
+        "z_raw": {
+          "min": -0.09237837261093276,
+          "max": 0.0,
+          "amplitude": 0.09237837261093276,
+          "weighted_mean": -0.05949744797571169,
+          "total_variation": 0.2778951453343886,
+          "significant_reversals": 4
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 438.44140355824493,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 439.44229662325233,
+        "at_one_target_s": 0
+      },
+      "STATE-LP120": {
+        "total_seconds": 463.25008392333984,
+        "available_seconds": 439.44229662325233,
+        "unavailable_seconds": 23.80778730008751,
+        "available_fraction": 0.9486070523755646,
+        "unavailable_reason_seconds": {
+          "original_60s_history_unavailable": 23.80778730008751
+        },
+        "z_raw": {
+          "min": -0.08007801902679361,
+          "max": 0.0,
+          "amplitude": 0.08007801902679361,
+          "weighted_mean": -0.04609183943764247,
+          "total_variation": 0.1108295348759092,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 438.44140355824493,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 439.44229662325233,
+        "at_one_target_s": 0
+      }
+    }
+  },
+  {
+    "run": "S",
+    "group": "phase-between-groups",
+    "branches": {
+      "STATE-G2": {
+        "total_seconds": 300.0025429725647,
+        "available_seconds": 239.1124947295757,
+        "unavailable_seconds": 60.890048242988996,
+        "available_fraction": 0.7970348929723658,
+        "unavailable_reason_seconds": {
+          "known_input_validity_expired": 0.000527268013684079,
+          "fan_missing_or_stale": 0.2166675309999846,
+          "original_60s_history_unavailable": 60.67285344397533
+        },
+        "z_raw": {
+          "min": -0.09476164986996452,
+          "max": 0.05457575423946963,
+          "amplitude": 0.14933740410943414,
+          "weighted_mean": 0.017824971355564913,
+          "total_variation": 0.11660871725651983,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.05457575423946963,
+          "amplitude": 0.05457575423946963,
+          "weighted_mean": 0.020049499582890498,
+          "total_variation": 0.09282818000815207,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.04040765270799653,
+          "amplitude": 0.04040765270799653,
+          "weighted_mean": 0.013290260833964458,
+          "total_variation": 0.04040765270799653,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 48.168638966133585,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 49.16953281214228,
+        "at_one_target_s": 0
+      },
+      "STATE-QS": {
+        "total_seconds": 300.0025429725647,
+        "available_seconds": 239.1124947295757,
+        "unavailable_seconds": 60.890048242988996,
+        "available_fraction": 0.7970348929723658,
+        "unavailable_reason_seconds": {
+          "known_input_validity_expired": 0.000527268013684079,
+          "fan_missing_or_stale": 0.2166675309999846,
+          "original_60s_history_unavailable": 60.67285344397533
+        },
+        "z_raw": {
+          "min": -0.04067623328873608,
+          "max": 0.19926373629475833,
+          "amplitude": 0.2399399695834944,
+          "weighted_mean": 0.03225108924365109,
+          "total_variation": 1.110883708940185,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.19926373629475833,
+          "amplitude": 0.19926373629475833,
+          "weighted_mean": 0.03267812123854289,
+          "total_variation": 1.0702074756514488,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.11345943302029439,
+          "amplitude": 0.11345943302029439,
+          "weighted_mean": 0.03082302385174091,
+          "total_variation": 0.10573366695419063,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 3.1684866540017538,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 4.169380500010448,
+        "at_one_target_s": 0
+      },
+      "STATE-LP30": {
+        "total_seconds": 300.0025429725647,
+        "available_seconds": 239.1124947295757,
+        "unavailable_seconds": 60.890048242988996,
+        "available_fraction": 0.7970348929723658,
+        "unavailable_reason_seconds": {
+          "known_input_validity_expired": 0.000527268013684079,
+          "fan_missing_or_stale": 0.2166675309999846,
+          "original_60s_history_unavailable": 60.67285344397533
+        },
+        "z_raw": {
+          "min": -0.07320545327179744,
+          "max": 0.0570057365092552,
+          "amplitude": 0.13021118978105264,
+          "weighted_mean": 0.027427705766578162,
+          "total_variation": 0.06595624880673936,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.0570057365092552,
+          "amplitude": 0.0570057365092552,
+          "weighted_mean": 0.028869821475910898,
+          "total_variation": 0.05718764100347613,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.040222934010165544,
+          "amplitude": 0.040222934010165544,
+          "weighted_mean": 0.019143133760063883,
+          "total_variation": 0.040222934010165544,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 5.129675625124946,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 6.13056947113364,
+        "at_one_target_s": 0
+      },
+      "STATE-LP120": {
+        "total_seconds": 300.0025429725647,
+        "available_seconds": 239.1124947295757,
+        "unavailable_seconds": 60.890048242988996,
+        "available_fraction": 0.7970348929723658,
+        "unavailable_reason_seconds": {
+          "known_input_validity_expired": 0.000527268013684079,
+          "fan_missing_or_stale": 0.2166675309999846,
+          "original_60s_history_unavailable": 60.67285344397533
+        },
+        "z_raw": {
+          "min": -0.0771162712297702,
+          "max": 0.031687691492412996,
+          "amplitude": 0.1088039627221832,
+          "weighted_mean": 0.010695789090090366,
+          "total_variation": 0.034053629074636396,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.031687691492412996,
+          "amplitude": 0.031687691492412996,
+          "weighted_mean": 0.012317366199473838,
+          "total_variation": 0.031687691492412996,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.02009526349572539,
+          "amplitude": 0.02009526349572539,
+          "weighted_mean": 0.005195441771667893,
+          "total_variation": 0.02009526349572539,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 12.135168848122703,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 13.136062694131397,
+        "at_one_target_s": 0
+      }
+    }
+  },
+  {
+    "run": "S",
+    "group": "phase-continuous",
+    "branches": {
+      "STATE-G2": {
+        "total_seconds": 138.77450895309448,
+        "available_seconds": 50.4402706764522,
+        "unavailable_seconds": 88.33423827664228,
+        "available_fraction": 0.36346927873836626,
+        "unavailable_reason_seconds": {
+          "known_input_validity_expired": 2.310365654004272,
+          "fan_missing_or_stale": 1.6475973070482723,
+          "original_60s_history_unavailable": 84.37627531558974
+        },
+        "z_raw": {
+          "min": 0.05426091444911165,
+          "max": 0.09711365597661867,
+          "amplitude": 0.04285274152750702,
+          "weighted_mean": 0.07926099313858079,
+          "total_variation": 0.05806114855806538,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.05426091444911165,
+          "max": 0.09711365597661867,
+          "amplitude": 0.04285274152750702,
+          "weighted_mean": 0.07926099313858079,
+          "total_variation": 0.05806114855806538,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.04040765270799653,
+          "max": 0.08450331713297743,
+          "amplitude": 0.0440956644249809,
+          "weighted_mean": 0.07155271281066725,
+          "total_variation": 0.0440956644249809,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 0,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 0,
+        "at_one_target_s": 0
+      },
+      "STATE-QS": {
+        "total_seconds": 138.77450895309448,
+        "available_seconds": 50.4402706764522,
+        "unavailable_seconds": 88.33423827664228,
+        "available_fraction": 0.36346927873836626,
+        "unavailable_reason_seconds": {
+          "known_input_validity_expired": 2.310365654004272,
+          "fan_missing_or_stale": 1.6475973070482723,
+          "original_60s_history_unavailable": 84.37627531558974
+        },
+        "z_raw": {
+          "min": 0.034941885960370914,
+          "max": 0.2858332030361879,
+          "amplitude": 0.250891317075817,
+          "weighted_mean": 0.10348356660833025,
+          "total_variation": 1.7028752470461301,
+          "significant_reversals": 7
+        },
+        "z_target": {
+          "min": 0.034941885960370914,
+          "max": 0.2858332030361879,
+          "amplitude": 0.250891317075817,
+          "weighted_mean": 0.10348356660833025,
+          "total_variation": 1.7028752470461301,
+          "significant_reversals": 7
+        },
+        "z_output": {
+          "min": 0.04735422301169903,
+          "max": 0.17253973538663037,
+          "amplitude": 0.12518551237493133,
+          "weighted_mean": 0.10569333577019986,
+          "total_variation": 0.6423481975907634,
+          "significant_reversals": 7
+        },
+        "lower_clipped_s": 0,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 0,
+        "at_one_target_s": 0
+      },
+      "STATE-LP30": {
+        "total_seconds": 138.77450895309448,
+        "available_seconds": 50.4402706764522,
+        "unavailable_seconds": 88.33423827664228,
+        "available_fraction": 0.36346927873836626,
+        "unavailable_reason_seconds": {
+          "known_input_validity_expired": 2.310365654004272,
+          "fan_missing_or_stale": 1.6475973070482723,
+          "original_60s_history_unavailable": 84.37627531558974
+        },
+        "z_raw": {
+          "min": 0.0570057365092552,
+          "max": 0.10215213715614695,
+          "amplitude": 0.045146400646891745,
+          "weighted_mean": 0.08211647844969125,
+          "total_variation": 0.07450370718531757,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0570057365092552,
+          "max": 0.10215213715614695,
+          "amplitude": 0.045146400646891745,
+          "weighted_mean": 0.08211647844969125,
+          "total_variation": 0.07450370718531757,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.040222934010165544,
+          "max": 0.08270112651525707,
+          "amplitude": 0.04247819250509153,
+          "weighted_mean": 0.07444396174793684,
+          "total_variation": 0.04247819250509153,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 0,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 0,
+        "at_one_target_s": 0
+      },
+      "STATE-LP120": {
+        "total_seconds": 138.77450895309448,
+        "available_seconds": 50.4402706764522,
+        "unavailable_seconds": 88.33423827664228,
+        "available_fraction": 0.36346927873836626,
+        "unavailable_reason_seconds": {
+          "known_input_validity_expired": 2.310365654004272,
+          "fan_missing_or_stale": 1.6475973070482723,
+          "original_60s_history_unavailable": 84.37627531558974
+        },
+        "z_raw": {
+          "min": 0.031687691492412996,
+          "max": 0.054996706702097956,
+          "amplitude": 0.02330901520968496,
+          "weighted_mean": 0.04374500822747543,
+          "total_variation": 0.02345777125754297,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.031687691492412996,
+          "max": 0.054996706702097956,
+          "amplitude": 0.02330901520968496,
+          "weighted_mean": 0.04374500822747543,
+          "total_variation": 0.02345777125754297,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.02009526349572539,
+          "max": 0.04077375636967133,
+          "amplitude": 0.02067849287394594,
+          "weighted_mean": 0.03411271924967299,
+          "total_variation": 0.02067849287394594,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 0,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 0,
+        "at_one_target_s": 0
+      }
+    }
+  },
+  {
+    "run": "S",
+    "group": "phase-final-cooldown",
+    "branches": {
+      "STATE-G2": {
+        "total_seconds": 300.001925945282,
+        "available_seconds": 192.31737705817795,
+        "unavailable_seconds": 107.68454888710403,
+        "available_fraction": 0.6410538080787359,
+        "unavailable_reason_seconds": {
+          "original_60s_history_unavailable": 101.20202764309943,
+          "known_input_validity_expired": 2.061438319971785,
+          "fan_missing_or_stale": 1.428678223019233,
+          "control_temperature_stale": 2.757884354010457,
+          "fan_missing_or_stale;control_temperature_stale": 0.23452034700312652
+        },
+        "z_raw": {
+          "min": -0.0009638966891529321,
+          "max": 0.023541619372385015,
+          "amplitude": 0.024505516061537946,
+          "weighted_mean": 0.010593865882516738,
+          "total_variation": 0.0884788567277489,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.023541619372385015,
+          "amplitude": 0.023541619372385015,
+          "weighted_mean": 0.010628062554534481,
+          "total_variation": 0.08381858514122835,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.020255589366517057,
+          "amplitude": 0.020255589366517057,
+          "weighted_mean": 0.0021225389817689927,
+          "total_variation": 0.020255589366517057,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 11.011247090005782,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 12.011870388989337,
+        "at_one_target_s": 0
+      },
+      "STATE-QS": {
+        "total_seconds": 300.001925945282,
+        "available_seconds": 192.31737705817795,
+        "unavailable_seconds": 107.68454888710403,
+        "available_fraction": 0.6410538080787359,
+        "unavailable_reason_seconds": {
+          "original_60s_history_unavailable": 101.20202764309943,
+          "known_input_validity_expired": 2.061438319971785,
+          "fan_missing_or_stale": 1.428678223019233,
+          "control_temperature_stale": 2.757884354010457,
+          "fan_missing_or_stale;control_temperature_stale": 0.23452034700312652
+        },
+        "z_raw": {
+          "min": -0.0020568250557822408,
+          "max": 0.026937773311203016,
+          "amplitude": 0.028994598366985258,
+          "weighted_mean": 0.014396039222124216,
+          "total_variation": 0.6514635525752228,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.026937773311203016,
+          "amplitude": 0.026937773311203016,
+          "weighted_mean": 0.014406745528340011,
+          "total_variation": 0.6473499024636583,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.02167723357341984,
+          "amplitude": 0.02167723357341984,
+          "weighted_mean": 0.01377936237320267,
+          "total_variation": 0.02167723357341984,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 1.0010616720246617,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 6.006189084000653,
+        "at_one_target_s": 0
+      },
+      "STATE-LP30": {
+        "total_seconds": 300.001925945282,
+        "available_seconds": 192.31737705817795,
+        "unavailable_seconds": 107.68454888710403,
+        "available_fraction": 0.6410538080787359,
+        "unavailable_reason_seconds": {
+          "original_60s_history_unavailable": 101.20202764309943,
+          "known_input_validity_expired": 2.061438319971785,
+          "fan_missing_or_stale": 1.428678223019233,
+          "control_temperature_stale": 2.757884354010457,
+          "fan_missing_or_stale;control_temperature_stale": 0.23452034700312652
+        },
+        "z_raw": {
+          "min": -0.0010904384328050299,
+          "max": 0.012631504507623958,
+          "amplitude": 0.013721942940428989,
+          "weighted_mean": 0.004734777982160848,
+          "total_variation": 0.02104378996945896,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.012631504507623958,
+          "amplitude": 0.012631504507623958,
+          "weighted_mean": 0.004797560428897623,
+          "total_variation": 0.017838056156350746,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 23.025462163001066,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 24.02608546198462,
+        "at_one_target_s": 0
+      },
+      "STATE-LP120": {
+        "total_seconds": 300.001925945282,
+        "available_seconds": 192.31737705817795,
+        "unavailable_seconds": 107.68454888710403,
+        "available_fraction": 0.6410538080787359,
+        "unavailable_reason_seconds": {
+          "original_60s_history_unavailable": 101.20202764309943,
+          "known_input_validity_expired": 2.061438319971785,
+          "fan_missing_or_stale": 1.428678223019233,
+          "control_temperature_stale": 2.757884354010457,
+          "fan_missing_or_stale;control_temperature_stale": 0.23452034700312652
+        },
+        "z_raw": {
+          "min": -0.0003762994307486167,
+          "max": 0.00635351086583924,
+          "amplitude": 0.006729810296587857,
+          "weighted_mean": 0.0017461324499526828,
+          "total_variation": 0.008173640837249961,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.00635351086583924,
+          "amplitude": 0.00635351086583924,
+          "weighted_mean": 0.0018079191205963756,
+          "total_variation": 0.00648167505314845,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 64.06249655099236,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 65.06311984997592,
+        "at_one_target_s": 0
+      }
+    }
+  },
+  {
+    "run": "M",
+    "group": "whole-run",
+    "branches": {
+      "STATE-G2": {
+        "total_seconds": 2510.6696287219993,
+        "available_seconds": 2387.5925690740005,
+        "unavailable_seconds": 123.0770596479988,
+        "available_fraction": 0.9509783930788821,
+        "unavailable_reason_seconds": {
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.05066257499947824,
+          "temperature_status_missing_or_stale;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.015631751000000804,
+          "original_60s_history_unavailable": 122.0102980469992,
+          "control_temperature_stale": 1.0004672750001191,
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed;source_identity_changed": 0.0
+        },
+        "z_raw": {
+          "min": -0.018020165579684288,
+          "max": 0.5756340868822335,
+          "amplitude": 0.5936542524619178,
+          "weighted_mean": 0.07147625960912217,
+          "total_variation": 3.0285959142544754,
+          "significant_reversals": 11
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.5756340868822335,
+          "amplitude": 0.5756340868822335,
+          "weighted_mean": 0.07470678136202637,
+          "total_variation": 2.5468726165351483,
+          "significant_reversals": 11
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.5662236774958622,
+          "amplitude": 0.5662236774958622,
+          "weighted_mean": 0.08364635759303686,
+          "total_variation": 1.8769309172792454,
+          "significant_reversals": 5
+        },
+        "lower_clipped_s": 1088.0738221299998,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 1090.078933449,
+        "at_one_target_s": 0
+      },
+      "STATE-QS": {
+        "total_seconds": 2510.6696287219993,
+        "available_seconds": 2387.5925690740005,
+        "unavailable_seconds": 123.0770596479988,
+        "available_fraction": 0.9509783930788821,
+        "unavailable_reason_seconds": {
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.05066257499947824,
+          "temperature_status_missing_or_stale;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.015631751000000804,
+          "original_60s_history_unavailable": 122.0102980469992,
+          "control_temperature_stale": 1.0004672750001191,
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed;source_identity_changed": 0.0
+        },
+        "z_raw": {
+          "min": -0.01984842071769961,
+          "max": 0.6464824814904795,
+          "amplitude": 0.6663309022081791,
+          "weighted_mean": 0.07531035400483567,
+          "total_variation": 12.917536716319784,
+          "significant_reversals": 64
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.6464824814904795,
+          "amplitude": 0.6464824814904795,
+          "weighted_mean": 0.07767270518750266,
+          "total_variation": 9.810060429775156,
+          "significant_reversals": 63
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.6369134787958437,
+          "amplitude": 0.6369134787958437,
+          "weighted_mean": 0.09116928184495647,
+          "total_variation": 3.3311512513874675,
+          "significant_reversals": 7
+        },
+        "lower_clipped_s": 769.7519223869995,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 911.9801499580026,
+        "at_one_target_s": 0
+      },
+      "STATE-LP30": {
+        "total_seconds": 2510.6696287219993,
+        "available_seconds": 2387.5925690740005,
+        "unavailable_seconds": 123.0770596479988,
+        "available_fraction": 0.9509783930788821,
+        "unavailable_reason_seconds": {
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.05066257499947824,
+          "temperature_status_missing_or_stale;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.015631751000000804,
+          "original_60s_history_unavailable": 122.0102980469992,
+          "control_temperature_stale": 1.0004672750001191,
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed;source_identity_changed": 0.0
+        },
+        "z_raw": {
+          "min": -0.013081550489901872,
+          "max": 0.5928693537045369,
+          "amplitude": 0.6059509041944388,
+          "weighted_mean": 0.0730982775104398,
+          "total_variation": 2.4019502700890394,
+          "significant_reversals": 5
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.5928693537045369,
+          "amplitude": 0.5928693537045369,
+          "weighted_mean": 0.07540877973851048,
+          "total_variation": 2.2854456690946767,
+          "significant_reversals": 5
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.5887061865230997,
+          "amplitude": 0.5887061865230997,
+          "weighted_mean": 0.0842442081954174,
+          "total_variation": 2.1493060676981988,
+          "significant_reversals": 5
+        },
+        "lower_clipped_s": 927.966137166999,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 929.9712484859992,
+        "at_one_target_s": 0
+      },
+      "STATE-LP120": {
+        "total_seconds": 2510.6696287219993,
+        "available_seconds": 2387.5925690740005,
+        "unavailable_seconds": 123.0770596479988,
+        "available_fraction": 0.9509783930788821,
+        "unavailable_reason_seconds": {
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.05066257499947824,
+          "temperature_status_missing_or_stale;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.015631751000000804,
+          "original_60s_history_unavailable": 122.0102980469992,
+          "control_temperature_stale": 1.0004672750001191,
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed;source_identity_changed": 0.0
+        },
+        "z_raw": {
+          "min": -0.0074680719344982546,
+          "max": 0.41697921525111353,
+          "amplitude": 0.4244472871856118,
+          "weighted_mean": 0.0702532118435517,
+          "total_variation": 1.273706585939022,
+          "significant_reversals": 5
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.41697921525111353,
+          "amplitude": 0.41697921525111353,
+          "weighted_mean": 0.07085289674866863,
+          "total_variation": 1.2320618258221947,
+          "significant_reversals": 5
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.41570420596635105,
+          "amplitude": 0.41570420596635105,
+          "weighted_mean": 0.07793155369318415,
+          "total_variation": 1.099735960516311,
+          "significant_reversals": 5
+        },
+        "lower_clipped_s": 711.9113092420012,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 713.9164205610014,
+        "at_one_target_s": 0
+      }
+    }
+  },
+  {
+    "run": "M",
+    "group": "phase-resident_background",
+    "branches": {
+      "STATE-G2": {
+        "total_seconds": 599.9601015624366,
+        "available_seconds": 538.0547643124373,
+        "unavailable_seconds": 61.90533724999932,
+        "available_fraction": 0.896817576554202,
+        "unavailable_reason_seconds": {
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.05066257499947824,
+          "temperature_status_missing_or_stale;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.015631751000000804,
+          "original_60s_history_unavailable": 61.83904292399984
+        },
+        "z_raw": {
+          "min": -0.0033570721703959803,
+          "max": 0.002198643231002251,
+          "amplitude": 0.005555715401398232,
+          "weighted_mean": -0.0007556709238961734,
+          "total_variation": 0.20095550582785385,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.002198643231002251,
+          "amplitude": 0.002198643231002251,
+          "weighted_mean": 0.0001624542555596846,
+          "total_variation": 0.05691424107276931,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 387.59252183543686,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 388.591822590437,
+        "at_one_target_s": 0
+      },
+      "STATE-QS": {
+        "total_seconds": 599.9601015624366,
+        "available_seconds": 538.0547643124373,
+        "unavailable_seconds": 61.90533724999932,
+        "available_fraction": 0.896817576554202,
+        "unavailable_reason_seconds": {
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.05066257499947824,
+          "temperature_status_missing_or_stale;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.015631751000000804,
+          "original_60s_history_unavailable": 61.83904292399984
+        },
+        "z_raw": {
+          "min": -0.009544762188576073,
+          "max": 0.012407299530037363,
+          "amplitude": 0.021952061718613435,
+          "weighted_mean": 0.0017173791603169277,
+          "total_variation": 1.711230524875783,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.012407299530037363,
+          "amplitude": 0.012407299530037363,
+          "weighted_mean": 0.0023089283012372613,
+          "total_variation": 1.2564627345300654,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 104.0323572119969,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 206.5394078434374,
+        "at_one_target_s": 0
+      },
+      "STATE-LP30": {
+        "total_seconds": 599.9601015624366,
+        "available_seconds": 538.0547643124373,
+        "unavailable_seconds": 61.90533724999932,
+        "available_fraction": 0.896817576554202,
+        "unavailable_reason_seconds": {
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.05066257499947824,
+          "temperature_status_missing_or_stale;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.015631751000000804,
+          "original_60s_history_unavailable": 61.83904292399984
+        },
+        "z_raw": {
+          "min": -0.0020356487427754645,
+          "max": 0.0017668207470642016,
+          "amplitude": 0.0038024694898396664,
+          "weighted_mean": -0.00010482846064135861,
+          "total_variation": 0.0441769720416168,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.0017668207470642016,
+          "amplitude": 0.0017668207470642016,
+          "weighted_mean": 0.00027232585503326735,
+          "total_variation": 0.024255318924770092,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 251.5049971684366,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 252.50429792343675,
+        "at_one_target_s": 0
+      },
+      "STATE-LP120": {
+        "total_seconds": 599.9601015624366,
+        "available_seconds": 538.0547643124373,
+        "unavailable_seconds": 61.90533724999932,
+        "available_fraction": 0.896817576554202,
+        "unavailable_reason_seconds": {
+          "unsupported_control_scope;fan_missing_or_stale;temperature_status_missing_or_stale;fan_not_enabled;fan_fault;guard_active;control_temperature_stale;successful_duty_unavailable;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.05066257499947824,
+          "temperature_status_missing_or_stale;manual_temperature;control_temperature_invalid;active_temperature_source_untrusted;temperature_binding_unconfirmed": 0.015631751000000804,
+          "original_60s_history_unavailable": 61.83904292399984
+        },
+        "z_raw": {
+          "min": -0.0010282066513951805,
+          "max": 0.00037666536129137284,
+          "amplitude": 0.0014048720126865533,
+          "weighted_mean": -0.00024963769259917266,
+          "total_variation": 0.011258936710284934,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.00037666536129137284,
+          "amplitude": 0.00037666536129137284,
+          "weighted_mean": 4.726857009354694e-05,
+          "total_variation": 0.003697429596464018,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.0,
+          "amplitude": 0.0,
+          "weighted_mean": 0.0,
+          "total_variation": 0.0,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 356.88159687043935,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 357.8808976254395,
+        "at_one_target_s": 0
+      }
+    }
+  },
+  {
+    "run": "M",
+    "group": "phase-M20",
+    "branches": {
+      "STATE-G2": {
+        "total_seconds": 32.73797011375427,
+        "available_seconds": 32.73797011375427,
+        "unavailable_seconds": 0.0,
+        "available_fraction": 1.0,
+        "unavailable_reason_seconds": {},
+        "z_raw": {
+          "min": -0.00028135263330568704,
+          "max": 0.16801614736389822,
+          "amplitude": 0.16829749999720392,
+          "weighted_mean": 0.0814007672307874,
+          "total_variation": 0.16829749999720392,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.16801614736389822,
+          "amplitude": 0.16801614736389822,
+          "weighted_mean": 0.0814068301102801,
+          "total_variation": 0.16801614736389822,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.156916800339976,
+          "amplitude": 0.156916800339976,
+          "weighted_mean": 0.07299739612938803,
+          "total_variation": 0.156916800339976,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 0.7054718674680771,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 0.7054718674680771,
+        "at_one_target_s": 0
+      },
+      "STATE-QS": {
+        "total_seconds": 32.73797011375427,
+        "available_seconds": 32.73797011375427,
+        "unavailable_seconds": 0.0,
+        "available_fraction": 1.0,
+        "unavailable_reason_seconds": {},
+        "z_raw": {
+          "min": 0.0,
+          "max": 0.3999290946572849,
+          "amplitude": 0.3999290946572849,
+          "weighted_mean": 0.29438498761284826,
+          "total_variation": 0.6525216906361626,
+          "significant_reversals": 6
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.3999290946572849,
+          "amplitude": 0.3999290946572849,
+          "weighted_mean": 0.29438498761284826,
+          "total_variation": 0.6525216906361626,
+          "significant_reversals": 6
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.395518137557495,
+          "amplitude": 0.395518137557495,
+          "weighted_mean": 0.2778516340562079,
+          "total_variation": 0.4288912966575086,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 0,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 0.7054718674680771,
+        "at_one_target_s": 0
+      },
+      "STATE-LP30": {
+        "total_seconds": 32.73797011375427,
+        "available_seconds": 32.73797011375427,
+        "unavailable_seconds": 0.0,
+        "available_fraction": 1.0,
+        "unavailable_reason_seconds": {},
+        "z_raw": {
+          "min": -0.0010189639220243407,
+          "max": 0.19719636607723245,
+          "amplitude": 0.19821532999925678,
+          "weighted_mean": 0.09636757437899017,
+          "total_variation": 0.19824448797250652,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.19719636607723245,
+          "amplitude": 0.19719636607723245,
+          "weighted_mean": 0.09642006528430803,
+          "total_variation": 0.19719636607723245,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.18539060591302386,
+          "amplitude": 0.18539060591302386,
+          "weighted_mean": 0.08855428740208991,
+          "total_variation": 0.18539060591302386,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 1.7066510224676676,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 1.7066510224676676,
+        "at_one_target_s": 0
+      },
+      "STATE-LP120": {
+        "total_seconds": 32.73797011375427,
+        "available_seconds": 32.73797011375427,
+        "unavailable_seconds": 0.0,
+        "available_fraction": 1.0,
+        "unavailable_reason_seconds": {},
+        "z_raw": {
+          "min": -0.00039139161876562413,
+          "max": 0.06675378808935477,
+          "amplitude": 0.0671451797081204,
+          "weighted_mean": 0.02979123816217253,
+          "total_variation": 0.06715909385332068,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.06675378808935477,
+          "amplitude": 0.06675378808935477,
+          "weighted_mean": 0.02981134181753253,
+          "total_variation": 0.06675378808935477,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.06416313285726645,
+          "amplitude": 0.06416313285726645,
+          "weighted_mean": 0.021410296720401494,
+          "total_variation": 0.06416313285726645,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 1.7066510224676676,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 1.7066510224676676,
+        "at_one_target_s": 0
+      }
+    }
+  },
+  {
+    "run": "M",
+    "group": "phase-cooldown_1",
+    "branches": {
+      "STATE-G2": {
+        "total_seconds": 420.0011260509491,
+        "available_seconds": 420.0011260509491,
+        "unavailable_seconds": 0.0,
+        "available_fraction": 1.0,
+        "unavailable_reason_seconds": {},
+        "z_raw": {
+          "min": -0.018020165579684288,
+          "max": 0.17708711392771548,
+          "amplitude": 0.19510727950739976,
+          "weighted_mean": 0.01337025640024984,
+          "total_variation": 0.41006102573325875,
+          "significant_reversals": 2
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.17708711392771548,
+          "amplitude": 0.17708711392771548,
+          "weighted_mean": 0.023004110810907318,
+          "total_variation": 0.28646684908427683,
+          "significant_reversals": 2
+        },
+        "z_output": {
+          "min": 0.018618288094375886,
+          "max": 0.17708711392771548,
+          "amplitude": 0.1584688258333396,
+          "weighted_mean": 0.03974006943446829,
+          "total_variation": 0.1786391394210791,
+          "significant_reversals": 1
+        },
+        "lower_clipped_s": 280.8735867208252,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 280.8735867208252,
+        "at_one_target_s": 0
+      },
+      "STATE-QS": {
+        "total_seconds": 420.0011260509491,
+        "available_seconds": 420.0011260509491,
+        "unavailable_seconds": 0.0,
+        "available_fraction": 1.0,
+        "unavailable_reason_seconds": {},
+        "z_raw": {
+          "min": -0.01984842071769961,
+          "max": 0.3999290946572849,
+          "amplitude": 0.4197775153749845,
+          "weighted_mean": 0.0042720862550488315,
+          "total_variation": 1.8387420286825313,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.3999290946572849,
+          "amplitude": 0.3999290946572849,
+          "weighted_mean": 0.010982235487686134,
+          "total_variation": 0.7326133168004267,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.011851254932493987,
+          "max": 0.395518137557495,
+          "amplitude": 0.383666882625001,
+          "weighted_mean": 0.03566534821519744,
+          "total_variation": 0.3836668826250011,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 292.8849872488245,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 298.89062440982434,
+        "at_one_target_s": 0
+      },
+      "STATE-LP30": {
+        "total_seconds": 420.0011260509491,
+        "available_seconds": 420.0011260509491,
+        "unavailable_seconds": 0.0,
+        "available_fraction": 1.0,
+        "unavailable_reason_seconds": {},
+        "z_raw": {
+          "min": -0.013081550489901872,
+          "max": 0.21072364140541425,
+          "amplitude": 0.2238051918953161,
+          "weighted_mean": 0.018343536877450765,
+          "total_variation": 0.25402203007956875,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.21072364140541425,
+          "amplitude": 0.21072364140541425,
+          "weighted_mean": 0.025043428486188384,
+          "total_variation": 0.22425091673359604,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.01821244063175463,
+          "max": 0.21005215384007983,
+          "amplitude": 0.1918397132083252,
+          "weighted_mean": 0.04204634412107141,
+          "total_variation": 0.21650126113538115,
+          "significant_reversals": 1
+        },
+        "lower_clipped_s": 263.85750155482583,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 263.85750155482583,
+        "at_one_target_s": 0
+      },
+      "STATE-LP120": {
+        "total_seconds": 420.0011260509491,
+        "available_seconds": 420.0011260509491,
+        "unavailable_seconds": 0.0,
+        "available_fraction": 1.0,
+        "unavailable_reason_seconds": {},
+        "z_raw": {
+          "min": -0.007384345635335165,
+          "max": 0.07784973685146782,
+          "amplitude": 0.08523408248680298,
+          "weighted_mean": 0.024602657476253998,
+          "total_variation": 0.09636238098708602,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.07784973685146782,
+          "amplitude": 0.07784973685146782,
+          "weighted_mean": 0.025830968372530242,
+          "total_variation": 0.08894568561358085,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.01411873713226134,
+          "max": 0.06416313285726645,
+          "amplitude": 0.05004439572500511,
+          "weighted_mean": 0.03657732984630877,
+          "total_variation": 0.05004439572500511,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 116.72895605082522,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 116.72895605082522,
+        "at_one_target_s": 0
+      }
+    }
+  },
+  {
+    "run": "M",
+    "group": "phase-M60",
+    "branches": {
+      "STATE-G2": {
+        "total_seconds": 65.03052806854248,
+        "available_seconds": 65.03052806854248,
+        "unavailable_seconds": 0.0,
+        "available_fraction": 1.0,
+        "unavailable_reason_seconds": {},
+        "z_raw": {
+          "min": -0.015106286483037223,
+          "max": 0.2664074024394282,
+          "amplitude": 0.2815136889224654,
+          "weighted_mean": 0.13788622596642736,
+          "total_variation": 0.31591395499405983,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.2664074024394282,
+          "amplitude": 0.2664074024394282,
+          "weighted_mean": 0.13846934549170473,
+          "total_variation": 0.30073811011541246,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.018618288094375886,
+          "max": 0.2606841125443502,
+          "amplitude": 0.24206582444997432,
+          "weighted_mean": 0.1338828402488742,
+          "total_variation": 0.24206582444997432,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 4.349464944298234,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 4.349464944298234,
+        "at_one_target_s": 0
+      },
+      "STATE-QS": {
+        "total_seconds": 65.03052806854248,
+        "available_seconds": 65.03052806854248,
+        "unavailable_seconds": 0.0,
+        "available_fraction": 1.0,
+        "unavailable_reason_seconds": {},
+        "z_raw": {
+          "min": -0.012473648725384834,
+          "max": 0.48010059467348964,
+          "amplitude": 0.49257424339887446,
+          "weighted_mean": 0.33387612967383706,
+          "total_variation": 1.2974218344948343,
+          "significant_reversals": 14
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.48010059467348964,
+          "amplitude": 0.48010059467348964,
+          "weighted_mean": 0.3341127892738608,
+          "total_variation": 1.2807681864625386,
+          "significant_reversals": 14
+        },
+        "z_output": {
+          "min": 0.011851254932493987,
+          "max": 0.48010059467348964,
+          "amplitude": 0.46824933974099564,
+          "weighted_mean": 0.3289968681075038,
+          "total_variation": 0.5348786604826509,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 1.351135737297227,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 1.351135737297227,
+        "at_one_target_s": 0
+      },
+      "STATE-LP30": {
+        "total_seconds": 65.03052806854248,
+        "available_seconds": 65.03052806854248,
+        "unavailable_seconds": 0.0,
+        "available_fraction": 1.0,
+        "unavailable_reason_seconds": {},
+        "z_raw": {
+          "min": -0.011513397346617183,
+          "max": 0.3344387057102239,
+          "amplitude": 0.34595210305684104,
+          "weighted_mean": 0.16644540350400966,
+          "total_variation": 0.34609067599860455,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.3344387057102239,
+          "amplitude": 0.3344387057102239,
+          "weighted_mean": 0.16693589923476052,
+          "total_variation": 0.3344387057102239,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.01821244063175463,
+          "max": 0.3344387057102239,
+          "amplitude": 0.31622626507846924,
+          "weighted_mean": 0.16067641529564608,
+          "total_variation": 0.31622626507846924,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 3.3509185312977934,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 3.3509185312977934,
+        "at_one_target_s": 0
+      },
+      "STATE-LP120": {
+        "total_seconds": 65.03052806854248,
+        "available_seconds": 65.03052806854248,
+        "unavailable_seconds": 0.0,
+        "available_fraction": 1.0,
+        "unavailable_reason_seconds": {},
+        "z_raw": {
+          "min": -0.0074680719344982546,
+          "max": 0.13790087315405444,
+          "amplitude": 0.1453689450885527,
+          "weighted_mean": 0.057113100467652674,
+          "total_variation": 0.14545267138771575,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.13790087315405444,
+          "amplitude": 0.13790087315405444,
+          "weighted_mean": 0.05761196352483456,
+          "total_variation": 0.13790087315405444,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.01411873713226134,
+          "max": 0.11906905814403217,
+          "amplitude": 0.10495032101177082,
+          "weighted_mean": 0.05278453724920162,
+          "total_variation": 0.10495032101177082,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 7.345555305297239,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 7.345555305297239,
+        "at_one_target_s": 0
+      }
+    }
+  },
+  {
+    "run": "M",
+    "group": "phase-cooldown_2",
+    "branches": {
+      "STATE-G2": {
+        "total_seconds": 600.0008499622345,
+        "available_seconds": 600.0008499622345,
+        "unavailable_seconds": 0.0,
+        "available_fraction": 1.0,
+        "unavailable_reason_seconds": {},
+        "z_raw": {
+          "min": -0.014022740137139066,
+          "max": 0.27068626380097527,
+          "amplitude": 0.2847090039381143,
+          "weighted_mean": 0.03409030918338525,
+          "total_variation": 0.5553392093504355,
+          "significant_reversals": 2
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.27068626380097527,
+          "amplitude": 0.27068626380097527,
+          "weighted_mean": 0.038252907945356504,
+          "total_variation": 0.4210092668003597,
+          "significant_reversals": 2
+        },
+        "z_output": {
+          "min": 0.018163929486018283,
+          "max": 0.2606841125443502,
+          "amplitude": 0.24252018305833192,
+          "weighted_mean": 0.05452264244871742,
+          "total_variation": 0.24252018305833192,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 299.18899139293535,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 299.18899139293535,
+        "at_one_target_s": 0
+      },
+      "STATE-QS": {
+        "total_seconds": 600.0008499622345,
+        "available_seconds": 600.0008499622345,
+        "unavailable_seconds": 0.0,
+        "available_fraction": 1.0,
+        "unavailable_reason_seconds": {},
+        "z_raw": {
+          "min": -0.017800898830502378,
+          "max": 0.47523455605402487,
+          "amplitude": 0.49303545488452727,
+          "weighted_mean": 0.01925276352105515,
+          "total_variation": 2.5426486203106227,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.47523455605402487,
+          "amplitude": 0.47523455605402487,
+          "weighted_mean": 0.022428635385710185,
+          "total_variation": 1.4592327652280346,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.013001120115153924,
+          "max": 0.4634229634151545,
+          "amplitude": 0.45042184330000057,
+          "weighted_mean": 0.042935083189466615,
+          "total_variation": 0.4504218433000006,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 280.1415918289367,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 300.1664269219382,
+        "at_one_target_s": 0
+      },
+      "STATE-LP30": {
+        "total_seconds": 600.0008499622345,
+        "available_seconds": 600.0008499622345,
+        "unavailable_seconds": 0.0,
+        "available_fraction": 1.0,
+        "unavailable_reason_seconds": {},
+        "z_raw": {
+          "min": -0.011051147068236133,
+          "max": 0.3432448760985821,
+          "amplitude": 0.35429602316681824,
+          "weighted_mean": 0.03521280082062433,
+          "total_variation": 0.3832392742733725,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.3432448760985821,
+          "amplitude": 0.3432448760985821,
+          "weighted_mean": 0.03857761205525701,
+          "total_variation": 0.35320792335409257,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.017005657276843993,
+          "max": 0.3344387057102239,
+          "amplitude": 0.3174330484333799,
+          "weighted_mean": 0.05470082006065985,
+          "total_variation": 0.31743304843337994,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 293.1837977709347,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 293.1837977709347,
+        "at_one_target_s": 0
+      },
+      "STATE-LP120": {
+        "total_seconds": 600.0008499622345,
+        "available_seconds": 600.0008499622345,
+        "unavailable_seconds": 0.0,
+        "available_fraction": 1.0,
+        "unavailable_reason_seconds": {},
+        "z_raw": {
+          "min": -0.0066164550628244004,
+          "max": 0.1510481037413726,
+          "amplitude": 0.157664558804197,
+          "weighted_mean": 0.04676192500431149,
+          "total_variation": 0.17082579959614952,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.1510481037413726,
+          "amplitude": 0.1510481037413726,
+          "weighted_mean": 0.0474839807722301,
+          "total_variation": 0.1641953343286907,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.015425422018321927,
+          "max": 0.140642443709973,
+          "amplitude": 0.12521702169165108,
+          "weighted_mean": 0.060931449903454886,
+          "total_variation": 0.14679040725759193,
+          "significant_reversals": 1
+        },
+        "lower_clipped_s": 111.8803871679338,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 111.8803871679338,
+        "at_one_target_s": 0
+      }
+    }
+  },
+  {
+    "run": "M",
+    "group": "phase-M180",
+    "branches": {
+      "STATE-G2": {
+        "total_seconds": 192.92035698890686,
+        "available_seconds": 192.92035698890686,
+        "unavailable_seconds": 0.0,
+        "available_fraction": 1.0,
+        "unavailable_reason_seconds": {},
+        "z_raw": {
+          "min": -0.013324485235699512,
+          "max": 0.5756340868822335,
+          "amplitude": 0.588958572117933,
+          "weighted_mean": 0.340870151639575,
+          "total_variation": 0.6896219695581239,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.5756340868822335,
+          "amplitude": 0.5756340868822335,
+          "weighted_mean": 0.34103613928984,
+          "total_variation": 0.6762974843224244,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.018163929486018283,
+          "max": 0.5662236774958622,
+          "amplitude": 0.5480597480098439,
+          "weighted_mean": 0.33451141695591985,
+          "total_variation": 0.5480597480098439,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 4.198838793672621,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 4.198838793672621,
+        "at_one_target_s": 0
+      },
+      "STATE-QS": {
+        "total_seconds": 192.92035698890686,
+        "available_seconds": 192.92035698890686,
+        "unavailable_seconds": 0.0,
+        "available_fraction": 1.0,
+        "unavailable_reason_seconds": {},
+        "z_raw": {
+          "min": -0.015753376943305142,
+          "max": 0.6464824814904795,
+          "amplitude": 0.6622358584337846,
+          "weighted_mean": 0.4709900777066543,
+          "total_variation": 2.5521446690430794,
+          "significant_reversals": 38
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.6464824814904795,
+          "amplitude": 0.6464824814904795,
+          "weighted_mean": 0.47107938778307795,
+          "total_variation": 2.528135155457847,
+          "significant_reversals": 38
+        },
+        "z_output": {
+          "min": 0.013001120115153924,
+          "max": 0.6369134787958437,
+          "amplitude": 0.6239123586806897,
+          "weighted_mean": 0.47076599998117935,
+          "total_variation": 0.9493264365139586,
+          "significant_reversals": 2
+        },
+        "lower_clipped_s": 1.1952331116735877,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 1.1952331116735877,
+        "at_one_target_s": 0
+      },
+      "STATE-LP30": {
+        "total_seconds": 192.92035698890686,
+        "available_seconds": 192.92035698890686,
+        "unavailable_seconds": 0.0,
+        "available_fraction": 1.0,
+        "unavailable_reason_seconds": {},
+        "z_raw": {
+          "min": -0.010775875630327647,
+          "max": 0.5915438189547935,
+          "amplitude": 0.6023196945851211,
+          "weighted_mean": 0.37320490820094543,
+          "total_variation": 0.6025920720190967,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.5915438189547935,
+          "amplitude": 0.5915438189547935,
+          "weighted_mean": 0.3733537411128805,
+          "total_variation": 0.5915438189547935,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.017005657276843993,
+          "max": 0.5887061865230997,
+          "amplitude": 0.5717005292462557,
+          "weighted_mean": 0.364994679487949,
+          "total_variation": 0.5717005292462557,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 3.1973245436729485,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 3.1973245436729485,
+        "at_one_target_s": 0
+      },
+      "STATE-LP120": {
+        "total_seconds": 192.92035698890686,
+        "available_seconds": 192.92035698890686,
+        "unavailable_seconds": 0.0,
+        "available_fraction": 1.0,
+        "unavailable_reason_seconds": {},
+        "z_raw": {
+          "min": -0.006733623041849768,
+          "max": 0.4138925694647817,
+          "amplitude": 0.42062619250663147,
+          "weighted_mean": 0.2051356218149151,
+          "total_variation": 0.4207433604856568,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.4138925694647817,
+          "amplitude": 0.4138925694647817,
+          "weighted_mean": 0.2052780567304356,
+          "total_variation": 0.4138925694647817,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.015425422018321927,
+          "max": 0.3955344272119298,
+          "amplitude": 0.38010900519360785,
+          "weighted_mean": 0.1974130961723474,
+          "total_variation": 0.38010900519360785,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 6.2032162496743695,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 6.2032162496743695,
+        "at_one_target_s": 0
+      }
+    }
+  },
+  {
+    "run": "M",
+    "group": "phase-final_cooldown",
+    "branches": {
+      "STATE-G2": {
+        "total_seconds": 600.0008988380432,
+        "available_seconds": 538.8291764400437,
+        "unavailable_seconds": 61.171722397999474,
+        "available_fraction": 0.8980472820683033,
+        "unavailable_reason_seconds": {
+          "control_temperature_stale": 1.0004672750001191,
+          "original_60s_history_unavailable": 60.171255122999355
+        },
+        "z_raw": {
+          "min": -0.011189446465239427,
+          "max": 0.5756340868822335,
+          "amplitude": 0.586823533347473,
+          "weighted_mean": 0.12545452038299254,
+          "total_variation": 0.6884067487935374,
+          "significant_reversals": 2
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.5756340868822335,
+          "amplitude": 0.5756340868822335,
+          "weighted_mean": 0.1265775265456006,
+          "total_variation": 0.6374305177760055,
+          "significant_reversals": 2
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.5662236774958622,
+          "amplitude": 0.5662236774958622,
+          "weighted_mean": 0.13859014520872043,
+          "total_variation": 0.5087292220000413,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 111.15340077337532,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 112.15921133737538,
+        "at_one_target_s": 0
+      },
+      "STATE-QS": {
+        "total_seconds": 600.0008988380432,
+        "available_seconds": 538.8291764400437,
+        "unavailable_seconds": 61.171722397999474,
+        "available_fraction": 0.8980472820683033,
+        "unavailable_reason_seconds": {
+          "control_temperature_stale": 1.0004672750001191,
+          "original_60s_history_unavailable": 60.171255122999355
+        },
+        "z_raw": {
+          "min": -0.015809169348394648,
+          "max": 0.6337662830670908,
+          "amplitude": 0.6495754524154854,
+          "weighted_mean": 0.08040418132189793,
+          "total_variation": 2.3228273482767534,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.6337662830670908,
+          "amplitude": 0.6337662830670908,
+          "weighted_mean": 0.08145373804633588,
+          "total_variation": 1.9003265806600895,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.6285736707458542,
+          "amplitude": 0.6285736707458542,
+          "weighted_mean": 0.10322353921396811,
+          "total_variation": 0.5839661318083472,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 90.13700525937747,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 103.12030426437559,
+        "at_one_target_s": 0
+      },
+      "STATE-LP30": {
+        "total_seconds": 600.0008988380432,
+        "available_seconds": 538.8291764400437,
+        "unavailable_seconds": 61.171722397999474,
+        "available_fraction": 0.8980472820683033,
+        "unavailable_reason_seconds": {
+          "control_temperature_stale": 1.0004672750001191,
+          "original_60s_history_unavailable": 60.171255122999355
+        },
+        "z_raw": {
+          "min": -0.0073046767537334745,
+          "max": 0.5928693537045369,
+          "amplitude": 0.6001740304582703,
+          "weighted_mean": 0.11093182130226308,
+          "total_variation": 0.5735847577042718,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.5928693537045369,
+          "amplitude": 0.5928693537045369,
+          "weighted_mean": 0.11170819453108194,
+          "total_variation": 0.5605526193399654,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.5887061865230997,
+          "amplitude": 0.5887061865230997,
+          "weighted_mean": 0.12414973215765372,
+          "total_variation": 0.5420543578916901,
+          "significant_reversals": 0
+        },
+        "lower_clipped_s": 111.15340077337532,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 112.15921133737538,
+        "at_one_target_s": 0
+      },
+      "STATE-LP120": {
+        "total_seconds": 600.0008988380432,
+        "available_seconds": 538.8291764400437,
+        "unavailable_seconds": 61.171722397999474,
+        "available_fraction": 0.8980472820683033,
+        "unavailable_reason_seconds": {
+          "control_temperature_stale": 1.0004672750001191,
+          "original_60s_history_unavailable": 60.171255122999355
+        },
+        "z_raw": {
+          "min": -0.005042815168612691,
+          "max": 0.41697921525111353,
+          "amplitude": 0.42202203041972625,
+          "weighted_mean": 0.1581476200192531,
+          "total_variation": 0.36190434291881024,
+          "significant_reversals": 0
+        },
+        "z_target": {
+          "min": 0.0,
+          "max": 0.41697921525111353,
+          "amplitude": 0.41697921525111353,
+          "weighted_mean": 0.15863439048625502,
+          "total_variation": 0.35667614557526967,
+          "significant_reversals": 0
+        },
+        "z_output": {
+          "min": 0.0,
+          "max": 0.41570420596635105,
+          "amplitude": 0.41570420596635105,
+          "weighted_mean": 0.17060601891509625,
+          "total_variation": 0.35367869847106903,
+          "significant_reversals": 1
+        },
+        "lower_clipped_s": 111.15340077337532,
+        "upper_clipped_s": 0,
+        "at_zero_target_s": 112.15921133737538,
+        "at_one_target_s": 0
+      }
+    }
+  }
+]

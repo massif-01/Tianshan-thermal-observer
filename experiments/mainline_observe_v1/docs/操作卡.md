@@ -1,0 +1,60 @@
+# observe.1 持续只读观察操作卡（待复审、待现场清单与窗口批准）
+
+本轮只有本地实现和验证。**不要把历史cpu.3许可、密码、CPU60秒或12请求许可用于本候选。** 当前不登录、不部署、不启动现场观察。CPU专用旁录/12请求暂停；无需YET、jtop、Web UI或全部通讯Issue关闭。
+
+## 现场前一次填写并批准
+
+使用本包的`config/device-register.template.json`、`config/pilot-plan.proposed.json`登记：最多3台的具体设备/热配置、每台观察主机和两路只读源、候选wheel/65项清单/冻结模型SHA、数据目录及磁盘预算、最长窗口、只日常业务、谁能停止。首台在已批准窗口中前2小时检查健康，无阻断可继续，单台总上限24小时；不逐小步骤重复申请，也不机械重复60秒。
+
+默认每观察主机观察一个设备；不同设备不共享Ts/E、缓存或单调时钟。SKU/SoC/模组、散热版本、单风扇、原控制/功耗设置未知项留null。新硬件的冻结模型直接迁移只作探索，不能宣称已校准。保持AUTO、曲线、gain、保护、源采样、fan/temp轮询、2s HTTP预算和TTL原样。没有原始有效TJ/两rail时只是保真诊断记录，不称模型验证。
+
+若已有观察器持全局锁，由其负责人按已批准范围先有界结束归档，或不启动新候选；本候选不kill别人的进程、不删锁。没有任何新的推理许可；用户自己的业务照常运行。
+
+## 独立安装与身份（获准后才执行）
+
+原Linux x86_64/CPython3.10解释器与21个锁定依赖复用。原TTO/cpu.3/closeout/基础环境不覆盖，不升级依赖。变量全部由这次清单填写，不猜路径或设备。
+
+```sh
+"$TTO_PY310" scripts/assemble_wheelhouse.py --accepted-wheelhouse "$TTO_ACCEPTED_WHEELHOUSE" --candidate "$TTO_OBSERVE_WHEEL" --output "$TTO_NEW_WHEELHOUSE"
+"$TTO_PY310" scripts/install_observe.py --prefix "$TTO_NEW_PREFIX" --wheelhouse "$TTO_NEW_WHEELHOUSE"
+"$TTO_NEW_PREFIX/bin/tto-observe" verify-install --target --thread-policy-output "$TTO_IDENTITY_DIR/install-thread-policy.json"
+```
+
+核对实际65项文件、解释器、依赖、两个真实数值池以及冻结primary/spec/observer；无身份差异即可在同一已批准窗口继续准备，不再专门交安装回执等一次许可。不同或无法核验就保留错误并停止，不使用Python豁免、test sitecustomize、线程热重置或TTL override。
+
+## 预览与唯一启动
+
+新的registration须有本机hostname、全新UUID session_id、device_id/thermal_config_id；配置使用当次已核对的源端点。没有默认IP。`expected_platform`只填已证实部分，GPU UUID若已知则登记；运行发现已见GPU UUID或已登记平台不符就停止本候选。没有稳定序列号的硬件对应仍依赖操作登记，不伪称已独立证明。
+
+```sh
+"$TTO_NEW_PREFIX/bin/tto-observe" preview --config "$TTO_CONFIG" --registration "$TTO_REGISTRATION" --duration "$TTO_WINDOW_SECONDS" > "$TTO_PREVIEW"
+```
+
+preview不开网络，不是许可。按本次批准填写其中grant_template，另存新grant：action=readonly-observe；精确candidate_manifest/model_manifest/config SHA、设备/配置/session一致；not_before_utc/expires_at_utc含时区，覆盖运行和10秒收尾；max_duration_s、session_max_bytes及批准依据明确；explicit_user_start只能在真实批准后写true。**绝不能为现场填写self_owned_loopback或使用--local-loopback；该选项仅接受数值loopback源和自己的测试许可。**
+
+```sh
+"$TTO_NEW_PREFIX/bin/tto-observe" observe --config "$TTO_CONFIG" --registration "$TTO_REGISTRATION" --grant "$TTO_GRANT" --output "$TTO_NEW_SESSION" --duration "$TTO_WINDOW_SECONDS" --allow-network
+```
+
+这一个进程包含唯一原生collector/quality、一条有界模型消费链与真实预测发布/成熟评分，没有Requester或SSH旁录。状态provisional/degraded/unavailable、fan缺口和guard不决定raw能否继续，也不许可任何负载。异常不改成正常，恢复不补造缺口。可选业务事件只读已存在文件；缺少时unknown，不查询模型或用GPU反推请求。
+
+## 状态、检查点、停止、归档
+
+```sh
+"$TTO_NEW_PREFIX/bin/tto-observe" status --session "$TTO_NEW_SESSION"
+"$TTO_NEW_PREFIX/bin/tto-observe" history --session "$TTO_NEW_SESSION" --stream predictions --last 20
+"$TTO_NEW_PREFIX/bin/tto-observe" stop --session "$TTO_NEW_SESSION"
+"$TTO_NEW_PREFIX/bin/tto-observe" archive --session "$TTO_NEW_SESSION" --output "$TTO_ARCHIVE_NEW"
+```
+
+STOP只核对并终止本会话PID/创建时刻/主机/用户；正常先SIGTERM，8秒未退出才kill自己的进程，另存强制收尾回执。不会停止用户推理、天山OS、风扇或其他观察器。到时正常退出不重开；重启需新session/新目录，按原冷启动规则，不把不同进程片段伪装为连续run。
+
+前2小时看two-hour-checkpoint、资源、状态/预测覆盖及raw质量；原mean5%目标、rolling10s均值>8%持续30s、RSS>128MiB、资源未知10s有预登记含义。普通缺口非阻断；硬件/身份串机、原始队列丢失、磁盘/写入问题、资源持续超限或收尾不明属于软件阻断。模型计算异常可冷启动恢复；投影软件异常则本会话禁用模型但保留原生与I-02质量，报告为raw诊断，不用旧状态假装可用。
+
+24小时版本化上限=86400秒；同一进程/原生UUID热状态连续。会话总存储最多8GiB（grant可降，最低64MiB），每个逻辑片最多2GiB/4小时，所有JSONL文件64MiB轮转，索引保留物理文件及SHA。普通非observe仍原4小时/2GiB边界。本机短合成服务外推约5.1GiB/天仅供磁盘建议，不能保证真实数据量；每主机建议至少18GiB可用，含最坏8GiB原记录、8GiB归档及余量。低空间停止数据写入，保留8MiB元数据额度；真磁盘不可写时只能保留现有文件和stderr/非零退出，不伪称完整索引。
+
+可选用户服务由`install_observe.py --unit-output ... --config ... --registration ... --grant ... --session-output ... --duration ...`仅生成单元文本，**不自动enable/start**。模板Restart=no、TimeoutStopSec=10、RuntimeMaxSec=窗口+10、KillMode=control-group。现场服务启用必须包含在这次窗口批准中；本轮未执行。
+
+## 回退
+
+停止本候选并核对实际退出、索引归档；保留新prefix和失败记录。原TTO/cpu.3/closeout目录、配置和数据仍在，按批准的所有权/新窗口选择旧观察入口，不自动重启旧程序，不回滚或改动风扇/源服务。冻结G2原件deployable=false不改；生成器的新候选不能热替换当前观察会话。

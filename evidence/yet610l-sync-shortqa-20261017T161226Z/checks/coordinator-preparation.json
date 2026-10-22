@@ -1,0 +1,18 @@
+{
+  "state": "prepared_not_started",
+  "runtime": "/home/rm01/TTO-midload-0.2.4/conda-env/bin/python",
+  "health": "original unmodified native TrialHealth from reviewed 0.2.4 candidate",
+  "hard_limit_s": 2400,
+  "collection_timeout_s": 2395,
+  "cleanup_reserve_s": 5,
+  "config_changes": [
+    "new independent storage.data_root only"
+  ],
+  "production_changes": false,
+  "checks": [
+    "syntax parsed",
+    "explicit user authorization required",
+    "no inference calls in collector coordinator",
+    "no old override"
+  ]
+}

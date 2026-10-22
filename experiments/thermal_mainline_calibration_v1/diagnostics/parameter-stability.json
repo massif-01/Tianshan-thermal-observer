@@ -1,0 +1,244 @@
+{
+  "generate": {
+    "parameters": {
+      "a": {
+        "min": 0.13423467118049023,
+        "max": 0.13426252553525936,
+        "mean": 0.13424835575305466,
+        "sample_std": 1.3507021869585747e-05,
+        "coefficient_of_variation": 0.00010061219590973211,
+        "selected": 0.13425653359865786,
+        "ratio_to_frozen": 1.1693732877573293,
+        "ratio_to_parent": 1.1693732877573293
+      },
+      "c": {
+        "min": 0.01259798569898942,
+        "max": 0.01259959003259836,
+        "mean": 0.012598766769913795,
+        "sample_std": 7.681865532328812e-07,
+        "coefficient_of_variation": 6.097315453662751e-05,
+        "selected": 0.012599213474287089,
+        "ratio_to_frozen": 1.03492771073106,
+        "ratio_to_parent": 1.03492771073106
+      },
+      "d0": {
+        "min": 0.005659997984905074,
+        "max": 0.0056603009033435936,
+        "mean": 0.005660142745799368,
+        "sample_std": 1.4384319995584712e-07,
+        "coefficient_of_variation": 2.541335199763279e-05,
+        "selected": 0.005660245266470366,
+        "ratio_to_frozen": 1.2110710754955922,
+        "ratio_to_parent": 1.2110710754955922
+      },
+      "d1": {
+        "min": 0.007194496522824522,
+        "max": 0.007194667148106863,
+        "mean": 0.007194549595220524,
+        "sample_std": 6.351642750642382e-08,
+        "coefficient_of_variation": 8.828409154148995e-06,
+        "selected": 0.007194526533665937,
+        "ratio_to_frozen": 0.862982764403209,
+        "ratio_to_parent": 0.862982764403209
+      },
+      "b_g": {
+        "min": 0.046907818009669325,
+        "max": 0.04691657150201382,
+        "mean": 0.04691179611328527,
+        "sample_std": 4.049701694653893e-06,
+        "coefficient_of_variation": 8.632587174608372e-05,
+        "selected": 0.04691374807554039,
+        "ratio_to_frozen": 2.553400479025707,
+        "ratio_to_parent": 2.553400479025707
+      },
+      "b_c": {
+        "min": 0.00676403873754315,
+        "max": 0.00676703279442936,
+        "mean": 0.006766152393432682,
+        "sample_std": 1.1183360014441044e-06,
+        "coefficient_of_variation": 0.000165283891998882,
+        "selected": 0.0067668586566291345,
+        "ratio_to_frozen": 0.10881521436969091,
+        "ratio_to_parent": 0.10881521436969091
+      }
+    },
+    "input_diagnostics": {
+      "fit_rows": 2508,
+      "eligible_segments": 26,
+      "independent_runs": 1,
+      "power_min": [
+        1.984,
+        5.952
+      ],
+      "power_max": [
+        40.392,
+        18.619
+      ],
+      "PWM_range": [
+        0.18,
+        1.0
+      ],
+      "normalized_input_singular_values": [
+        1.6565244415763045,
+        0.4681488558289991,
+        0.1917379024770966
+      ],
+      "independent_rail_correlation": 0.9630557811204107,
+      "independent_thermal_contributions_identified": false,
+      "no_environment_temperature_fixed": true
+    },
+    "training_objectives": [
+      {
+        "seed": "N1",
+        "J": 0.8015352937541687
+      },
+      {
+        "seed": "N2",
+        "J": 0.8015352938566671
+      },
+      {
+        "seed": "N3",
+        "J": 0.8015352938176801
+      },
+      {
+        "seed": "N4",
+        "J": 0.8015352931879218
+      },
+      {
+        "seed": "N5",
+        "J": 0.8015352918193215
+      },
+      {
+        "seed": "N6",
+        "J": 0.8015352926588154
+      }
+    ],
+    "selected_seed": "N5",
+    "inference": "Within-data numerical convergence across fixed starts; not a sampling confidence interval or physical identification"
+  },
+  "calibrate": {
+    "parameters": {
+      "a": {
+        "min": 0.5147184898110198,
+        "max": 0.5148703745253357,
+        "mean": 0.5147791395573341,
+        "sample_std": 6.926476208062393e-05,
+        "coefficient_of_variation": 0.00013455238714642882,
+        "selected": 0.5148641747653312,
+        "ratio_to_frozen": 4.484462667519805,
+        "ratio_to_parent": 3.8349282598376147
+      },
+      "c": {
+        "min": 0.04411483730621694,
+        "max": 0.04411971980145679,
+        "mean": 0.044116716833624114,
+        "sample_std": 2.2515603892511973e-06,
+        "coefficient_of_variation": 5.103644493180286e-05,
+        "selected": 0.044119421176807866,
+        "ratio_to_frozen": 3.6240684111336443,
+        "ratio_to_parent": 3.501759952464359
+      },
+      "d0": {
+        "min": 0.004069592711632476,
+        "max": 0.00406991592797178,
+        "mean": 0.0040697601401869996,
+        "sample_std": 1.373117106405984e-07,
+        "coefficient_of_variation": 3.373950943317488e-05,
+        "selected": 0.004069605890859186,
+        "ratio_to_frozen": 0.8707364700751588,
+        "ratio_to_parent": 0.7189804856984447
+      },
+      "d1": {
+        "min": 0.010697650331363785,
+        "max": 0.010698233204009542,
+        "mean": 0.010697897368796868,
+        "sample_std": 2.473342202174409e-07,
+        "coefficient_of_variation": 2.3119890917897e-05,
+        "selected": 0.010698164013891584,
+        "ratio_to_frozen": 1.2832437425236374,
+        "ratio_to_parent": 1.4869865256359525
+      },
+      "b_g": {
+        "min": 0.04080940692997679,
+        "max": 0.04082845399051539,
+        "mean": 0.04081658775952997,
+        "sample_std": 8.936398560869587e-06,
+        "coefficient_of_variation": 0.0002189403634992269,
+        "selected": 0.04082713792083579,
+        "ratio_to_frozen": 2.2221211862341677,
+        "ratio_to_parent": 0.8702595634673239
+      },
+      "b_c": {
+        "min": 0.20551212024767246,
+        "max": 0.2055387365485118,
+        "mean": 0.20552392150371177,
+        "sample_std": 1.182353792052678e-05,
+        "coefficient_of_variation": 5.7528767619944654e-05,
+        "selected": 0.2055387365485118,
+        "ratio_to_frozen": 3.3051882437194395,
+        "ratio_to_parent": 30.37432093356292
+      }
+    },
+    "input_diagnostics": {
+      "fit_rows": 2503,
+      "eligible_segments": 2,
+      "independent_runs": 1,
+      "power_min": [
+        1.984,
+        5.952
+      ],
+      "power_max": [
+        26.938,
+        17.827
+      ],
+      "PWM_range": [
+        0.18,
+        0.86
+      ],
+      "normalized_input_singular_values": [
+        1.6851228301106425,
+        0.3997631945443391,
+        0.02346136670443641
+      ],
+      "independent_rail_correlation": 0.999375624944989,
+      "independent_thermal_contributions_identified": false,
+      "no_environment_temperature_fixed": true
+    },
+    "training_objectives": [
+      {
+        "seed": "N2",
+        "J": 0.6343698032749687
+      },
+      {
+        "seed": "N3",
+        "J": 0.6343698036708606
+      },
+      {
+        "seed": "N4",
+        "J": 0.6343698044389635
+      },
+      {
+        "seed": "N5",
+        "J": 0.6343698034581716
+      },
+      {
+        "seed": "N6",
+        "J": 0.6343698040545328
+      },
+      {
+        "seed": "PARENT",
+        "J": 0.6343698033930312
+      }
+    ],
+    "selected_seed": "N2",
+    "inference": "Within-data numerical convergence across fixed starts; not a sampling confidence interval or physical identification"
+  },
+  "interpretation": {
+    "numerical_start_stability_not_cross_process_stability": true,
+    "independently_identified_rail_contributions": false,
+    "measured_heat_capacity": false,
+    "ambient_24C_applies_only_to_old_M": true,
+    "no_ambient_constraint_used": true,
+    "new_fits": 0
+  }
+}

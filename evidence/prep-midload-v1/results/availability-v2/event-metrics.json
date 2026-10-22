@@ -1,0 +1,1731 @@
+[
+  {
+    "event": {
+      "id": "P01",
+      "stage": "pilot",
+      "start": 253476.44694447517,
+      "end": 253480.05925130844,
+      "client_submit_mono_s": 253476.446958615,
+      "client_end_mono_s": 253480.059307869,
+      "overlaps_previous": false
+    },
+    "reference_TJ_C": 45.906,
+    "reference_n": 30,
+    "reference_span_s": 29.0274009660061,
+    "actual_peak_C": 49.343,
+    "peak_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:528",
+    "peak_time": 253479.693944037,
+    "temperature_rise_C": 3.4370000000000047,
+    "positive_temperature_rise_area_C_s": 11.19537797201734,
+    "area_covered_s": 8.007904494996183,
+    "model_peak_comparison": {
+      "G1": {
+        "common_n": 9,
+        "actual_peak_C": 49.343,
+        "model_peak_C": 45.92199036712502,
+        "peak_error_C": -3.421009632874984,
+        "common_refs": [
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:520",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:523",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:525",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:528",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:532",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:535",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:538",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:540",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:543"
+        ],
+        "peak_window_incomplete": false
+      },
+      "G2": {
+        "common_n": 9,
+        "actual_peak_C": 49.343,
+        "model_peak_C": 46.898137553248986,
+        "peak_error_C": -2.444862446751017,
+        "common_refs": [
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:520",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:523",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:525",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:528",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:532",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:535",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:538",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:540",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:543"
+        ],
+        "peak_window_incomplete": false
+      }
+    },
+    "cooldown": [
+      {
+        "window_s": [
+          0,
+          5
+        ],
+        "TJ_n": 5,
+        "TJ_mean_C": 46.9184,
+        "TJ_first_C": 47.687,
+        "TJ_last_C": 46.531,
+        "PWM_mean_pct": 42.4,
+        "complete_input_seconds": 5.0
+      },
+      {
+        "window_s": [
+          5,
+          15
+        ],
+        "TJ_n": 10,
+        "TJ_mean_C": 46.3403,
+        "TJ_first_C": 46.5,
+        "TJ_last_C": 46.25,
+        "PWM_mean_pct": 44,
+        "complete_input_seconds": 10.0
+      },
+      {
+        "window_s": [
+          15,
+          45
+        ],
+        "TJ_n": 30,
+        "TJ_mean_C": 45.87976666666667,
+        "TJ_first_C": 46.125,
+        "TJ_last_C": 45.593,
+        "PWM_mean_pct": 39.93333333333333,
+        "complete_input_seconds": 30.0
+      },
+      {
+        "window_s": [
+          45,
+          90
+        ],
+        "TJ_n": 45,
+        "TJ_mean_C": 45.367666666666665,
+        "TJ_first_C": 45.593,
+        "TJ_last_C": 45.25,
+        "PWM_mean_pct": 23.77777777777778,
+        "complete_input_seconds": 45.0
+      }
+    ],
+    "not_energy_or_heat_capacity": true
+  },
+  {
+    "event": {
+      "id": "S01",
+      "stage": "sparse",
+      "start": 253660.09575629234,
+      "end": 253662.6312584877,
+      "client_submit_mono_s": 253660.095772709,
+      "client_end_mono_s": 253662.631308302,
+      "overlaps_previous": false
+    },
+    "reference_TJ_C": 45.343,
+    "reference_n": 30,
+    "reference_span_s": 29.027591669000685,
+    "actual_peak_C": 48.531,
+    "peak_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1072",
+    "peak_time": 253661.857839691,
+    "temperature_rise_C": 3.1879999999999953,
+    "positive_temperature_rise_area_C_s": 10.60810610938969,
+    "area_covered_s": 6.006617748993449,
+    "model_peak_comparison": {},
+    "cooldown": [
+      {
+        "window_s": [
+          0,
+          5
+        ],
+        "TJ_n": 4,
+        "TJ_mean_C": 46.445,
+        "TJ_first_C": 47.0,
+        "TJ_last_C": 46.062,
+        "PWM_mean_pct": 36,
+        "complete_input_seconds": 5.0
+      },
+      {
+        "window_s": [
+          5,
+          15
+        ],
+        "TJ_n": 10,
+        "TJ_mean_C": 45.893299999999996,
+        "TJ_first_C": 46.093,
+        "TJ_last_C": 45.75,
+        "PWM_mean_pct": 42,
+        "complete_input_seconds": 10.0
+      },
+      {
+        "window_s": [
+          15,
+          45
+        ],
+        "TJ_n": 30,
+        "TJ_mean_C": 45.4351,
+        "TJ_first_C": 45.75,
+        "TJ_last_C": 45.156,
+        "PWM_mean_pct": 39.36666666666667,
+        "complete_input_seconds": 30.0
+      },
+      {
+        "window_s": [
+          45,
+          90
+        ],
+        "TJ_n": 45,
+        "TJ_mean_C": 44.964133333333336,
+        "TJ_first_C": 45.218,
+        "TJ_last_C": 44.843,
+        "PWM_mean_pct": 24.022222222222222,
+        "complete_input_seconds": 45.0
+      }
+    ],
+    "not_energy_or_heat_capacity": true
+  },
+  {
+    "event": {
+      "id": "S02",
+      "stage": "sparse",
+      "start": 253752.66175436974,
+      "end": 253754.87303233147,
+      "client_submit_mono_s": 253752.661780962,
+      "client_end_mono_s": 253754.873062301,
+      "overlaps_previous": false
+    },
+    "reference_TJ_C": 44.906,
+    "reference_n": 30,
+    "reference_span_s": 29.029620251007145,
+    "actual_peak_C": 48.093,
+    "peak_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1351",
+    "peak_time": 253754.950409668,
+    "temperature_rise_C": 3.1870000000000047,
+    "positive_temperature_rise_area_C_s": 8.784331904327777,
+    "area_covered_s": 6.005035984009737,
+    "model_peak_comparison": {
+      "G1": {
+        "common_n": 7,
+        "actual_peak_C": 48.093,
+        "model_peak_C": 45.35556004616194,
+        "peak_error_C": -2.737439953838063,
+        "common_refs": [
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1344",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1348",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1351",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1354",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1357",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1359",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1363"
+        ],
+        "peak_window_incomplete": false
+      },
+      "G2": {
+        "common_n": 7,
+        "actual_peak_C": 48.093,
+        "model_peak_C": 45.909110242344354,
+        "peak_error_C": -2.183889757655649,
+        "common_refs": [
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1344",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1348",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1351",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1354",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1357",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1359",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1363"
+        ],
+        "peak_window_incomplete": false
+      }
+    },
+    "cooldown": [
+      {
+        "window_s": [
+          0,
+          5
+        ],
+        "TJ_n": 5,
+        "TJ_mean_C": 46.3806,
+        "TJ_first_C": 48.093,
+        "TJ_last_C": 45.656,
+        "PWM_mean_pct": 33.2,
+        "complete_input_seconds": 5.0
+      },
+      {
+        "window_s": [
+          5,
+          15
+        ],
+        "TJ_n": 10,
+        "TJ_mean_C": 45.2809,
+        "TJ_first_C": 45.437,
+        "TJ_last_C": 45.093,
+        "PWM_mean_pct": 40,
+        "complete_input_seconds": 10.0
+      },
+      {
+        "window_s": [
+          15,
+          45
+        ],
+        "TJ_n": 30,
+        "TJ_mean_C": 44.8851,
+        "TJ_first_C": 45.093,
+        "TJ_last_C": 44.562,
+        "PWM_mean_pct": 37.5,
+        "complete_input_seconds": 30.0
+      },
+      {
+        "window_s": [
+          45,
+          90
+        ],
+        "TJ_n": 45,
+        "TJ_mean_C": 44.56422222222222,
+        "TJ_first_C": 44.625,
+        "TJ_last_C": 44.468,
+        "PWM_mean_pct": 23.266666666666666,
+        "complete_input_seconds": 45.0
+      }
+    ],
+    "not_energy_or_heat_capacity": true
+  },
+  {
+    "event": {
+      "id": "S03",
+      "stage": "sparse",
+      "start": 253844.89767742157,
+      "end": 253847.11232542992,
+      "client_submit_mono_s": 253844.89769211,
+      "client_end_mono_s": 253847.112337217,
+      "overlaps_previous": false
+    },
+    "reference_TJ_C": 44.531,
+    "reference_n": 30,
+    "reference_span_s": 29.024398412992014,
+    "actual_peak_C": 47.687,
+    "peak_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1626",
+    "peak_time": 253847.037601429,
+    "temperature_rise_C": 3.155999999999999,
+    "positive_temperature_rise_area_C_s": 9.542387059813404,
+    "area_covered_s": 7.007868771004723,
+    "model_peak_comparison": {
+      "G1": {
+        "common_n": 8,
+        "actual_peak_C": 47.687,
+        "model_peak_C": 45.30228057345915,
+        "peak_error_C": -2.3847194265408476,
+        "common_refs": [
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1620",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1623",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1626",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1628",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1632",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1635",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1638",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1641"
+        ],
+        "peak_window_incomplete": false
+      },
+      "G2": {
+        "common_n": 8,
+        "actual_peak_C": 47.687,
+        "model_peak_C": 45.68316738186233,
+        "peak_error_C": -2.0038326181376647,
+        "common_refs": [
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1620",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1623",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1626",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1628",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1632",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1635",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1638",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1641"
+        ],
+        "peak_window_incomplete": false
+      }
+    },
+    "cooldown": [
+      {
+        "window_s": [
+          0,
+          5
+        ],
+        "TJ_n": 5,
+        "TJ_mean_C": 45.4432,
+        "TJ_first_C": 46.062,
+        "TJ_last_C": 45.156,
+        "PWM_mean_pct": 33.8,
+        "complete_input_seconds": 5.0
+      },
+      {
+        "window_s": [
+          5,
+          15
+        ],
+        "TJ_n": 10,
+        "TJ_mean_C": 44.9309,
+        "TJ_first_C": 45.062,
+        "TJ_last_C": 44.812,
+        "PWM_mean_pct": 38,
+        "complete_input_seconds": 10.0
+      },
+      {
+        "window_s": [
+          15,
+          45
+        ],
+        "TJ_n": 30,
+        "TJ_mean_C": 44.595333333333336,
+        "TJ_first_C": 44.75,
+        "TJ_last_C": 44.468,
+        "PWM_mean_pct": 35.766666666666666,
+        "complete_input_seconds": 30.0
+      },
+      {
+        "window_s": [
+          45,
+          90
+        ],
+        "TJ_n": 44,
+        "TJ_mean_C": 44.32840909090909,
+        "TJ_first_C": 44.562,
+        "TJ_last_C": 44.25,
+        "PWM_mean_pct": 22.613636363636363,
+        "complete_input_seconds": 45.0
+      }
+    ],
+    "not_energy_or_heat_capacity": true
+  },
+  {
+    "event": {
+      "id": "S04",
+      "stage": "sparse",
+      "start": 253937.14072227478,
+      "end": 253938.6765344143,
+      "client_submit_mono_s": 253937.140744527,
+      "client_end_mono_s": 253938.676589238,
+      "overlaps_previous": false
+    },
+    "reference_TJ_C": 44.296499999999995,
+    "reference_n": 30,
+    "reference_span_s": 29.028474066988565,
+    "actual_peak_C": 47.343,
+    "peak_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1902",
+    "peak_time": 253939.121386438,
+    "temperature_rise_C": 3.046500000000009,
+    "positive_temperature_rise_area_C_s": 7.70615250619287,
+    "area_covered_s": 5.003394136001589,
+    "model_peak_comparison": {
+      "G1": {
+        "common_n": 6,
+        "actual_peak_C": 47.343,
+        "model_peak_C": 45.41031292950384,
+        "peak_error_C": -1.932687070496165,
+        "common_refs": [
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1898",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1902",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1905",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1908",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1911",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1913"
+        ],
+        "peak_window_incomplete": false
+      },
+      "G2": {
+        "common_n": 6,
+        "actual_peak_C": 47.343,
+        "model_peak_C": 45.430264252035784,
+        "peak_error_C": -1.91273574796422,
+        "common_refs": [
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1898",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1902",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1905",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1908",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1911",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:1913"
+        ],
+        "peak_window_incomplete": false
+      }
+    },
+    "cooldown": [
+      {
+        "window_s": [
+          0,
+          5
+        ],
+        "TJ_n": 5,
+        "TJ_mean_C": 45.412,
+        "TJ_first_C": 47.343,
+        "TJ_last_C": 44.75,
+        "PWM_mean_pct": 31.4,
+        "complete_input_seconds": 5.0
+      },
+      {
+        "window_s": [
+          5,
+          15
+        ],
+        "TJ_n": 10,
+        "TJ_mean_C": 44.6371,
+        "TJ_first_C": 44.812,
+        "TJ_last_C": 44.593,
+        "PWM_mean_pct": 37,
+        "complete_input_seconds": 10.0
+      },
+      {
+        "window_s": [
+          15,
+          45
+        ],
+        "TJ_n": 30,
+        "TJ_mean_C": 44.380833333333335,
+        "TJ_first_C": 44.593,
+        "TJ_last_C": 44.281,
+        "PWM_mean_pct": 35.266666666666666,
+        "complete_input_seconds": 30.0
+      },
+      {
+        "window_s": [
+          45,
+          90
+        ],
+        "TJ_n": 45,
+        "TJ_mean_C": 44.16353333333333,
+        "TJ_first_C": 44.25,
+        "TJ_last_C": 44.156,
+        "PWM_mean_pct": 22.266666666666666,
+        "complete_input_seconds": 45.0
+      }
+    ],
+    "not_energy_or_heat_capacity": true
+  },
+  {
+    "event": {
+      "id": "S05",
+      "stage": "sparse",
+      "start": 254028.70183944702,
+      "end": 254030.9159913063,
+      "client_submit_mono_s": 254028.701857356,
+      "client_end_mono_s": 254030.916075148,
+      "overlaps_previous": false
+    },
+    "reference_TJ_C": 44.156,
+    "reference_n": 30,
+    "reference_span_s": 29.020793136995053,
+    "actual_peak_C": 47.531,
+    "peak_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2178",
+    "peak_time": 254031.196672615,
+    "temperature_rise_C": 3.375,
+    "positive_temperature_rise_area_C_s": 10.916766499994765,
+    "area_covered_s": 6.006063248991268,
+    "model_peak_comparison": {
+      "G1": {
+        "common_n": 7,
+        "actual_peak_C": 47.531,
+        "model_peak_C": 45.41835644049346,
+        "peak_error_C": -2.1126435595065374,
+        "common_refs": [
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2171",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2175",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2178",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2181",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2183",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2186",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2190"
+        ],
+        "peak_window_incomplete": false
+      },
+      "G2": {
+        "common_n": 7,
+        "actual_peak_C": 47.531,
+        "model_peak_C": 45.59627728771249,
+        "peak_error_C": -1.9347227122875097,
+        "common_refs": [
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2171",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2175",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2178",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2181",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2183",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2186",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2190"
+        ],
+        "peak_window_incomplete": false
+      }
+    },
+    "cooldown": [
+      {
+        "window_s": [
+          0,
+          5
+        ],
+        "TJ_n": 5,
+        "TJ_mean_C": 45.4998,
+        "TJ_first_C": 47.531,
+        "TJ_last_C": 44.75,
+        "PWM_mean_pct": 35.2,
+        "complete_input_seconds": 5.0
+      },
+      {
+        "window_s": [
+          5,
+          15
+        ],
+        "TJ_n": 10,
+        "TJ_mean_C": 44.6121,
+        "TJ_first_C": 44.687,
+        "TJ_last_C": 44.531,
+        "PWM_mean_pct": 38,
+        "complete_input_seconds": 10.0
+      },
+      {
+        "window_s": [
+          15,
+          45
+        ],
+        "TJ_n": 30,
+        "TJ_mean_C": 44.2871,
+        "TJ_first_C": 44.468,
+        "TJ_last_C": 44.156,
+        "PWM_mean_pct": 35.833333333333336,
+        "complete_input_seconds": 30.0
+      },
+      {
+        "window_s": [
+          45,
+          90
+        ],
+        "TJ_n": 45,
+        "TJ_mean_C": 44.050377777777776,
+        "TJ_first_C": 44.125,
+        "TJ_last_C": 44.031,
+        "PWM_mean_pct": 22.57777777777778,
+        "complete_input_seconds": 45.0
+      }
+    ],
+    "not_energy_or_heat_capacity": true
+  },
+  {
+    "event": {
+      "id": "S06",
+      "stage": "sparse",
+      "start": 254120.9468483925,
+      "end": 254123.31644630432,
+      "client_submit_mono_s": 254120.94687418,
+      "client_end_mono_s": 254123.316499433,
+      "overlaps_previous": false
+    },
+    "reference_TJ_C": 44.031,
+    "reference_n": 30,
+    "reference_span_s": 29.023535405023722,
+    "actual_peak_C": 47.531,
+    "peak_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2453",
+    "peak_time": 254123.283273886,
+    "temperature_rise_C": 3.5,
+    "positive_temperature_rise_area_C_s": 12.231178563944887,
+    "area_covered_s": 7.006940749997739,
+    "model_peak_comparison": {
+      "G1": {
+        "common_n": 8,
+        "actual_peak_C": 47.531,
+        "model_peak_C": 45.397646330232895,
+        "peak_error_C": -2.1333536697671036,
+        "common_refs": [
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2448",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2451",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2453",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2456",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2460",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2463",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2465",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2467"
+        ],
+        "peak_window_incomplete": false
+      },
+      "G2": {
+        "common_n": 8,
+        "actual_peak_C": 47.531,
+        "model_peak_C": 45.58255918248959,
+        "peak_error_C": -1.9484408175104093,
+        "common_refs": [
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2448",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2451",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2453",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2456",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2460",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2463",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2465",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:2467"
+        ],
+        "peak_window_incomplete": false
+      }
+    },
+    "cooldown": [
+      {
+        "window_s": [
+          0,
+          5
+        ],
+        "TJ_n": 5,
+        "TJ_mean_C": 44.8936,
+        "TJ_first_C": 45.406,
+        "TJ_last_C": 44.656,
+        "PWM_mean_pct": 37,
+        "complete_input_seconds": 5.0
+      },
+      {
+        "window_s": [
+          5,
+          15
+        ],
+        "TJ_n": 10,
+        "TJ_mean_C": 44.4966,
+        "TJ_first_C": 44.656,
+        "TJ_last_C": 44.437,
+        "PWM_mean_pct": 37,
+        "complete_input_seconds": 9.782805200986331
+      },
+      {
+        "window_s": [
+          15,
+          45
+        ],
+        "TJ_n": 28,
+        "TJ_mean_C": 44.18382142857143,
+        "TJ_first_C": 44.343,
+        "TJ_last_C": 44.156,
+        "PWM_mean_pct": 34.57142857142857,
+        "complete_input_seconds": 30.0
+      },
+      {
+        "window_s": [
+          45,
+          90
+        ],
+        "TJ_n": 45,
+        "TJ_mean_C": 43.937866666666665,
+        "TJ_first_C": 44.031,
+        "TJ_last_C": 43.906,
+        "PWM_mean_pct": 21.844444444444445,
+        "complete_input_seconds": 45.0
+      }
+    ],
+    "not_energy_or_heat_capacity": true
+  },
+  {
+    "event": {
+      "id": "D01",
+      "stage": "continuous",
+      "start": 254423.3531243801,
+      "end": 254425.7334663868,
+      "client_submit_mono_s": 254423.353138838,
+      "client_end_mono_s": 254425.733485976,
+      "overlaps_previous": false
+    },
+    "reference_TJ_C": 44.625,
+    "reference_n": 30,
+    "reference_span_s": 29.02442626300035,
+    "actual_peak_C": 48.156,
+    "peak_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3359",
+    "peak_time": 254425.561077506,
+    "temperature_rise_C": 3.530999999999999,
+    "positive_temperature_rise_area_C_s": 10.538564571515723,
+    "area_covered_s": 7.00698655997985,
+    "model_peak_comparison": {
+      "G1": {
+        "common_n": 8,
+        "actual_peak_C": 48.156,
+        "model_peak_C": 45.70065019300686,
+        "peak_error_C": -2.4553498069931408,
+        "common_refs": [
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3352",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3355",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3359",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3362",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3365",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3367",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3370",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3374"
+        ],
+        "peak_window_incomplete": false
+      },
+      "G2": {
+        "common_n": 8,
+        "actual_peak_C": 48.156,
+        "model_peak_C": 45.652979190268965,
+        "peak_error_C": -2.5030208097310336,
+        "common_refs": [
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3352",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3355",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3359",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3362",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3365",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3367",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3370",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3374"
+        ],
+        "peak_window_incomplete": false
+      }
+    },
+    "cooldown": [
+      {
+        "window_s": [
+          0,
+          5
+        ],
+        "TJ_n": 5,
+        "TJ_mean_C": 45.6246,
+        "TJ_first_C": 46.25,
+        "TJ_last_C": 45.312,
+        "PWM_mean_pct": 38,
+        "complete_input_seconds": 5.0
+      },
+      {
+        "window_s": [
+          5,
+          15
+        ],
+        "TJ_n": 10,
+        "TJ_mean_C": 46.3464,
+        "TJ_first_C": 45.25,
+        "TJ_last_C": 46.375,
+        "PWM_mean_pct": 38.6,
+        "complete_input_seconds": 10.0
+      },
+      {
+        "window_s": [
+          15,
+          45
+        ],
+        "TJ_n": 30,
+        "TJ_mean_C": 46.27236666666667,
+        "TJ_first_C": 45.968,
+        "TJ_last_C": 45.718,
+        "PWM_mean_pct": 39.733333333333334,
+        "complete_input_seconds": 30.0
+      },
+      {
+        "window_s": [
+          45,
+          90
+        ],
+        "TJ_n": 45,
+        "TJ_mean_C": 46.535022222222224,
+        "TJ_first_C": 45.718,
+        "TJ_last_C": 46.093,
+        "PWM_mean_pct": 33.8,
+        "complete_input_seconds": 44.0927662649774
+      }
+    ],
+    "not_energy_or_heat_capacity": true
+  },
+  {
+    "event": {
+      "id": "D02",
+      "stage": "continuous",
+      "start": 254435.75733733177,
+      "end": 254438.7497062683,
+      "client_submit_mono_s": 254435.757362789,
+      "client_end_mono_s": 254438.749761565,
+      "overlaps_previous": true
+    },
+    "reference_TJ_C": 44.671499999999995,
+    "reference_n": 30,
+    "reference_span_s": 29.02442933002021,
+    "actual_peak_C": 48.875,
+    "peak_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3397",
+    "peak_time": 254438.574665766,
+    "temperature_rise_C": 4.203500000000005,
+    "positive_temperature_rise_area_C_s": 16.623779350827064,
+    "area_covered_s": 7.0060101940180175,
+    "model_peak_comparison": {
+      "G1": {
+        "common_n": 8,
+        "actual_peak_C": 48.875,
+        "model_peak_C": 46.14021630892246,
+        "peak_error_C": -2.7347836910775385,
+        "common_refs": [
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3392",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3395",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3397",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3400",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3404",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3407",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3410",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3412"
+        ],
+        "peak_window_incomplete": false
+      },
+      "G2": {
+        "common_n": 8,
+        "actual_peak_C": 48.875,
+        "model_peak_C": 46.59145554232993,
+        "peak_error_C": -2.283544457670068,
+        "common_refs": [
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3392",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3395",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3397",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3400",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3404",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3407",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3410",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3412"
+        ],
+        "peak_window_incomplete": false
+      }
+    },
+    "cooldown": [
+      {
+        "window_s": [
+          0,
+          5
+        ],
+        "TJ_n": 5,
+        "TJ_mean_C": 46.1182,
+        "TJ_first_C": 46.718,
+        "TJ_last_C": 45.718,
+        "PWM_mean_pct": 41,
+        "complete_input_seconds": 5.0
+      },
+      {
+        "window_s": [
+          5,
+          15
+        ],
+        "TJ_n": 10,
+        "TJ_mean_C": 46.3402,
+        "TJ_first_C": 45.656,
+        "TJ_last_C": 46.093,
+        "PWM_mean_pct": 41,
+        "complete_input_seconds": 10.0
+      },
+      {
+        "window_s": [
+          15,
+          45
+        ],
+        "TJ_n": 30,
+        "TJ_mean_C": 46.2984,
+        "TJ_first_C": 45.937,
+        "TJ_last_C": 45.656,
+        "PWM_mean_pct": 37.06666666666667,
+        "complete_input_seconds": 29.778411673003575
+      },
+      {
+        "window_s": [
+          45,
+          90
+        ],
+        "TJ_n": 45,
+        "TJ_mean_C": 46.57602222222222,
+        "TJ_first_C": 45.593,
+        "TJ_last_C": 46.093,
+        "PWM_mean_pct": 33.48888888888889,
+        "complete_input_seconds": 43.855580976989586
+      }
+    ],
+    "not_energy_or_heat_capacity": true
+  },
+  {
+    "event": {
+      "id": "D03",
+      "stage": "continuous",
+      "start": 254448.76884627342,
+      "end": 254450.97368335724,
+      "client_submit_mono_s": 254448.768860922,
+      "client_end_mono_s": 254450.973740514,
+      "overlaps_previous": true
+    },
+    "reference_TJ_C": 45.531,
+    "reference_n": 30,
+    "reference_span_s": 29.02573199098697,
+    "actual_peak_C": 48.718,
+    "peak_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3434",
+    "peak_time": 254450.58546248,
+    "temperature_rise_C": 3.1870000000000047,
+    "positive_temperature_rise_area_C_s": 8.47412390585315,
+    "area_covered_s": 6.005424347997177,
+    "model_peak_comparison": {
+      "G1": {
+        "common_n": 7,
+        "actual_peak_C": 48.718,
+        "model_peak_C": 46.295991345240374,
+        "peak_error_C": -2.4220086547596296,
+        "common_refs": [
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3430",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3434",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3437",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3440",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3442",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3445",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3449"
+        ],
+        "peak_window_incomplete": false
+      },
+      "G2": {
+        "common_n": 7,
+        "actual_peak_C": 48.718,
+        "model_peak_C": 46.65663817584233,
+        "peak_error_C": -2.0613618241576717,
+        "common_refs": [
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3430",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3434",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3437",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3440",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3442",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3445",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3449"
+        ],
+        "peak_window_incomplete": false
+      }
+    },
+    "cooldown": [
+      {
+        "window_s": [
+          0,
+          5
+        ],
+        "TJ_n": 5,
+        "TJ_mean_C": 46.1932,
+        "TJ_first_C": 46.843,
+        "TJ_last_C": 45.812,
+        "PWM_mean_pct": 41,
+        "complete_input_seconds": 5.0
+      },
+      {
+        "window_s": [
+          5,
+          15
+        ],
+        "TJ_n": 10,
+        "TJ_mean_C": 46.621300000000005,
+        "TJ_first_C": 45.75,
+        "TJ_last_C": 46.343,
+        "PWM_mean_pct": 38.6,
+        "complete_input_seconds": 10.0
+      },
+      {
+        "window_s": [
+          15,
+          45
+        ],
+        "TJ_n": 30,
+        "TJ_mean_C": 46.41203333333333,
+        "TJ_first_C": 46.093,
+        "TJ_last_C": 45.968,
+        "PWM_mean_pct": 35.36666666666667,
+        "complete_input_seconds": 29.554690910998033
+      },
+      {
+        "window_s": [
+          45,
+          90
+        ],
+        "TJ_n": 45,
+        "TJ_mean_C": 46.57322222222222,
+        "TJ_first_C": 45.937,
+        "TJ_last_C": 46.343,
+        "PWM_mean_pct": 33.044444444444444,
+        "complete_input_seconds": 43.366768634994514
+      }
+    ],
+    "not_energy_or_heat_capacity": true
+  },
+  {
+    "event": {
+      "id": "D04",
+      "stage": "continuous",
+      "start": 254460.99373149872,
+      "end": 254463.51611042023,
+      "client_submit_mono_s": 254460.993746303,
+      "client_end_mono_s": 254463.51612907,
+      "overlaps_previous": true
+    },
+    "reference_TJ_C": 45.734,
+    "reference_n": 30,
+    "reference_span_s": 29.02745631299331,
+    "actual_peak_C": 49.218,
+    "peak_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3472",
+    "peak_time": 254463.598046726,
+    "temperature_rise_C": 3.4840000000000018,
+    "positive_temperature_rise_area_C_s": 9.821964570613403,
+    "area_covered_s": 6.007172037003329,
+    "model_peak_comparison": {
+      "G1": {
+        "common_n": 7,
+        "actual_peak_C": 49.218,
+        "model_peak_C": 46.521967050255995,
+        "peak_error_C": -2.6960329497440085,
+        "common_refs": [
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3467",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3470",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3472",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3475",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3479",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3482",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3485"
+        ],
+        "peak_window_incomplete": false
+      },
+      "G2": {
+        "common_n": 7,
+        "actual_peak_C": 49.218,
+        "model_peak_C": 46.86786072691984,
+        "peak_error_C": -2.350139273080167,
+        "common_refs": [
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3467",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3470",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3472",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3475",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3479",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3482",
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3485"
+        ],
+        "peak_window_incomplete": false
+      }
+    },
+    "cooldown": [
+      {
+        "window_s": [
+          0,
+          5
+        ],
+        "TJ_n": 5,
+        "TJ_mean_C": 46.830600000000004,
+        "TJ_first_C": 49.218,
+        "TJ_last_C": 45.843,
+        "PWM_mean_pct": 38.8,
+        "complete_input_seconds": 5.0
+      },
+      {
+        "window_s": [
+          5,
+          15
+        ],
+        "TJ_n": 10,
+        "TJ_mean_C": 46.3994,
+        "TJ_first_C": 45.843,
+        "TJ_last_C": 46.218,
+        "PWM_mean_pct": 35.9,
+        "complete_input_seconds": 9.778411673003575
+      },
+      {
+        "window_s": [
+          15,
+          45
+        ],
+        "TJ_n": 30,
+        "TJ_mean_C": 46.46946666666667,
+        "TJ_first_C": 46.031,
+        "TJ_last_C": 45.906,
+        "PWM_mean_pct": 34.03333333333333,
+        "complete_input_seconds": 29.54391143398243
+      },
+      {
+        "window_s": [
+          45,
+          90
+        ],
+        "TJ_n": 45,
+        "TJ_mean_C": 46.596066666666665,
+        "TJ_first_C": 45.812,
+        "TJ_last_C": 46.156,
+        "PWM_mean_pct": 33.6,
+        "complete_input_seconds": 42.65400432198658
+      }
+    ],
+    "not_energy_or_heat_capacity": true
+  },
+  {
+    "event": {
+      "id": "D05",
+      "stage": "continuous",
+      "start": 254473.54015731812,
+      "end": 254475.59697437286,
+      "client_submit_mono_s": 254473.540182865,
+      "client_end_mono_s": 254475.597057796,
+      "overlaps_previous": true
+    },
+    "reference_TJ_C": 45.812,
+    "reference_n": 30,
+    "reference_span_s": 29.027243955992162,
+    "actual_peak_C": 48.843,
+    "peak_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3508",
+    "peak_time": 254475.609528535,
+    "temperature_rise_C": 3.031000000000006,
+    "positive_temperature_rise_area_C_s": 6.534704014618254,
+    "area_covered_s": 6.004900998988887,
+    "model_peak_comparison": {
+      "G1": {
+        "common_n": 1,
+        "actual_peak_C": 45.625,
+        "model_peak_C": 46.21631058623145,
+        "peak_error_C": 0.5913105862314509,
+        "common_refs": [
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3501"
+        ],
+        "peak_window_incomplete": true
+      },
+      "G2": {
+        "common_n": 1,
+        "actual_peak_C": 45.625,
+        "model_peak_C": 45.89961247049524,
+        "peak_error_C": 0.2746124704952422,
+        "common_refs": [
+          "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3501"
+        ],
+        "peak_window_incomplete": true
+      }
+    },
+    "cooldown": [
+      {
+        "window_s": [
+          0,
+          5
+        ],
+        "TJ_n": 5,
+        "TJ_mean_C": 46.7494,
+        "TJ_first_C": 48.843,
+        "TJ_last_C": 45.968,
+        "PWM_mean_pct": 34.8,
+        "complete_input_seconds": 5.0
+      },
+      {
+        "window_s": [
+          5,
+          15
+        ],
+        "TJ_n": 10,
+        "TJ_mean_C": 46.7184,
+        "TJ_first_C": 45.937,
+        "TJ_last_C": 47.0,
+        "PWM_mean_pct": 33.5,
+        "complete_input_seconds": 10.0
+      },
+      {
+        "window_s": [
+          15,
+          45
+        ],
+        "TJ_n": 30,
+        "TJ_mean_C": 46.39653333333333,
+        "TJ_first_C": 46.625,
+        "TJ_last_C": 45.781,
+        "PWM_mean_pct": 33.63333333333333,
+        "complete_input_seconds": 29.314354591973824
+      },
+      {
+        "window_s": [
+          45,
+          90
+        ],
+        "TJ_n": 45,
+        "TJ_mean_C": 46.620400000000004,
+        "TJ_first_C": 45.687,
+        "TJ_last_C": 46.312,
+        "PWM_mean_pct": 33.733333333333334,
+        "complete_input_seconds": 41.48494074397604
+      }
+    ],
+    "not_energy_or_heat_capacity": true
+  },
+  {
+    "event": {
+      "id": "D06",
+      "stage": "continuous",
+      "start": 254485.6206483841,
+      "end": 254488.7786912918,
+      "client_submit_mono_s": 254485.620673649,
+      "client_end_mono_s": 254488.778744233,
+      "overlaps_previous": true
+    },
+    "reference_TJ_C": 45.8275,
+    "reference_n": 30,
+    "reference_span_s": 29.026616763992934,
+    "actual_peak_C": 49.25,
+    "peak_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3546",
+    "peak_time": 254488.621881861,
+    "temperature_rise_C": 3.4224999999999994,
+    "positive_temperature_rise_area_C_s": 11.31065938655362,
+    "area_covered_s": 7.006041334010661,
+    "model_peak_comparison": {},
+    "cooldown": [
+      {
+        "window_s": [
+          0,
+          5
+        ],
+        "TJ_n": 5,
+        "TJ_mean_C": 46.431,
+        "TJ_first_C": 47.0,
+        "TJ_last_C": 46.031,
+        "PWM_mean_pct": 37,
+        "complete_input_seconds": 5.0
+      },
+      {
+        "window_s": [
+          5,
+          15
+        ],
+        "TJ_n": 10,
+        "TJ_mean_C": 46.5841,
+        "TJ_first_C": 46.125,
+        "TJ_last_C": 46.187,
+        "PWM_mean_pct": 33.8,
+        "complete_input_seconds": 9.770420148182893
+      },
+      {
+        "window_s": [
+          15,
+          45
+        ],
+        "TJ_n": 30,
+        "TJ_mean_C": 46.3371,
+        "TJ_first_C": 46.125,
+        "TJ_last_C": 45.75,
+        "PWM_mean_pct": 33,
+        "complete_input_seconds": 28.590216233802494
+      },
+      {
+        "window_s": [
+          45,
+          90
+        ],
+        "TJ_n": 45,
+        "TJ_mean_C": 46.44262222222222,
+        "TJ_first_C": 45.718,
+        "TJ_last_C": 45.531,
+        "PWM_mean_pct": 29.976190476190474,
+        "complete_input_seconds": 38.98310922193923
+      }
+    ],
+    "not_energy_or_heat_capacity": true
+  },
+  {
+    "event": {
+      "id": "D07",
+      "stage": "continuous",
+      "start": 254498.7980234623,
+      "end": 254500.7217144966,
+      "client_submit_mono_s": 254498.798039964,
+      "client_end_mono_s": 254500.721771852,
+      "overlaps_previous": true
+    },
+    "reference_TJ_C": 45.968,
+    "reference_n": 30,
+    "reference_span_s": 29.025623680994613,
+    "actual_peak_C": 48.875,
+    "peak_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3582",
+    "peak_time": 254500.632837849,
+    "temperature_rise_C": 2.9069999999999965,
+    "positive_temperature_rise_area_C_s": 6.572476035121453,
+    "area_covered_s": 6.005031147011323,
+    "model_peak_comparison": {},
+    "cooldown": [
+      {
+        "window_s": [
+          0,
+          5
+        ],
+        "TJ_n": 5,
+        "TJ_mean_C": 46.2622,
+        "TJ_first_C": 46.75,
+        "TJ_last_C": 45.937,
+        "PWM_mean_pct": 33,
+        "complete_input_seconds": 4.7676321959879715
+      },
+      {
+        "window_s": [
+          5,
+          15
+        ],
+        "TJ_n": 10,
+        "TJ_mean_C": 46.5214,
+        "TJ_first_C": 45.937,
+        "TJ_last_C": 46.093,
+        "PWM_mean_pct": 31.8,
+        "complete_input_seconds": 9.770443157991394
+      },
+      {
+        "window_s": [
+          15,
+          45
+        ],
+        "TJ_n": 30,
+        "TJ_mean_C": 46.50476666666667,
+        "TJ_first_C": 46.0,
+        "TJ_last_C": 45.968,
+        "PWM_mean_pct": 33.93333333333333,
+        "complete_input_seconds": 28.355126012989786
+      },
+      {
+        "window_s": [
+          45,
+          90
+        ],
+        "TJ_n": 45,
+        "TJ_mean_C": 46.05724444444444,
+        "TJ_first_C": 45.843,
+        "TJ_last_C": 45.218,
+        "PWM_mean_pct": 25.023809523809526,
+        "complete_input_seconds": 38.51296222698875
+      }
+    ],
+    "not_energy_or_heat_capacity": true
+  },
+  {
+    "event": {
+      "id": "D08",
+      "stage": "continuous",
+      "start": 254510.74085330963,
+      "end": 254512.65412831306,
+      "client_submit_mono_s": 254510.740868788,
+      "client_end_mono_s": 254512.654154577,
+      "overlaps_previous": true
+    },
+    "reference_TJ_C": 45.9995,
+    "reference_n": 30,
+    "reference_span_s": 29.025761859986233,
+    "actual_peak_C": 48.812,
+    "peak_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3616",
+    "peak_time": 254512.641679333,
+    "temperature_rise_C": 2.8125,
+    "positive_temperature_rise_area_C_s": 6.068912474879509,
+    "area_covered_s": 6.006535377993714,
+    "model_peak_comparison": {},
+    "cooldown": [
+      {
+        "window_s": [
+          0,
+          5
+        ],
+        "TJ_n": 5,
+        "TJ_mean_C": 46.1746,
+        "TJ_first_C": 46.562,
+        "TJ_last_C": 45.937,
+        "PWM_mean_pct": 34,
+        "complete_input_seconds": 4.770443157991394
+      },
+      {
+        "window_s": [
+          5,
+          15
+        ],
+        "TJ_n": 9,
+        "TJ_mean_C": 46.593333333333334,
+        "TJ_first_C": 45.906,
+        "TJ_last_C": 46.437,
+        "PWM_mean_pct": 33.44444444444444,
+        "complete_input_seconds": 9.541226385015761
+      },
+      {
+        "window_s": [
+          15,
+          45
+        ],
+        "TJ_n": 30,
+        "TJ_mean_C": 46.53706666666667,
+        "TJ_first_C": 46.156,
+        "TJ_last_C": 45.781,
+        "PWM_mean_pct": 34.166666666666664,
+        "complete_input_seconds": 27.8716970019741
+      },
+      {
+        "window_s": [
+          45,
+          90
+        ],
+        "TJ_n": 44,
+        "TJ_mean_C": 45.743227272727275,
+        "TJ_first_C": 45.75,
+        "TJ_last_C": 45.156,
+        "PWM_mean_pct": 20.5609756097561,
+        "complete_input_seconds": 38.980628017976414
+      }
+    ],
+    "not_energy_or_heat_capacity": true
+  },
+  {
+    "event": {
+      "id": "D09",
+      "stage": "continuous",
+      "start": 254522.67249131203,
+      "end": 254524.89769744873,
+      "client_submit_mono_s": 254522.672505911,
+      "client_end_mono_s": 254524.897751147,
+      "overlaps_previous": true
+    },
+    "reference_TJ_C": 45.9525,
+    "reference_n": 30,
+    "reference_span_s": 29.025166995998006,
+    "actual_peak_C": 49.156,
+    "peak_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3650",
+    "peak_time": 254524.653827383,
+    "temperature_rise_C": 3.2034999999999982,
+    "positive_temperature_rise_area_C_s": 7.193809107889007,
+    "area_covered_s": 6.0042295739986,
+    "model_peak_comparison": {},
+    "cooldown": [
+      {
+        "window_s": [
+          0,
+          5
+        ],
+        "TJ_n": 5,
+        "TJ_mean_C": 46.2808,
+        "TJ_first_C": 46.812,
+        "TJ_last_C": 45.906,
+        "PWM_mean_pct": 34,
+        "complete_input_seconds": 4.505055404995801
+      },
+      {
+        "window_s": [
+          5,
+          15
+        ],
+        "TJ_n": 10,
+        "TJ_mean_C": 46.8996,
+        "TJ_first_C": 45.906,
+        "TJ_last_C": 46.625,
+        "PWM_mean_pct": 32.6,
+        "complete_input_seconds": 9.782411491003586
+      },
+      {
+        "window_s": [
+          15,
+          45
+        ],
+        "TJ_n": 30,
+        "TJ_mean_C": 46.43706666666667,
+        "TJ_first_C": 46.343,
+        "TJ_last_C": 45.812,
+        "PWM_mean_pct": 33.666666666666664,
+        "complete_input_seconds": 24.663842761947308
+      },
+      {
+        "window_s": [
+          45,
+          90
+        ],
+        "TJ_n": 44,
+        "TJ_mean_C": 45.368272727272725,
+        "TJ_first_C": 45.812,
+        "TJ_last_C": 45.187,
+        "PWM_mean_pct": 17.09090909090909,
+        "complete_input_seconds": 41.974213487003
+      }
+    ],
+    "not_energy_or_heat_capacity": true
+  },
+  {
+    "event": {
+      "id": "D10",
+      "stage": "continuous",
+      "start": 254534.92161035538,
+      "end": 254537.7723493576,
+      "client_submit_mono_s": 254534.921633955,
+      "client_end_mono_s": 254537.772403972,
+      "overlaps_previous": true
+    },
+    "reference_TJ_C": 45.921499999999995,
+    "reference_n": 30,
+    "reference_span_s": 29.025167874991894,
+    "actual_peak_C": 49.406,
+    "peak_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3688",
+    "peak_time": 254537.664924762,
+    "temperature_rise_C": 3.484500000000004,
+    "positive_temperature_rise_area_C_s": 10.96427690611987,
+    "area_covered_s": 7.006891148979776,
+    "model_peak_comparison": {},
+    "cooldown": [
+      {
+        "window_s": [
+          0,
+          5
+        ],
+        "TJ_n": 5,
+        "TJ_mean_C": 46.4558,
+        "TJ_first_C": 46.968,
+        "TJ_last_C": 46.156,
+        "PWM_mean_pct": 35.8,
+        "complete_input_seconds": 5.0
+      },
+      {
+        "window_s": [
+          5,
+          15
+        ],
+        "TJ_n": 10,
+        "TJ_mean_C": 46.6338,
+        "TJ_first_C": 46.093,
+        "TJ_last_C": 46.156,
+        "PWM_mean_pct": 34.8,
+        "complete_input_seconds": 9.054867882980034
+      },
+      {
+        "window_s": [
+          15,
+          45
+        ],
+        "TJ_n": 30,
+        "TJ_mean_C": 46.04233333333333,
+        "TJ_first_C": 46.125,
+        "TJ_last_C": 45.437,
+        "PWM_mean_pct": 25,
+        "complete_input_seconds": 24.688505062978948
+      },
+      {
+        "window_s": [
+          45,
+          90
+        ],
+        "TJ_n": 44,
+        "TJ_mean_C": 45.22975,
+        "TJ_first_C": 45.375,
+        "TJ_last_C": 45.062,
+        "PWM_mean_pct": 17,
+        "complete_input_seconds": 42.894683302991325
+      }
+    ],
+    "not_energy_or_heat_capacity": true
+  },
+  {
+    "event": {
+      "id": "D11",
+      "stage": "continuous",
+      "start": 254547.7912592888,
+      "end": 254549.6945283413,
+      "client_submit_mono_s": 254547.791275089,
+      "client_end_mono_s": 254549.694572486,
+      "overlaps_previous": true
+    },
+    "reference_TJ_C": 46.0305,
+    "reference_n": 30,
+    "reference_span_s": 29.025292951002484,
+    "actual_peak_C": 49.062,
+    "peak_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3721",
+    "peak_time": 254549.676833182,
+    "temperature_rise_C": 3.031499999999994,
+    "positive_temperature_rise_area_C_s": 6.63516762433942,
+    "area_covered_s": 6.006564516021172,
+    "model_peak_comparison": {},
+    "cooldown": [
+      {
+        "window_s": [
+          0,
+          5
+        ],
+        "TJ_n": 5,
+        "TJ_mean_C": 46.3122,
+        "TJ_first_C": 46.812,
+        "TJ_last_C": 46.031,
+        "PWM_mean_pct": 35,
+        "complete_input_seconds": 4.529362222994678
+      },
+      {
+        "window_s": [
+          5,
+          15
+        ],
+        "TJ_n": 10,
+        "TJ_mean_C": 46.5934,
+        "TJ_first_C": 46.0,
+        "TJ_last_C": 46.312,
+        "PWM_mean_pct": 32.9,
+        "complete_input_seconds": 9.07201735698618
+      },
+      {
+        "window_s": [
+          15,
+          45
+        ],
+        "TJ_n": 29,
+        "TJ_mean_C": 45.58689655172414,
+        "TJ_first_C": 46.125,
+        "TJ_last_C": 45.218,
+        "PWM_mean_pct": 17.807692307692307,
+        "complete_input_seconds": 25.383147496002493
+      },
+      {
+        "window_s": [
+          45,
+          90
+        ],
+        "TJ_n": 44,
+        "TJ_mean_C": 45.17572727272727,
+        "TJ_first_C": 45.25,
+        "TJ_last_C": 45.062,
+        "PWM_mean_pct": 17,
+        "complete_input_seconds": 43.59866128998692
+      }
+    ],
+    "not_energy_or_heat_capacity": true
+  },
+  {
+    "event": {
+      "id": "D12",
+      "stage": "continuous",
+      "start": 254559.71322226524,
+      "end": 254562.09776043892,
+      "client_submit_mono_s": 254559.713238503,
+      "client_end_mono_s": 254562.097787627,
+      "overlaps_previous": true
+    },
+    "reference_TJ_C": 46.062,
+    "reference_n": 30,
+    "reference_span_s": 29.026847350003663,
+    "actual_peak_C": 48.875,
+    "peak_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3756",
+    "peak_time": 254561.687036276,
+    "temperature_rise_C": 2.8130000000000024,
+    "positive_temperature_rise_area_C_s": 6.6945859580510465,
+    "area_covered_s": 6.006468371022493,
+    "model_peak_comparison": {},
+    "cooldown": [
+      {
+        "window_s": [
+          0,
+          5
+        ],
+        "TJ_n": 5,
+        "TJ_mean_C": 46.387,
+        "TJ_first_C": 46.843,
+        "TJ_last_C": 46.093,
+        "PWM_mean_pct": 32.5,
+        "complete_input_seconds": 3.7483457840862684
+      },
+      {
+        "window_s": [
+          5,
+          15
+        ],
+        "TJ_n": 10,
+        "TJ_mean_C": 45.7746,
+        "TJ_first_C": 46.062,
+        "TJ_last_C": 45.531,
+        "PWM_mean_pct": 17.625,
+        "complete_input_seconds": 7.331774453894468
+      },
+      {
+        "window_s": [
+          15,
+          45
+        ],
+        "TJ_n": 29,
+        "TJ_mean_C": 45.33586206896552,
+        "TJ_first_C": 45.718,
+        "TJ_last_C": 45.281,
+        "PWM_mean_pct": 17,
+        "complete_input_seconds": 27.898917658021674
+      },
+      {
+        "window_s": [
+          45,
+          90
+        ],
+        "TJ_n": 45,
+        "TJ_mean_C": 45.14608888888889,
+        "TJ_first_C": 45.156,
+        "TJ_last_C": 45.062,
+        "PWM_mean_pct": 17,
+        "complete_input_seconds": 44.53844085999299
+      }
+    ],
+    "not_energy_or_heat_capacity": true
+  }
+]

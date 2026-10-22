@@ -1,0 +1,28 @@
+{
+  "schema": "TTO-AUTOWORKDAY-REQUESTER-v1",
+  "field_authorized": false,
+  "code": {
+    "runner.py": "f54fc5466adc9f743c5d6e4cca92941dba1d80db0cbed1a251edd7e7fbd3b3cb",
+    "make_plan.py": "9f9863cc1bb191b750ceae7180268d9e3c75437730826ada23bf26b981a2fe3c",
+    "vendor/requester.py": "ced3134782fe5e21f123317d0da18ad567c2923c2d4592106ac97ef27c1aa670",
+    "vendor/events.py": "126535545f4e092718a63c45519daaac4a2c26678db6337d91be6ef82f5fd588",
+    "verify_offline.py": "97d4ca782129b1fd3c7d3809b4d1fe00c701373f5f25cfa6ee671666fa25744d",
+    "fixtures/fake_runtime.py": "32d3b4ade024321e15d94d77afe3c5202f906e8c6ea4918f09e362082bb4c8e7",
+    "tests/test_runner.py": "f058aa507d6af16406ec1068fd8bcd3c121579500d09d07ec903108a4dd9e16a"
+  },
+  "accepted_sources_unchanged": {
+    "experiments/mainline_inference_v1/reference/requester.py": "ced3134782fe5e21f123317d0da18ad567c2923c2d4592106ac97ef27c1aa670",
+    "experiments/mainline_inference_v1/events.py": "126535545f4e092718a63c45519daaac4a2c26678db6337d91be6ef82f5fd588"
+  },
+  "observe2_wheel_unchanged_sha256": "481a9671148fe40fcc33c2a65bc98c818be3178fe3138c1cd06bc93b3d21b725",
+  "input_package_members_verified": 6,
+  "plan_canonical_sha256": "14ed7fedbda1eec0d50a36e0dd3becd6b618820f616a231c394b87bfa603b69f",
+  "plan_file_sha256": "769a627b9308a0d4e7e08029f3263aef6b689f984a3efdd94a3ca8ff7b611616",
+  "frozen_opportunities": 386,
+  "request_tasks": 8,
+  "dependency_increment": 0,
+  "collector_instances_created": 0,
+  "external_model_queries": 0,
+  "real_model_requests": 0,
+  "scope": "request line local offline candidate; integration and field approval owned by test line"
+}

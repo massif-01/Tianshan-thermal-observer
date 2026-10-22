@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/Users/massif/Tianshan-thermal-observer/evidence/prep-midload-v1/repair-r1-r2/tools/verify_and_patch.py", line 60, in <module>
+    assert all(sha(primary/p)==h for p,h in pmap['files'].items())
+AssertionError

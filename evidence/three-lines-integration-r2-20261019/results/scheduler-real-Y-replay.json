@@ -1,0 +1,498 @@
+{
+  "virtual_only": true,
+  "phase": "terminal",
+  "stop_reason": "data_or_observer_unavailable_too_long",
+  "virtual_submissions": 0,
+  "actual_requests": 0,
+  "events": [
+    {
+      "event": "run_created",
+      "mono_s": 0.0,
+      "run_id": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece",
+      "command_id": "OFFLINE-REAL-Y-REPLAY",
+      "collector_count": 1,
+      "request_executor_count": 1,
+      "mode": "local_demo"
+    },
+    {
+      "event": "preparation_ready",
+      "mono_s": 20.039405944000464,
+      "run_id": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece",
+      "command_id": "OFFLINE-REAL-Y-REPLAY",
+      "layers": {
+        "collection_available": true,
+        "model_available": true,
+        "field_safety_available": true,
+        "execution_authorized": true,
+        "instrument_clock_ready": false,
+        "explicit_stop": false,
+        "start_allowed": true,
+        "reasons": [],
+        "raw_valid_preserved": {
+          "tj": {
+            "value_C": 44.343,
+            "observed_mono_s": 202545.726490972,
+            "observed_utc": "2026-10-17T16:31:14.430623+00:00",
+            "source_ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:59",
+            "source_age_lower_bound_ms": 234.23494398593903,
+            "valid_until_mono_s": 202550.49225602802,
+            "native_source_valid": true,
+            "age_s": 0.6725022099853959,
+            "raw_valid": true
+          },
+          "power": {
+            "rails_W": [
+              1.984,
+              5.952
+            ],
+            "names": [
+              "vdd_gpu",
+              "vdd_cpu_soc_mss"
+            ],
+            "observed_mono_s": 202545.726490972,
+            "source_ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:59",
+            "valid_until_mono_s": 202550.49225602802,
+            "native_source_valid": true,
+            "age_s": 0.6725022099853959,
+            "raw_valid": true
+          },
+          "last_successful_pwm": {
+            "value_percent": 17,
+            "observed_mono_s": 202545.91126886,
+            "observed_utc": "2026-10-17T16:31:14.615401+00:00",
+            "source_ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:60",
+            "valid_until_mono_s": 202548.41126886,
+            "last_observed_flags": {
+              "auto_state": "active",
+              "control_temperature": 44.3,
+              "controller_gain": 0.819374918937683,
+              "cooling_response": 7.599999904632568,
+              "duty": 17,
+              "duty_valid": true,
+              "enabled": true,
+              "fault": false,
+              "guard_active": false,
+              "guard_temperature": 44.3,
+              "id": 0,
+              "mode": "auto",
+              "predicted_temperature": 44.3,
+              "rpm": 0,
+              "running": true,
+              "slope_c_per_min": 0,
+              "target_duty": 17,
+              "temp_stale": false,
+              "temperature": 44.3,
+              "successful_duty": 17
+            },
+            "age_s": 0.48772432198165916,
+            "raw_valid": true
+          },
+          "control_context": {
+            "observed_mono_s": 202541.459214191,
+            "observed_utc": "2026-10-17T16:31:10.163346+00:00",
+            "source_ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:48",
+            "valid_until_mono_s": 202548.959214191,
+            "last_observed_flags": {
+              "active_source": "variable",
+              "bound_variable": "agx_info.temperature.tj",
+              "initialized": true,
+              "manual_mode": false,
+              "preferred_source": "variable",
+              "temperature_01c": 443,
+              "temperature_c": 44.3,
+              "timestamp_ms": 202585161,
+              "valid": true,
+              "normalized_temp": 44.3,
+              "normalized_valid": true,
+              "clock": "esp32_update_ms"
+            },
+            "age_s": 4.93977899098536,
+            "raw_valid": true
+          }
+        },
+        "observer_state": "tracking",
+        "successful_PWM_age_s": 0.48772432198165916,
+        "safety_status": "observed_fresh",
+        "state_generated_at": 202546.398993182,
+        "observation_cutoff": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:61",
+        "formal_start_allowed": false,
+        "clock_domain": "offline_virtual_observer_clock",
+        "model_permission_unchanged": {
+          "local_demo": true,
+          "formal_field_authorized": false,
+          "device_actions": false
+        },
+        "firmware_identity": null
+      }
+    },
+    {
+      "event": "phase_start",
+      "mono_s": 20.039405944000464,
+      "run_id": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece",
+      "command_id": "OFFLINE-REAL-Y-REPLAY",
+      "index": 0,
+      "stage": {
+        "kind": "background",
+        "seconds": 300
+      },
+      "window_end": 320.03940594400046
+    },
+    {
+      "event": "input_unready",
+      "mono_s": 24.560164638998685,
+      "run_id": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece",
+      "command_id": "OFFLINE-REAL-Y-REPLAY",
+      "layers": {
+        "collection_available": true,
+        "model_available": true,
+        "field_safety_available": false,
+        "execution_authorized": true,
+        "instrument_clock_ready": false,
+        "explicit_stop": false,
+        "start_allowed": false,
+        "reasons": [
+          "safety_unready_or_explicit_stop"
+        ],
+        "raw_valid_preserved": {
+          "tj": {
+            "value_C": 44.437,
+            "observed_mono_s": 202550.72831753,
+            "observed_utc": "2026-10-17T16:31:19.432450+00:00",
+            "source_ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:74",
+            "source_age_lower_bound_ms": 226.15823199157603,
+            "valid_until_mono_s": 202555.50215929802,
+            "native_source_valid": true,
+            "age_s": 0.19143434698344208,
+            "raw_valid": true
+          },
+          "power": {
+            "rails_W": [
+              1.984,
+              5.952
+            ],
+            "names": [
+              "vdd_gpu",
+              "vdd_cpu_soc_mss"
+            ],
+            "observed_mono_s": 202550.72831753,
+            "source_ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:74",
+            "valid_until_mono_s": 202555.50215929802,
+            "native_source_valid": true,
+            "age_s": 0.19143434698344208,
+            "raw_valid": true
+          },
+          "last_successful_pwm": {
+            "value_percent": 17,
+            "observed_mono_s": 202550.919751877,
+            "observed_utc": "2026-10-17T16:31:19.623884+00:00",
+            "source_ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:75",
+            "valid_until_mono_s": 202553.419751877,
+            "last_observed_flags": {
+              "auto_state": "active",
+              "control_temperature": 44.3,
+              "controller_gain": 0.819374918937683,
+              "cooling_response": 7.599999904632568,
+              "duty": 17,
+              "duty_valid": true,
+              "enabled": true,
+              "fault": false,
+              "guard_active": false,
+              "guard_temperature": 44.3,
+              "id": 0,
+              "mode": "auto",
+              "predicted_temperature": 44.3,
+              "rpm": 0,
+              "running": true,
+              "slope_c_per_min": 0,
+              "target_duty": 17,
+              "temp_stale": false,
+              "temperature": 44.3,
+              "successful_duty": 17
+            },
+            "age_s": 0.0,
+            "raw_valid": true
+          },
+          "control_context": {
+            "observed_mono_s": 202546.4338447,
+            "observed_utc": "2026-10-17T16:31:15.137976+00:00",
+            "source_ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:63",
+            "valid_until_mono_s": 202553.9338447,
+            "last_observed_flags": {
+              "active_source": "variable",
+              "bound_variable": "agx_info.temperature.tj",
+              "initialized": true,
+              "manual_mode": false,
+              "preferred_source": "variable",
+              "temperature_01c": 443,
+              "temperature_c": 44.3,
+              "timestamp_ms": 202589183,
+              "valid": true,
+              "normalized_temp": 44.3,
+              "normalized_valid": true,
+              "clock": "esp32_update_ms"
+            },
+            "age_s": 4.485907177004265,
+            "raw_valid": true
+          }
+        },
+        "observer_state": "degraded",
+        "successful_PWM_age_s": 0.0,
+        "safety_status": "observed_fresh",
+        "state_generated_at": 202550.919751877,
+        "observation_cutoff": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:75",
+        "formal_start_allowed": false,
+        "clock_domain": "offline_virtual_observer_clock",
+        "model_permission_unchanged": {
+          "local_demo": true,
+          "formal_field_authorized": false,
+          "device_actions": false
+        },
+        "firmware_identity": null
+      }
+    },
+    {
+      "event": "input_unready",
+      "mono_s": 52.099562424991746,
+      "run_id": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece",
+      "command_id": "OFFLINE-REAL-Y-REPLAY",
+      "layers": {
+        "collection_available": true,
+        "model_available": true,
+        "field_safety_available": false,
+        "execution_authorized": true,
+        "instrument_clock_ready": false,
+        "explicit_stop": false,
+        "start_allowed": false,
+        "reasons": [
+          "safety_unready_or_explicit_stop"
+        ],
+        "raw_valid_preserved": {
+          "tj": {
+            "value_C": 44.343,
+            "observed_mono_s": 202577.741122151,
+            "observed_utc": "2026-10-17T16:31:46.445255+00:00",
+            "source_ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:161",
+            "source_age_lower_bound_ms": 181.02146999444813,
+            "valid_until_mono_s": 202582.560100681,
+            "native_source_valid": true,
+            "age_s": 0.7180275119899306,
+            "raw_valid": true
+          },
+          "power": {
+            "rails_W": [
+              1.984,
+              5.952
+            ],
+            "names": [
+              "vdd_gpu",
+              "vdd_cpu_soc_mss"
+            ],
+            "observed_mono_s": 202577.741122151,
+            "source_ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:161",
+            "valid_until_mono_s": 202582.560100681,
+            "native_source_valid": true,
+            "age_s": 0.7180275119899306,
+            "raw_valid": true
+          },
+          "last_successful_pwm": {
+            "value_percent": 25,
+            "observed_mono_s": 202578.459149663,
+            "observed_utc": "2026-10-17T16:31:47.163282+00:00",
+            "source_ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:163",
+            "valid_until_mono_s": 202580.959149663,
+            "last_observed_flags": {
+              "auto_state": "stale",
+              "control_temperature": 44.4,
+              "controller_gain": 0.819374918937683,
+              "cooling_response": 7.599999904632568,
+              "duty": 25,
+              "duty_valid": true,
+              "enabled": true,
+              "fault": false,
+              "guard_active": false,
+              "guard_temperature": 44.4,
+              "id": 0,
+              "mode": "auto",
+              "predicted_temperature": 44.4,
+              "rpm": 0,
+              "running": true,
+              "slope_c_per_min": 0.20000000298023224,
+              "target_duty": 25,
+              "temp_stale": true,
+              "temperature": 44.4,
+              "successful_duty": 25
+            },
+            "age_s": 0.0,
+            "raw_valid": true
+          },
+          "control_context": {
+            "observed_mono_s": 202576.417510392,
+            "observed_utc": "2026-10-17T16:31:45.121640+00:00",
+            "source_ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:155",
+            "valid_until_mono_s": 202583.917510392,
+            "last_observed_flags": {
+              "active_source": "variable",
+              "bound_variable": "agx_info.temperature.tj",
+              "initialized": true,
+              "manual_mode": false,
+              "preferred_source": "variable",
+              "temperature_01c": 442,
+              "temperature_c": 44.2,
+              "timestamp_ms": 202620155,
+              "valid": true,
+              "normalized_temp": 44.2,
+              "normalized_valid": true,
+              "clock": "esp32_update_ms"
+            },
+            "age_s": 2.041639270988526,
+            "raw_valid": true
+          }
+        },
+        "observer_state": "degraded",
+        "successful_PWM_age_s": 0.0,
+        "safety_status": "observed_fresh",
+        "state_generated_at": 202578.459149663,
+        "observation_cutoff": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:163",
+        "formal_start_allowed": false,
+        "clock_domain": "offline_virtual_observer_clock",
+        "model_permission_unchanged": {
+          "local_demo": true,
+          "formal_field_authorized": false,
+          "device_actions": false
+        },
+        "firmware_identity": null
+      }
+    },
+    {
+      "event": "input_unready",
+      "mono_s": 58.06789650101564,
+      "run_id": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece",
+      "command_id": "OFFLINE-REAL-Y-REPLAY",
+      "layers": {
+        "collection_available": true,
+        "model_available": true,
+        "field_safety_available": false,
+        "execution_authorized": true,
+        "instrument_clock_ready": false,
+        "explicit_stop": false,
+        "start_allowed": false,
+        "reasons": [
+          "safety_unready_or_explicit_stop"
+        ],
+        "raw_valid_preserved": {
+          "tj": {
+            "value_C": 44.343,
+            "observed_mono_s": 202583.743396622,
+            "observed_utc": "2026-10-17T16:31:52.447530+00:00",
+            "source_ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:178",
+            "source_age_lower_bound_ms": 168.92007098067552,
+            "valid_until_mono_s": 202588.57447655103,
+            "native_source_valid": true,
+            "age_s": 0.6840871169988532,
+            "raw_valid": true
+          },
+          "power": {
+            "rails_W": [
+              1.984,
+              5.952
+            ],
+            "names": [
+              "vdd_gpu",
+              "vdd_cpu_soc_mss"
+            ],
+            "observed_mono_s": 202583.743396622,
+            "source_ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:178",
+            "valid_until_mono_s": 202588.57447655103,
+            "native_source_valid": true,
+            "age_s": 0.6840871169988532,
+            "raw_valid": true
+          },
+          "last_successful_pwm": {
+            "value_percent": 17,
+            "observed_mono_s": 202584.427483739,
+            "observed_utc": "2026-10-17T16:31:53.131618+00:00",
+            "source_ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:179",
+            "valid_until_mono_s": 202586.927483739,
+            "last_observed_flags": {
+              "auto_state": "active",
+              "control_temperature": 44.3,
+              "controller_gain": 0.819374918937683,
+              "cooling_response": 7.599999904632568,
+              "duty": 17,
+              "duty_valid": true,
+              "enabled": true,
+              "fault": false,
+              "guard_active": false,
+              "guard_temperature": 44.3,
+              "id": 0,
+              "mode": "auto",
+              "predicted_temperature": 44.3,
+              "rpm": 0,
+              "running": true,
+              "slope_c_per_min": 0,
+              "target_duty": 17,
+              "temp_stale": false,
+              "temperature": 44.3,
+              "successful_duty": 17
+            },
+            "age_s": 0.0,
+            "raw_valid": true
+          },
+          "control_context": {
+            "observed_mono_s": 202581.421948046,
+            "observed_utc": "2026-10-17T16:31:50.126081+00:00",
+            "source_ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:171",
+            "valid_until_mono_s": 202588.921948046,
+            "last_observed_flags": {
+              "active_source": "variable",
+              "bound_variable": "agx_info.temperature.tj",
+              "initialized": true,
+              "manual_mode": false,
+              "preferred_source": "variable",
+              "temperature_01c": 443,
+              "temperature_c": 44.3,
+              "timestamp_ms": 202624177,
+              "valid": true,
+              "normalized_temp": 44.3,
+              "normalized_valid": true,
+              "clock": "esp32_update_ms"
+            },
+            "age_s": 3.005535693024285,
+            "raw_valid": true
+          }
+        },
+        "observer_state": "degraded",
+        "successful_PWM_age_s": 0.0,
+        "safety_status": "observed_fresh",
+        "state_generated_at": 202584.427483739,
+        "observation_cutoff": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:179",
+        "formal_start_allowed": false,
+        "clock_domain": "offline_virtual_observer_clock",
+        "model_permission_unchanged": {
+          "local_demo": true,
+          "formal_field_authorized": false,
+          "device_actions": false
+        },
+        "firmware_identity": null
+      }
+    },
+    {
+      "event": "stop_new_requests",
+      "mono_s": 118.11623488401528,
+      "run_id": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece",
+      "command_id": "OFFLINE-REAL-Y-REPLAY",
+      "reason": "data_or_observer_unavailable_too_long"
+    },
+    {
+      "event": "run_end",
+      "mono_s": 118.11623488401528,
+      "run_id": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece",
+      "command_id": "OFFLINE-REAL-Y-REPLAY",
+      "reason": "data_or_observer_unavailable_too_long",
+      "server_completion": "protocol_observed",
+      "elapsed_s": 118.11623488401528,
+      "cleanup_reserved_s": 120
+    }
+  ],
+  "requests": []
+}

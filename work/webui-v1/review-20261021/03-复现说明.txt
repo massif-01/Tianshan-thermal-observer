@@ -1,0 +1,33 @@
+复现说明
+
+本包没有修改原候选，不包含原软件的替代安装包。
+01 是完整报告；02 是可交给原开发对话的有限修正指令；evidence 是已得到的结果；probes 是独立反例。
+
+运行条件
+- 本地解压用户原 TTO-WebUI-v1-证据与安装候选.zip。
+- 使用原 tools/install.py --service none 创建的独立 Python 3.10 环境（Linux x86_64），或依赖一致的开发环境。不要连接真实设备。
+- 设 TTO_REVIEW_CANDIDATE 为原解压出的 TTO-WebUI-v1.0 绝对路径。
+- 设 TTO_REVIEW_OUTPUT 为自己的临时结果目录；不要覆盖 evidence 内原证据。
+- Node 探针需要提供 node:module.stripTypeScriptTypes 的 Node（主审为 24.19.0）。
+
+命令示意（把示意路径换成实际本地路径）
+export TTO_REVIEW_CANDIDATE=/absolute/path/TTO-WebUI-v1.0
+export TTO_REVIEW_OUTPUT=/absolute/path/review-output
+/absolute/path/independent/env/bin/python probes/probe_optional_source_fields.py
+/absolute/path/independent/env/bin/python probes/repro_gpu_age.py
+/absolute/path/independent/env/bin/python probes/repro_label_deadline.py
+/absolute/path/independent/env/bin/python probes/probe_events.py
+node probes/probe_frontend.mjs
+/absolute/path/independent/env/bin/python probes/probe_observe_recovery.py
+
+probe_events.py 从已安装的候选导入 State，其他 Python 探针加载环境变量指定的源码（主审先验证该源码与 wheel 字节一致）。因此需保证环境中安装的候选与源码对应。
+先跑 probe_events.py 再跑前端探针；后者使用该事件结果，同时读取原候选 evidence/installed-api 的提交快照。
+GPU/标签探针输出 JSON 到 stdout，可以重定向到自己的结果文件。其余探针会在 TTO_REVIEW_OUTPUT 写 JSON。
+
+网络和验证范围
+- GPU/标签/可选字段/事件/前端探针不创建真实设备网络请求。
+- 重连探针仅绑定自己创建的 127.0.0.1 随机端口，设备传输和原锁均为受控替身。保留原 10 次预算，只把退避等待缩短，不能把其时长当现场性能。
+- 前端用真实交付 TS 函数和 DOM/ECharts I/O 替身，没有运行真实浏览器；不可把它表述为浏览器 E2E。
+- 反例针对旧版缺陷，脚本中的断言期望旧缺陷成立。修复后应翻转为修复目标断言，不要追求让旧缺陷继续成立。
+
+打包仅将探针的本机路径改为上述环境变量，未改变复现逻辑。evidence 保存的是原复审运行结果，不伪称它们是在用户设备上的输出。

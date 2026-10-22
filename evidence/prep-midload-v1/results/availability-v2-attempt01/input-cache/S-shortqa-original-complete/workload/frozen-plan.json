@@ -1,0 +1,102 @@
+{
+  "frozen_at_utc": "2026-10-13T05:31:07.399458+00:00",
+  "max_tokens": 64,
+  "sequence": {
+    "plan_version": "TTO-SHORT-QA-v1.0",
+    "purpose": "短文本输入和简短输出的单路推理负载；非知识正确性测验，非图像/长上下文覆盖。",
+    "request_instruction": "请用中文一到两句话简短回答，不超过60个汉字：",
+    "note": "保留现有系统模板和服务设置；每题独立，不累计聊天历史。生成预算经最多2条预试后冻结；实际时长与finish_reason照实保留。",
+    "pilot": [
+      {
+        "id": "P01",
+        "question": "为什么冰块放在室温下会融化？"
+      },
+      {
+        "id": "P02",
+        "question": "用简单的话解释什么是回声。"
+      }
+    ],
+    "sparse": [
+      {
+        "id": "S01",
+        "question": "为什么下雨后路面会慢慢变干？"
+      },
+      {
+        "id": "S02",
+        "question": "为什么保温杯能让热水凉得慢一些？"
+      },
+      {
+        "id": "S03",
+        "question": "为什么气球放开后会向相反方向飞？"
+      },
+      {
+        "id": "S04",
+        "question": "为什么植物通常需要阳光？"
+      },
+      {
+        "id": "S05",
+        "question": "为什么镜子能照出人的样子？"
+      },
+      {
+        "id": "S06",
+        "question": "为什么声音在空房间里更容易产生回声？"
+      }
+    ],
+    "continuous": [
+      {
+        "id": "D01",
+        "question": "为什么金属勺摸起来常比木勺凉？"
+      },
+      {
+        "id": "D02",
+        "question": "为什么白天通常比夜晚更亮？"
+      },
+      {
+        "id": "D03",
+        "question": "为什么水烧开时会出现气泡？"
+      },
+      {
+        "id": "D04",
+        "question": "为什么物体会在阳光下形成影子？"
+      },
+      {
+        "id": "D05",
+        "question": "为什么自行车刹车能让车停下来？"
+      },
+      {
+        "id": "D06",
+        "question": "为什么拉紧的橡皮筋会缩回去？"
+      },
+      {
+        "id": "D07",
+        "question": "为什么窗户内侧有时会出现小水珠？"
+      },
+      {
+        "id": "D08",
+        "question": "为什么电风扇吹过时人会觉得凉？"
+      },
+      {
+        "id": "D09",
+        "question": "为什么磁铁能吸住一些铁制品？"
+      },
+      {
+        "id": "D10",
+        "question": "为什么蜡烛熄灭后会冒出一缕烟？"
+      },
+      {
+        "id": "D11",
+        "question": "为什么成熟的水果常常会变甜？"
+      },
+      {
+        "id": "D12",
+        "question": "为什么把声音放大后听得更清楚？"
+      }
+    ]
+  },
+  "sparse_interval_seconds": 90,
+  "continuous_interval_seconds": 10,
+  "baseline_seconds": 180,
+  "between_groups_seconds": 300,
+  "final_cooldown_seconds": 300,
+  "hard_deadline_utc": "2026-10-13T06:08:11.445979Z"
+}

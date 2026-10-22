@@ -1,0 +1,37 @@
+{
+  "read_started_at_utc": "2026-10-13T06:37:57.730677+00:00",
+  "read_ended_at_utc": "2026-10-13T06:37:57.747740+00:00",
+  "method": "GET",
+  "source": "known-board-read-only",
+  "body": {
+    "code": 0,
+    "data": {
+      "fans": [
+        {
+          "id": 0,
+          "mode": "auto",
+          "duty_valid": true,
+          "duty": 19,
+          "target_duty": 19,
+          "rpm": 0,
+          "temperature": 46.3,
+          "enabled": true,
+          "running": true,
+          "fault": false,
+          "control_temperature": 46.3,
+          "guard_temperature": 46.3,
+          "predicted_temperature": 46.3,
+          "slope_c_per_min": 0,
+          "controller_gain": 1.2397300004959106,
+          "cooling_response": 8,
+          "auto_state": "active",
+          "guard_active": false,
+          "temp_stale": false
+        }
+      ],
+      "temperature": 46.29999923706055,
+      "temp_valid": true,
+      "temp_source": "agx_info.temperature.tj"
+    }
+  }
+}

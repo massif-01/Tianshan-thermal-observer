@@ -1,0 +1,229 @@
+{
+  "files_compared": 22,
+  "max_abs_difference": 1.4210854715202004e-13,
+  "results": [
+    {
+      "name": "A-long-summary.json",
+      "floats": 77,
+      "max_abs": 4.973799150320701e-14,
+      "path": "/by_phase/6-recovery/P95_abs_error_C"
+    },
+    {
+      "name": "A-long.jsonl",
+      "floats": 13230,
+      "max_abs": 9.947598300641403e-14,
+      "path": "1425/Tf_C",
+      "rows": 2646
+    },
+    {
+      "name": "context-metrics.json",
+      "floats": 588,
+      "max_abs": 4.440892098500626e-14,
+      "path": "/10/errors/AUGMENTED-KF/P95_underprediction_C"
+    },
+    {
+      "name": "coverage-own.json",
+      "floats": 210,
+      "max_abs": 4.263256414560601e-14,
+      "path": "/14/error/P95_abs_error_C"
+    },
+    {
+      "name": "descriptive-diagnostics-spec.json",
+      "floats": 0,
+      "max_abs": 0.0,
+      "path": ""
+    },
+    {
+      "name": "metrics-common.json",
+      "floats": 9240,
+      "max_abs": 8.604228440844963e-14,
+      "path": "/58/errors/LP120/P95_underprediction_C"
+    },
+    {
+      "name": "phases.json",
+      "floats": 18,
+      "max_abs": 0.0,
+      "path": ""
+    },
+    {
+      "name": "physical-input-nodes.jsonl",
+      "floats": 60724,
+      "max_abs": 0.0,
+      "path": "",
+      "rows": 8677
+    },
+    {
+      "name": "predictions.jsonl",
+      "floats": 128646,
+      "max_abs": 1.4210854715202004e-13,
+      "path": "3215/A_roll/LP120",
+      "rows": 8118
+    },
+    {
+      "name": "quality-ledger.jsonl",
+      "floats": 37908,
+      "max_abs": 0.0,
+      "path": "",
+      "rows": 2712
+    },
+    {
+      "name": "repeat-single-lane-descriptive.json",
+      "floats": 12,
+      "max_abs": 2.1316282072803006e-14,
+      "path": "/0/E_mean_C"
+    },
+    {
+      "name": "samples-and-causal-states.jsonl",
+      "floats": 132592,
+      "max_abs": 7.105427357601002e-14,
+      "path": "756/states/CONDITIONAL-HOLD/uncertainty/covariance_C2/1/2",
+      "rows": 2706
+    },
+    {
+      "name": "signal-frames.jsonl",
+      "floats": 130108,
+      "max_abs": 6.394884621840902e-14,
+      "path": "6/values/KF_Ts",
+      "rows": 8677
+    },
+    {
+      "name": "stage-boundary-metrics.json",
+      "floats": 3612,
+      "max_abs": 6.394884621840902e-14,
+      "path": "/152/errors/AUGMENTED-KF/P95_underprediction_C"
+    },
+    {
+      "name": "state-coverage.json",
+      "floats": 22,
+      "max_abs": 0.0,
+      "path": ""
+    },
+    {
+      "name": "state-diagnostics.json",
+      "floats": 11,
+      "max_abs": 2.1316282072803006e-14,
+      "path": "/E_range_C/0"
+    },
+    {
+      "name": "surface-diagnostic-points.jsonl",
+      "floats": 278160,
+      "max_abs": 1.0658141036401503e-13,
+      "path": "5663/relative_models_C/A_long_Tf",
+      "rows": 8952
+    },
+    {
+      "name": "surface-fixed-reference.json",
+      "floats": 1,
+      "max_abs": 0.0,
+      "path": ""
+    },
+    {
+      "name": "surface-phase-diagnostics.json",
+      "floats": 1470,
+      "max_abs": 3.552713678800501e-14,
+      "path": "/24/model_relative_range_C/1"
+    },
+    {
+      "name": "surface-summary.json",
+      "floats": 2,
+      "max_abs": 0.0,
+      "path": ""
+    },
+    {
+      "name": "time-window-metrics.json",
+      "floats": 350,
+      "max_abs": 5.3984594572398237e-14,
+      "path": "/23/KF_B_HOLD/P95_underprediction_C"
+    },
+    {
+      "name": "worst-underprediction-cases.json",
+      "floats": 240,
+      "max_abs": 2.842170943040401e-14,
+      "path": "/29/prediction_C"
+    }
+  ],
+  "supplement": [
+    {
+      "name": "cpu-memory-time-summary.json",
+      "byte_equal": true
+    },
+    {
+      "name": "cpu-per-core-observations.csv",
+      "byte_equal": true
+    },
+    {
+      "name": "existing-outcome-extract.json",
+      "byte_equal": true
+    },
+    {
+      "name": "source-valid-cohort.json",
+      "byte_equal": true
+    }
+  ],
+  "runtime": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+  "rerun_state_replay": {
+    "raw_events": 8677,
+    "single_native_process_per_event": true,
+    "I02_views": 8677,
+    "recorded_states_compared": 8677,
+    "accepted_TJ": 2706,
+    "source_valid_TJ": 2706,
+    "state_and_I02_structure_flags_exact": true,
+    "max_state_float_abs_difference": 1.4210854715202004e-14,
+    "float_tolerance": 1e-08,
+    "state_phase_all_events": {
+      "uninitialized": 3,
+      "provisional": 28,
+      "tracking": 8642,
+      "degraded": 3,
+      "unavailable": 1
+    },
+    "source_resets": [
+      {
+        "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1",
+        "t": 350745.711096709,
+        "reason": "socketio_connecting",
+        "cold_starts": 0
+      },
+      {
+        "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8677",
+        "t": 353460.049910811,
+        "reason": "socketio_disconnected",
+        "cold_starts": 1
+      }
+    ],
+    "no_phase_resets": true,
+    "network_clients_constructed": 0,
+    "dynamic_fits": 0,
+    "original_quality": {
+      "boundary_socketio_connecting": 1,
+      "boundary_control_context_change": 3,
+      "boundary_stream": 1,
+      "new_samples": 2706,
+      "boundary_input_boundary": 3,
+      "boundary_input_profile_change": 1,
+      "duplicate": 6,
+      "boundary_normal_scope_change": 2,
+      "boundary_socketio_disconnected": 1
+    },
+    "original_processing": {
+      "fan_ok": 2710,
+      "temp_ok": 543,
+      "origins": 532
+    }
+  },
+  "environment": {
+    "python": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+    "numpy": "2.3.5",
+    "scipy": "1.17.0",
+    "platform": "Linux-6.18.55-x86_64-with-glibc2.41",
+    "machine": "x86_64",
+    "wall_s": 18.42373892399999,
+    "process_cpu_s": 18.41536054,
+    "peak_rss_bytes": 228077568,
+    "BLAS_threads": 1,
+    "CUDA": false,
+    "training": false,
+    "network_clients_constructed": 0
+  }
+}

@@ -1,0 +1,252 @@
+已连接，正在等待第一份有效温度数据。
+本轮TTO已停止；现有风扇控制未被修改。
+{
+  "reason": "SIGTERM",
+  "error": null,
+  "elapsed_s": 15.143688749987632,
+  "clock_end": {
+    "domain": "Massif-MacBook-Pro.local:26574:05c07799-93c4-4be8-94e9-33ca0fb9152a",
+    "mono_before_s": 1042948.062880625,
+    "utc": "2026-10-21T16:49:20.810344+00:00",
+    "mono_after_s": 1042948.062909125,
+    "utc_clock_accuracy_s": null,
+    "host": "Massif-MacBook-Pro.local",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "pid": 26574
+  },
+  "pid": 26574,
+  "native_run_id": "8f74ab0b-26c7-4598-b9e3-8f04637f95e3",
+  "collector_invocation_count": 1,
+  "collector_count": 1,
+  "stateful_observer_count": 1,
+  "valid_TJ_observed": 14,
+  "model_trial": "conditional_observation",
+  "native_callbacks": 48,
+  "I02_processed_views": 48,
+  "projection_diagnostics": {
+    "retain_history": false,
+    "retained": 0,
+    "quality_seen": 14,
+    "complete_quality_stream": "observations"
+  },
+  "shared_native_engine_id": 4453542000,
+  "projection_disabled": false,
+  "model_errors": 0,
+  "model_dropped_frames": 0,
+  "consumer_stopped": true,
+  "Requester_count": 0,
+  "sidecar_count": 0,
+  "control_permission": false,
+  "experiment_authorization": false,
+  "scoring": {
+    "contract": "TTO-OBSERVE-SCORING-v1",
+    "publication_mode": "live",
+    "stride_s": 5,
+    "valid_TJ_denominator": 14,
+    "scheduled_origin_denominator": 3,
+    "counts": {
+      "all_valid_TJ": 14,
+      "scheduled_TJ_origins": 3,
+      "issued/G2-HOLD/15": 3,
+      "valid_predictions/G2-HOLD/15": 3,
+      "issued/B0/15": 3,
+      "valid_predictions/B0/15": 3,
+      "issued/B1/15": 3,
+      "issued/G2-HOLD/45": 3,
+      "valid_predictions/G2-HOLD/45": 3,
+      "issued/B0/45": 3,
+      "valid_predictions/B0/45": 3,
+      "issued/B1/45": 3,
+      "issued/G2-HOLD/90": 3,
+      "valid_predictions/G2-HOLD/90": 3,
+      "issued/B0/90": 3,
+      "valid_predictions/B0/90": 3,
+      "issued/B1/90": 3,
+      "valid_predictions/B1/15": 1,
+      "valid_predictions/B1/45": 1,
+      "valid_predictions/B1/90": 1,
+      "unscored/source_epoch_changed": 21
+    },
+    "per_method": {},
+    "same_set_G2_B0": {},
+    "percentile": "linear interpolation at (n-1)*.95; full bounded session error arrays",
+    "error": "prediction-actual",
+    "label": "first qualified received TJ at/after target within2s, same session/epoch/domain",
+    "statistical_unit": "one session, overlapping horizons are not independent experiments",
+    "all_native_valid_TJ_denominator": 14
+  },
+  "native_summary": {
+    "stop_reason": "SIGTERM",
+    "poll_missed": 0,
+    "poll_count": 18,
+    "connection_attempts": 1,
+    "payload_oversize": 0,
+    "orin_event_count": 14,
+    "business_payload_bytes_sum": 22125,
+    "business_payload_bytes_max": 1581,
+    "poll_rtt_ms": [
+      2.9249159852042794,
+      1.944374991580844,
+      1.7226249910891056,
+      2.915124990977347,
+      1.3523749075829983,
+      2.1937090205028653,
+      0.8539999835193157,
+      0.6802920252084732,
+      1.2578750029206276,
+      6.215292029082775,
+      1.5992919215932488,
+      4.685749998316169,
+      4.111125017516315,
+      4.980375058948994,
+      1.3510410208255053,
+      1.7418330535292625,
+      2.7549169026315212,
+      6.5220409305766225
+    ],
+    "prediction_ms": [
+      13.359416974708438,
+      2.663083025254309,
+      0.7100829388946295
+    ],
+    "rss_mib": [
+      68.796875,
+      69.09375,
+      69.203125,
+      69.234375,
+      69.28125,
+      69.4375,
+      69.4375,
+      69.59375,
+      69.671875,
+      69.6875,
+      69.6875,
+      69.703125,
+      69.703125,
+      69.75
+    ],
+    "cpu_pct_single_core": [
+      2.9688490017362765,
+      2.208652810676165,
+      2.0745612170225294,
+      1.326391402471857,
+      1.6993485653385527,
+      1.616465298096283,
+      1.0277247674234082,
+      1.5889095523035572,
+      1.599876275672206,
+      1.7698703341863131,
+      1.5197085325981938,
+      1.653646383290629,
+      1.252146890328529,
+      1.3670917878938125
+    ],
+    "elapsed_s": 14.164134750026278,
+    "queue_peak_items": 2,
+    "queue_peak_bytes": 1961,
+    "dropped": 0,
+    "quality": {
+      "boundary_socketio_connecting": 1,
+      "boundary_control_context_change": 1,
+      "boundary_stream": 1,
+      "new_samples": 14,
+      "boundary_input_boundary": 1,
+      "boundary_input_profile_change": 1,
+      "boundary_socketio_disconnected": 1,
+      "boundary_run_end": 1
+    },
+    "processing": {
+      "fan_ok": 15,
+      "temp_ok": 3,
+      "origins": 3
+    },
+    "target_host_verified": false,
+    "polling_health": {
+      "contract": "TTO-POLL-INDEPENDENT-v1",
+      "max_inflight_per_endpoint": 1,
+      "max_total_inflight_limit": 2,
+      "max_total_inflight_observed": 2,
+      "end_inflight": 0,
+      "legacy_config_max_inflight_esp32": 1,
+      "endpoints": {
+        "fan": {
+          "sent": 15,
+          "returned": 15,
+          "http_ok": 15,
+          "errors": 0,
+          "skipped": 0,
+          "cancelled": 0,
+          "peak_inflight": 1,
+          "rtt_ms": {
+            "n": 15,
+            "retained_n": 15,
+            "p50": 2.1937090205028653,
+            "p95": 6.307316699530929,
+            "min": 0.6802920252084732,
+            "max": 6.5220409305766225
+          },
+          "send_interval_s": {
+            "n": 14,
+            "retained_n": 14,
+            "p50": 1.0015855625388213,
+            "p95": 1.0049006857152563,
+            "min": 1.000498916953802,
+            "max": 1.0054360419744626
+          },
+          "return_interval_s": {
+            "n": 14,
+            "retained_n": 14,
+            "p50": 1.0014795625465922,
+            "p95": 1.00806764398003,
+            "min": 0.9960745829157531,
+            "max": 1.0092031660024077
+          }
+        },
+        "temp": {
+          "sent": 3,
+          "returned": 3,
+          "http_ok": 3,
+          "errors": 0,
+          "skipped": 0,
+          "cancelled": 0,
+          "peak_inflight": 1,
+          "rtt_ms": {
+            "n": 3,
+            "retained_n": 3,
+            "p50": 1.944374991580844,
+            "p95": 3.894450014922768,
+            "min": 0.8539999835193157,
+            "max": 4.111125017516315
+          },
+          "send_interval_s": {
+            "n": 2,
+            "retained_n": 2,
+            "p50": 5.001609583501704,
+            "p95": 5.00195120871067,
+            "min": 5.001229999936186,
+            "max": 5.001989167067222
+          },
+          "return_interval_s": {
+            "n": 2,
+            "retained_n": 2,
+            "p50": 5.002692958514672,
+            "p95": 5.004307708324632,
+            "min": 5.000898792059161,
+            "max": 5.004487124970183
+          }
+        }
+      }
+    },
+    "diagnostic_history_contract": {
+      "max_retained_per_series": 4096,
+      "percentiles": "last4096; full raw/resource journals preserved",
+      "sample_totals": {
+        "poll_rtt_ms": 18,
+        "prediction_ms": 3,
+        "rss_mib": 14,
+        "cpu_pct_single_core": 14
+      }
+    }
+  },
+  "thread_policy_same_pid": true
+}

@@ -1,0 +1,81 @@
+
+==================================== ERRORS ====================================
+___________________ ERROR collecting tests/test_semantics.py ___________________
+ImportError while importing test module '/Users/massif/Tianshan-thermal-observer/work/webui-v1/tests/test_semantics.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+work/webui-v1/tests/test_semantics.py:7: in <module>
+    from scipy.integrate import solve_ivp
+work/webui-v1/.venv/lib/python3.12/site-packages/scipy/integrate/__init__.py:103: in <module>
+    from ._quadrature import *
+work/webui-v1/.venv/lib/python3.12/site-packages/scipy/integrate/_quadrature.py:8: in <module>
+    from scipy.special import roots_legendre
+work/webui-v1/.venv/lib/python3.12/site-packages/scipy/special/__init__.py:834: in <module>
+    from . import _orthogonal
+work/webui-v1/.venv/lib/python3.12/site-packages/scipy/special/_orthogonal.py:81: in <module>
+    from scipy import linalg
+work/webui-v1/.venv/lib/python3.12/site-packages/scipy/__init__.py:134: in __getattr__
+    return _importlib.import_module(f'scipy.{name}')
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+work/webui-v1/.venv/lib/python3.12/site-packages/scipy/linalg/__init__.py:222: in <module>
+    from ._sketches import *
+work/webui-v1/.venv/lib/python3.12/site-packages/scipy/linalg/_sketches.py:10: in <module>
+    from scipy.sparse import csc_matrix
+work/webui-v1/.venv/lib/python3.12/site-packages/scipy/sparse/__init__.py:315: in <module>
+    from . import csgraph
+work/webui-v1/.venv/lib/python3.12/site-packages/scipy/sparse/csgraph/__init__.py:187: in <module>
+    from ._laplacian import laplacian
+work/webui-v1/.venv/lib/python3.12/site-packages/scipy/sparse/csgraph/_laplacian.py:7: in <module>
+    from scipy.sparse.linalg import LinearOperator
+work/webui-v1/.venv/lib/python3.12/site-packages/scipy/sparse/linalg/__init__.py:134: in <module>
+    from ._eigen import *
+work/webui-v1/.venv/lib/python3.12/site-packages/scipy/sparse/linalg/_eigen/__init__.py:11: in <module>
+    from ._svds import svds
+work/webui-v1/.venv/lib/python3.12/site-packages/scipy/sparse/linalg/_eigen/_svds.py:10: in <module>
+    from scipy.sparse.linalg._svdp import _svdp
+work/webui-v1/.venv/lib/python3.12/site-packages/scipy/sparse/linalg/_svdp.py:23: in <module>
+    from ._propack import _spropack  # type: ignore[attr-defined]
+E   ImportError: dlopen(/Users/massif/Tianshan-thermal-observer/work/webui-v1/.venv/lib/python3.12/site-packages/scipy/sparse/linalg/_propack/_spropack.cpython-312-darwin.so, 0x0002): tried: '/Users/massif/Tianshan-thermal-observer/work/webui-v1/.venv/lib/python3.12/site-packages/scipy/sparse/linalg/_propack/_spropack.cpython-312-darwin.so' (section '__DATA/__thread_bss' has a zero-fill section type, but offset field is not zero), '/System/Volumes/Preboot/Cryptexes/OS/Users/massif/Tianshan-thermal-observer/work/webui-v1/.venv/lib/python3.12/site-packages/scipy/sparse/linalg/_propack/_spropack.cpython-312-darwin.so' (no such file), '/Users/massif/Tianshan-thermal-observer/work/webui-v1/.venv/lib/python3.12/site-packages/scipy/sparse/linalg/_propack/_spropack.cpython-312-darwin.so' (section '__DATA/__thread_bss' has a zero-fill section type, but offset field is not zero)
+____________________ ERROR collecting tests/test_service.py ____________________
+ImportError while importing test module '/Users/massif/Tianshan-thermal-observer/work/webui-v1/tests/test_service.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+work/webui-v1/tests/test_service.py:11: in <module>
+    from tto_web.server import app_for,password_hash,configuration
+work/webui-v1/src/tto_web/server.py:20: in <module>
+    from .state import State
+work/webui-v1/src/tto_web/state.py:9: in <module>
+    from .adapter import SPEC, SPEC_ID, TOPOLOGY, ThermalObserver
+work/webui-v1/src/tto_web/adapter.py:10: in <module>
+    from tto_field.research.observer import ThermalObserver
+work/webui-v1/vendor/tto_field/research/observer.py:5: in <module>
+    from scipy.linalg import expm
+work/webui-v1/.venv/lib/python3.12/site-packages/scipy/linalg/__init__.py:222: in <module>
+    from ._sketches import *
+work/webui-v1/.venv/lib/python3.12/site-packages/scipy/linalg/_sketches.py:10: in <module>
+    from scipy.sparse import csc_matrix
+work/webui-v1/.venv/lib/python3.12/site-packages/scipy/sparse/__init__.py:315: in <module>
+    from . import csgraph
+work/webui-v1/.venv/lib/python3.12/site-packages/scipy/sparse/csgraph/__init__.py:187: in <module>
+    from ._laplacian import laplacian
+work/webui-v1/.venv/lib/python3.12/site-packages/scipy/sparse/csgraph/_laplacian.py:7: in <module>
+    from scipy.sparse.linalg import LinearOperator
+work/webui-v1/.venv/lib/python3.12/site-packages/scipy/sparse/linalg/__init__.py:134: in <module>
+    from ._eigen import *
+work/webui-v1/.venv/lib/python3.12/site-packages/scipy/sparse/linalg/_eigen/__init__.py:11: in <module>
+    from ._svds import svds
+work/webui-v1/.venv/lib/python3.12/site-packages/scipy/sparse/linalg/_eigen/_svds.py:10: in <module>
+    from scipy.sparse.linalg._svdp import _svdp
+work/webui-v1/.venv/lib/python3.12/site-packages/scipy/sparse/linalg/_svdp.py:23: in <module>
+    from ._propack import _spropack  # type: ignore[attr-defined]
+E   ImportError: dlopen(/Users/massif/Tianshan-thermal-observer/work/webui-v1/.venv/lib/python3.12/site-packages/scipy/sparse/linalg/_propack/_spropack.cpython-312-darwin.so, 0x0002): tried: '/Users/massif/Tianshan-thermal-observer/work/webui-v1/.venv/lib/python3.12/site-packages/scipy/sparse/linalg/_propack/_spropack.cpython-312-darwin.so' (section '__DATA/__thread_bss' has a zero-fill section type, but offset field is not zero), '/System/Volumes/Preboot/Cryptexes/OS/Users/massif/Tianshan-thermal-observer/work/webui-v1/.venv/lib/python3.12/site-packages/scipy/sparse/linalg/_propack/_spropack.cpython-312-darwin.so' (no such file), '/Users/massif/Tianshan-thermal-observer/work/webui-v1/.venv/lib/python3.12/site-packages/scipy/sparse/linalg/_propack/_spropack.cpython-312-darwin.so' (section '__DATA/__thread_bss' has a zero-fill section type, but offset field is not zero)
+=========================== short test summary info ============================
+ERROR work/webui-v1/tests/test_semantics.py
+ERROR work/webui-v1/tests/test_service.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 2 errors during collection !!!!!!!!!!!!!!!!!!!!
+2 errors in 16.57s

@@ -1,0 +1,320 @@
+{
+  "candidate_version": "0.2.4+closeout.1",
+  "target": "Ubuntu22.04 Linux x86_64 CPython3.10.12, bounded emulated container; not N305 hardware",
+  "target_install_offline_no_index": true,
+  "installed_source_files_verified": 42,
+  "new_entry_tests": 14,
+  "end_to_end_scenarios": [
+    {
+      "scenario": "diagnose",
+      "reason": "diagnostic_duration",
+      "run_id": "2042a673-ff68-4c87-82de-b90961c48b00",
+      "callbacks": 29,
+      "requests": 0,
+      "requester_instances": 0,
+      "native_poll_end_inflight": 0,
+      "actual_shared_engine": true,
+      "closed": true,
+      "time_coverage": {
+        "observed_s": 8.98382169499996,
+        "measurement_usable_s": 7.936560865999809,
+        "model_usable_s": 0.0,
+        "context_ready_s": 3.930932198999926,
+        "joint_ready_s": 0.0,
+        "work_paused_s": 0.0,
+        "tj_usable_s": 7.936560865999809,
+        "rail_usable_s": 7.936560865999809,
+        "PWM_usable_s": 8.879778715999919,
+        "temp_context_usable_s": 8.879778715999919
+      },
+      "phase_seconds": {
+        "uninitialized": 1.0472608290001517,
+        "provisional": 7.936560865999809
+      }
+    },
+    {
+      "scenario": "normal",
+      "reason": "completed",
+      "run_id": "76dcbf05-7941-4ff3-9b93-e90ce3241e45",
+      "callbacks": 48,
+      "requests": 52,
+      "requester_instances": 4,
+      "native_poll_end_inflight": 0,
+      "actual_shared_engine": true,
+      "closed": true,
+      "time_coverage": {
+        "observed_s": 14.89415871999995,
+        "measurement_usable_s": 13.847839989000022,
+        "model_usable_s": 4.763098288000037,
+        "context_ready_s": 9.845276137999917,
+        "joint_ready_s": 4.763098288000037,
+        "work_paused_s": 0.0,
+        "tj_usable_s": 13.847839989000022,
+        "rail_usable_s": 13.847839989000022,
+        "PWM_usable_s": 14.790433740000026,
+        "temp_context_usable_s": 14.790433740000026
+      },
+      "phase_seconds": {
+        "uninitialized": 1.0463187309999284,
+        "provisional": 9.084741700999984,
+        "tracking": 4.763098288000037
+      }
+    },
+    {
+      "scenario": "disconnect",
+      "reason": "diagnostic_duration",
+      "run_id": "2bbb3b2f-1078-4349-9026-0283fc22d93f",
+      "callbacks": 40,
+      "requests": 0,
+      "requester_instances": 0,
+      "native_poll_end_inflight": 0,
+      "actual_shared_engine": true,
+      "closed": true,
+      "time_coverage": {
+        "observed_s": 12.060776412999985,
+        "measurement_usable_s": 8.99182019900013,
+        "model_usable_s": 0.0,
+        "context_ready_s": 0.0,
+        "joint_ready_s": 0.0,
+        "work_paused_s": 0.0,
+        "tj_usable_s": 8.99182019900013,
+        "rail_usable_s": 8.99182019900013,
+        "PWM_usable_s": 10.047662526000067,
+        "temp_context_usable_s": 6.968218438000122
+      },
+      "phase_seconds": {
+        "uninitialized": 3.0689562139998543,
+        "provisional": 8.99182019900013
+      }
+    },
+    {
+      "scenario": "short_gap",
+      "reason": "completed",
+      "run_id": "d7bbb5f5-c64d-4247-8c6d-c75eb909c55e",
+      "callbacks": 125,
+      "requests": 112,
+      "requester_instances": 4,
+      "native_poll_end_inflight": 0,
+      "actual_shared_engine": true,
+      "closed": true,
+      "time_coverage": {
+        "observed_s": 38.76685059800002,
+        "measurement_usable_s": 31.6820255680002,
+        "model_usable_s": 28.650917689000153,
+        "context_ready_s": 22.607207789000313,
+        "joint_ready_s": 17.537791202000335,
+        "work_paused_s": 11.113126486999818,
+        "tj_usable_s": 37.71805526900016,
+        "rail_usable_s": 37.71805526900016,
+        "PWM_usable_s": 32.6247853870002,
+        "temp_context_usable_s": 38.66081508800016
+      },
+      "phase_seconds": {
+        "uninitialized": 1.0487953289998586,
+        "provisional": 9.067137580000008,
+        "tracking": 17.537791202000335,
+        "degraded": 11.113126486999818
+      }
+    },
+    {
+      "scenario": "guard",
+      "reason": "explicit_protection_or_mode_binding",
+      "run_id": "57402644-36b6-49ba-a71a-c2d1d0678473",
+      "callbacks": 61,
+      "requests": 100,
+      "requester_instances": 4,
+      "native_poll_end_inflight": 0,
+      "actual_shared_engine": true,
+      "closed": true,
+      "time_coverage": {
+        "observed_s": 18.1825118700001,
+        "measurement_usable_s": 17.133654375000106,
+        "model_usable_s": 8.026674442000058,
+        "context_ready_s": 13.103601230000095,
+        "joint_ready_s": 8.026674442000058,
+        "work_paused_s": 0.0,
+        "tj_usable_s": 17.133654375000106,
+        "rail_usable_s": 17.133654375000106,
+        "PWM_usable_s": 18.076509650000162,
+        "temp_context_usable_s": 18.076509650000162
+      },
+      "phase_seconds": {
+        "uninitialized": 1.048857494999993,
+        "provisional": 9.106979933000048,
+        "tracking": 8.026674442000058
+      }
+    },
+    {
+      "scenario": "user_stop",
+      "reason": "user_stop",
+      "run_id": "6e7c8831-c788-4540-92cd-3d69f82822b4",
+      "callbacks": 61,
+      "requests": 100,
+      "requester_instances": 4,
+      "native_poll_end_inflight": 0,
+      "actual_shared_engine": true,
+      "closed": true,
+      "time_coverage": {
+        "observed_s": 18.1340580640001,
+        "measurement_usable_s": 17.08004488100005,
+        "model_usable_s": 8.021730988999934,
+        "context_ready_s": 13.075045142999898,
+        "joint_ready_s": 8.021730988999934,
+        "work_paused_s": 0.0,
+        "tj_usable_s": 17.08004488100005,
+        "rail_usable_s": 17.08004488100005,
+        "PWM_usable_s": 18.02710781399992,
+        "temp_context_usable_s": 18.02710781399992
+      },
+      "phase_seconds": {
+        "uninitialized": 1.0540131830000519,
+        "provisional": 9.058313892000115,
+        "tracking": 8.021730988999934
+      }
+    },
+    {
+      "scenario": "unknown",
+      "reason": "request_termination_unknown",
+      "run_id": "194c40e2-537b-4853-97ab-df876a87db2a",
+      "callbacks": 36,
+      "requests": 4,
+      "requester_instances": 4,
+      "native_poll_end_inflight": 0,
+      "actual_shared_engine": true,
+      "closed": true,
+      "time_coverage": {
+        "observed_s": 10.579989435000016,
+        "measurement_usable_s": 9.529947942000035,
+        "model_usable_s": 0.4228243279999333,
+        "context_ready_s": 5.526990980999926,
+        "joint_ready_s": 0.4228243279999333,
+        "work_paused_s": 0.0,
+        "tj_usable_s": 9.529947942000035,
+        "rail_usable_s": 9.529947942000035,
+        "PWM_usable_s": 10.47401678999995,
+        "temp_context_usable_s": 10.47401678999995
+      },
+      "phase_seconds": {
+        "uninitialized": 1.0500414929999806,
+        "provisional": 9.107123614000102,
+        "tracking": 0.4228243279999333
+      }
+    }
+  ],
+  "complete_frozen_virtual": {
+    "reason": "completed",
+    "elapsed_virtual_s": 2717.0,
+    "virtual_requests": 185,
+    "peak_virtual_slots": 4,
+    "native_quality_single_engine": true,
+    "native_callbacks": 5980,
+    "actual_requests": 0,
+    "plan_bytes_unchanged": true,
+    "actual_frozen_observer": true,
+    "live_adapter_used": true,
+    "math_fits": 0,
+    "all_stages": [
+      {
+        "kind": "background",
+        "seconds": 300
+      },
+      {
+        "kind": "work",
+        "concurrency": 1,
+        "seconds": 360,
+        "repeat_key": "single-anchor"
+      },
+      {
+        "kind": "recovery",
+        "seconds": 90
+      },
+      {
+        "kind": "work",
+        "concurrency": 2,
+        "seconds": 270
+      },
+      {
+        "kind": "recovery",
+        "seconds": 240
+      },
+      {
+        "kind": "work",
+        "concurrency": 4,
+        "seconds": 450
+      },
+      {
+        "kind": "recovery",
+        "seconds": 120
+      },
+      {
+        "kind": "work",
+        "concurrency": 1,
+        "seconds": 360,
+        "repeat_key": "single-anchor"
+      },
+      {
+        "kind": "final_recovery",
+        "seconds": 480
+      }
+    ]
+  },
+  "native_files_sha_verified": 49,
+  "field_files_sha_verified": 505,
+  "lifecycle": {
+    "SIGINT_native_stop_reason": "SIGINT",
+    "CLI_exit_code": 0,
+    "actual_concurrent_second_launch_rejected": true,
+    "persistent_completed_command_rejected": true,
+    "premature_actual_collector_exit": "collector_exited",
+    "actual_requests": 0,
+    "cleanup_tasks_remaining": 0
+  },
+  "collector_exit_under_load": {
+    "actual_loopback_requests": 24,
+    "reason": "collector_exited",
+    "no_scheduler_submissions_after_stop": true,
+    "native_poll_inflight_end": 0,
+    "requester_sessions_all_closed": true,
+    "own_async_tasks_remaining": 0
+  },
+  "numeric_dependency_compatibility": {
+    "rows": 5319,
+    "phase_discrepancies": [],
+    "max_state_difference_C": 4.831690603168681e-13,
+    "max_covariance_difference_C2": 2.842170943040401e-14,
+    "theta_fits": 0,
+    "interpretation": "installed target candidate numerical compatibility only; not physical Ts accuracy or new forecast scoring"
+  },
+  "I02": {
+    "rows": 5319,
+    "owner_tests": 6,
+    "only_semantic_changes": 1,
+    "owner_exporter_bytes_preserved": true,
+    "shared_existing_quality_engine": true
+  },
+  "device_connections": 0,
+  "field_installs": 0,
+  "real_inference_requests": 0,
+  "theta_fits": 0,
+  "prod_control_changes": 0,
+  "supplemental_timeout_diagnostics": {
+    "raw_request_budget_s": 2.0,
+    "timeout_phases": [
+      "request_headers_sent",
+      "response_body"
+    ],
+    "fan_recovered": true,
+    "inference_requests": 0,
+    "credential_not_in_logs": true,
+    "temporary_failure_not_root_cause_proof": true
+  },
+  "synthetic_CSV_sidecar": {
+    "SYNTHETIC": true,
+    "records": 3,
+    "equal_adjacent_rows_preserved": true,
+    "native_UUID_linked": true,
+    "original_run_index_unchanged": true,
+    "end_clock_original_SHA_verified": true,
+    "clock_offset_applied": false
+  }
+}

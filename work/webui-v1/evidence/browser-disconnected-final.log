@@ -1,0 +1,15 @@
+### Result
+{"web":"Web已连接","model":"当前无法估计","sourceStatus":"Web：已连接；设备数据：unavailable；模型：当前无法估计。HTTP成功、源有效与模型可用分别判定。"}
+### Ran Playwright code
+```js
+await (async (page) => {
+ await page.waitForFunction(async()=>{const s=await(await fetch('/api/v1/snapshot')).json();return s.model.phase==='unavailable'&&s.metrics.filter(m=>!m.id.startsWith('host.')).every(m=>m.value===null);});
+ await page.waitForTimeout(700);
+ await page.screenshot({path:'output/playwright/source-disconnected-final.png',fullPage:true});
+ return {web:await page.locator('#link').innerText(),model:await page.locator('#modelPhase').innerText(),sourceStatus:await page.locator('#sourceStatus').innerText()};
+}
+)(page);
+```
+### Page
+- Page URL: http://127.0.0.1:59009/#trends
+- Page Title: TTO 热观察台

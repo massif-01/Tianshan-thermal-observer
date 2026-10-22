@@ -1,0 +1,474 @@
+- generic [ref=f3e2]:
+  - navigation "章节导航" [ref=f3e3]:
+    - group [ref=f3e4]:
+      - generic "展开章节目录" [ref=f3e5] [cursor=pointer]
+  - article [ref=f3e6]:
+    - generic [ref=f3e7]: TTO 0.1.2 · 出厂Conda · 测试者使用
+    - generic [ref=f3e8]: 第一次先记录数据，再看报告。拿到真实冻结模型后，再进入旁路预测步骤。
+    - heading "TTO 测试者使用说明" [level=1] [ref=f3e9]
+    - paragraph [ref=f3e10]: 适用版本：TTO 0.1.2，出厂预装Conda的N305。
+    - paragraph [ref=f3e11]:
+      - text: 你用TTO做两件事：
+      - strong [ref=f3e12]: 记录设备正常使用时的温度和散热状态，查看这些记录是否适合评价预测。
+      - text: 拿到真实冻结模型后，还可以观察未来15、45、90秒的温度预测。
+    - paragraph [ref=f3e13]: TTO安装在N305上，风扇继续由TianshanOS控制。当前通过终端启动，结果用浏览器打开。第一次测试不需要先训练模型，也不需要安装CUDA。
+    - heading "第一次测试的路线" [level=2] [ref=f3e14]
+    - list [ref=f3e15]:
+      - listitem [ref=f3e16]: 安装TTO，确认版本为0.1.2。
+      - listitem [ref=f3e17]: 填写Orin监控服务和TianshanOS的访问地址。
+      - listitem [ref=f3e18]: 运行3分钟连接检查。
+      - listitem [ref=f3e19]: 记录一次正常使用过程。
+      - listitem [ref=f3e20]: 生成报告，交回完整测试资料。
+    - paragraph [ref=f3e21]:
+      - strong [ref=f3e22]: 第3、4步会连接你填写的设备。
+      - text: 安装后的离线检查、生成报告和打开报告都不连接设备。下面的联网命令由你在准备好的测试现场执行，不会因为填写了地址就自动开始。
+    - heading "1 先认识这套软件" [level=2] [ref=f3e23]
+    - table [ref=f3e25]:
+      - rowgroup [ref=f3e26]:
+        - row [ref=f3e27]:
+          - columnheader "设备或程序" [ref=f3e28]
+          - columnheader "提供什么" [ref=f3e29]
+          - columnheader "你需要知道什么" [ref=f3e30]
+      - rowgroup [ref=f3e31]:
+        - row [ref=f3e32]:
+          - cell "N305上的TTO" [ref=f3e33]
+          - cell "保存记录、预测、生成报告" [ref=f3e34]
+          - cell "这是你运行命令和查看文件的电脑" [ref=f3e35]
+        - row [ref=f3e36]:
+          - cell "Orin上的rm01OrinStatus监控服务" [ref=f3e37]
+          - cell "芯片温度、负载、功耗" [ref=f3e38]
+          - cell "TTO需要这个服务的访问地址" [ref=f3e39]
+        - row [ref=f3e40]:
+          - cell "ESP32上的TianshanOS" [ref=f3e41]
+          - cell "风扇控制百分比、自动模式、保护状态、控制温度" [ref=f3e42]
+          - cell "TTO读取WebUI背后的状态接口，浏览器不用一直开着" [ref=f3e43]
+    - paragraph [ref=f3e44]: 同样的功耗，风扇控制百分比不同，温度走势也可能不同，所以TTO同时记录两路数据。它读取的是已确认成功下发的风扇百分比，不把目标设定值当作实际输出。
+    - paragraph [ref=f3e45]:
+      - text: 这里的“设备地址”，技术文档有时叫“端点”，就是
+      - code [ref=f3e46]: http://设备IP:端口
+      - text: 这样的访问地址。
+    - heading "2 安装并确认版本" [level=2] [ref=f3e47]
+    - paragraph [ref=f3e48]:
+      - text: 如果使用《TTO测试者使用包》，打开其中的
+      - code [ref=f3e49]: TTO-v1-0.1.2-conda-install
+      - text: 文件夹。如果单独下载Conda便捷安装包，先解压，再进入同名文件夹。
+    - paragraph [ref=f3e50]: 在Ubuntu文件管理器中进入这个文件夹，右键空白处，选择“在终端打开”（英文系统为Open in Terminal），执行：
+    - code [ref=f3e52]: sh install.sh
+    - paragraph [ref=f3e53]: 脚本复用出厂Conda，创建独立的TTO环境、安装依赖和程序，最后做离线检查。默认需要下载依赖；不会把TTO依赖装进Conda的base。安装完成会显示“安装完成：TTO 0.1.2”。
+    - paragraph [ref=f3e54]: 确认版本：
+    - code [ref=f3e56]: ~/TTO/tto --version
+    - paragraph [ref=f3e57]: 应显示：
+    - code [ref=f3e59]: 0.1.2
+    - paragraph [ref=f3e60]:
+      - text: 以后都用
+      - code [ref=f3e61]: ~/TTO/tto
+      - text: 启动，不需要手动执行
+      - code [ref=f3e62]: conda activate
+      - text: 。重复运行安装脚本会保留配置、模型和记录。
+    - table [ref=f3e64]:
+      - rowgroup [ref=f3e65]:
+        - row [ref=f3e66]:
+          - columnheader "安装后的文件" [ref=f3e67]
+          - columnheader "用途" [ref=f3e68]
+      - rowgroup [ref=f3e69]:
+        - row [ref=f3e70]:
+          - cell [ref=f3e71]:
+            - code [ref=f3e72]: ~/TTO/tto
+          - cell "程序入口" [ref=f3e73]
+        - row [ref=f3e74]:
+          - cell [ref=f3e75]:
+            - code [ref=f3e76]: ~/TTO/config/local.json
+          - cell "设备地址等本机设置" [ref=f3e77]
+        - row [ref=f3e78]:
+          - cell [ref=f3e79]:
+            - code [ref=f3e80]: ~/TTO/runs/
+          - cell "每次录制生成的文件夹" [ref=f3e81]
+        - row [ref=f3e82]:
+          - cell [ref=f3e83]:
+            - code [ref=f3e84]: ~/TTO/installation.json
+          - cell "实际安装版本和程序身份，交资料时保留" [ref=f3e85]
+    - paragraph [ref=f3e86]: 如果安装提示找不到Conda，在已经初始化Conda的终端重试；维护者也可帮你指定预装Conda的位置。不要为此重新安装另一套Conda。离线安装和自选目录的步骤见安装包内的README。
+    - heading "3 填写设备地址" [level=2] [ref=f3e87]
+    - paragraph [ref=f3e88]:
+      - text: 用文本编辑器打开
+      - code [ref=f3e89]: ~/TTO/config/local.json
+      - text: 。找到下面两处
+      - code [ref=f3e90]: base_url
+      - text: ，把对应的
+      - code [ref=f3e91]: "null"
+      - text: 换成真实地址，保留双引号、逗号和其他设置。
+    - table [ref=f3e93]:
+      - rowgroup [ref=f3e94]:
+        - row [ref=f3e95]:
+          - columnheader "所属部分" [ref=f3e96]
+          - columnheader "填谁的地址" [ref=f3e97]
+          - columnheader "怎么找到" [ref=f3e98]
+      - rowgroup [ref=f3e99]:
+        - row [ref=f3e100]:
+          - cell [ref=f3e101]:
+            - code [ref=f3e102]: orin
+            - text: 中的
+            - code [ref=f3e103]: base_url
+          - cell "rm01OrinStatus监控服务" [ref=f3e104]
+          - cell "从当前运行服务的配置确认IP与端口，或请维护者提供" [ref=f3e105]
+        - row [ref=f3e106]:
+          - cell [ref=f3e107]:
+            - code [ref=f3e108]: tianshan
+            - text: 中的
+            - code [ref=f3e109]: base_url
+          - cell "TianshanOS" [ref=f3e110]
+          - cell "通常就是你打开控制网页时使用的地址" [ref=f3e111]
+    - paragraph [ref=f3e112]: 例如，一个地址字段改完后可能长这样：
+    - code [ref=f3e114]: "\"base_url\": \"http://192.168.1.20:5000\","
+    - paragraph [ref=f3e115]:
+      - strong [ref=f3e116]: 这只是格式示例，IP和5000端口都不是默认值。不要照抄数字。
+      - text: 两台设备分别填写各自的真实地址。
+    - paragraph [ref=f3e117]:
+      - text: 只填地址的开头部分，例如
+      - code [ref=f3e118]: http://192.168.1.30
+      - text: 。如果控制网页地址后面有
+      - code [ref=f3e119]: /index.html
+      - text: 、
+      - code [ref=f3e120]: "#/fan"
+      - text: 等页面路径，去掉这些部分。不用手填
+      - code [ref=f3e121]: /api/v1/fan/status
+      - text: 或
+      - code [ref=f3e122]: /socket.io
+      - text: ，程序已经知道这些接口。
+    - heading "源采样周期怎么填" [level=3] [ref=f3e123]
+    - paragraph [ref=f3e124]:
+      - code [ref=f3e125]: orin
+      - text: 部分还有两个字段：
+      - code [ref=f3e126]: source_sample_interval_ms
+      - text: 和
+      - code [ref=f3e127]: source_interval_evidence
+      - text: 。它们记录Orin监控服务
+      - strong [ref=f3e128]: 实际多久产生一份新采样
+      - text: ，不是要求你改变服务频率。
+    - paragraph [ref=f3e129]: 只有维护者确认当前源服务确实每1秒采样一次时，才把原文件中的两行分别改为：
+    - code [ref=f3e131]: "\"source_sample_interval_ms\": 1000, \"source_interval_evidence\": \"已核对源服务生效配置：1000ms\","
+    - paragraph [ref=f3e132]:
+      - text: 不知道时，两项保留
+      - code [ref=f3e133]: "null"
+      - text: 。仍可记录原始数据，但模型预测资格暂不可用；交回资料时写“源采样周期未确认”。不要凭网页刷新速度、端口或经验猜周期，也不用改其他轮询参数。
+    - heading "检查编辑有没有出错" [level=3] [ref=f3e134]
+    - paragraph [ref=f3e135]: 保存文件后执行：
+    - code [ref=f3e137]: ~/TTO/tto doctor --config "$HOME/TTO/config/local.json"
+    - paragraph [ref=f3e138]:
+      - text: 这是离线检查。看到下面两个字段表示配置格式通过，
+      - strong [ref=f3e139]: 还没有连接设备
+      - text: ：
+    - code [ref=f3e141]: "\"status\": \"offline_config_valid\", \"connected\": false"
+    - paragraph [ref=f3e142]: 如果提示配置错误，先检查双引号、逗号和字段所在位置。地址为空时，离线检查也可以通过；下一步联网前必须填好两个真实地址。
+    - paragraph [ref=f3e143]: 设备需要登录认证时，请维护者配置本机认证文件；不要把账号密码塞进URL，也不要把认证文件打包交回。
+    - heading "4 做一次3分钟连接检查" [level=2] [ref=f3e144]
+    - paragraph [ref=f3e145]: 确认两路源服务已运行、N305能访问它们，再执行：
+    - code [ref=f3e147]: ~/TTO/tto doctor --config "$HOME/TTO/config/local.json" --live --duration 180
+    - paragraph [ref=f3e148]:
+      - strong [ref=f3e149]: 这条命令会连接设备，计划只读观察180秒，到时停止并收尾。
+      - text: 权限、数据或资源问题可能使它提前结束；它会保存这一轮已经写下的原始记录。
+    - table [ref=f3e151]:
+      - rowgroup [ref=f3e152]:
+        - row [ref=f3e153]:
+          - columnheader "终端提示" [ref=f3e154]
+          - columnheader "怎么理解" [ref=f3e155]
+      - rowgroup [ref=f3e156]:
+        - row [ref=f3e157]:
+          - cell "已连接，正在等待第一份有效温度数据。" [ref=f3e158]
+          - cell "通道连上了，还要等有效新测量" [ref=f3e159]
+        - row [ref=f3e160]:
+          - cell "数据暂不可用，预测已暂停。" [ref=f3e161]
+          - cell "当前没有可用新数据，不能把旧缓存当新采样" [ref=f3e162]
+        - row [ref=f3e163]:
+          - cell "本轮TTO已停止；现有风扇控制未被修改。" [ref=f3e164]
+          - cell "本轮观察结束" [ref=f3e165]
+    - paragraph [ref=f3e166]:
+      - text: 终端不是每秒刷新，有时安静一段时间是正常的。最终输出是一组JSON文字，不需要逐项读懂；先找
+      - code [ref=f3e167]: run
+      - text: 、
+      - code [ref=f3e168]: new_samples
+      - text: 和
+      - code [ref=f3e169]: observer_stop_reason
+      - text: 。
+    - list [ref=f3e170]:
+      - listitem [ref=f3e171]:
+        - code [ref=f3e172]: run
+        - text: ：这次录制的完整文件夹路径，后面生成报告要用。
+      - listitem [ref=f3e173]:
+        - code [ref=f3e174]: new_samples
+        - text: ：有效新测量数量。大于0说明收到过新测量，不等于整段数据都可靠或模型有效。
+      - listitem [ref=f3e175]:
+        - code [ref=f3e176]: observer_stop_reason
+        - text: ：正常跑满时间是
+        - code [ref=f3e177]: duration
+        - text: ，按Ctrl+C停止是
+        - code [ref=f3e178]: SIGINT
+        - text: 。
+    - paragraph [ref=f3e179]: 收到数据也不能自动证明现场装的是正确源服务版本。源服务最终安装包与生效配置仍需现场核对；未确认的地方在测试记录里写“未确认”。
+    - heading "5 记录一次正常使用过程" [level=2] [ref=f3e180]
+    - paragraph [ref=f3e181]: 连接检查后，按设备原有方式正常使用。不要为了测试额外启动负载、修改风扇曲线、温度绑定或采样频率。
+    - paragraph [ref=f3e182]: 下面记录30分钟，场景名叫“办公使用01”：
+    - code [ref=f3e184]: ~/TTO/tto collect --config "$HOME/TTO/config/local.json" --duration 1800 --episode "办公使用01"
+    - paragraph [ref=f3e185]:
+      - text: 这条命令会联网。
+      - code [ref=f3e186]: "1800"
+      - text: 是秒数，等于30分钟。尽量覆盖自然升温、正常使用和后续降温；按实际完整过程选择时长，单次最多4小时。
+    - paragraph [ref=f3e187]:
+      - strong [ref=f3e188]: 场景名用来说明是不是同一个持续过程。
+      - text: 同一过程因时长限制分两次录制，沿用同名；已经结束、下一次独立使用过程，换成“办公使用02”等新名字。不要把每个文件都当成独立实验，也不要随意把不同过程起成同名。每次测试在记录模板里说明起止情况。
+    - paragraph [ref=f3e189]:
+      - text: 没有模型也可以执行
+      - code [ref=f3e190]: collect
+      - text: ，数据与简单参考预测会照常记录。第一次测试先把数据记录好即可。
+    - heading "怎样提前停止" [level=3] [ref=f3e191]
+    - paragraph [ref=f3e192]:
+      - text: 在运行TTO的终端按一次
+      - strong [ref=f3e193]: Ctrl+C
+      - text: ，等到“本轮TTO已停止”再关闭终端。它停止的是观察程序，已有风扇控制继续运行。
+    - paragraph [ref=f3e194]:
+      - text: 看到
+      - code [ref=f3e195]: SIGINT
+      - text: 或
+      - code [ref=f3e196]: SIGTERM
+      - text: 是正常停止方式。其他停止原因、磁盘不足、授权失败或队列丢弃需要留在测试记录中。不要删掉该轮数据，也不要重启设备或源服务来替代问题记录。
+    - heading "6 生成报告并用浏览器打开" [level=2] [ref=f3e197]
+    - paragraph [ref=f3e198]:
+      - text: 录制结束后，找到终端里的
+      - code [ref=f3e199]: run
+      - text: 。复制双引号中的完整路径，用它替换下面第一行的
+      - code [ref=f3e200]: 这里替换为本次run完整路径
+      - text: 。
+    - code [ref=f3e202]: RUN="这里替换为本次run完整路径" REPORT="$HOME/TTO/reports/$(date +%Y%m%d-%H%M%S)" ~/TTO/tto report --run "$RUN" --output "$REPORT" xdg-open "$REPORT/report.html"
+    - paragraph [ref=f3e203]:
+      - text: 这几行只读本机已有记录，
+      - strong [ref=f3e204]: 不连接设备
+      - text: 。Ubuntu会用默认浏览器打开报告；也可以在文件管理器里找到对应的
+      - code [ref=f3e205]: report.html
+      - text: ，双击打开。
+    - paragraph [ref=f3e206]: 每次报告需要新目录。上面的命令用时间生成新名称；若提示目录已存在，不要删除旧报告，等一秒重新生成新名称即可。
+    - paragraph [ref=f3e207]: 报告目录中有三份内容相同、用途不同的文件：
+    - table [ref=f3e209]:
+      - rowgroup [ref=f3e210]:
+        - row [ref=f3e211]:
+          - columnheader "文件" [ref=f3e212]
+          - columnheader "用法" [ref=f3e213]
+      - rowgroup [ref=f3e214]:
+        - row [ref=f3e215]:
+          - cell [ref=f3e216]:
+            - code [ref=f3e217]: report.html
+          - cell "用浏览器看，测试者优先看这份" [ref=f3e218]
+        - row [ref=f3e219]:
+          - cell [ref=f3e220]:
+            - code [ref=f3e221]: report.md
+          - cell "可编辑的文字版" [ref=f3e222]
+        - row [ref=f3e223]:
+          - cell [ref=f3e224]:
+            - code [ref=f3e225]: report.json
+          - cell "完整数字、原因和原始引用，给维护者复核" [ref=f3e226]
+    - heading "7 报告先看什么" [level=2] [ref=f3e227]
+    - heading "普通采集报告" [level=3] [ref=f3e228]
+    - paragraph [ref=f3e229]:
+      - text: 用
+      - code [ref=f3e230]: collect
+      - text: 录制后，主要看采集质量：
+    - table [ref=f3e232]:
+      - rowgroup [ref=f3e233]:
+        - row [ref=f3e234]:
+          - columnheader "项目" [ref=f3e235]
+          - columnheader "你要判断什么" [ref=f3e236]
+      - rowgroup [ref=f3e237]:
+        - row [ref=f3e238]:
+          - cell "有效新测量" [ref=f3e239]
+          - cell "是否真正收到新数据" [ref=f3e240]
+        - row [ref=f3e241]:
+          - cell "连接质量和缺口" [ref=f3e242]
+          - cell "有无断线、缓存、冲突、过期或丢弃" [ref=f3e243]
+        - row [ref=f3e244]:
+          - cell "正常AUTO起点" [ref=f3e245]
+          - cell "当时风扇与温度来源是否符合评价条件" [ref=f3e246]
+        - row [ref=f3e247]:
+          - cell "停止原因" [ref=f3e248]
+          - cell "是否按时或手动结束，还是因异常提前停止" [ref=f3e249]
+        - row [ref=f3e250]:
+          - cell "资源与记录时长" [ref=f3e251]
+          - cell "本轮在这台N305上的运行情况，是否覆盖你要记录的过程" [ref=f3e252]
+    - paragraph [ref=f3e253]: “正常AUTO起点”不是原始采样总量。风扇非自动模式、处于保护或故障、温度失效或来源不符合要求等，都可能使这个数很低或为0。把当时情况照实写下来，不要为了增加数量改风扇或绑定设置。源采样周期未确认还会使模型预测不可用，这与正常AUTO状态计数是两项检查。
+    - paragraph [ref=f3e254]: 普通采集报告没有正式模型成绩是正常的。软件能记录，不代表已经证明预测有收益。
+    - heading "旁路预测报告" [level=3] [ref=f3e255]
+    - paragraph [ref=f3e256]:
+      - text: 拿到真实冻结模型并用下一节的
+      - code [ref=f3e257]: shadow
+      - text: 录制后，报告还会显示当时实际发出的预测与保存的评分。先看“计划起点、已发、历史评分、质量排除、当前有效”，再看误差。
+    - table [ref=f3e259]:
+      - rowgroup [ref=f3e260]:
+        - row [ref=f3e261]:
+          - columnheader "报告里的方法名" [ref=f3e262]
+          - columnheader "中文含义" [ref=f3e263]
+      - rowgroup [ref=f3e264]:
+        - row [ref=f3e265]:
+          - cell [ref=f3e266]:
+            - code [ref=f3e267]: persist
+          - cell "假设温度维持当前值的简单参考" [ref=f3e268]
+        - row [ref=f3e269]:
+          - cell [ref=f3e270]:
+            - code [ref=f3e271]: trend30
+          - cell "按最近温度走势给出的简单参考" [ref=f3e272]
+        - row [ref=f3e273]:
+          - cell [ref=f3e274]:
+            - code [ref=f3e275]: ridge_tj
+          - cell "使用温度历史的小模型，简称M0" [ref=f3e276]
+        - row [ref=f3e277]:
+          - cell [ref=f3e278]:
+            - code [ref=f3e279]: ridge_full
+          - cell "还使用风扇、负载、功耗等输入的小模型，简称M1" [ref=f3e280]
+    - table [ref=f3e282]:
+      - rowgroup [ref=f3e283]:
+        - row [ref=f3e284]:
+          - columnheader "指标或状态" [ref=f3e285]
+          - columnheader "怎么理解" [ref=f3e286]
+      - rowgroup [ref=f3e287]:
+        - row [ref=f3e288]:
+          - cell "MAE" [ref=f3e289]
+          - cell "平均绝对误差，单位℃；只在同一评分集合内比较才公平" [ref=f3e290]
+        - row [ref=f3e291]:
+          - cell "RMSE" [ref=f3e292]
+          - cell "对较大误差更敏感的误差指标，单位℃" [ref=f3e293]
+        - row [ref=f3e294]:
+          - cell "绝对误差P95" [ref=f3e295]
+          - cell "约95%分位的绝对误差，帮助看大多数误差的上沿" [ref=f3e296]
+        - row [ref=f3e297]:
+          - cell "欠预测" [ref=f3e298]
+          - cell "预测低于后来实际温度，观察时尤其留意" [ref=f3e299]
+        - row [ref=f3e300]:
+          - cell "过预测" [ref=f3e301]
+          - cell "预测高于后来实际温度" [ref=f3e302]
+        - row [ref=f3e303]:
+          - cell "降级" [ref=f3e304]
+          - cell "缺少部分输入后只用了较简单的方法，不算M1成功" [ref=f3e305]
+        - row [ref=f3e306]:
+          - cell "未能评分" [ref=f3e307]
+          - cell "没有合适的未来标签、跨段、尚在等待或证据缺失；不等于误差0" [ref=f3e308]
+    - paragraph [ref=f3e309]: 旁路报告里，各方法可用的起点不一定相同，不能拿两行MAE直接断定哪个模型更好。正式判断模型价值，要看单独离线评估报告里的共同评分集合。
+    - paragraph [ref=f3e310]:
+      - strong [ref=f3e311]: 覆盖率要和误差一起看。
+      - text: 同一方法、同一时距的主表覆盖率，是“当前有效评分 / 当时计划起点”。例如计划100个起点、当前只有60条可用评分，覆盖率就是60%；被质量隔离的历史部分仍在分母里。另有按该方法已发预测计算的评分率，详见JSON。
+    - paragraph [ref=f3e312]: “历史评分”表示当时确实保存过，“当前有效”表示现在仍适合用于评价。后来出现同身份读数冲突或序号倒退，受影响的旧片段会退出有效误差和图，原始记录保留；后续恢复的有效片段继续计分。不要为了消除警告删整轮或编辑评分文件。
+    - paragraph [ref=f3e313]: 已有预测需要等到对应未来时刻才能评分。第一条预测发出后，15、45、90秒的成绩不会同时立刻出现；软件结束时尚未等到未来温度的预测，也可能保留为未评分。
+    - paragraph [ref=f3e314]: 看到“模拟”时，这些数字只用于熟悉软件流程，不是实机成绩。一轮旁路表现也不能替代独立时间留出评估；不要根据某个漂亮误差表决定降低风扇百分比。
+    - heading "8 拿到真实模型后再做旁路观察" [level=2] [ref=f3e315]
+    - paragraph [ref=f3e316]:
+      - text: 这一步不是第一次记录的前置条件。等待维护者提供准备使用的真实冻结模型，在TTO目录中新建
+      - code [ref=f3e317]: models
+      - text: 文件夹，把模型放进去并保留原文件名；不要用模拟演示模型连接真机。
+    - paragraph [ref=f3e318]:
+      - text: 下面假设文件叫
+      - code [ref=f3e319]: 真实冻结模型.json
+      - text: 。先做离线检查：
+    - code [ref=f3e321]: ~/TTO/tto doctor --config "$HOME/TTO/config/local.json" --model "$HOME/TTO/models/真实冻结模型.json"
+    - paragraph [ref=f3e322]:
+      - text: 除了配置通过，还要看到
+      - code [ref=f3e323]: "\"model\": \"valid\""
+      - text: 。如果显示
+      - code [ref=f3e324]: unavailable
+      - text: ，先找维护者处理；配置检查通过不等于模型也可用。
+    - paragraph [ref=f3e325]: 确认文件正确、两路数据可用且本次观察窗口已经确定，再执行：
+    - code [ref=f3e327]: ~/TTO/tto shadow --config "$HOME/TTO/config/local.json" --model "$HOME/TTO/models/真实冻结模型.json" --duration 1800 --episode "旁路使用01"
+    - paragraph [ref=f3e328]: 这条命令会联网，使用指定的固定模型观察30分钟，不在线训练，也不自动切换模型。需要积累最近3分钟的连续温度历史，期间预热或降级是可能的。
+    - paragraph [ref=f3e329]:
+      - text: 结束后，仍用第6节的
+      - code [ref=f3e330]: report
+      - text: 命令生成报告。报告使用本次当时保存的预测和评分，不会拿后来换上的模型重新算历史成绩。下一次要用新模型时，结束本次TTO，再指定新的模型文件；保留旧模型与旧记录。
+    - heading "9 一次测试结束后交回什么" [level=2] [ref=f3e331]
+    - paragraph [ref=f3e332]: 用文件管理器把以下项目压缩在一起，交回完整一轮，不只挑看起来效果好的片段：
+    - list [ref=f3e333]:
+      - listitem [ref=f3e334]:
+        - text: 本次
+        - code [ref=f3e335]: run-…
+        - text: 文件夹，完整保留。
+      - listitem [ref=f3e336]: 本次报告文件夹，包含HTML、Markdown和JSON。
+      - listitem [ref=f3e337]:
+        - code [ref=f3e338]: ~/TTO/installation.json
+        - text: 。
+      - listitem [ref=f3e339]: 填好的“测试记录模板”，说明使用过程、起止情况及看到的提示。
+    - paragraph [ref=f3e340]: 原始观测、预测、评分与事件文件不要修改或删除。认证文件、密码、整个Conda环境不需要交回；也不要把私有任务内容写进场景名或测试备注。需要注明现场源服务版本、配置或模型版本时，写能确认的事实，不清楚就填“未确认”。
+    - heading "10 常见问题" [level=2] [ref=f3e341]
+    - table [ref=f3e343]:
+      - rowgroup [ref=f3e344]:
+        - row [ref=f3e345]:
+          - columnheader "遇到的问题" [ref=f3e346]
+          - columnheader "先怎么做" [ref=f3e347]
+      - rowgroup [ref=f3e348]:
+        - row [ref=f3e349]:
+          - cell [ref=f3e350]:
+            - text: 找不到
+            - code [ref=f3e351]: ~/TTO/tto
+          - cell [ref=f3e352]:
+            - text: 确认安装是否完成；若用了自选目录，使用实际安装目录里的
+            - code [ref=f3e353]: tto
+        - row [ref=f3e354]:
+          - cell "配置格式不对" [ref=f3e355]
+          - cell "检查编辑过的两处地址及采样周期字段，保留英文双引号和逗号，再跑离线doctor" [ref=f3e356]
+        - row [ref=f3e357]:
+          - cell "能开WebUI但TTO读不到" [ref=f3e358]
+          - cell "浏览器能访问页面不代表状态接口或Orin监控通道可用；保存提示和本轮文件夹，请维护者核对地址、接口与当前源版本" [ref=f3e359]
+        - row [ref=f3e360]:
+          - cell "提示授权失败、401或403" [ref=f3e361]
+          - cell "结束本轮并保留记录，请维护者核对本机认证配置；不用在URL里加密码" [ref=f3e362]
+        - row [ref=f3e363]:
+          - cell "提示证书错误" [ref=f3e364]
+          - cell "请维护者配置设备证书的信任文件，保留连接证书检查" [ref=f3e365]
+        - row [ref=f3e366]:
+          - cell "另一个TTO观察进程正在运行" [ref=f3e367]
+          - cell "回到原终端结束那一轮，等它停止；不要同时开两轮观察" [ref=f3e368]
+        - row [ref=f3e369]:
+          - cell "一直提示数据暂不可用" [ref=f3e370]
+          - cell "核对Orin是否产生有效新数据、两路服务是否可访问；不要将旧缓存算成新测量或修改源频率" [ref=f3e371]
+        - row [ref=f3e372]:
+          - cell "没有模型成绩或M1降级" [ref=f3e373]
+          - cell "查看预热、采样周期、风扇状态、缺项和未来标签原因，照实交回" [ref=f3e374]
+        - row [ref=f3e375]:
+          - cell "日志齐全但一部分评分被排除" [ref=f3e376]
+          - cell "属于当前评价资格变化，不是“文件缺失”；保留旧段与恢复后的数据" [ref=f3e377]
+        - row [ref=f3e378]:
+          - cell "磁盘空间不足或提前停止" [ref=f3e379]
+          - cell "保留已写记录和停止原因，先归档已有资料；不要删除本轮证据后重跑冒充原测试" [ref=f3e380]
+        - row [ref=f3e381]:
+          - cell "报告目录已存在" [ref=f3e382]
+          - cell "用新目录名再生成，保留旧报告" [ref=f3e383]
+    - heading "11 随手查的几个词" [level=2] [ref=f3e384]
+    - table [ref=f3e386]:
+      - rowgroup [ref=f3e387]:
+        - row [ref=f3e388]:
+          - columnheader "词" [ref=f3e389]
+          - columnheader "简单理解" [ref=f3e390]
+      - rowgroup [ref=f3e391]:
+        - row [ref=f3e392]:
+          - cell "TJ" [ref=f3e393]
+          - cell "Orin芯片结温，是本软件预测目标；不是机壳温度" [ref=f3e394]
+        - row [ref=f3e395]:
+          - cell "PWM" [ref=f3e396]
+          - cell "风扇控制百分比，不等于测出的RPM转速" [ref=f3e397]
+        - row [ref=f3e398]:
+          - cell "run" [ref=f3e399]
+          - cell "一次命令录制生成的文件夹" [ref=f3e400]
+        - row [ref=f3e401]:
+          - cell "场景名或episode" [ref=f3e402]
+          - cell "你给持续使用过程起的短名字，帮助确认分组" [ref=f3e403]
+        - row [ref=f3e404]:
+          - cell "片段或segment" [ref=f3e405]
+          - cell "软件按数据连续性与质量自动划分的部分，不用你手动编号" [ref=f3e406]
+        - row [ref=f3e407]:
+          - cell "基线" [ref=f3e408]
+          - cell "简单参考预测，用来判断复杂模型是否值得用" [ref=f3e409]
+        - row [ref=f3e410]:
+          - cell "shadow或旁路" [ref=f3e411]
+          - cell "固定模型只观察和预测，风扇控制照常由TianshanOS负责" [ref=f3e412]
+    - paragraph [ref=f3e413]: 第一次操作时，按第2到第6节走完并交回资料就够了。安装身份、现场连接、数据质量和预测效果是几件不同的事，分别看对应的记录；当前真实预测效果仍待数据验证。
+    - generic [ref=f3e414]:
+      - link "下载第一次测试操作卡" [ref=f3e415] [cursor=pointer]:
+        - /url: TTO第一次测试操作卡.md
+      - link "下载测试记录模板" [ref=f3e416] [cursor=pointer]:
+        - /url: TTO测试记录模板.md
+      - link "下载可编辑说明书" [ref=f3e417] [cursor=pointer]:
+        - /url: TTO测试者使用说明.md
+    - generic [ref=f3e418]: 本说明按当前0.1.2程序核对。现场安装、连接与真实预测效果分别以对应记录确认。

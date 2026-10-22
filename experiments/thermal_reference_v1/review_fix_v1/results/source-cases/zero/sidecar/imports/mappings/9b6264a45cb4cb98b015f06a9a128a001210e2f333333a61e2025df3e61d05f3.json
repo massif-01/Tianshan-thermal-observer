@@ -1,0 +1,16 @@
+{
+  "input_path": "numeric_export",
+  "columns": {
+    "record_id": "id",
+    "original_value": "value",
+    "original_unit": "unit",
+    "measured_at_raw": "sample_time",
+    "synthetic": "synthetic",
+    "note": "note"
+  },
+  "constants": {
+    "session_id": "TEST-ONLY-NOT-A-REAL-MEASUREMENT",
+    "time_source": "TEST-CONSTRUCTED",
+    "time_uncertainty_s": 0
+  }
+}

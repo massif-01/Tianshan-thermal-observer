@@ -1,0 +1,33 @@
+{
+  "id": "natural-gap-single-recovery-proposed-v1",
+  "status": "offline_candidate_not_field_authorized",
+  "trigger": "whole approved natural window lacks sustained work or recovery; explicit new approval",
+  "stages": [
+    {
+      "kind": "background",
+      "seconds": 300
+    },
+    {
+      "kind": "work",
+      "seconds": 360,
+      "concurrency": 1
+    },
+    {
+      "kind": "final_recovery",
+      "seconds": 480
+    }
+  ],
+  "max_requests": 24,
+  "max_tokens": 256,
+  "request_timeout_s": 30,
+  "nominal_seconds": 1140,
+  "hard_limit_seconds": 1500,
+  "preparation_max_seconds": 300,
+  "drain_max_seconds": 30,
+  "cleanup_max_seconds": 30,
+  "requester": "reference/requester.py (unmodified accepted Requester)",
+  "device_id": null,
+  "model_profile": null,
+  "authorization": null,
+  "requires_reviewed_unified_execute_integration": true
+}

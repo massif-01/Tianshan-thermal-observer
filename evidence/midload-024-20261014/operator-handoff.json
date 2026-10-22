@@ -1,0 +1,17 @@
+{
+  "handoff_at_utc": "2026-10-13T16:33:56.878224+00:00",
+  "handoff_success": true,
+  "verified_runner_pid": 7140,
+  "verified_wrapper_pid": 7121,
+  "verified_parent_shell_pid": 7120,
+  "verified_runner_command": "python -I /home/rm01/TTO-midload-0.2.4/thermal_trials/run_midload.py --live",
+  "trial": "midload-20261013T162317890886Z",
+  "collector_run": "a03db81c-ed3a-415c-a1d3-11bc26389419",
+  "current_phase": "cooldown_1",
+  "status_evidence": "handoff-status.json",
+  "control_scope": "Supervise existing runner only; on user stop or card stop condition reverify identity and send one SIGINT to PID 7140; never stop model service; coordinate to avoid duplicate stop",
+  "new_runner_started": false,
+  "api_requests_sent_by_handoff": 0,
+  "handoff_time_semantics": "Actual handoff record time; not original runner start or request time",
+  "operation_card": "/Users/massif/Downloads/TTO-0.2.4中等负载测试操作卡.md"
+}

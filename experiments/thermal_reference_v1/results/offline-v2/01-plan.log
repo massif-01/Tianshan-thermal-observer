@@ -1,0 +1,35 @@
+{
+  "contract": "TTO-REF-PREP-v1.0",
+  "mode": "offline_plan",
+  "cue_plan": {
+    "schema": "TTO-REF-CUES-v1",
+    "run_id": "SYNTHETIC-CUE-RUN",
+    "model_driven": false,
+    "max_prompts": 14,
+    "minimum_spacing_s": 30,
+    "late_grace_s": 5,
+    "background_offsets_s": [
+      30,
+      120
+    ],
+    "sparse_mid_s": 180,
+    "pre_continuous_offset_s": 270,
+    "pre_medium_offset_s": 369,
+    "bindings": {
+      "background": "resident_background",
+      "sparse": "sparse",
+      "pre_continuous": "between_groups",
+      "continuous": "continuous",
+      "pre_medium": "cooldown",
+      "medium": "optional_medium"
+    },
+    "missing_policy": "record_missing_no_wait_no_rerun",
+    "actual_field_plan_confirmed": false
+  },
+  "measurement_sites": "fin_surface_ir 与 backplate_surface_ir 分别登记；红外鳍片不是空气温度",
+  "preparation": "未知型号/发射率/反射/ROI/精度保持null；不默认裸金属0.95；现在不需测量",
+  "clocks": "提醒/按键/实际拍摄或区间/写入分别保存；mtime与聊天时间不当测量时间",
+  "missing": "遗漏记未采，不延长、不补跑；外部测温不是全局建模前置",
+  "device_access": false,
+  "workload_actions": false
+}

@@ -1,0 +1,24 @@
+{
+  "profile": "offline_macos_accelerate_v1",
+  "numpy": "2.2.6",
+  "scipy": "1.16.3",
+  "pid": 6617,
+  "backend_names": [
+    "accelerate",
+    "Accelerate"
+  ],
+  "environment": {
+    "OPENBLAS_NUM_THREADS": "1",
+    "OPENBLAS_DEFAULT_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1"
+  },
+  "pool_introspection": [],
+  "numerical_pool_threads_verified": false,
+  "Accelerate_thread_request": 1,
+  "limitation": "Accelerate worker count not introspectable; requested single-thread, serial C trajectory, CPU/RSS recorded",
+  "field_runtime_attestation": false,
+  "scope": "isolated offline training only; original cpu.3/observe policy unchanged"
+}

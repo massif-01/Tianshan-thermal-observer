@@ -1,0 +1,2288 @@
+diff --git a/experiments/thermal_identification_v1/README.md b/experiments/thermal_identification_v1/README.md
+new file mode 100644
+index 0000000..8738166
+--- /dev/null
++++ b/experiments/thermal_identification_v1/README.md
+@@ -0,0 +1,75 @@
++# TTO-GREYBOX-ID-v1.0：已执行的离线研究
++
++先读 [实际结果报告](TTO-首轮灰箱实际辨识与对照实验报告.md)。36次主拟合、一次d1=0、双向迁移与合并表达检查均已执行。没有设备、网络采集、控制或发布入口；研究JSON不兼容生产模型加载器，`deployable=false`。
++
++## 复核已有结果（不重新拟合）
++
++在本目录，使用有 NumPy/SciPy 的 Python：
++
++```sh
++python verify_results.py --run runs/main --output readback-new.json
++```
++
++输出必须为新文件。这个命令核对冻结SHA、初值择优、实际标签／共同集合、B指标与独立增广矩阵指数。ZIP中每个文件的清单为根目录 `SHA256.json`；它不包含自身。原始三包不递归打入本包，其精确SHA见 `runs/main/source-archives.json`。
++
++## 从原始分享归档独立重跑
++
++从最初的《TTO-首轮灰箱实际辨识与对照实验-Codex交接包.zip》解出 `inputs/`，包含三个ZIP和 `input-index.json`；保留原层级。不能拿私有manifest哈希替换分享文件的哈希。全部请求文本不进入派生特征或输出。
++
++核心运行环境：Python 3.12.3、NumPy 2.2.6、SciPy 1.14.1、scikit-learn 1.6.1、threadpoolctl 3.7.0、pytest 8.3.5，以及本机 C 编译器。实际使用仓库既有 `.venv`，未安装/升级生产依赖。独立环境依赖列表见 `research-requirements.txt`；需要安装时只安装到新的研究环境。C内核会在输出目录编译；没有CUDA依赖。
++
++```sh
++python run_experiment.py \
++  --spec experiment-spec.json \
++  --input-index /ABSOLUTE/PATH/ORIGINAL_HANDOFF/inputs/input-index.json \
++  --output /ABSOLUTE/PATH/NEW_RESEARCH_RUN
++```
++
++默认 `--stage all` 顺序执行输入校验、数据回放、冻结、G1-L/G2-L/G1-S/G2-S及Ridge、双方参数冻结、目标评价、F-POOL、唯一d1=0、诊断和状态。输出目录必须不存在；不会覆盖旧实验。原始质量源码从第三个原包取出并按其SHA核对，不依赖当前 `src/tto` 的变化。`sources/tto-reference/` 是本次包内同一源码副本，供独立审读。
++
++作者为了在拟合后完成评价代码，分两阶段运行：`--stage directions` 后 `--stage finish`。后者只能用于已经完成方向冻结且尚未产生 `evaluation/` 的目录，先核验冻结文件。第一次评价入口空矩阵错误的空目录和日志已单独保存；修复后只重启评价，没有重训双向模型。最小独立重跑直接使用默认 `all` 即可。
++
++计算合同：最多36次主非线性拟合、每次300 nfev及1500实际残差调用，1 BLAS线程，2GiB RSS目标，2小时总计算软预算。实际核心流程42.73秒、约531MiB。每次求解边界与调用预算由程序执行；RSS与总耗时为记录/人工监督的软目标，不是操作系统硬限额。时长不含实现/阅读/测试/绘图/打包，更不是N305基准。
++
++## 测试、图表与报告
++
++新的研究测试在读取新重跑数据时设置该路径；不设置时读取交付的 `runs/main`。
++
++```sh
++TTO_RESEARCH_RUN=/ABSOLUTE/PATH/NEW_RESEARCH_RUN \
++  python -m pytest tests -q --basetemp=/ABSOLUTE/PATH/NEW_TEST_TEMP
++python plot_results.py --run /ABSOLUTE/PATH/NEW_RESEARCH_RUN \
++  --output /ABSOLUTE/PATH/NEW_RESEARCH_RUN/charts
++python report.py --run /ABSOLUTE/PATH/NEW_RESEARCH_RUN \
++  --output /ABSOLUTE/PATH/NEW_REPORT.md
++```
++
++绘图另外需要 Matplotlib。作者复用 `/private/tmp/tto-analysis-20261013-env` 的 Python 3.14、NumPy 2.5.4、Matplotlib 3.11.2，仅读取保存结果；核心拟合依赖未改变。图表的运行版本在 `charts/plot-environment.json`。生成报告含本次的解释性文字与固定验证结论；复跑到不同环境或不同结果时应重新核对这些结论，不把模板文字当验收。
++
++相关既有回归的原样副本在 `sources/related-tests/`。已执行的是11项与本轮复用质量/平台链有关的测试，不是整套仓库回归。独立执行同一集合：
++
++```sh
++python -m pytest \
++  sources/related-tests/test_review_repair.py \
++  sources/related-tests/test_platform_curve.py::test_thor_rails_units_without_alias \
++  sources/related-tests/test_platform_curve.py::test_qualification_does_not_relax_invalid_temperature \
++  sources/related-tests/test_platform_curve.py::test_gpu_age_sum_duplicates_utc_and_window_gap \
++  sources/related-tests/test_platform_curve.py::test_same_identity_additive_fields_isolate \
++  -q -o pythonpath=sources/tto-reference/src \
++  --basetemp=/ABSOLUTE/PATH/NEW_RELATED_TEST_TEMP
++```
++
++相关测试导入原 CLI/collector 模块但由离线guard阻断外部连接和进程启动；不会启动现场采集。对应导入依赖列在研究依赖中。
++
++## 文件与语义
++
++- `experiment-spec.json` 与 `runs/main/freeze.json`：拟合前冻结，代码变更时间和唯一初始化修复另记，不悄悄改历史冻结。
++- `data.json`：4139个accepted点、56个严格连续段、原引用、所有传播输入事件及TTL、逐规则排除。约1秒资料不是独立样本集合。
++- `fits/`：全部36次主尝试、选择记录、6个灰箱模型、三套按h独立的紧凑Ridge及单次嵌套诊断。
++- `evaluation/`：A与B分离，固定HOLD/RELAX30分离，共同集合ID、覆盖分母、逐起点状态证据和请求窗口。
++- `diagnostics/`：灵敏度含/不含nuisance、参数散布、输入共线、残差、热点、数值/初态敏感性。
++- `protected-before.json` / `protected-after.json`：起始HEAD与3506个既有文件字节保护检查；没有创建分支或修改Git索引。
++- `research-code.patch`：仅新增研究代码、测试、README与spec的补丁，路径相对仓库根；在空临时仓库通过 `git apply --check`，未应用到既有脏工作树。
++- `executed-commands.json`、环境/资源、通过与失败日志、图表视觉核对和SHA：验证范围可区分，原三包按SHA引用。
++
++F-LS/F-SL都是开发迁移/反向压力检查；F-POOL参数来自整轮，只能作拟合内描述。B的输入特征因果不意味着这些参数在历史现场已经可用。潜在状态不是实测热容，状态估计不是在线参数学习。`target_validation=not_performed`，`control_authorization=none`。本轮到此停止。
+diff --git a/experiments/thermal_identification_v1/common.py b/experiments/thermal_identification_v1/common.py
+new file mode 100644
+index 0000000..8c8b217
+--- /dev/null
++++ b/experiments/thermal_identification_v1/common.py
+@@ -0,0 +1,49 @@
++"""Small, offline-only experiment utilities."""
++import hashlib
++import json
++from pathlib import Path
++from datetime import datetime, timezone
++import numpy as np
++
++
++def sha(path):
++    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
++
++
++def read(path):
++    return json.loads(Path(path).read_text())
++
++
++def write(path, obj):
++    def cast(x):
++        if isinstance(x, np.ndarray):
++            return x.tolist()
++        if isinstance(x, np.generic):
++            return x.item()
++        if isinstance(x, Path):
++            return str(x)
++        raise TypeError(type(x))
++    Path(path).parent.mkdir(parents=True, exist_ok=True)
++    Path(path).write_text(json.dumps(obj, ensure_ascii=False, indent=2, default=cast, allow_nan=False)+'\n')
++
++
++def stamp():
++    return datetime.now(timezone.utc).isoformat()
++
++
++def seconds(utc):
++    return datetime.fromisoformat(utc).timestamp()
++
++
++def balanced_weights(rows):
++    """Equal runs, equal present macroclasses, then actual supported time."""
++    w = np.zeros(len(rows))
++    runs = sorted({r['run'] for r in rows if r['duration'] > 0})
++    for run in runs:
++        classes = sorted({r['macro'] for r in rows if r['run'] == run and r['duration'] > 0})
++        for macro in classes:
++            ids = [i for i, r in enumerate(rows) if r['run'] == run and r['macro'] == macro]
++            dt = np.array([rows[i]['duration'] for i in ids])
++            if dt.sum():
++                w[ids] = dt/dt.sum()/len(classes)/len(runs)
++    return w
+diff --git a/experiments/thermal_identification_v1/data_adapter.py b/experiments/thermal_identification_v1/data_adapter.py
+new file mode 100644
+index 0000000..36208dd
+--- /dev/null
++++ b/experiments/thermal_identification_v1/data_adapter.py
+@@ -0,0 +1,188 @@
++"""Replay the preserved quality processor; never invoke collectors or live I/O."""
++import bisect
++import collections
++import copy
++import csv
++import json
++import sys
++import zipfile
++from pathlib import Path
++import numpy as np
++from common import read, write, sha, seconds, stamp
++
++
++def extract_inputs(index_path, output):
++    index_path = Path(index_path).resolve()
++    base = index_path.parent.parent
++    dest = Path(output)/'input-cache'
++    checks = []
++    for entry in read(index_path)['archives']:
++        src = base/entry['path']
++        assert src.stat().st_size == entry['bytes'] and sha(src) == entry['sha256']
++        target = dest/src.stem
++        with zipfile.ZipFile(src) as z:
++            assert z.testzip() is None
++            assert all(not Path(n).is_absolute() and '..' not in Path(n).parts for n in z.namelist())
++            z.extractall(target)
++        manifest = target/('archive-file-hashes.json' if src.stem.startswith('L-') else 'SHA256.json')
++        hashes = read(manifest)
++        for name, value in hashes.items():
++            expected = value['sha256'] if isinstance(value, dict) else value
++            assert sha(target/name) == expected, name
++        checks.append(dict(entry, verified_entries=len(hashes)))
++    write(Path(output)/'source-archives.json', checks)
++    return dest
++
++
++def phase_metadata(root, label):
++    if label == 'L':
++        phases = []
++        with (root/'analysis/phase-summary.csv').open() as f:
++            for p in csv.DictReader(f):
++                phases.append(dict(id=p['phase'], label=p['label'], start=seconds(p['start']), end=seconds(p['end']),
++                                   macro='work' if p['phase'] in ('2','4','5a','5b') else 'recovery' if p['phase'] in ('3','I1','I2','6') else 'background',
++                                   boundary_precision='manual_seconds' if p['phase'] in ('1','2','3') else 'client_event_milliseconds'))
++        return phases, []
++    phases = [dict(id=p['phase'], start=seconds(p['start_utc']), end=seconds(p['end_utc'])) for p in read(root/'normalized-phases.json')]
++    # Read only metadata into derived evidence: request text is never a feature.
++    reqs = [dict(id=p['request_id'], stage=p['stage'], start=seconds(p['submit_utc']), end=seconds(p['end_utc']),
++                 client_submit_mono_s=p['submit_mono_s'], client_end_mono_s=p['end_mono_s'],
++                 end_semantics=p['end_semantics']) for p in read(root/'normalized-requests.json')]
++    return phases, reqs
++
++
++def classify(wall, label, phases, reqs):
++    phase = next((p for p in phases if p['start'] <= wall < p['end']), None)
++    if label == 'L':
++        if phase is None:
++            return 'background', 'unlabelled', 'background'
++        regime = ('model_loading' if phase['id']=='2' else 'long_rise' if phase['macro']=='work' and wall-phase['start']<60 else 'long_sustained' if phase['macro']=='work' else 'cooldown' if phase['macro']=='recovery' else 'idle')
++        return phase['macro'], phase['id'], regime
++    for j, q in enumerate(reqs):
++        stop = min(q['end']+30, reqs[j+1]['start'] if j+1<len(reqs) else float('inf'))
++        if q['start'] <= wall < stop:
++            return 'work', q['stage'], 'continuous_short' if q['stage']=='continuous' else 'isolated_pulse'
++    # Labelled inter-request gaps and explicit post-task cooldowns are recovery.
++    recovery = phase is not None and phase['id'] in ('resident-baseline','sparse','between-groups','continuous','final-cooldown')
++    return ('recovery' if recovery else 'background', phase['id'] if phase else 'unlabelled', 'cooldown' if recovery else 'idle')
++
++
++def prepare(cache, out):
++    cache, out = Path(cache), Path(out)
++    reference = cache/'previous-exploration-evidence/sources/tto-reference/src'
++    sys.path.insert(0, str(reference))
++    from tto.config import load_config, merge, validate
++    from tto.engine import engine_for
++    from tto.dataset import replay
++    records, segments, evidence = [], [], []
++    for label, sub, old in [('L','L-seven-conditions-original','seven-conditions'),('S','S-shortqa-original-complete','short-qa')]:
++        root = cache/sub
++        run = next(root.glob('run-*'))
++        m = read(run/'manifest.json')
++        index = read(run/'files.json')
++        assert all(sha(run/k)==v for k,v in index.items())
++        replayed = replay(run)
++        assert not replayed['platform_state']['mixed_profiles']
++        assert not replayed['platform_state']['evidence_issues']
++        invalids = {v['segment'] for v in replayed['quality_eligibility']['isolations']}
++        c = load_config(environ={})
++        saved = copy.deepcopy(m['config'])
++        for section in ('orin','tianshan'):
++            saved[section]['headers_file'] = saved[section]['ca_file'] = None
++        merge(c,saved); validate(c)
++        engine = engine_for(c,record_schema=2)
++        originals = [json.loads(line) for line in (cache/'previous-exploration-evidence/model-exploration'/old/'accepted-timeseries.jsonl').open()]
++        lookup = {a['ref']:a for a in originals}
++        phases, reqs = phase_metadata(root,label)
++        nodes, accepted, latest = [], [], None
++        for line in (run/'observations-0001.jsonl').open():
++            raw = json.loads(line)
++            result = engine.process(raw)
++            t = raw['mono_s']; q = result['quality']
++            if q and q['accepted']:
++                s = engine.features.history[-1]
++                a = lookup[raw['ref']]
++                assert a['values']==s['values'] and a['segment']==s['segment'] and a['control_eligible']==s['control_eligible']
++                assert a['mono_s']==t and a['utc']==raw['received_at_utc'] and a['sample_seq']==raw['payload']['telemetry_meta']['sample_seq']
++                for field in ('vdd_gpu','vdd_cpu_soc_mss','vin_sys_5v0'):
++                    assert s['values'][field] == raw['payload']['power'][field]['current']/1000
++                assert s['values']['tj']==raw['payload']['temperature']['tj']
++                latest = copy.deepcopy(a)
++                latest.update(run=label, wall=seconds(a['utc']), source_age_ms=q['age_lower_bound_ms'],
++                              source_received_at=raw['payload']['telemetry_meta']['received_at'], source_timestamp=raw['payload']['timestamp'],
++                              source_valid_until=t+(raw['payload']['telemetry_meta']['freshness_timeout_ms']-q['age_lower_bound_ms'])/1000,
++                              contract_eligible=q['period_known'] and engine.profile_id is not None,
++                              isolation=latest['segment'] in invalids, node_index=len(nodes))
++                latest['macro'],latest['phase'],latest['regime']=classify(latest['wall'],label,phases,reqs)
++                accepted.append(latest)
++            scope, ctrl, reasons = engine.control_qualification(t)
++            deadline = min(engine.fan['t']+2.5 if engine.fan else t, engine.temp['t']+7.5 if engine.temp else t,
++                           engine.q.anchor_t+(engine.q.timeout_ms-engine.q.anchor_age)/1000 if latest else t)
++            good = bool(latest and ctrl and latest['contract_eligible'] and not engine.q.blocked and not engine.q.quarantined and
++                        latest['segment']==engine.q.segment and latest['segment'] not in invalids)
++            inputs = [latest['values']['vdd_gpu'],latest['values']['vdd_cpu_soc_mss'],engine.fan['data']['successful_duty']/100] if good else None
++            if good:
++                assert np.isfinite(inputs).all() and 0 <= inputs[2] <= 1
++            nodes.append(dict(t=t, valid_until=deadline, good=good, segment=engine.q.segment, inputs=inputs,
++                              trigger_ref=raw['ref'], power_ref=latest['ref'] if latest else None,
++                              fan_ref=engine.fan['ref'] if engine.fan else None,
++                              temp_ref=engine.temp['ref'] if engine.temp else None,
++                              fan_age_s=t-engine.fan['t'] if engine.fan else None,
++                              source_age_ms=(t-engine.q.anchor_t)*1000+engine.q.anchor_age if latest else None,
++                              reasons=reasons))
++        assert len(accepted)==len(originals)
++        groups, group, rejected, interval_rejections = [], [], [], []
++        for a in accepted:
++            node = nodes[a['node_index']]
++            good = node['good'] and node['valid_until'] > a['mono_s']
++            if not good:
++                if group: groups.append(group);group=[]
++                rejected.append(dict(ref=a['ref'],segment=a['segment'],reasons=node['reasons'],isolation=a['isolation']))
++                a['research_segment']=None
++                continue
++            if group:
++                prev=group[-1]
++                used=nodes[prev['node_index']:a['node_index']+1]
++                bad=[dict(ref=x['trigger_ref'],reason='qualification_or_segment' if not x['good'] or x['segment']!=prev['segment'] else 'TTL_expires_inside_interval',from_t=x['t'],to_t=y['t'],valid_until=x['valid_until'])
++                     for x,y in zip(used,used[1:]) if y['t']>x['t'] and (not x['good'] or x['segment']!=prev['segment'] or x['valid_until']<y['t']-1e-9)]
++                if bad or a['segment']!=prev['segment']:
++                    interval_rejections.append(dict(from_ref=prev['ref'],to_ref=a['ref'],details=bad,segment_change=a['segment']!=prev['segment']))
++                    groups.append(group);group=[]
++            group.append(a)
++        if group:groups.append(group)
++        for j,g in enumerate(groups):
++            sid=f'{label}-{j:02d}'
++            event_nodes=nodes[g[0]['node_index']:g[-1]['node_index']+1]
++            # Include real arrival updates, but remove zero-duration duplicate times.
++            timeline=[]
++            for n in event_nodes:
++                if timeline and n['t']==timeline[-1]['t']: timeline[-1]=n
++                else: timeline.append(n)
++            ts=[n['t'] for n in timeline]
++            for i,a in enumerate(g):
++                a['research_segment']=sid
++                a['duration']=g[i+1]['mono_s']-a['mono_s'] if i+1<len(g) else 0.0
++                a['timeline_index']=bisect.bisect_left(ts,a['mono_s'])
++            segments.append(dict(id=sid,run=label,source_segment=g[0]['segment'],rows=g,timeline=timeline,
++                                 span_s=g[-1]['mono_s']-g[0]['mono_s'],eligible_for_fit=len(g)>1))
++        records+=accepted
++        evidence.append(dict(run=label,run_id=m['observer_run_id'],episode=m['episode'],accepted=len(accepted),
++                             accepted_match_all_fields=True,share_run_hashes=index,
++                             private_run_hashes=read(root/'original-run-file-hashes.json') if (root/'original-run-file-hashes.json').exists() else read(cache/'previous-exploration-evidence/results/private-original-run-index-verification.json'),
++                             quality_counts=replayed['quality'],isolations=replayed['quality_eligibility']['isolations'],
++                             rejections=rejected,interval_rejections=interval_rejections,phases=phases,requests=reqs,
++                             duration_s=seconds(m['ended_at_utc'])-seconds(m['started_at_utc']) if m.get('ended_at_utc') else accepted[-1]['mono_s']-accepted[0]['mono_s']))
++    data=dict(usage='previously_observed_development_only',segments=segments,accepted=records,runs=evidence)
++    write(out/'data.json',data)
++    coverage=[]
++    for s in segments:
++        row=dict(id=s['id'],run=s['run'],source_segment=s['source_segment'],start=s['rows'][0]['utc'],end=s['rows'][-1]['utc'],span_s=s['span_s'],n=len(s['rows']),
++                 first_ref=s['rows'][0]['ref'],last_ref=s['rows'][-1]['ref'],fit=s['eligible_for_fit'],
++                 evaluation_warmup_s=60,eligible_after_60=sum(a['mono_s']>=s['rows'][0]['mono_s']+60 for a in s['rows']),
++                 macro_seconds={m:sum(a['duration'] for a in s['rows'] if a['macro']==m) for m in ('work','recovery','background')})
++        coverage.append(row)
++    write(out/'coverage.json',coverage)
++    write(out/'roles.json',dict(frozen_at=stamp(),runs={r['run']:r['run_id'] for r in evidence},
++          F_LS=dict(fit=['L'],target=['S']),F_SL=dict(fit=['S'],target=['L']),F_POOL=dict(fit=['L','S'],target=['L','S']),
++          segments=coverage,continuous_groups_are_not_independent_episodes=True))
++    return data
+diff --git a/experiments/thermal_identification_v1/diagnostics.py b/experiments/thermal_identification_v1/diagnostics.py
+new file mode 100644
+index 0000000..685b899
+--- /dev/null
++++ b/experiments/thermal_identification_v1/diagnostics.py
+@@ -0,0 +1,153 @@
++"""Pre-registered numerical, state, input, hotspot and residual diagnostics."""
++import copy
++from pathlib import Path
++import numpy as np
++from scipy.linalg import expm
++from common import read,write,balanced_weights
++from greybox import FitProblem,propagate,matrices,forecast
++from initialize import rolling_state
++from evaluation import load_jsonl,model_context,jsonl
++
++
++def corr(x,y):
++    x=np.asarray(x,float);y=np.asarray(y,float)
++    keep=np.isfinite(x)&np.isfinite(y);x=x[keep];y=y[keep]
++    return float(np.corrcoef(x,y)[0,1]) if len(x)>2 and np.std(x)>1e-10 and np.std(y)>1e-10 else None
++
++
++def spectrum(M):
++    U,s,V=np.linalg.svd(M,full_matrices=False)
++    return dict(singular_values=s,condition=float(s[0]/s[-1]) if len(s) and s[-1]>0 else None,
++                numerical_rank=int(sum(s>s[0]*1e-10)) if len(s) and s[0] else 0,
++                weakest_vectors=V[-min(3,len(V)):])
++
++
++def parameter_diagnostic(eid,model,data,spec,out):
++    artifact=read(out/'fits'/f'{eid}-{model}/model.json')
++    seg=[s for s in data['segments'] if s['run'] in artifact['fit_runs']]
++    problem=FitProblem(model,seg,spec);x=np.array(artifact['x']);base=problem.residual(x);columns=[]
++    scales=np.r_[np.maximum(abs(x[:problem.nd]),[.001]*(problem.nd-2)+[.01,.01]),np.full(len(x)-problem.nd,20.)]
++    for i in range(len(x)):
++        h=1e-5*scales[i]
++        if x[i]+h>problem.hi[i]:h=-h
++        v=x.copy();v[i]+=h;columns.append((problem.residual(v)-base)/h)
++    J=np.array(columns).T*np.sqrt(problem.weights)[:,None]*scales[None,:]
++    nuisance=J[:,problem.nd:];u,s,_=np.linalg.svd(nuisance,full_matrices=False)
++    rank=sum(s>s[0]*1e-10) if len(s) and s[0] else 0
++    D=J[:,:problem.nd];projected=D-u[:,:rank]@(u[:,:rank].T@D)
++    p=np.array(list(artifact['dynamic'].values()));times=[];numeric=[]
++    for duty in sorted(set([0.,1.,*artifact['u_range'],np.mean(artifact['u_range'])])):
++        A,f=matrices(model,p,artifact['parameters'][f'E_{artifact["fit_runs"][0]}'],[15,8,duty]);eigen=np.linalg.eigvals(A).real
++        times.append(dict(u=duty,eigenvalues=eigen,time_constants_s=-1/eigen,all_stable=bool(np.all(eigen<0))))
++        for dt in [1e-8,.003,1.003,2.49,90.]:
++            n=len(A);aug=np.zeros((n+1,n+1));aug[:n,:n]=A;aug[:n,-1]=f
++            E=artifact['parameters'][f'E_{artifact["fit_runs"][0]}'];initial=[48,55]
++            actual=propagate(model,p,E,[dt],[[15,8,duty]],initial)[-1,:n]
++            reference=(expm(aug*dt)@np.r_[initial[:n],1])[:n]
++            numeric.append(float(np.max(abs(actual-reference))))
++    attempts=[read(out/'fits'/f'{eid}-{model}/{seed["id"]}.json') for seed in spec['initializations']]
++    return dict(experiment=eid,model=model,parameter_names=problem.names,scale=scales,
++                weighted_raw_residual_full=spectrum(J),projected_dynamic=spectrum(projected),nuisance_rank=int(rank),
++                singular_value_interpretation='numerical sensitivity only; no physical confidence interval',time_constants=times,
++                expm_max_abs_difference=max(numeric),
++                attempts=[{k:a[k] for k in ['seed','parameters','J','converged','status','actual_residual_calls','nfev','seconds','boundary_parameters']} for a in attempts])
++
++
++def run_diagnostics(data,examples,spec,out):
++    out=Path(out);dest=out/'diagnostics';dest.mkdir()
++    rows={r['ref']:r for r in data['accepted']}
++    input_info=[];hotspots=[]
++    for run in ('L','S'):
++        valid=[r for r in data['accepted'] if r['run']==run and r.get('research_segment')]
++        names=['vdd_gpu','vdd_cpu_soc_mss','vin_sys_5v0','duty'];X=np.array([[r['values'][n] for n in names] for r in valid]);Z=(X-X.mean(axis=0))/X.std(axis=0)
++        input_info.append(dict(run=run,n=len(valid),columns=names,min=X.min(axis=0),max=X.max(axis=0),std=X.std(axis=0),correlation=np.corrcoef(X.T),standardized_spectrum=spectrum(Z)))
++        zones=[k for k in valid[0]['values'] if k.startswith('temp_')]
++        last=None
++        for r in valid:
++            temps=[r['values'][k] for k in zones];mx=max(temps);dominant='|'.join(k for k,v in zip(zones,temps) if v==mx)
++            switch=last is not None and last[0]==r['research_segment'] and last[1]!=dominant
++            hotspots.append(dict(ref=r['ref'],run=run,segment=r['research_segment'],tj_minus_zone_max=r['values']['tj']-mx,dominant=dominant,switch=switch))
++            last=(r['research_segment'],dominant)
++    write(dest/'input-information.json',input_info);jsonl(dest/'hotspots.jsonl',hotspots);hs={r['ref']:r for r in hotspots}
++    write(dest/'hotspot-summary.json',[dict(run=run,n=sum(r['run']==run for r in hotspots),switches=sum(r['switch'] for r in hotspots if r['run']==run),
++          max_abs_TJ_minus_zone_max=max(abs(r['tj_minus_zone_max']) for r in hotspots if r['run']==run),
++          dominant_counts={k:sum(r['run']==run and r['dominant']==k for r in hotspots) for k in sorted({r['dominant'] for r in hotspots if r['run']==run})}) for run in ('L','S')])
++    parameters=[];residuals=[];initials=[];input_assumption=[];offset_sensitivity=[];firmware=[]
++    for eid in ('F-LS','F-SL','F-POOL'):
++        predictions=load_jsonl(out/'evaluation'/eid/'predictions.jsonl');longs=load_jsonl(out/'evaluation'/eid/'A-long.jsonl')
++        for model in ('G1','G2'):
++            parameters.append(parameter_diagnostic(eid,model,data,spec,out))
++            error=np.array([r['A'][model]-r['label']['value'] for r in longs]);assoc={}
++            for field in ['vin_sys_5v0','gain','temp_cpu','temp_gpu','temp_soc012','temp_soc345','duty','vdd_gpu','vdd_cpu_soc_mss']:
++                assoc[field]=corr(error,[rows[r['ref']]['values'].get(field,np.nan) for r in longs])
++            ac={}
++            for lag in (1,5,15,45,90):
++                a=[];b=[]
++                for sid in sorted({r['segment'] for r in longs}):
++                    group=[r for r in longs if r['segment']==sid];t=np.array([r['t'] for r in group]);e=np.array([r['A'][model]-r['label']['value'] for r in group])
++                    for i in range(len(group)):
++                        j=np.searchsorted(t,t[i]+lag)
++                        if j<len(t) and t[j]-t[i]-lag<=2:a.append(e[i]);b.append(e[j])
++                ac[str(lag)]=dict(n_pairs=len(a),correlation=corr(a,b))
++            byhot={}
++            for hot in sorted({hs[r['ref']]['dominant'] for r in longs}):
++                e=[v for v,r in zip(error,longs) if hs[r['ref']]['dominant']==hot];byhot[hot]=dict(n=len(e),mae=float(np.mean(np.abs(e))),bias=float(np.mean(e)))
++            switch_error=[v for v,r in zip(error,longs) if hs[r['ref']]['switch']]
++            bad=sorted(zip(error,longs),key=lambda x:abs(x[0]),reverse=True)[:20]
++            residuals.append(dict(experiment=eid,model=model,correlations=assoc,autocorrelation=ac,by_hotspot=byhot,
++                                  hotspot_switch_error=dict(n=len(switch_error),mae=float(np.mean(np.abs(switch_error))) if switch_error else None),
++                                  largest_errors=[dict(ref=r['ref'],utc=r['utc'],run=r['run'],regime=r['regime'],error_C=float(e),truth=r['label']['value'],prediction=r['A'][model]) for e,r in bad]))
++        sens=load_jsonl(out/'evaluation'/eid/'state-sensitivity-180.jsonl')
++        for h in (15,45,90):
++            cohort=[r for r in sens if r['h']==h]
++            for mode in ('A','HOLD','RELAX30'):
++                if not cohort:continue
++                w=balanced_weights(cohort);err={v:np.array([r[f'{mode}{v}']-r['label']['value'] for r in cohort]) for v in (60,180)}
++                initials.append(dict(experiment=eid,h=h,mode=mode,n=len(cohort),mae60=float(np.mean(abs(err[60]))),mae180=float(np.mean(abs(err[180]))),balanced_mae60=float(w@abs(err[60])),balanced_mae180=float(w@abs(err[180])),prediction_change_p95=float(np.percentile(abs(err[60]-err[180]),95))))
++        for h in (15,45,90):
++            for model in ('G1','G2'):
++                cohort=[r for r in predictions if r['h']==h and r['label'] and model in r['A'] and f'{model}-HOLD' in r['B']]
++                for regime in ['all']+sorted({r['regime'] for r in cohort}):
++                    c=cohort if regime=='all' else [r for r in cohort if r['regime']==regime]
++                    if not c:continue
++                    input_assumption.append(dict(experiment=eid,h=h,model=model,regime=regime,n=len(c),
++                         known_input_mae=float(np.mean([abs(r['A'][model]-r['label']['value']) for r in c])),
++                         hold_mae=float(np.mean([abs(r['B'][f'{model}-HOLD']-r['label']['value']) for r in c])),
++                         relax30_mae=float(np.mean([abs(r['B'][f'{model}-RELAX30']-r['label']['value']) for r in c]))))
++            labeled=[r for r in predictions if r['h']==h and r['label']]
++            for bucket in ('offset_le_0.5','offset_gt_0.5'):
++                c=[r for r in labeled if (r['label']['offset_s']<=.5)==(bucket=='offset_le_0.5') and 'G2-HOLD' in r['B']]
++                offset_sensitivity.append(dict(experiment=eid,h=h,bucket=bucket,n=len(c),max_offset_s=max([r['label']['offset_s'] for r in c],default=None),
++                      B0_mae=float(np.mean([abs(r['B']['B0']-r['label']['value']) for r in c])) if c else None,
++                      G2_HOLD_mae=float(np.mean([abs(r['B']['G2-HOLD']-r['label']['value']) for r in c])) if c else None))
++        c=[r for r in predictions if r['h']==45 and r['label'] and 'firmware_diagnostic' in r]
++        firmware.append(dict(experiment=eid,n=len(c),firmware_mae=float(np.mean([abs(r['firmware_diagnostic']['value']-r['label']['value']) for r in c])),B0_same_origins_mae=float(np.mean([abs(r['B']['B0']-r['label']['value']) for r in c])),note='as-of firmware number, different fan timestamp, not control efficacy'))
++    write(dest/'parameters.json',parameters);write(dest/'residuals.json',residuals);write(dest/'state-sensitivity.json',initials)
++    write(dest/'known-vs-assumed-inputs.json',input_assumption);write(dest/'label-offset-sensitivity.json',offset_sensitivity);write(dest/'firmware-reference.json',firmware)
++    nested=read(out/'fits/nested-d1-zero.json');pool=read(out/'fits/F-POOL-G2/model.json')
++    write(dest/'nested-fan.json',dict(main_J=pool['J'],d1_zero_J=nested['J'],relative_increase=(nested['J']-pool['J'])/pool['J'],
++                                   converged=nested['converged'],main_d1=pool['dynamic']['d1'],interpretation='closed-loop observational identifiability diagnostic; no causal fan claim'))
++    near=[]
++    for eid,target in [('F-LS','S'),('F-SL','L')]:
++        target_segments=[s for s in data['segments'] if s['run']==target];smap={s['id']:s for s in target_segments}
++        scored=[r for r in load_jsonl(out/'evaluation'/eid/'predictions.jsonl') if r['h']==45 and r['label'] and 'G2-HOLD' in r['B']]
++        for model in ('G1','G2'):
++            best=read(out/'fits'/f'{eid}-{model}/model.json')
++            for seed in spec['initializations']:
++                trial=read(out/'fits'/f'{eid}-{model}/{seed["id"]}.json')
++                if not trial['finite'] or trial['J']>best['J']*1.05:continue
++                alternative=copy.deepcopy(best);alternative['parameters']=trial['parameters'];alternative['dynamic']={k:trial['parameters'][k] for k in best['dynamic']}
++                p,boundaries,cal,responses=model_context(alternative,target_segments)
++                changes=[];errors=[];points=[]
++                byref={r['ref']:r for s in target_segments for r in s['rows']}
++                for r in scored:
++                    seg=smap[r['segment']];a=byref[r['ref']];i=next(i for i,x in enumerate(seg['rows']) if x['ref']==r['ref'])
++                    state,_=rolling_state(model,p,boundaries[target],seg,i);u=[a['values']['vdd_gpu'],a['values']['vdd_cpu_soc_mss'],a['values']['duty']/100]
++                    pred=forecast(model,p,boundaries[target],state,u,45,'HOLD',best['P10_fit']);delta=pred-r['B'][f'{model}-HOLD']
++                    changes.append(delta);errors.append(pred-r['label']['value']);points.append(dict(ref=r['ref'],prediction=pred,delta_from_selected=delta))
++                jsonl(dest/f'near-{eid}-{model}-{seed["id"]}.jsonl',points)
++                rel={k:abs(alternative['dynamic'][k]-v)/max(abs(v),.001) for k,v in best['dynamic'].items()}
++                near.append(dict(experiment=eid,model=model,seed=seed['id'],J=trial['J'],converged=trial['converged'],relative_dynamic_differences=rel,
++                                 n=len(changes),HOLD45_prediction_change_p95=float(np.percentile(abs(np.array(changes)),95)),HOLD45_prediction_change_max=float(max(abs(np.array(changes)))),HOLD45_mae=float(np.mean(abs(np.array(errors))))))
++    write(dest/'near-optimal-solutions.json',near)
++    print('diagnostics complete',flush=True)
+diff --git a/experiments/thermal_identification_v1/evaluation.py b/experiments/thermal_identification_v1/evaluation.py
+new file mode 100644
+index 0000000..189210c
+--- /dev/null
++++ b/experiments/thermal_identification_v1/evaluation.py
+@@ -0,0 +1,188 @@
++"""Separate known-input response A from strictly past-only forecast B."""
++import hashlib
++import json
++from pathlib import Path
++import numpy as np
++from common import read,write,balanced_weights,stamp,sha
++from greybox import propagate,forecast,arrays
++from initialize import estimate,rolling_state,path_between
++from ridge_reference import predict
++
++
++def jsonl(path,rows):
++    from common import write as _write
++    def cast(x):
++        return x.tolist() if isinstance(x,np.ndarray) else x.item() if isinstance(x,np.generic) else str(x)
++    Path(path).parent.mkdir(parents=True,exist_ok=True)
++    with Path(path).open('x') as f:
++        for r in rows:f.write(json.dumps(r,ensure_ascii=False,default=cast,allow_nan=False)+'\n')
++
++
++def load_jsonl(path):
++    return [json.loads(line) for line in Path(path).open()]
++
++
++def metrics(rows,method,mode='B'):
++    e=np.array([r[mode][method]-r['label']['value'] for r in rows]);dt=np.array([r['duration'] for r in rows])
++    w=dt/dt.sum() if dt.sum()>0 else np.ones(len(e))/len(e)
++    return dict(n=len(e),seconds=float(dt.sum()),mae=float(w@abs(e)),balanced_mae=float(balanced_weights(rows)@abs(e)),
++                point_mae=float(np.mean(abs(e))),rmse=float(np.sqrt(w@(e*e))),p95_abs=float(np.percentile(abs(e),95)),
++                bias=float(w@e),underprediction_p95=float(np.percentile(np.maximum(-e,0),95)),underprediction_max=float(max(0,-e.min())))
++
++
++def cohort_id(rows):
++    return hashlib.sha256('\n'.join(f"{r['ref']}|{r['h']}|{r['label']['ref']}" for r in rows).encode()).hexdigest()
++
++
++def table(rows,mode,methods,layer):
++    out=[]
++    for h in (15,45,90):
++        common=[r for r in rows if r['h']==h and r['label'] is not None and all(m in r[mode] for m in methods)]
++        scopes=[('all','all',common)]
++        for field in ('run','macro','phase','regime'):
++            for val in sorted({r[field] for r in common}):scopes.append((field,val,[r for r in common if r[field]==val]))
++        for field,val,cohort in scopes:
++            if not cohort:continue
++            out.append(dict(mode=mode,layer=layer,h=h,scope=field,value=val,cohort_id=cohort_id(cohort),
++                            metrics={m:metrics(cohort,m,mode) for m in methods}))
++    return out
++
++
++def model_context(artifact,segments,pool=False):
++    model=artifact['model'];p=np.array(list(artifact['dynamic'].values()))
++    fallback=np.median([v for k,v in artifact['parameters'].items() if k.startswith('E_')])
++    boundary={};calibrations={};responses={}
++    for segment in segments:
++        if segment['span_s']<60:continue
++        run=segment['run'];end=segment['rows'][0]['mono_s']+60
++        if pool:
++            E=artifact['parameters'][f'E_{run}'];ts=artifact['parameters'].get(f'Ts_{segment["id"]}',0)
++            g=arrays(segment);states=propagate(model,p,E,g['dt'],g['u'],[g['y'][0],ts]);response=states[g['index'],0]
++            calibration=dict(E=E,Ts_initial=ts,training_joint_initial=True,start=segment['rows'][0]['mono_s'],end=end,
++                             evidence_end=segment['rows'][-1]['mono_s'],note='in-sample nuisance fitted on whole training segment')
++        else:
++            calibration=estimate(model,p,segment,end,60,E=boundary.get(run),E_fallback=fallback)
++            E=calibration['E'];ts=calibration['Ts_initial'];g=arrays(segment)
++            states=propagate(model,p,E,g['dt'],g['u'],[g['y'][0],ts]);response=states[g['index'],0]
++        boundary[run]=E;calibrations[segment['id']]=calibration;responses[segment['id']]=response
++    return p,boundary,calibrations,responses
++
++
++def evaluate_experiment(eid,target_runs,data,examples,out):
++    out=Path(out);dest=out/'evaluation'/eid;dest.mkdir()
++    artifacts={name:read(out/'fits'/f'{eid}-{name}'/'model.json') for name in ('G1','G2')}
++    ridge=read(out/'fits'/f'{eid}-ridge.json')
++    segments=[s for s in data['segments'] if s['run'] in target_runs];smap={s['id']:s for s in segments}
++    contexts={m:model_context(a,segments,pool=eid=='F-POOL') for m,a in artifacts.items()}
++    write(dest/'calibrations.json',{m:c[2] for m,c in contexts.items()})
++    longs=[]
++    for segment in segments:
++        for i,r in enumerate(segment['rows']):
++            if r['mono_s']-segment['rows'][0]['mono_s']<60:continue
++            pred={m:c[3][segment['id']][i] for m,c in contexts.items()}
++            longs.append(dict(ref=r['ref'],utc=r['utc'],run=r['run'],segment=segment['id'],t=r['mono_s'],macro=r['macro'],phase=r['phase'],regime=r['regime'],duration=r['duration'],
++                              label=dict(value=r['values']['tj'],ref=r['ref']),A=pred))
++    jsonl(dest/'A-long.jsonl',longs)
++    longtable=[]
++    for segment in segments:
++        cohort=[r for r in longs if r['segment']==segment['id']]
++        if not cohort:continue
++        longtable.append(dict(segment=segment['id'],run=segment['run'],n=len(cohort),seconds=cohort[-1]['t']-cohort[0]['t'],first_ref=cohort[0]['ref'],last_ref=cohort[-1]['ref'],
++                              metrics={m:metrics(cohort,m,'A') for m in artifacts},
++                              peak_error={m:float(max(r['A'][m] for r in cohort)-max(r['label']['value'] for r in cohort)) for m in artifacts},
++                              tail_bias={m:float(np.mean([r['A'][m]-r['label']['value'] for r in cohort if r['t']>=cohort[-1]['t']-60])) for m in artifacts}))
++    longsummary={m:metrics(longs,m,'A') for m in artifacts}
++    write(dest/'A-long-metrics.json',dict(summary=longsummary,segments=longtable))
++    predictions=[];states=[];sensitivity=[]
++    end_by_run={run:max(a['mono_s'] for a in data['accepted'] if a['run']==run) for run in target_runs}
++    for row in examples:
++        if row['run'] not in target_runs:continue
++        segment=smap[row['segment']];current=segment['rows'][row['i']];ready=row['t']>=segment['rows'][0]['mono_s']+60
++        local={};old180={}
++        for m,artifact in artifacts.items():
++            if not ready:continue
++            p,boundary,_,_=contexts[m];E=boundary[row['run']]
++            state,ev=rolling_state(m,p,E,segment,row['i'])
++            local[m]=(state,E,p)
++            states.append(dict(ref=row['ref'],segment=row['segment'],model=m,E=E,state=state,evidence=ev,window=60,dynamic_model_sha256=sha(out/'fits'/f'{eid}-{m}/model.json')))
++            if m=='G2' and eid!='F-POOL' and row['t']>=segment['rows'][0]['mono_s']+180:
++                s180,e180=rolling_state(m,p,E,segment,row['i'],window=180);old180[m]=s180
++                states.append(dict(ref=row['ref'],segment=row['segment'],model=m,E=E,state=s180,evidence=e180,window=180))
++        u=np.array([current['values']['vdd_gpu'],current['values']['vdd_cpu_soc_mss'],current['values']['duty']/100])
++        for h in (15,45,90):
++            label=row['labels'].get(str(h));B={'B0':row['current']};A={};outside={}
++            unavailable={}
++            if row['slope'] is not None:B['B1']=row['current']+h*row['slope']
++            else:unavailable['B1']='history_under_10s'
++            for name in ('R_TJ','R_IO'):
++                if row[name] is not None:
++                    head=ridge['methods'][name][str(h)];B[name]=predict(head,row[name],row['current'])
++                    outside[name]=bool(np.any((row[name]<head['min'])|(row[name]>head['max'])))
++                else:unavailable[name]='history_under_60s'
++            for m,artifact in artifacts.items():
++                if m not in local:
++                    for scenario in ('HOLD','RELAX30'):unavailable[f'{m}-{scenario}']='history_under_60s'
++                    continue
++                state,E,p=local[m]
++                for scenario in ('HOLD','RELAX30'):
++                    B[f'{m}-{scenario}']=forecast(m,p,E,state,u,h,scenario,artifact['P10_fit'])
++                    outside[f'{m}-{scenario}']=bool(np.any((u[:2]<artifact['input_min'])|(u[:2]>artifact['input_max'])) or u[2]<artifact['u_range'][0] or u[2]>artifact['u_range'][1])
++                if label is not None:
++                    dt,inputs=path_between(segment,row['t'],row['t']+h)
++                    A[m]=float(propagate(m,p,E,dt,inputs,state)[-1,0])
++                    if m in old180:
++                        s180=old180[m]
++                        sensitivity.append(dict(ref=row['ref'],h=h,run=row['run'],macro=row['macro'],duration=row['duration'],label=label,
++                                                A60=A[m],A180=float(propagate(m,p,E,dt,inputs,s180)[-1,0]),
++                                                HOLD60=B[f'{m}-HOLD'],HOLD180=forecast(m,p,E,s180,u,h,'HOLD',artifact['P10_fit']),
++                                                RELAX3060=B[f'{m}-RELAX30'],RELAX30180=forecast(m,p,E,s180,u,h,'RELAX30',artifact['P10_fit'])))
++            record={k:row[k] for k in ('ref','utc','run','segment','t','wall','macro','phase','regime','duration')}
++            record.update(h=h,label=label,current=row['current'],B=B,A=A,outside_fit_input_range=outside,unavailable=unavailable,
++                          label_status='scored' if label else 'run_end' if row['t']+h>end_by_run[row['run']] else 'cross_quality_or_input_interval',
++                          input_available_cutoff=row['t'],power_ref=current['ref'],fan_ref=segment['timeline'][current['timeline_index']]['fan_ref'],
++                          actual_input_end=row['t']+h if A else None)
++            if h==45 and ready and current['fan_observation']['predicted_temperature'] is not None:
++                record['firmware_diagnostic']=dict(value=current['fan_observation']['predicted_temperature'],fan_ref=record['fan_ref'],age_s=current['fan_return_age_s'])
++            predictions.append(record)
++    jsonl(dest/'predictions.jsonl',predictions);jsonl(dest/'states.jsonl',states)
++    jsonl(dest/'state-sensitivity-180.jsonl',sensitivity)
++    methods=['B0','B1','R_TJ','R_IO','G1-HOLD','G1-RELAX30','G2-HOLD','G2-RELAX30']
++    scores=[]
++    for layer,ms in [('baselines',methods[:2]),('plus_TJ',methods[:3]),('plus_IO',methods[:4]),('all_methods',methods)]:scores+=table(predictions,'B',ms,layer)
++    scores+=table(predictions,'B',['B0','G2-HOLD'],'G2_B0_pair')
++    write(dest/'B-metrics.json',scores)
++    write(dest/'A-roll-metrics.json',table(predictions,'A',['G1','G2'],'known_input_only'))
++    coverage=[]
++    for h in (15,45,90):
++        for run in target_runs:
++            cohort=[r for r in predictions if r['h']==h and r['run']==run]
++            total=sum(r['run']==run for r in data['accepted'])
++            for m in methods:
++                emitted=[r for r in cohort if m in r['B']];scored=[r for r in emitted if r['label'] is not None]
++                coverage.append(dict(run=run,h=h,method=m,all_accepted_denominator=total,quality_or_current_input_rejected=total-len(cohort),
++                                     emitted=len(emitted),scored=len(scored),warming_up=sum(m in r['unavailable'] for r in cohort),
++                                     cross_boundary=sum(r['label_status']=='cross_quality_or_input_interval' for r in emitted),
++                                     no_future_at_end=sum(r['label_status']=='run_end' for r in emitted),outside_fit_domain=sum(r['outside_fit_input_range'].get(m,False) for r in emitted)))
++    write(dest/'method-coverage.json',coverage)
++    request_table=[]
++    for run in data['runs']:
++        if run['run'] not in target_runs:continue
++        reqs=run['requests']
++        for j,q in enumerate(reqs):
++            windows=[('pre15',q['start']-15,q['start']),('during',q['start'],q['end']),('post0_15',q['end'],q['end']+15),('post15_45',q['end']+15,q['end']+45),('post45_90',q['end']+45,q['end']+90)]
++            for window,a,b in windows:
++                for h in (15,45,90):
++                    emitted=[r for r in predictions if r['run']==run['run'] and r['h']==h and a<=r['wall']<b]
++                    shared=[r for r in emitted if r['label'] is not None and all(m in r['B'] for m in methods)]
++                    request_table.append(dict(request=q['id'],stage=q['stage'],window=window,h=h,start=a,end=b,
++                                              next_request_overlap=j+1<len(reqs) and reqs[j+1]['start']<b,
++                                              any_other_request_overlap=any(k!=j and v['start']<b and v['end']>a for k,v in enumerate(reqs)),
++                                              raw_accepted=sum(a<=r['wall']<b for r in data['accepted'] if r['run']==run['run']),
++                                              normal_origins=len(emitted),shared_n=len(shared),cohort_id=cohort_id(shared),
++                                              metrics={m:metrics(shared,m) for m in methods} if shared else {}))
++    write(dest/'request-windows.json',request_table)
++    write(dest/'evaluation-identity.json',dict(evaluated_at=stamp(),directions_freeze_sha256=sha(out/'directions-frozen.json'),
++          model_sha256={m:sha(out/'fits'/f'{eid}-{m}/model.json') for m in artifacts},
++          interpretation='in_sample_only' if eid=='F-POOL' else 'reverse_time_stress' if eid=='F-SL' else 'development_cross_workload',
++          A='recorded_future_inputs_no_future_TJ_feedback',B='only_arrived_measurements_fixed_future_scenarios',control='none'))
++    print('evaluated',eid,'A-long',len(longs),'forecast rows',len(predictions),flush=True)
+diff --git a/experiments/thermal_identification_v1/experiment-spec.json b/experiments/thermal_identification_v1/experiment-spec.json
+new file mode 100644
+index 0000000..fa99ba2
+--- /dev/null
++++ b/experiments/thermal_identification_v1/experiment-spec.json
+@@ -0,0 +1,406 @@
++{
++  "execution_id": "TTO-GREYBOX-ID-v1.0",
++  "status": "preregistered_before_real_fit",
++  "model_artifact_schema": "TTO-GREYBOX-EXPERIMENT-v1",
++  "deployable": false,
++  "reference_repository": "massif-01/Tianshan-thermal-observer",
++  "reference_commit": "52f571acb128af44f4b06bbba049148e00fd97fb",
++  "runs": {
++    "L": "929742d7-6f4d-4d80-b53e-4436d45ac12c",
++    "S": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02"
++  },
++  "data": {
++    "source": "complete_accepted_series_plus_existing_quality_isolation",
++    "record_schema": 2,
++    "time_axis": "per_run_observer_monotonic_receive",
++    "target": "values.tj",
++    "target_unit": "C",
++    "primary_rails_W": [
++      "values.vdd_gpu",
++      "values.vdd_cpu_soc_mss"
++    ],
++    "duty": "values.duty / 100",
++    "diagnostics_only": [
++      "values.vin_sys_5v0",
++      "values.gain",
++      "values.gpu_busy",
++      "other_chip_temperatures"
++    ],
++    "origin_schedule": "each_accepted_new_sample",
++    "gap_policy": "inherit_validity_and_segment_boundaries_no_fabricated_hold",
++    "label_policy": "first_valid_same_segment_sample_at_or_after_nominal_target_with_original_tolerance",
++    "independent_labels_per_horizon": true
++  },
++  "experiments": [
++    {
++      "id": "F-LS",
++      "fit": [
++        "L"
++      ],
++      "score": [
++        "S"
++      ],
++      "interpretation": "development_cross_workload_transfer_with_past_prefix_calibration"
++    },
++    {
++      "id": "F-SL",
++      "fit": [
++        "S"
++      ],
++      "score": [
++        "L"
++      ],
++      "interpretation": "reverse_time_development_stress_diagnostic_not_future_validation"
++    },
++    {
++      "id": "F-POOL",
++      "fit": [
++        "L",
++        "S"
++      ],
++      "score": [
++        "L",
++        "S"
++      ],
++      "interpretation": "in_sample_expressive_capacity_only"
++    }
++  ],
++  "models": {
++    "G1": {
++      "equation": "dT/dt=-(k0+k1*u)*(T-E_r)+b_g*P_g+b_c*P_c",
++      "dynamic_parameters": [
++        "k0",
++        "k1",
++        "b_g",
++        "b_c"
++      ],
++      "bounds": {
++        "k0": [
++          1e-06,
++          4
++        ],
++        "k1": [
++          0,
++          4
++        ],
++        "b_g": [
++          0,
++          5
++        ],
++        "b_c": [
++          0,
++          5
++        ]
++      }
++    },
++    "G2": {
++      "equations": [
++        "dT_f/dt=-a*(T_f-T_s)+b_g*P_g+b_c*P_c",
++        "dT_s/dt=c*(T_f-T_s)-(d0+d1*u)*(T_s-E_r)"
++      ],
++      "output": "T_f approximately reported TJ, not measured TTP",
++      "dynamic_parameters": [
++        "a",
++        "c",
++        "d0",
++        "d1",
++        "b_g",
++        "b_c"
++      ],
++      "bounds": {
++        "a": [
++          0.0001,
++          4
++        ],
++        "c": [
++          1e-06,
++          1
++        ],
++        "d0": [
++          1e-06,
++          1
++        ],
++        "d1": [
++          0,
++          1
++        ],
++        "b_g": [
++          0,
++          5
++        ],
++        "b_c": [
++          0,
++          5
++        ]
++      }
++    }
++  },
++  "nuisance": {
++    "E_r_bounds_C": [
++      -10,
++      60
++    ],
++    "slow_initial_bounds_C": [
++      -20,
++      120
++    ],
++    "E_r_initial": "clip(first_run_TJ-15,-10,60)",
++    "slow_initial": "clip(first_segment_TJ-2,-20,120)",
++    "meaning": "effective_boundary_and_latent_state_not_measured_ambient_or_heat_capacity",
++    "evaluation_boundary": "one_causal_prefix_calibration_per_run_then_fixed",
++    "weak_prefix_singular_ratio": 1e-06,
++    "weak_prefix_fallback": "fix_E_to_fit_run_median_then_estimate_slow_state"
++  },
++  "initializations": [
++    {
++      "id": "N1",
++      "G1": {
++        "k0": 0.5,
++        "k1": 0.5,
++        "b_g": 0.08,
++        "b_c": 0.04
++      },
++      "G2": {
++        "a": 1,
++        "c": 0.02,
++        "d0": 0.01,
++        "d1": 0.02,
++        "b_g": 0.08,
++        "b_c": 0.04
++      }
++    },
++    {
++      "id": "N2",
++      "G1": {
++        "k0": 0.1,
++        "k1": 0.1,
++        "b_g": 0.04,
++        "b_c": 0.02
++      },
++      "G2": {
++        "a": 0.33,
++        "c": 0.005,
++        "d0": 0.003,
++        "d1": 0.006,
++        "b_g": 0.04,
++        "b_c": 0.02
++      }
++    },
++    {
++      "id": "N3",
++      "G1": {
++        "k0": 0.02,
++        "k1": 0.02,
++        "b_g": 0.02,
++        "b_c": 0.01
++      },
++      "G2": {
++        "a": 0.1,
++        "c": 0.002,
++        "d0": 0.001,
++        "d1": 0.002,
++        "b_g": 0.02,
++        "b_c": 0.01
++      }
++    },
++    {
++      "id": "N4",
++      "G1": {
++        "k0": 0.005,
++        "k1": 0.005,
++        "b_g": 0.01,
++        "b_c": 0.005
++      },
++      "G2": {
++        "a": 0.033,
++        "c": 0.001,
++        "d0": 0.0003,
++        "d1": 0.0006,
++        "b_g": 0.01,
++        "b_c": 0.005
++      }
++    },
++    {
++      "id": "N5",
++      "G1": {
++        "k0": 0.001,
++        "k1": 0.003,
++        "b_g": 0.03,
++        "b_c": 0.015
++      },
++      "G2": {
++        "a": 1,
++        "c": 0.001,
++        "d0": 0.001,
++        "d1": 0.006,
++        "b_g": 0.03,
++        "b_c": 0.015
++      }
++    },
++    {
++      "id": "N6",
++      "G1": {
++        "k0": 0.0002,
++        "k1": 0.001,
++        "b_g": 0.015,
++        "b_c": 0.0075
++      },
++      "G2": {
++        "a": 0.1,
++        "c": 0.0003,
++        "d0": 0.0001,
++        "d1": 0.001,
++        "b_g": 0.015,
++        "b_c": 0.0075
++      }
++    }
++  ],
++  "fit": {
++    "solver": "scipy.optimize.least_squares",
++    "method": "trf",
++    "x_scale": "jac",
++    "float": "float64",
++    "loss": "time_weighted_huber_on_unweighted_C_residual",
++    "huber_transition_C": 0.3,
++    "weights": "equal_run_then_equal_present_macroregime_then_effective_time",
++    "macroregime_order": [
++      "work_or_short_event_to_end_plus_30s_capped_at_next_submit",
++      "labelled_recovery_not_in_work",
++      "remaining_background"
++    ],
++    "seed_selection": "minimum_finite_converged_training_objective_only",
++    "max_nfev": 300,
++    "max_actual_residual_calls_per_seed": 1500,
++    "main_fits_max": 36,
++    "BLAS_threads": 1,
++    "rss_target_MiB": 2048,
++    "total_soft_budget_s": 7200
++  },
++  "initialization": {
++    "causal_prefix_s": 60,
++    "rolling_state_window_s": 60,
++    "fixed_sensitivity_window_s": 180,
++    "fit_initial_states": "joint_per_segment",
++    "score_initial_states": "past_only_fixed_dynamic_parameters",
++    "keep_boundary_fixed_after_prefix": true,
++    "free_run_after_prefix": "no_target_TJ_assimilation"
++  },
++  "evaluation": {
++    "horizons_s": [
++      15,
++      45,
++      90
++    ],
++    "primary_horizon_s": 45,
++    "modes": [
++      "A-long-free-response-known-inputs",
++      "A-roll-known-future-inputs",
++      "B-HOLD-past-only",
++      "B-RELAX30-past-only"
++    ],
++    "RELAX30": {
++      "tau_s": 30,
++      "floor": "per_rail_min(current,fit_only_P10)",
++      "PWM": "hold_current",
++      "use_future_task_end": false
++    },
++    "no_oracle_choice_between_scenarios": true,
++    "no_claim_of_unseen_research_test": true
++  },
++  "ridge": {
++    "TJ_lags_s": [
++      5,
++      15,
++      30,
++      60
++    ],
++    "TJ_means_s": [
++      10,
++      30
++    ],
++    "TJ_slopes_s": [
++      10,
++      30
++    ],
++    "R_TJ_n_columns": 9,
++    "R_IO_added_groups": [
++      "u_current_and_mean30",
++      "P_g_current_and_mean30",
++      "P_c_current_and_mean30"
++    ],
++    "R_IO_n_columns": 15,
++    "lambda_grid": [
++      0.01,
++      0.1,
++      1,
++      10
++    ],
++    "CV": "fit_side_only_whole_valid_segment_groups_up_to_3_folds",
++    "CV_fallback_lambda": 1,
++    "near_tie_C": 0.01,
++    "label_eligibility": "separate_per_horizon",
++    "alpha_mapping": "lambda * sum_sample_weights",
++    "target": "delta_T"
++  },
++  "diagnostics": {
++    "near_optimal_training_relative_loss": 0.05,
++    "nested_d1_zero": "G2_F_POOL_one_refit_from_frozen_best_training_seed",
++    "primary_parameters_not_updated_on_score": true
++  },
++  "prohibitions": [
++    "production_source_edits",
++    "device_connection",
++    "new_workload",
++    "fan_write",
++    "service_restart",
++    "deployment",
++    "online_parameter_learning",
++    "git_commit_push_pr",
++    "overwriting_old_data_models_test_used",
++    "future_measurements_in_B"
++  ],
++  "authoritative_text": "01-首轮灰箱实际辨识与对照实验方案.md",
++  "implementation_decisions": {
++    "label_tolerance_s": 2.0,
++    "all_accepted_origins": true,
++    "continuous_inputs": "all raw arrival events, power left-hold, fan updates at arrival; check TTL throughout interval",
++    "control_status_TTL_s": 7.5,
++    "successful_PWM_TTL_s": 2.5,
++    "power_TTL": "source timeout minus source age; duplicate age increases retained",
++    "short_segments": "all positive-span valid segments fit; segments under 60s have no main G2/Ridge comparison",
++    "macro_L_work": [
++      "2",
++      "4",
++      "5a",
++      "5b"
++    ],
++    "macro_L_recovery": [
++      "3",
++      "I1",
++      "I2",
++      "6"
++    ],
++    "macro_L_other": "background",
++    "macro_S_work": "each request start to end+30 capped at next submit",
++    "macro_S_recovery": "labelled resident-baseline/sparse/between-groups/continuous/final-cooldown outside work",
++    "macro_S_other": "background",
++    "long_rise_s": 60,
++    "P10": "unweighted empirical accepted fit-side rail 10th percentile",
++    "fit_nuisance_jacobian": "exact affine sensitivities; only dynamic columns numerical forward differences, every full residual call counted",
++    "solver_tolerances": {
++      "ftol": 1e-08,
++      "xtol": 1e-08,
++      "gtol": 1e-08
++    },
++    "prefix_objective": "unweighted bounded linear least squares on only first <=60s observations; E fixed thereafter",
++    "pool_evaluation": "training E, joint training initial states for fitted-response; rolling 60s states fixed training E, all in-sample",
++    "ridge_scaling": "weighted fit-side mean and variance, constant scale=1",
++    "ridge_penalty": "lambda*sum(w), unpenalized intercept",
++    "rolling_window_edge": "first observed sample at or after t-window, never before edge",
++    "evaluation_start": "first accepted sample at or after segment-start+60; prefix excludes later TJ",
++    "time_weights": "left sample to next accepted in same continuous interval; last point has zero time weight",
++    "parameter_sensitivity_scales": "dynamic max(abs(theta),0.001) rates; max(abs(b),0.01) inputs; E/Ts 20C",
++    "budgets": "36 real main fits plus one d1=0; synthetic verification outside real fit matrix",
++    "no_target_ranking_before_both_directions_frozen": true
++  }
++}
+diff --git a/experiments/thermal_identification_v1/greybox.py b/experiments/thermal_identification_v1/greybox.py
+new file mode 100644
+index 0000000..e7ab7f5
+--- /dev/null
++++ b/experiments/thermal_identification_v1/greybox.py
+@@ -0,0 +1,172 @@
++"""Constrained thermal candidates with exact CPU propagation and bounded fitting."""
++import ctypes
++import os
++import subprocess
++import time
++from pathlib import Path
++import numpy as np
++from scipy.linalg import expm
++from scipy.optimize import least_squares
++from common import write, balanced_weights, stamp, sha
++
++LIB = None
++
++
++def build_kernel(build_dir):
++    global LIB
++    build_dir=Path(build_dir);build_dir.mkdir(parents=True,exist_ok=True)
++    source=Path(__file__).with_name('propagate.c')
++    binary=build_dir/'propagate.so'
++    cmd=[os.environ.get('CC','cc'),'-O2','-fPIC','-shared',str(source),'-o',str(binary),'-lm']
++    result=subprocess.run(cmd,capture_output=True,text=True,check=True)
++    write(build_dir/'compiler.json',dict(command=cmd,stdout=result.stdout,stderr=result.stderr,source_sha256=sha(source)))
++    LIB=ctypes.CDLL(str(binary.resolve()))
++    ptr=np.ctypeslib.ndpointer(dtype=np.float64,flags='C_CONTIGUOUS')
++    LIB.trajectory.argtypes=[ctypes.c_int,ctypes.c_size_t,ptr,ctypes.c_double,ptr,ptr,ptr,ptr]
++    LIB.trajectory.restype=None
++
++
++def propagate(model,p,E,dt,inputs,initial):
++    p,dt,inputs,initial=[np.ascontiguousarray(x,dtype=np.float64) for x in (p,dt,inputs,initial)]
++    assert len(initial)==2 and inputs.shape==(len(dt),3)
++    out=np.empty((len(dt)+1,2),dtype=np.float64)
++    LIB.trajectory(int(model[-1]),len(dt),p,float(E),dt,inputs,initial,out)
++    return out
++
++
++def matrices(model,p,E,u):
++    pg,pc,duty=u
++    if model=='G1':
++        k=p[0]+p[1]*duty
++        return np.array([[-k]]),np.array([k*E+p[2]*pg+p[3]*pc])
++    a,c,d0,d1,bg,bc=p;d=d0+d1*duty
++    return np.array([[-a,a],[c,-c-d]]),np.array([bg*pg+bc*pc,d*E])
++
++
++def forecast(model,p,E,state,current,h,scenario,floors):
++    if scenario=='HOLD':
++        return propagate(model,p,E,[h],[current],state)[-1,0]
++    # Augment with the *known hypothetical* exponential power deviation state.
++    floor=np.minimum(current[:2],floors)
++    A,f=matrices(model,p,E,[*floor,current[2]])
++    n=len(A);M=np.zeros((n+2,n+2));M[:n,:n]=A;M[:n,-1]=f
++    b=p[2:] if model=='G1' else p[4:]
++    M[0,n]=np.dot(b,np.asarray(current[:2])-floor);M[n,n]=-1/30
++    return (expm(M*h)@np.r_[state[:n],1.,1.])[0]
++
++
++def arrays(segment):
++    t=np.array([n['t'] for n in segment['timeline']])
++    return dict(dt=np.diff(t),u=np.array([n['inputs'] for n in segment['timeline'][:-1]],dtype=float).reshape(-1,3),
++                index=np.array([a['timeline_index'] for a in segment['rows']],dtype=int),
++                y=np.array([a['values']['tj'] for a in segment['rows']]),segment=segment)
++
++
++def huber_loss(weights):
++    def loss(z):
++        z=np.asarray(z);root=np.sqrt(np.maximum(z,1.));mask=z<=1
++        return np.array([np.where(mask,z,2*root-1),np.where(mask,1,1/root),np.where(mask,0,-0.5/(root**3))])*weights
++    return loss
++
++
++class FitProblem:
++    def __init__(self,model,segments,spec):
++        self.model,self.spec=model,spec
++        self.groups=[arrays(s) for s in segments if s['eligible_for_fit']]
++        self.runs=sorted({g['segment']['run'] for g in self.groups})
++        self.dynamic=spec['models'][model]['dynamic_parameters']
++        self.names=self.dynamic+[f'E_{r}' for r in self.runs]+([f'Ts_{g["segment"]["id"]}' for g in self.groups] if model=='G2' else [])
++        bounds=[spec['models'][model]['bounds'][n] for n in self.dynamic]+[[-10,60]]*len(self.runs)+([[-20,120]]*len(self.groups) if model=='G2' else [])
++        self.lo,self.hi=np.array(bounds).T
++        self.rows=[a for g in self.groups for a in g['segment']['rows']]
++        self.weights=balanced_weights(self.rows)
++        self.nd=len(self.dynamic)
++
++    def initial(self,seed):
++        values=[seed[self.model][k] for k in self.dynamic]
++        values += [np.clip(next(g['y'][0] for g in self.groups if g['segment']['run']==r)-15,-10,60) for r in self.runs]
++        if self.model=='G2': values += [np.clip(g['y'][0]-2,-20,120) for g in self.groups]
++        return np.array(values)
++
++    def responses(self,x):
++        out=[]
++        for j,g in enumerate(self.groups):
++            E=x[self.nd+self.runs.index(g['segment']['run'])]
++            ts=x[self.nd+len(self.runs)+j] if self.model=='G2' else 0
++            z=propagate(self.model,x[:self.nd],E,g['dt'],g['u'],[g['y'][0],ts])
++            out.append(z[g['index'],0])
++        return out
++
++    def residual(self,x):
++        return np.concatenate([v-g['y'] for v,g in zip(self.responses(x),self.groups)])
++
++    def objective(self,x):
++        e=self.residual(x)/.3
++        return float(np.dot(self.weights,np.where(np.abs(e)<=1,e*e,2*np.abs(e)-1)))
++
++
++def solve(problem,x0,seed_id,out,max_nfev=300,max_calls=1500,fixed_d1=False):
++    start=time.perf_counter();calls=0;best=(float('inf'),x0.copy());trace=[]
++    free=np.arange(len(x0))
++    if fixed_d1: free=np.delete(free,3);x0=x0.copy();x0[3]=0
++    def unpack(z):
++        x=x0.copy();x[free]=z;return x
++    def residual(z):
++        nonlocal calls,best
++        if calls>=max_calls: raise RuntimeError('actual_residual_call_budget')
++        calls+=1;x=unpack(z);r=problem.residual(x)/.3
++        J=float(np.dot(problem.weights,np.where(abs(r)<=1,r*r,2*abs(r)-1)))
++        if np.isfinite(J) and J<best[0]:best=(J,x.copy())
++        trace.append(dict(call=calls,J=J if np.isfinite(J) else None))
++        return r
++    def jacobian(z):
++        # Finite differences only for nonlinear dynamics. Nuisance columns are
++        # exact homogeneous/affine sensitivities, not 56 perturbed full fits.
++        x=unpack(z);base=residual(z);J=np.zeros((len(base),len(x)))
++        for k in range(problem.nd):
++            if k not in free: continue
++            step=np.sqrt(np.finfo(float).eps)*max(abs(x[k]),.01)
++            if x[k]+step>problem.hi[k]: step=-step
++            zp=z.copy();zp[list(free).index(k)]+=step
++            J[:,k]=(residual(zp)-base)/step
++        pos=0
++        for j,g in enumerate(problem.groups):
++            n=len(g['y']);zero=g['u'].copy();zero[:,:2]=0
++            eb=propagate(problem.model,x[:problem.nd],1,g['dt'],zero,[0,0])[g['index'],0]/.3
++            J[pos:pos+n,problem.nd+problem.runs.index(g['segment']['run'])]=eb
++            if problem.model=='G2':
++                sb=propagate('G2',x[:problem.nd],0,g['dt'],zero,[0,1])[g['index'],0]/.3
++                J[pos:pos+n,problem.nd+len(problem.runs)+j]=sb
++            pos+=n
++        return J[:,free]
++    try:
++        result=least_squares(residual,x0[free],jac=jacobian,bounds=(problem.lo[free],problem.hi[free]),method='trf',x_scale='jac',
++                             loss=huber_loss(problem.weights),max_nfev=max_nfev,ftol=1e-8,xtol=1e-8,gtol=1e-8)
++        x=unpack(result.x);status=int(result.status);message=result.message;nfev=result.nfev;optimality=float(result.optimality)
++        J=float(np.dot(problem.weights,np.where(abs(result.fun)<=1,result.fun**2,2*abs(result.fun)-1)))
++    except RuntimeError as e:
++        x=best[1];J=best[0];status=0;message=str(e);nfev=None;optimality=None
++    entry=dict(seed=seed_id,initial=x0,parameters=dict(zip(problem.names,x)),x=x,J=J,finite=bool(np.isfinite(x).all() and np.isfinite(J)),
++               converged=status>0,status=status,message=message,nfev=nfev,actual_residual_calls=calls,optimality=optimality,
++               seconds=time.perf_counter()-start,finished_at=stamp(),
++               boundary_parameters=[name for name,v,lo,hi in zip(problem.names,x,problem.lo,problem.hi) if min(v-lo,hi-v)<1e-4*(hi-lo)],trace=trace)
++    write(out,entry)
++    print(problem.model,seed_id,'J',round(J,6),'status',status,'calls',calls,'seconds',round(entry['seconds'],2),flush=True)
++    return entry
++
++
++def fit(model,segments,spec,out):
++    out=Path(out);out.mkdir(parents=True,exist_ok=False)
++    problem=FitProblem(model,segments,spec)
++    trials=[solve(problem,problem.initial(seed),seed['id'],out/f'{seed["id"]}.json',spec['fit']['max_nfev'],spec['fit']['max_actual_residual_calls_per_seed']) for seed in spec['initializations']]
++    good=[v for v in trials if v['converged'] and v['finite']]
++    selected=min(good if good else [v for v in trials if v['finite']],key=lambda v:v['J'])
++    rows=problem.rows;P=np.array([[r['values']['vdd_gpu'],r['values']['vdd_cpu_soc_mss']] for r in rows])
++    artifact=dict(schema='TTO-GREYBOX-EXPERIMENT-v1',deployable=False,model=model,
++                  fit_runs=problem.runs,selected_seed=selected['seed'],converged=selected['converged'],selection='training_objective_only',
++                  dynamic={k:selected['parameters'][k] for k in problem.dynamic},parameters=selected['parameters'],x=selected['x'],
++                  J=selected['J'],P10_fit=np.percentile(P,10,axis=0),input_min=P.min(axis=0),input_max=P.max(axis=0),
++                  u_range=[min(r['values']['duty']/100 for r in rows),max(r['values']['duty']/100 for r in rows)],
++                  frozen_at=stamp(),parameter_count=len(problem.names),spec_sha256=sha(Path(out).parents[1]/'experiment-spec.json'))
++    write(out/'model.json',artifact)
++    return artifact,problem,trials
+diff --git a/experiments/thermal_identification_v1/initialize.py b/experiments/thermal_identification_v1/initialize.py
+new file mode 100644
+index 0000000..b9b278e
+--- /dev/null
++++ b/experiments/thermal_identification_v1/initialize.py
+@@ -0,0 +1,62 @@
++"""Past-only affine boundary / state estimation with fixed dynamic parameters."""
++import numpy as np
++from scipy.optimize import lsq_linear
++from greybox import propagate
++
++
++def path_between(segment,start,end):
++    """Nominal end time; only actual left-held input events strictly before end."""
++    times=np.array([n['t'] for n in segment['timeline']])
++    lo=np.searchsorted(times,start,side='right')-1
++    hi=np.searchsorted(times,end,side='left')
++    mids=times[lo+1:hi]
++    edges=np.r_[start,mids,end]
++    inputs=np.array([n['inputs'] for n in segment['timeline'][lo:hi]],float).reshape(-1,3)
++    return np.diff(edges),inputs
++
++
++def estimate(model,p,segment,end,window,E=None,E_fallback=None):
++    """All observed TJ used is in [end-window,end], inclusively."""
++    rows=segment['rows']
++    chosen=[a for a in rows if end-window-1e-9<=a['mono_s']<=end+1e-9]
++    assert chosen and chosen[-1]['mono_s']<=end+1e-9
++    start=chosen[0]['mono_s']
++    dt,u=path_between(segment,start,end)
++    times=np.r_[start,start+np.cumsum(dt)]
++    idx=np.array([np.argmin(abs(times-r['mono_s'])) for r in chosen])
++    y=np.array([a['values']['tj'] for a in chosen]);y0=y[0]
++    z=propagate(model,p,0 if E is None else E,dt,u,[y0,0])
++    columns=[];names=[]
++    zero=u.copy();zero[:,:2]=0
++    if E is None:
++        columns.append(propagate(model,p,1,dt,zero,[0,0])[:,0]);names.append('E')
++    if model=='G2':
++        columns.append(propagate(model,p,0,dt,zero,[0,1])[:,0]);names.append('Ts')
++    X=np.array(columns).T[idx] if columns else np.empty((len(chosen),0))
++    norms=np.linalg.norm(X,axis=0)
++    singular=np.linalg.svd(X/np.where(norms>0,norms,1),compute_uv=False)
++    ratio=float(singular[-1]/singular[0]) if len(singular) and singular[0]>0 else 0
++    weak=E is None and model=='G2' and ratio<1e-6
++    if weak:
++        result=estimate(model,p,segment,end,window,E=E_fallback)
++        result.update(weak_prefix_calibration=True,original_singular_ratio=ratio,original_singular_values=singular.tolist())
++        return result
++    lower=[-10 if n=='E' else -20 for n in names];upper=[60 if n=='E' else 120 for n in names]
++    fit=lsq_linear(X,y-z[idx,0],bounds=(lower,upper),tol=1e-12) if names else None
++    values=dict(zip(names,fit.x)) if fit else {}
++    Er=values.get('E',E);ts=values.get('Ts',0.)
++    states=propagate(model,p,Er,dt,u,[y0,ts])
++    return dict(E=float(Er),Ts_initial=float(ts),state=states[-1].tolist(),start=start,end=end,
++                first_ref=chosen[0]['ref'],last_ref=chosen[-1]['ref'],n=len(chosen),rank=int(np.linalg.matrix_rank(X)) if names else 0,
++                normalized_singular_values=singular.tolist(),singular_ratio=ratio,condition=1/ratio if ratio>0 else None,
++                weak_prefix_calibration=False,rmse=float(np.sqrt(np.mean((states[idx,0]-y)**2))),
++                bounds_hit=[n for n,v,l,h in zip(names,fit.x if fit else [],lower,upper) if min(v-l,h-v)<1e-5])
++
++
++def rolling_state(model,p,E,segment,index,window=60):
++    row=segment['rows'][index];t=row['mono_s']
++    if model=='G1':
++        return [row['values']['tj'],0.],dict(start=t,end=t,first_ref=row['ref'],last_ref=row['ref'],n=1)
++    result=estimate(model,p,segment,t,window,E=E)
++    state=result['state'].copy();state[0]=row['values']['tj']
++    return state,result
+diff --git a/experiments/thermal_identification_v1/package_delivery.py b/experiments/thermal_identification_v1/package_delivery.py
+new file mode 100644
+index 0000000..34f2f26
+--- /dev/null
++++ b/experiments/thermal_identification_v1/package_delivery.py
+@@ -0,0 +1,73 @@
++"""Build and read back the bounded evidence ZIP, excluding raw archive recursion."""
++import hashlib
++import json
++import shutil
++import subprocess
++import tempfile
++import zipfile
++from pathlib import Path
++from common import read,write,sha,stamp
++
++
++def main():
++    root=Path(__file__).resolve().parent;repo=root.parents[1]
++    before=read(root/'protected-before.json');changed=[]
++    for name,expected in before['files'].items():
++        p=repo/name
++        if not p.is_file() or sha(p)!=expected:changed.append(name)
++    assert not changed,changed
++    head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=repo,text=True).strip();assert head==before['head']
++    write(root/'protected-after.json',dict(checked_at=stamp(),head=head,checked_files=len(before['files']),changed=changed,
++                branch=subprocess.check_output(['git','branch','--show-current'],cwd=repo,text=True).strip(),
++                no_git_write=True))
++    source_files=sorted([p for p in root.iterdir() if p.suffix in ('.py','.c')]+[root/'README.md',root/'experiment-spec.json',root/'research-requirements.txt']+list((root/'tests').glob('*.py')))
++    patch=b''
++    for p in source_files:
++        result=subprocess.run(['git','diff','--no-index','--','/dev/null',str(p.relative_to(repo))],cwd=repo,capture_output=True)
++        assert result.returncode==1
++        patch+=result.stdout
++    (root/'research-code.patch').write_bytes(patch)
++    with tempfile.TemporaryDirectory(prefix='tto-greybox-patch-') as tmp:
++        subprocess.run(['git','init','-q',tmp],check=True)
++        p=subprocess.run(['git','apply','--check',str(root/'research-code.patch')],cwd=tmp,capture_output=True,text=True)
++        assert p.returncode==0,p.stderr
++    write(root/'patch-verification.json',dict(new_files=len(source_files),sha256=sha(root/'research-code.patch'),git_apply_check='passed_in_empty_temporary_repository',applied_to_current_worktree=False))
++    excluded={'handoff','inputs','preflight','deliverables','.matplotlib','.pytest_cache','test-tmp-numeric','test-tmp-contracts','test-tmp-related','test-tmp-final','__pycache__'}
++    files={}
++    for p in root.iterdir():
++        if p.is_file() and p.suffix in ('.py','.c','.md','.json','.txt','.log','.patch') and p.name not in ('delivery-receipt.json',):files[p.name]=p
++    for p in (root/'tests').glob('*.py'):files[str(p.relative_to(root))]=p
++    for p in (root/'runs/main').rglob('*'):
++        if p.is_file() and not any(part in ('input-cache','__pycache__') for part in p.relative_to(root/'runs/main').parts) and p.suffix!='.so':files[str(p.relative_to(root))]=p
++    for p in (root/'handoff').rglob('*'):
++        if p.is_file() and p.suffix!='.zip' and p.name!='verify_handoff.py':files[str(p.relative_to(root))]=p
++    reference=root/'inputs/previous-exploration-evidence/sources/tto-reference'
++    for p in reference.rglob('*'):
++        if p.is_file() and '__pycache__' not in p.parts:files['sources/tto-reference/'+str(p.relative_to(reference))]=p
++    for name in ('conftest.py','test_review_repair.py','test_platform_curve.py'):
++        files['sources/related-tests/'+name]=repo/'tests'/name
++    fixture=repo/'tests/fixtures/review-repair'
++    for p in fixture.rglob('*'):
++        if p.is_file():files['sources/related-tests/fixtures/review-repair/'+str(p.relative_to(fixture))]=p
++    hashes={name:dict(bytes=p.stat().st_size,sha256=sha(p)) for name,p in sorted(files.items())}
++    dest=root/'deliverables';dest.mkdir(exist_ok=True)
++    archive=dest/'TTO-首轮灰箱实际辨识与对照实验证据包.zip';assert not archive.exists()
++    with zipfile.ZipFile(archive,'x',zipfile.ZIP_DEFLATED,compresslevel=9) as z:
++        for name,p in sorted(files.items()):z.write(p,name)
++        z.writestr('SHA256.json',json.dumps(hashes,ensure_ascii=False,indent=2)+'\n')
++    with zipfile.ZipFile(archive) as z:
++        assert z.testzip() is None
++        for name,entry in read_manifest(z).items():
++            blob=z.read(name);assert len(blob)==entry['bytes'] and hashlib.sha256(blob).hexdigest()==entry['sha256']
++        report='TTO-首轮灰箱实际辨识与对照实验报告.md'
++        assert z.read(report)==(root/report).read_bytes()
++    write(root/'delivery-receipt.json',dict(checked_at=stamp(),archive=str(archive),bytes=archive.stat().st_size,sha256=sha(archive),
++          verified_files=len(hashes),CRC='passed',report_sha256=sha(root/report),report_matches_archive=True,
++          raw_archives_recursively_packaged=False,protected_files_unchanged=len(before['files'])))
++    print(json.dumps(read(root/'delivery-receipt.json'),ensure_ascii=False,indent=2))
++
++
++def read_manifest(z):return json.loads(z.read('SHA256.json'))
++
++
++if __name__=='__main__':main()
+diff --git a/experiments/thermal_identification_v1/plot_results.py b/experiments/thermal_identification_v1/plot_results.py
+new file mode 100644
+index 0000000..e0c8eb9
+--- /dev/null
++++ b/experiments/thermal_identification_v1/plot_results.py
+@@ -0,0 +1,101 @@
++"""Static, exportable scientific plots; run with the recorded plotting environment."""
++import argparse
++import json
++from pathlib import Path
++import numpy as np
++import matplotlib
++matplotlib.use('Agg')
++import matplotlib.pyplot as plt
++from matplotlib.colors import LogNorm
++
++
++def read(p):return json.loads(Path(p).read_text())
++def lines(p):return [json.loads(s) for s in Path(p).open()]
++
++
++def main():
++    ap=argparse.ArgumentParser();ap.add_argument('--run',type=Path,required=True);ap.add_argument('--output',type=Path,required=True);a=ap.parse_args()
++    out=a.output;out.mkdir(parents=True,exist_ok=False);root=a.run;data=read(root/'data.json')
++    plt.rcParams.update({'font.size':10,'axes.spines.top':False,'axes.spines.right':False,'figure.dpi':130,'savefig.dpi':170})
++    def save(fig,name):
++        fig.savefig(out/f'{name}.png',bbox_inches='tight');fig.savefig(out/f'{name}.svg',bbox_inches='tight');plt.close(fig)
++    fig,ax=plt.subplots(4,2,figsize=(15,11),sharex='col',layout='constrained')
++    starts={}
++    for col,run in enumerate(('L','S')):
++        rows=[r for r in data['accepted'] if r['run']==run];start=rows[0]['mono_s'];starts[run]=start;t=np.array([r['mono_s']-start for r in rows])/60
++        ax[0,col].plot(t,[r['values']['tj'] for r in rows],color='#152532',lw=.8,label='Accepted TJ')
++        for field,color,label in [('vdd_gpu','#287fa5','GPU'),('vdd_cpu_soc_mss','#b87820','CPU/SOC/MSS'),('vin_sys_5v0','#888888','5V (diagnostic)')]:
++            ax[1,col].plot(t,[r['values'][field] for r in rows],lw=.7,color=color,label=label)
++        ax[2,col].plot(t,[r['values'].get('duty') if r['values'].get('duty') is not None else np.nan for r in rows],color='#794999',lw=.8,label='Successful PWM')
++        for s in data['segments']:
++            if s['run']!=run:continue
++            x=(s['rows'][0]['mono_s']-start)/60;width=s['span_s']/60
++            ax[3,col].broken_barh([(x,width)],(.15,.25),facecolors='#248772')
++            ax[3,col].broken_barh([(x,min(width,1))],(.48,.25),facecolors='#dbb25c')
++        ax[0,col].set_title(f'{run}: {len(rows)} accepted samples; one physical episode')
++        ax[3,col].set_yticks([.28,.6],['valid input span','60 s initialization']);ax[3,col].set_ylim(0,.9);ax[3,col].set_xlabel('Minutes from first accepted sample')
++        ax[0,col].set_ylabel('TJ (C)');ax[1,col].set_ylabel('Independent rails (W)');ax[2,col].set_ylabel('PWM (%)')
++        for j in range(4):ax[j,col].grid(alpha=.18)
++        ax[1,col].legend(fontsize=8,ncol=3)
++    fig.suptitle('Recorded data and strict continuous coverage (no interpolation through TTL gaps)',fontsize=15)
++    save(fig,'01-inputs-and-coverage')
++    fig,axs=plt.subplots(4,1,figsize=(15,12),layout='constrained')
++    for ax,(eid,run) in zip(axs,[('F-LS','S'),('F-SL','L'),('F-POOL','L'),('F-POOL','S')]):
++        rows=[r for r in data['accepted'] if r['run']==run];start=starts[run]
++        ax.plot([(r['mono_s']-start)/60 for r in rows],[r['values']['tj'] for r in rows],c='#111111',lw=.9,label='Recorded TJ')
++        pred=[r for r in lines(root/'evaluation'/eid/'A-long.jsonl') if r['run']==run]
++        for k,model in enumerate(('G1','G2')):
++            for j,seg in enumerate(sorted({r['segment'] for r in pred})):
++                group=[r for r in pred if r['segment']==seg]
++                ax.plot([(r['t']-start)/60 for r in group],[r['A'][model] for r in group],lw=1.1,c=['#c9792d','#168b88'][k],label=model if j==0 else None)
++        ax.set_title(f'{eid}, target {run}: '+('in-sample parameters AND initial states' if eid=='F-POOL' else 'parameters frozen on other run; causal 60 s prefix'))
++        ax.set_ylabel('Temperature (C)');ax.set_xlabel('Minutes');ax.grid(alpha=.15);ax.legend(loc='upper left',ncol=3)
++    fig.suptitle('A-long: known recorded inputs; no TJ feedback after initialization',fontsize=15)
++    save(fig,'02-free-response')
++    models=['B0','B1','R_TJ','R_IO','G1-HOLD','G1-RELAX30','G2-HOLD','G2-RELAX30']
++    fig,axs=plt.subplots(1,2,figsize=(16,7),layout='constrained',gridspec_kw={'width_ratios':[1,2]})
++    def heat(ax,values,labels,title):
++        vals=np.array(values).T;im=ax.imshow(vals,aspect='auto',cmap='YlOrRd',norm=LogNorm(vmin=.05,vmax=max(10,np.nanmax(vals))))
++        ax.set_xticks(range(len(labels)),labels,rotation=30,ha='right');ax.set_yticks(range(len(models)),models);ax.set_title(title)
++        for i in range(vals.shape[0]):
++            for j in range(vals.shape[1]):
++                if np.isfinite(vals[i,j]):ax.text(j,i,f'{vals[i,j]:.3f}',ha='center',va='center',color='white' if vals[i,j]>4 else 'black',fontsize=9)
++        fig.colorbar(im,ax=ax,label='45 s time-weighted MAE (C)',shrink=.75)
++    values=[];labels=[]
++    for eid in ('F-LS','F-SL','F-POOL'):
++        metrics=read(root/'evaluation'/eid/'B-metrics.json');r=next(r for r in metrics if r['h']==45 and r['scope']=='all' and r['layer']=='all_methods')
++        values.append([r['metrics'][m]['mae'] for m in models]);labels.append(f'{eid}\nn={r["metrics"]["B0"]["n"]}')
++    heat(axs[0],values,labels,'B only: identical origin + label sets')
++    metrics=read(root/'evaluation/F-POOL/B-metrics.json');groups=[r for r in metrics if r['h']==45 and r['scope']=='regime' and r['layer']=='all_methods']
++    heat(axs[1],[[r['metrics'][m]['mae'] for m in models] for r in groups],[f'{r["value"]}\nn={r["metrics"]["B0"]["n"]}' for r in groups],'F-POOL regimes: in-sample description only')
++    fig.suptitle('Future input scenarios are fixed separately; no per-point oracle selection',fontsize=15)
++    save(fig,'03-causal-forecast-comparison')
++    fig,axs=plt.subplots(1,3,figsize=(16,5),layout='constrained')
++    params=read(root/'diagnostics/parameters.json')
++    for ax,eid in zip(axs[:2],['F-LS','F-SL']):
++        row=next(r for r in params if r['experiment']==eid and r['model']=='G2')
++        for key,label in [('weighted_raw_residual_full','incl. nuisance'),('projected_dynamic','dynamic after nuisance projection')]:
++            s=np.array(row[key]['singular_values']);ax.semilogy(np.arange(1,len(s)+1),s/s[0],'.-',label=label)
++        ax.set_ylim(1e-20,2);ax.set_title(f'{eid} / G2 sensitivity');ax.set_xlabel('Singular value index');ax.set_ylabel('Relative singular value');ax.grid(alpha=.2);ax.legend(fontsize=8)
++    state=read(root/'diagnostics/state-sensitivity.json');v=[next(r for r in state if r['experiment']==eid and r['h']==45 and r['mode']=='HOLD') for eid in ['F-LS','F-SL']]
++    x=np.arange(2);axs[2].bar(x-.18,[r['mae60'] for r in v],.36,label='60 s history');axs[2].bar(x+.18,[r['mae180'] for r in v],.36,label='180 s history')
++    axs[2].set_xticks(x,[f'{r["experiment"]}\nn={r["n"]}' for r in v]);axs[2].set_ylabel('45 s HOLD MAE (C)');axs[2].set_title('Fixed state-window sensitivity\nSame >=180 s origins');axs[2].legend();axs[2].grid(axis='y',alpha=.2)
++    save(fig,'04-identifiability-and-state')
++    requests=read(root/'evaluation/F-LS/request-windows.json');ids=sorted({r['request'] for r in requests if r['request']!='P01'},key=lambda q:(q.startswith('D'),q))
++    windows=['pre15','during','post0_15','post15_45','post45_90'];Z=np.zeros((len(ids),len(windows)));notes=[]
++    for i,q in enumerate(ids):
++        note=[]
++        for j,w in enumerate(windows):
++            r=next(r for r in requests if r['request']==q and r['window']==w and r['h']==45)
++            Z[i,j]=r['shared_n']/max(1,r['raw_accepted']);note.append(f'{r["shared_n"]}/{r["raw_accepted"]}'+('*' if r['any_other_request_overlap'] else ''))
++        notes.append(note)
++    fig,ax=plt.subplots(figsize=(9,11),layout='constrained');im=ax.imshow(Z,vmin=0,vmax=1,cmap='Blues',aspect='auto')
++    ax.set_xticks(range(len(windows)),windows);ax.set_yticks(range(len(ids)),ids)
++    for i in range(len(ids)):
++        for j in range(len(windows)):ax.text(j,i,notes[i][j],ha='center',va='center',color='white' if Z[i,j]>.65 else 'black')
++    ax.set_title('Short requests: shared 45 s forecast origins / raw accepted points\n* another request overlaps this window; requests are not independent episodes')
++    fig.colorbar(im,ax=ax,label='Common comparison coverage',shrink=.65);save(fig,'05-request-coverage')
++    (out/'plot-environment.json').write_text(json.dumps({'matplotlib':matplotlib.__version__,'numpy':np.__version__,'source':'saved results only; no refit'},indent=2)+'\n')
++
++
++if __name__=='__main__':main()
+diff --git a/experiments/thermal_identification_v1/propagate.c b/experiments/thermal_identification_v1/propagate.c
+new file mode 100644
+index 0000000..1876aef
+--- /dev/null
++++ b/experiments/thermal_identification_v1/propagate.c
+@@ -0,0 +1,48 @@
++/* Exact affine G1/G2 propagation. No inverse of A, no Euler integration. */
++#include <math.h>
++#include <stddef.h>
++
++static double phi(double z, double dt) {
++    return fabs(z*dt)<1e-8 ? dt*(1+z*dt/2+z*z*dt*dt/6) : expm1(z*dt)/z;
++}
++
++static void step(int model,const double *p,double E,const double *u,double dt,double *x) {
++    if(model==1) {
++        double k=p[0]+p[1]*u[2], q=p[2]*u[0]+p[3]*u[1];
++        x[0] += phi(-k,dt)*(q-k*(x[0]-E));
++        return;
++    }
++    double a=p[0],c=p[1],d=p[2]+p[3]*u[2];
++    double A[4]={-a,a,c,-c-d};
++    double v[2]={-a*(x[0]-x[1])+p[4]*u[0]+p[5]*u[1], c*(x[0]-x[1])-d*(x[1]-E)};
++    double norm=(2*a+2*c+d)*dt;
++    /* x_new=x+integral exp(A*s) ds * (A*x+f). Stable at tiny dt. */
++    if(norm<0.1) {
++        double t0=dt*v[0],t1=dt*v[1],q0=t0,q1=t1;
++        for(int k=2;k<=12;k++) {
++            double n0=dt*(A[0]*t0+A[1]*t1)/k;
++            double n1=dt*(A[2]*t0+A[3]*t1)/k;
++            t0=n0;t1=n1;q0+=n0;q1+=n1;
++        }
++        x[0]+=q0;x[1]+=q1;return;
++    }
++    double sum=a+c+d, disc=sqrt((a-c-d)*(a-c-d)+4*a*c);
++    double lo=-(sum+disc)/2, hi=-2*a*d/(sum+disc);
++    double fl=phi(lo,dt), fh=phi(hi,dt), slope;
++    if(disc>1e-7*fmax(1.,sum)) slope=(fh-fl)/disc;
++    else {
++        double mid=(hi+lo)/2,z=mid*dt;
++        slope=(exp(z)*(z-1)+1)/(mid*mid);
++    }
++    double q0=fl*v[0]+slope*((A[0]-lo)*v[0]+A[1]*v[1]);
++    double q1=fl*v[1]+slope*(A[2]*v[0]+(A[3]-lo)*v[1]);
++    x[0]+=q0;x[1]+=q1;
++}
++
++void trajectory(int model,size_t n,const double *p,double E,const double *dt,const double *inputs,const double *initial,double *out) {
++    double x[2]={initial[0],initial[1]};out[0]=x[0];out[1]=x[1];
++    for(size_t i=0;i<n;i++) {
++        step(model,p,E,inputs+3*i,dt[i],x);
++        out[2*(i+1)]=x[0];out[2*(i+1)+1]=x[1];
++    }
++}
+diff --git a/experiments/thermal_identification_v1/report.py b/experiments/thermal_identification_v1/report.py
+new file mode 100644
+index 0000000..7b2b433
+--- /dev/null
++++ b/experiments/thermal_identification_v1/report.py
+@@ -0,0 +1,256 @@
++"""Render the research report from saved results; does not fit or select models."""
++import argparse
++from pathlib import Path
++import numpy as np
++from common import read,write,sha
++from evaluation import load_jsonl
++
++TITLE='TTO-首轮灰箱实际辨识与对照实验报告'
++METHODS=['B0','B1','R_TJ','R_IO','G1-HOLD','G1-RELAX30','G2-HOLD','G2-RELAX30']
++
++
++def table(headers,rows):
++    return '\n'.join(['| '+' | '.join(headers)+' |','|'+'|'.join(['---']*len(headers))+'|']+['| '+' | '.join(str(x) for x in r)+' |' for r in rows])+'\n'
++
++
++def fmt(x):return f'{x:.3f}'
++
++
++def main():
++    ap=argparse.ArgumentParser();ap.add_argument('--run',type=Path,required=True);ap.add_argument('--output',type=Path,required=True);args=ap.parse_args();run=args.run
++    assert not args.output.exists()
++    data=read(run/'data.json');coverage=read(run/'coverage.json');params=read(run/'diagnostics/parameters.json');env=read(run/'environment.json')
++    parts=[f'''# {TITLE}
++
++执行编号：**TTO-GREYBOX-ID-v1.0** · 2026-10-13 · 离线开发研究 · 交回复审
++
++**G1、G2 已实际拟合，36 次主拟合全部收敛。G2 值得保留为热响应研究候选，但本轮不支持把它作为已验证的 45 秒预测器。** 两者都使用独立的 GPU、CPU/SOC/MSS 功率及成功 PWM；G1 拟合一个等效温度状态，G2 拟合快／慢两个等效状态，并处理未知边界和慢初态。它们不是实测热容。
++
++- **热响应：**两轮合并后，G2 在初始化后不再读取 TJ 反馈的自由响应 MAE 为 **0.284°C**，G1 为 **0.911°C**。这是拟合内表达能力。长→短迁移的 G2 自由响应 MAE 为 **0.877°C**；短→长反向压力检查为 **13.753°C**，出现明显过热预测。
++- **真实未来预测：**相同起点／标签的 45 秒比较中，长→短 G2-HOLD 为 **0.610°C**，保持当前 TJ 的 B0 为 **0.375°C**；短→长分别为 **6.941°C / 1.627°C**。两个方向都没有整体胜出。RELAX30 不能在长持续负载与短脉冲间通用，也未建立自动选择器。
++- **有价值与无价值的场景：**合并拟合的 G2-HOLD 对长负载升温、持续段有表达优势；RELAX30 对孤立脉冲有拟合内价值。安静背景仍应尊重 B0。连续短问答的共同 45 秒起点仅 **6 个**，不足以判断整组任务效果；所有原始点和未评分原因均保留。
++- **最值得推进：**先补一个包含中等持续时间负载与完整回落、记录环境温度和热前史的完整过程，区分“短脉冲侧辨识出的热增益不可迁移”与“未知边界／慢状态”两个解释。不是继续扩大数值搜索。本轮只设计补测，未执行。
++
++全部资料已被项目分析过；F-SL 是反向工况压力诊断，F-POOL 是拟合内描述。本轮没有独立新过程验证，没有风扇控制收益或现场放行结论。状态估计不是在线参数学习。
++
++## 1. 执行与来源
++
++仅新增 `experiments/thermal_identification_v1/`。保留原工作树和当前分支，没有提交、推送或创建 PR。没有连接设备、live doctor、新负载、PWM／风扇／WS／采样更改、刷机、部署、重启、CUDA 或在线参数更新。红叉只影响资格；未追查其根因、旧错误曲线归属或实施短任务退档原型。
++
++输入取交接包中的分享归档，逐包 CRC、原文件清单、run 索引和固定质量处理源码均核验。重放后逐条比对 accepted 序列的时间、序号、段、控制资格及全部 `values`；GPU/CPU/5V 的原始 mW→W 另作断言。两轮仍然只是两个 episode，18 条正式短请求没有被改称 18 个独立热过程。
++''']
++    sources=read(run/'source-archives.json')
++    parts.append(table(['原包','字节','核验文件数','SHA-256'],[[s['original_attachment_name'],s['bytes'],s['verified_entries'],f'`{s["sha256"]}`'] for s in sources]))
++    parts.append('''本轮使用分享字节的身份；旧 accepted 派生产物的私有来源身份不被改写。例如 S 的分享 manifest SHA 为 `2c5c6c3593b70dab6b3bdf2c1ea5425c49dc08d556235ceb2e211221720e8c3f`，私有 manifest 为 `51cd77db0f8748c3f6fb002a964a170208ddc783177f711a271d7c7f10402bfa`；其 observations 字节相同，不表示 manifest 或 ZIP 身份相同。原脱敏回执、私有索引和分享索引由输入原包及 `data.json` 并列引用。
++
++旧 Ridge、旧 split、旧 test-used、失败成绩保持原样，仍是原 85/5 实验，不是本轮紧凑 Ridge。其后段 45 秒共同 20 点，B0 / B1 / 旧 TJ Ridge / 旧 full Ridge MAE 分别为 0.089050 / 0.116615 / 0.505719 / 0.230872°C；不与本轮不同分母的全段成绩直接排位。
++
++## 2. 覆盖、时间与冻结合同
++
++使用全部 4139 个约 1 秒 accepted 新 TJ，未用旧 5 秒预测起点表替代。应用固定 `engine_for` 的源质量、段隔离、平台／采样合同和控制资格；GPU 利用率并非灰箱必需输入。成功 PWM 的有效期为 2.5 秒，控制温度状态 7.5 秒，源功率按 5000 ms 减已有源年龄；重复包提高年龄的证据也保留。所有区间内实际到达的 fan/temp/source/tick 事件均检查，真实 fan 更新按到达时间插入传播，不能把下一点 PWM 倒填。
++
++因此“两个温度点都有效”仍可能不构成连续可用区间。L 有 12 个区间内 TTL 到期记录，S 有 27 个；这些间隙不做插值。实际未知时不使用目标 PWM、模型 PWM 或 0。每个有效段单独估初态；短段仍进入自由响应拟合，只有具备 60 秒历史后才进入主 G2/Ridge 比较。
++''')
++    covrows=[]
++    for r in data['runs']:
++        ss=[s for s in coverage if s['run']==r['run']];pred=read(run/'evaluation'/('F-SL' if r['run']=='L' else 'F-LS')/'method-coverage.json')
++        m=next(p for p in pred if p['h']==45 and p['method']=='G2-HOLD')
++        covrows.append([r['run'],r['accepted'],r['accepted']-len(r['rejections']),len(ss),fmt(sum(s['span_s'] for s in ss)),sum(s['span_s']>=60 for s in ss),m['scored'],f'{100*m["scored"]/r["accepted"]:.1f}%'])
++    parts.append(table(['run','accepted','当前资格有效','连续段','连续有效秒','≥60秒段','共同45秒点','占全部accepted'],covrows))
++    parts.append('''拟合权重为 run 等权，再按负载／脉冲相关、回落、背景三个实际存在的宏类等权，类内按真实有效时间；末点无后续有效时长，时间权重为 0。短请求到结束后最多 30 秒／下次提交前归负载；既有回落标签优先于背景。长负载最初 60 秒另标升温，仅用于分层。人工秒级阶段边界不升级为精确事件边界。
++
++约 1 秒采样不能确定亚秒热延迟。所有输入仍是接收时间近似，不是精确芯片功率积分或机械风速。数据、覆盖、角色及 spec 在首次真实拟合前哈希冻结；双方全部 G1/G2/Ridge 先冻结，才计算目标成绩。证据顺序见 `freeze.json`、`directions-frozen.json`、各 `evaluation-identity.json` 和 `readback-verification.json`。
++
++![输入与严格连续覆盖](runs/main/charts/01-inputs-and-coverage.png)
++
++各段起止、秒数、样本、原引用、宏类时长、60 秒初始化和可评价点见 [coverage.json](runs/main/coverage.json)。逐条异常资格与区间内 TTL 排除记录在 [data.json](runs/main/data.json) 的 `runs`；其 `segments.timeline` 保存输入年龄、引用与有效截止。模型拉起段保留在拟合与数据图中，但严格共同 45 秒集合没有该阶段覆盖，不能给它补一个模型胜负结论。
++
++## 3. 实际模型与拟合
++
++```text
++G1: dT/dt = -(k0+k1*u)*(T-E_r) + b_g*P_g + b_c*P_c
++G2: dTf/dt = -a*(Tf-Ts) + b_g*P_g + b_c*P_c
++    dTs/dt = c*(Tf-Ts) - (d0+d1*u)*(Ts-E_r)
++    yhat = Tf
++```
++
++u=成功 PWM/100。5V、gain、NVML 和其他温区只用于诊断；不相加 rail，不把 gain 当物理冷却输入，不补造环境或 TTP 温度。E 是等效边界参数；Ts 是未测潜在状态，允许高于 Tf。60 秒前缀不表示热平衡。
++
++六组初值、参数边界、Huber 0.3°C 转折和预算完全使用冻结正文规范。目标是每段完整自由响应，不吸收后续真实 TJ；权重乘在 Huber rho 和导数外，保持物理转折一致。float64、真实 Δt、G1 解析解与 G2 稳定精确离散化；不求病态 A 逆，不使用显式 Euler。编译的 C 内核只加速等价传播，求解仍为 SciPy TRF。动态列数值差分，E/Ts 列使用精确仿射灵敏度；实际残差调用包含数值 Jacobian。
++''')
++    fitrows=[];parrows=[];initrows=[];total_s=0
++    for eid in ('F-LS','F-SL','F-POOL'):
++        for model in ('G1','G2'):
++            a=read(run/'fits'/f'{eid}-{model}/model.json');trials=[read(run/'fits'/f'{eid}-{model}/N{k}.json') for k in range(1,7)]
++            fitrows.append([eid,model,a['selected_seed'],a['parameter_count']]+[f'{t["J"]:.6f}' for t in trials])
++            total_s+=sum(t['seconds'] for t in trials)
++            parrows.append([eid,model,'; '.join(f'{k}={v:.7g}' for k,v in a['dynamic'].items()),'; '.join(f'{k}={v:.4f}' for k,v in a['parameters'].items() if k.startswith('E_'))])
++            ts=[v for k,v in a['parameters'].items() if k.startswith('Ts_')]
++            initrows.append([eid,model,len(ts),'—' if not ts else f'{min(ts):.3f}～{max(ts):.3f}',','.join(trials[int(a['selected_seed'][1:])-1]['boundary_parameters']) or '无',max(t['actual_residual_calls'] for t in trials)])
++    parts.append(table(['实验','模型','选中','总参数数','N1 J','N2 J','N3 J','N4 J','N5 J','N6 J'],fitrows))
++    parts.append('全部 36 次主拟合均有限且收敛。选中初值只由对应训练 J 决定，未按目标成绩选种子；没有扩边界、加模型族或无限扩搜索。各初值／终值、逐调用 J 轨迹、收敛码、nfev、实际调用、时间和贴边记录均在 `fits/*/N*.json`。\n\n')
++    parts.append(table(['实验','模型','动态系数','训练侧等效边界°C'],parrows))
++    parts.append(table(['实验','模型','慢初态个数','慢初态范围°C','选中解贴边项','六次最大残差调用'],initrows))
++    parts.append('''每个训练 run 一个 E，每个独立有效段一个 Ts；不能把短段初态当独立热实验。完整逐段数值在模型 JSON 中。S-only G1 的 CPU 系数贴 0 不表示 CPU 不发热；S-only G2 的 a 贴 4 s⁻¹，不能扩大边界追成绩。
++
++目标 E 只由首个 60 秒过去前缀校准，之后全 run 固定：F-LS 的 G1/G2 为 40.9405/43.1168°C；F-SL 为 29.0277/30.9228°C。这些不是测得室温。G2 两个首前缀的归一化奇异值比分别约 0.272/0.276，未触发预登记的 <1e-6 弱前缀降级；满秩不等于有物理准确度。新质量段只估状态，不重估 E。
++
++Ridge 的 9/15 列、ΔTJ 标签、未惩罚截距及 alpha=λΣw 均按正文实现。均值／方差与 λ 只在拟合侧计算。完整有效段按时间排序轮流分至最多三折，段不跨两侧；近 0.01°C 平分时选择更强正则。各 h 单独建立标签、训练和选参；没有依赖 90 秒资格删除 45 秒答案。
++''')
++    ridge_rows=[]
++    for eid in ('F-LS','F-SL','F-POOL'):
++        d=read(run/'fits'/f'{eid}-ridge.json')
++        for name in ('R_TJ','R_IO'):
++            for h,head in d['methods'][name].items():ridge_rows.append([eid,name,h,head['n'],len(head['groups']),head['lambda_']])
++    parts.append(table(['实验','Ridge','秒','拟合起点','有效段组','λ'],ridge_rows))
++    parts.append('''## 4. A：给定真实输入的热响应
++
++**A-long** 在因果前缀结束后不再读取 TJ 修正状态；输入为该段已记录的实际功率／PWM。F-POOL 的动态参数、E 及段初态均曾用完整训练段拟合，所以只说明表达能力，不是因果前缀留出。没有拿每秒更新 TJ 的 B0 当整段自由仿真参照，也没有把 Ridge 递归伪造为热响应。
++''')
++    along=[]
++    for eid in ('F-LS','F-SL','F-POOL'):
++        d=read(run/'evaluation'/eid/'A-long-metrics.json')['summary']
++        along.append([eid,d['G2']['n'],fmt(d['G2']['seconds']),fmt(d['G1']['mae']),fmt(d['G2']['mae']),fmt(d['G1']['rmse']),fmt(d['G2']['rmse']),fmt(d['G2']['balanced_mae'])])
++    parts.append(table(['实验','点','计权秒','G1 MAE','G2 MAE','G1 RMSE','G2 RMSE','G2均衡MAE'],along))
++    parts.append('''单位°C。主 MAE/RMSE 按原始有效时间计权，均衡 MAE 按 run／宏类等权。F-SL 的 G2 自由响应偏差约 +13.638°C，不能靠滚动锚定当前 TJ 把这个结构／参数迁移问题藏起来。F-LS 的 G2 自由响应偏差约 +0.817°C，存在有方向性的漂移，不是仅随机噪声。
++
++![不吸收后续TJ的自由响应](runs/main/charts/02-free-response.png)
++
++**A-roll** 与 B 使用同一过去状态，只额外提供名义未来 15/45/90 秒内的记录输入。它只定位动态，不参加 B 的实时预测胜负榜。
++''')
++    ar=[]
++    for eid in ('F-LS','F-SL','F-POOL'):
++        for r in read(run/'evaluation'/eid/'A-roll-metrics.json'):
++            if r['scope']=='all':ar.append([eid,r['h'],r['metrics']['G1']['n'],fmt(r['metrics']['G1']['mae']),fmt(r['metrics']['G2']['mae']),fmt(r['metrics']['G2']['underprediction_max'])])
++    parts.append(table(['实验','秒','共同点','G1 MAE','G2 MAE','G2最大欠预测'],ar))
++    parts.append('''## 5. B：只用当时信息的未来预测
++
++HOLD 固定当前两 rail 和成功 PWM；RELAX30 固定 PWM，功率各自以 30 秒时间常数衰减到 min(当前功率, 拟合侧 P10)。本轮各拟合集 P10 恰为 GPU 1.984W、CPU/SOC/MSS 5.952W；这个值来自拟合侧，不读取目标未来低负载。RELAX30 用增加指数输入状态的矩阵指数计算，并通过 0.1/0.05 秒步长减半核验。两策略独立报告，不逐点选优；不使用真实任务结束、未来输入或未来 TJ。
++
++每 h 取同段 t+h 后第一份有效 TJ，容差 2 秒；所有方法按名义 h 预测，标签偏移一致。下表是最严格的八方法共同起点集合；B0/B1、加入 R_TJ、再加入 R_IO 的较宽集合另在逐层指标中完整保存。没有用不同分母的 MAE 排名。
++''')
++    for eid in ('F-LS','F-SL','F-POOL'):
++        parts.append(f'### {eid}：'+('同机长→短开发迁移' if eid=='F-LS' else '时间反向工况压力检查' if eid=='F-SL' else '拟合内表达检查')+'\n\n')
++        rr=[r for r in read(run/'evaluation'/eid/'B-metrics.json') if r['scope']=='all' and r['layer']=='all_methods']
++        parts.append(table(['秒','共同点']+METHODS,[[r['h'],r['metrics']['B0']['n']]+[fmt(r['metrics'][m]['mae']) for m in METHODS] for r in rr]))
++    parts.append('''### 45秒的场景差异与风险
++
++以下场景仍使用各行相同集合；不能将行间当独立实验或事后选策略。时间均衡总分另列，防止长持续段或背景掩盖其他阶段。
++''')
++    regimes=[];risk=[]
++    for eid in ('F-LS','F-SL','F-POOL'):
++        for r in read(run/'evaluation'/eid/'B-metrics.json'):
++            if r['h']!=45 or r['layer']!='all_methods':continue
++            if r['scope']=='regime':regimes.append([eid,r['value'],r['metrics']['B0']['n']]+[fmt(r['metrics'][m]['mae']) for m in ['B0','R_TJ','R_IO','G2-HOLD','G2-RELAX30']])
++            if r['scope']=='all':
++                for m in METHODS:risk.append([eid,m,fmt(r['metrics'][m]['balanced_mae']),fmt(r['metrics'][m]['p95_abs']),fmt(r['metrics'][m]['bias']),fmt(r['metrics'][m]['underprediction_p95']),fmt(r['metrics'][m]['underprediction_max'])])
++    parts.append(table(['实验','场景','点','B0','R_TJ','R_IO','G2-HOLD','G2-RELAX30'],regimes))
++    parts.append('''`isolated_pulse` 含预试与稀疏短题及规定尾窗；`continuous_short` 含连续题规定窗口；`long_rise` 是每个长任务起始 60 秒。初始空载与模型退出后的背景并未删除。
++
++合并 G2-HOLD 45 秒时间 MAE 0.918°C，B0 1.133°C；run/宏类均衡后为 0.996°C 与 1.080°C，优势收窄。这个合并参数使用了两轮全记录；不能冒充未见验证。它在 idle 0.246°C，劣于 B0 的 0.194°C。RELAX30 对合并孤立脉冲 0.357°C，但长持续段 7.841°C，说明固定“很快结束”假设有明确代价。
++
++长→短的 A-roll45 仍为 0.560°C，并未因提供未来输入自动变好到足以胜过 B0；反向 A-roll45 6.455°C 与 HOLD 6.941°C 都差。因此跨工况问题不能仅归因于不知道下一题何时结束。合并 A-roll45 0.290°C、HOLD 0.918°C 的差距则说明在动态表达较好的条件下，未来输入仍是重要限制。
++
++![B类未来预测共同集合比较](runs/main/charts/03-causal-forecast-comparison.png)
++''')
++    parts.append(table(['实验','方法','均衡MAE','绝对误差P95','偏差','欠预测P95','最大欠预测'],risk))
++    parts.append('''P95 为逐点经验分位，MAE/RMSE/偏差为有效时间权重；欠预测=max(真实−预测,0)，未截断原始误差。重叠预测高度相关，不提供伪精确置信区间。固件45秒参考仅对存在可信原值的同起点另作诊断，见 `diagnostics/firmware-reference.json`；其 API 时间仍与 TJ 时间不同，不能叫控制收益。
++
++### 请求窗口和覆盖
++
++每题前15秒、执行中、结束后0–15/15–45/45–90秒，各自的 raw accepted、正常起点、共同标签、误差与其他请求重叠标记均在 `evaluation/*/request-windows.json`。18 条正式请求执行区间都有约1秒源测量；但只有 S02/S03/S04/S05/D01 的执行中起点进入全部方法共同45秒评分，另有 P01 预试。其余不隐去，也不据此声称漏采或模型成功。
++
++![每题共同45秒覆盖分子和原始分母](runs/main/charts/05-request-coverage.png)
++
++连续问答只有 6 个主共同起点，起点层计分也包含其未来45秒内发生的其他题，不能归因到单题热量。扩成1秒起点未取消60秒历史、真实质量断点及未来标签约束；当前覆盖不足的具体来源已列明，不恢复失效输入凑数。
++
++## 6. 辨识、初态与数值诊断
++
++**局部优化不是主要失败解释。** 双向24个有限近优候选都落在训练 J 的5%范围内；相对动态参数差异最大约0.55%，同目标45秒 HOLD 预测相对选中解的最大差约0.0037°C。六初值没有展示一个被漏掉的明显更优盆地；仍不证明全局最优或物理唯一。
++''')
++    specrows=[]
++    for r in params:
++        specrows.append([r['experiment'],r['model'],f'{r["weighted_raw_residual_full"]["condition"]:.3g}',r['weighted_raw_residual_full']['numerical_rank'],f'{r["projected_dynamic"]["condition"]:.3g}',r['projected_dynamic']['numerical_rank']])
++    parts.append(table(['实验','模型','含nuisance条件数','全矩阵数值秩','投影后动态条件数','动态秩'],specrows))
++    parts.append('''灵敏度来自加权原始摄氏残差，未用 Huber 改写 Jacobian。动态参数按冻结尺度归一化，E/Ts 使用20°C尺度；投影掉 nuisance 列空间后单列动态 SVD。完整参数方向、奇异值与尺度保存在 `diagnostics/parameters.json`。S/POOL 的全矩阵极病态，部分极短段慢初态缺乏带时间权重的动态观测支持；动态投影满秩也不是热参数真实可辨识的证明。
++
++G2 的 L-only 快时间尺度约6.8秒、慢尺度随 u 约86–194秒；S-only 快尺度约0.24秒，小于约1秒采样，慢尺度在实际PWM范围约303–685秒；POOL 快尺度约13秒，慢尺度在实际PWM范围约105–266秒。S-only 的快尺度没有被充分分辨，不能把 a=4 当已测到的热常数。u=0 的外推更慢，也没有成为现场数据支持的观测。
++
++**状态窗口变长没有修好迁移。** 在同一 ≥180 秒起点集合上，G2-HOLD45 的普通逐点 MAE：F-LS 60秒/180秒为0.735/1.000°C（n=530），F-SL 为8.664/13.394°C（n=792）。E 与动态参数都保持60秒主版本冻结值；没有按点选窗口。说明更长历史不能补偿错误的等效动态／边界假设，并可能累积其偏差。没有做可选的180秒重新校准E副本，也没有据结果改主方案。
++
++![参数灵敏度与固定初态窗口检查](runs/main/charts/04-identifiability-and-state.png)
++
++**输入分离能力有限。** L 的 GPU/CPU rail 相关0.963，S为0.990；CPU与5V相关0.9988/0.9942。标准化 GPU/CPU/5V/PWM 矩阵条件数约57/33。各 rail 仍分别保留，不能永久宣称某一路无热贡献。闭环 PWM 与温度／任务历史纠缠，gain只作背景线索。
++
++**残差有结构。** G2自由响应残差45秒自相关在 F-LS/F-SL 约0.685/0.970，POOL约−0.033。合并降低了长时间残差相关，但短→长持续高估说明短脉冲侧的稳态热增益／散热动态无法迁移；它不是靠当前TJ锚定能解决的问题。各阶段残差、5V/gain/温区相关、峰温和尾段误差均保存，相关性不被解释为积灰、材料老化或已确定的散热效率。
++
++**TJ≈快状态只是局部近似。** 有效样本中 L 的已报告分区最高值以GPU占2441/2508，34次主导温区切换；S为1605/1606，1次切换。TJ与这些已报告分区最大值的绝对差最大0.844/0.250°C。因此既不能把所有TJ误差归到同一固定GPU温区，也未将真值换成GPU以改善成绩；详见逐点 `hotspots.jsonl` 与按热点残差。
++
++**一次预登记的风扇嵌套诊断已完成。** F-POOL G2固定 d1=0，从主最优解单次重拟合，其 J 从1.128863升至1.507627（+33.55%），且收敛。当前PWM项确实改善该模型对现有闭环记录的拟合，但这不能识别独立风量因果效应，更不能推出调低PWM仍安全。
++
++## 7. 验证、资源与实现偏差
++
++新增研究测试 **12/12通过**；复用链相关离线回归 **11/11通过**。覆盖单位和原引用、G1/G2精确传播／近重根／小Δt、温度平移、非平衡热初态、充分激励合成拟合、弱激励不同系数的同响应、未来TJ/输入/结束时刻反例、独立时距标签、真实质量断点与恢复、Huber权重、Ridge标准化／alpha、仿射 nuisance 灵敏度。没有重跑全仓189项或现场故障矩阵。
++
++保存结果另以 SciPy 增广矩阵指数独立复算 **1766** 个 HOLD 传播实例，最大差 **4.30e−11°C**；全部共同集合ID、标签、B各层指标和冻结参数哈希重新核对。三个实验视图中保留 **990** 条有45秒而无90秒答案的记录（POOL会重复引用同一原点，因此不是990个独立样本）。
++
++评价启动曾发现 G1 后续段固定E、无待估参数时的空矩阵分支错误；已加专门回归修复。发生在目标成绩产生前，未重新训练或改变已冻结双向参数。`finish-attempt-01.log` 和 `implementation-repair-01.json` 保留。另修正绘图对缺PWM字段的显示，仍画缺口；没有补回数据。没有单位修正、范围扩张或追加主模型搜索。
++''')
++    resources=[read(run/f'resource-{stage}.json') for stage in ['directions','finish']]
++    parts.append(f'执行环境：{env["machine"]}，{env["platform"]}，Python {env["python"].split()[0]}；'+', '.join(f'{k} {v}' for k,v in env['dependencies'].items())+'。\n\n')
++    parts.append(f'核心数据准备／双向拟合和评价／合并／诊断两阶段合计 **{sum(r["wall_s"] for r in resources):.2f}秒**，其中36次主拟合的求解记录合计 **{total_s:.2f}秒**；记录峰值RSS **{max(r["ru_maxrss_native"] for r in resources)/1024**2:.1f}MiB**，BLAS 1线程。首次完整L残差约0.00057秒。以上不含交互实现、阅读、测试、绘图与打包时间，属于本机CPU结果，**不是N305成绩**。绘图使用已有独立环境，版本单列；未安装或升级生产依赖。\n\n')
++    parts.append('''## 8. 最多三项有目标的下一轮补测建议（本轮未执行）
++
++### 1）补上中等时长，区分短脉冲热增益与持续响应
++
++- **缺口／可证伪解释：**短→长即使给真实输入也失败，而短侧 a 贴边；现有近2秒脉冲与数百秒持续负载之间缺少辨识信息。若同一冻结候选在中等负载持续中系统高估、结束后又系统偏离，即推翻“只有未知结束时刻导致B差”的解释。
++- **改变／保持：**改变任务持续时间为约20/60/180秒，顺序事先固定并保留完整回落；保持同设备、模型、客户端任务类别、AUTO控制与已有配置，不要求功率恰为常数，实测两rail作输入。
++- **记录／时间：**完整约1秒TJ、独立rail、成功PWM及其源年龄/引用、控制资格、原请求起止；增加同期进风附近环境温度和此前10分钟热前史。单个完整过程约35–45分钟，包含首尾各5–10分钟背景，回落不冒称达到平衡。
++- **保护／停止／回退：**保留原AUTO与保护；若保护/失温/故障触发，停止当前测试请求并保存原日志，等待原系统正常恢复。若出现持续热告警或异常升温，停止整个负载流程，不手调PWM、不改保护。回退仅回到原日常空闲/AUTO状态。
++- **用户只需做什么：**下一轮另行授权后确认可用时段及相同任务条件，按一张预先固定的20/60/180秒操作卡启动／停止任务，放置并记录环境温度。无需修改风扇设置或拆模组。
++
++### 2）相同任务、不同热前史，区分边界与未观测慢初态
++
++- **缺口／可证伪解释：**60→180秒窗口反而变差，E与慢态均非实测；当前难分“热前史改变”与“固定等效边界不适用”。若相同输入附近的残差随已记录环境或前史稳定改变，且冻结参数／过去窗口无法重现，则推翻一套固定边界即可迁移的假设。
++- **改变／保持：**对同一个约60–90秒任务，分别在较长空闲后和一次正常负载回落早期启动；保持任务、设备、AUTO及环境布置相同，仅改变起始热前史。不能把空闲若干分钟直接命名为冷机平衡。
++- **记录／时间：**每种前史保留至少10分钟先行记录、任务和5–10分钟后续，合计约40–50分钟；环境温度必录。可选在不拆模组、不扰动TIM的外部可接近位置记录散热体表面温度，明确不是内部TTP。
++- **保护／停止／回退：**同第1项的既有AUTO保护与停止负载规则；若第二次启动前仍有热告警/资格异常，则取消该次，不绕过保护凑成对照。恢复日常空闲/AUTO，无配置回滚动作。
++- **用户只需做什么：**另行授权并按两种前史的固定操作卡执行；若加外部测点，只放置安全、可移除的外部探头并记录位置，不接入设备控制。
++
++### 3）保留一个全新的完整过程，只用于确认
++
++- **缺口／可证伪解释：**本轮两过程及合并参数都已用于研究，不能给独立确认。若提前冻结的候选在新过程的共同45秒集合、动态和背景分层仍不如B0，或欠预测尾部恶化，则否定推进该候选的预测收益主张；不能用新过程继续选初值后又称它未见。
++- **改变／保持：**新完整过程包含待机、中等持续任务、孤立短题、连续短问答与最终回落；保持设备／记录合同及AUTO。候选、输入情景、过去窗口、评分口径和成功条件先冻结。
++- **记录／时间：**完整原始记录、请求元数据、输入年龄与环境／热前史，约30–40分钟。连续题的有效传播／标签覆盖不足时应报告“未完成确认”，不得取消资格规则。
++- **保护／停止／回退：**沿用原保护，异常时停止请求、留存日志、恢复日常空闲。确认只做旁路预测和观察，没有调PWM权限。
++- **用户只需做什么：**在前两项结论复审、候选再次冻结后，另行批准这一个确认过程；运行前不向预测器透露实际未来结束时间，不人工补写遗漏样本。
++
++当前不建议直接开展受控PWM改动。d1=0损失表明PWM项有观测拟合价值，但尚未把风扇因果作用与闭环／任务结束分开；不能切MANUAL并假定AUTO保护仍在。
++
++## 9. 复审入口与停止状态
++
++- [研究入口和复跑说明](README.md)、[冻结规格](experiment-spec.json)、`research-code.patch`。
++- `runs/main/fits/`：36次主尝试、6个灰箱模型、3套Ridge、唯一d1=0；全部模型 `deployable=false`。
++- `runs/main/evaluation/`：A-long、A-roll、B的逐点预测、状态证据、分层指标、共同集合ID、方法覆盖、请求周边和初态敏感性。
++- `runs/main/diagnostics/`：输入相关、参数与初态SVD、时间尺度、近优多解、原始残差、热点、标签偏移及固件数值参考。
++- `runs/main/charts/`：5幅PNG/SVG；所有误差单位°C，输入rail分开。
++- `*-tests-*.log`、`related-regression.log`、`readback.log`、失败日志、环境／资源、`protected-after.json` 和 ZIP 内 `SHA256.json`。
++
++原三大ZIP只通过SHA引用，不递归收入新证据包；独立重跑者从原交接包 `inputs/` 取得。新运行必须使用新目录。保存模型重放不等于可以交给生产加载器或现场部署。
++
++状态：implementation / numeric_fit / response_evaluation 已完成；causal_forecast 为开发回放已完成；**target_validation=not_performed，control_authorization=none**。完成本轮实际拟合、报告与证据后停止，交回复审。
++
++## 附：逐有效段A-long结果
++
++下表的 first_ref/last_ref 均可在逐点JSONL回到原始记录；所有实际初始化范围和秩在各实验 `calibrations.json`，每个滚动起点则见 `states.jsonl`。峰温误差是预测峰值−实测峰值，尾部偏差取段末60秒内，均未反馈校正状态。
++''')
++    ar=[]
++    for eid in ('F-LS','F-SL','F-POOL'):
++        for s in read(run/'evaluation'/eid/'A-long-metrics.json')['segments']:
++            ar.append([eid,s['segment'],s['n'],fmt(s['seconds']),fmt(s['metrics']['G1']['mae']),fmt(s['metrics']['G2']['mae']),fmt(s['metrics']['G2']['rmse']),fmt(s['peak_error']['G2']),fmt(s['tail_bias']['G2']),s['first_ref'].split('/')[-1]+' → '+s['last_ref'].split('/')[-1]])
++    parts.append(table(['实验','段','点','自由传播秒','G1 MAE','G2 MAE','G2 RMSE','G2峰差','G2尾偏','原始引用'],ar))
++    args.output.write_text('\n'.join(parts))
++    print(args.output)
++
++
++if __name__=='__main__':main()
+diff --git a/experiments/thermal_identification_v1/research-requirements.txt b/experiments/thermal_identification_v1/research-requirements.txt
+new file mode 100644
+index 0000000..d154bf5
+--- /dev/null
++++ b/experiments/thermal_identification_v1/research-requirements.txt
+@@ -0,0 +1,10 @@
++# Research environment only; do not install into or edit production dependencies.
++numpy==2.2.6
++scipy==1.14.1
++scikit-learn==1.6.1
++threadpoolctl==3.7.0
++pytest==8.3.5
++# Imports required by the preserved related tests; no live collector is invoked.
++python-socketio==5.13.0
++aiohttp==3.11.18
++psutil==7.0.0
+diff --git a/experiments/thermal_identification_v1/ridge_reference.py b/experiments/thermal_identification_v1/ridge_reference.py
+new file mode 100644
+index 0000000..a4b00ec
+--- /dev/null
++++ b/experiments/thermal_identification_v1/ridge_reference.py
+@@ -0,0 +1,100 @@
++"""Frozen 9/15-column compact Ridge and independent horizon eligibility."""
++import numpy as np
++from sklearn.linear_model import Ridge
++from common import balanced_weights,write
++
++TJ_COLUMNS=['tj']+[f'lag_{h}_minus_current' for h in (5,15,30,60)]+[f'mean_{h}_minus_current' for h in (10,30)]+['slope_10','slope_30']
++IO_COLUMNS=TJ_COLUMNS+['u','u_mean30','Pg','Pg_mean30','Pc','Pc_mean30']
++
++
++def label_index(times,i,h,tolerance=2.):
++    j=np.searchsorted(times,times[i]+h)
++    return int(j) if j<len(times) and times[j]<=times[i]+h+tolerance else None
++
++
++def held_mean(times,values,start,end):
++    lo=np.searchsorted(times,start,side='right')-1
++    hi=np.searchsorted(times,end,side='left')
++    if lo<0:return None
++    durations=np.diff(np.r_[start,times[lo+1:hi],end])
++    return np.dot(durations,values[lo:hi])/(end-start)
++
++
++def features(segment,i):
++    # Slice the observation prefix: no future measurement enters even the helper.
++    rows=segment['rows'][:i+1]
++    t=np.array([a['mono_s'] for a in rows]);y=np.array([a['values']['tj'] for a in rows]);now=t[-1]
++    slope={}
++    for h in (10,30):
++        j=np.searchsorted(t,now-h)
++        slope[h]=(y[-1]-y[j])/(now-t[j]) if now-t[j]>=min(10,h-2) else None
++    if now-t[0]<60:return None,None,slope[30]
++    vals=[y[-1]]
++    for h in (5,15,30,60):
++        j=np.searchsorted(t,now-h,side='right')-1
++        if j<0 or now-h-t[j]>2:return None,None,slope[30]
++        vals.append(y[j]-y[-1])
++    vals += [held_mean(t,y,now-h,now)-y[-1] for h in (10,30)]
++    vals += [slope[10],slope[30]]
++    nodes=[n for n in segment['timeline'] if n['t']<=now]
++    nt=np.array([n['t'] for n in nodes]);u=np.array([n['inputs'] for n in nodes])
++    io=[]
++    for k in (2,0,1):io.extend([u[-1,k],held_mean(nt,u[:,k],now-30,now)])
++    return np.array(vals),np.r_[vals,io],slope[30]
++
++
++def examples(data):
++    out=[]
++    for segment in data['segments']:
++        times=np.array([r['mono_s'] for r in segment['rows']])
++        for i,a in enumerate(segment['rows']):
++            tj,io,slope=features(segment,i)
++            row=dict(run=segment['run'],segment=segment['id'],i=i,t=times[i],ref=a['ref'],utc=a['utc'],wall=a['wall'],
++                     macro=a['macro'],phase=a['phase'],regime=a['regime'],duration=a['duration'],current=a['values']['tj'],
++                     R_TJ=tj,R_IO=io,slope=slope,labels={})
++            for h in (15,45,90):
++                j=label_index(times,i,h)
++                if j is not None:
++                    label=segment['rows'][j]
++                    row['labels'][str(h)]=dict(value=label['values']['tj'],ref=label['ref'],t=times[j],offset_s=times[j]-times[i]-h)
++            out.append(row)
++    return out
++
++
++def fit_one(rows,name,h,lam):
++    X=np.array([r[name] for r in rows]);y=np.array([r['labels'][str(h)]['value']-r['current'] for r in rows])
++    w=balanced_weights(rows);mean=np.average(X,axis=0,weights=w);scale=np.sqrt(np.average((X-mean)**2,axis=0,weights=w));scale[scale<1e-12]=1
++    fit=Ridge(alpha=lam*w.sum(),fit_intercept=True,solver='svd').fit((X-mean)/scale,y,sample_weight=w)
++    return dict(lambda_=lam,alpha=lam*w.sum(),mean=mean,scale=scale,coef=fit.coef_,intercept=float(fit.intercept_),n=len(rows),
++                min=X.min(axis=0),max=X.max(axis=0),weight_sum=float(w.sum()),groups=sorted({r['segment'] for r in rows}))
++
++
++def predict(model,vector,current):
++    return float(current+np.dot((vector-np.array(model['mean']))/model['scale'],model['coef'])+model['intercept'])
++
++
++def fit_ridges(rows,runs,spec,out):
++    result=dict(schema='TTO-COMPACT-RIDGE-EXPERIMENT-v1',deployable=False,fit_runs=runs,methods={})
++    for name in ('R_TJ','R_IO'):
++        result['methods'][name]={}
++        for h in (15,45,90):
++            eligible=[r for r in rows if r['run'] in runs and r[name] is not None and str(h) in r['labels']]
++            groups=sorted({r['segment'] for r in eligible});nfold=min(3,len(groups));cv=[]
++            fold={g:i%nfold for i,g in enumerate(groups)} if nfold else {}
++            if nfold>=2:
++                for lam in spec['ridge']['lambda_grid']:
++                    fold_scores=[]
++                    for k in range(nfold):
++                        train=[r for r in eligible if fold[r['segment']]!=k];validation=[r for r in eligible if fold[r['segment']]==k]
++                        candidate=fit_one(train,name,h,lam)
++                        errors=np.array([abs(predict(candidate,r[name],r['current'])-r['labels'][str(h)]['value']) for r in validation])
++                        fold_scores.append(dict(fold=k,score=float(np.dot(balanced_weights(validation),errors)),train_groups=candidate['groups'],validation_groups=sorted({r['segment'] for r in validation}),n_train=len(train),n_validation=len(validation)))
++                    cv.append(dict(lambda_=lam,score=float(np.mean([v['score'] for v in fold_scores])),folds=fold_scores))
++                best=min(v['score'] for v in cv);selected=max(v['lambda_'] for v in cv if v['score']<=best+spec['ridge']['near_tie_C'])
++            else:selected=spec['ridge']['CV_fallback_lambda']
++            head=fit_one(eligible,name,h,selected)
++            head.update(cv=cv,selection='whole_segment_fit_side_CV' if nfold>=2 else 'insufficient_groups_fixed_lambda_1',fold_assignment=fold,
++                        columns=TJ_COLUMNS if name=='R_TJ' else IO_COLUMNS,training_refs=[r['ref'] for r in eligible])
++            result['methods'][name][str(h)]=head
++    write(out,result)
++    return result
+diff --git a/experiments/thermal_identification_v1/run_experiment.py b/experiments/thermal_identification_v1/run_experiment.py
+new file mode 100644
+index 0000000..e4ed51e
+--- /dev/null
++++ b/experiments/thermal_identification_v1/run_experiment.py
+@@ -0,0 +1,73 @@
++"""Reproducible offline entry point. Every fresh run requires a new output path."""
++import os
++for variable in ('OPENBLAS_NUM_THREADS','OMP_NUM_THREADS','MKL_NUM_THREADS','VECLIB_MAXIMUM_THREADS','NUMEXPR_NUM_THREADS'):
++    os.environ[variable]='1'
++os.environ['PYTHONDONTWRITEBYTECODE']='1'
++import argparse
++import importlib.metadata
++import platform
++import resource
++import shutil
++import sys
++import time
++from pathlib import Path
++from threadpoolctl import threadpool_limits,threadpool_info
++from common import read,write,sha,stamp
++from data_adapter import extract_inputs,prepare
++from greybox import build_kernel,fit,FitProblem,solve
++from ridge_reference import examples,fit_ridges
++
++
++def main():
++    parser=argparse.ArgumentParser()
++    parser.add_argument('--spec',type=Path,default=Path(__file__).with_name('experiment-spec.json'))
++    parser.add_argument('--input-index',type=Path,required=True)
++    parser.add_argument('--output',type=Path,required=True)
++    parser.add_argument('--stage',choices=['all','directions','finish'],default='all')
++    args=parser.parse_args();out=args.output.resolve();start=time.perf_counter()
++    if args.stage!='finish':
++        out.mkdir(parents=True,exist_ok=False)
++        shutil.copyfile(args.spec,out/'experiment-spec.json')
++        cache=extract_inputs(args.input_index,out);data=prepare(cache,out)
++        write(out/'freeze.json',dict(frozen_at=stamp(),files={p:sha(out/p) for p in ['experiment-spec.json','data.json','coverage.json','roles.json','source-archives.json']},
++                                     source_files={p.name:sha(p) for p in Path(__file__).parent.glob('*') if p.suffix in ('.py','.c')},note='before first real-data numerical fit'))
++        write(out/'environment.json',dict(python=sys.version,executable=sys.executable,platform=platform.platform(),machine=platform.machine(),
++              dependencies={p:importlib.metadata.version(p) for p in ['numpy','scipy','scikit-learn','threadpoolctl','pytest']},
++              threadpools=threadpool_info(),CUDA=False,device_access=False,N305_benchmark=False))
++    else:
++        data=read(out/'data.json')
++        frozen=read(out/'freeze.json')
++        assert all(sha(out/p)==h for p,h in frozen['files'].items())
++        assert (out/'directions-frozen.json').exists()
++        assert not (out/'evaluation').exists(), 'Never overwrite an existing evaluation'
++    spec=read(out/'experiment-spec.json');build_kernel(out/'kernel')
++    with threadpool_limits(limits=1):
++        rows=examples(data)
++        if args.stage!='finish':
++            bench=FitProblem('G2',[s for s in data['segments'] if s['run']=='L'],spec)
++            t=time.perf_counter();bench.residual(bench.initial(spec['initializations'][0]))
++            write(out/'residual-timing.json',dict(seconds=time.perf_counter()-t,n_samples=len(bench.rows),parameters=len(bench.names)))
++            for eid,run in [('F-LS','L'),('F-SL','S')]:
++                selected=[s for s in data['segments'] if s['run']==run]
++                for model in ('G1','G2'):
++                    fit(model,selected,spec,out/'fits'/f'{eid}-{model}')
++                fit_ridges(rows,[run],spec,out/'fits'/f'{eid}-ridge.json')
++            files=list((out/'fits').rglob('model.json'))+list((out/'fits').glob('*ridge.json'))
++            write(out/'directions-frozen.json',dict(frozen_at=stamp(),files={str(p.relative_to(out)):sha(p) for p in files},no_target_candidate_scores_computed=True))
++        if args.stage in ('all','finish'):
++            from evaluation import evaluate_experiment
++            from diagnostics import run_diagnostics
++            (out/'evaluation').mkdir()
++            for eid,target in [('F-LS',['S']),('F-SL',['L'])]:evaluate_experiment(eid,target,data,rows,out)
++            for model in ('G1','G2'):fit(model,data['segments'],spec,out/'fits'/f'F-POOL-{model}')
++            fit_ridges(rows,['L','S'],spec,out/'fits'/'F-POOL-ridge.json')
++            pool=read(out/'fits/F-POOL-G2/model.json');problem=FitProblem('G2',data['segments'],spec)
++            solve(problem,__import__('numpy').array(pool['x']),'nested-d1-zero',out/'fits/nested-d1-zero.json',fixed_d1=True)
++            evaluate_experiment('F-POOL',['L','S'],data,rows,out)
++            run_diagnostics(data,rows,spec,out)
++            write(out/'status.json',dict(implementation='complete',numeric_fit='complete',response_evaluation='complete',causal_forecast='complete_development_replay',target_validation='not_performed',control_authorization='none',deployable=False))
++        write(out/f'resource-{args.stage}.json',dict(wall_s=time.perf_counter()-start,ru_maxrss_native=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
++                rss_unit='bytes' if sys.platform=='darwin' else 'KiB',thread_limit=1,finished_at=stamp()))
++
++
++if __name__=='__main__':main()
+diff --git a/experiments/thermal_identification_v1/tests/test_contracts.py b/experiments/thermal_identification_v1/tests/test_contracts.py
+new file mode 100644
+index 0000000..b275f67
+--- /dev/null
++++ b/experiments/thermal_identification_v1/tests/test_contracts.py
+@@ -0,0 +1,80 @@
++import copy
++import os
++import sys
++from pathlib import Path
++sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
++import numpy as np
++from test_numeric import synthetic,kernel
++from greybox import forecast,propagate,FitProblem
++from initialize import rolling_state,path_between
++from ridge_reference import features,label_index,fit_one,predict
++from common import read,balanced_weights
++
++
++def test_future_temperature_input_and_request_end_causal_counterexample():
++    p=np.array([.18,.006,.002,.004,.09,.03]);segment=synthetic('G2',p);i=150;now=150.
++    state,evidence=rolling_state('G2',p,25,segment,i)
++    u=np.array(segment['timeline'][i]['inputs']);before=forecast('G2',p,25,state,u,45,'HOLD',[2,6])
++    feature_before=features(segment,i)
++    dt,inputs=path_between(segment,now,now+45);response_before=propagate('G2',p,25,dt,inputs,state)[-1,0]
++    changed=copy.deepcopy(segment);changed['future_request_end']=152
++    for row in changed['rows'][i+1:]:row['values']['tj']+=50
++    for node in changed['timeline'][i+1:]:node['inputs'][0]+=25
++    state2,evidence2=rolling_state('G2',p,25,changed,i)
++    assert state==state2 and evidence==evidence2
++    assert forecast('G2',p,25,state2,u,45,'HOLD',[2,6])==before
++    np.testing.assert_equal(features(changed,i),feature_before)
++    dt,inputs=path_between(changed,now,now+45);assert abs(propagate('G2',p,25,dt,inputs,state2)[-1,0]-response_before)>1
++
++
++def test_horizons_are_independent_and_no_early_or_cross_segment_label():
++    t=np.array([0.,15.2,45.6,59.])
++    assert label_index(t,0,45)==2 and label_index(t,0,90) is None
++    assert label_index(t[:2],0,45) is None
++    assert label_index(np.array([0.,44.9,48.]),0,45) is None
++
++
++def test_ridge_normalization_penalty_and_unpenalized_intercept():
++    rows=[]
++    for i in range(25):
++        x=np.array([i*.1,np.sin(i)])
++        rows.append(dict(run='L' if i<10 else 'S',macro='work' if i%2 else 'background',duration=1.+i*.02,segment=str(i//5),
++                         current=40.,R_TJ=x,labels={'45':dict(value=41.+x@[.3,.9])}))
++    lam=.1;model=fit_one(rows,'R_TJ',45,lam);w=balanced_weights(rows)
++    X=np.array([r['R_TJ'] for r in rows]);X=(X-model['mean'])/model['scale'];y=np.array([r['labels']['45']['value']-40 for r in rows])
++    A=np.column_stack([np.ones(len(rows)),X]);reg=np.diag([0,lam*w.sum(),lam*w.sum()])
++    ref=np.linalg.solve(A.T@(w[:,None]*A)+reg,A.T@(w*y))
++    np.testing.assert_allclose(np.r_[model['intercept'],model['coef']],ref,atol=1e-11)
++    assert abs(sum(w)-1)<1e-12
++
++
++def test_real_quality_timeline_never_bridges_ttl_or_restores_rejected_points():
++    root=Path(os.environ.get('TTO_RESEARCH_RUN',Path(__file__).parents[1]/'runs/main'));data=read(root/'data.json')
++    assert [r['accepted'] for r in data['runs']]==[2529,1610]
++    assert [len(r['rejections']) for r in data['runs']]==[21,4]
++    assert len({r['episode'] for r in data['runs']})==2
++    for s in data['segments']:
++        for a,b in zip(s['timeline'],s['timeline'][1:]):
++            assert a['good'] and a['valid_until']>=b['t']-1e-9
++            assert a['segment']==s['source_segment']
++        assert all(r['control_eligible'] and not r['isolation'] for r in s['rows'])
++    assert any(s['span_s']<60 and s['eligible_for_fit'] for s in data['segments'])
++    assert any(s['source_segment']>5 and s['span_s']>180 for s in data['segments'])
++
++
++def test_nuisance_affine_sensitivities_match_full_parameter_difference():
++    spec=read(Path(__file__).parents[1]/'experiment-spec.json');p=[.18,.006,.002,.004,.09,.03]
++    s=synthetic('G2',p,n=130);problem=FitProblem('G2',[s],spec);x=np.r_[p,25.,55.];base=problem.residual(x);g=problem.groups[0]
++    u=g['u'].copy();u[:,:2]=0
++    for k,E,init in [(6,1,[0,0]),(7,0,[0,1])]:
++        changed=x.copy();changed[k]+=1
++        expected=propagate('G2',p,E,g['dt'],u,init)[g['index'],0]
++        np.testing.assert_allclose(problem.residual(changed)-base,expected,atol=1e-11)
++
++
++def test_constant_power_has_distinct_indistinguishable_heat_coefficients():
++    p=np.array([.18,.006,.002,.004,.09,.03]);q=p.copy();q[4]+=.03;q[5]-=.01
++    u=np.tile([2,6,.2],(300,1));dt=np.ones(300)
++    a=propagate('G2',p,25,dt,u,[48,55]);b=propagate('G2',q,25,dt,u,[48,55])
++    assert not np.array_equal(p,q)
++    np.testing.assert_allclose(a,b,atol=1e-12)
+diff --git a/experiments/thermal_identification_v1/tests/test_numeric.py b/experiments/thermal_identification_v1/tests/test_numeric.py
+new file mode 100644
+index 0000000..2d9fa6e
+--- /dev/null
++++ b/experiments/thermal_identification_v1/tests/test_numeric.py
+@@ -0,0 +1,83 @@
++import sys
++from pathlib import Path
++sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
++import numpy as np
++import pytest
++from scipy.linalg import expm
++from greybox import build_kernel,propagate,matrices,forecast,huber_loss,FitProblem,solve
++from initialize import estimate
++from common import read
++
++
++@pytest.fixture(scope='session',autouse=True)
++def kernel(tmp_path_factory):
++    build_kernel(tmp_path_factory.mktemp('kernel'))
++
++
++def synthetic(model,p,E=25.,n=401,excited=True):
++    t=np.arange(n,dtype=float)
++    u=np.column_stack([5+20*((t//17)%2),6+8*((t//31)%2),.15+.6*((t//43)%2)]) if excited else np.tile([2,6,.2],(n,1))
++    y=propagate(model,p,E,np.diff(t),u[:-1],[48,55])[:,0]
++    rows=[dict(mono_s=float(v),timeline_index=i,values=dict(tj=y[i]),ref=str(i),run='X',macro='work',duration=1 if i<n-1 else 0) for i,v in enumerate(t)]
++    timeline=[dict(t=float(v),inputs=u[i].tolist()) for i,v in enumerate(t)]
++    return dict(id='X-0',run='X',rows=rows,timeline=timeline,eligible_for_fit=True,span_s=float(n-1))
++
++
++def test_exact_propagation_and_affine_shift():
++    rng=np.random.default_rng(423)
++    params=[[.4,.2,.1,.05],[1,.02,.001,.02,.08,.04],[.0001,.000001,.0001,0,.01,.02],[4,1,1,1,5,5]]
++    for p in params:
++        model='G1' if len(p)==4 else 'G2'
++        for dt in [1e-9,1e-5,.1,1.37,90.]:
++            u=rng.uniform([0,0,0],[60,30,1]);A,f=matrices(model,p,31,u);n=len(A)
++            M=np.zeros((n+1,n+1));M[:n,:n]=A;M[:n,-1]=f
++            x=[54,63];ref=(expm(M*dt)@np.r_[x[:n],1])[:n]
++            got=propagate(model,p,31,[dt],[u],x)[-1,:n]
++            np.testing.assert_allclose(got,ref,rtol=1e-10,atol=1e-9)
++            shifted=propagate(model,p,43,[dt],[u],np.array(x)+12)[-1,:n]
++            np.testing.assert_allclose(shifted,got+12,atol=1e-9)
++
++
++def test_huber_weight_does_not_move_celsius_knee():
++    z=np.array([.5,2.,.5,2.])**2
++    w=np.array([1.,1.,.01,.01]);rho=huber_loss(w)(z)
++    np.testing.assert_allclose(rho[:,2:]/.01,rho[:,:2])
++    np.testing.assert_allclose(rho[0,:2],[.25,3])
++
++
++def test_hot_slow_initial_and_past_only():
++    p=np.array([.18,.006,.002,.004,.09,.03]);s=synthetic('G2',p)
++    r=estimate('G2',p,s,60,60,E=None,E_fallback=25)
++    np.testing.assert_allclose([r['E'],r['Ts_initial']],[25,55],atol=1e-6)
++    for row in s['rows'][61:]:row['values']['tj']+=100
++    r2=estimate('G2',p,s,60,60,E=None,E_fallback=25)
++    assert r==r2
++
++
++def test_g1_later_segment_has_fixed_boundary_and_no_fit_columns():
++    p=np.array([.03,.08,.08,.03]);s=synthetic('G1',p)
++    r=estimate('G1',p,s,60,60,E=25)
++    assert r['E']==25 and r['rank']==0 and r['rmse']<1e-10
++
++
++def test_relax_analytic_step_halving():
++    p=np.array([.18,.006,.002,.004,.09,.03]);state=[52,50];current=np.array([25,15,.4]);floor=[2,6]
++    exact=forecast('G2',p,25,state,current,90,'RELAX30',floor)
++    errors=[]
++    for step in [.1,.05]:
++        t=np.arange(0,90,step);power=np.minimum(current[:2],floor)+(current[:2]-np.minimum(current[:2],floor))*np.exp(-(t[:,None]+step/2)/30)
++        u=np.column_stack([power,np.full(len(t),current[2])])
++        got=propagate('G2',p,25,np.full(len(t),step),u,state)[-1,0];errors.append(abs(got-exact))
++    assert errors[1]<errors[0]/3 and errors[1]<1e-5
++
++
++def test_excited_synthetic_fits_response_and_weak_excitation_rank(tmp_path):
++    spec=read(Path(__file__).parents[1]/'experiment-spec.json')
++    for model,p in [('G1',[.03,.08,.08,.03]),('G2',[.18,.006,.002,.004,.09,.03])]:
++        s=synthetic(model,p,n=501);problem=FitProblem(model,[s],spec)
++        # A verification fit, deliberately offset from truth; never real-data seed selection.
++        x=np.r_[np.array(p)*1.15,27,53] if model=='G2' else np.r_[np.array(p)*1.15,27]
++        r=solve(problem,x,'synthetic',tmp_path/f'{model}.json',max_calls=1500)
++        assert r['converged'] and np.sqrt(np.mean(problem.residual(r['x'])**2))<1e-4
++    weak=synthetic('G2',p,excited=False);u=np.array([n['inputs'] for n in weak['timeline']])
++    assert np.linalg.matrix_rank(u-u.mean(axis=0),tol=1e-10)==0
+diff --git a/experiments/thermal_identification_v1/verify_results.py b/experiments/thermal_identification_v1/verify_results.py
+new file mode 100644
+index 0000000..eebe89e
+--- /dev/null
++++ b/experiments/thermal_identification_v1/verify_results.py
+@@ -0,0 +1,63 @@
++"""Read-back verification of saved artifacts; no refitting or device access."""
++import argparse
++import hashlib
++from pathlib import Path
++import numpy as np
++from scipy.linalg import expm
++from common import read,write,sha,stamp
++from evaluation import load_jsonl,cohort_id
++from greybox import matrices
++
++
++def main():
++    ap=argparse.ArgumentParser();ap.add_argument('--run',type=Path,required=True);ap.add_argument('--output',type=Path,required=True);a=ap.parse_args();root=a.run
++    assert not a.output.exists()
++    freeze=read(root/'freeze.json');assert all(sha(root/k)==v for k,v in freeze['files'].items())
++    direction=read(root/'directions-frozen.json');assert all(sha(root/k)==v for k,v in direction['files'].items())
++    data=read(root/'data.json');observations={r['ref']:r for r in data['accepted']};checks=[];independent45=0
++    for eid in ('F-LS','F-SL','F-POOL'):
++        pred=load_jsonl(root/'evaluation'/eid/'predictions.jsonl');states=load_jsonl(root/'evaluation'/eid/'states.jsonl')
++        smap={(r['ref'],r['model']):r for r in states if r['window']==60}
++        index={(r['ref'],r['h']):r for r in pred}
++        assert read(root/'evaluation'/eid/'evaluation-identity.json')['evaluated_at']>direction['frozen_at']
++        max_error=0.;counts=0
++        for r in pred:
++            original=observations[r['ref']]
++            assert original['mono_s']==r['t'] and r['input_available_cutoff']==r['t']
++            if r['label']:
++                label=observations[r['label']['ref']]
++                assert label['research_segment']==original['research_segment']
++                assert label['values']['tj']==r['label']['value']
++                assert 0<=label['mono_s']-(r['t']+r['h'])<=2
++            if r['h']==45 and r['label'] and index[(r['ref'],90)]['label'] is None:independent45+=1
++        for m in ('G1','G2'):
++            artifact=read(root/'fits'/f'{eid}-{m}/model.json');p=np.array(list(artifact['dynamic'].values()))
++            # Every 17th scored origin across all horizons: independent augmented-expm HOLD.
++            candidates=[r for r in pred if r['label'] and f'{m}-HOLD' in r['B']]
++            for r in candidates[::17]:
++                state=smap[(r['ref'],m)];ev=state['evidence']
++                assert ev['end']<=r['t'] and observations[ev['last_ref']]['mono_s']<=r['t']
++                assert ev['start']>=r['t']-60-1e-8
++                original=observations[r['ref']];u=[original['values']['vdd_gpu'],original['values']['vdd_cpu_soc_mss'],original['values']['duty']/100]
++                A,f=matrices(m,p,state['E'],u);n=len(A);M=np.zeros((n+1,n+1));M[:n,:n]=A;M[:n,-1]=f
++                got=(expm(M*r['h'])@np.r_[state['state'][:n],1])[0];delta=abs(got-r['B'][f'{m}-HOLD'])
++                assert delta<1e-8;max_error=max(max_error,delta);counts+=1
++            trials=[read(root/'fits'/f'{eid}-{m}/N{k}.json') for k in range(1,7)]
++            selected=min((t for t in trials if t['converged'] and t['finite']),key=lambda t:t['J'])
++            assert selected['seed']==artifact['selected_seed'] and all(t['actual_residual_calls']<=1500 for t in trials)
++        for r in read(root/'evaluation'/eid/'B-metrics.json'):
++            methods=list(r['metrics']);group=[p for p in pred if p['h']==r['h'] and p['label'] and all(m in p['B'] for m in methods)]
++            if r['scope']!='all':group=[p for p in group if p[r['scope']]==r['value']]
++            assert cohort_id(group)==r['cohort_id']
++            for m,v in r['metrics'].items():
++                assert len(group)==v['n'];w=np.array([p['duration'] for p in group]);w=w/w.sum()
++                mae=float(w@np.array([abs(p['B'][m]-p['label']['value']) for p in group]));assert abs(mae-v['mae'])<1e-10
++        checks.append(dict(experiment=eid,forecast_rows=len(pred),independent_expm_cases=counts,max_abs_expm_difference=max_error,all_cohorts_recomputed=True))
++    assert independent45>0
++    write(a.output,dict(checked_at=stamp(),freeze_verified=True,direction_models_unchanged=True,checks=checks,
++                       retained_45_labels_without_90_across_experiment_views=independent45,main_attempts=36,nested_attempts=1,
++                       control_authorization='none',target_validation='not_performed'))
++    print('saved results verified:',checks,'45 without 90:',independent45)
++
++
++if __name__=='__main__':main()

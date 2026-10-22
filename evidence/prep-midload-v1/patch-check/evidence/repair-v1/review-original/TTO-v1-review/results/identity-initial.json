@@ -1,0 +1,561 @@
+{
+  "checksums": [
+    {
+      "file": ".gitignore",
+      "match": true
+    },
+    {
+      "file": "PROGRESS.md",
+      "match": true
+    },
+    {
+      "file": "README.md",
+      "match": true
+    },
+    {
+      "file": "TTO-v1-\u5b9e\u65bd\u4e0e\u9a8c\u8bc1\u62a5\u544a.md",
+      "match": true
+    },
+    {
+      "file": "config/tto.example.json",
+      "match": true
+    },
+    {
+      "file": "docs/CLI\u4f7f\u7528\u5361.md",
+      "match": true
+    },
+    {
+      "file": "docs/TTO-PLAN-v1.0.md",
+      "match": true
+    },
+    {
+      "file": "docs/contracts.md",
+      "match": true
+    },
+    {
+      "file": "evidence/browser-console.txt",
+      "match": true
+    },
+    {
+      "file": "evidence/browser-requests-final.txt",
+      "match": true
+    },
+    {
+      "file": "evidence/browser-snapshot.txt",
+      "match": true
+    },
+    {
+      "file": "evidence/failures/README.md",
+      "match": true
+    },
+    {
+      "file": "evidence/failures/browser-open-first.txt",
+      "match": true
+    },
+    {
+      "file": "evidence/failures/browser-open.txt",
+      "match": true
+    },
+    {
+      "file": "evidence/failures/demo-first.txt",
+      "match": true
+    },
+    {
+      "file": "evidence/failures/final-tests-python310-v3.txt",
+      "match": true
+    },
+    {
+      "file": "evidence/failures/phase-b-first-regression.txt",
+      "match": true
+    },
+    {
+      "file": "evidence/failures/phase-b-first-setup-failure.txt",
+      "match": true
+    },
+    {
+      "file": "evidence/failures/python310-lock-collision.txt",
+      "match": true
+    },
+    {
+      "file": "evidence/failures/signals-first.txt",
+      "match": true
+    },
+    {
+      "file": "evidence/final/benchmark.json",
+      "match": true
+    },
+    {
+      "file": "evidence/final/benchmark.txt",
+      "match": true
+    },
+    {
+      "file": "evidence/final/demo.txt",
+      "match": true
+    },
+    {
+      "file": "evidence/final/doctor.txt",
+      "match": true
+    },
+    {
+      "file": "evidence/final/junit.xml",
+      "match": true
+    },
+    {
+      "file": "evidence/final/linux-dependency-identity.json",
+      "match": true
+    },
+    {
+      "file": "evidence/final/model-via-cli.json.resource.json",
+      "match": true
+    },
+    {
+      "file": "evidence/final/signals-result.json",
+      "match": true
+    },
+    {
+      "file": "evidence/final/signals.txt",
+      "match": true
+    },
+    {
+      "file": "evidence/final/software-identity.json",
+      "match": true
+    },
+    {
+      "file": "evidence/final/tests.txt",
+      "match": true
+    },
+    {
+      "file": "evidence/final/train.txt",
+      "match": true
+    },
+    {
+      "file": "evidence/final/verification.json",
+      "match": true
+    },
+    {
+      "file": "evidence/final-candidate-replay.txt",
+      "match": true
+    },
+    {
+      "file": "evidence/independent-wheel-install.txt",
+      "match": true
+    },
+    {
+      "file": "evidence/linux-wheel-resolution.txt",
+      "match": true
+    },
+    {
+      "file": "evidence/reference-identities.json",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/SIMULATION-ONLY.json",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/collection-report/report.html",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/collection-report/report.json",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/collection-report/report.md",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/evaluation/evaluation.json",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/evaluation/predictions.jsonl",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/evaluation/report.html",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/evaluation/report.md",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/frozen/dataset.json",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/frozen/split.json",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/frozen/test-used.json",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/model-simulation.json",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144323.379691_0000-e7a29ff5/events.jsonl",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144323.379691_0000-e7a29ff5/files.json",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144323.379691_0000-e7a29ff5/manifest.json",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144323.379691_0000-e7a29ff5/observations-0001.jsonl",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144323.379691_0000-e7a29ff5/predictions.jsonl",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144323.379691_0000-e7a29ff5/scores.jsonl",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144323.379691_0000-e7a29ff5/summary.json",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144323.645776_0000-46e6f518/events.jsonl",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144323.645776_0000-46e6f518/files.json",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144323.645776_0000-46e6f518/manifest.json",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144323.645776_0000-46e6f518/observations-0001.jsonl",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144323.645776_0000-46e6f518/predictions.jsonl",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144323.645776_0000-46e6f518/scores.jsonl",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144323.645776_0000-46e6f518/summary.json",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144323.917094_0000-8841f2ae/events.jsonl",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144323.917094_0000-8841f2ae/files.json",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144323.917094_0000-8841f2ae/manifest.json",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144323.917094_0000-8841f2ae/observations-0001.jsonl",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144323.917094_0000-8841f2ae/predictions.jsonl",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144323.917094_0000-8841f2ae/scores.jsonl",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144323.917094_0000-8841f2ae/summary.json",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144324.184241_0000-f3e6a35d/events.jsonl",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144324.184241_0000-f3e6a35d/files.json",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144324.184241_0000-f3e6a35d/manifest.json",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144324.184241_0000-f3e6a35d/observations-0001.jsonl",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144324.184241_0000-f3e6a35d/predictions.jsonl",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144324.184241_0000-f3e6a35d/scores.jsonl",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144324.184241_0000-f3e6a35d/summary.json",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144324.452049_0000-a9129044/events.jsonl",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144324.452049_0000-a9129044/files.json",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144324.452049_0000-a9129044/manifest.json",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144324.452049_0000-a9129044/observations-0001.jsonl",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144324.452049_0000-a9129044/predictions.jsonl",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144324.452049_0000-a9129044/scores.jsonl",
+      "match": true
+    },
+    {
+      "file": "evidence/simulation/synthetic-runs/run-2026-10-10T144324.452049_0000-a9129044/summary.json",
+      "match": true
+    },
+    {
+      "file": "evidence/wheel-build.txt",
+      "match": true
+    },
+    {
+      "file": "output/playwright/tto-evaluation.png",
+      "match": true
+    },
+    {
+      "file": "pyproject.toml",
+      "match": true
+    },
+    {
+      "file": "requirements-locked.txt",
+      "match": true
+    },
+    {
+      "file": "scripts/benchmark_offline.py",
+      "match": true
+    },
+    {
+      "file": "scripts/package_evidence.py",
+      "match": true
+    },
+    {
+      "file": "scripts/reproduce_offline.py",
+      "match": true
+    },
+    {
+      "file": "scripts/verify_signals.py",
+      "match": true
+    },
+    {
+      "file": "src/tto/__init__.py",
+      "match": true
+    },
+    {
+      "file": "src/tto/__main__.py",
+      "match": true
+    },
+    {
+      "file": "src/tto/cli.py",
+      "match": true
+    },
+    {
+      "file": "src/tto/collector.py",
+      "match": true
+    },
+    {
+      "file": "src/tto/config.py",
+      "match": true
+    },
+    {
+      "file": "src/tto/dataset.py",
+      "match": true
+    },
+    {
+      "file": "src/tto/defaults.json",
+      "match": true
+    },
+    {
+      "file": "src/tto/demo.py",
+      "match": true
+    },
+    {
+      "file": "src/tto/deployment.py",
+      "match": true
+    },
+    {
+      "file": "src/tto/engine.py",
+      "match": true
+    },
+    {
+      "file": "src/tto/evaluation.py",
+      "match": true
+    },
+    {
+      "file": "src/tto/features.py",
+      "match": true
+    },
+    {
+      "file": "src/tto/model.py",
+      "match": true
+    },
+    {
+      "file": "src/tto/quality.py",
+      "match": true
+    },
+    {
+      "file": "src/tto/report.py",
+      "match": true
+    },
+    {
+      "file": "src/tto/storage.py",
+      "match": true
+    },
+    {
+      "file": "src/tto/training.py",
+      "match": true
+    },
+    {
+      "file": "src/tto/util.py",
+      "match": true
+    },
+    {
+      "file": "templates/deployment-record.example.json",
+      "match": true
+    },
+    {
+      "file": "tests/conftest.py",
+      "match": true
+    },
+    {
+      "file": "tests/test_config_storage.py",
+      "match": true
+    },
+    {
+      "file": "tests/test_failures.py",
+      "match": true
+    },
+    {
+      "file": "tests/test_modeling.py",
+      "match": true
+    },
+    {
+      "file": "tests/test_network.py",
+      "match": true
+    },
+    {
+      "file": "tests/test_quality.py",
+      "match": true
+    },
+    {
+      "file": "wheels/tianshan_thermal_observer-0.1.0-py3-none-any.whl",
+      "match": true
+    }
+  ],
+  "wheel_files": [
+    {
+      "file": "tto/__init__.py",
+      "match": true
+    },
+    {
+      "file": "tto/__main__.py",
+      "match": true
+    },
+    {
+      "file": "tto/cli.py",
+      "match": true
+    },
+    {
+      "file": "tto/collector.py",
+      "match": true
+    },
+    {
+      "file": "tto/config.py",
+      "match": true
+    },
+    {
+      "file": "tto/dataset.py",
+      "match": true
+    },
+    {
+      "file": "tto/defaults.json",
+      "match": true
+    },
+    {
+      "file": "tto/demo.py",
+      "match": true
+    },
+    {
+      "file": "tto/deployment.py",
+      "match": true
+    },
+    {
+      "file": "tto/engine.py",
+      "match": true
+    },
+    {
+      "file": "tto/evaluation.py",
+      "match": true
+    },
+    {
+      "file": "tto/features.py",
+      "match": true
+    },
+    {
+      "file": "tto/model.py",
+      "match": true
+    },
+    {
+      "file": "tto/quality.py",
+      "match": true
+    },
+    {
+      "file": "tto/report.py",
+      "match": true
+    },
+    {
+      "file": "tto/storage.py",
+      "match": true
+    },
+    {
+      "file": "tto/training.py",
+      "match": true
+    },
+    {
+      "file": "tto/util.py",
+      "match": true
+    }
+  ],
+  "wheel_sha256": "2498062c139b70241a42c942305e269d2c4f88bf153fe6b35ba4bc3d5299b03b",
+  "available_versions": {
+    "numpy": "2.3.5",
+    "scipy": "1.17.0",
+    "scikit-learn": "1.8.0",
+    "pytest": "9.0.2",
+    "pytest-asyncio": "1.3.0",
+    "psutil": "7.2.2",
+    "aiohttp": "3.13.3",
+    "threadpoolctl": "3.6.0"
+  }
+}

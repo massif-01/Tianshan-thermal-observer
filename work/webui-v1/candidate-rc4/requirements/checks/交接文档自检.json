@@ -1,0 +1,58 @@
+{
+  "kind": "document/contract checks only, not Web software or field acceptance",
+  "executed_at_document_date": "2026-10-20",
+  "checks": [
+    {
+      "check": "example-degraded.json",
+      "result": "schema and semantic sample checks passed",
+      "source": "synthetic only"
+    },
+    {
+      "check": "example-matured.json",
+      "result": "schema and semantic sample checks passed",
+      "source": "synthetic only"
+    },
+    {
+      "check": "example-tracking.json",
+      "result": "schema and semantic sample checks passed",
+      "source": "synthetic only"
+    },
+    {
+      "check": "example-waiting.json",
+      "result": "schema and semantic sample checks passed",
+      "source": "synthetic only"
+    },
+    {
+      "check": "invalid_status_with_live_value_rejected",
+      "result": "passed"
+    },
+    {
+      "check": "invented_confidence_rejected",
+      "result": "passed"
+    },
+    {
+      "check": "device_write_permission_rejected",
+      "result": "passed"
+    },
+    {
+      "check": "port_59009_and_default_follow",
+      "result": "passed"
+    },
+    {
+      "check": "topology_ids_and_roles",
+      "result": "passed"
+    },
+    {
+      "check": "offline_html_sections_and_tables",
+      "result": "passed",
+      "tables": 12
+    }
+  ],
+  "relative_links": [],
+  "live_device_access": false,
+  "code_implementation": false,
+  "notes": [
+    "The PRD defines new work; code/installation must be implemented and independently reviewed.",
+    "Source scan is limited to disclosed archives and sample schemas, not current firmware tachometer calibration."
+  ]
+}

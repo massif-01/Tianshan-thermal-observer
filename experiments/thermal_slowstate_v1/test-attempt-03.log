@@ -1,0 +1,24 @@
+.........F..                                                             [100%]
+=================================== FAILURES ===================================
+___________ test_expiry_keeps_fast_TJ_and_tail_bins_do_not_overcount ___________
+
+    def test_expiry_keeps_fast_TJ_and_tail_bins_do_not_overcount():
+        ledger=jsonlines(ROOT/'results/fast-status-and-demand-ledger.jsonl')
+        expiry=[r for r in ledger if r['event']=='known_input_expiry']
+        assert expiry
+        kept=[r for r in expiry if r['measured_TJ_valid']]
+        assert kept and all(r['measured_TJ'] is not None and r['normal_extra_demand_index'] is None for r in kept)
+        tails=read(ROOT/'results/post-task-tail-metrics.json')
+        for row in tails:
+            if row['status']=='unavailable_at_end':
+                assert row['branches'] is None
+                continue
+            for label,value in row['bins'].items():
+                lo,hi=map(float,label[:-1].split('-'))
+>               assert value['available_seconds']<=hi-lo+1e-7
+E               assert 30.000001192092896 <= ((45.0 - 15.0) + 1e-07)
+
+experiments/thermal_slowstate_v1/tests/test_slowstate.py:193: AssertionError
+=========================== short test summary info ============================
+FAILED experiments/thermal_slowstate_v1/tests/test_slowstate.py::test_expiry_keeps_fast_TJ_and_tail_bins_do_not_overcount
+1 failed, 11 passed in 3.43s

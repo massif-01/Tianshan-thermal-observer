@@ -1,0 +1,97 @@
+{
+  "contract": "TTO-CPU-PREP-CLOSE-v1.0-R1",
+  "reporter_version": "cpu-joint-reporter-1.0.1",
+  "reporter_manifest_sha256": "80285a84bdb6fc7972413f64e2b1820d387718113345184172a2d69ead2fe8da",
+  "data_source": {
+    "category": "declared_field_unverified",
+    "label_zh": "声明现场，证据另核",
+    "synthetic_only": false,
+    "identity_association_verified": true,
+    "physical_source_verified": false,
+    "Thor_N305_verified": false,
+    "source_timing_verified": false,
+    "reasons": [
+      "field_declaration_is_not_hardware_or_timing_verification"
+    ],
+    "metadata_sha256": {
+      "launch.json": "0b8bd15d923958c60d588b5bb63b835efc7b9cb8a197de31dc6673ecd30472d1",
+      "native-binding.json": "82245831c84a911cb0c09ca67e06d316af79fb7162a73bc963e5f06e6acb297e",
+      "native/run-2026-10-20T140251.807504_0000-80938521/manifest.json": "0f2cf2b922b74011e9d6d79487ab95068edeaefcd2d5883a14e492c9a8fd5143",
+      "adapted/registration.json": "d7693ae5ea08bb8678a5eba8e5d85403ff18673ca595ece63427a60c3af29839",
+      "adapted/sources.json": "9c7ee5b22fea1b40f5f895cc222e86779e4b3449b954f081a9cfc93b6a68f56c"
+    },
+    "declarations": [
+      {
+        "source": "launch",
+        "field": "synthetic_loopback_only",
+        "value": false
+      },
+      {
+        "source": "launch.binding",
+        "field": "synthetic_loopback_only",
+        "value": false
+      },
+      {
+        "source": "manifest",
+        "field": "simulated",
+        "value": false
+      },
+      {
+        "source": "registration",
+        "field": "declared_role",
+        "value": "targeted_recorded_arrival_research"
+      }
+    ],
+    "run_id": "80938521-b659-4160-a7b2-5fdfb6ebc197",
+    "command_id": "cpu2-capability-20261020-1ca3a249-8ea9-4608-aa05-105f9aff5614",
+    "declared_role": "targeted_recorded_arrival_research",
+    "saw_new_data_for_parameter_selection": false
+  },
+  "synthetic_only": false,
+  "new_physical_temperature_scores": false,
+  "source_lead_or_control_benefit": false,
+  "evaluate_stream_called": true,
+  "analysis_complete": true,
+  "reporter_execution": {
+    "network_clients": 0,
+    "device_connections": 0,
+    "parameter_search": 0
+  },
+  "status": "analysed",
+  "source_declaration_unresolved": false,
+  "actual_wire_to_source_rows_verified": 27,
+  "frames": 221,
+  "Activity_counts": {
+    "INPUT-BASE": {
+      "UNKNOWN": 4,
+      "IDLE": 217
+    },
+    "INPUT-MEAN": {
+      "UNKNOWN": 179,
+      "IDLE": 3,
+      "ACTIVE": 39
+    },
+    "INPUT-CORE": {
+      "UNKNOWN": 179,
+      "IDLE": 3,
+      "ACTIVE": 39
+    }
+  },
+  "variant_has_nonUNKNOWN": {
+    "INPUT-BASE": true,
+    "INPUT-MEAN": true,
+    "INPUT-CORE": true
+  },
+  "activity_comparison_status": "some_available",
+  "actual_sender_receiver_artifacts_used": true,
+  "manual_model_FRAME_used": false,
+  "original_TJ_origins": 60,
+  "revocations": {
+    "native_epoch_changed": 2,
+    "missing_complete_raw_counter_window": 1,
+    "transport_receiver_total_resource_budget_exceeded": 1
+  },
+  "candidate_sha256": "89ae53229af3e84b3bae1140a1ce013d6bf16e374cd5d3ffcde6fc7d28b78831",
+  "analysis_spec_sha256": "df26198dd631a45564d88c10b7b30433ab8b272cb4cf5d3726d7be6eacbab716",
+  "actual_and_1s_delivery_conditions_written": true
+}

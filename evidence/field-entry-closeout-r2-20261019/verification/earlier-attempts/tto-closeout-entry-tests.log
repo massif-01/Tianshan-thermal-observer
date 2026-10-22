@@ -1,0 +1,21 @@
+test_async_generated_not_equal_now_is_usable (__main__.EntryTests.test_async_generated_not_equal_now_is_usable) ... ok
+test_current_command_only_and_no_old_override (__main__.EntryTests.test_current_command_only_and_no_old_override) ... ok
+test_diagnostic_can_never_emit_load (__main__.EntryTests.test_diagnostic_can_never_emit_load) ... ok
+test_finite_model_does_not_override_expired_pwm (__main__.EntryTests.test_finite_model_does_not_override_expired_pwm) ... ok
+test_lifetime_lock_and_permanent_command_claim (__main__.EntryTests.test_lifetime_lock_and_permanent_command_claim) ... ok
+test_mismatched_clock_domain (__main__.EntryTests.test_mismatched_clock_domain) ... ok
+test_model_permission_not_authority (__main__.EntryTests.test_model_permission_not_authority) ... ok
+test_no_more_messages_expire_without_feed (__main__.EntryTests.test_no_more_messages_expire_without_feed) ... ok
+test_preview_no_socket_or_credential_reads (__main__.EntryTests.test_preview_no_socket_or_credential_reads) ... ok
+test_provisional_finite_is_not_ready (__main__.EntryTests.test_provisional_finite_is_not_ready) ... ok
+test_run_requires_network_flag_before_clients (__main__.EntryTests.test_run_requires_network_flag_before_clients) ... usage: test_entry.py [-h] [--version]
+                     {verify-install,preview,diagnose,execute} ...
+test_entry.py: error: Run commands require --allow-network and a current bound authorization; preview is offline.
+ok
+test_threaded_evidence_counter (__main__.EntryTests.test_threaded_evidence_counter) ... ok
+test_unknown_safety_is_not_normal (__main__.EntryTests.test_unknown_safety_is_not_normal) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.066s
+
+OK

@@ -1,0 +1,1008 @@
+{
+  "schema": "TTO-CPU-CAPABILITY-RECEIPT-v2",
+  "candidate_version": "0.2.4+cpu.3",
+  "config_sha256": "525b3bb83be7199b80fbc234a39e9be08fdd01b16763770c61aa9d25c069e76a",
+  "sidecar_config_sha256": "ee9ebe39df978b236077d31f393e94de4bade6019e5608e4e1338ef9e0b0b4e2",
+  "qualified": false,
+  "checks": {
+    "thread_policy": true,
+    "baseline_resources": true,
+    "native_delay_budget": true,
+    "complete_native": true,
+    "packets": true,
+    "clock_identified": true,
+    "cpu_measured": false,
+    "read_budget": true,
+    "jitter_budget": true,
+    "no_sidecar_trip": true,
+    "native_fan_gap": true
+  },
+  "evaluation_scope": "arrival_side",
+  "automatic_work_authorization": false,
+  "actual_sidecar_interval": {
+    "start_mono_s": 30.067727165995166,
+    "stop_mono_s": 60.07519012503326
+  },
+  "baseline_admission": {
+    "evaluated_mono_s": 30.063409583061002,
+    "resource_sample": {
+      "mono_s": 29.652130000060424,
+      "interval_start_mono_s": 28.627941166050732,
+      "cpu_pct_single_core": 2.6120308200652462,
+      "rss_bytes": 72957952,
+      "cpu_times": {
+        "user": 0.688579904,
+        "system": 0.276662112,
+        "children_user": 0.0,
+        "children_system": 0.0
+      },
+      "resource_error": null,
+      "resource_seq": 29,
+      "field_log_bytes": 1403451,
+      "native_log_bytes": 179721
+    },
+    "cpu_limit_single_core_percent": 8.0,
+    "rss_limit_bytes": 134217728,
+    "allowed": true,
+    "reason": "baseline_receiver_resources_qualified",
+    "interval_contract": "latest actual1s interval; start>=1s, span0.5..2s, age0..1.5s; no averaging or host-core normalization",
+    "sample_age_s": 0.411279583000578
+  },
+  "resource_check_evidence": {
+    "native_callback_lag_p95_s": {
+      "before": 0.005161249893717468,
+      "during": 0.005638708011247218,
+      "after": null
+    },
+    "read_p95_s": 0.004907874972559512,
+    "jitter_p95_s": 0.0051470056641846895,
+    "resources_by_actual_phase": {
+      "before": [
+        {
+          "mono_s": 1.0167531250044703,
+          "interval_start_mono_s": null,
+          "cpu_pct_single_core": null,
+          "rss_bytes": 71188480,
+          "cpu_times": {
+            "user": 0.210024128,
+            "system": 0.046072168,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 1,
+          "field_log_bytes": 50235,
+          "native_log_bytes": 17922
+        },
+        {
+          "mono_s": 2.039850207976997,
+          "interval_start_mono_s": 1.0167531250044703,
+          "cpu_pct_single_core": 2.2378415871815,
+          "rss_bytes": 71876608,
+          "cpu_times": {
+            "user": 0.226278464,
+            "system": 0.052713124,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 2,
+          "field_log_bytes": 96521,
+          "native_log_bytes": 22515
+        },
+        {
+          "mono_s": 3.061439916025847,
+          "interval_start_mono_s": 2.039850207976997,
+          "cpu_pct_single_core": 3.0372150145541914,
+          "rss_bytes": 72138752,
+          "cpu_times": {
+            "user": 0.24703088,
+            "system": 0.062988584,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 3,
+          "field_log_bytes": 142839,
+          "native_log_bytes": 27106
+        },
+        {
+          "mono_s": 4.08182816603221,
+          "interval_start_mono_s": 3.061439916025847,
+          "cpu_pct_single_core": 2.69681584434438,
+          "rss_bytes": 72286208,
+          "cpu_times": {
+            "user": 0.265799584,
+            "system": 0.071737872,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 4,
+          "field_log_bytes": 210647,
+          "native_log_bytes": 33223
+        },
+        {
+          "mono_s": 5.103140749968588,
+          "interval_start_mono_s": 4.08182816603221,
+          "cpu_pct_single_core": 1.7106324033199611,
+          "rss_bytes": 72302592,
+          "cpu_times": {
+            "user": 0.2783024,
+            "system": 0.07670596,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 5,
+          "field_log_bytes": 267775,
+          "native_log_bytes": 38809
+        },
+        {
+          "mono_s": 6.119965875055641,
+          "interval_start_mono_s": 5.103140749968588,
+          "cpu_pct_single_core": 1.5378683722691502,
+          "rss_bytes": 72384512,
+          "cpu_times": {
+            "user": 0.289409664,
+            "system": 0.081236128,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 6,
+          "field_log_bytes": 313920,
+          "native_log_bytes": 47341
+        },
+        {
+          "mono_s": 7.149019666016102,
+          "interval_start_mono_s": 6.119965875055641,
+          "cpu_pct_single_core": 2.136340023535723,
+          "rss_bytes": 72384512,
+          "cpu_times": {
+            "user": 0.304656544,
+            "system": 0.087973336,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 7,
+          "field_log_bytes": 359919,
+          "native_log_bytes": 51936
+        },
+        {
+          "mono_s": 8.172148457961157,
+          "interval_start_mono_s": 7.149019666016102,
+          "cpu_pct_single_core": 2.1782078830596387,
+          "rss_bytes": 72400896,
+          "cpu_times": {
+            "user": 0.319586336,
+            "system": 0.095329416,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 8,
+          "field_log_bytes": 405914,
+          "native_log_bytes": 56533
+        },
+        {
+          "mono_s": 9.19143983302638,
+          "interval_start_mono_s": 8.172148457961157,
+          "cpu_pct_single_core": 2.4240134474226243,
+          "rss_bytes": 72450048,
+          "cpu_times": {
+            "user": 0.33646576,
+            "system": 0.103157752,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 9,
+          "field_log_bytes": 451894,
+          "native_log_bytes": 61131
+        },
+        {
+          "mono_s": 10.220700000063516,
+          "interval_start_mono_s": 9.19143983302638,
+          "cpu_pct_single_core": 2.908213196102437,
+          "rss_bytes": 72466432,
+          "cpu_times": {
+            "user": 0.356245088,
+            "system": 0.113311504,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 10,
+          "field_log_bytes": 508197,
+          "native_log_bytes": 66719
+        },
+        {
+          "mono_s": 11.244993583066389,
+          "interval_start_mono_s": 10.220700000063516,
+          "cpu_pct_single_core": 2.5139503387797526,
+          "rss_bytes": 72466432,
+          "cpu_times": {
+            "user": 0.373676448,
+            "system": 0.121630376,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 11,
+          "field_log_bytes": 553645,
+          "native_log_bytes": 75859
+        },
+        {
+          "mono_s": 12.261097291018814,
+          "interval_start_mono_s": 11.244993583066389,
+          "cpu_pct_single_core": 2.2068810323689787,
+          "rss_bytes": 72482816,
+          "cpu_times": {
+            "user": 0.389238528,
+            "system": 0.128492496,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 12,
+          "field_log_bytes": 599045,
+          "native_log_bytes": 80455
+        },
+        {
+          "mono_s": 13.28360020800028,
+          "interval_start_mono_s": 12.261097291018814,
+          "cpu_pct_single_core": 2.5705299773219648,
+          "rss_bytes": 72515584,
+          "cpu_times": {
+            "user": 0.406111264,
+            "system": 0.137903504,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 13,
+          "field_log_bytes": 644441,
+          "native_log_bytes": 85048
+        },
+        {
+          "mono_s": 14.30608858296182,
+          "interval_start_mono_s": 13.28360020800028,
+          "cpu_pct_single_core": 2.4357346850947503,
+          "rss_bytes": 72630272,
+          "cpu_times": {
+            "user": 0.423139328,
+            "system": 0.145780544,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 14,
+          "field_log_bytes": 689854,
+          "native_log_bytes": 89646
+        },
+        {
+          "mono_s": 15.328819000045769,
+          "interval_start_mono_s": 14.30608858296182,
+          "cpu_pct_single_core": 3.299489233557254,
+          "rss_bytes": 72695808,
+          "cpu_times": {
+            "user": 0.445308128,
+            "system": 0.157356624,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 15,
+          "field_log_bytes": 745946,
+          "native_log_bytes": 95233
+        },
+        {
+          "mono_s": 16.350082874996588,
+          "interval_start_mono_s": 15.328819000045769,
+          "cpu_pct_single_core": 2.2900095238487,
+          "rss_bytes": 72695808,
+          "cpu_times": {
+            "user": 0.460689632,
+            "system": 0.16536216,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 16,
+          "field_log_bytes": 791378,
+          "native_log_bytes": 105264
+        },
+        {
+          "mono_s": 17.3728282910306,
+          "interval_start_mono_s": 16.350082874996588,
+          "cpu_pct_single_core": 2.4091938828284603,
+          "rss_bytes": 72712192,
+          "cpu_times": {
+            "user": 0.476813088,
+            "system": 0.173878624,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 17,
+          "field_log_bytes": 836759,
+          "native_log_bytes": 109865
+        },
+        {
+          "mono_s": 18.397526666056365,
+          "interval_start_mono_s": 17.3728282910306,
+          "cpu_pct_single_core": 2.6851530821748693,
+          "rss_bytes": 72712192,
+          "cpu_times": {
+            "user": 0.494503552,
+            "system": 0.18370288,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 18,
+          "field_log_bytes": 882186,
+          "native_log_bytes": 114463
+        },
+        {
+          "mono_s": 19.419018249958754,
+          "interval_start_mono_s": 18.397526666056365,
+          "cpu_pct_single_core": 2.3264442286653986,
+          "rss_bytes": 72744960,
+          "cpu_times": {
+            "user": 0.509874912,
+            "system": 0.192095952,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 19,
+          "field_log_bytes": 927633,
+          "native_log_bytes": 119065
+        },
+        {
+          "mono_s": 20.44031095795799,
+          "interval_start_mono_s": 19.419018249958754,
+          "cpu_pct_single_core": 2.6057501235013127,
+          "rss_bytes": 72744960,
+          "cpu_times": {
+            "user": 0.528164576,
+            "system": 0.200418624,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 20,
+          "field_log_bytes": 983732,
+          "native_log_bytes": 124652
+        },
+        {
+          "mono_s": 21.461393082980067,
+          "interval_start_mono_s": 20.44031095795799,
+          "cpu_pct_single_core": 2.652721395883256,
+          "rss_bytes": 72761344,
+          "cpu_times": {
+            "user": 0.546476672,
+            "system": 0.209192992,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 21,
+          "field_log_bytes": 1029186,
+          "native_log_bytes": 135299
+        },
+        {
+          "mono_s": 22.482755000004545,
+          "interval_start_mono_s": 21.461393082980067,
+          "cpu_pct_single_core": 2.555776514171159,
+          "rss_bytes": 72761344,
+          "cpu_times": {
+            "user": 0.56447264,
+            "system": 0.217300752,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 22,
+          "field_log_bytes": 1074627,
+          "native_log_bytes": 139900
+        },
+        {
+          "mono_s": 23.504479540977627,
+          "interval_start_mono_s": 22.482755000004545,
+          "cpu_pct_single_core": 2.6159222890491534,
+          "rss_bytes": 72794112,
+          "cpu_times": {
+            "user": 0.58248928,
+            "system": 0.226011632,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 23,
+          "field_log_bytes": 1120075,
+          "native_log_bytes": 144502
+        },
+        {
+          "mono_s": 24.531443165964447,
+          "interval_start_mono_s": 23.504479540977627,
+          "cpu_pct_single_core": 2.295799327878107,
+          "rss_bytes": 72859648,
+          "cpu_times": {
+            "user": 0.599162688,
+            "system": 0.232915248,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 24,
+          "field_log_bytes": 1165531,
+          "native_log_bytes": 149100
+        },
+        {
+          "mono_s": 25.556537666008808,
+          "interval_start_mono_s": 24.531443165964447,
+          "cpu_pct_single_core": 3.079558421065944,
+          "rss_bytes": 72876032,
+          "cpu_times": {
+            "user": 0.620052608,
+            "system": 0.243593712,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 25,
+          "field_log_bytes": 1221636,
+          "native_log_bytes": 154686
+        },
+        {
+          "mono_s": 26.579653957975097,
+          "interval_start_mono_s": 25.556537666008808,
+          "cpu_pct_single_core": 2.8237071608426554,
+          "rss_bytes": 72908800,
+          "cpu_times": {
+            "user": 0.638942464,
+            "system": 0.253593664,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 26,
+          "field_log_bytes": 1267106,
+          "native_log_bytes": 165920
+        },
+        {
+          "mono_s": 27.60531841602642,
+          "interval_start_mono_s": 26.579653957975097,
+          "cpu_pct_single_core": 2.4476917185662925,
+          "rss_bytes": 72925184,
+          "cpu_times": {
+            "user": 0.655414144,
+            "system": 0.262227088,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 27,
+          "field_log_bytes": 1312565,
+          "native_log_bytes": 170521
+        },
+        {
+          "mono_s": 28.627941166050732,
+          "interval_start_mono_s": 27.60531841602642,
+          "cpu_pct_single_core": 2.0387436128821035,
+          "rss_bytes": 72957952,
+          "cpu_times": {
+            "user": 0.670444672,
+            "system": 0.268045216,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 28,
+          "field_log_bytes": 1358030,
+          "native_log_bytes": 175122
+        },
+        {
+          "mono_s": 29.652130000060424,
+          "interval_start_mono_s": 28.627941166050732,
+          "cpu_pct_single_core": 2.6120308200652462,
+          "rss_bytes": 72957952,
+          "cpu_times": {
+            "user": 0.688579904,
+            "system": 0.276662112,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 29,
+          "field_log_bytes": 1403451,
+          "native_log_bytes": 179721
+        }
+      ],
+      "during": [
+        {
+          "mono_s": 30.672063625068404,
+          "interval_start_mono_s": 29.652130000060424,
+          "cpu_pct_single_core": 1.844044704365236,
+          "rss_bytes": 73170944,
+          "cpu_times": {
+            "user": 0.699444928,
+            "system": 0.28460512,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 30,
+          "field_log_bytes": 1485302,
+          "native_log_bytes": 185312
+        },
+        {
+          "mono_s": 31.696750957984477,
+          "interval_start_mono_s": 30.672063625068404,
+          "cpu_pct_single_core": 2.4965836092847646,
+          "rss_bytes": 73187328,
+          "cpu_times": {
+            "user": 0.71674144,
+            "system": 0.292890784,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 31,
+          "field_log_bytes": 1575422,
+          "native_log_bytes": 197221
+        },
+        {
+          "mono_s": 32.713647832977585,
+          "interval_start_mono_s": 31.696750957984477,
+          "cpu_pct_single_core": 3.0738818034239674,
+          "rss_bytes": 73252864,
+          "cpu_times": {
+            "user": 0.737769984,
+            "system": 0.303120448,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 32,
+          "field_log_bytes": 1676122,
+          "native_log_bytes": 204908
+        },
+        {
+          "mono_s": 33.73144983302336,
+          "interval_start_mono_s": 32.713647832977585,
+          "cpu_pct_single_core": 2.4680823970546464,
+          "rss_bytes": 73302016,
+          "cpu_times": {
+            "user": 0.754389504,
+            "system": 0.31162112,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 33,
+          "field_log_bytes": 1775117,
+          "native_log_bytes": 209509
+        },
+        {
+          "mono_s": 34.74998504098039,
+          "interval_start_mono_s": 33.73144983302336,
+          "cpu_pct_single_core": 2.292167007837472,
+          "rss_bytes": 73318400,
+          "cpu_times": {
+            "user": 0.770411648,
+            "system": 0.318945504,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 34,
+          "field_log_bytes": 1865182,
+          "native_log_bytes": 214115
+        },
+        {
+          "mono_s": 35.76980808295775,
+          "interval_start_mono_s": 34.74998504098039,
+          "cpu_pct_single_core": 2.574294452996187,
+          "rss_bytes": 73318400,
+          "cpu_times": {
+            "user": 0.789809152,
+            "system": 0.325801248,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 35,
+          "field_log_bytes": 1965922,
+          "native_log_bytes": 227676
+        },
+        {
+          "mono_s": 36.79051145806443,
+          "interval_start_mono_s": 35.76980808295775,
+          "cpu_pct_single_core": 2.527859966888348,
+          "rss_bytes": 73334784,
+          "cpu_times": {
+            "user": 0.808301568,
+            "system": 0.333110784,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 36,
+          "field_log_bytes": 2056086,
+          "native_log_bytes": 232278
+        },
+        {
+          "mono_s": 37.80962287506554,
+          "interval_start_mono_s": 36.79051145806443,
+          "cpu_pct_single_core": 2.2299551963487954,
+          "rss_bytes": 73351168,
+          "cpu_times": {
+            "user": 0.82444512,
+            "system": 0.33969296,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 37,
+          "field_log_bytes": 2146081,
+          "native_log_bytes": 236881
+        },
+        {
+          "mono_s": 38.834826249978505,
+          "interval_start_mono_s": 37.80962287506554,
+          "cpu_pct_single_core": 2.5473314504272944,
+          "rss_bytes": 73383936,
+          "cpu_times": {
+            "user": 0.84125248,
+            "system": 0.349000928,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 38,
+          "field_log_bytes": 2235782,
+          "native_log_bytes": 241483
+        },
+        {
+          "mono_s": 39.85188312502578,
+          "interval_start_mono_s": 38.834826249978505,
+          "cpu_pct_single_core": 1.474563750360862,
+          "rss_bytes": 73383936,
+          "cpu_times": {
+            "user": 0.851939008,
+            "system": 0.353311552,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 39,
+          "field_log_bytes": 2325804,
+          "native_log_bytes": 246082
+        },
+        {
+          "mono_s": 40.870130333001725,
+          "interval_start_mono_s": 39.85188312502578,
+          "cpu_pct_single_core": 2.9443977616787276,
+          "rss_bytes": 73433088,
+          "cpu_times": {
+            "user": 0.872889216,
+            "system": 0.362342592,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 40,
+          "field_log_bytes": 2426618,
+          "native_log_bytes": 260226
+        },
+        {
+          "mono_s": 41.89303691603709,
+          "interval_start_mono_s": 40.870130333001725,
+          "cpu_pct_single_core": 2.852883780785207,
+          "rss_bytes": 73482240,
+          "cpu_times": {
+            "user": 0.89188352,
+            "system": 0.372530624,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 41,
+          "field_log_bytes": 2516687,
+          "native_log_bytes": 264831
+        },
+        {
+          "mono_s": 42.91245104104746,
+          "interval_start_mono_s": 41.89303691603709,
+          "cpu_pct_single_core": 2.110595828734581,
+          "rss_bytes": 73482240,
+          "cpu_times": {
+            "user": 0.907011648,
+            "system": 0.378918208,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 42,
+          "field_log_bytes": 2606743,
+          "native_log_bytes": 269436
+        },
+        {
+          "mono_s": 43.93670454097446,
+          "interval_start_mono_s": 42.91245104104746,
+          "cpu_pct_single_core": 2.40237089761018,
+          "rss_bytes": 73515008,
+          "cpu_times": {
+            "user": 0.923839488,
+            "system": 0.386696736,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 43,
+          "field_log_bytes": 2705570,
+          "native_log_bytes": 274035
+        },
+        {
+          "mono_s": 44.95901212503668,
+          "interval_start_mono_s": 43.93670454097446,
+          "cpu_pct_single_core": 2.5812035840667256,
+          "rss_bytes": 73515008,
+          "cpu_times": {
+            "user": 0.941825408,
+            "system": 0.395098656,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 44,
+          "field_log_bytes": 2795473,
+          "native_log_bytes": 278629
+        },
+        {
+          "mono_s": 45.98150087497197,
+          "interval_start_mono_s": 44.95901212503668,
+          "cpu_pct_single_core": 2.858556243464758,
+          "rss_bytes": 73547776,
+          "cpu_times": {
+            "user": 0.963662656,
+            "system": 0.402489824,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 45,
+          "field_log_bytes": 2895994,
+          "native_log_bytes": 293688
+        },
+        {
+          "mono_s": 47.00617625005543,
+          "interval_start_mono_s": 45.98150087497197,
+          "cpu_pct_single_core": 1.597961695787434,
+          "rss_bytes": 73547776,
+          "cpu_times": {
+            "user": 0.975723904,
+            "system": 0.406802496,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 46,
+          "field_log_bytes": 2986036,
+          "native_log_bytes": 298286
+        },
+        {
+          "mono_s": 48.026710291043855,
+          "interval_start_mono_s": 47.00617625005543,
+          "cpu_pct_single_core": 1.8146890996466243,
+          "rss_bytes": 73564160,
+          "cpu_times": {
+            "user": 0.989056576,
+            "system": 0.411989344,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 47,
+          "field_log_bytes": 3075962,
+          "native_log_bytes": 302888
+        },
+        {
+          "mono_s": 49.049954000045545,
+          "interval_start_mono_s": 48.026710291043855,
+          "cpu_pct_single_core": 2.248363688690116,
+          "rss_bytes": 73646080,
+          "cpu_times": {
+            "user": 1.004275904,
+            "system": 0.419776256,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 48,
+          "field_log_bytes": 3165956,
+          "native_log_bytes": 307494
+        },
+        {
+          "mono_s": 50.07340650004335,
+          "interval_start_mono_s": 49.049954000045545,
+          "cpu_pct_single_core": 3.0223190622003844,
+          "rss_bytes": 73646080,
+          "cpu_times": {
+            "user": 1.024909568,
+            "system": 0.430074592,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 49,
+          "field_log_bytes": 3255985,
+          "native_log_bytes": 313086
+        },
+        {
+          "mono_s": 51.096146999974735,
+          "interval_start_mono_s": 50.07340650004335,
+          "cpu_pct_single_core": 2.7397166731815,
+          "rss_bytes": 73678848,
+          "cpu_times": {
+            "user": 1.044161152,
+            "system": 0.4388432,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 50,
+          "field_log_bytes": 3356683,
+          "native_log_bytes": 327764
+        },
+        {
+          "mono_s": 52.11706758302171,
+          "interval_start_mono_s": 51.096146999974735,
+          "cpu_pct_single_core": 2.323481022314596,
+          "rss_bytes": 73695232,
+          "cpu_times": {
+            "user": 1.060299776,
+            "system": 0.446425472,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 51,
+          "field_log_bytes": 3446806,
+          "native_log_bytes": 332369
+        },
+        {
+          "mono_s": 53.13988916599192,
+          "interval_start_mono_s": 52.11706758302171,
+          "cpu_pct_single_core": 3.228790685477946,
+          "rss_bytes": 73744384,
+          "cpu_times": {
+            "user": 1.082873216,
+            "system": 0.4568768,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 52,
+          "field_log_bytes": 3567113,
+          "native_log_bytes": 338491
+        },
+        {
+          "mono_s": 54.159392833011225,
+          "interval_start_mono_s": 53.13988916599192,
+          "cpu_pct_single_core": 2.758393217183712,
+          "rss_bytes": 73777152,
+          "cpu_times": {
+            "user": 1.102080384,
+            "system": 0.465791552,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 53,
+          "field_log_bytes": 3657130,
+          "native_log_bytes": 343097
+        },
+        {
+          "mono_s": 55.17851125006564,
+          "interval_start_mono_s": 54.159392833011225,
+          "cpu_pct_single_core": 2.466181709544941,
+          "rss_bytes": 73793536,
+          "cpu_times": {
+            "user": 1.119570816,
+            "system": 0.473434432,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 54,
+          "field_log_bytes": 3757852,
+          "native_log_bytes": 348696
+        },
+        {
+          "mono_s": 56.198343666037545,
+          "interval_start_mono_s": 55.17851125006564,
+          "cpu_pct_single_core": 2.4143762851992316,
+          "rss_bytes": 73809920,
+          "cpu_times": {
+            "user": 1.137885184,
+            "system": 0.479742656,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 55,
+          "field_log_bytes": 3847949,
+          "native_log_bytes": 363970
+        },
+        {
+          "mono_s": 57.21956333296839,
+          "interval_start_mono_s": 56.198343666037545,
+          "cpu_pct_single_core": 2.301618031959793,
+          "rss_bytes": 73809920,
+          "cpu_times": {
+            "user": 1.154542848,
+            "system": 0.486589568,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 56,
+          "field_log_bytes": 3937964,
+          "native_log_bytes": 368571
+        },
+        {
+          "mono_s": 58.24071412498597,
+          "interval_start_mono_s": 57.21956333296839,
+          "cpu_pct_single_core": 2.530315424713008,
+          "rss_bytes": 73859072,
+          "cpu_times": {
+            "user": 1.171530496,
+            "system": 0.495440256,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 57,
+          "field_log_bytes": 4028024,
+          "native_log_bytes": 373176
+        },
+        {
+          "mono_s": 59.26008191599976,
+          "interval_start_mono_s": 58.24071412498597,
+          "cpu_pct_single_core": 1.811152379225041,
+          "rss_bytes": 73859072,
+          "cpu_times": {
+            "user": 1.184892672,
+            "system": 0.500540384,
+            "children_user": 0.0,
+            "children_system": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 58,
+          "field_log_bytes": 4118141,
+          "native_log_bytes": 377775
+        }
+      ],
+      "after": []
+    }
+  },
+  "measured_resolution_evidence": {
+    "cpu_median_read_period_s": 0.20000616693869233,
+    "GPU_independent_resolution": "unknown unless source window/generation provided",
+    "rail_independent_resolution": "unknown; native coarse baseline retained",
+    "exact_cross_host_source_lead": "unknown"
+  },
+  "source_run_id": "7dd5948c-785a-48aa-8a1b-787ac5491488",
+  "files": {
+    "launch.json": "0dab00d93ca9e2baaaf3608e041074ea7ecdf809481f5a782b33d6f91290bf7a",
+    "summary.json": "7b806d998ab3dfc20214ac425a198dbf67f5d8748c98c40c0501f62ff30dc042",
+    "thread-policy.json": "c905aafde35a8ad21a4131d0b38b0d89ef13ec9b13ffc009c332f02613b25bdb",
+    "resources.jsonl": "66499e7dfe28e693546722efba20e78bfa44af673594a0f376c78e33a22961d2"
+  }
+}

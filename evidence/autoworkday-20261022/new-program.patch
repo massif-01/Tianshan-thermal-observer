@@ -1,0 +1,1089 @@
+--- /dev/null
++++ autoworkday-v1/admission.py
+@@ -0,0 +1,41 @@
++"""Only consumes the ONE observer's existing output; no sensors, model, or API clients."""
++import math
++
++def number(x):return type(x) in (int,float) and math.isfinite(x)
++def fresh(x,now):
++    return bool(x and x.get('raw_valid') is True and number(x.get('observed_mono_s')) and number(x.get('valid_until_mono_s')) and x['observed_mono_s']<=now<x['valid_until_mono_s'])
++
++def evaluate(launch,status,now,identity,*,alive,process_created):
++    """No model score/tracking or instrument dependency; permission is checked separately."""
++    if not launch or not status:return dict(action='pause',reasons=['observer_starting'],software_healthy=False)
++    reg=launch['registration'];clock=launch['clock_start'];env=status.get('latest_state')
++    expected={k:identity[k] for k in ('device_id','thermal_config_id','session_id','observer_host_id','boot_id')}
++    if any(reg.get(k)!=v for k,v in expected.items()) or launch.get('version')!='0.2.4+observe.2':
++        return dict(action='stop',reasons=['observer_identity_mismatch'],software_healthy=False)
++    if not alive or status.get('running') is not True:
++        return dict(action='stop',reasons=['observer_exited'],software_healthy=False)
++    if status.get('process_created')!=process_created or status.get('pid')!=launch['clock_start']['pid']:
++        return dict(action='stop',reasons=['observer_process_replaced'],software_healthy=False)
++    age=now-(clock['mono_before_s']+status['elapsed_s'])
++    if not -.1<=age<=3:return dict(action='pause',reasons=['observer_heartbeat_stale'],software_healthy=False)
++    healthy=bool(status.get('collection') and not status.get('reason'))
++    if not env:return dict(action='pause',reasons=['no_current_measurement_view'],software_healthy=healthy)
++    actual=env['identity']
++    if any(actual.get(k)!=v for k,v in expected.items()) or actual.get('run_id')!=status.get('native_run_id') or env['process_clock_domain']!=clock['domain'] or env['clock']['domain']!=clock['domain']:
++        return dict(action='stop',reasons=['state_session_or_clock_mismatch'],software_healthy=False)
++    if any(actual.get(k)!=identity[k] for k in ('model_sha256','spec_sha256')) or env['expected_identity']['config_sha256']!=launch['authorization']['config_sha256']:
++        return dict(action='stop',reasons=['state_model_or_config_mismatch'],software_healthy=False)
++    if not env['clock']['observer_input_mono_s']<=env['clock']['generated_at_mono_s']<=now:
++        return dict(action='stop',reasons=['state_clock_invalid'],software_healthy=False)
++    m=env['measurement'];s=env['safety'];pwm=m.get('last_successful_pwm');context=m.get('control_context');tj=m.get('tj');power=m.get('power')
++    ff=fresh(pwm,now);cf=fresh(context,now)
++    if ((ff and (s.get('guard') is True or s.get('fault') is True or s.get('enabled') is False or s.get('mode') not in (None,'auto'))) or
++        (cf and (s.get('manual_mode') is True or s.get('binding') not in (None,'agx_info.temperature.tj') or s.get('active_source') not in (None,'variable')))):
++        return dict(action='stop',reasons=['explicit_protection_or_mode_binding'],software_healthy=healthy)
++    facts=bool(fresh(tj,now) and number(tj.get('value_C')) and fresh(power,now) and power.get('names')==['vdd_gpu','vdd_cpu_soc_mss'] and len(power.get('rails_W',[]))==2 and all(number(v) for v in power['rails_W']) and ff and number(pwm.get('value_percent')))
++    safety=bool(ff and cf and s.get('fan_fresh') and s.get('binding_fresh') and s.get('guard') is False and s.get('fault') is False and s.get('enabled') is True and s.get('mode')=='auto' and s.get('temp_stale') is False and s.get('manual_mode') is False and s.get('normalized_valid') is True and s.get('active_source')=='variable' and s.get('binding')=='agx_info.temperature.tj' and s.get('confirmed_normal_now') is True and number(s.get('context_stable_s')) and s['context_stable_s']>=5)
++    reasons=[]
++    if not healthy:reasons.append('observer_not_recording')
++    if not facts:reasons.append('measurement_unusable')
++    if not safety:reasons.append('control_context_unready')
++    return dict(action='allow' if not reasons else 'pause',reasons=reasons,software_healthy=healthy,model_available=env.get('model',{}).get('available'),model_used_as_permission=False,instrument_required=False,raw_expiry_unchanged=True,observation_ref=env['native_ref'],native_run_id=status['native_run_id'])
+--- /dev/null
++++ autoworkday-v1/executor/fixtures/fake_runtime.py
+@@ -0,0 +1,95 @@
++"""Owned in-memory SSE fixtures and virtual clock. Never used by field runtime."""
++import asyncio
++from datetime import datetime, timedelta, timezone
++import heapq
++import json
++from pathlib import Path
++from vendor.requester import Requester
++
++class VirtualClock:
++    def __init__(self, start=0):
++        self.value = start
++        self.pending = []
++        self.serial = 0
++        self.scheduled = False
++    def now(self):
++        return self.value
++    def utc(self):
++        return (datetime(2026,10,22,tzinfo=timezone.utc)+timedelta(seconds=self.value)).isoformat()
++    async def sleep(self, seconds):
++        loop = asyncio.get_running_loop()
++        future = loop.create_future()
++        self.serial += 1
++        heapq.heappush(self.pending,(self.value+seconds,self.serial,future))
++        self._schedule()
++        await future
++    def _schedule(self):
++        if not self.scheduled:
++            self.scheduled = True
++            asyncio.get_running_loop().call_later(0,self._advance)
++    def _advance(self):
++        self.scheduled = False
++        while self.pending and self.pending[0][2].done():
++            heapq.heappop(self.pending)
++        if not self.pending: return
++        self.value=max(self.value,self.pending[0][0])
++        while self.pending and self.pending[0][0]<=self.value:
++            _,_,future=heapq.heappop(self.pending)
++            if not future.done(): future.set_result(None)
++        # Sleepers awakened at this instant get a turn before advancing time again.
++        if self.pending: self._schedule()
++
++class Response:
++    status=200
++    def __init__(self, clock, mode, duration, number):
++        self.clock,self.mode,self.duration,self.number=clock,mode,duration,number
++        self.content=self
++    async def __aenter__(self): return self
++    async def __aexit__(self,*args): return False
++    def __aiter__(self): return self.lines()
++    async def lines(self):
++        if self.mode=='hang':
++            await asyncio.Event().wait()
++        await self.clock.sleep(self.duration)
++        ident=f'synthetic-chat-{self.number}'
++        yield ('data: '+json.dumps(dict(id=ident,choices=[dict(delta=dict(reasoning_content='synthetic reasoning'),finish_reason=None)]))+'\n').encode()
++        yield ('data: '+json.dumps(dict(id=ident,choices=[dict(delta=dict(content='synthetic text'),finish_reason=None)]))+'\n').encode()
++        if self.mode=='truncated': return
++        yield ('data: '+json.dumps(dict(id=ident,choices=[dict(delta={},finish_reason='length' if self.number%2==0 else 'stop')]))+'\n').encode()
++        yield ('data: '+json.dumps(dict(id=ident,choices=[],usage=dict(prompt_tokens=12,completion_tokens=16,total_tokens=28)))+'\n').encode()
++        yield b'data: [DONE]\n'
++
++class MemorySession:
++    def __init__(self, clock, mode='complete', duration=3):
++        self.clock,self.mode,self.duration=clock,mode,duration
++        self.posts=[]
++        self.closed=False
++        self.active=0
++    def post(self, url, *, data, headers, allow_redirects):
++        assert url=='http://synthetic.invalid/v1/chat/completions'
++        assert not allow_redirects
++        self.posts.append(json.loads(data))
++        return Response(self.clock,self.mode,self.duration,len(self.posts))
++    async def close(self): self.closed=True
++
++def make_requester(out, clock, mode='complete', duration=3):
++    out=Path(out);out.mkdir(parents=True,exist_ok=True)
++    r=Requester(dict(base_url='http://synthetic.invalid',model='synthetic-resident-model',
++                     messages=[],stream=True,sampling={},max_tokens=256,request_timeout_s=30),out,clock,lambda *a,**k:None)
++    r.session=MemorySession(clock,mode,duration);r.headers={}
++    return r
++
++BINDING=dict(native_run_id='synthetic-native-run',observer_session_id='synthetic-observe-session',
++             device_id='synthetic-device',config_sha256='synthetic-config',
++             clock_domain='synthetic-observer-origin-domain')
++
++class Journal:
++    def __init__(self, out=None):
++        self.rows=[];self.out=Path(out) if out else None
++        if self.out: self.out.mkdir(parents=True,exist_ok=True)
++    def __call__(self,event,row):
++        self.rows.append((event,row))
++        if self.out:
++            name='workload-events.jsonl' if event=='workload_event' else 'protocol.jsonl'
++            with (self.out/name).open('a',encoding='utf8') as f:
++                f.write(json.dumps(row,ensure_ascii=False)+'\n')
+--- /dev/null
++++ autoworkday-v1/executor/make_plan.py
+@@ -0,0 +1,91 @@
++"""Freeze a bounded synthetic workday. This module never constructs a client."""
++import hashlib
++import json
++from pathlib import Path
++import random
++
++SEED = 20261022
++STAGES = [
++    ('background_health', 0, 7200, 'no_added_requests'),
++    ('sparse_qa', 7200, 21600, 'single_sparse'),
++    ('conversation_clusters', 21600, 28800, 'single_clusters'),
++    ('bounded_batch', 28800, 32400, 'single_batch_blocks'),
++    ('cooldown', 32400, 36000, 'no_added_requests'),
++    ('long_rest', 36000, 64800, 'no_added_requests'),
++    ('irregular_mix', 64800, 84600, 'single_mixed'),
++    ('final_recovery', 84600, 86400, 'no_added_requests'),
++]
++TASKS = [
++    ('qa_heat', '问答', '请用中文解释为什么计算机芯片在不同负载下温度会不同。避免编造具体设备参数。'),
++    ('qa_network', '问答', '请用中文解释网络延迟和吞吐量的区别，举一个日常例子。'),
++    ('summary', '摘要', '请概括以下虚构工作记录：上午整理公开文档，午间休息，下午复核表格，最后归档。列出三项关键安排。'),
++    ('rewrite', '改写', '请把这句话改写得清晰简洁：在完成对已经整理的文件进行再次检查之后，我们准备开始实施归档工作。'),
++    ('code_explain', '代码解释', '只解释、不执行下面的Python代码，并说明结果：values=[2,4,6]; total=sum(v*v for v in values); print(total)。'),
++    ('compare', '比较', '请比较列表和集合的用途，给出适合初学者的例子。不要运行代码。'),
++    ('outline', '提纲', '请为一篇介绍散热器、空气流动与环境温度关系的科普文章拟一个简短提纲。'),
++    ('translation', '翻译', '请将这段非敏感示例译成中文并解释：A clear plan includes work, rest, and a definite stopping time.'),
++]
++
++def digest(value):
++    return hashlib.sha256(json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
++
++def plan_digest(plan):
++    return digest({k:v for k,v in plan.items() if k != 'plan_sha256'})
++
++def generate():
++    rng = random.Random(SEED)
++    tasks = [dict(task_id=k, kind=t, messages=[dict(role='user', content=s)]) for k,t,s in TASKS]
++    slots = []
++    def add(stage, block, at, end, gap):
++        if at + 30 > end or len(slots) >= 600:
++            return
++        slots.append(dict(slot_id=f'W{len(slots)+1:04d}', stage_id=stage, block_id=block,
++                          planned_submit_s=at, latest_submit_s=min(at+5, end-30),
++                          issue_window_end_s=end, min_gap_after_previous_end_s=gap,
++                          task_id=rng.choice(tasks)['task_id']))
++    def sparse(stage, start, end, block):
++        at = start
++        gap = 0
++        while at+30 <= end:
++            add(stage, block, at, end, gap)
++            gap = rng.randint(120,450)
++            at += 30+gap
++    def clusters(stage, start, end, block):
++        at = start
++        group = 0
++        while at+30 <= end:
++            group += 1
++            for j in range(rng.randint(4,8)):
++                gap = 0 if j == 0 else rng.randint(3,15)
++                if j: at += 30+gap
++                if at+30 > end: return
++                add(stage, f'{block}-g{group}', at, end, gap)
++            at += 30+rng.randint(480,1200)
++    def batch(stage, start, end, block):
++        # Fixed ten-second opportunities; late/busy opportunities are skipped, never queued.
++        for at in range(start, end-29, 10):
++            add(stage, block, at, end, 0)
++    sparse('sparse_qa',7200,21600,'sparse')
++    clusters('conversation_clusters',21600,28800,'conversation')
++    for i,(start,end) in enumerate([(28800,29160),(29640,30180),(30660,30960)]):
++        batch('bounded_batch',start,end,f'batch-{i+1}')
++    at=64800;index=0
++    while at+30 <= 84600:
++        index+=1;kind=rng.choice(['sparse','clusters','batch'])
++        length=rng.randint(1800,2700) if kind=='sparse' else rng.randint(1200,1800) if kind=='clusters' else rng.choice([300,360,540])
++        end=min(at+length,84600)
++        {'sparse':sparse,'clusters':clusters,'batch':batch}[kind]('irregular_mix',at,end,f'mix-{index}-{kind}')
++        at=end+rng.randint(480,1200)
++    plan=dict(schema='TTO-AUTOWORKDAY-FROZEN-v1', status='OFFLINE_CANDIDATE_NOT_FIELD_AUTHORIZED',
++              field_authorized=False, seed=SEED, total_elapsed_seconds=86400,
++              health_checkpoint_seconds=7200, last_new_request_latest_s=84570,
++              max_concurrency=1, max_submissions=600, max_client_inflight_seconds=18000,
++              request_max_tokens=256, request_protocol_budget_seconds=30, unready_grace_seconds=60,
++              no_catch_up=True, pause_extends_window=False, cache_policy='unchanged_hit_unknown',
++              predictor_reads_future_schedule=False,
++              stages=[dict(id=k,start_s=a,end_s=b,workload=w) for k,a,b,w in STAGES], tasks=tasks, slots=slots)
++    plan['plan_sha256']=plan_digest(plan)
++    return plan
++
++if __name__=='__main__':
++    print(json.dumps(generate(),ensure_ascii=False,indent=2))
+--- /dev/null
++++ autoworkday-v1/executor/runner.py
+@@ -0,0 +1,273 @@
++"""One bounded Requester alongside a separately owned read-only observer.
++No telemetry, model discovery, collector, estimator or CLI for field execution.
++"""
++import asyncio
++from dataclasses import dataclass
++from copy import deepcopy
++from datetime import datetime, timezone
++import inspect
++import math
++import time
++
++from make_plan import plan_digest, STAGES
++from vendor.events import Adapter
++
++@dataclass
++class Control:
++    binding: dict
++    stop: object = lambda: False
++    paused: object = lambda: False
++
++class RealClock:
++    """Production monotonic clock; origin must be the observer's same-host origin."""
++    def __init__(self, origin_mono_s):
++        self.origin = origin_mono_s
++    def now(self):
++        return time.monotonic() - self.origin
++    def utc(self):
++        return datetime.now(timezone.utc).isoformat()
++    async def sleep(self, seconds):
++        await asyncio.sleep(seconds)
++
++class Runner:
++    def __init__(self, clock, requester, plan, admission, emit, control):
++        self.clock, self.requester, self.plan = clock, requester, deepcopy(plan)
++        plan = self.plan
++        self.binding = dict(control.binding)
++        self.admission, self.emit, self.control = admission, emit, control
++        if plan_digest(plan) != plan['plan_sha256']:
++            raise ValueError('plan_digest_mismatch')
++        if (plan['total_elapsed_seconds'] != 86400 or plan['max_concurrency'] != 1 or
++            not 0 < plan['max_submissions'] <= 600 or
++            not 0 < plan['max_client_inflight_seconds'] <= 18000 or
++            plan['request_max_tokens'] != 256 or plan['request_protocol_budget_seconds'] != 30 or
++            plan['unready_grace_seconds'] != 60):
++            raise ValueError('profile_budget_mismatch')
++        if [(s['id'],s['start_s'],s['end_s'],s['workload']) for s in plan['stages']] != STAGES:
++            raise ValueError('stage_contract_mismatch')
++        self.tasks = {t['task_id']:t for t in plan['tasks']}
++        last = -1
++        for slot in plan['slots']:
++            due, latest, end = (slot[k] for k in ('planned_submit_s','latest_submit_s','issue_window_end_s'))
++            if not (math.isfinite(due) and last < due and 7200 <= due <= latest <= min(end-30,84570)
++                    and latest <= due+5 and slot['task_id'] in self.tasks
++                    and slot['min_gap_after_previous_end_s'] >= 0):
++                raise ValueError('invalid_frozen_opportunity')
++            stage = next((s for s in plan['stages'] if s['id']==slot['stage_id']), None)
++            if stage is None or stage['workload']=='no_added_requests' or not stage['start_s']<=due<end<=stage['end_s']:
++                raise ValueError('request_outside_work_stage')
++            last = due
++        for key in ('native_run_id','observer_session_id','device_id','config_sha256','clock_domain'):
++            if not control.binding.get(key):
++                raise ValueError('missing_binding_'+key)
++        if requester.clock is not clock or not requester.config.get('model') or requester.config.get('stream',True) is not True or requester.config.get('sampling',{}) != {}:
++            raise ValueError('requester_contract_mismatch')
++        self.model_id = requester.config['model']
++        self.adapter = Adapter(session_id=control.binding['native_run_id'],
++                               source_clock_domain=control.binding['clock_domain'],
++                               observer_clock_domain=control.binding['clock_domain'],
++                               complete_from_session_start=True, publication_mode='live_from_source')
++        requester.emit = self._request_event
++        self.submissions = self.completed = self.skipped = 0
++        self.inflight_seconds = 0.0
++        self.last_end = None
++        self.current_submit = None
++        self.unknown_server_end = False
++        self.slot = None
++        self.task = None
++        self.halted = None
++        self.pause_since = None
++        self.last_admission = None
++        self.stage_id = None
++        self._used = False
++        self._cancel_emitted = False
++        self.summary = None
++
++    def _raw(self, event, **fields):
++        row = dict(event=event, mono_s=self.clock.now(), at_utc=self.clock.utc(),
++                   plan_sha256=self.plan['plan_sha256'], **self.binding)
++        row.update(fields)
++        row['actual_elapsed_s'] = row['mono_s']
++        if self.slot is not None:
++            row.update(slot_id=self.slot['slot_id'], task_id=self.slot['task_id'],
++                       stage_id=self.slot['stage_id'], planned_submit_s=self.slot['planned_submit_s'])
++        self.emit(event, row)
++        return row
++
++    def _request_event(self, event, **fields):
++        row = self._raw(event, **fields)
++        if event == 'request_submit':
++            self.current_submit = row['submit_mono_s']
++            self.submissions += 1
++        elif event == 'request_end':
++            self.last_end = row['client_end_mono_s']
++            self.inflight_seconds += max(0, self.last_end-row['submit_mono_s'])
++            if row.get('status')=='completed' and row.get('done') and row.get('finish_reason') is not None:
++                self.completed += 1
++            else:
++                self.unknown_server_end = True
++        out = self.adapter.feed(row, received_mono_s=self.clock.now(), received_at_utc=self.clock.utc())
++        if out is not None:
++            # Audit schedule stays in raw stream. Predictor sees only actual arrived events.
++            out.update(observer_session_id=self.binding['observer_session_id'],
++                       device_id=self.binding['device_id'], config_sha256=self.binding['config_sha256'],
++                       model_id=self.model_id, cache_hit=None)
++            self.emit('workload_event', out)
++
++    def _halt(self, reason):
++        if self.halted is None:
++            self.halted = reason
++            self._raw('request_line_stop', reason=reason)
++
++    async def _check(self):
++        now = self.clock.now()
++        stage = next((s for s in self.plan['stages'] if s['start_s']<=now<s['end_s']), None)
++        if stage and stage['id'] != self.stage_id:
++            self.stage_id = stage['id']
++            self._raw('stage_observed', current_stage=self.stage_id,
++                      planned_start_s=stage['start_s'], planned_end_s=stage['end_s'])
++        if self.control.stop():
++            self._halt('user_stop'); return 'stop'
++        if now >= self.plan['total_elapsed_seconds']:
++            return 'deadline'
++        decision = self.admission()
++        if inspect.isawaitable(decision):
++            decision = await decision
++        action = decision['action']
++        reasons = decision.get('reasons',[])
++        if action not in ('allow','pause','stop'):
++            raise ValueError('invalid_admission_action')
++        if self.control.paused() and action != 'stop':
++            action, reasons = 'pause', ['user_pause']
++        key = (action, tuple(reasons))
++        if key != self.last_admission:
++            self._raw('admission_change', action=action, reasons=reasons)
++            self.last_admission = key
++        if action == 'stop':
++            self._halt('admission_stop:'+','.join(reasons)); return 'stop'
++        if action == 'pause' and now >= 7200:
++            if self.pause_since is None:
++                self.pause_since = now
++            if now-self.pause_since >= 60:
++                self._halt('unready_grace_exhausted'); return 'stop'
++        else:
++            # Pre-checkpoint background never consumes the request-readiness grace.
++            self.pause_since = None
++        return action
++
++    async def _wait_until(self, target):
++        while self.clock.now() < target and not self.halted:
++            await self._check()
++            if self.halted:
++                return
++            remaining = target-self.clock.now()
++            if remaining > 0:
++                await self.clock.sleep(min(1, remaining))
++
++    async def _cancel(self, reason):
++        if self.task is not None and not self.task.done():
++            if self.current_submit is not None and not self._cancel_emitted:
++                self._request_event('request_cancel', request_id=self.slot['slot_id'], reason=reason)
++                self._cancel_emitted = True
++            self.task.cancel()
++            try:
++                await self.task
++            except asyncio.CancelledError:
++                pass
++
++    async def _one(self):
++        self.requester.config['messages'] = self.tasks[self.slot['task_id']]['messages']
++        if self.requester.config['model'] != self.model_id:
++            raise ValueError('model_changed')
++        # Require a full unchanged protocol budget before admission, never shorten timeout to fit.
++        self._cancel_emitted = False
++        self.current_submit = None
++        self.task = asyncio.create_task(self.requester.request(self.slot['slot_id'], timeout_s=30))
++        while not self.task.done():
++            action = await self._check()
++            if self.halted and self.current_submit is None:
++                # Task was queued but never submitted: cancel it before it can send.
++                await self._cancel('stopped_before_submit')
++                return
++            elapsed = 0 if self.current_submit is None else self.clock.now()-self.current_submit
++            if action == 'deadline' or elapsed >= 30:
++                self._halt(self.halted or 'protocol_deadline_server_end_unknown')
++                await self._cancel('protocol_deadline_server_end_unknown')
++                return
++            # pause/STOP blocks new work; already submitted work gets its original <=30s drain.
++            await self.clock.sleep(min(1, max(0,30-elapsed)))
++        try:
++            record = await self.task
++        except asyncio.CancelledError:
++            self._halt('client_cancelled_server_end_unknown'); return
++        if (record.get('status') != 'completed' or not record.get('done') or
++                record.get('finish_reason') is None):
++            self._halt('protocol_end_unknown_no_retry')
++
++    async def run(self):
++        if self._used:
++            raise ValueError('runner_cannot_restart_or_replay_live_requests')
++        self._used = True
++        opened = self.requester.session is not None
++        self._raw('driver_start', model_id=self.model_id,
++                  source_type='real_device_automatically_constructed_workload_if_field_authorized')
++        try:
++            for slot in self.plan['slots']:
++                self.slot = slot
++                await self._wait_until(slot['planned_submit_s'])
++                if self.halted:
++                    break
++                # Bounded opportunity windows. Never build a backlog of paused/busy slots.
++                while self.clock.now() <= slot['latest_submit_s']:
++                    action = await self._check()
++                    if self.halted or action=='deadline':
++                        break
++                    remaining = self.plan['max_client_inflight_seconds']-self.inflight_seconds
++                    if self.submissions >= self.plan['max_submissions'] or remaining < 30:
++                        self._halt('request_budget_exhausted'); break
++                    gap_ready = self.last_end is None or self.clock.now() >= self.last_end+slot['min_gap_after_previous_end_s']
++                    if action == 'allow' and gap_ready:
++                        if not opened:
++                            await self.requester.open()
++                            opened = True
++                        # Opening/callback latency is real elapsed time, not extra authorization time.
++                        action = await self._check()
++                        now = self.clock.now()
++                        if action != 'allow' or now > slot['latest_submit_s'] or now+30 > min(slot['issue_window_end_s'],84600):
++                            if self.halted: break
++                        else:
++                            await self._one()
++                            break
++                    await self.clock.sleep(min(1,max(0,slot['latest_submit_s']-self.clock.now()+0.001)))
++                else:
++                    self.skipped += 1
++                    self._raw('opportunity_skipped', reason='missed_paused_or_busy_no_catch_up')
++                if self.halted:
++                    break
++            self.slot = None
++            if not self.halted:
++                await self._wait_until(86400)
++        except asyncio.CancelledError:
++            self._halt('driver_cancelled')
++            await self._cancel('driver_cancelled')
++            raise
++        except Exception as exc:
++            self._halt('driver_exception:'+type(exc).__name__)
++            await self._cancel(self.halted)
++            raise
++        finally:
++            await self.requester.close()
++            self.summary = dict(reason=self.halted or 'completed', submissions=self.submissions,
++                                scheduled_opportunities=len(self.plan['slots']),
++                                not_submitted_opportunities=len(self.plan['slots'])-self.submissions,
++                                schedule_window_completed=self.halted is None and self.clock.now()>=86400,
++                                all_planned_requests_protocol_completed=self.completed==len(self.plan['slots']),
++                                protocol_completed=self.completed, skipped_opportunities=self.skipped,
++                                client_inflight_seconds=self.inflight_seconds,
++                                actual_elapsed_s=self.clock.now(), requester_closed=True,
++                                unknown_server_end=self.unknown_server_end,
++                                gpu_busy_seconds=None, collector_instances_created=0,
++                                thermal_observer_instances_created=0, requester_instances_supplied=1,
++                                plan_sha256=self.plan['plan_sha256'], **self.binding)
++            self._raw('driver_end', **self.summary)
++        return self.summary
+--- /dev/null
++++ autoworkday-v1/program.py
+@@ -0,0 +1,187 @@
++"""One approved autonomous window: own observe.2 subprocess plus delegated one-requester Runner."""
++import argparse,asyncio,datetime,hashlib,json,os,signal,socket,sys,time,uuid,zipfile,shlex
++from pathlib import Path
++import psutil
++from supervision import read_json,Health,Controls,DiskEvidence,request_admission
++from admission import evaluate
++ROOT=Path(__file__).resolve().parent
++WHEEL_SHA='481a9671148fe40fcc33c2a65bc98c818be3178fe3138c1cd06bc93b3d21b725'
++MODEL_SHA='dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0'
++SPEC_SHA='2080adcf20773650299def2bb0f3ebdb9f87d8f85281d5b87a99d8b406c83c6b'
++def utc():return datetime.datetime.now(datetime.timezone.utc).isoformat()
++def digest(x):return hashlib.sha256(json.dumps(x,sort_keys=True,separators=(',',':'),ensure_ascii=False).encode()).hexdigest()
++def file_sha(p,deadline=None):
++    h=hashlib.sha256()
++    with Path(p).open('rb') as f:
++        for b in iter(lambda:f.read(1024**2),b''):
++            if deadline is not None and time.monotonic()>=deadline:raise TimeoutError('final_index_deadline')
++            h.update(b)
++    return h.hexdigest()
++def source_sha():
++    return digest({p.relative_to(ROOT).as_posix():file_sha(p) for p in sorted(ROOT.rglob('*.py')) if '__pycache__' not in p.parts and 'tests' not in p.relative_to(ROOT).parts and 'fixtures' not in p.relative_to(ROOT).parts})
++def write(p,x):Path(p).write_text(json.dumps(x,ensure_ascii=False,indent=2,allow_nan=False)+'\n')
++class Clock:
++    def __init__(self,origin):self.origin=origin
++    def now(self):return time.monotonic()-self.origin
++    def utc(self):return utc()
++    async def sleep(self,seconds):await asyncio.sleep(seconds)
++def validate(c,g,local=False):
++    from urllib.parse import urlsplit
++    import ipaddress
++    plan=read_json(c['plan']);reg=read_json(c['registration']);request=read_json(c['request_config']);observe_grant=read_json(c['observe_grant'])
++    plain={k:v for k,v in plan.items() if k!='plan_sha256'}
++    if plan['plan_sha256']!=digest(plain):raise ValueError('plan_identity')
++    duration=plan['total_elapsed_seconds'];cleanup=c.get('cleanup_seconds',120)
++    if not local and (duration!=86400 or plan['health_checkpoint_seconds']!=7200 or cleanup!=120):raise ValueError('field_profile_requires_frozen_24h_plan')
++    if not 0<cleanup<duration or duration>86400:raise ValueError('bounded_window')
++    for k,v in dict(action='auto-workday',explicit_user_start=True,program_sha256=source_sha(),plan_sha256=plan['plan_sha256'],request_config_sha256=digest(request),observer_wheel_sha256=WHEEL_SHA,device_id=reg['device_id'],thermal_config_id=reg['thermal_config_id'],session_id=reg['session_id']).items():
++        if g.get(k)!=v:raise ValueError('load_permission_mismatch:'+k)
++    if not g.get('evidence') or g.get('max_duration_s')!=duration:raise ValueError('load_permission_scope')
++    a=datetime.datetime.fromisoformat(g['not_before_utc']);b=datetime.datetime.fromisoformat(g['expires_at_utc']);now=datetime.datetime.now(datetime.timezone.utc)
++    if a.tzinfo is None or b.tzinfo is None or not a<=now or b<now+datetime.timedelta(seconds=duration):raise ValueError('load_permission_time')
++    if reg['observer_host_id']!=socket.gethostname() or reg.get('workload_event_source'):raise ValueError('host_or_duplicate_event_source')
++    if observe_grant['session_id']!=reg['session_id'] or observe_grant['action']!='readonly-observe':raise ValueError('separate_read_permission')
++    if local:
++        if not g.get('self_owned_loopback') or not observe_grant.get('self_owned_loopback'):raise ValueError('owned_loopback_permission')
++        obs=read_json(c['observe_config'])
++        for url in [request['base_url'],obs['orin']['base_url'],obs['tianshan']['base_url']]:
++            if not ipaddress.ip_address(urlsplit(url).hostname).is_loopback:raise ValueError('owned_numeric_loopback_only')
++    if request.get('stream') is not True or not request.get('model'):raise ValueError('original_stream_model_contract')
++    return plan,reg,request,cleanup
++
++async def command(args,*,timeout,stdout=None):
++    p=await asyncio.create_subprocess_exec(*map(str,args),stdout=stdout or asyncio.subprocess.PIPE,stderr=asyncio.subprocess.PIPE)
++    try:
++        data,err=await asyncio.wait_for(p.communicate(),timeout)
++        return dict(returncode=p.returncode,stdout=data.decode() if data else None,stderr=err.decode() if err else None)
++    except asyncio.TimeoutError:
++        p.kill();await p.wait();return dict(returncode=p.returncode,error='owned_command_timeout')
++
++async def run(c,g,local=False):
++    plan,reg,request,cleanup=validate(c,g,local)
++    permission_deadline=time.monotonic()+(datetime.datetime.fromisoformat(g['expires_at_utc'])-datetime.datetime.now(datetime.timezone.utc)).total_seconds()
++    prefix=Path(c['observe_prefix']);entry=prefix/'bin/tto-observe';out=Path(c['output']);out.mkdir(mode=0o700)
++    if Path(sys.prefix).resolve()!=prefix.resolve():raise ValueError('run_with_the_observe_prefix_interpreter')
++    # One program per observer registration, regardless of output-directory spelling.
++    ledger=out.parent/'.autoworkday-ledger';ledger.mkdir(exist_ok=True)
++    fd=os.open(ledger/reg['session_id'],os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600);os.close(fd)
++    verify=await command([entry,'verify-install',*([] if local else ['--target'])],timeout=10);write(out/'install-identity.json',verify)
++    if verify['returncode']!=0:raise ValueError('observe_install_identity_rejected')
++    identity_receipt=json.loads(verify['stdout'])
++    if identity_receipt['candidate_version']!='0.2.4+observe.2' or identity_receipt['checked_files']!=65:raise ValueError('wrong_observe_candidate')
++    from importlib.resources import files as package_files
++    if hashlib.sha256(package_files('tto_field').joinpath('candidate-files.json').read_bytes()).hexdigest()!='28680be46280395e4257a4e5beaf07a30b0c4b781797604439cb7bb622eddd84':raise ValueError('unreviewed_observe_manifest')
++    from tto_field.observe_runtime import boot_identity
++    identity={k:reg[k] for k in ('device_id','thermal_config_id','session_id','observer_host_id')};identity.update(boot_id=boot_identity(),model_sha256=MODEL_SHA,spec_sha256=SPEC_SHA)
++    if not identity['boot_id']:raise ValueError('same_boot_clock_unverified')
++    ev=DiskEvidence(out);control=Controls(out/'control.json');stop=False;reason='duration';driver_summary=None;error=None;child=None;runner_task=None;origin=None
++    for sig in (signal.SIGINT,signal.SIGTERM):asyncio.get_running_loop().add_signal_handler(sig,lambda:setattr(control,'stopped',True))
++    write(out/'load-permission.json',g);write(out/'config.json',c);write(out/'plan.json',plan)
++    native=out/'observe';duration=plan['total_elapsed_seconds'];wallstart=time.monotonic();deadline=min(permission_deadline,wallstart+duration)
++    with (out/'observe.stdout').open('wb') as stdout,(out/'observe.stderr').open('wb') as stderr:
++        child=await asyncio.create_subprocess_exec(str(entry),'observe','--config',c['observe_config'],'--registration',c['registration'],'--grant',c['observe_grant'],'--output',str(native),'--duration',str(duration-cleanup),'--allow-network',*(['--local-loopback'] if local else []),stdout=stdout,stderr=stderr)
++    try:
++        while not (native/'launch.json').exists():
++            if child.returncode is not None or time.monotonic()-wallstart>10:raise ValueError('observer_start_failed')
++            await asyncio.sleep(.1)
++        launch=read_json(native/'launch.json');origin=launch['clock_start']['mono_before_s'];clock=Clock(origin);health=Health(identity,plan['health_checkpoint_seconds']);created=psutil.Process(child.pid).create_time()
++        if launch['process_created']!=created:raise ValueError('child_process_identity')
++        deadline=min(origin+duration,permission_deadline);gate=dict(action='pause',reasons=['starting']);health.load_stop=None
++        sys.path.insert(0,str(ROOT/'executor'))
++        from executor.runner import Runner,Control
++        from executor.vendor.requester import Requester
++        binding=dict(observer_session_id=reg['session_id'],native_run_id=None,device_id=reg['device_id'],config_sha256=launch['config_sha256'],clock_domain='observer-relative:'+reg['session_id'])
++        # Wait for the true UUID; never fill a guessed native identity or use a prior run.
++        while not binding['native_run_id']:
++            if child.returncode is not None or clock.now()>10:raise ValueError('native_binding_unavailable')
++            if (native/'status.json').exists():binding['native_run_id']=read_json(native/'status.json').get('native_run_id')
++            await asyncio.sleep(.1)
++        write(out/'run-binding.json',dict(binding,identity=identity,clock_origin_mono_s=origin,observer_directory=str(native),plan_sha256=plan['plan_sha256'],event_sink='workload_event.jsonl',source_kind='self_owned_loopback' if local else 'real_device_automatically_constructed_workload'))
++        last_gate=None;last_resource=None;previous=None
++        def emit(event,row):ev.emit(event,row)
++        def admission():
++            try:
++                st=read_json(native/'status.json');return request_admission(health,launch,st,time.monotonic(),alive=child.returncode is None,created=created)
++            except (OSError,ValueError,KeyError,TypeError):return request_admission(health,launch,None,time.monotonic(),alive=child.returncode is None,created=created)
++        # Only the delegated requester sends API calls. A once-open resident/idle check is field-only.
++        requester=Requester(request,out,clock,lambda *a,**k:None)
++        original_open=requester.open
++        async def opened():
++            await original_open()
++            if not local:emit('resident_check',dict(await requester.check_resident_idle(),at_utc=utc(),scope='one_time_startup_not_global_idle_proof_for_24h'))
++        requester.open=opened
++        runner=Runner(clock,requester,plan,admission,emit,Control(binding=binding,stop=lambda:control.stopped,paused=lambda:control.paused))
++        runner_task=asyncio.create_task(runner.run())
++        while time.monotonic()<deadline-cleanup and child.returncode is None and not control.stopped:
++            try:ctl=control.read();ev.check_disk()
++            except Exception as exc:health.load_stop=type(exc).__name__+':'+str(exc)
++            now=time.monotonic();t=clock.now()
++            try:st=read_json(native/'status.json')
++            except (OSError,ValueError):st=None
++            try:
++                own=psutil.Process();other=psutil.Process(child.pid);a=own.cpu_times();b=other.cpu_times();tot=(a.user+a.system,b.user+b.system);rss=(own.memory_info().rss,other.memory_info().rss)
++                rates=(None,None) if previous is None else tuple(100*(tot[i]-previous[1][i])/(now-previous[0]) for i in (0,1));previous=(now,tot)
++                sample=dict(own_cpu=rates[0],own_rss=rss[0],total_cpu=sum(rates) if None not in rates else None,total_rss=sum(rss),observer_cpu=rates[1],observer_rss=rss[1])
++            except psutil.Error:sample=dict(own_cpu=None,own_rss=None,total_cpu=None,total_rss=None)
++            gate,checkpoint=health.update(t,launch,st,now,alive=child.returncode is None,created=created,resource=sample)
++            ev.emit('resources',dict(elapsed_s=t,at_utc=utc(),**sample))
++            if checkpoint:write(out/'automatic-two-hour-checkpoint.json',checkpoint)
++            key=(gate['action'],tuple(gate['reasons']),gate.get('software_healthy'))
++            if key!=last_gate:ev.emit('admission',dict(elapsed_s=t,**gate));last_gate=key
++            if runner_task.done() and driver_summary is None:
++                try:driver_summary=runner_task.result()
++                except Exception as exc:driver_summary=dict(reason='driver_error',error=type(exc).__name__+':'+str(exc),completed=False);health.load_stop='driver_error'
++                write(out/'driver-summary.json',driver_summary)
++            await asyncio.sleep(min(1,max(0,deadline-cleanup-time.monotonic())))
++        reason='user_stop' if control.stopped else 'observer_exited' if child.returncode is not None else 'cleanup_boundary'
++    except Exception as exc:reason='supervisor_error';error=type(exc).__name__+':'+str(exc)
++    finally:
++        if runner_task and not control.stopped:health.load_stop='planned_cleanup_boundary' if reason=='cleanup_boundary' else reason
++        if runner_task and not runner_task.done():
++            try:driver_summary=await asyncio.wait_for(asyncio.shield(runner_task),min(31,max(0,(deadline if origin else min(permission_deadline,wallstart+15))-time.monotonic())))
++            except Exception as exc:
++                runner_task.cancel();await asyncio.gather(runner_task,return_exceptions=True);driver_summary=dict(reason='bounded_request_cleanup',server_state='unknown',error=type(exc).__name__)
++        if child and child.returncode is None:
++            child.send_signal(signal.SIGTERM)
++            try:await asyncio.wait_for(child.wait(),8)
++            except asyncio.TimeoutError:child.kill();await child.wait();error=error or 'observer_forced_cleanup'
++        if runner_task and runner_task.done() and driver_summary is None:
++            try:driver_summary=runner_task.result()
++            except Exception as exc:driver_summary=dict(reason='driver_error',error=type(exc).__name__+':'+str(exc),completed=False)
++        if driver_summary and driver_summary.get('reason')=='driver_error':error=error or driver_summary.get('error')
++        remaining=max(0,(deadline if origin else min(permission_deadline,wallstart+20))-time.monotonic())
++        archive=dict(skipped='observer_summary_unavailable')
++        if (native/'summary.json').exists() and remaining>0:
++            archive=await command([entry,'archive','--session',native,'--output',out/'observe.zip'],timeout=min(60,remaining))
++        ev.close()
++        summary=dict(load_result='work_stages_finished' if driver_summary and driver_summary.get('reason') in ('completed','admission_stop:planned_cleanup_boundary') and not driver_summary.get('unknown_server_end') else 'incomplete',reason=reason,error=error,driver=driver_summary,archive=archive,observer_returncode=child.returncode if child else None,elapsed_s=time.monotonic()-origin if origin else None,observer_session_id=reg['session_id'],model_training=False,collector_count=1,request_executor_count=1,field=not local,actual_ending_utc=utc())
++        write(out/'summary.json',summary)
++        files={}
++        try:
++            for p in sorted(out.rglob('*')):
++                if not p.is_file() or p.name=='files.json' or native in p.parents or p.name=='observe.zip':continue
++                files[p.relative_to(out).as_posix()]=dict(bytes=p.stat().st_size,sha256=file_sha(p,deadline if origin else min(permission_deadline,wallstart+20)))
++            write(out/'files.json',dict(driver_files=files,observer_index='observe/files.json',observer_archive_receipt=archive))
++        except TimeoutError:
++            summary['final_index_complete']=False;summary['error']=summary.get('error') or 'final_index_deadline';write(out/'summary.json',summary)
++    return summary
++
++def main():
++    p=argparse.ArgumentParser(description=__doc__);sub=p.add_subparsers(dest='command',required=True)
++    for name in ('preview','run'):
++        q=sub.add_parser(name);q.add_argument('--config',type=Path,required=True)
++        if name=='run':q.add_argument('--grant',type=Path,required=True);q.add_argument('--allow-network',action='store_true');q.add_argument('--self-owned-loopback',action='store_true')
++    q=sub.add_parser('control');q.add_argument('--output',type=Path,required=True);q.add_argument('action',choices=['pause','resume','stop'])
++    q=sub.add_parser('unit');q.add_argument('--config',type=Path,required=True);q.add_argument('--grant',type=Path,required=True);q.add_argument('--output',type=Path,required=True)
++    a=p.parse_args()
++    if a.command=='control':
++        path=a.output/'control.json';seq=read_json(path)['sequence']+1 if path.exists() else 1;tmp=path.with_suffix('.next');write(tmp,dict(sequence=seq,action=a.action,at_utc=utc()));os.replace(tmp,path);return
++    if a.command=='unit':
++        args=[sys.executable,str(Path(__file__).resolve()),'run','--config',str(a.config.resolve()),'--grant',str(a.grant.resolve()),'--allow-network'];quoted=' '.join('"'+x.replace('\\','\\\\').replace('"','\\"').replace('%','%%')+'"' for x in args)
++        a.output.write_text('[Unit]\nDescription=TTO bounded automatic workday\n[Service]\nType=simple\nExecStart='+quoted+'\nRestart=no\nTimeoutStopSec=45\nKillMode=control-group\nRuntimeMaxSec=86400\n[Install]\nWantedBy=default.target\n');return
++    c=read_json(a.config)
++    if a.command=='preview':
++        reg=read_json(c['registration']);request=read_json(c['request_config']);plan=read_json(c['plan']);write_json=dict(software='TTO-AUTOWORKDAY-INTEGRATION-v1',network_clients_created=0,load_grant_template=dict(action='auto-workday',explicit_user_start=False,evidence=None,program_sha256=source_sha(),plan_sha256=plan['plan_sha256'],request_config_sha256=digest(request),observer_wheel_sha256=WHEEL_SHA,max_duration_s=plan['total_elapsed_seconds'],not_before_utc=None,expires_at_utc=None,**{k:reg[k] for k in ('device_id','thermal_config_id','session_id')}));print(json.dumps(write_json,indent=2));return
++    if not a.allow_network:p.error('current permission plus --allow-network required')
++    result=asyncio.run(run(c,read_json(a.grant),a.self_owned_loopback));print(json.dumps(result,ensure_ascii=False,indent=2));return 0 if not result['error'] else 2
++if __name__=='__main__':raise SystemExit(main())
+--- /dev/null
++++ autoworkday-v1/supervision.py
+@@ -0,0 +1,80 @@
++"""Local-only health supervisor. Actual source validity remains owned by observe.2."""
++import json,os,time,shutil
++from pathlib import Path
++from collections import deque
++from admission import evaluate
++
++def read_json(path):
++    p=Path(path)
++    if p.stat().st_size>1024**2:raise ValueError('local_state_size')
++    return json.loads(p.read_text())
++
++class Budget:
++    def __init__(self,cpu,rss):self.cpu=cpu;self.rss=rss;self.rows=deque();self.over=None;self.unknown=None;self.mean=None
++    def tick(self,t,cpu,rss):
++        if cpu is not None:self.rows.append((t,cpu))
++        while self.rows and t-self.rows[0][0]>10:self.rows.popleft()
++        self.mean=sum(x[1] for x in self.rows)/len(self.rows) if self.rows else None
++        if rss is None or (cpu is None and t>2):self.unknown=t if self.unknown is None else self.unknown
++        else:self.unknown=None
++        high=self.mean is not None and len(self.rows)>=8 and self.mean>self.cpu
++        self.over=(t if self.over is None else self.over) if high else None
++        return 'RSS_budget' if rss is not None and rss>self.rss else 'sustained_CPU_budget' if self.over is not None and t-self.over>=30 else 'resource_unknown' if self.unknown is not None and t-self.unknown>=10 else None
++
++class Health:
++    def __init__(self,identity,checkpoint_s=7200):
++        self.identity=identity;self.checkpoint_s=checkpoint_s;self.checked=False;self.unready=None;self.load_stop=None;self.last=None;self.resource_stop=None
++        self.own=Budget(5,64*1024**2);self.total=Budget(8,192*1024**2)
++    def update(self,t,launch,status,now,*,alive,created,resource=None):
++        gate=evaluate(launch,status,now,self.identity,alive=alive,process_created=created)
++        if gate['action']=='allow':self.unready=None
++        elif self.unready is None:self.unready=t
++        if gate['action']=='stop':self.load_stop=gate['reasons'][0]
++        # Background is a health inspection, not 2h continuously green active readiness.
++        if t>=self.checkpoint_s and self.unready is not None and t-max(self.checkpoint_s,self.unready)>=60:self.load_stop='active_conditions_unready_60s'
++        if resource:
++            for name,b,cpu,rss in [('driver',self.own,resource['own_cpu'],resource['own_rss']),('combined',self.total,resource['total_cpu'],resource['total_rss'])]:
++                reason=b.tick(t,cpu,rss)
++                if reason:self.resource_stop=name+'_'+reason;self.load_stop=self.resource_stop
++        checkpoint=None
++        if not self.checked and t>=self.checkpoint_s:
++            self.checked=True
++            checkpoint=dict(elapsed_s=t,software_healthy=gate['software_healthy'],active_allowed=gate['action']=='allow' and not self.load_stop,active_reasons=gate['reasons'],resource_stop=self.resource_stop,model_score_used=False,human_confirmation_required=False)
++        if self.load_stop:gate=dict(gate,action='stop',reasons=[self.load_stop])
++        self.last=gate
++        return gate,checkpoint
++
++class DiskEvidence:
++    def __init__(self,root,limit=256*1024**2):
++        self.root=Path(root);self.limit=limit;self.files={};self.written=0;self.external=0
++    def emit(self,name,row):
++        b=(json.dumps(row,ensure_ascii=False,allow_nan=False)+'\n').encode()
++        if self.written+self.external+len(b)>self.limit:raise ValueError('driver_evidence_budget')
++        if name not in self.files:self.files[name]=(self.root/(name+'.jsonl')).open('xb')
++        self.files[name].write(b);self.files[name].flush();self.written+=len(b)
++    def check_disk(self):
++        self.external=sum(p.stat().st_size for p in (self.root/'responses').glob('*') if p.is_file())
++        if self.written+self.external>self.limit:raise ValueError('driver_evidence_budget')
++        if shutil.disk_usage(self.root).free<1024**3:raise ValueError('driver_min_free_bytes')
++    def close(self):
++        for f in self.files.values():f.flush();os.fsync(f.fileno());f.close()
++
++class Controls:
++    def __init__(self,path):self.path=Path(path);self.last_sequence=-1;self.paused=False;self.stopped=False
++    def read(self):
++        if self.path.exists():
++            x=read_json(self.path)
++            if type(x.get('sequence')) is not int or x['sequence']<self.last_sequence:raise ValueError('control_sequence_regression')
++            if x['sequence']>self.last_sequence:
++                if x.get('action') not in ('pause','resume','stop'):raise ValueError('unknown_control')
++                self.last_sequence=x['sequence']
++                if x['action']=='pause':self.paused=True
++                if x['action']=='resume':self.paused=False
++                if x['action']=='stop':self.stopped=True
++        return dict(paused=self.paused,stopped=self.stopped,sequence=self.last_sequence)
++
++
++def request_admission(health,launch,status,now,*,alive,created):
++    if health.load_stop:return dict(action='stop',reasons=[health.load_stop])
++    if not health.checked:return dict(action='pause',reasons=['automatic_checkpoint_pending'])
++    return evaluate(launch,status,now,health.identity,alive=alive,process_created=created)
+--- /dev/null
++++ autoworkday-v1/tests/fake_source.py
+@@ -0,0 +1,63 @@
++"""Own numeric-loopback Socket.IO + ESP status + SSE service. All values SYNTHETIC."""
++import asyncio,copy,json,time,uuid
++from pathlib import Path
++from aiohttp import web
++import socketio
++from tto_field.support import utc
++FIX=Path(__file__).with_name('fixtures')
++
++class FakeSource:
++    def __init__(self,scenario='normal'):
++        self.scenario=scenario;self.seq=0;self.connections=set();self.posts=0;self.active=0;self.peak=0;self.status_gets=[];self.completions=0
++        self.start=None;self.runner=None;self.ticker=None;self.model_gets=0;self.silent=False;self.did_disconnect=False
++    def packet(self):
++        p=json.loads((FIX/'orin.json').read_text());self.seq+=1
++        p['telemetry_meta'].update(sample_seq=self.seq,stream_id=str(uuid.UUID(int=1)),received_at=utc(),sample_age_ms=0.,fresh=True,collector_state='running')
++        p['gpu'].update(sampled_at_utc=utc(),age_at_telemetry_receive_ms=0.,device_uuid='SYNTHETIC-GPU')
++        p['timestamp']=utc();p['temperature']['tj']=44.3;p['temperature']['gpu']=44.3
++        return p
++    def payload(self,kind):
++        p=json.loads((FIX/(kind+'.json')).read_text())
++        if kind=='fan':
++            p['data']['fans'][0].update(mode='auto',enabled=True,guard_active=self.scenario=='guard' and self.elapsed()>=18,
++                                      fault=False,temp_stale=False,successful_duty=17,duty=17,duty_valid=True,controller_gain=.82)
++        else:p['data'].update(manual_mode=False,normalized_valid=True,valid=True,active_source='variable',bound_variable='agx_info.temperature.tj')
++        return p
++    def elapsed(self):return time.monotonic()-self.start
++    async def status(self,r):
++        self.status_gets.append(dict(path=r.path,at_s=self.elapsed()));kind=r.match_info['kind']
++        if kind=='fan' and self.scenario=='short_gap' and 20<=self.elapsed()<26:return web.Response(status=503)
++        return web.json_response(self.payload(kind))
++    async def models(self,r):self.model_gets+=1;return web.json_response({'data':[{'id':'SIMULATED-MODEL','root':'SYNTHETIC-ONLY'}]})
++    async def metrics(self,r):return web.Response(text=f'vllm:num_requests_running {self.active}\nvllm:num_requests_waiting 0\n')
++    async def request(self,r):
++        self.posts+=1;idx=self.posts;self.active+=1;self.peak=max(self.peak,self.active)
++        payload=await r.json();assert payload['max_tokens']==256 and payload['stream_options']['include_usage']
++        response=web.StreamResponse(headers={'Content-Type':'text/event-stream'});await response.prepare(r)
++        try:
++            await asyncio.sleep(.1)
++            await response.write(('data: '+json.dumps({'id':f'SYNTHETIC-{idx}','choices':[{'delta':{'content':'synthetic'},'finish_reason':None}]})+'\n\n').encode())
++            await asyncio.sleep(.15)
++            if self.scenario=='unknown' and idx==1:return response
++            await response.write(('data: '+json.dumps({'id':f'SYNTHETIC-{idx}','choices':[{'delta':{},'finish_reason':'length'}],'usage':{'completion_tokens':256,'prompt_tokens':1,'total_tokens':257}})+'\n\n').encode())
++            await response.write(b'data: [DONE]\n\n');self.completions+=1;return response
++        except (ConnectionResetError,RuntimeError):return response
++        finally:self.active-=1
++    async def tick(self):
++        while True:
++            if self.connections and not self.silent:await self.sio.emit('tegrastats_update',self.packet())
++            if self.scenario=='disconnect' and self.elapsed()>=5 and not self.did_disconnect:
++                self.did_disconnect=True
++                for sid in list(self.connections):await self.sio.disconnect(sid)
++            await asyncio.sleep(1.)
++    async def __aenter__(self):
++        app=web.Application();self.sio=socketio.AsyncServer(async_mode='aiohttp',logger=False,engineio_logger=False);self.sio.attach(app)
++        @self.sio.event
++        async def connect(sid,environ):self.connections.add(sid)
++        @self.sio.event
++        async def disconnect(sid,*args):self.connections.discard(sid)
++        app.router.add_get('/api/v1/{kind}/status',self.status);app.router.add_get('/v1/models',self.models);app.router.add_get('/metrics',self.metrics);app.router.add_post('/v1/chat/completions',self.request)
++        self.runner=web.AppRunner(app);await self.runner.setup();site=web.TCPSite(self.runner,'127.0.0.1',0);await site.start()
++        self.url='http://127.0.0.1:'+str(site._server.sockets[0].getsockname()[1]);self.start=time.monotonic();self.ticker=asyncio.create_task(self.tick());return self
++    async def __aexit__(self,*args):
++        self.ticker.cancel();await asyncio.gather(self.ticker,return_exceptions=True);await self.sio.shutdown();await self.runner.cleanup()
+--- /dev/null
++++ autoworkday-v1/tests/joint_loopback.py
+@@ -0,0 +1,78 @@
++"""Actual unchanged observe.2 + delegated Runner/Requester + live self-owned SSE.
++Only the injected TEST clock starts at 7200; real field Clock and wheel are untouched.
++Gate uses actual live observer/host times. Shift is explicit and NOT a field timing claim.
++"""
++import asyncio,json,sys,time,uuid,socket
++from pathlib import Path
++from datetime import datetime,timedelta,timezone
++from aiohttp import web
++HERE=Path(__file__).resolve().parents[1];sys.path.insert(0,str(HERE));sys.path.insert(0,str(HERE/'executor'))
++from program import Clock
++from admission import evaluate
++from supervision import read_json
++from runner import Runner,Control
++from vendor.requester import Requester
++sys.path.insert(0,str(Path(__file__).parent))
++from fake_source import FakeSource
++
++class Source(FakeSource):
++    def __init__(self):super().__init__();self.mode='complete';self.api_calls=0
++    async def inference(self,r):
++        self.api_calls+=1;payload=await r.json();assert payload['max_tokens']==256 and payload['stream']
++        response=web.StreamResponse(headers={'Content-Type':'text/event-stream'});await response.prepare(r)
++        for row in [dict(id='owned-response',choices=[dict(delta=dict(content='测试内容'),finish_reason=None)]),dict(id='owned-response',choices=[dict(delta={},finish_reason='stop')],usage=dict(prompt_tokens=12,completion_tokens=4,total_tokens=16))]:
++            await response.write(('data: '+json.dumps(row)+'\n\n').encode());await asyncio.sleep(.1)
++        if self.api_calls==1:await response.write(b'data: [DONE]\n\n')
++        await response.write_eof();return response
++
++async def main(prefix,out):
++    out.mkdir();start_receipts=[]
++    async with Source() as src:
++        # FakeSource app is frozen after startup; register the request API on a second owned app.
++        app=web.Application();app.router.add_post('/v1/chat/completions',src.inference);api=web.AppRunner(app);await api.setup();site=web.TCPSite(api,'127.0.0.1',0);await site.start();url='http://127.0.0.1:'+str(site._server.sockets[0].getsockname()[1])
++        cfg=dict(orin=dict(base_url=src.url,source_sample_interval_ms=1000,source_interval_evidence='owned synthetic source'),tianshan=dict(base_url=src.url))
++        reg=dict(device_id='joint-owned',thermal_config_id='joint-owned-config',session_id=str(uuid.uuid4()),observer_host_id=socket.gethostname())
++        c=out/'config.json';c.write_text(json.dumps(cfg));rr=out/'registration.json';rr.write_text(json.dumps(reg));entry=prefix/'bin/tto-observe'
++        p=await asyncio.create_subprocess_exec(str(entry),'preview','--config',str(c),'--registration',str(rr),'--duration','35',stdout=asyncio.subprocess.PIPE);data,_=await p.communicate();assert p.returncode==0
++        grant=json.loads(data)['grant_template'];now=datetime.now(timezone.utc);grant.update(explicit_user_start=True,evidence='OWNED LOOPBACK ONLY',self_owned_loopback=True,not_before_utc=(now-timedelta(seconds=1)).isoformat(),expires_at_utc=(now+timedelta(seconds=90)).isoformat());g=out/'observe-grant.json';g.write_text(json.dumps(grant));run=out/'observe'
++        with (out/'observe.stdout').open('wb') as stdout,(out/'observe.stderr').open('wb') as stderr:
++            child=await asyncio.create_subprocess_exec(str(entry),'observe','--config',str(c),'--registration',str(rr),'--grant',str(g),'--duration','35','--output',str(run),'--allow-network','--local-loopback',stdout=stdout,stderr=stderr)
++        try:
++            ready=None;wall=time.monotonic()
++            while time.monotonic()-wall<20:
++                await asyncio.sleep(.2)
++                if (run/'launch.json').exists() and (run/'status.json').exists():
++                    launch=read_json(run/'launch.json');st=read_json(run/'status.json');ident={k:launch['registration'][k] for k in ('device_id','thermal_config_id','session_id','observer_host_id','boot_id')};ident.update(model_sha256='dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0',spec_sha256='2080adcf20773650299def2bb0f3ebdb9f87d8f85281d5b87a99d8b406c83c6b')
++                    ready=evaluate(launch,st,time.monotonic(),ident,alive=child.returncode is None,process_created=launch['process_created'])
++                    if ready['action']=='allow':break
++            assert ready and ready['action']=='allow',ready
++            raw_events=[]
++            class InjectedTestClock:
++                def __init__(self):self.start=time.monotonic();self.offset=7200
++                def now(self):return time.monotonic()-self.start+self.offset
++                def utc(self):return datetime.now(timezone.utc).isoformat()
++                async def sleep(self,seconds):await asyncio.sleep(seconds)
++            clk=InjectedTestClock()
++            binding=dict(observer_session_id=reg['session_id'],native_run_id=st['native_run_id'],device_id=reg['device_id'],config_sha256=launch['config_sha256'],clock_domain='synthetic-test-shifted-relative-only')
++            def admission():return evaluate(launch,read_json(run/'status.json'),time.monotonic(),ident,alive=child.returncode is None,process_created=launch['process_created'])
++            def emit(e,row):raw_events.append(dict(event=e,row=row))
++            requester=Requester(dict(model='OWNED-MOCK',base_url=url,stream=True,sampling={}),out,clk,lambda *a,**k:None)
++            original_request=requester.request
++            async def requested(*args,**kwargs):
++                result=await original_request(*args,**kwargs)
++                if src.api_calls==1:clk.offset+=7646-clk.now() # TEST-only jump after the real first end
++                return result
++            requester.request=requested
++            driver=Runner(clk,requester,read_json(HERE/'executor/frozen-plan.json'),admission,emit,Control(binding))
++            result=await asyncio.wait_for(driver.run(),10);results=[result]
++            assert result['protocol_completed']==1 and result['submissions']==2 and result['unknown_server_end'] and result['reason']=='protocol_end_unknown_no_retry'
++            assert src.api_calls==2 and src.model_gets==0
++            (out/'actual-emits.jsonl').write_text(''.join(json.dumps(x,ensure_ascii=False)+'\n' for x in raw_events))
++            (out/'joint-receipt.json').write_text(json.dumps(dict(scope=__doc__,observer_version=launch['version'],native_run_id=st['native_run_id'],same_live_observer_gate=ready,api_requests=src.api_calls,model_queries=0,results=results,second_collector=False,future_plan_sent_to_observer=False),ensure_ascii=False,indent=2)+'\n')
++        finally:
++            if child.returncode is None:child.terminate();await asyncio.wait_for(child.wait(),10)
++            await api.cleanup()
++        assert child.returncode==0
++        p=await asyncio.create_subprocess_exec(str(entry),'archive','--session',str(run),'--output',str(out/'observe.zip'),stdout=asyncio.subprocess.PIPE);data,_=await p.communicate();assert p.returncode==0;(out/'archive-receipt.json').write_bytes(data)
++    print('joint real source, gate, two SSE cases and archive passed')
++if __name__=='__main__':asyncio.run(main(Path(sys.argv[1]).resolve(),Path(sys.argv[2]).resolve()))
+--- /dev/null
++++ autoworkday-v1/tests/joint_virtual.py
+@@ -0,0 +1,27 @@
++"""Whole virtual window: real Runner+Requester+event Adapter wired to the new Health gate."""
++import asyncio,json,sys
++from pathlib import Path
++HERE=Path(__file__).resolve().parents[1];sys.path.insert(0,str(HERE));sys.path.insert(0,str(HERE/'executor'));sys.path.insert(0,str(Path(__file__).parent))
++from test_supervision import views,IDENTITY
++from supervision import Health,request_admission
++from runner import Runner,Control
++from fixtures.fake_runtime import VirtualClock,make_requester,Journal
++
++async def main(out):
++    out.mkdir();clock=VirtualClock();health=Health(IDENTITY);checkpoints=[];events=Journal()
++    def admission():
++        t=clock.now();launch,status=views(t);gate,check=health.update(t,launch,status,t,alive=True,created=10)
++        if check:checkpoints.append(check)
++        return request_admission(health,launch,status,t,alive=True,created=10)
++    binding=dict(observer_session_id=IDENTITY['session_id'],native_run_id='synthetic-native',device_id=IDENTITY['device_id'],config_sha256='config',clock_domain='synthetic-virtual-domain')
++    requester=make_requester(out,clock,'complete',3)
++    driver=Runner(clock,requester,json.loads((HERE/'executor/frozen-plan.json').read_text()),admission,events,Control(binding))
++    summary=await driver.run();raw=[x for name,x in events.rows if name=='request_submit'];normalized=[x for name,x in events.rows if name=='workload_event']
++    assert summary['reason']=='completed' and clock.now()==86400 and len(checkpoints)==1 and checkpoints[0]['elapsed_s']==7200
++    assert len(raw)<=600 and summary['client_inflight_seconds']<=18000
++    assert all(7200<=x['mono_s']<=84570 and not 32400<=x['mono_s']<64800 for x in raw)
++    assert all(not any(k in x for k in ('seed','slots','planned_submit_s')) for x in normalized)
++    (out/'actual-emits.jsonl').write_text(''.join(json.dumps(dict(event=e,row=x),ensure_ascii=False)+'\n' for e,x in events.rows))
++    (out/'receipt.json').write_text(json.dumps(dict(scope=__doc__+' Synthetic measurement fixture, no physical time/temperature claim.',checkpoint=checkpoints,summary=summary,stage_counts={s['id']:sum(x['stage_id']==s['id'] for x in raw) for s in driver.plan['stages']},single_requester=True,second_collector=False,predictor_received_future_schedule=False,human_required=False),indent=2)+'\n')
++    print('joint virtual checkpoint + all stages + actual requester events passed')
++if __name__=='__main__':asyncio.run(main(Path(sys.argv[1]).resolve()))
+--- /dev/null
++++ autoworkday-v1/tests/lifecycle_loopback.py
+@@ -0,0 +1,39 @@
++"""Real supervisor CLI, frozen 24h plan, user STOP during background; no time scaling."""
++import asyncio,json,sys,socket,time,uuid
++from pathlib import Path
++from datetime import datetime,timedelta,timezone
++HERE=Path(__file__).resolve().parents[1];sys.path.insert(0,str(HERE))
++from program import source_sha,digest,WHEEL_SHA
++sys.path.insert(0,str(Path(__file__).parent))
++from fake_source import FakeSource
++
++async def main(prefix,out):
++    out.mkdir();program=HERE/'program.py';py=prefix/'bin/python';entry=prefix/'bin/tto-observe'
++    async with FakeSource() as server:
++        config=out/'observer-config.json';config.write_text(json.dumps(dict(orin=dict(base_url=server.url,source_sample_interval_ms=1000,source_interval_evidence='owned synthetic source'),tianshan=dict(base_url=server.url))))
++        reg=dict(device_id='lifecycle-owned',thermal_config_id='owned-config',observer_host_id=socket.gethostname(),session_id=str(uuid.uuid4()));registration=out/'registration.json';registration.write_text(json.dumps(reg))
++        proc=await asyncio.create_subprocess_exec(str(entry),'preview','--config',str(config),'--registration',str(registration),'--duration','86280',stdout=asyncio.subprocess.PIPE);data,_=await proc.communicate();assert proc.returncode==0
++        now=datetime.now(timezone.utc);grant=json.loads(data)['grant_template'];grant.update(explicit_user_start=True,evidence='OWNED LOOPBACK ONLY',self_owned_loopback=True,not_before_utc=(now-timedelta(seconds=1)).isoformat(),expires_at_utc=(now+timedelta(seconds=86520)).isoformat())
++        og=out/'observe-grant.json';og.write_text(json.dumps(grant));req=dict(model='OWNED-MOCK-NOT-QUERIED',stream=True,base_url=server.url,sampling={});request=out/'request.json';request.write_text(json.dumps(req));plan=json.loads((HERE/'executor/frozen-plan.json').read_text())
++        run=out/'run';c=dict(observe_prefix=str(prefix),observe_config=str(config),registration=str(registration),observe_grant=str(og),request_config=str(request),plan=str(HERE/'executor/frozen-plan.json'),output=str(run),cleanup_seconds=120);cp=out/'supervisor-config.json';cp.write_text(json.dumps(c))
++        g=dict(action='auto-workday',explicit_user_start=True,program_sha256=source_sha(),plan_sha256=plan['plan_sha256'],request_config_sha256=digest(req),observer_wheel_sha256=WHEEL_SHA,evidence='OWNED LOOPBACK ONLY',max_duration_s=86400,self_owned_loopback=True,not_before_utc=(now-timedelta(seconds=1)).isoformat(),expires_at_utc=(now+timedelta(seconds=86520)).isoformat(),**{k:reg[k] for k in ('device_id','thermal_config_id','session_id')});gp=out/'load-grant.json';gp.write_text(json.dumps(g))
++        with (out/'stdout').open('wb') as stdout,(out/'stderr').open('wb') as stderr:
++            p=await asyncio.create_subprocess_exec(str(py),str(program),'run','--config',str(cp),'--grant',str(gp),'--allow-network','--self-owned-loopback',stdout=stdout,stderr=stderr)
++            try:
++                start=time.monotonic()
++                while time.monotonic()-start<13:
++                    assert p.returncode is None,(out/'stderr').read_text()
++                    await asyncio.sleep(.2)
++                control=await asyncio.create_subprocess_exec(str(py),str(program),'control','--output',str(run),'stop');assert await control.wait()==0
++                await asyncio.wait_for(p.wait(),20)
++            except BaseException:
++                if p.returncode is None:p.kill();await p.wait()
++                raise
++        assert p.returncode==0,(out/'stderr').read_text()
++        s=json.loads((run/'summary.json').read_text());assert s['reason']=='user_stop' and s['archive']['returncode']==0 and s['driver']['submissions']==0
++        assert server.posts==server.model_gets==0
++        assert len(list((run/'observe/native').glob('*/manifest.json')))==1
++        index=json.loads((run/'files.json').read_text());assert index['observer_index']=='observe/files.json'
++        (out/'receipt.json').write_text(json.dumps(dict(scope=__doc__,summary=s,requests=server.posts,model_queries=server.model_gets,one_native_run=True,original_wheel_unchanged=True,independent_read_and_load_grants=True,no_interactive_confirmation=True),indent=2)+'\n')
++    print('supervisor actual CLI / one observe / controls / STOP / archive passed')
++if __name__=='__main__':asyncio.run(main(Path(sys.argv[1]).resolve(),Path(sys.argv[2]).resolve()))
+--- /dev/null
++++ autoworkday-v1/tests/test_supervision.py
+@@ -0,0 +1,82 @@
++import copy,json,sys
++from pathlib import Path
++sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
++from admission import evaluate
++from supervision import Health,Controls,Budget
++
++IDENTITY=dict(device_id='synthetic-device',thermal_config_id='synthetic-config',session_id='synthetic-session',observer_host_id='synthetic-host',boot_id='synthetic-boot',model_sha256='model',spec_sha256='spec')
++def views(t):
++    m={k:dict(raw_valid=True,observed_mono_s=t,valid_until_mono_s=t+ttl) for k,ttl in [('tj',7.5),('power',7.5),('last_successful_pwm',2.5),('control_context',7.5)]}
++    m['tj']['value_C']=45;m['power'].update(names=['vdd_gpu','vdd_cpu_soc_mss'],rails_W=[2,6]);m['last_successful_pwm']['value_percent']=17
++    safe=dict(guard=False,fault=False,enabled=True,mode='auto',manual_mode=False,binding='agx_info.temperature.tj',active_source='variable',fan_fresh=True,binding_fresh=True,temp_stale=False,normalized_valid=True,confirmed_normal_now=True,context_stable_s=5)
++    launch=dict(registration=dict(IDENTITY),version='0.2.4+observe.2',clock_start=dict(mono_before_s=0,pid=7,domain='synthetic-domain'),authorization=dict(config_sha256='config'))
++    env=dict(identity=dict(IDENTITY,run_id='synthetic-native'),process_clock_domain='synthetic-domain',clock=dict(domain='synthetic-domain',observer_input_mono_s=t,generated_at_mono_s=t),expected_identity=dict(config_sha256='config'),measurement=m,safety=safe,model=dict(available=False),native_ref='synthetic-native/observation:1')
++    return launch,dict(running=True,process_created=10,pid=7,elapsed_s=t,collection=True,native_run_id='synthetic-native',latest_state=env)
++def gate(l,s,now):return evaluate(l,s,now,IDENTITY,alive=True,process_created=10)
++def test_no_model_yet_override_and_TTL_expiry():
++    l,s=views(20);assert gate(l,s,20)['action']=='allow'
++    assert gate(l,s,22.5)['action']=='pause' # unchanged exact PWM TTL
++    s['latest_state']['measurement']['tj']['raw_valid']=False
++    assert gate(l,s,20)['action']=='pause'
++def test_protection_identity_clock_and_observer_exit():
++    for key,value in [('guard',True),('fault',True),('mode','manual'),('binding','other')]:
++        l,s=views(20);s['latest_state']['safety'][key]=value;assert gate(l,s,20)['action']=='stop'
++    l,s=views(20);s['latest_state']['identity']['boot_id']='wrong';assert gate(l,s,20)['action']=='stop'
++    l,s=views(20);s['latest_state']['clock']['domain']='wrong';assert gate(l,s,20)['action']=='stop'
++    l,s=views(20);assert evaluate(l,s,20,IDENTITY,alive=False,process_created=10)['action']=='stop'
++def test_automatic_checkpoint_unready_grace_recovery_and_no_human():
++    h=Health(IDENTITY);check=[]
++    for t in [0,3600,7199,7200,7201]:
++        l,s=views(t);g,c=h.update(t,l,s,t,alive=True,created=10)
++        if c:check.append(c)
++    assert len(check)==1 and check[0]['active_allowed'] and not check[0]['human_confirmation_required']
++    l,s=views(7210);s['latest_state']['measurement']['last_successful_pwm']['raw_valid']=False
++    assert h.update(7210,l,s,7210,alive=True,created=10)[0]['action']=='pause'
++    l,s=views(7220);assert h.update(7220,l,s,7220,alive=True,created=10)[0]['action']=='allow'
++    for t in [7230,7289,7290]:
++        l,s=views(t);s['latest_state']['measurement']['tj']['raw_valid']=False;g,c=h.update(t,l,s,t,alive=True,created=10)
++    assert g['action']=='stop' and g['reasons']==['active_conditions_unready_60s']
++def test_background_failure_checkpoint_does_not_silently_allow():
++    h=Health(IDENTITY)
++    for t in [0,7199,7200,7259,7260]:
++        l,s=views(t);s['latest_state']=None;g,c=h.update(t,l,s,t,alive=True,created=10)
++        if t==7200:assert not c['active_allowed'] and c['software_healthy']
++    assert g['action']=='stop'
++def test_driver_and_total_resources_and_controls(tmp_path):
++    b=Budget(5,64*1024**2)
++    for t in range(40):r=b.tick(t,6,40*1024**2)
++    assert r=='sustained_CPU_budget'
++    assert Budget(8,192*1024**2).tick(1,0,193*1024**2)=='RSS_budget'
++    p=tmp_path/'control.json';c=Controls(p)
++    for seq,action in enumerate(['pause','resume','stop'],1):
++        p.write_text(json.dumps(dict(sequence=seq,action=action)));r=c.read()
++        assert r['paused']==(action=='pause') and r['stopped']==(action=='stop')
++
++def test_load_permission_is_separate_and_exact(tmp_path):
++    import socket
++    from datetime import datetime,timedelta,timezone
++    from program import validate,source_sha,digest,WHEEL_SHA
++    root=Path(__file__).resolve().parents[1];plan=json.loads((root/'executor/frozen-plan.json').read_text())
++    reg=dict(device_id='d',thermal_config_id='c',session_id='s',observer_host_id=socket.gethostname())
++    request=dict(model='test',base_url='http://127.0.0.1:1',stream=True,sampling={})
++    files={'registration':reg,'request_config':request,'observe_grant':dict(action='readonly-observe',session_id='s')}
++    c=dict(plan=str(root/'executor/frozen-plan.json'),cleanup_seconds=120)
++    for k,v in files.items():
++        p=tmp_path/(k+'.json');p.write_text(json.dumps(v));c[k]=str(p)
++    now=datetime.now(timezone.utc)
++    grant=dict(action='auto-workday',explicit_user_start=True,evidence='SYNTHETIC UNIT',program_sha256=source_sha(),plan_sha256=plan['plan_sha256'],request_config_sha256=digest(request),observer_wheel_sha256=WHEEL_SHA,device_id='d',thermal_config_id='c',session_id='s',max_duration_s=86400,not_before_utc=(now-timedelta(seconds=1)).isoformat(),expires_at_utc=(now+timedelta(seconds=86500)).isoformat())
++    assert validate(c,grant)[0]['plan_sha256']==plan['plan_sha256']
++    import pytest
++    for k,v in [('action','readonly-observe'),('explicit_user_start',False),('program_sha256','other'),('plan_sha256','other'),('device_id','other'),('session_id','other'),('request_config_sha256','other'),('expires_at_utc',now.isoformat())]:
++        g=dict(grant);g[k]=v
++        with pytest.raises(ValueError):validate(c,g)
++
++
++def test_first_opportunity_waits_for_automatic_checkpoint():
++    from supervision import request_admission
++    h=Health(IDENTITY);l,s=views(7200)
++    assert request_admission(h,l,s,7200,alive=True,created=10)['reasons']==['automatic_checkpoint_pending']
++    h.update(7200,l,s,7200,alive=True,created=10)
++    assert request_admission(h,l,s,7200,alive=True,created=10)['action']=='allow'
++    h.load_stop='explicit_protection'
++    assert request_admission(h,l,None,7200,alive=True,created=10)['action']=='stop'

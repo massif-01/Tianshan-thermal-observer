@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/Users/massif/Tianshan-thermal-observer/scripts/check_install_identity.py", line 39, in <module>
+    a=p.parse_args();verify(a.source,a.wheel,a.output)
+  File "/Users/massif/Tianshan-thermal-observer/scripts/check_install_identity.py", line 25, in verify
+    assert content==wheel_files[name]==(installed/name).read_bytes()
+AssertionError

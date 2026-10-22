@@ -1,0 +1,31 @@
+{
+  "scope": "fresh ZIP extraction; no devices/network/fitting",
+  "checks": [
+    {
+      "script": "verify_bundle.py",
+      "exit_code": 0,
+      "stdout": "Verified 326 file hashes/lengths; this is integrity only, not field authorization.\n",
+      "stderr": ""
+    },
+    {
+      "script": "integration/run_checks.py",
+      "exit_code": 0,
+      "stdout": "{\"checks\": 23, \"rows\": 5319, \"counts\": {\"collection_available\": 4351, \"model_available\": 5290, \"field_safety_available\": 289, \"start_allowed\": 289}, \"scheduler_state\": \"terminal\", \"stop_reason\": \"data_or_observer_unavailable_too_long\"}\n",
+      "stderr": ""
+    },
+    {
+      "script": "integration/check_synthetic_chain.py",
+      "exit_code": 0,
+      "stdout": "[{\"scenario\": \"normal\", \"steps\": 451, \"reason\": null}, {\"scenario\": \"short_gap\", \"steps\": 451, \"reason\": null}, {\"scenario\": \"long_gap\", \"steps\": 451, \"reason\": null}, {\"scenario\": \"guard\", \"steps\": 331, \"reason\": \"explicit_protection_or_mode_binding\"}, {\"scenario\": \"user_stop\", \"steps\": 331, \"reason\": \"user_stop\"}, {\"scenario\": \"request_unknown\", \"steps\": 331, \"reason\": \"request_termination_unknown\"}]\n",
+      "stderr": ""
+    },
+    {
+      "script": "verify_bundle.py",
+      "exit_code": 0,
+      "stdout": "Verified 326 file hashes/lengths; this is integrity only, not field authorization.\n",
+      "stderr": ""
+    }
+  ],
+  "all_passed": true,
+  "virtual_requests_only": true
+}

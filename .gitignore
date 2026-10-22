@@ -11,3 +11,16 @@ runs/
 .playwright-cli/
 output/
 .DS_Store
+
+# Installed test environments and frontend dependency cache; experimental data remains tracked.
+node_modules/
+/evidence/prep-midload-v1/clean-install/
+/evidence/mainline-observe-20261021/local-env/
+/evidence/mainline-observe-20261021/release-env/
+/evidence/cpu-runtime-threads-20261020/local-env/
+/evidence/observe-longrun-close-20261021/release-env/
+/evidence/prep-midload-v1/repair-r1-r2/clean-install/
+/evidence/prep-midload-v1/conda-clean-final/conda-env/
+/evidence/prep-midload-v1/conda-clean-install/conda-env/
+/evidence/observe-longrun-close-20261021/release-env-py312/
+/evidence/prep-midload-v1/repair-r1-r2/conda-install/conda-env/

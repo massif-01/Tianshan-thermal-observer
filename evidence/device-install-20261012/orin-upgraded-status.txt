@@ -1,0 +1,30 @@
+MainPID=126282
+ActiveState=active
+SubState=running
+Oct 12 11:35:43 agx tegrastats-api[126282]: 2026-10-12 11:35:43,145 - tegrastats_api.server - INFO - 启动Tegrastats API服务器
+Oct 12 11:35:43 agx tegrastats-api[126282]: 2026-10-12 11:35:43,145 - tegrastats_api.server - INFO - 监听地址: 0.0.0.0:58090
+Oct 12 11:35:43 agx tegrastats-api[126282]: 2026-10-12 11:35:43,145 - tegrastats_api.server - INFO - 最大连接数: 10
+Oct 12 11:35:43 agx tegrastats-api[126282]: 2026-10-12 11:35:43,145 - tegrastats_api.server - INFO - 数据更新频率: 1.0秒
+Oct 12 11:35:43 agx tegrastats-api[126282]: 2026-10-12 11:35:43,145 - tegrastats_api.server - WARNING - 使用不安全的Werkzeug模式 (仅用于开发环境)
+Oct 12 11:35:43 agx tegrastats-api[126282]: 2026-10-12 11:35:43,145 - werkzeug - WARNING - Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+Oct 12 11:35:43 agx tegrastats-api[126282]:  * Serving Flask app 'tegrastats_api.server'
+Oct 12 11:35:43 agx tegrastats-api[126282]:  * Debug mode: off
+Oct 12 11:35:43 agx tegrastats-api[126282]: 2026-10-12 11:35:43,147 - werkzeug - INFO - WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+Oct 12 11:35:43 agx tegrastats-api[126282]:  * Running on all addresses (0.0.0.0)
+Oct 12 11:35:43 agx tegrastats-api[126282]:  * Running on http://127.0.0.1:58090
+Oct 12 11:35:43 agx tegrastats-api[126282]:  * Running on http://10.10.99.98:58090
+Oct 12 11:35:43 agx tegrastats-api[126282]: 2026-10-12 11:35:43,147 - werkzeug - INFO - Press CTRL+C to quit
+Oct 12 11:35:44 agx tegrastats-api[126282]: 2026-10-12 11:35:44,150 - tegrastats_api.model_monitor - INFO - Service dev-reranker.service is not active (attempt 1/3)
+Oct 12 11:35:44 agx tegrastats-api[126282]: 2026-10-12 11:35:44,150 - tegrastats_api.model_monitor - INFO - Service dev-llm.service is not active (attempt 1/3)
+Oct 12 11:35:44 agx tegrastats-api[126282]: 2026-10-12 11:35:44,150 - tegrastats_api.model_monitor - INFO - Service dev-embedding.service is not active (attempt 1/3)
+Oct 12 11:35:47 agx tegrastats-api[126282]: 2026-10-12 11:35:47,155 - tegrastats_api.model_monitor - INFO - Service dev-reranker.service is not active (attempt 2/3)
+Oct 12 11:35:47 agx tegrastats-api[126282]: 2026-10-12 11:35:47,156 - tegrastats_api.model_monitor - INFO - Service dev-llm.service is not active (attempt 2/3)
+Oct 12 11:35:47 agx tegrastats-api[126282]: 2026-10-12 11:35:47,157 - tegrastats_api.model_monitor - INFO - Service dev-embedding.service is not active (attempt 2/3)
+Oct 12 11:35:52 agx tegrastats-api[126282]: 2026-10-12 11:35:52,160 - tegrastats_api.model_monitor - INFO - Service dev-reranker.service is not active (attempt 3/3)
+Oct 12 11:35:52 agx tegrastats-api[126282]: 2026-10-12 11:35:52,161 - tegrastats_api.model_monitor - INFO - Service dev-llm.service is not active (attempt 3/3)
+Oct 12 11:35:52 agx tegrastats-api[126282]: 2026-10-12 11:35:52,162 - tegrastats_api.model_monitor - INFO - Service dev-embedding.service is not active (attempt 3/3)
+Oct 12 11:35:52 agx tegrastats-api[126282]: Invalid session BJDG-xcjE-LzpAZiAAAR (further occurrences of this error will be logged with level INFO)
+Oct 12 11:35:52 agx tegrastats-api[126282]: 2026-10-12 11:35:52,759 - engineio.server - ERROR - Invalid session BJDG-xcjE-LzpAZiAAAR (further occurrences of this error will be logged with level INFO)
+Oct 12 11:35:52 agx tegrastats-api[126282]: 2026-10-12 11:35:52,759 - werkzeug - INFO - 10.10.99.97 - - [12/Oct/2026 11:35:52] "GET /socket.io/?EIO=4&transport=websocket&sid=BJDG-xcjE-LzpAZiAAAR HTTP/1.1" 400 -
+{"cpu":{"cores":[{"freq":972,"id":0,"usage":0},{"freq":972,"id":1,"usage":1},{"freq":972,"id":2,"usage":0},{"freq":972,"id":3,"usage":0},{"freq":972,"id":4,"usage":4},{"freq":972,"id":5,"usage":1},{"freq":972,"id":6,"usage":0},{"freq":972,"id":7,"usage":1},{"freq":972,"id":8,"usage":0},{"freq":972,"id":9,"usage":0},{"freq":972,"id":10,"usage":1},{"freq":972,"id":11,"usage":3}]},"gpu":{},"memory":{"ram":{"total":125772,"unit":"MB","used":54111},"swap":{"cached":0,"total":2048,"unit":"MB","used":0}},"power":{"vdd_cpu_soc_mss":{"average":6013,"current":5952,"unit":"mW"},"vdd_gpu":{"average":1984,"current":1984,"unit":"mW"},"vin_sys_5v0":{"average":4459,"current":4485,"unit":"mW"}},"telemetry_meta":{"collector_state":"running","fresh":true,"freshness_timeout_ms":5000,"received_at":"2026-10-12T11:35:56.187445Z","sample_age_ms":48.917811014689505,"sample_seq":13,"schema_version":1,"stream_id":"baa91959-3774-44d4-96c1-bd9a0e37eca4","time_basis":"collector_receive"},"temperature":{"cpu":45.906,"gpu":46.312,"soc012":45.156,"soc345":45.031,"tj":46.312},"timestamp":"2026-10-12T11:35:56.236474Z"}
+ 126286 tegrastats --interval 1000

@@ -1,0 +1,124 @@
+{
+  "scope": "Root-cause localization from existing run and bounded read-only board queries; no production changes, workload rerun, service restart, log-level change or deliberate live reproduction",
+  "runtime_version": "0.6.2+028e6330.10132311",
+  "source_association": "Live reported git hash; version generator adds d for tracked/untracked changes outside build; no d is reported. Device binary hash is not exposed in reads and has not been matched.",
+  "field_confirmed": [
+    "Board temp status became default/valid=false before fan stale was observed",
+    "Board fan reported stale and successful PWM25; not a TTO-synthesized stale flag",
+    "Thor-to-TTO stream remained valid; this alone does not prove board subscription continued",
+    "HTTP fan and temp errors were zero",
+    "Both inference requests completed before handoff and before anomaly; no unknown in-flight request"
+  ],
+  "age_expiration_check": {
+    "observer_monotonic_domain": "Same N305 Python time.monotonic as recorded run; no wall-clock alignment used",
+    "board_uptime_ms_at_anchor": 4846873,
+    "anchor_observer_monotonic_bounds_s": [
+      4801.831208264,
+      4801.884350283
+    ],
+    "last_valid_temp_ref": "a03db81c-ed3a-415c-a1d3-11bc26389419/observation:2846",
+    "last_known_variable_timestamp_ms": 3787012,
+    "invalid_temp_ref": "a03db81c-ed3a-415c-a1d3-11bc26389419/observation:2862",
+    "last_known_variable_age_at_invalid_ms_bounds": [
+      5597.754550000653,
+      5650.896568999626
+    ],
+    "board_timeout_ms": 10000,
+    "age_below_timeout": true,
+    "assumptions": [
+      "Same board and observer boots and no monotonic clock discontinuity",
+      "Clock-rate differences over the interval small relative to the >4-second margin",
+      "The already observed valid last_update was not subsequently reset or corrupted; such reset would be a separate invalidation, not subscription age expiration"
+    ],
+    "limits": "This compares the last known valid timestamp, not the unrecorded variable read return code or internal age at anomaly."
+  },
+  "subscription_conclusion": "Ordinary >10s age expiration is inconsistent with the last known valid variable timestamp (age upper bound ~5.651s), assuming no variable reset/replacement or clock discontinuity. A shorter subscription pause is not excluded, but alone does not explain this expiry decision.",
+  "source_code_confirmed": [
+    {
+      "step": "AUTO timer invokes a nonblocking effective-temperature read",
+      "file": "components/ts_drivers/src/ts_fan.c",
+      "line": 666
+    },
+    {
+      "step": "Temperature mutex try failure returns invalid data locally; this path alone does not overwrite global active_source. Thus it cannot alone explain observed global default.",
+      "file": "components/ts_drivers/src/ts_temp_source.c",
+      "line": 676
+    },
+    {
+      "step": "Once temperature mutex acquired, reevaluation reads bound variable with zero-wait variable mutex",
+      "file": "components/ts_drivers/src/ts_temp_source.c",
+      "line": 682
+    },
+    {
+      "step": "Busy variable mutex returns ESP_ERR_TIMEOUT immediately",
+      "file": "components/ts_automation/src/ts_variable.c",
+      "line": 533
+    },
+    {
+      "step": "Reader merges lookup failure and invalid/expired age into false, losing reason",
+      "file": "components/ts_drivers/src/ts_temp_source.c",
+      "line": 181
+    },
+    {
+      "step": "now is captured before variable snapshot; concurrent later variable update can also produce negative age and false",
+      "file": "components/ts_drivers/src/ts_temp_source.c",
+      "line": 353
+    },
+    {
+      "step": "Failed snapshot replaces cached valid state; no valid alternative yields default/25C and overwrites global active_source",
+      "file": "components/ts_drivers/src/ts_temp_source.c",
+      "line": 359
+    },
+    {
+      "step": "AUTO treats invalid input as stale and applies25% fallback",
+      "file": "components/ts_drivers/src/ts_fan.c",
+      "line": 447
+    }
+  ],
+  "diagnosis": "Localized to board temperature-variable read/validity evaluation and shared-state invalidation; code definitely allows transient read failure to masquerade as stale. Actual incident branch is not uniquely determined by available telemetry.",
+  "candidate_branches": [
+    {
+      "candidate": "zero-wait variable mutex contention",
+      "status": "code-reachable; principal hypothesis; no incident return code to prove it"
+    },
+    {
+      "candidate": "concurrent update makes captured now earlier than returned last_update_ms",
+      "status": "code-reachable; incident now/last_update pair not recorded"
+    },
+    {
+      "candidate": "lookup/type/state invalidation or variable replacement",
+      "status": "no supporting field evidence; cannot fully exclude from lossy cached status alone"
+    }
+  ],
+  "log_limits": {
+    "current_level": "INFO",
+    "buffer_capacity": 500,
+    "dropped": 160,
+    "filtered_temp_logs": 0,
+    "filtered_source_logs": "startup only; no incident-level reader return code or internal age",
+    "no_absence_proof": "No matching log does not prove no disconnect or contention occurred"
+  },
+  "missing_for_unique_branch": [
+    "ts_variable_get_info_try return code at anomaly",
+    "evaluation now_ms and actual variable last_update_ms at anomaly",
+    "optional variable type/existence and active source revision at anomaly"
+  ],
+  "not_claimed": [
+    "Confirmed lock contention on this exact frame",
+    "Confirmed communications/manual refresh conflict",
+    "Complete absence of any board subscription pause",
+    "Exact stale duration or recovery instant",
+    "Bit-identical running firmware binary versus local build"
+  ],
+  "next_boundary": "Existing data cannot recover the discarded branch reason. No extra instrumentation or configuration changes were made in this task.",
+  "production_source_unchanged": {
+    "components/ts_drivers/src/ts_temp_source.c": true,
+    "components/ts_drivers/include/ts_temp_source.h": true,
+    "components/ts_drivers/src/ts_fan.c": true,
+    "components/ts_automation/src/ts_variable.c": true,
+    "components/ts_automation/src/ts_source_manager.c": true,
+    "components/ts_api/src/ts_api_temp.c": true,
+    "components/ts_api/src/ts_api_fan.c": true,
+    "tools/gen_version.py": true
+  }
+}

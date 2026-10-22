@@ -1,0 +1,210 @@
+{
+  "run_id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02",
+  "episode": "tto-short-qa-v1-20261013-052807",
+  "usage": "exploration/development; previously analyzed",
+  "record_counts": {
+    "boundary": 2,
+    "fan": 1261,
+    "temp": 322,
+    "orin": 1613,
+    "tick": 1611
+  },
+  "accepted_count": 1610,
+  "quality_counts": {
+    "boundary_socketio_connecting": 1,
+    "boundary_control_context_change": 3,
+    "boundary_stream": 1,
+    "new_samples": 1610,
+    "boundary_input_boundary": 3,
+    "boundary_input_profile_change": 1,
+    "boundary_normal_scope_change": 4,
+    "duplicate": 3,
+    "boundary_socketio_disconnected": 1
+  },
+  "continuous_segments": [
+    {
+      "segment": 5,
+      "normal_auto": true,
+      "control_eligible": true,
+      "start_utc": "2026-10-13T05:28:11.859380+00:00",
+      "end_utc": "2026-10-13T05:33:29.151574+00:00",
+      "start_mono_s": 253304.524443393,
+      "end_mono_s": 253621.816635778,
+      "span_s": 317.2921923850081,
+      "n": 318,
+      "first_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:4",
+      "last_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:953",
+      "max_receive_step_s": 1.0030668860126752
+    },
+    {
+      "segment": 6,
+      "normal_auto": false,
+      "control_eligible": false,
+      "start_utc": "2026-10-13T05:33:30.152569+00:00",
+      "end_utc": "2026-10-13T05:33:30.152569+00:00",
+      "start_mono_s": 253622.817631936,
+      "end_mono_s": 253622.817631936,
+      "span_s": 0.0,
+      "n": 1,
+      "first_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:955",
+      "last_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:955",
+      "max_receive_step_s": 0
+    },
+    {
+      "segment": 7,
+      "normal_auto": true,
+      "control_eligible": true,
+      "start_utc": "2026-10-13T05:33:31.153533+00:00",
+      "end_utc": "2026-10-13T05:49:13.025415+00:00",
+      "start_mono_s": 253623.818595927,
+      "end_mono_s": 254565.690478013,
+      "span_s": 941.8718820860086,
+      "n": 940,
+      "first_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:958",
+      "last_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3766",
+      "max_receive_step_s": 2.0018025760073215
+    },
+    {
+      "segment": 10,
+      "normal_auto": false,
+      "control_eligible": false,
+      "start_utc": "2026-10-13T05:49:14.027203+00:00",
+      "end_utc": "2026-10-13T05:49:16.028958+00:00",
+      "start_mono_s": 254566.692263533,
+      "end_mono_s": 254568.694016569,
+      "span_s": 2.001753035990987,
+      "n": 3,
+      "first_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3770",
+      "last_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3774",
+      "max_receive_step_s": 1.0016992750170175
+    },
+    {
+      "segment": 13,
+      "normal_auto": true,
+      "control_eligible": true,
+      "start_utc": "2026-10-13T05:49:17.030064+00:00",
+      "end_utc": "2026-10-13T05:55:05.364134+00:00",
+      "start_mono_s": 254569.695122849,
+      "end_mono_s": 254918.029197254,
+      "span_s": 348.33407440502197,
+      "n": 348,
+      "first_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3777",
+      "last_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:4808",
+      "max_receive_step_s": 2.0026115590007976
+    }
+  ],
+  "anomalies": [
+    {
+      "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3769",
+      "utc": "2026-10-13T05:49:13.645377+00:00",
+      "kind": "fan",
+      "reason": null,
+      "payload": {
+        "code": 0,
+        "data": {
+          "fans": [
+            {
+              "auto_state": "stale",
+              "control_temperature": 46.3,
+              "controller_gain": 1.2397300004959106,
+              "cooling_response": 8,
+              "duty": 25,
+              "duty_valid": true,
+              "enabled": true,
+              "fault": false,
+              "guard_active": false,
+              "guard_temperature": 46.3,
+              "id": 0,
+              "mode": "auto",
+              "predicted_temperature": 46.3,
+              "rpm": 0,
+              "running": true,
+              "slope_c_per_min": 1.2000000476837158,
+              "target_duty": 25,
+              "temp_stale": true,
+              "temperature": 46.3
+            }
+          ],
+          "temp_source": "agx_info.temperature.tj",
+          "temp_valid": false,
+          "temperature": 25
+        }
+      }
+    }
+  ],
+  "profile": "thor_auto_v2",
+  "input_contract": {
+    "schema_version": 2,
+    "processing_contract": "TTO-PLATFORM-CURVE-v2.0",
+    "platform_schema": 1,
+    "family": "jetson_thor",
+    "soc": "tegra264",
+    "gpu_backend": "nvml",
+    "gpu_schema": 1,
+    "source_period_ms": 1000,
+    "source_period_basis": "wire_telemetry_meta",
+    "gpu_period_ms": 1000,
+    "gpu_timeout_ms": 5000,
+    "units": {
+      "temperature": "C",
+      "power": "W",
+      "gpu_busy": "percent",
+      "cpu_freq": "MHz",
+      "duty": "logical_percent"
+    }
+  },
+  "original_source_identity": "c17e5080fd97b9ff0d53f887ed5bd28e827909fb68adf847c0d7df3c338a6803",
+  "fields_availability": {
+    "tj": 1610,
+    "cpu_usage": 1610,
+    "cpu_freq": 1610,
+    "cpu_reported_cores": 1610,
+    "gpu_busy": 1610,
+    "temp_cpu": 1610,
+    "temp_gpu": 1610,
+    "temp_soc012": 1610,
+    "temp_soc345": 1610,
+    "vdd_gpu": 1610,
+    "vdd_cpu_soc_mss": 1610,
+    "vin_sys_5v0": 1610,
+    "duty": 1606,
+    "gain": 1606
+  },
+  "source_receive_step_s": {
+    "min": 0.9987473399960436,
+    "max": 2.0026115590007976
+  },
+  "origins": 325,
+  "history_ready": 215,
+  "all_label_TJ_eligible": 161,
+  "split": {
+    "scope": "same_thermal_process_time_extrapolation",
+    "independence": "unconfirmed",
+    "counts": {
+      "train": 176,
+      "validation": 10,
+      "test": 29
+    },
+    "eligible_TJ_counts": {
+      "train": 85,
+      "validation": 5,
+      "test": 11
+    },
+    "purged": 110,
+    "ranges": {
+      "train": {
+        "first_utc": "2026-10-13T05:28:11.859380+00:00",
+        "last_utc": "2026-10-13T05:42:41.663764+00:00"
+      },
+      "validation": {
+        "first_utc": "2026-10-13T05:47:21.924103+00:00",
+        "last_utc": "2026-10-13T05:48:06.966560+00:00"
+      },
+      "test": {
+        "first_utc": "2026-10-13T05:52:42.223756+00:00",
+        "last_utc": "2026-10-13T05:55:02.360966+00:00"
+      }
+    },
+    "semantics": "tool test partition is a purged later development window; never an untouched formal test"
+  }
+}

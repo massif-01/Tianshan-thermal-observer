@@ -1,0 +1,26 @@
+{
+  "python": "3.12.3 (v3.12.3:f6650f9ad7, Apr  9 2024, 08:18:47) [Clang 13.0.0 (clang-1300.0.29.30)]",
+  "executable": "/Users/massif/Tianshan-thermal-observer/.venv/bin/python",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "machine": "arm64",
+  "dependencies": {
+    "numpy": "2.2.6",
+    "scipy": "1.14.1",
+    "scikit-learn": "1.6.1",
+    "threadpoolctl": "3.7.0",
+    "pytest": "8.3.5"
+  },
+  "threadpools": [
+    {
+      "user_api": "openmp",
+      "internal_api": "openmp",
+      "num_threads": 1,
+      "prefix": "libomp",
+      "filepath": "/Users/massif/Tianshan-thermal-observer/.venv/lib/python3.12/site-packages/sklearn/.dylibs/libomp.dylib",
+      "version": null
+    }
+  ],
+  "CUDA": false,
+  "device_access": false,
+  "N305_benchmark": false
+}

@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "type": "fan_curve_config",
+  "fan_id": 0,
+  "curve": [
+    {
+      "temp": 30,
+      "duty": 0
+    },
+    {
+      "temp": 40,
+      "duty": 10
+    },
+    {
+      "temp": 50,
+      "duty": 15
+    },
+    {
+      "temp": 55,
+      "duty": 25
+    },
+    {
+      "temp": 60,
+      "duty": 35
+    },
+    {
+      "temp": 65,
+      "duty": 40
+    },
+    {
+      "temp": 70,
+      "duty": 45
+    },
+    {
+      "temp": 80,
+      "duty": 50
+    },
+    {
+      "temp": 90,
+      "duty": 60
+    }
+  ],
+  "hysteresis": 2,
+  "min_interval": 1000,
+  "min_duty": 10,
+  "max_duty": 100,
+  "exported_at": "2026-02-08T17:50:49.350Z"
+}

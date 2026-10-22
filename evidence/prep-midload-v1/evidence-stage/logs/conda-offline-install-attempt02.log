@@ -1,0 +1,66 @@
+安装TTO 0.2.3 → /Users/massif/Tianshan-thermal-observer/evidence/prep-midload-v1/conda-clean-install
+1/5 使用预装Conda创建独立Python 3.10环境
+Collecting package metadata (current_repodata.json): ...working... sysctl: sysctl fmt -1 1024 1: Operation not permitted
+sysctl: sysctl fmt -1 1024 1: Operation not permitted
+sysctl: unknown oid 'machdep.cpu.leaf7_features'
+sysctl: unknown oid 'machdep.cpu.vendor'
+sysctl: sysctl fmt -1 1024 1: Operation not permitted
+sysctl: sysctl fmt -1 1024 1: Operation not permitted
+sysctl: sysctl fmt -1 1024 1: Operation not permitted
+sysctl: unknown oid 'machdep.cpu.leaf7_features'
+sysctl: unknown oid 'machdep.cpu.vendor'
+sysctl: sysctl fmt -1 1024 1: Operation not permitted
+sysctl: sysctl fmt -1 1024 1: Operation not permitted
+sysctl: sysctl fmt -1 1024 1: Operation not permitted
+sysctl: unknown oid 'machdep.cpu.leaf7_features'
+sysctl: unknown oid 'machdep.cpu.vendor'
+sysctl: sysctl fmt -1 1024 1: Operation not permitted
+done
+Solving environment: ...working... done
+
+## Package Plan ##
+
+  environment location: /Users/massif/Tianshan-thermal-observer/evidence/prep-midload-v1/conda-clean-install/conda-env
+
+  added / updated specs:
+    - pip
+    - python=3.10
+
+
+The following NEW packages will be INSTALLED:
+
+  bzip2              conda-forge/osx-arm64::bzip2-1.0.8-h4e30115_10 
+  ca-certificates    conda-forge/noarch::ca-certificates-2026.7.22-hbd8a1cb_0 
+  libexpat           conda-forge/osx-arm64::libexpat-2.8.5-h6111c0a_0 
+  libffi             conda-forge/osx-arm64::libffi-3.7.0-h47dc5ef_1 
+  liblzma            conda-forge/osx-arm64::liblzma-5.8.3-h8088a28_1 
+  libsqlite          conda-forge/osx-arm64::libsqlite-3.54.0-h34a968b_101 
+  libzlib            conda-forge/osx-arm64::libzlib-1.3.2-h8088a28_3 
+  ncurses            conda-forge/osx-arm64::ncurses-6.6-he64c551_1 
+  openssl            conda-forge/osx-arm64::openssl-3.6.5-h55eecbc_0 
+  packaging          conda-forge/noarch::packaging-26.3-pyhc364b38_0 
+  pip                conda-forge/noarch::pip-26.2.1-pyh8b19718_0 
+  python             conda-forge/osx-arm64::python-3.10.22-hac0b6dc_0_cpython 
+  readline           conda-forge/osx-arm64::readline-8.3-h8b90a29_1 
+  setuptools         conda-forge/noarch::setuptools-84.0.0-pyh332efcf_0 
+  tk                 conda-forge/osx-arm64::tk-8.6.13-hbeba79b_4 
+  tzdata             conda-forge/noarch::tzdata-2026c-h151e31d_0 
+  wheel              conda-forge/noarch::wheel-0.48.0-pyhd8ed1ab_0 
+
+
+
+Downloading and Extracting Packages: ...working... done
+Preparing transaction: ...working... done
+Verifying transaction: ...working... WARNING conda.core.path_actions:verify(1050): Unable to create environments file. Path not writable.
+  environment location: /Users/massif/.conda/environments.txt
+
+done
+Executing transaction: ...working... done
+Rolling back transaction: ...working... done
+
+[Errno 1] Operation not permitted: '/Users/massif/.conda/environments.txt'
+()
+
+
+安装未完成：本地命令失败，退出码 1
+配置和数据不会被覆盖；处理上述问题后可重跑。

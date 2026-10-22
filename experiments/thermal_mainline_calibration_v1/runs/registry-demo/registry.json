@@ -1,0 +1,83 @@
+{
+  "schema": "TTO-LOCAL-MODEL-REGISTRY-v1",
+  "models": {
+    "G2-FROZEN-RM01-v1": {
+      "manifest": "/Users/massif/Tianshan-thermal-observer/experiments/thermal_mainline_calibration_v1/runs/registry-demo/models/G2-FROZEN-RM01-v1/frozen-model-manifest.json",
+      "manifest_sha256": "a43cd5d111f169408d71f3fe008e0c03119bb9e4f0dc1ffd63d2f79c5f8834c9",
+      "model_sha256": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
+      "parent_model_id": null,
+      "numerical_convergence": true,
+      "data_role": "frozen previously examined development reference",
+      "registered_at": "2026-10-21T13:20:35.155398+00:00",
+      "automatic_activation": false,
+      "control_permission": false
+    },
+    "G2-GEN-L-20261021-v1": {
+      "manifest": "/Users/massif/Tianshan-thermal-observer/experiments/thermal_mainline_calibration_v1/runs/registry-demo/models/G2-GEN-L-20261021-v1/model-manifest.json",
+      "manifest_sha256": "f495cccab8339c9bf7dfd13f277b2d5dc5d111143d96f446dd53169d58c4ff60",
+      "model_sha256": "6c7f6e4a6304513f4588840129efb909d7fa5c051131bf3270c16c8f9dce743f",
+      "parent_model_id": "G2-FROZEN-RM01-v1",
+      "numerical_convergence": true,
+      "data_role": "development_example",
+      "registered_at": "2026-10-21T13:20:35.192811+00:00",
+      "automatic_activation": false,
+      "control_permission": false
+    },
+    "G2-CAL-M-20261021-v1": {
+      "manifest": "/Users/massif/Tianshan-thermal-observer/experiments/thermal_mainline_calibration_v1/runs/registry-demo/models/G2-CAL-M-20261021-v1/model-manifest.json",
+      "manifest_sha256": "8397a682ac07a916b9e967cd0e75d966ab23918a7ff48aeb9a0ea8abed172e3f",
+      "model_sha256": "7bf6472053e798d80a49b26a5e7fb14458087392a35704d2f7c12173813fe85e",
+      "parent_model_id": "G2-GEN-L-20261021-v1",
+      "numerical_convergence": true,
+      "data_role": "development_example",
+      "registered_at": "2026-10-21T13:20:35.230007+00:00",
+      "automatic_activation": false,
+      "control_permission": false
+    }
+  },
+  "selected_for_next_session": "G2-FROZEN-RM01-v1",
+  "previous_selection": "G2-GEN-L-20261021-v1",
+  "sessions": {
+    "offline-demo-before": {
+      "session_id": "offline-demo-before",
+      "model_id": "G2-FROZEN-RM01-v1",
+      "manifest_sha256": "a43cd5d111f169408d71f3fe008e0c03119bb9e4f0dc1ffd63d2f79c5f8834c9",
+      "manifest": "/Users/massif/Tianshan-thermal-observer/experiments/thermal_mainline_calibration_v1/runs/registry-demo/models/G2-FROZEN-RM01-v1/frozen-model-manifest.json",
+      "model_sha256": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
+      "opened_at": "2026-10-21T13:20:35.265101+00:00",
+      "control_permission": false,
+      "device_id": "RM01-reference-LSM",
+      "thermal_config_id": "RM01-original-development-config-unverified-revision",
+      "state_initialization": "new observer for this device/model/session; never copy another thermal state"
+    },
+    "offline-demo-candidate": {
+      "session_id": "offline-demo-candidate",
+      "model_id": "G2-GEN-L-20261021-v1",
+      "manifest_sha256": "f495cccab8339c9bf7dfd13f277b2d5dc5d111143d96f446dd53169d58c4ff60",
+      "manifest": "/Users/massif/Tianshan-thermal-observer/experiments/thermal_mainline_calibration_v1/runs/registry-demo/models/G2-GEN-L-20261021-v1/model-manifest.json",
+      "model_sha256": "6c7f6e4a6304513f4588840129efb909d7fa5c051131bf3270c16c8f9dce743f",
+      "opened_at": "2026-10-21T13:20:35.368050+00:00",
+      "control_permission": false,
+      "device_id": "RM01-reference-LSM",
+      "thermal_config_id": "RM01-original-development-config-unverified-revision",
+      "state_initialization": "new observer for this device/model/session; never copy another thermal state"
+    },
+    "offline-demo-after-rollback": {
+      "session_id": "offline-demo-after-rollback",
+      "model_id": "G2-FROZEN-RM01-v1",
+      "manifest_sha256": "a43cd5d111f169408d71f3fe008e0c03119bb9e4f0dc1ffd63d2f79c5f8834c9",
+      "manifest": "/Users/massif/Tianshan-thermal-observer/experiments/thermal_mainline_calibration_v1/runs/registry-demo/models/G2-FROZEN-RM01-v1/frozen-model-manifest.json",
+      "model_sha256": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
+      "opened_at": "2026-10-21T13:20:35.473344+00:00",
+      "control_permission": false,
+      "device_id": "RM01-reference-LSM",
+      "thermal_config_id": "RM01-original-development-config-unverified-revision",
+      "state_initialization": "new observer for this device/model/session; never copy another thermal state"
+    }
+  },
+  "frozen_reference_model_id": "G2-FROZEN-RM01-v1",
+  "device_id": "RM01-reference-LSM",
+  "thermal_config_id": "RM01-original-development-config-unverified-revision",
+  "selection_effect": "next new session only; existing session pins never change",
+  "control_permission": false
+}

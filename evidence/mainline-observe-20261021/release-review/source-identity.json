@@ -1,0 +1,132 @@
+{
+  "version": "0.2.4+observe.1",
+  "sealed_base_zip_sha256": "dd49cbbbd87f01465b91149e2d45d048edc6e4515ee2cfd7efd7561a03e0ddae",
+  "wheel_sha256": "492916f2f6f50fe69853e3b248ecf266283d52eca2c2fbf1c80e48b45178ba06",
+  "candidate_manifest_sha256": "d6de6b97370fbca02102a7af784a590958116c8db6696339a2da8c2918d0ee18",
+  "candidate_manifest_count": 65,
+  "changes": [
+    {
+      "path": "tto/collector.py",
+      "kind": "modified",
+      "before_sha256": "4c696d3a63cef96d255e0e6e0fd5f56754727a2647801653ed373f0aede22563",
+      "after_sha256": "94f3791bc1b9f4f2a47f06af07491ab0c199237475fe921d0b5df9ad9452c444"
+    },
+    {
+      "path": "tto/config.py",
+      "kind": "modified",
+      "before_sha256": "5a05545f28b8b44b3e6f0e7efcf2453e01ee0726ef0bd228cc73d553e01d8e3e",
+      "after_sha256": "a6739022a483de11a5436deed024b13aa017e8161fc7f3dad364d17ad526a7f7"
+    },
+    {
+      "path": "tto_field/__init__.py",
+      "kind": "modified",
+      "before_sha256": "ad02c64181eea81da52a038072ec1f200a92f7255a49080e06187074bf0f574b",
+      "after_sha256": "5a3a2869cab8cee2a2bf779439b15a282205dbd8a93326c3f161950e999325c1"
+    },
+    {
+      "path": "tto_field/business_events.py",
+      "kind": "added",
+      "before_sha256": null,
+      "after_sha256": "126535545f4e092718a63c45519daaac4a2c26678db6337d91be6ef82f5fd588"
+    },
+    {
+      "path": "tto_field/candidate-files.json",
+      "kind": "modified",
+      "before_sha256": "dffdfb7607b52224e1be55531a23525df2e32aca02503cf76ba2affedf8de046",
+      "after_sha256": "d6de6b97370fbca02102a7af784a590958116c8db6696339a2da8c2918d0ee18"
+    },
+    {
+      "path": "tto_field/g2_model/__init__.py",
+      "kind": "added",
+      "before_sha256": null,
+      "after_sha256": "5c0db97bf3d021c8225199e7a31e9737161867bfb3f326e1b17844b789f218e4"
+    },
+    {
+      "path": "tto_field/g2_model/frozen-model-manifest.json",
+      "kind": "added",
+      "before_sha256": null,
+      "after_sha256": "a43cd5d111f169408d71f3fe008e0c03119bb9e4f0dc1ffd63d2f79c5f8834c9"
+    },
+    {
+      "path": "tto_field/g2_model/g2_runtime/__init__.py",
+      "kind": "added",
+      "before_sha256": null,
+      "after_sha256": "225fc72920f7b20601c5be23a21179b7afed8bf6acd3b787da4367526b75b713"
+    },
+    {
+      "path": "tto_field/g2_model/g2_runtime/__main__.py",
+      "kind": "added",
+      "before_sha256": null,
+      "after_sha256": "bcd02f08c0e2b224b60905b542be28e4ff33761d8a92c7f62911d38c14f211f1"
+    },
+    {
+      "path": "tto_field/g2_model/g2_runtime/frozen/observer-spec.json",
+      "kind": "added",
+      "before_sha256": null,
+      "after_sha256": "2080adcf20773650299def2bb0f3ebdb9f87d8f85281d5b87a99d8b406c83c6b"
+    },
+    {
+      "path": "tto_field/g2_model/g2_runtime/frozen/observer.py",
+      "kind": "added",
+      "before_sha256": null,
+      "after_sha256": "599e292a0000697615e76a97596f2f48c7527bc82027bacca5aea0c0fe5d4a47"
+    },
+    {
+      "path": "tto_field/g2_model/g2_runtime/frozen/primary.json",
+      "kind": "added",
+      "before_sha256": null,
+      "after_sha256": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0"
+    },
+    {
+      "path": "tto_field/g2_model/g2_runtime/predict.py",
+      "kind": "added",
+      "before_sha256": null,
+      "after_sha256": "dc135fcc2cd5e2c8c5ef4b18db4a88806eba8b52079cf645e34375b534e8d7e9"
+    },
+    {
+      "path": "tto_field/observe_cli.py",
+      "kind": "added",
+      "before_sha256": null,
+      "after_sha256": "9a9a9910a3422a3106e28ab8708e3fd4f8667f2334b1dbcc69432f26efcf0b80"
+    },
+    {
+      "path": "tto_field/observe_limits.py",
+      "kind": "added",
+      "before_sha256": null,
+      "after_sha256": "1dc0b1dd827d1603bf15653fe31bebca5e9b5c07b6a723653601170b3334924a"
+    },
+    {
+      "path": "tto_field/observe_predictions.py",
+      "kind": "added",
+      "before_sha256": null,
+      "after_sha256": "205a8b431ab89e444d73d94982151a4dd97d79a06d7791c076885318136ce32e"
+    },
+    {
+      "path": "tto_field/observe_runtime.py",
+      "kind": "added",
+      "before_sha256": null,
+      "after_sha256": "5371fb535a1e605229b7886780df7e4a37a6d50e2f68fda0f16e163dc7a711bd"
+    },
+    {
+      "path": "tto_field/observe_storage.py",
+      "kind": "added",
+      "before_sha256": null,
+      "after_sha256": "19b063c06e68768079d78f088a72b9406dfcb783034a1e5e1c6186218652b22d"
+    },
+    {
+      "path": "tto_field/observe_workload.py",
+      "kind": "added",
+      "before_sha256": null,
+      "after_sha256": "9332d2e3bc2bcf4f410db19557d816bdea222f4ed72a1542471a1e171ae2d93c"
+    }
+  ],
+  "protected_unchanged_count": 1836,
+  "protected_changed": [],
+  "byte_identical_critical": [
+    "tto_field/numeric_policy.py",
+    "tto_field/comm_bridge.py",
+    "tto_field/projection.py",
+    "tto/quality.py",
+    "tto/engine.py"
+  ]
+}

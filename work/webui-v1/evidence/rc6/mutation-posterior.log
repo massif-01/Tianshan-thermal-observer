@@ -1,0 +1,23 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______________ test_real_observer_history_is_posterior_of_same_tj ______________
+
+    def test_real_observer_history_is_posterior_of_same_tj():
+        producer=Producer(time.monotonic()-90.)
+        s=State(web_config());checked=0
+        for seconds in range(91):
+            packet=producer.step(seconds,tj=44.3+3.*math.sin(seconds/8.))
+            s.accept(packet,now=producer.start+seconds+.01)
+            row=s.model_history[-1]
+            if row.reason is not None:continue
+            assert row.sample_id==packet['tj_sample_id']
+            assert row.t==pytest.approx(seconds*1000.,abs=.001)
+            tj,tf,_,_=row.values
+            innovation=packet['model']['latest_innovation_C']
+>           assert tf!=tj
+E           assert 47.006802782297285 != 47.006802782297285
+
+tests/test_model_history.py:72: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_model_history.py::test_real_observer_history_is_posterior_of_same_tj
+1 failed in 0.24s

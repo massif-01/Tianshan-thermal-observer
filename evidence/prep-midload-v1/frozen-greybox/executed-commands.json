@@ -1,0 +1,57 @@
+{
+  "path_convention": "commands above normalized to research directory unless stated; actual core interpreter /Users/massif/Tianshan-thermal-observer/.venv/bin/python, PYTHONDONTWRITEBYTECODE=1; core runner sets thread limits; original shell invocations prefix research paths",
+  "plot_python": "/private/tmp/tto-analysis-20261013-env/bin/python",
+  "commands": [
+    {
+      "command": "python run_experiment.py --spec experiment-spec.json --input-index handoff/inputs/input-index.json --output runs/main --stage directions",
+      "log": "directions.log",
+      "result": "24 main fits and both Ridge directions frozen"
+    },
+    {
+      "command": "python run_experiment.py --spec experiment-spec.json --input-index handoff/inputs/input-index.json --output runs/main --stage finish",
+      "log": "finish-attempt-01.log",
+      "result": "failed before target metrics; G1 fixed-E zero-column initialization branch"
+    },
+    {
+      "command": "python -m pytest tests -q --basetemp=test-tmp-contracts -o cache_dir=.pytest_cache",
+      "log": "research-tests-pre-evaluation.log",
+      "result": "11 passed before restarted evaluation"
+    },
+    {
+      "command": "python run_experiment.py --spec experiment-spec.json --input-index handoff/inputs/input-index.json --output runs/main --stage finish",
+      "log": "finish.log",
+      "result": "direction scoring; 12 pool fits; one nested fit; all diagnostics complete"
+    },
+    {
+      "command": "python -m pytest tests -q --basetemp=test-tmp-final -o cache_dir=.pytest_cache",
+      "log": "research-tests-final.log",
+      "result": "12 passed"
+    },
+    {
+      "command": "python -m pytest tests/test_review_repair.py tests/test_platform_curve.py::test_thor_rails_units_without_alias tests/test_platform_curve.py::test_qualification_does_not_relax_invalid_temperature tests/test_platform_curve.py::test_gpu_age_sum_duplicates_utc_and_window_gap tests/test_platform_curve.py::test_same_identity_additive_fields_isolate -q -o pythonpath=experiments/thermal_identification_v1/inputs/previous-exploration-evidence/sources/tto-reference/src --basetemp=experiments/thermal_identification_v1/test-tmp-related -o cache_dir=experiments/thermal_identification_v1/.pytest_cache",
+      "cwd": "repository root",
+      "log": "related-regression.log",
+      "result": "11 passed"
+    },
+    {
+      "command": "python verify_results.py --run runs/main --output runs/main/readback-verification.json",
+      "log": "readback.log",
+      "result": "1766 independent matrix exponential cases; all cohort metrics and frozen hashes checked"
+    },
+    {
+      "command": "python plot_results.py --run runs/main --output runs/main/charts",
+      "log": "plot-attempt-01.log",
+      "result": "display-only missing-duty field branch; fixed to preserve plotted gaps"
+    },
+    {
+      "command": "python plot_results.py --run runs/main --output runs/main/charts",
+      "log": "plot.log",
+      "result": "5 PNG + 5 SVG generated"
+    },
+    {
+      "command": "python report.py --run runs/main --output TTO-首轮灰箱实际辨识与对照实验报告.md",
+      "result": "report created from saved data"
+    }
+  ],
+  "no_external_or_device_IO": true
+}

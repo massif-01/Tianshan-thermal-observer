@@ -1,0 +1,113 @@
+{
+  "trial_id": "TTO-MIDLOAD-DEV-v1.0",
+  "mode": "dry_run",
+  "connected": false,
+  "credentials_read": false,
+  "runtime": {
+    "version": "0.2.4",
+    "import_path": "/home/rm01/TTO-midload-0.2.4/conda-env/lib/python3.10/site-packages/tto/__init__.py",
+    "python": "/home/rm01/TTO-midload-0.2.4/conda-env/bin/python",
+    "isolated": true,
+    "non_editable": true
+  },
+  "operator_override": {
+    "policy": {
+      "authorized_at_record_utc": "2026-10-13T17:36:27.725457+00:00",
+      "authority_source": "User authorization relayed by TTO coordination chat 01a12fd6-393a-7c73-8d46-6e70f9e17e61",
+      "authorization_text": "用户现在明确覆盖了先前暂缓决定：认为主板 temp_stale/default/valid=false 可能暂时不可用，要求本轮忽略这类标记、完成完整中等负载流程，并由你对话负责模型调度。",
+      "latest_execution_instruction": "现在请由你完成独立测试执行副本准备、有限离线核验，然后直接启动唯一新一轮完整测试，不再等我启动或再向用户确认。",
+      "conditions": {
+        "bound_variable": "agx_info.temperature.tj",
+        "manual_mode": false,
+        "active_source": [
+          "variable",
+          "default"
+        ]
+      },
+      "ignored_admission_reasons": [
+        "control_temperature_stale",
+        "control_temperature_invalid",
+        "active_temperature_source_untrusted"
+      ],
+      "ignored_context_transition": "variable <-> default only under same authorized binding/manual=false",
+      "native_card_override": "Specified stale/invalid/default flags no longer stop or deny new requests; no invented time threshold",
+      "retained_stop_conditions": [
+        "fault",
+        "guard",
+        "disabled",
+        "not AUTO",
+        "manual temperature",
+        "binding change",
+        "other source change",
+        "HTTP/Socket missing inputs",
+        "collector exit",
+        "unknown request termination",
+        "budgets"
+      ],
+      "raw_evidence": "unchanged; default25C not real temperature; native snapshot retained",
+      "result_role": "User-overridden development experiment, not unchanged candidate acceptance",
+      "new_prefix": "/home/rm01/TTO-midload-useroverride-20261014",
+      "original_prefix": "/home/rm01/TTO-midload-0.2.4"
+    },
+    "copy_hashes": {
+      "health.py": "60acb44c5ddd72d7b6220d2a212649f549e24515a3b5278e10f979948c10b090",
+      "health_native.py": "e479541aeb676823bc9a137936a44c899b7a71d217de3ff0224edb8f5008d300",
+      "requester.py": "ced3134782fe5e21f123317d0da18ad567c2923c2d4592106ac97ef27c1aa670",
+      "run_midload.py": "a3461b79458e5efa1d35144e2e4e88a66b3352ecdc58500093c62984b561223e",
+      "trial.py": "522154d04a8b811221fafddc0d8c65ba116289de7d7034c825528bf6dc8ee0c9"
+    },
+    "result_role": "user_overridden_development_experiment_not_native_acceptance"
+  },
+  "nominal_duration_s": 2480,
+  "hard_limit_s": 2700,
+  "initial_check_within_background_s": 180,
+  "strict_history_s": 60,
+  "phases": [
+    {
+      "id": "resident_background",
+      "kind": "passive",
+      "duration_s": 600
+    },
+    {
+      "id": "M20",
+      "kind": "work",
+      "duration_s": 20
+    },
+    {
+      "id": "cooldown_1",
+      "kind": "passive",
+      "duration_s": 420
+    },
+    {
+      "id": "M60",
+      "kind": "work",
+      "duration_s": 60
+    },
+    {
+      "id": "cooldown_2",
+      "kind": "passive",
+      "duration_s": 600
+    },
+    {
+      "id": "M180",
+      "kind": "work",
+      "duration_s": 180
+    },
+    {
+      "id": "final_cooldown",
+      "kind": "passive",
+      "duration_s": 600
+    }
+  ],
+  "max_total_requests": 256,
+  "max_tokens": 256,
+  "max_inflight": 1,
+  "max_request_wall_s": 30,
+  "max_drain_s": 30,
+  "model": "RM-01 VLM",
+  "inference_target_configured": true,
+  "tto_config_path": "/home/rm01/TTO/config/local.json",
+  "ambient_temperature_default": null,
+  "not_thermal_equilibrium": true,
+  "message": "约41分20秒；20/60/180秒是单路请求发起窗口，已有请求自然结束；最多45分钟。当前只预览，未连接设备。"
+}

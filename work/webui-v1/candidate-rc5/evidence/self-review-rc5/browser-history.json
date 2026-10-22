@@ -1,0 +1,51 @@
+{
+  "scope": "installed rc5 API; minimal synthetic verification page, not Sonnet homepage",
+  "health": {
+    "web": "running",
+    "version": "1.0.0rc5",
+    "pid": 22553,
+    "device_health_is_separate": true
+  },
+  "initial": {
+    "identity": "6b88279b-9ad7-4e66-9c73-da8efde120b2|f9e1998961ef194d|1|dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0|2080adcf20773650299def2bb0f3ebdb9f87d8f85281d5b87a99d8b406c83c6b",
+    "rows": "temperature.tj2400144.3model.Tf_C2400144.30003767776882model.Ts_C2400140.75883961836811model.E_C2400133.681669262926796",
+    "lines": 4
+  },
+  "gap": {
+    "nulls": 1,
+    "lines": 8
+  },
+  "silent": {
+    "last": {
+      "t": 3791500,
+      "value": null,
+      "status": "unknown",
+      "sample_id": null,
+      "received_at_utc": null,
+      "source_ref": null,
+      "phase_at_sample": null,
+      "reason_code": "model_expired"
+    },
+    "table": "temperature.tj25322—model.Tf_C25322—model.Ts_C25322—model.E_C25322—"
+  },
+  "recovered": {
+    "t": 3794000,
+    "value": 44.300043544777004,
+    "status": "valid",
+    "sample_id": "1:f9e1998961ef194d:6f68e14b49f08785",
+    "received_at_utc": "2026-10-21T16:21:24.071091+00:00",
+    "source_ref": "f9e1998961ef194d:6f68e14b49f08785",
+    "phase_at_sample": "degraded",
+    "reason_code": null
+  },
+  "switched": {
+    "source_epoch": 2,
+    "run_id": "f9e1998961ef194d",
+    "lines": 0,
+    "status": "已加载，同采样对齐；缺口不连线"
+  },
+  "lateIgnored": true,
+  "accessibilityTable": true,
+  "jsHeapBytes": 9871738,
+  "pass": true
+}

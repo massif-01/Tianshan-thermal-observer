@@ -1,0 +1,77 @@
+{
+  "status": "offline_config_valid",
+  "connected": false,
+  "deployment_status": "deployment_unverified",
+  "config_sha256": "3bffdf56bf90681332e459659012f6b0f3512c6900bab141e4db9d1990e0a0c4",
+  "source_period_confirmed": false,
+  "model": "not_requested",
+  "input_selection": "automatic_remote_platform_declaration",
+  "message": "离线检查完成；尚未连接设备，平台和控制资格将在记录中检查。"
+}
+{
+  "trial_id": "TTO-MIDLOAD-DEV-v1.0",
+  "mode": "dry_run",
+  "connected": false,
+  "credentials_read": false,
+  "runtime": {
+    "version": "0.2.4",
+    "import_path": "/home/rm01/TTO-midload-0.2.4/conda-env/lib/python3.10/site-packages/tto/__init__.py",
+    "python": "/home/rm01/TTO-midload-0.2.4/conda-env/bin/python",
+    "isolated": true,
+    "non_editable": true
+  },
+  "nominal_duration_s": 2480,
+  "hard_limit_s": 2700,
+  "initial_check_within_background_s": 180,
+  "strict_history_s": 60,
+  "phases": [
+    {
+      "id": "resident_background",
+      "kind": "passive",
+      "duration_s": 600
+    },
+    {
+      "id": "M20",
+      "kind": "work",
+      "duration_s": 20
+    },
+    {
+      "id": "cooldown_1",
+      "kind": "passive",
+      "duration_s": 420
+    },
+    {
+      "id": "M60",
+      "kind": "work",
+      "duration_s": 60
+    },
+    {
+      "id": "cooldown_2",
+      "kind": "passive",
+      "duration_s": 600
+    },
+    {
+      "id": "M180",
+      "kind": "work",
+      "duration_s": 180
+    },
+    {
+      "id": "final_cooldown",
+      "kind": "passive",
+      "duration_s": 600
+    }
+  ],
+  "max_total_requests": 256,
+  "max_tokens": 256,
+  "max_inflight": 1,
+  "max_request_wall_s": 30,
+  "max_drain_s": 30,
+  "model": "RM-01 VLM",
+  "inference_target_configured": true,
+  "tto_config_path": "/home/rm01/TTO/config/local.json",
+  "ambient_temperature_default": null,
+  "not_thermal_equilibrium": true,
+  "message": "约41分20秒；20/60/180秒是单路请求发起窗口，已有请求自然结束；最多45分钟。当前只预览，未连接设备。"
+}
+0.2.2
+71fd4ac0954b273edca7f859ba45079d4e3709cda6ae448c0c9527990d539805  /home/rm01/TTO/config/local.json

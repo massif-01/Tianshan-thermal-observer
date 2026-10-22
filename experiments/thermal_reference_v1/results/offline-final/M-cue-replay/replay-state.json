@@ -1,0 +1,193 @@
+{
+  "plan_sha256": "378185d029f27493b6ea1d6e668974edde3ff7218cdca606a74e76a608aa055e",
+  "seen": [
+    "9ad35caecdda79fda4d5d40f",
+    "ae6cb1ba9a24c20185d17478",
+    "d1489138352e3b4448992a21",
+    "1f1489da87cc7b38f7c1cb4d",
+    "3368bf8dbdc823c9844908b8",
+    "2a1cef981e51fe816dfe86ff",
+    "af1d7221724a79fa97a03bc9",
+    "a96ac2a4853cdadf39fa5155",
+    "6edccb454acdc7ada9be4b25",
+    "6a8be16444890a2ad02956ef",
+    "bcb3bef2f92f22096011ce51",
+    "cca6247abafd8c29b0d17534",
+    "207420c323091819c4de1e49",
+    "b31db860a10ad52a3cd0df2a",
+    "1eb9ca2b23dd506a838ddb29",
+    "70d7ccc22e541168d2a2f47e",
+    "4cbd23c677aa89b7fcf59e87",
+    "7cc43e4536db013d6ab03534",
+    "32789e237f08e09cd4071db0",
+    "f3ff0dccb76541a87a775d9c",
+    "3a89d451b6b19af29a9e024f",
+    "2f19585a6e1299679f6395fb",
+    "2cec8ed0a5aefd533192ac4b",
+    "93abaaff1c6647c705431563",
+    "04669012d1542df6f4b5dcaf",
+    "637cf197623e5d70951b1f53",
+    "18934426642406890f6e7219",
+    "17bf66ee474043c39ebabae7",
+    "9d94b50111863abeef3470e8",
+    "f529667756788725998ebab2",
+    "00a5e00f04fb7fa7f54ce754",
+    "2e039668991791208652adca",
+    "bbe3e4074860643b1cebca35"
+  ],
+  "pending": [],
+  "history": [
+    {
+      "status": "prompt",
+      "checkpoint_ids": [
+        "background-1@9ad35caecdda79fda4d5d40f"
+      ],
+      "prompt_due_at_utc": "2026-10-13T17:38:17.320419+00:00",
+      "original_checkpoint_due_utc": {
+        "background-1@9ad35caecdda79fda4d5d40f": "2026-10-13T17:38:17.320419+00:00"
+      },
+      "prompt_emitted_at_utc": null,
+      "replay_emitted_at_utc": "2026-10-13T17:38:17.320419+00:00",
+      "recorded_at_utc": "2026-10-14T04:55:33.995093+00:00",
+      "replay": true,
+      "anchors": [
+        {
+          "event": "phase_start",
+          "phase": "resident_background",
+          "utc_s": 1791913067.3204188,
+          "mono_s": 7321.616256211,
+          "evidence_id": "9ad35caecdda79fda4d5d40f",
+          "source_time_field": "actual_start_mono_s"
+        }
+      ],
+      "does_not_control_or_extend_workload": true
+    },
+    {
+      "status": "prompt",
+      "checkpoint_ids": [
+        "background-2@9ad35caecdda79fda4d5d40f"
+      ],
+      "prompt_due_at_utc": "2026-10-13T17:39:47.320419+00:00",
+      "original_checkpoint_due_utc": {
+        "background-2@9ad35caecdda79fda4d5d40f": "2026-10-13T17:39:47.320419+00:00"
+      },
+      "prompt_emitted_at_utc": null,
+      "replay_emitted_at_utc": "2026-10-13T17:39:47.320419+00:00",
+      "recorded_at_utc": "2026-10-14T04:55:33.995099+00:00",
+      "replay": true,
+      "anchors": [
+        {
+          "event": "phase_start",
+          "phase": "resident_background",
+          "utc_s": 1791913067.3204188,
+          "mono_s": 7321.616256211,
+          "evidence_id": "9ad35caecdda79fda4d5d40f",
+          "source_time_field": "actual_start_mono_s"
+        }
+      ],
+      "does_not_control_or_extend_workload": true
+    },
+    {
+      "status": "prompt",
+      "checkpoint_ids": [
+        "medium-before-from-idle-timer@af1d7221724a79fa97a03bc9"
+      ],
+      "prompt_due_at_utc": "2026-10-13T17:54:50.063824+00:00",
+      "original_checkpoint_due_utc": {
+        "medium-before-from-idle-timer@af1d7221724a79fa97a03bc9": "2026-10-13T17:54:50.063824+00:00"
+      },
+      "prompt_emitted_at_utc": null,
+      "replay_emitted_at_utc": "2026-10-13T17:54:50.063824+00:00",
+      "recorded_at_utc": "2026-10-14T04:55:33.995162+00:00",
+      "replay": true,
+      "anchors": [
+        {
+          "event": "phase_start",
+          "phase": "cooldown_1",
+          "utc_s": 1791913700.0638237,
+          "mono_s": 7954.359659345,
+          "evidence_id": "af1d7221724a79fa97a03bc9",
+          "source_time_field": "actual_start_mono_s"
+        }
+      ],
+      "does_not_control_or_extend_workload": true
+    },
+    {
+      "status": "prompt",
+      "checkpoint_ids": [
+        "medium-after30@b31db860a10ad52a3cd0df2a"
+      ],
+      "prompt_due_at_utc": "2026-10-13T17:56:55.097498+00:00",
+      "original_checkpoint_due_utc": {
+        "medium-after30@b31db860a10ad52a3cd0df2a": "2026-10-13T17:56:55.097498+00:00"
+      },
+      "prompt_emitted_at_utc": null,
+      "replay_emitted_at_utc": "2026-10-13T17:56:55.097498+00:00",
+      "recorded_at_utc": "2026-10-14T04:55:33.995238+00:00",
+      "replay": true,
+      "anchors": [
+        {
+          "event": "phase_end",
+          "phase": "M60",
+          "utc_s": 1791914185.0974977,
+          "mono_s": 8439.393332106,
+          "evidence_id": "b31db860a10ad52a3cd0df2a",
+          "source_time_field": "actual_end_mono_s"
+        }
+      ],
+      "does_not_control_or_extend_workload": true
+    },
+    {
+      "status": "prompt",
+      "checkpoint_ids": [
+        "medium-after120@b31db860a10ad52a3cd0df2a"
+      ],
+      "prompt_due_at_utc": "2026-10-13T17:58:25.097498+00:00",
+      "original_checkpoint_due_utc": {
+        "medium-after120@b31db860a10ad52a3cd0df2a": "2026-10-13T17:58:25.097498+00:00"
+      },
+      "prompt_emitted_at_utc": null,
+      "replay_emitted_at_utc": "2026-10-13T17:58:25.097498+00:00",
+      "recorded_at_utc": "2026-10-14T04:55:33.995243+00:00",
+      "replay": true,
+      "anchors": [
+        {
+          "event": "phase_end",
+          "phase": "M60",
+          "utc_s": 1791914185.0974977,
+          "mono_s": 8439.393332106,
+          "evidence_id": "b31db860a10ad52a3cd0df2a",
+          "source_time_field": "actual_end_mono_s"
+        }
+      ],
+      "does_not_control_or_extend_workload": true
+    },
+    {
+      "status": "prompt",
+      "checkpoint_ids": [
+        "medium-after300@b31db860a10ad52a3cd0df2a"
+      ],
+      "prompt_due_at_utc": "2026-10-13T18:01:25.097498+00:00",
+      "original_checkpoint_due_utc": {
+        "medium-after300@b31db860a10ad52a3cd0df2a": "2026-10-13T18:01:25.097498+00:00"
+      },
+      "prompt_emitted_at_utc": null,
+      "replay_emitted_at_utc": "2026-10-13T18:01:25.097498+00:00",
+      "recorded_at_utc": "2026-10-14T04:55:33.995248+00:00",
+      "replay": true,
+      "anchors": [
+        {
+          "event": "phase_end",
+          "phase": "M60",
+          "utc_s": 1791914185.0974977,
+          "mono_s": 8439.393332106,
+          "evidence_id": "b31db860a10ad52a3cd0df2a",
+          "source_time_field": "actual_end_mono_s"
+        }
+      ],
+      "does_not_control_or_extend_workload": true
+    }
+  ],
+  "emitted_count": 6,
+  "last_emit_s": 1791914485.0974977
+}

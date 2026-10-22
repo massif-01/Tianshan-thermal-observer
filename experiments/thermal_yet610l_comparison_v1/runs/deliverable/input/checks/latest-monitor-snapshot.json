@@ -1,0 +1,384 @@
+{
+  "checked_at_utc": "2026-10-17T17:01:03.773552+00:00",
+  "collector": {
+    "status": "running",
+    "session_id": "yet610l-sync-shortqa-retry-20261017T162947Z",
+    "started_coordinator_utc": "2026-10-17T16:30:54.891833+00:00",
+    "clock_host": "lpmu305",
+    "deadline_mono_s": 204926.187303529,
+    "tto_version": "0.2.4",
+    "operator_override": true,
+    "explicit_policy_id": "YET-SYNC-TRANSIENT-TEMP-CONTINUE-v1",
+    "run_id": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece",
+    "run_path": "/home/rm01/TTO-sync-experiments/yet610l-sync-shortqa-retry-20261017T162947Z/collection/run-2026-10-17T163054.892751_0000-1ae9a7d7",
+    "collection_started_at_utc": "2026-10-17T16:30:54.894925+00:00"
+  },
+  "workload": {
+    "state": "running",
+    "phase": "final-cooldown",
+    "run_id": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece",
+    "updated_at_utc": "2026-10-17T16:51:42.649736+00:00",
+    "completed_requests": 18
+  },
+  "health": {
+    "current_ready": true,
+    "continuous_60s": false,
+    "abnormal": false,
+    "gaps_180s": [
+      {
+        "from_t": 204155.788380086,
+        "to_t": 204155.955106075,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:4663",
+        "reasons": []
+      },
+      {
+        "from_t": 204160.774960376,
+        "to_t": 204160.993867709,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:4678",
+        "reasons": []
+      },
+      {
+        "from_t": 204165.800279406,
+        "to_t": 204166.073334783,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:4693",
+        "reasons": []
+      },
+      {
+        "from_t": 204175.809266781,
+        "to_t": 204175.98152798,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:4723",
+        "reasons": []
+      },
+      {
+        "from_t": 204180.814651185,
+        "to_t": 204180.983994006,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:4738",
+        "reasons": []
+      },
+      {
+        "from_t": 204185.821313944,
+        "to_t": 204186.098934148,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:4753",
+        "reasons": []
+      },
+      {
+        "from_t": 204195.829059963,
+        "to_t": 204195.966723564,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:4783",
+        "reasons": []
+      },
+      {
+        "from_t": 204200.829636427,
+        "to_t": 204201.085386682,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:4798",
+        "reasons": []
+      },
+      {
+        "from_t": 204205.817123204,
+        "to_t": 204205.963433039,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:4813",
+        "reasons": []
+      },
+      {
+        "from_t": 204210.843940209,
+        "to_t": 204211.069517322,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:4828",
+        "reasons": []
+      },
+      {
+        "from_t": 204215.830127147,
+        "to_t": 204216.004491637,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:4843",
+        "reasons": []
+      },
+      {
+        "from_t": 204220.850141341,
+        "to_t": 204220.986309401,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:4858",
+        "reasons": []
+      },
+      {
+        "from_t": 204225.862063886,
+        "to_t": 204226.015933782,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:4873",
+        "reasons": []
+      },
+      {
+        "from_t": 204230.856159025,
+        "to_t": 204231.078039079,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:4888",
+        "reasons": []
+      },
+      {
+        "from_t": 204235.845816961,
+        "to_t": 204236.020685041,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:4903",
+        "reasons": []
+      },
+      {
+        "from_t": 204240.854651686,
+        "to_t": 204240.996114041,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:4918",
+        "reasons": []
+      },
+      {
+        "from_t": 204245.880064561,
+        "to_t": 204245.993889417,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:4933",
+        "reasons": []
+      },
+      {
+        "from_t": 204250.883965405,
+        "to_t": 204251.001426169,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:4948",
+        "reasons": []
+      },
+      {
+        "from_t": 204255.868828925,
+        "to_t": 204255.994764878,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:4963",
+        "reasons": []
+      },
+      {
+        "from_t": 204260.871169133,
+        "to_t": 204261.011959266,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:4978",
+        "reasons": []
+      },
+      {
+        "from_t": 204265.878259749,
+        "to_t": 204266.012968693,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:4993",
+        "reasons": []
+      },
+      {
+        "from_t": 204270.895193162,
+        "to_t": 204271.088530742,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:5008",
+        "reasons": []
+      },
+      {
+        "from_t": 204275.903801196,
+        "to_t": 204275.997675278,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:5023",
+        "reasons": []
+      },
+      {
+        "from_t": 204280.913915732,
+        "to_t": 204280.993910619,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:5038",
+        "reasons": []
+      },
+      {
+        "from_t": 204285.940548755,
+        "to_t": 204286.009737778,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:5053",
+        "reasons": []
+      },
+      {
+        "from_t": 204290.899679809,
+        "to_t": 204291.004873102,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:5068",
+        "reasons": []
+      },
+      {
+        "from_t": 204295.904488512,
+        "to_t": 204295.906566748,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:5082",
+        "reasons": []
+      },
+      {
+        "from_t": 204295.906566748,
+        "to_t": 204296.009773813,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:5083",
+        "reasons": [
+          "fan_missing_or_stale"
+        ]
+      },
+      {
+        "from_t": 204300.949434943,
+        "to_t": 204301.017441293,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:5098",
+        "reasons": []
+      },
+      {
+        "from_t": 204304.931962474,
+        "to_t": 204305.391724034,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:5110",
+        "reasons": []
+      },
+      {
+        "from_t": 204305.391724034,
+        "to_t": 204305.400534897,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:5111",
+        "reasons": [
+          "fan_missing_or_stale"
+        ]
+      },
+      {
+        "from_t": 204305.400534897,
+        "to_t": 204305.919306355,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:5112",
+        "reasons": [
+          "unsupported_control_scope",
+          "fan_missing_or_stale",
+          "fan_not_enabled",
+          "fan_fault",
+          "guard_active",
+          "control_temperature_stale",
+          "successful_duty_unavailable"
+        ]
+      },
+      {
+        "from_t": 204305.919306355,
+        "to_t": 204306.392728347,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:5113",
+        "reasons": [
+          "unsupported_control_scope",
+          "fan_missing_or_stale",
+          "fan_not_enabled",
+          "fan_fault",
+          "guard_active",
+          "control_temperature_stale",
+          "successful_duty_unavailable"
+        ]
+      },
+      {
+        "from_t": 204306.392728347,
+        "to_t": 204306.440569503,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:5114",
+        "reasons": [
+          "unsupported_control_scope",
+          "fan_missing_or_stale",
+          "fan_not_enabled",
+          "fan_fault",
+          "guard_active",
+          "control_temperature_stale",
+          "successful_duty_unavailable"
+        ]
+      },
+      {
+        "from_t": 204310.917032704,
+        "to_t": 204310.927224616,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:5126",
+        "reasons": []
+      },
+      {
+        "from_t": 204310.927224616,
+        "to_t": 204311.135451342,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:5127",
+        "reasons": [
+          "fan_missing_or_stale"
+        ]
+      },
+      {
+        "from_t": 204315.923531212,
+        "to_t": 204315.934309914,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:5141",
+        "reasons": []
+      },
+      {
+        "from_t": 204315.934309914,
+        "to_t": 204316.06785599,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:5142",
+        "reasons": [
+          "fan_missing_or_stale"
+        ]
+      },
+      {
+        "from_t": 204320.92856317,
+        "to_t": 204320.942696853,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:5156",
+        "reasons": []
+      },
+      {
+        "from_t": 204320.942696853,
+        "to_t": 204321.0162895,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:5157",
+        "reasons": [
+          "fan_missing_or_stale"
+        ]
+      },
+      {
+        "from_t": 204325.95231906,
+        "to_t": 204326.0036719,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:5172",
+        "reasons": []
+      },
+      {
+        "from_t": 204330.952344035,
+        "to_t": 204330.957566711,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:5186",
+        "reasons": []
+      },
+      {
+        "from_t": 204330.957566711,
+        "to_t": 204331.041857272,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:5187",
+        "reasons": [
+          "fan_missing_or_stale"
+        ]
+      }
+    ],
+    "latest": {
+      "t": 204334.325300119,
+      "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:5199",
+      "complete": true,
+      "valid_until": 204335.928657843,
+      "source_valid_until": 204339.23024324898,
+      "source_usable": true,
+      "source_epoch": 2,
+      "source_rejection": null,
+      "observed_abnormal": false,
+      "control_context_changed": false,
+      "control_mode": "auto",
+      "reasons": [],
+      "TJ": 44.781,
+      "source_ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:5199",
+      "fan_ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:5197",
+      "P_g": 1.984,
+      "P_c": 6.348,
+      "fan_age_s": 0.8966422759986017,
+      "PWM": 17,
+      "gain": 0.543590009212494,
+      "source_age_ms": 95.056870020926,
+      "source_accepted_t": 204334.325300119,
+      "source_key": [
+        "orin-primary",
+        "50ea6d93-8f3a-4991-9211-43cc8129cb90",
+        203732
+      ],
+      "source_period_ms": 1000
+    },
+    "checked_at_mono_s": 204334.63264733,
+    "observed_span_s": 180.38442128399038,
+    "input_coverage": {
+      "complete_input_s": 1438.962415450078,
+      "unknown_input_s": 369.0032974309288,
+      "longest_continuous_s": 27.53939778599306,
+      "current_continuous_s": 3.2834428469941486,
+      "reasons_seconds": {
+        "unsupported_control_scope,fan_missing_or_stale,temperature_status_missing_or_stale,fan_not_enabled,fan_fault,guard_active,control_temperature_stale,successful_duty_unavailable,manual_temperature,control_temperature_invalid,active_temperature_source_untrusted,temperature_binding_unconfirmed,source_not_usable:socketio_connecting": 0.07168411201564595,
+        "temperature_status_missing_or_stale,manual_temperature,control_temperature_invalid,active_temperature_source_untrusted,temperature_binding_unconfirmed,source_not_usable:socketio_connecting": 0.009261813975172117,
+        "source_not_usable:socketio_connecting": 0.2792489670100622,
+        "input_validity_expired_or_source_unusable": 80.3795080567943,
+        "control_temperature_stale": 4.782486158015672,
+        "unsupported_control_scope,fan_missing_or_stale,fan_not_enabled,fan_fault,guard_active,control_temperature_stale,successful_duty_unavailable": 233.32528554304736,
+        "fan_missing_or_stale": 49.977636447089026,
+        "fan_missing_or_stale,control_temperature_stale": 0.17818633298156783
+      }
+    },
+    "coverage_measured_until_mono_s": 204334.325300119,
+    "native_abnormal": true,
+    "execution_stop_reasons": [],
+    "transient_temp": false,
+    "run_id": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece",
+    "clock_host": "lpmu305",
+    "collection_state": "running",
+    "valid_until_mono_s": 204335.928657843,
+    "operator_override": true,
+    "explicit_policy_id": "YET-SYNC-TRANSIENT-TEMP-CONTINUE-v1"
+  },
+  "now_mono_s": 204335.069451975,
+  "observation_bytes": 5248440
+}

@@ -1,0 +1,31 @@
+idf_component_register(
+    SRCS
+        "src/ts_net.c"
+        "src/ts_net_manager.c"
+        "src/ts_eth.c"
+        "src/ts_wifi.c"
+        "src/ts_dhcp_server.c"
+        "src/ts_nat.c"
+        "src/ts_http_server.c"
+        "src/ts_https_server.c"
+        "src/ts_time_sync.c"
+    INCLUDE_DIRS
+        "include"
+    REQUIRES
+        ts_core
+        ts_hal
+        ts_storage
+        ts_security
+        esp_netif
+        esp_eth
+        esp_wifi
+        esp_http_server
+        esp_https_server
+        lwip
+        mbedtls
+        mdns
+    PRIV_REQUIRES
+        driver
+        esp_event
+        nvs_flash
+)

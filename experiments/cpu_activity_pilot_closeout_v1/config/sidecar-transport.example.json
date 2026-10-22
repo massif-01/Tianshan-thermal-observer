@@ -1,0 +1,14 @@
+{
+  "transport": "existing_ssh_mux",
+  "host": "rm01@10.10.99.98",
+  "query_target_s": 0.2,
+  "existing_control_socket": null,
+  "command_id": null,
+  "remote_python": null,
+  "remote_source_script": null,
+  "source_script_sha256": null,
+  "remote_source_config": null,
+  "source_config_sha256": null,
+  "remote_source_permission": null,
+  "note": "Fill confirmed paths and identities only after separate current permission. No credentials, SSH login setup or service changes. ProxyCommand=false prevents a new TCP authentication fallback if mux is gone."
+}

@@ -1,0 +1,37 @@
+{
+  "accepted": 2504,
+  "strict_current": 2503,
+  "strict_rejected_refs": [
+    "637f114b-563b-4c35-8062-a7588a89ce1c/observation:7473"
+  ],
+  "segments": [
+    {
+      "id": "M-00",
+      "n": 2330,
+      "span_s": 2335.486429075,
+      "first_ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:4",
+      "last_ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:7470",
+      "phases": [
+        "M180",
+        "M20",
+        "M60",
+        "cooldown_1",
+        "cooldown_2",
+        "final_cooldown",
+        "resident_background"
+      ]
+    },
+    {
+      "id": "M-01",
+      "n": 173,
+      "span_s": 172.03659304499888,
+      "first_ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:7476",
+      "last_ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:8024",
+      "phases": [
+        "final_cooldown"
+      ]
+    }
+  ],
+  "breaks": [],
+  "reset_policy": "only real qualification/source break; never phase change"
+}

@@ -1,0 +1,163 @@
+{
+  "output": "/Users/massif/Tianshan-thermal-observer/evidence/r3b-v1/after/r3b-probes/normal-report",
+  "report_type": "shadow",
+  "conclusion": "模拟旁路：已读取当时保存的模型预测与事后评分；这是该次在线观察，不是新独立留出验证。 模拟记录仅验证软件，真实预测效果待数据。",
+  "next_step": "查看实际误差、覆盖和降级片段，再决定是否保留该冻结模型；不能据此降低PWM。",
+  "missing_required_logs": [],
+  "recorded_origins": 71
+}
+{
+  "output": "/Users/massif/Tianshan-thermal-observer/evidence/r3b-v1/after/r3b-probes/conflict-report",
+  "report_type": "shadow",
+  "conclusion": "模拟旁路：历史评分已保存，但全部被既有质量隔离排除；当前没有可用成绩，误差不可计算。 模拟记录仅验证软件，真实预测效果待数据。",
+  "next_step": "查看隔离原因与原始引用；保留历史记录，不重算预测或改写评分。",
+  "missing_required_logs": [],
+  "recorded_origins": 71
+}
+{
+  "output": "/Users/massif/Tianshan-thermal-observer/evidence/r3b-v1/after/r3b-probes/conflict_then_recovery-report",
+  "report_type": "shadow",
+  "conclusion": "模拟旁路：已读取当时保存的模型预测与事后评分；这是该次在线观察，不是新独立留出验证。 历史评分中510条因质量隔离排除，当前306条有效；误差和图只使用有效集合。 模拟记录仅验证软件，真实预测效果待数据。",
+  "next_step": "查看实际误差、覆盖和降级片段，再决定是否保留该冻结模型；不能据此降低PWM。",
+  "missing_required_logs": [],
+  "recorded_origins": 125
+}
+{
+  "output": "/Users/massif/Tianshan-thermal-observer/evidence/r3b-v1/after/r3b-probes/sequence_regression-report",
+  "report_type": "shadow",
+  "conclusion": "模拟旁路：已读取当时保存的模型预测与事后评分；这是该次在线观察，不是新独立留出验证。 历史评分中510条因质量隔离排除，当前306条有效；误差和图只使用有效集合。 模拟记录仅验证软件，真实预测效果待数据。",
+  "next_step": "查看实际误差、覆盖和降级片段，再决定是否保留该冻结模型；不能据此降低PWM。",
+  "missing_required_logs": [],
+  "recorded_origins": 125
+}
+{
+  "passed": true,
+  "synthetic_only": true,
+  "findings": {
+    "normal": {
+      "mode": "normal",
+      "run_relative": "normal/run-2026-10-10T191636.547787_0000-84b56d31",
+      "report_relative": "normal-report",
+      "simulated": true,
+      "issued_prediction_origins": 71,
+      "terminal_score_records": 213,
+      "historical_scored": 510,
+      "currently_eligible": 510,
+      "quality_excluded": 0,
+      "disputed_label_excluded": 0,
+      "log_evidence_complete": true,
+      "log_hashes_before": {
+        "predictions.jsonl": "8d5e01a2cc8db338424d688ba49b81bcc4d8f76faa940bb77467c5350b9ff878",
+        "scores.jsonl": "396b7c999d00f0a1909f128c2bbbfc3ec8610dcd18acdd5f7066f859edb0cb2f",
+        "observations-0001.jsonl": "a8d1b804c73e3aead967471953d49e47e0cb03ae801f86afed91272ac136c29d",
+        "events.jsonl": "fe72874d6b028eedff9e33df7dd65dbca9e7d4508549c5a52ea6a73066dc3ff0"
+      },
+      "log_hashes_after": {
+        "predictions.jsonl": "8d5e01a2cc8db338424d688ba49b81bcc4d8f76faa940bb77467c5350b9ff878",
+        "scores.jsonl": "396b7c999d00f0a1909f128c2bbbfc3ec8610dcd18acdd5f7066f859edb0cb2f",
+        "observations-0001.jsonl": "a8d1b804c73e3aead967471953d49e47e0cb03ae801f86afed91272ac136c29d",
+        "events.jsonl": "fe72874d6b028eedff9e33df7dd65dbca9e7d4508549c5a52ea6a73066dc3ff0"
+      },
+      "quality_isolations": []
+    },
+    "conflict": {
+      "mode": "conflict",
+      "run_relative": "conflict/run-2026-10-10T191636.963405_0000-cb7b9055",
+      "report_relative": "conflict-report",
+      "simulated": true,
+      "issued_prediction_origins": 71,
+      "terminal_score_records": 213,
+      "historical_scored": 510,
+      "currently_eligible": 0,
+      "quality_excluded": 510,
+      "disputed_label_excluded": 12,
+      "log_evidence_complete": true,
+      "log_hashes_before": {
+        "predictions.jsonl": "74b157dade8c1eaca673e18b7fbf3d05a6b03652ac44bc8c47b7338dc56f40ad",
+        "scores.jsonl": "72bf9d003b7cab2cd6602888738911f73199537dcc26dbb1f6a6dee41702601a",
+        "observations-0001.jsonl": "61b8b85d3356b9789721219586e7c858853fabe8e3045afa292ed7ef85cbc9cc",
+        "events.jsonl": "a8add8116e1951a2106c6e53daf1fe43012aa595123c26c397c73049313c3c19"
+      },
+      "log_hashes_after": {
+        "predictions.jsonl": "74b157dade8c1eaca673e18b7fbf3d05a6b03652ac44bc8c47b7338dc56f40ad",
+        "scores.jsonl": "72bf9d003b7cab2cd6602888738911f73199537dcc26dbb1f6a6dee41702601a",
+        "observations-0001.jsonl": "61b8b85d3356b9789721219586e7c858853fabe8e3045afa292ed7ef85cbc9cc",
+        "events.jsonl": "a8add8116e1951a2106c6e53daf1fe43012aa595123c26c397c73049313c3c19"
+      },
+      "quality_isolations": [
+        {
+          "run_id": "cb7b9055-c749-45d3-bd86-88aa80720f31",
+          "segment": 3,
+          "reason": "identity_conflict",
+          "trigger_ref": "cb7b9055-c749-45d3-bd86-88aa80720f31/observation:774"
+        }
+      ]
+    },
+    "conflict_then_recovery": {
+      "mode": "conflict_then_recovery",
+      "run_relative": "conflict_then_recovery/run-2026-10-10T191637.383404_0000-b9705e8d",
+      "report_relative": "conflict_then_recovery-report",
+      "simulated": true,
+      "issued_prediction_origins": 125,
+      "terminal_score_records": 375,
+      "historical_scored": 816,
+      "currently_eligible": 306,
+      "quality_excluded": 510,
+      "disputed_label_excluded": 12,
+      "log_evidence_complete": true,
+      "log_hashes_before": {
+        "predictions.jsonl": "c068b23507fdb0aaa6bb0df457d38d24930c12a9a09760850a43d116b712947e",
+        "scores.jsonl": "7dbf957526fbc6fa46424368fdc0d92e832bfc6c60cae810466222c71d5ac4e0",
+        "observations-0001.jsonl": "82f7f527dea8b2aac666604bb79dbcb51a5c97e7ad79e9eda900b2660fdd73b8",
+        "events.jsonl": "51d77495cdcc28b99035567a47bd024630022d4fba3477076e6d370d7f879aaf"
+      },
+      "log_hashes_after": {
+        "predictions.jsonl": "c068b23507fdb0aaa6bb0df457d38d24930c12a9a09760850a43d116b712947e",
+        "scores.jsonl": "7dbf957526fbc6fa46424368fdc0d92e832bfc6c60cae810466222c71d5ac4e0",
+        "observations-0001.jsonl": "82f7f527dea8b2aac666604bb79dbcb51a5c97e7ad79e9eda900b2660fdd73b8",
+        "events.jsonl": "51d77495cdcc28b99035567a47bd024630022d4fba3477076e6d370d7f879aaf"
+      },
+      "quality_isolations": [
+        {
+          "run_id": "b9705e8d-84eb-43c2-9526-da224d2df703",
+          "segment": 3,
+          "reason": "identity_conflict",
+          "trigger_ref": "b9705e8d-84eb-43c2-9526-da224d2df703/observation:774"
+        }
+      ]
+    },
+    "sequence_regression": {
+      "mode": "sequence_regression",
+      "run_relative": "sequence_regression/run-2026-10-10T191638.053920_0000-c646a962",
+      "report_relative": "sequence_regression-report",
+      "simulated": true,
+      "issued_prediction_origins": 125,
+      "terminal_score_records": 375,
+      "historical_scored": 816,
+      "currently_eligible": 306,
+      "quality_excluded": 510,
+      "disputed_label_excluded": 12,
+      "log_evidence_complete": true,
+      "log_hashes_before": {
+        "predictions.jsonl": "4791409575c118bd472ef71a5c4ceb6e974b1cbeb1ea72039d69225d7ffb3f49",
+        "scores.jsonl": "1d1587190bf25e956a9fabe4abc46e43a705afc200de0dc2773973759971cd4c",
+        "observations-0001.jsonl": "ca097508e2d59e7521607b5d9b890ab54188b8ff1aaa99d84708b7b8439a34a2",
+        "events.jsonl": "3c25d2edafe73893d0312a671d82d3f3445fe6353bb30ba66b992db0ea183796"
+      },
+      "log_hashes_after": {
+        "predictions.jsonl": "4791409575c118bd472ef71a5c4ceb6e974b1cbeb1ea72039d69225d7ffb3f49",
+        "scores.jsonl": "1d1587190bf25e956a9fabe4abc46e43a705afc200de0dc2773973759971cd4c",
+        "observations-0001.jsonl": "ca097508e2d59e7521607b5d9b890ab54188b8ff1aaa99d84708b7b8439a34a2",
+        "events.jsonl": "3c25d2edafe73893d0312a671d82d3f3445fe6353bb30ba66b992db0ea183796"
+      },
+      "quality_isolations": [
+        {
+          "run_id": "c646a962-7090-446c-94f6-759a6aa77b88",
+          "segment": 3,
+          "reason": "sequence_regression",
+          "trigger_ref": "c646a962-7090-446c-94f6-759a6aa77b88/observation:774"
+        }
+      ]
+    }
+  }
+}

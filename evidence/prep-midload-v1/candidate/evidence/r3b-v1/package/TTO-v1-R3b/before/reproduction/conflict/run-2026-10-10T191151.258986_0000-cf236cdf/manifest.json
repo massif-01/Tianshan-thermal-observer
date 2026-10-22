@@ -1,0 +1,172 @@
+{
+  "record_schema": 1,
+  "report_type": "shadow",
+  "model_sha256": "25a474d843c8b3ef26fe5abb119c619eaa4806a68db52113b61d9fe1267824d0",
+  "version": "0.1.1",
+  "source_identity": {
+    "kind": "package_source_hashes",
+    "sha256": "17b7dd54ecb856c31dcdc3ffde3e4f923eb90553116caa4ec7c4409136165e34",
+    "files": {
+      "__init__.py": "af9100b2e4ef802903d285685150bf1bc3a91c72cbb672c0508a4b687e5ef932",
+      "__main__.py": "79ee6f134c5c5193377cf9b189cbdcc3e2095e49ba9cec310114441c15a917c4",
+      "cli.py": "5101217439991b5b8823511980e3730744ce7cfc17379bb573fa21c9897c9a7c",
+      "collector.py": "a1442cd7935224da78916b362985616221b205408efa463e0fa2c021444f82d2",
+      "config.py": "5a05545f28b8b44b3e6f0e7efcf2453e01ee0726ef0bd228cc73d553e01d8e3e",
+      "dataset.py": "7765acb4d03a57025935fd81e1dc4ebd359ba3be21f4e49fbbceb7309658bac1",
+      "demo.py": "c41e1fc3a6c4f5454e32418e9784278786a5e315dcb60590d036b1cc1dfd5d67",
+      "deployment.py": "221b1d098d46623dc0eba5addc9804d917f8ede6cfa850cec1922c5cd177aaf7",
+      "engine.py": "937a0327a5211ae6fbf6daf81ccd214f7b1f0ef4e0a554589678b153ed8d7bf2",
+      "evaluation.py": "8f40dc1a025b994d8a0502e010461bdeda62a52fb5cf68d8a5d4265be349b2ca",
+      "features.py": "e01d25b52f6aec2b584b9382b46a665b6be790aa6a2eec76884b08fbed208b60",
+      "model.py": "1b998ac04883ebdc59ed5abde442a5c1455d825ddd51ec1f69fe6a72532f919e",
+      "quality.py": "72f3886fdd0becf7168b87901181cfb7afd130579c411c71c3414e1d94b72218",
+      "recorded.py": "46c815d30204dab4a6f6fb7c001b95d8f5d90dfb24c834c7679f6a648307a3ed",
+      "report.py": "15f92a515864ec83011aeb03da131e0f1d76628380c4eddfd9c365ba8b89d140",
+      "storage.py": "0a112270db059fe04eee8fa7a11bfad7b4fc8e38ecdd8a9f7aecbb80308c0817",
+      "training.py": "7cb331f65f76bff7489acd8457fa7b69101933ee461168139d615b8511f5ad8c",
+      "util.py": "0a33bb268e7817ddd19b6ae81562c50e1fdd08a9cdb3fa08f8f2dd3fbb252f16"
+    },
+    "git_head": null,
+    "dirty": null,
+    "git_state": "not_checked_in_installed_runtime"
+  },
+  "config": {
+    "schema_version": 1,
+    "mode": "observe_only",
+    "orin": {
+      "source_id": "orin-primary",
+      "base_url": null,
+      "socketio_path": "socket.io",
+      "namespace": "/",
+      "event": "tegrastats_update",
+      "transports": [
+        "websocket"
+      ],
+      "source_sample_interval_ms": 1000,
+      "source_interval_evidence": "fixed_simulation_1Hz",
+      "headers_file": null,
+      "ca_file": null
+    },
+    "tianshan": {
+      "source_id": "esp32-primary",
+      "base_url": null,
+      "fan_id": 0,
+      "fan_status_path": "/api/v1/fan/status",
+      "temp_status_path": "/api/v1/temp/status",
+      "fan_poll_interval_s": 1.0,
+      "temp_poll_interval_s": 5.0,
+      "headers_file": null,
+      "ca_file": null
+    },
+    "network": {
+      "request_timeout_s": 2.0,
+      "connect_timeout_s": 5.0,
+      "max_inflight_esp32": 1,
+      "follow_redirects": false,
+      "reconnect_initial_s": 1.0,
+      "reconnect_max_s": 30.0,
+      "reconnect_max_attempts": 10,
+      "reconnect_jitter_ratio": 0.2,
+      "max_business_payload_bytes": 65536
+    },
+    "storage": {
+      "data_root": null,
+      "chunk_bytes": 67108864,
+      "run_max_bytes": 2147483648,
+      "min_free_bytes": 1073741824,
+      "queue_max_items": 256,
+      "queue_max_bytes": 8388608,
+      "overwrite_existing": false
+    },
+    "run": {
+      "default_duration_s": 1800,
+      "max_duration_s": 14400,
+      "doctor_duration_s": 180,
+      "single_instance": true
+    },
+    "features": {
+      "schema_version": 1,
+      "time_axis": "observer_receive",
+      "history_s": 180,
+      "prediction_stride_s": 5,
+      "fan_max_age_s": 2.5,
+      "optional_train_min_availability": 0.95,
+      "max_feature_columns": 64,
+      "missing_optional_policy": "fallback_tj_or_baseline",
+      "power_current_rails": [
+        "vdd_gpu_soc",
+        "vdd_cpu_cv",
+        "vin_sys_5v0"
+      ]
+    },
+    "model": {
+      "schema_version": 1,
+      "horizons_s": [
+        15,
+        45,
+        90
+      ],
+      "primary_horizon_s": 45,
+      "methods": [
+        "persist",
+        "trend30",
+        "ridge_tj",
+        "ridge_full"
+      ],
+      "ridge_lambda_grid": [
+        0.001,
+        0.01,
+        0.1,
+        1.0
+      ],
+      "train_threads": 1,
+      "train_timeout_s": 600,
+      "online_training": false,
+      "automatic_activation": false
+    },
+    "resources": {
+      "observer_rss_target_mib": 256,
+      "observer_cpu_single_core_target_pct": 5.0,
+      "predict_all_horizons_p99_target_ms": 20.0,
+      "train_rss_limit_mib": 2048
+    },
+    "security": {
+      "business_control_writes": false,
+      "production_discovery": false,
+      "telemetry_upload": false,
+      "system_service_install": false,
+      "default_live_access": false
+    }
+  },
+  "config_sha256": "7837c81a58bbe3cfcc7ed73c949dde71e296856bf85541dbea76cf7bd5d551f1",
+  "observer_run_id": "cf236cdf-25d4-46ff-82a8-d74166ce3f6f",
+  "episode": "review-synthetic-shadow",
+  "episode_evidence": "operator_named_process",
+  "simulated": true,
+  "started_at_utc": "2026-10-10T19:11:51.259811+00:00",
+  "time_axis": "observer_receive",
+  "feature_schema": 1,
+  "model_schema": 1,
+  "input_schema": 1,
+  "units": {
+    "temperature": "C",
+    "raw_power": "mW",
+    "features_power": "W",
+    "duty": "logical_percent",
+    "cpu_freq": "MHz",
+    "gpu_gr3d_freq": "busy_percent"
+  },
+  "fan_id": 0,
+  "deployment_status": "deployment_unverified",
+  "ws_final_package_sha256": null,
+  "firmware_identity": null,
+  "source_period_ms": 1000,
+  "source_period_evidence": "fixed_simulation_1Hz",
+  "network_authorization": {
+    "kind": "offline_simulation",
+    "endpoints": [],
+    "business_writes": false
+  },
+  "operator_environment": "unknown",
+  "control_elapsed_time_available": false
+}

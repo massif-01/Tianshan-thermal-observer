@@ -1,0 +1,13 @@
+{
+  "scope": "independent review work copy only; archived files untouched",
+  "file": "config/generate.json",
+  "changed_fields": {
+    "runtime_profile": {
+      "before": "offline_macos_accelerate_v1",
+      "after": "offline_openblas_v1"
+    }
+  },
+  "reason": "Mac Accelerate-only test fixture cannot run on Linux OpenBLAS; existing supported profile selected before running stationary no-fit case",
+  "theta_training": false,
+  "assertions_changed": false
+}

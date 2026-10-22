@@ -1,0 +1,14 @@
+Collecting setuptools-scm
+  Downloading setuptools_scm-10.3.4-py3-none-any.whl (33 kB)
+Requirement already satisfied: typing-extensions>=4.1 in /private/tmp/tto-platform-curve-v2/rm-env/lib/python3.10/site-packages (from setuptools-scm) (4.16.0)
+Requirement already satisfied: packaging>=20 in /private/tmp/tto-platform-curve-v2/rm-env/lib/python3.10/site-packages (from setuptools-scm) (26.3)
+Collecting vcs-versioning<3,>=2.5.0.dev0
+  Downloading vcs_versioning-2.6.0-py3-none-any.whl (123 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 123.2/123.2 kB 377.8 kB/s eta 0:00:00
+Requirement already satisfied: tomli>=1 in /private/tmp/tto-platform-curve-v2/rm-env/lib/python3.10/site-packages (from setuptools-scm) (2.5.0)
+Requirement already satisfied: setuptools in /private/tmp/tto-platform-curve-v2/rm-env/lib/python3.10/site-packages (from setuptools-scm) (65.5.0)
+Installing collected packages: vcs-versioning, setuptools-scm
+Successfully installed setuptools-scm-10.3.4 vcs-versioning-2.6.0
+
+[notice] A new release of pip is available: 23.0.1 -> 26.2.1
+[notice] To update, run: /private/tmp/tto-platform-curve-v2/rm-env/bin/python -m pip install --upgrade pip

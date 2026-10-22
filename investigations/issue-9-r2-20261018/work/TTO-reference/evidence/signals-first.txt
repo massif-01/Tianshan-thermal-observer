@@ -1,0 +1,58 @@
+Traceback (most recent call last):
+  File "/Users/massif/Tianshan-thermal-observer/scripts/verify_signals.py", line 119, in <module>
+    print(json.dumps(asyncio.run(verify(a.output)), indent=2))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Users/massif/Tianshan-thermal-observer/scripts/verify_signals.py", line 99, in verify
+    assert p.returncode == 0, stderr.decode()
+           ^^^^^^^^^^^^^^^^^
+AssertionError: Traceback (most recent call last):
+  File "/Users/massif/Tianshan-thermal-observer/src/tto/collector.py", line 303, in collect
+    await asyncio.wait_for(stop.wait(), duration)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/locks.py", line 212, in wait
+    await fut
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/massif/Tianshan-thermal-observer/src/tto/__main__.py", line 2, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/Users/massif/Tianshan-thermal-observer/src/tto/cli.py", line 137, in main
+    result = run(args)
+             ^^^^^^^^^
+  File "/Users/massif/Tianshan-thermal-observer/src/tto/cli.py", line 104, in run
+    path, stats = asyncio.run(collect(c, duration, model=model, episode=args.episode))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Users/massif/Tianshan-thermal-observer/src/tto/collector.py", line 314, in collect
+    await writer_task
+  File "/Users/massif/Tianshan-thermal-observer/src/tto/collector.py", line 182, in writer
+    await asyncio.to_thread(process, row)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+

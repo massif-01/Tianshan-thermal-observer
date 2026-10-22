@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/bin/tto-cpu-pilot", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/tto_field/cpu_cli.py", line 34, in main
+    if a.cmd=='verify-install':print(json.dumps(verify(a.target),indent=2));return 0
+                                                ^^^^^^^^^^^^^^^^
+  File "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/tto_field/identity.py", line 18, in verify
+    raise ValueError('field target is Linux x86_64 CPython3.10; use isolated target environment')
+ValueError: field target is Linux x86_64 CPython3.10; use isolated target environment

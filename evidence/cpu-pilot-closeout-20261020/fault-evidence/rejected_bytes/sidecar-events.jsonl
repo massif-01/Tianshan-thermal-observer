@@ -1,0 +1,6 @@
+{"event": "startup_scheduled", "mono_s": 30.000053750001825, "at_utc": "2026-10-20T12:35:50.303167+00:00", "status": "starting", "stage": "baseline", "startup_budget_s": 3.0}
+{"event": "started", "mono_s": 30.00250770803541, "at_utc": "2026-10-20T12:35:50.305622+00:00", "status": "running", "stage": "receive"}
+{"event": "source_rejected", "mono_s": 30.015481375041418, "at_utc": "2026-10-20T12:35:50.318593+00:00", "status": "running", "stage": "receive", "wire_seq": 1, "error_class": "UnicodeDecodeError", "detail": "'utf-8' codec can't decode byte 0xff in position 8: invalid start byte"}
+{"event": "stop_sidecar_only", "mono_s": 30.01549879205413, "at_utc": "2026-10-20T12:35:50.318610+00:00", "status": "source_invalid", "stage": "receive"}
+{"event": "child_exit", "mono_s": 30.066802917048335, "at_utc": "2026-10-20T12:35:50.369916+00:00", "status": "source_invalid", "stage": "receive", "child_stage": "source_start", "returncode": -15, "child_pid": 29523}
+{"event": "cleanup_finished", "mono_s": 30.06696395808831, "at_utc": "2026-10-20T12:35:50.370076+00:00", "status": "source_invalid", "stage": "receive", "own_tasks_remaining": 0, "unreaped_children": 0}

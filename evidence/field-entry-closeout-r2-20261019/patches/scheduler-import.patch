@@ -1,0 +1,11 @@
+--- accepted/scheduler.py
++++ candidate/scheduler.py
+@@ -1,7 +1,7 @@
+ """One clock-driven scheduling state machine, shared by virtual and loopback drivers."""
+ import hashlib,json,math
+ from pathlib import Path
+-from contracts import readiness
++from .gate import readiness
+ 
+ class Registry:
+     def __init__(self,root):self.root=Path(root);self.root.mkdir(parents=True,exist_ok=True)

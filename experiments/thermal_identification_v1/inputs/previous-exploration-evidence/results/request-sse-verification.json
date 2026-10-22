@@ -1,0 +1,1034 @@
+{
+  "count": 19,
+  "formal_count": 18,
+  "checks": [
+    {
+      "request": "P01",
+      "sse_sha256": "44967c36d23ddf85877d3e29d1f6ae3b4e7c114cc5c6ee6546ce61e34f2066b7",
+      "sse_bytes": 3477,
+      "normalized_equals_raw": true,
+      "finish_matches": true,
+      "usage_matches": true,
+      "done_matches": true,
+      "has_content": true,
+      "server_id_matches": true,
+      "times_in_order": true,
+      "duration_matches_mono": true,
+      "event_time_checks": [
+        {
+          "event": "request_submit",
+          "count": 1,
+          "timestamp": "2026-10-13T05:31:03.781881+00:00",
+          "log_delta_s": 1.6927719116210938e-05
+        },
+        {
+          "event": "first_network_packet",
+          "count": 1,
+          "timestamp": "2026-10-13T05:31:05.458078+00:00",
+          "log_delta_s": 5.0067901611328125e-05
+        },
+        {
+          "event": "first_model_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:31:05.460737+00:00",
+          "log_delta_s": 3.790855407714844e-05
+        },
+        {
+          "event": "first_visible_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:31:05.462731+00:00",
+          "log_delta_s": 5.602836608886719e-05
+        },
+        {
+          "event": "finish_reason",
+          "count": 1,
+          "timestamp": "2026-10-13T05:31:07.389043+00:00",
+          "log_delta_s": 4.601478576660156e-05
+        },
+        {
+          "event": "request_end",
+          "count": 1,
+          "timestamp": "2026-10-13T05:31:07.394188+00:00",
+          "log_delta_s": 0.0025861263275146484
+        }
+      ],
+      "duration_s": 3.6123492539918516,
+      "event_times_match": true,
+      "passed": true
+    },
+    {
+      "request": "S01",
+      "sse_sha256": "7df9b09078cd1ea59359f0baa8c5f5ca52b1ff49345403813d2cde7633f7f91e",
+      "sse_bytes": 3718,
+      "normalized_equals_raw": true,
+      "finish_matches": true,
+      "usage_matches": true,
+      "done_matches": true,
+      "has_content": true,
+      "server_id_matches": true,
+      "times_in_order": true,
+      "duration_matches_mono": true,
+      "event_time_checks": [
+        {
+          "event": "request_submit",
+          "count": 1,
+          "timestamp": "2026-10-13T05:34:07.430693+00:00",
+          "log_delta_s": 2.09808349609375e-05
+        },
+        {
+          "event": "first_network_packet",
+          "count": 1,
+          "timestamp": "2026-10-13T05:34:07.869965+00:00",
+          "log_delta_s": 2.6941299438476562e-05
+        },
+        {
+          "event": "first_model_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:34:07.872171+00:00",
+          "log_delta_s": 2.09808349609375e-05
+        },
+        {
+          "event": "first_visible_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:34:07.873722+00:00",
+          "log_delta_s": 1.8835067749023438e-05
+        },
+        {
+          "event": "finish_reason",
+          "count": 1,
+          "timestamp": "2026-10-13T05:34:09.960888+00:00",
+          "log_delta_s": 8.511543273925781e-05
+        },
+        {
+          "event": "request_end",
+          "count": 1,
+          "timestamp": "2026-10-13T05:34:09.966195+00:00",
+          "log_delta_s": 0.002022981643676758
+        }
+      ],
+      "duration_s": 2.5355355929932557,
+      "event_times_match": true,
+      "passed": true
+    },
+    {
+      "request": "S02",
+      "sse_sha256": "dfdb0608f014bab5a9b1efccaab23479bce27f2a5629d524461baf930d2d6bde",
+      "sse_bytes": 3296,
+      "normalized_equals_raw": true,
+      "finish_matches": true,
+      "usage_matches": true,
+      "done_matches": true,
+      "has_content": true,
+      "server_id_matches": true,
+      "times_in_order": true,
+      "duration_matches_mono": true,
+      "event_time_checks": [
+        {
+          "event": "request_submit",
+          "count": 1,
+          "timestamp": "2026-10-13T05:35:39.996691+00:00",
+          "log_delta_s": 3.790855407714844e-05
+        },
+        {
+          "event": "first_network_packet",
+          "count": 1,
+          "timestamp": "2026-10-13T05:35:40.428112+00:00",
+          "log_delta_s": 5.1975250244140625e-05
+        },
+        {
+          "event": "first_model_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:35:40.431354+00:00",
+          "log_delta_s": 4.696846008300781e-05
+        },
+        {
+          "event": "first_visible_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:35:40.433640+00:00",
+          "log_delta_s": 5.1021575927734375e-05
+        },
+        {
+          "event": "finish_reason",
+          "count": 1,
+          "timestamp": "2026-10-13T05:35:42.203353+00:00",
+          "log_delta_s": 4.506111145019531e-05
+        },
+        {
+          "event": "request_end",
+          "count": 1,
+          "timestamp": "2026-10-13T05:35:42.207969+00:00",
+          "log_delta_s": 0.0020971298217773438
+        }
+      ],
+      "duration_s": 2.211281338997651,
+      "event_times_match": true,
+      "passed": true
+    },
+    {
+      "request": "S03",
+      "sse_sha256": "4a455865bc45e334e31c5b0fcda315234863524482722695b10cbf379178bfff",
+      "sse_bytes": 3296,
+      "normalized_equals_raw": true,
+      "finish_matches": true,
+      "usage_matches": true,
+      "done_matches": true,
+      "has_content": true,
+      "server_id_matches": true,
+      "times_in_order": true,
+      "duration_matches_mono": true,
+      "event_time_checks": [
+        {
+          "event": "request_submit",
+          "count": 1,
+          "timestamp": "2026-10-13T05:37:12.232614+00:00",
+          "log_delta_s": 1.7881393432617188e-05
+        },
+        {
+          "event": "first_network_packet",
+          "count": 1,
+          "timestamp": "2026-10-13T05:37:12.664086+00:00",
+          "log_delta_s": 2.384185791015625e-05
+        },
+        {
+          "event": "first_model_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:37:12.666408+00:00",
+          "log_delta_s": 1.5974044799804688e-05
+        },
+        {
+          "event": "first_visible_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:37:12.668277+00:00",
+          "log_delta_s": 1.7881393432617188e-05
+        },
+        {
+          "event": "finish_reason",
+          "count": 1,
+          "timestamp": "2026-10-13T05:37:14.443833+00:00",
+          "log_delta_s": 1.8835067749023438e-05
+        },
+        {
+          "event": "request_end",
+          "count": 1,
+          "timestamp": "2026-10-13T05:37:14.447262+00:00",
+          "log_delta_s": 0.0013298988342285156
+        }
+      ],
+      "duration_s": 2.2146451069856994,
+      "event_times_match": true,
+      "passed": true
+    },
+    {
+      "request": "S04",
+      "sse_sha256": "fb34ce3c20c339b5844493f89e7e57a60ae92a8e6d829cd3697e13accc58cd2c",
+      "sse_bytes": 2401,
+      "normalized_equals_raw": true,
+      "finish_matches": true,
+      "usage_matches": true,
+      "done_matches": true,
+      "has_content": true,
+      "server_id_matches": true,
+      "times_in_order": true,
+      "duration_matches_mono": true,
+      "event_time_checks": [
+        {
+          "event": "request_submit",
+          "count": 1,
+          "timestamp": "2026-10-13T05:38:44.475659+00:00",
+          "log_delta_s": 3.0040740966796875e-05
+        },
+        {
+          "event": "first_network_packet",
+          "count": 1,
+          "timestamp": "2026-10-13T05:38:44.863770+00:00",
+          "log_delta_s": 5.2928924560546875e-05
+        },
+        {
+          "event": "first_model_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:38:44.866775+00:00",
+          "log_delta_s": 4.887580871582031e-05
+        },
+        {
+          "event": "first_visible_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:38:44.869057+00:00",
+          "log_delta_s": 5.1021575927734375e-05
+        },
+        {
+          "event": "finish_reason",
+          "count": 1,
+          "timestamp": "2026-10-13T05:38:46.005224+00:00",
+          "log_delta_s": 4.792213439941406e-05
+        },
+        {
+          "event": "request_end",
+          "count": 1,
+          "timestamp": "2026-10-13T05:38:46.011471+00:00",
+          "log_delta_s": 0.0021948814392089844
+        }
+      ],
+      "duration_s": 1.5358447110047564,
+      "event_times_match": true,
+      "passed": true
+    },
+    {
+      "request": "S05",
+      "sse_sha256": "d4eab451e0df381212a723899725c6c7c196e6be447b9fc5257ab943db9a0df2",
+      "sse_bytes": 3284,
+      "normalized_equals_raw": true,
+      "finish_matches": true,
+      "usage_matches": true,
+      "done_matches": true,
+      "has_content": true,
+      "server_id_matches": true,
+      "times_in_order": true,
+      "duration_matches_mono": true,
+      "event_time_checks": [
+        {
+          "event": "request_submit",
+          "count": 1,
+          "timestamp": "2026-10-13T05:40:16.036776+00:00",
+          "log_delta_s": 2.288818359375e-05
+        },
+        {
+          "event": "first_network_packet",
+          "count": 1,
+          "timestamp": "2026-10-13T05:40:16.470836+00:00",
+          "log_delta_s": 2.3126602172851562e-05
+        },
+        {
+          "event": "first_model_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:40:16.472945+00:00",
+          "log_delta_s": 1.811981201171875e-05
+        },
+        {
+          "event": "first_visible_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:40:16.474469+00:00",
+          "log_delta_s": 1.811981201171875e-05
+        },
+        {
+          "event": "finish_reason",
+          "count": 1,
+          "timestamp": "2026-10-13T05:40:18.245194+00:00",
+          "log_delta_s": 4.696846008300781e-05
+        },
+        {
+          "event": "request_end",
+          "count": 1,
+          "timestamp": "2026-10-13T05:40:18.250928+00:00",
+          "log_delta_s": 0.002583026885986328
+        }
+      ],
+      "duration_s": 2.2142177920031827,
+      "event_times_match": true,
+      "passed": true
+    },
+    {
+      "request": "S06",
+      "sse_sha256": "e417e71bc373577b316623e3f910b19aab971dd9e50e6ad1a03f234f0367cf35",
+      "sse_bytes": 3498,
+      "normalized_equals_raw": true,
+      "finish_matches": true,
+      "usage_matches": true,
+      "done_matches": true,
+      "has_content": true,
+      "server_id_matches": true,
+      "times_in_order": true,
+      "duration_matches_mono": true,
+      "event_time_checks": [
+        {
+          "event": "request_submit",
+          "count": 1,
+          "timestamp": "2026-10-13T05:41:48.281785+00:00",
+          "log_delta_s": 3.695487976074219e-05
+        },
+        {
+          "event": "first_network_packet",
+          "count": 1,
+          "timestamp": "2026-10-13T05:41:48.713258+00:00",
+          "log_delta_s": 2.4080276489257812e-05
+        },
+        {
+          "event": "first_model_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:41:48.715143+00:00",
+          "log_delta_s": 1.0967254638671875e-05
+        },
+        {
+          "event": "first_visible_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:41:48.716369+00:00",
+          "log_delta_s": 9.059906005859375e-06
+        },
+        {
+          "event": "finish_reason",
+          "count": 1,
+          "timestamp": "2026-10-13T05:41:50.644777+00:00",
+          "log_delta_s": 4.601478576660156e-05
+        },
+        {
+          "event": "request_end",
+          "count": 1,
+          "timestamp": "2026-10-13T05:41:50.651383+00:00",
+          "log_delta_s": 0.002154111862182617
+        }
+      ],
+      "duration_s": 2.3696252530207857,
+      "event_times_match": true,
+      "passed": true
+    },
+    {
+      "request": "D01",
+      "sse_sha256": "3e92cd9c2b2102687bbd88af946454cee973fbc3c8372262d9b6998acd602bf6",
+      "sse_bytes": 3519,
+      "normalized_equals_raw": true,
+      "finish_matches": true,
+      "usage_matches": true,
+      "done_matches": true,
+      "has_content": true,
+      "server_id_matches": true,
+      "times_in_order": true,
+      "duration_matches_mono": true,
+      "event_time_checks": [
+        {
+          "event": "request_submit",
+          "count": 1,
+          "timestamp": "2026-10-13T05:46:50.688061+00:00",
+          "log_delta_s": 1.811981201171875e-05
+        },
+        {
+          "event": "first_network_packet",
+          "count": 1,
+          "timestamp": "2026-10-13T05:46:51.125117+00:00",
+          "log_delta_s": 2.09808349609375e-05
+        },
+        {
+          "event": "first_model_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:46:51.126863+00:00",
+          "log_delta_s": 1.1920928955078125e-05
+        },
+        {
+          "event": "first_visible_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:46:51.128104+00:00",
+          "log_delta_s": 9.059906005859375e-06
+        },
+        {
+          "event": "finish_reason",
+          "count": 1,
+          "timestamp": "2026-10-13T05:46:53.064763+00:00",
+          "log_delta_s": 2.002716064453125e-05
+        },
+        {
+          "event": "request_end",
+          "count": 1,
+          "timestamp": "2026-10-13T05:46:53.068403+00:00",
+          "log_delta_s": 0.0015430450439453125
+        }
+      ],
+      "duration_s": 2.3803471380088013,
+      "event_times_match": true,
+      "passed": true
+    },
+    {
+      "request": "D02",
+      "sse_sha256": "7e1095702b77a4fae59e39575d1f39383f87a6a42a036b61d5b5bcf95817e6a5",
+      "sse_bytes": 4381,
+      "normalized_equals_raw": true,
+      "finish_matches": true,
+      "usage_matches": true,
+      "done_matches": true,
+      "has_content": true,
+      "server_id_matches": true,
+      "times_in_order": true,
+      "duration_matches_mono": true,
+      "event_time_checks": [
+        {
+          "event": "request_submit",
+          "count": 1,
+          "timestamp": "2026-10-13T05:47:03.092274+00:00",
+          "log_delta_s": 3.409385681152344e-05
+        },
+        {
+          "event": "first_network_packet",
+          "count": 1,
+          "timestamp": "2026-10-13T05:47:03.523428+00:00",
+          "log_delta_s": 5.0067901611328125e-05
+        },
+        {
+          "event": "first_model_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:47:03.526686+00:00",
+          "log_delta_s": 4.696846008300781e-05
+        },
+        {
+          "event": "first_visible_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:47:03.528743+00:00",
+          "log_delta_s": 2.5987625122070312e-05
+        },
+        {
+          "event": "finish_reason",
+          "count": 1,
+          "timestamp": "2026-10-13T05:47:06.078825+00:00",
+          "log_delta_s": 4.506111145019531e-05
+        },
+        {
+          "event": "request_end",
+          "count": 1,
+          "timestamp": "2026-10-13T05:47:06.084643+00:00",
+          "log_delta_s": 0.0022420883178710938
+        }
+      ],
+      "duration_s": 2.9923987759975716,
+      "event_times_match": true,
+      "passed": true
+    },
+    {
+      "request": "D03",
+      "sse_sha256": "f94cdb8dd2742d4ef44615f678cdece7283c766c876b16ad61fe711d1adc7886",
+      "sse_bytes": 3296,
+      "normalized_equals_raw": true,
+      "finish_matches": true,
+      "usage_matches": true,
+      "done_matches": true,
+      "has_content": true,
+      "server_id_matches": true,
+      "times_in_order": true,
+      "duration_matches_mono": true,
+      "event_time_checks": [
+        {
+          "event": "request_submit",
+          "count": 1,
+          "timestamp": "2026-10-13T05:47:16.103783+00:00",
+          "log_delta_s": 1.9073486328125e-05
+        },
+        {
+          "event": "first_network_packet",
+          "count": 1,
+          "timestamp": "2026-10-13T05:47:16.535550+00:00",
+          "log_delta_s": 4.982948303222656e-05
+        },
+        {
+          "event": "first_model_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:47:16.538820+00:00",
+          "log_delta_s": 4.887580871582031e-05
+        },
+        {
+          "event": "first_visible_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:47:16.541221+00:00",
+          "log_delta_s": 5.698204040527344e-05
+        },
+        {
+          "event": "finish_reason",
+          "count": 1,
+          "timestamp": "2026-10-13T05:47:18.302479+00:00",
+          "log_delta_s": 4.696846008300781e-05
+        },
+        {
+          "event": "request_end",
+          "count": 1,
+          "timestamp": "2026-10-13T05:47:18.308620+00:00",
+          "log_delta_s": 0.0021390914916992188
+        }
+      ],
+      "duration_s": 2.2048795919981785,
+      "event_times_match": true,
+      "passed": true
+    },
+    {
+      "request": "D04",
+      "sse_sha256": "9f8f1ce80043612a7e14fc0aa4c3988272ab7933e4cbc55cbbd7aaa3bc1582a6",
+      "sse_bytes": 3715,
+      "normalized_equals_raw": true,
+      "finish_matches": true,
+      "usage_matches": true,
+      "done_matches": true,
+      "has_content": true,
+      "server_id_matches": true,
+      "times_in_order": true,
+      "duration_matches_mono": true,
+      "event_time_checks": [
+        {
+          "event": "request_submit",
+          "count": 1,
+          "timestamp": "2026-10-13T05:47:28.328668+00:00",
+          "log_delta_s": 1.7881393432617188e-05
+        },
+        {
+          "event": "first_network_packet",
+          "count": 1,
+          "timestamp": "2026-10-13T05:47:28.763114+00:00",
+          "log_delta_s": 2.3126602172851562e-05
+        },
+        {
+          "event": "first_model_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:47:28.765184+00:00",
+          "log_delta_s": 2.4080276489257812e-05
+        },
+        {
+          "event": "first_visible_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:47:28.766852+00:00",
+          "log_delta_s": 2.5033950805664062e-05
+        },
+        {
+          "event": "finish_reason",
+          "count": 1,
+          "timestamp": "2026-10-13T05:47:30.847113+00:00",
+          "log_delta_s": 2.2172927856445312e-05
+        },
+        {
+          "event": "request_end",
+          "count": 1,
+          "timestamp": "2026-10-13T05:47:30.851047+00:00",
+          "log_delta_s": 0.001703023910522461
+        }
+      ],
+      "duration_s": 2.5223827669979073,
+      "event_times_match": true,
+      "passed": true
+    },
+    {
+      "request": "D05",
+      "sse_sha256": "ef087213d10d1909f2ff0d0867d589f8199dc992cfb7c9e553fcee461089fbbd",
+      "sse_bytes": 3058,
+      "normalized_equals_raw": true,
+      "finish_matches": true,
+      "usage_matches": true,
+      "done_matches": true,
+      "has_content": true,
+      "server_id_matches": true,
+      "times_in_order": true,
+      "duration_matches_mono": true,
+      "event_time_checks": [
+        {
+          "event": "request_submit",
+          "count": 1,
+          "timestamp": "2026-10-13T05:47:40.875094+00:00",
+          "log_delta_s": 3.504753112792969e-05
+        },
+        {
+          "event": "first_network_packet",
+          "count": 1,
+          "timestamp": "2026-10-13T05:47:41.308990+00:00",
+          "log_delta_s": 5.1021575927734375e-05
+        },
+        {
+          "event": "first_model_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:47:41.312129+00:00",
+          "log_delta_s": 4.887580871582031e-05
+        },
+        {
+          "event": "first_visible_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:47:41.314308+00:00",
+          "log_delta_s": 5.698204040527344e-05
+        },
+        {
+          "event": "finish_reason",
+          "count": 1,
+          "timestamp": "2026-10-13T05:47:42.926444+00:00",
+          "log_delta_s": 4.601478576660156e-05
+        },
+        {
+          "event": "request_end",
+          "count": 1,
+          "timestamp": "2026-10-13T05:47:42.931911+00:00",
+          "log_delta_s": 0.002140045166015625
+        }
+      ],
+      "duration_s": 2.056874931004131,
+      "event_times_match": true,
+      "passed": true
+    },
+    {
+      "request": "D06",
+      "sse_sha256": "dda9bd015d8598b86474c0a164626a28d0e44275d59fcfd6e8b2877f0d3a45f8",
+      "sse_bytes": 4592,
+      "normalized_equals_raw": true,
+      "finish_matches": true,
+      "usage_matches": true,
+      "done_matches": true,
+      "has_content": true,
+      "server_id_matches": true,
+      "times_in_order": true,
+      "duration_matches_mono": true,
+      "event_time_checks": [
+        {
+          "event": "request_submit",
+          "count": 1,
+          "timestamp": "2026-10-13T05:47:52.955585+00:00",
+          "log_delta_s": 3.409385681152344e-05
+        },
+        {
+          "event": "first_network_packet",
+          "count": 1,
+          "timestamp": "2026-10-13T05:47:53.387891+00:00",
+          "log_delta_s": 8.58306884765625e-05
+        },
+        {
+          "event": "first_model_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:47:53.391151+00:00",
+          "log_delta_s": 4.506111145019531e-05
+        },
+        {
+          "event": "first_visible_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:47:53.393293+00:00",
+          "log_delta_s": 4.506111145019531e-05
+        },
+        {
+          "event": "finish_reason",
+          "count": 1,
+          "timestamp": "2026-10-13T05:47:56.106735+00:00",
+          "log_delta_s": 4.696846008300781e-05
+        },
+        {
+          "event": "request_end",
+          "count": 1,
+          "timestamp": "2026-10-13T05:47:56.113628+00:00",
+          "log_delta_s": 0.0024881362915039062
+        }
+      ],
+      "duration_s": 3.1580705839733128,
+      "event_times_match": true,
+      "passed": true
+    },
+    {
+      "request": "D07",
+      "sse_sha256": "f7a06773ec40fad3a7060877476cf7b263020e889263615a7c4e2b39296ab263",
+      "sse_bytes": 2823,
+      "normalized_equals_raw": true,
+      "finish_matches": true,
+      "usage_matches": true,
+      "done_matches": true,
+      "has_content": true,
+      "server_id_matches": true,
+      "times_in_order": true,
+      "duration_matches_mono": true,
+      "event_time_checks": [
+        {
+          "event": "request_submit",
+          "count": 1,
+          "timestamp": "2026-10-13T05:48:06.132960+00:00",
+          "log_delta_s": 2.09808349609375e-05
+        },
+        {
+          "event": "first_network_packet",
+          "count": 1,
+          "timestamp": "2026-10-13T05:48:06.566373+00:00",
+          "log_delta_s": 4.982948303222656e-05
+        },
+        {
+          "event": "first_model_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:48:06.569401+00:00",
+          "log_delta_s": 4.601478576660156e-05
+        },
+        {
+          "event": "first_visible_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:48:06.571592+00:00",
+          "log_delta_s": 4.100799560546875e-05
+        },
+        {
+          "event": "finish_reason",
+          "count": 1,
+          "timestamp": "2026-10-13T05:48:08.051053+00:00",
+          "log_delta_s": 4.696846008300781e-05
+        },
+        {
+          "event": "request_end",
+          "count": 1,
+          "timestamp": "2026-10-13T05:48:08.056651+00:00",
+          "log_delta_s": 0.002405881881713867
+        }
+      ],
+      "duration_s": 1.923731888004113,
+      "event_times_match": true,
+      "passed": true
+    },
+    {
+      "request": "D08",
+      "sse_sha256": "f5806b337d3992f8ef3d94f3cef9147b14eae1ddc000692365b3df16fce14ddb",
+      "sse_bytes": 2823,
+      "normalized_equals_raw": true,
+      "finish_matches": true,
+      "usage_matches": true,
+      "done_matches": true,
+      "has_content": true,
+      "server_id_matches": true,
+      "times_in_order": true,
+      "duration_matches_mono": true,
+      "event_time_checks": [
+        {
+          "event": "request_submit",
+          "count": 1,
+          "timestamp": "2026-10-13T05:48:18.075790+00:00",
+          "log_delta_s": 1.9073486328125e-05
+        },
+        {
+          "event": "first_network_packet",
+          "count": 1,
+          "timestamp": "2026-10-13T05:48:18.508670+00:00",
+          "log_delta_s": 2.288818359375e-05
+        },
+        {
+          "event": "first_model_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:48:18.510394+00:00",
+          "log_delta_s": 1.3828277587890625e-05
+        },
+        {
+          "event": "first_visible_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:48:18.511862+00:00",
+          "log_delta_s": 2.384185791015625e-05
+        },
+        {
+          "event": "finish_reason",
+          "count": 1,
+          "timestamp": "2026-10-13T05:48:19.985271+00:00",
+          "log_delta_s": 2.002716064453125e-05
+        },
+        {
+          "event": "request_end",
+          "count": 1,
+          "timestamp": "2026-10-13T05:48:19.989065+00:00",
+          "log_delta_s": 0.0015990734100341797
+        }
+      ],
+      "duration_s": 1.9132857889926527,
+      "event_times_match": true,
+      "passed": true
+    },
+    {
+      "request": "D09",
+      "sse_sha256": "b04a3a314185daaa4073b631f968e817f0d4adf1022b5115c40dd4bf343a7a90",
+      "sse_bytes": 3296,
+      "normalized_equals_raw": true,
+      "finish_matches": true,
+      "usage_matches": true,
+      "done_matches": true,
+      "has_content": true,
+      "server_id_matches": true,
+      "times_in_order": true,
+      "duration_matches_mono": true,
+      "event_time_checks": [
+        {
+          "event": "request_submit",
+          "count": 1,
+          "timestamp": "2026-10-13T05:48:30.007428+00:00",
+          "log_delta_s": 1.811981201171875e-05
+        },
+        {
+          "event": "first_network_packet",
+          "count": 1,
+          "timestamp": "2026-10-13T05:48:30.436637+00:00",
+          "log_delta_s": 2.002716064453125e-05
+        },
+        {
+          "event": "first_model_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:48:30.438575+00:00",
+          "log_delta_s": 1.1920928955078125e-05
+        },
+        {
+          "event": "first_visible_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:48:30.439802+00:00",
+          "log_delta_s": 9.059906005859375e-06
+        },
+        {
+          "event": "finish_reason",
+          "count": 1,
+          "timestamp": "2026-10-13T05:48:32.226908+00:00",
+          "log_delta_s": 7.700920104980469e-05
+        },
+        {
+          "event": "request_end",
+          "count": 1,
+          "timestamp": "2026-10-13T05:48:32.232634+00:00",
+          "log_delta_s": 0.0024039745330810547
+        }
+      ],
+      "duration_s": 2.225245235982584,
+      "event_times_match": true,
+      "passed": true
+    },
+    {
+      "request": "D10",
+      "sse_sha256": "f38a4d6016b3742835917a3a4c6bf7950d8c9dbfb144a6a10d24f3b547d3d5f9",
+      "sse_bytes": 4167,
+      "normalized_equals_raw": true,
+      "finish_matches": true,
+      "usage_matches": true,
+      "done_matches": true,
+      "has_content": true,
+      "server_id_matches": true,
+      "times_in_order": true,
+      "duration_matches_mono": true,
+      "event_time_checks": [
+        {
+          "event": "request_submit",
+          "count": 1,
+          "timestamp": "2026-10-13T05:48:42.256547+00:00",
+          "log_delta_s": 3.1948089599609375e-05
+        },
+        {
+          "event": "first_network_packet",
+          "count": 1,
+          "timestamp": "2026-10-13T05:48:42.684735+00:00",
+          "log_delta_s": 5.1021575927734375e-05
+        },
+        {
+          "event": "first_model_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:48:42.688072+00:00",
+          "log_delta_s": 4.696846008300781e-05
+        },
+        {
+          "event": "first_visible_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:48:42.690014+00:00",
+          "log_delta_s": 3.0040740966796875e-05
+        },
+        {
+          "event": "finish_reason",
+          "count": 1,
+          "timestamp": "2026-10-13T05:48:45.101515+00:00",
+          "log_delta_s": 4.792213439941406e-05
+        },
+        {
+          "event": "request_end",
+          "count": 1,
+          "timestamp": "2026-10-13T05:48:45.107286+00:00",
+          "log_delta_s": 0.0021829605102539062
+        }
+      ],
+      "duration_s": 2.850770016986644,
+      "event_times_match": true,
+      "passed": true
+    },
+    {
+      "request": "D11",
+      "sse_sha256": "d0794e0a6cb7bc3049eacbdb301be57b86344a6d505133fa4144000d218b588c",
+      "sse_bytes": 2838,
+      "normalized_equals_raw": true,
+      "finish_matches": true,
+      "usage_matches": true,
+      "done_matches": true,
+      "has_content": true,
+      "server_id_matches": true,
+      "times_in_order": true,
+      "duration_matches_mono": true,
+      "event_time_checks": [
+        {
+          "event": "request_submit",
+          "count": 1,
+          "timestamp": "2026-10-13T05:48:55.126196+00:00",
+          "log_delta_s": 2.002716064453125e-05
+        },
+        {
+          "event": "first_network_packet",
+          "count": 1,
+          "timestamp": "2026-10-13T05:48:55.553107+00:00",
+          "log_delta_s": 2.5033950805664062e-05
+        },
+        {
+          "event": "first_model_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:48:55.555088+00:00",
+          "log_delta_s": 1.2874603271484375e-05
+        },
+        {
+          "event": "first_visible_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:48:55.556343+00:00",
+          "log_delta_s": 1.0967254638671875e-05
+        },
+        {
+          "event": "finish_reason",
+          "count": 1,
+          "timestamp": "2026-10-13T05:48:57.019021+00:00",
+          "log_delta_s": 2.09808349609375e-05
+        },
+        {
+          "event": "request_end",
+          "count": 1,
+          "timestamp": "2026-10-13T05:48:57.029465+00:00",
+          "log_delta_s": 0.0029129981994628906
+        }
+      ],
+      "duration_s": 1.9032973970170133,
+      "event_times_match": true,
+      "passed": true
+    },
+    {
+      "request": "D12",
+      "sse_sha256": "5cfb937c4bb94ca3f0f73c48c15df05362cd6a498b44fa7b8d873ad8b5a8087a",
+      "sse_bytes": 3510,
+      "normalized_equals_raw": true,
+      "finish_matches": true,
+      "usage_matches": true,
+      "done_matches": true,
+      "has_content": true,
+      "server_id_matches": true,
+      "times_in_order": true,
+      "duration_matches_mono": true,
+      "event_time_checks": [
+        {
+          "event": "request_submit",
+          "count": 1,
+          "timestamp": "2026-10-13T05:49:07.048159+00:00",
+          "log_delta_s": 2.002716064453125e-05
+        },
+        {
+          "event": "first_network_packet",
+          "count": 1,
+          "timestamp": "2026-10-13T05:49:07.481595+00:00",
+          "log_delta_s": 2.384185791015625e-05
+        },
+        {
+          "event": "first_model_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:49:07.484023+00:00",
+          "log_delta_s": 2.09808349609375e-05
+        },
+        {
+          "event": "first_visible_content",
+          "count": 1,
+          "timestamp": "2026-10-13T05:49:07.485826+00:00",
+          "log_delta_s": 2.5987625122070312e-05
+        },
+        {
+          "event": "finish_reason",
+          "count": 1,
+          "timestamp": "2026-10-13T05:49:09.428500+00:00",
+          "log_delta_s": 2.09808349609375e-05
+        },
+        {
+          "event": "request_end",
+          "count": 1,
+          "timestamp": "2026-10-13T05:49:09.432697+00:00",
+          "log_delta_s": 0.0017189979553222656
+        }
+      ],
+      "duration_s": 2.3845491239917465,
+      "event_times_match": true,
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "timing_limit": "SSE body has no per-chunk client timestamps; first-content times are client event evidence, not independently reconstructed from body or GPU end."
+}

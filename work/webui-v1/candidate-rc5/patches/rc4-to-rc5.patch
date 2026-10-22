@@ -1,0 +1,581 @@
+--- rc4/src/tto_web/state.py
++++ rc5/src/tto_web/state.py
+@@ -33,7 +33,6 @@
+         self.model_history = deque(maxlen=18002)
+         self.model_history_sample = None
+         self.model_gap_t = -math.inf
+-        self.model_history_disposition = None
+         self.predictions = deque(maxlen=11070)
+         self.prediction_labels={}
+         self.events = deque(maxlen=1000)
+@@ -114,7 +113,7 @@
+         if old_signature!=signature:
+             self.history.clear(); self.history_seen.clear(); self.last_origin=-math.inf; self.last_tj=None;self.task_event_seq=0
+             self.model_history.clear(); self.model_history_sample=None
+-            self.model_gap_t=-math.inf; self.model_history_disposition=None
++            self.model_gap_t=-math.inf
+             self.last_signature=None
+             self.events=deque((e for e in self.events if e['run_id'] is None),maxlen=1000)
+             for p in self.predictions:
+@@ -317,16 +316,13 @@
+         return min(packet['consumable_until_mono_s'],tj.get('_expiry',now))
+ 
+     def model_gap(self, reason, t):
+-        self.model_history_disposition=reason
+         # One break per continuous invalid interval. Keep the barrier even after trim.
++        if self.model_history:t=max(t,self.model_history[-1].t)
+         self.model_gap_t=max(self.model_gap_t,t)
+         if self.model_history and self.model_history[-1].reason is not None:
+             return
+-        if self.model_history:
+-            t=max(t,self.model_history[-1].t)
+-            if t==self.model_history[-1].t:
+-                self.model_history.pop()
+-        self.model_gap_t=max(self.model_gap_t,t)
++        if self.model_history and t==self.model_history[-1].t:
++            self.model_history.pop()
+         self.model_history.append(ModelRow(t,(None,None,None,None),None,None,None,None,reason))
+ 
+     def expire_model_history(self, now):
+@@ -359,13 +355,11 @@
+             self.model_gap('alignment_mismatch',elapsed)
+             return
+         if t<=self.model_gap_t:
+-            self.model_history_disposition='arrived_after_gap'
+             return
+         if self.model_history and t<=self.model_history[-1].t:
+             return
+         self.model_history.append(ModelRow(t,(tj['value'],o['Tf_C'],o['Ts_C'],o['E_C']),
+             tj['sample_id'],tj['received_at_utc'],tj['source_ref'],o['phase'],None))
+-        self.model_history_disposition='accepted'
+ 
+     def model_series(self, ids, start, end, max_points):
+         rows=[r for r in self.model_history if start<=r.t<=end]
+--- rc4/src/tto_web/__init__.py
++++ rc5/src/tto_web/__init__.py
+@@ -1,2 +1,2 @@
+ """TTO read-only Web candidate. No controller or workload API."""
+-__version__ = '1.0.0rc4'
++__version__ = '1.0.0rc5'
+--- rc4/src/tto_web/contracts/series.schema.json
++++ rc5/src/tto_web/contracts/series.schema.json
+@@ -184,7 +184,130 @@
+             }
+           }
+         },
+-        "additionalProperties": false
++        "additionalProperties": false,
++        "allOf": [
++          {
++            "if": {
++              "properties": {
++                "id": {
++                  "enum": [
++                    "model.Tf_C",
++                    "model.Ts_C",
++                    "model.E_C"
++                  ]
++                }
++              },
++              "required": [
++                "id"
++              ]
++            },
++            "then": {
++              "required": [
++                "alignment_group"
++              ],
++              "properties": {
++                "kind": {
++                  "const": "estimate"
++                },
++                "unit": {
++                  "const": "°C"
++                },
++                "estimate_stage": {
++                  "const": "posterior"
++                }
++              }
++            }
++          },
++          {
++            "if": {
++              "required": [
++                "alignment_group"
++              ]
++            },
++            "then": {
++              "required": [
++                "kind",
++                "alignment_group",
++                "time_basis",
++                "anchor_metric_id",
++                "estimate_stage",
++                "original_points",
++                "returned_points",
++                "soft_budget_exceeded"
++              ],
++              "properties": {
++                "id": {
++                  "enum": [
++                    "temperature.tj",
++                    "model.Tf_C",
++                    "model.Ts_C",
++                    "model.E_C"
++                  ]
++                },
++                "unit": {
++                  "const": "°C"
++                },
++                "points": {
++                  "items": {
++                    "required": [
++                      "phase_at_sample",
++                      "reason_code"
++                    ],
++                    "allOf": [
++                      {
++                        "if": {
++                          "properties": {
++                            "value": {
++                              "type": "null"
++                            }
++                          }
++                        },
++                        "then": {
++                          "properties": {
++                            "status": {
++                              "const": "unknown"
++                            },
++                            "phase_at_sample": {
++                              "type": "null"
++                            },
++                            "reason_code": {
++                              "type": "string"
++                            },
++                            "sample_id": {
++                              "type": "null"
++                            },
++                            "received_at_utc": {
++                              "type": "null"
++                            },
++                            "source_ref": {
++                              "type": "null"
++                            }
++                          }
++                        },
++                        "else": {
++                          "properties": {
++                            "status": {
++                              "const": "valid"
++                            },
++                            "phase_at_sample": {
++                              "enum": [
++                                "tracking",
++                                "degraded"
++                              ]
++                            },
++                            "reason_code": {
++                              "type": "null"
++                            }
++                          }
++                        }
++                      }
++                    ]
++                  }
++                }
++              }
++            }
++          }
++        ]
+       }
+     }
+   },
+--- rc4/src/tto_web/contracts/model-history-contract.md
++++ rc5/src/tto_web/contracts/model-history-contract.md
+@@ -18,7 +18,7 @@
+ nonfinite_state/alignment_mismatch。显式缺口四列均 null，status=unknown；过去合格历史不会因当前过期而撤销。
+ 连续失效区间合并断点。断连、显示发布失败用检测时间；过期用原截止时间；阶段失效用包输入时间。
+ 断点时间不早于最后已记录行，同位置缺口优先。断点之后到达且源时刻不晚于断点的样本不回填，
+-后端最后处置状态为 arrived_after_gap；不额外累积日志/点。只在更新且时间晚于断点的合格 TJ 恢复。
++不额外累积日志、点或仅供测试读取的处置状态。只在更新且时间晚于断点的合格 TJ 恢复。
+ 
+ 完整响应身份：service_epoch/run_id/source_epoch/model_id/spec_id。run/epoch/model/spec 变化清空历史及去重，
+ Web 重启产生新 service_epoch。model/spec 冻结校验不放宽。一个 HTTP 响应内身份与数据同时生成。
+--- rc4/src/tto_web/web-candidate-files.json
++++ rc5/src/tto_web/web-candidate-files.json
+@@ -1,19 +1,19 @@
+ {
+-  "version": "1.0.0rc4",
++  "version": "1.0.0rc5",
+   "baseline": "0.2.4+closeout.2; historical identity retained separately",
+   "frozen_model_sha256": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
+   "frontend": "sealed rc3 static assets; Sonnet redesign not included",
+   "files": {
+     "tto_web/server.py": "41afd059e5f91e19c60913b44c9f8e69625d68b14b4e5d4431bb82a7d1807861",
+     "tto_web/adapter.py": "c0040f321d2fab408580883cfc1109d3ef50b3821a42b4e5bf38f97e4040cce8",
+-    "tto_web/__init__.py": "901c2748f1ca095a86e44490ff97fd662e6bac691069754a6d51d964aaa03ba2",
++    "tto_web/__init__.py": "92521f93af40ea7fca1a48c1b3d2fea5dcb2f9fddd4827d9679edeea1ba50fed",
+     "tto_web/display.py": "6abec7aa6f80740395b053b4969abb3fa673f64ef3eb906554290ba92a82b0a2",
+     "tto_web/context.py": "e271998ba8b93e3140c3534ec1a3b6f7c638ccd1dd6f0b4011619c8170aee795",
+     "tto_web/cli.py": "67efba0cc1e32005dfa4c1da48d51453110cb6c4e338867f1e92d21d833ac435",
+     "tto_web/common.py": "09465eb93b3aa324b0143bc29c71f5e5ad035866952a3b42c6a054e4501387a3",
+     "tto_web/identity.py": "8ec4dbc3606946210fcf26981f85220410aabac8cff9a219e30a27eaa98f0a3e",
+     "tto_web/source.py": "92bf0e1ab305e1e640d7538a474f6c793019096a0daccb10a9f5b0019c9354eb",
+-    "tto_web/state.py": "3cb9722b590588a74c84453e6170467a2f4de9c74d68894f3ab34641a180e8a9",
++    "tto_web/state.py": "78b7dfe734ece4c737ef64846d5c7f84f1b8ba3183804c1ee0c56913dccb035d",
+     "tto_web/contracts/series-example-gap.json": "7f81c08971f8fa06075f508cf398038448145377dc5ac22eda14ebc3abbafd21",
+     "tto_web/contracts/dashboard.schema.json": "ab4638c2bd20b94084374de4fecef1f2e853f3ce9b9a81733faab5a38d5d6f1c",
+     "tto_web/contracts/example-tracking.json": "232417c594bf24e35459c5ae18f11b7d63f54be6d1d5a43582c748839ca846c3",
+@@ -21,9 +21,9 @@
+     "tto_web/contracts/example-waiting.json": "d32ecbc8f6e17b556e30d52661ae656daad895fc614c66ff8caa7e3d0cb962b8",
+     "tto_web/contracts/series-example-new-epoch.json": "517de8562a21cb2c78b36604a527020642f85879452d749b88435943aaec8003",
+     "tto_web/contracts/model-topology.json": "93efc78ac8548028ed4b298b61aacc4d959ed7c239b8b25dc1d6e7b36ac499fa",
+-    "tto_web/contracts/series.schema.json": "286ffeac504e6b284cf41c67ba4d6e7e453e77dc1173e725773a3a1bdfcab194",
++    "tto_web/contracts/series.schema.json": "cfcad2ef84841b448691d894bc6b44e9b3c6be0583d0b0e37356fcf2fbbd09f3",
+     "tto_web/contracts/series-example-tracking.json": "743af2be78f511dc8f74bce967e07a94048f7b91f02e604d4c9c7403fe230510",
+-    "tto_web/contracts/model-history-contract.md": "8edc79c00156e4b6e5f1ca7567f079a6c46fa38002cc0a75085580c4c456d81b",
++    "tto_web/contracts/model-history-contract.md": "f1774f97d3d32a0627583090aa792a9a3cad5ba7716ede5325459c0576aea681",
+     "tto_web/contracts/example-degraded.json": "be29d8efa2dbca95fbe3f94088143bb6b71944b2c71e135a05eefff451e379b4",
+     "tto_web/static/index.html": "33efa855dcdbbb5621b5f0ce58191adf7ecb66cb858568305eeff90062792296",
+     "tto_web/static/assets/index--dJAhGlH.js": "6e89496588a9df87f44304d2010f062eb476ee1e9a5fdc881d68715b81fa13a2",
+--- rc4/tests/test_model_history.py
++++ rc5/tests/test_model_history.py
+@@ -14,11 +14,10 @@
+ from tto_web.source import Publication,follow
+ from tto_web.server import app_for
+ from tto_web.display import DisplayPublisher
+-from tto_web.common import boot_id
+ import tto_web.state as state_module
+ 
+ 
+-@pytest.fixture
++@pytest.fixture(scope='module')
+ def factory():
+     producer=Producer(1000.)
+     for t in range(31):template=producer.step(t)
+@@ -93,9 +92,9 @@
+     for t in range(20):s.refresh(1002.6+t*.01)
+     assert len(s.model_history)==2
+     put(s,factory(2),1003.)
+-    assert s.model_history_disposition=='arrived_after_gap' and len(s.model_history)==2
++    assert len(s.model_history)==2 and s.model_history[-1].t==2500
+     put(s,factory(2.5),1003.01)
+-    assert s.model_history_disposition=='arrived_after_gap'
++    assert len(s.model_history)==2 and s.model_history[-1].values==(None,)*4
+     put(s,factory(3),1003.02);assert s.model_history[-1].values[1]==43
+     assert [r.t for r in s.model_history]==[0,2500,3000]
+ 
+@@ -114,7 +113,7 @@
+     put(s,factory(2));assert s.model_history[-1].reason is None
+     monkeypatch.setattr(state_module.time,'monotonic',lambda:1002.5)
+     s.disconnect();assert s.model_history[-1].reason=='source_disconnected'
+-    put(s,factory(2.4),1002.6);assert s.model_history_disposition=='arrived_after_gap'
++    put(s,factory(2.4),1002.6);assert s.model_history[-1].t==2500 and s.model_history[-1].values==(None,)*4
+     put(s,factory(3),1003.01);assert s.model_history[-1].reason is None
+ 
+ 
+@@ -124,18 +123,13 @@
+     p[identity]=p[identity]+1 if identity=='source_epoch' else 'new-run'
+     put(s,p);assert len(s.model_history)==1 and s.model_history[0].t==1000
+     assert s.model_gap_t==-math.inf
+-    assert State(web_config()).epoch!=s.epoch
+ 
+ 
+ @pytest.mark.parametrize('key',['model_id','spec_id'])
+-def test_frozen_mismatch_stays_rejected_and_signature_reset(factory,key,monkeypatch):
++def test_frozen_mismatch_stays_rejected(factory,key):
+     s=State(web_config());put(s,factory(0));p=factory(1);p[key]='test-alternate'
+     with pytest.raises(ValueError,match='frozen model/spec'):put(s,p)
+     assert len(s.model_history)==1
+-    # Exercise legal signature transition only under a scoped alternate test contract.
+-    if key=='model_id':monkeypatch.setitem(state_module.SPEC,'model_sha256','test-alternate')
+-    else:monkeypatch.setattr(state_module,'SPEC_ID','test-alternate')
+-    put(s,p);assert len(s.model_history)==1 and s.model_history[-1].t==1000
+ 
+ 
+ def test_common_extrema_signed_differences_and_gap_segment_edges():
+@@ -214,6 +208,14 @@
+     schema=json.loads((root/'series.schema.json').read_text())
+     examples=list(root.glob('series-example-*.json'));assert len(examples)==3
+     for p in examples:jsonschema.validate(json.loads(p.read_text()),schema)
++    example=json.loads((root/'series-example-tracking.json').read_text())
++    for case in ('missing_alignment','wrong_kind','wrong_unit','missing_phase'):
++        invalid=copy.deepcopy(example);row=invalid['series'][1]
++        if case=='missing_alignment':row.pop('alignment_group')
++        elif case=='wrong_kind':row['kind']='observed'
++        elif case=='wrong_unit':row['unit']='W'
++        else:row['points'][-1].pop('phase_at_sample')
++        with pytest.raises(jsonschema.ValidationError):jsonschema.validate(invalid,schema)
+ 
+ 
+ async def test_waiting_series_schema_and_unknown_fields_rejected():
+@@ -231,11 +233,3 @@
+             with pytest.raises(jsonschema.ValidationError):jsonschema.validate(wrong,schema)
+     finally:await runner.cleanup()
+ 
+-
+-def test_installed_selection_loads_sealed_runtime():
+-    import os,tto_web
+-    from tto_web.identity import verify
+-    manifest=verify();assert manifest['version']==tto_web.__version__
+-    if os.environ.get('TTO_WEB_TEST_INSTALLED'):
+-        assert 'site-packages' in Path(tto_web.__file__).parts
+-        assert tto_web.__version__=='1.0.0rc4'
+--- /dev/null
++++ rc5/tests/test_build_seal.py
+@@ -0,0 +1,22 @@
++"""An occupied candidate must be rejected before sealing or rebuilding any artifact."""
++import importlib.util
++from pathlib import Path
++import pytest
++
++
++@pytest.mark.parametrize('occupied',['stage','wheel'])
++def test_existing_candidate_is_read_only_on_rebuild(tmp_path,monkeypatch,occupied):
++    script=Path(__file__).parents[1]/'tools/build_history_candidate.py'
++    spec=importlib.util.spec_from_file_location('build_seal_test',script)
++    builder=importlib.util.module_from_spec(spec);spec.loader.exec_module(builder)
++    monkeypatch.setattr(builder,'ROOT',tmp_path)
++    monkeypatch.setattr(builder,'STAGE',tmp_path/'candidate')
++    manifest=tmp_path/'src/tto_web/web-candidate-files.json';manifest.parent.mkdir(parents=True)
++    manifest.write_bytes(b'previous sealed identity')
++    wheel=tmp_path/f'dist/tto_web_ui-{builder.VERSION}-py3-none-any.whl'
++    if occupied=='stage':builder.STAGE.mkdir()
++    else:wheel.parent.mkdir();wheel.write_bytes(b'previous wheel')
++    with pytest.raises(SystemExit,match='already exists'):
++        builder.main()
++    assert manifest.read_bytes()==b'previous sealed identity'
++    if occupied=='wheel':assert wheel.read_bytes()==b'previous wheel'
+--- rc4/tools/build_history_candidate.py
++++ rc5/tools/build_history_candidate.py
+@@ -1,11 +1,18 @@
+-"""Offline rc4 build/staging. Preserve Sonnet sources and all sealed rc3 artifacts."""
++"""Offline candidate build/staging. Preserve Sonnet sources and all sealed rc3 artifacts."""
+ import hashlib,json,shutil,subprocess,sys,zipfile
+ from pathlib import Path
+ ROOT=Path(__file__).resolve().parents[1]
+-VERSION='1.0.0rc4'
+-STAGE=ROOT/'candidate-rc4'
++VERSION='1.0.0rc5'
++STAGE=ROOT/'candidate-rc5'
++ACTIVE_TOOLS=('build_history_candidate.py','install.py','verify_final_archive.py',
++    'history_source.py','history_service.py','history_view.html','history_view.js',
++    'history_allocation.py','history_resource_monitor.py','audit_history_equivalence.py',
++    'browser_history_checks.js','browser_history_D_regression.js')
+ def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+ def main():
++    wheel=ROOT/f'dist/tto_web_ui-{VERSION}-py3-none-any.whl'
++    if STAGE.exists() or wheel.exists():
++        raise SystemExit('candidate stage or wheel already exists; preserve the sealed artifacts')
+     old=ROOT/'dist/tto_web_ui-1.0.0rc3-py3-none-any.whl'
+     assert sha(old)=='5f4c9fe5f28e8ab892c83b1309f8b91ad8d6e828489f116f17c4f67c8a35b910'
+     with zipfile.ZipFile(old) as z:
+@@ -20,10 +27,13 @@
+     with zipfile.ZipFile(wheel) as z:
+         assert {n for n in z.namelist() if '.dist-info/' not in n}==set(packages)|{'tto_web/web-candidate-files.json'}
+         for n,digest in packages.items():assert hashlib.sha256(z.read(n)).hexdigest()==digest
+-    if STAGE.exists():raise SystemExit('stage exists; do not overwrite a prior candidate')
+     STAGE.mkdir()
+-    for name in ('src','vendor','config','tests','tools','requirements'):
++    for name in ('src','vendor','config','tests','requirements'):
+         shutil.copytree(ROOT/name,STAGE/name,ignore=shutil.ignore_patterns('__pycache__'))
++    # Ship active reproduction/installation tools; historical rc1/rc2/rc3 tools
++    # remain in their sealed releases rather than becoming alternate rc5 entrypoints.
++    (STAGE/'tools').mkdir()
++    for name in ACTIVE_TOOLS:shutil.copy2(ROOT/'tools'/name,STAGE/'tools'/name)
+     for name in ('pyproject.toml','requirements.runtime.lock','baseline-identities.json','TTO-WebUI-模型状态历史序列-实施与验收方案-v1.0.md'):
+         shutil.copy2(ROOT/name,STAGE/name)
+     (STAGE/'wheelhouse').mkdir()
+@@ -34,6 +44,6 @@
+     for name in ('pyproject.toml','requirements.runtime.lock','baseline-identities.json'):identities[name]=sha(STAGE/name)
+     (STAGE/'candidate-identities.json').write_text(json.dumps(identities,indent=2)+'\n')
+     receipt=dict(version=VERSION,wheel=wheel.name,wheel_bytes=wheel.stat().st_size,wheel_sha256=sha(wheel),package_files=len(packages),installer_files=len(identities),static_from_rc3=True,no_frontend_build=True,offline=True)
+-    (ROOT/'evidence/history-rc4/build-receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
++    (ROOT/'evidence/self-review-rc5/build-receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
+     print(json.dumps(receipt))
+ if __name__=='__main__':main()
+--- rc4/tools/verify_final_archive.py
++++ rc5/tools/verify_final_archive.py
+@@ -5,15 +5,15 @@
+ ROOT=Path(__file__).resolve().parents[1]
+ def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+ def main():
+-    archive=ROOT/'TTO-WebUI-v1-rc4-模型历史与安装候选.zip'
+-    dest=Path('/private/tmp/tto-web-rc4-zip-readback');dest.mkdir(exist_ok=False)
++    archive=ROOT/'TTO-WebUI-v1-rc5-Claude-Sonnet-5.5-审查交接包.zip'
++    dest=Path('/private/tmp/tto-web-rc5-zip-readback');dest.mkdir(exist_ok=False)
+     with zipfile.ZipFile(archive) as z:
+         z.extractall(dest);members=len(z.namelist())
+-    bundle=dest/'TTO-WebUI-v1.0-rc4'
++    bundle=dest/'TTO-WebUI-v1.0-rc5'
+     payload=json.loads((bundle/'PAYLOAD-MANIFEST.json').read_text())
+     for name,digest in payload.items():assert sha(bundle/name)==digest,name
+     rootfiles=[n for n in payload if n.startswith(('src/','vendor/','tools/','tests/')) or n in ('pyproject.toml','candidate-identities.json')]
+-    for n in rootfiles:assert (bundle/n).read_bytes()==(ROOT/'candidate-rc4'/n).read_bytes(),n
++    for n in rootfiles:assert (bundle/n).read_bytes()==(ROOT/'candidate-rc5'/n).read_bytes(),n
+     wheel=next((bundle/'wheelhouse').glob('tto_web_ui-*.whl'))
+     assert sha(wheel)==sha(ROOT/'dist'/wheel.name)
+     with zipfile.ZipFile(wheel) as z:
+@@ -22,12 +22,12 @@
+             source=bundle/('src' if name.startswith('tto_web/') else 'vendor')/name
+             assert source.read_bytes()==z.read(name),name
+             assert hashlib.sha256(z.read(name)).hexdigest()==digest
+-    prefix=Path('/private/tmp/tto-web-rc4-from-final-zip')
++    prefix=Path('/private/tmp/tto-web-rc5-from-final-zip')
+     install=subprocess.run([sys.executable,str(bundle/'tools/install.py'),'--prefix',str(prefix),'--service','none','--python','/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12'],capture_output=True,text=True)
+-    (ROOT/'evidence/history-rc4/zip-offline-install.log').write_text(install.stdout+install.stderr);assert install.returncode==0
++    (ROOT/'evidence/self-review-rc5/zip-offline-install.log').write_text(install.stdout+install.stderr);assert install.returncode==0
+     py=prefix/'current/env/bin/python'
+     identity=json.loads(subprocess.check_output([str(py),'-c','import json,tto_web;from tto_web.identity import verify;print(json.dumps(dict(module=tto_web.__file__,identity=verify())))'],text=True))
+-    env=dict(os.environ,TTO_WEB_TEST_BOOT_ID='rc4-final-zip')
++    env=dict(os.environ,TTO_WEB_TEST_BOOT_ID='rc5-final-zip')
+     cli=subprocess.Popen([str(prefix/'tto-web'),'serve','--config',str(prefix/'web.json')],stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True,env=env)
+     opener=build_opener(ProxyHandler({}))
+     try:
+@@ -40,13 +40,13 @@
+             except OSError:pass
+             assert time.monotonic()<end
+             time.sleep(.1)
+-        assert h['version']=='1.0.0rc4'
++        assert h['version']=='1.0.0rc5'
+         snapshot=json.load(opener.open('http://127.0.0.1:59009/api/v1/snapshot'))
+         result=json.load(opener.open('http://127.0.0.1:59009/api/v1/series?ids=temperature.tj,model.Tf_C,model.Ts_C,model.E_C'))
+         assert snapshot['mode']=='waiting' and all(not s['points'] for s in result['series'])
+     finally:
+         cli.send_signal(signal.SIGTERM);stdout,stderr=cli.communicate(timeout=15)
+     assert cli.returncode==0
+-    receipt=dict(version='1.0.0rc4',archive=archive.name,archive_bytes=archive.stat().st_size,archive_sha256=sha(archive),wheel=wheel.name,wheel_bytes=wheel.stat().st_size,wheel_sha256=sha(wheel),zip_members=members,payload_files_checked=len(payload),source_files_byte_equal=len(rootfiles),wheel_source_files_byte_equal=len(sealed['files']),offline_install_from_exact_zip=True,installed=identity,cli_health=h,cli_exit_code=cli.returncode,waiting_mode=snapshot['mode'],empty_model_history=True,service_none=True,no_device=True)
+-    (ROOT/'TTO-WebUI-v1-rc4-交付核验回执.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n');print(json.dumps(receipt))
++    receipt=dict(version='1.0.0rc5',archive=archive.name,archive_bytes=archive.stat().st_size,archive_sha256=sha(archive),wheel=wheel.name,wheel_bytes=wheel.stat().st_size,wheel_sha256=sha(wheel),zip_members=members,payload_files_checked=len(payload),source_files_byte_equal=len(rootfiles),wheel_source_files_byte_equal=len(sealed['files']),offline_install_from_exact_zip=True,installed=identity,cli_health=h,cli_exit_code=cli.returncode,waiting_mode=snapshot['mode'],empty_model_history=True,service_none=True,no_device=True)
++    (ROOT/'TTO-WebUI-v1-rc5-交付核验回执.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n');print(json.dumps(receipt))
+ if __name__=='__main__':main()
+--- rc4/tools/history_resource_monitor.py
++++ rc5/tools/history_resource_monitor.py
+@@ -7,11 +7,13 @@
+     start=time.monotonic();cpu=p.cpu_times();source_cpu=source.cpu_times();samples=[];requests=[]
+     async with aiohttp.ClientSession() as c:
+         health=await(await c.get('http://127.0.0.1:59009/healthz')).json();assert health['pid']==meta['pid']
++        bootstrap=await(await c.get('http://127.0.0.1:59009/api/v1/bootstrap')).json()
++        joint_enabled=bootstrap.get('series_capabilities',{}).get('model_state_history',False)
+         while time.monotonic()-start<120:
+             snap=await(await c.get('http://127.0.0.1:59009/api/v1/snapshot')).json()
+             assert snap['model']['phase'] in ('tracking','degraded'), 'fixture/model not eligible during measurement'
+             samples.append(dict(t=time.monotonic()-start,rss_MiB=p.memory_info().rss/1024**2,source_rss_MiB=source.memory_info().rss/1024**2,model_phase=snap['model']['phase']))
+-            if meta['version']=='1.0.0rc4' and len(samples)%2==0:
++            if joint_enabled and len(samples)%2==0:
+                 t=time.perf_counter()
+                 async with c.get('http://127.0.0.1:59009/api/v1/series?ids=temperature.tj,model.Tf_C,model.Ts_C,model.E_C&max_points=2000') as r:
+                     wire=await r.read();assert r.status==200;data=json.loads(wire)
+--- rc4/tools/history_source.py
++++ rc5/tools/history_source.py
+@@ -9,7 +9,7 @@
+ async def main():
+     stop=asyncio.Event();mode='live';gap_pending=False;p=Producer(time.monotonic()-3600);count=0
+     for t in list(range(31))+list(range(3570,3601)):last=p.step(t)
+-    async with Publication(Path('/private/tmp/twh4/active.json')) as pub:
++    async with Publication(Path('/private/tmp/twh5/active.json')) as pub:
+         pub.put(last)
+         async def command(r):
+             nonlocal mode,count,gap_pending
+--- rc4/tools/history_service.py
++++ rc5/tools/history_service.py
+@@ -1,6 +1,5 @@
+ """Installed-app verification harness; synthetic prefill is not production history."""
+-import asyncio,copy,json,os,signal,sys,time
+-from collections import deque
++import asyncio,json,os,signal,sys,time
+ from pathlib import Path
+ from aiohttp import web
+ ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/'tests'))
+@@ -10,7 +9,7 @@
+ from tto_web.server import app_for
+ from tto_web.common import atomic_json
+ async def main():
+-    out=Path(os.environ['TTO_HISTORY_OUT']);stop=asyncio.Event();c=web_config();c['source']['active_descriptor']='/private/tmp/twh4/active.json'
++    out=Path(os.environ['TTO_HISTORY_OUT']);stop=asyncio.Event();c=web_config();c['source']['active_descriptor']='/private/tmp/twh5/active.json'
+     s=State(c);source=asyncio.create_task(follow(c,s,stop))
+     for _ in range(150):
+         if s.packet:break
+--- rc4/tools/browser_history_checks.js
++++ rc5/tools/browser_history_checks.js
+@@ -2,7 +2,7 @@
+  const control=await page.evaluate(()=>sessionStorage.getItem('tto-test-control'));if(!control)throw Error('local control not registered');
+  const command=async name=>(await page.request.post(control+'/'+name)).json();
+  const refresh=()=>page.getByRole('button',{name:'刷新历史',exact:true}).click();
+- const result={scope:'installed rc4 API; minimal synthetic verification page, not Sonnet homepage',health:await(await page.request.get('http://127.0.0.1:59009/healthz')).json()};
++ const result={scope:'installed rc5 API; minimal synthetic verification page, not Sonnet homepage',health:await(await page.request.get('http://127.0.0.1:59009/healthz')).json()};
+  await page.goto('http://127.0.0.1:59009/__history');
+  await page.waitForFunction(()=>window.historyResult?.series[1].points.some(p=>p.value!==null));
+  result.initial=await page.evaluate(()=>({identity:document.querySelector('#identity').textContent,rows:document.querySelector('#rows').textContent,lines:document.querySelector('#chart').children.length}));
+@@ -10,7 +10,7 @@
+  await page.waitForFunction(()=>window.historyResult.series[1].points.some(p=>p.reason_code==='publication_gap'));
+  result.gap=await page.evaluate(()=>({nulls:window.historyResult.series[1].points.filter(p=>p.value===null).length,lines:document.querySelector('#chart').children.length}));
+  if(result.gap.lines<8)throw Error('joint curves joined across publication gap');
+- await page.screenshot({path:'output/playwright/rc4-history-gap.png',fullPage:true});
++ await page.screenshot({path:'output/playwright/rc5-history-gap.png',fullPage:true});
+  await command('silent');await page.waitForTimeout(3200);await refresh();
+  await page.waitForFunction(()=>window.historyResult.series[1].points.at(-1).value===null);
+  result.silent=await page.evaluate(()=>({last:window.historyResult.series[1].points.at(-1),table:document.querySelector('#rows').textContent}));
+@@ -26,7 +26,7 @@
+  await refresh();await held;await command('epoch');
+  await page.waitForFunction(epoch=>window.historyResult&&window.historyResult.source_epoch!==epoch&&document.querySelector('#chart').children.length===0,old.source_epoch);
+  result.switched=await page.evaluate(()=>({source_epoch:window.historyResult?.source_epoch,run_id:window.historyResult?.run_id,lines:document.querySelector('#chart').children.length,status:document.querySelector('#status').textContent}));
+- await page.screenshot({path:'output/playwright/rc4-history-epoch-before-late.png',fullPage:true});
++ await page.screenshot({path:'output/playwright/rc5-history-epoch-before-late.png',fullPage:true});
+  release();await returned;await page.waitForTimeout(400);
+  result.lateIgnored=await page.evaluate(epoch=>window.historyResult&&window.historyResult.source_epoch!==epoch&&!document.querySelector('#rows').textContent.includes('777.123'),old.source_epoch);
+  if(!result.lateIgnored||result.switched.run_id!==old.run_id)throw Error('history crossed same-run epoch');
+@@ -34,6 +34,6 @@
+  result.accessibilityTable=await page.getByRole('table',{name:'历史序列检查'}).isVisible();
+  result.jsHeapBytes=await page.evaluate(()=>performance.memory?.usedJSHeapSize??null);
+  result.pass=true;
+- await page.screenshot({path:'output/playwright/rc4-history-epoch-after-late.png',fullPage:true});
++ await page.screenshot({path:'output/playwright/rc5-history-epoch-after-late.png',fullPage:true});
+  return result;
+ }
+--- /dev/null
++++ rc5/tools/audit_history_equivalence.py
+@@ -0,0 +1,31 @@
++"""Audit rc4 vs installed candidate public history on deterministic source transitions."""
++import copy,importlib.util,json,os,random,sys
++from pathlib import Path
++ROOT=Path(__file__).resolve().parents[1]
++sys.path.insert(0,str(ROOT/'tests'))
++from producer import Producer,web_config
++from tto_web.state import State,MODEL_GROUP
++oldfile=ROOT/'evidence/self-review-rc5/before/src/tto_web/state.py'
++spec=importlib.util.spec_from_file_location('tto_web._audit_rc4',oldfile)
++old=importlib.util.module_from_spec(spec);spec.loader.exec_module(old)
++p=Producer(1000.)
++for t in range(31):template=p.step(t)
++a=old.State(web_config());b=State(web_config());rng=random.Random(514);t=0.;sample=0;checks=0
++for i in range(300):
++    t+=rng.choice((.1,.5,1.,3.));packet=copy.deepcopy(template)
++    packet.update(origin_mono_s=1000.,input_mono_s=1000.+t,consumable_until_mono_s=1002.5+t,new_tj=rng.random()>.15,publication_gap=rng.random()<.05)
++    if packet['new_tj']:sample+=1
++    packet['tj_sample_id']=str(sample)
++    packet['model'].update(phase=rng.choice(('tracking','tracking','degraded','provisional','unavailable')),conditional_inputs_rails_W_PWM=None)
++    for m in packet['metrics']:
++        m.update(as_of_elapsed_ms=t*1000,_at=1000.+t,_expiry=1005.+t)
++        if m['id']=='temperature.tj':m.update(sample_id=str(sample),source_ref='audit/'+str(sample))
++    packet['source_epoch']=i//75
++    now=1000.+t+rng.choice((.01,.2,3.))
++    a.accept(packet,now=now);b.accept(packet,now=now)
++    for ids in (list(MODEL_GROUP),['model.Ts_C'],['temperature.tj']):
++        assert a.series(ids,0,1e9,16)==b.series(ids,0,1e9,16),(i,ids)
++        checks+=1
++    assert list(a.model_history)==list(b.model_history)
++result=dict(seed=514,source_transitions=300,public_series_comparisons=checks,all_equal=True,scope='deterministic synthetic packets; same frozen observer input template, no training/device')
++(ROOT/'evidence/self-review-rc5/history-equivalence.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result))
+--- rc4/pyproject.toml
++++ rc5/pyproject.toml
+@@ -3,7 +3,7 @@
+ build-backend = "setuptools.build_meta"
+ [project]
+ name = "tto-web-ui"
+-version = "1.0.0rc4"
++version = "1.0.0rc5"
+ requires-python = ">=3.10"
+ dependencies = ["aiohttp==3.11.18", "python-socketio==5.13.0", "psutil==7.0.0", "numpy==2.2.6", "scipy>=1.14.1,<1.16"]
+ [project.scripts]

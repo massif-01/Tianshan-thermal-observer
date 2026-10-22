@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/massif/Tianshan-thermal-observer/experiments/thermal_identification_r2/diagnose.py", line 170, in <module>
+    if __name__=='__main__':main(ROOT/'runs/main')
+  File "/Users/massif/Tianshan-thermal-observer/experiments/thermal_identification_r2/diagnose.py", line 162, in main
+    fit_diagnostics(out,data,spec);event_diagnostics(data,out);raw_temperature_diagnostics(out)
+  File "/Users/massif/Tianshan-thermal-observer/experiments/thermal_identification_r2/diagnose.py", line 111, in event_diagnostics
+    rows=[r for r in long if r['run']==run['run'] and end+lo<=r['wall']<end+hi]
+  File "/Users/massif/Tianshan-thermal-observer/experiments/thermal_identification_r2/diagnose.py", line 111, in <listcomp>
+    rows=[r for r in long if r['run']==run['run'] and end+lo<=r['wall']<end+hi]
+KeyError: 'wall'

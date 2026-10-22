@@ -1,0 +1,15 @@
+{
+ "version":"cpu.2-startup-bounds-v1",
+ "start_at_existing_run_s":30,
+ "mux_check_max_s":1.0,
+ "startup_steps_total_max_s":3.0,
+ "first_packet_after_source_spawn_max_s":1.0,
+ "terminate_grace_s":0.5,
+ "kill_grace_s":0.5,
+ "startup_task_cancel_wait_max_s":0.5,
+ "reader_cancel_wait_max_s":0.5,
+ "stderr_capture_limit_per_child_bytes":4096,
+ "raw_line_limit_bytes":65536,
+ "new_run_time_allowance_s":0,
+ "note":"Startup runs in its own cancellable task. All deadlines consume the unchanged60/1200s run budget; main clock loop never awaits child wait. Cleanup only own mux-client/source-client processes; never SSH master. Existing8percent and200ms budgets unchanged."
+}

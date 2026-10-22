@@ -1,0 +1,68 @@
+{
+  "stop_reason": "duration",
+  "poll_missed": 0,
+  "poll_count": 7,
+  "connection_attempts": 1,
+  "payload_oversize": 0,
+  "orin_event_count": 9,
+  "business_payload_bytes_sum": 10378,
+  "business_payload_bytes_max": 1154,
+  "poll_rtt_ms": [
+    942.9482910200022,
+    1801.0804580408148,
+    61.003167007584125,
+    66.65387499378994,
+    64.11708402447402,
+    62.13145796209574,
+    64.2007919959724
+  ],
+  "prediction_ms": [
+    0.8018749649636447,
+    0.29783399077132344,
+    0.6609580013900995
+  ],
+  "rss_mib": [
+    50.625,
+    50.640625,
+    50.703125,
+    50.71875,
+    50.71875,
+    50.71875,
+    50.734375,
+    50.75
+  ],
+  "cpu_pct_single_core": [
+    1.543940641015211,
+    0.6726352248641922,
+    1.0055313513323942,
+    1.6554808519833084,
+    1.6284587329076499,
+    1.101984462222963,
+    1.6340997397632173,
+    1.3758614103625997
+  ],
+  "elapsed_s": 9.405205957998987,
+  "queue_peak_items": 1,
+  "queue_peak_bytes": 1280,
+  "dropped": 0,
+  "quality": {
+    "boundary_socketio_connecting": 1,
+    "boundary_stream": 1,
+    "new_samples": 9,
+    "boundary_input_boundary": 2,
+    "boundary_input_profile_change": 1,
+    "boundary_control_context_change": 1,
+    "boundary_normal_scope_change": 1,
+    "boundary_socketio_disconnected": 1,
+    "boundary_run_end": 1
+  },
+  "processing": {
+    "fan_ok": 6,
+    "origins": 3,
+    "temp_ok": 1
+  },
+  "target_host_verified": false,
+  "ended_at_utc": "2026-10-13T13:34:54.538270+00:00",
+  "raw_bytes": 43530,
+  "observations": 26
+}

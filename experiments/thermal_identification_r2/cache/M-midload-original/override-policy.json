@@ -1,0 +1,38 @@
+{
+  "authorized_at_record_utc": "2026-10-13T17:36:27.725457+00:00",
+  "authority_source": "User authorization relayed by TTO coordination chat 01a12fd6-393a-7c73-8d46-6e70f9e17e61",
+  "authorization_text": "用户现在明确覆盖了先前暂缓决定：认为主板 temp_stale/default/valid=false 可能暂时不可用，要求本轮忽略这类标记、完成完整中等负载流程，并由你对话负责模型调度。",
+  "latest_execution_instruction": "现在请由你完成独立测试执行副本准备、有限离线核验，然后直接启动唯一新一轮完整测试，不再等我启动或再向用户确认。",
+  "conditions": {
+    "bound_variable": "agx_info.temperature.tj",
+    "manual_mode": false,
+    "active_source": [
+      "variable",
+      "default"
+    ]
+  },
+  "ignored_admission_reasons": [
+    "control_temperature_stale",
+    "control_temperature_invalid",
+    "active_temperature_source_untrusted"
+  ],
+  "ignored_context_transition": "variable <-> default only under same authorized binding/manual=false",
+  "native_card_override": "Specified stale/invalid/default flags no longer stop or deny new requests; no invented time threshold",
+  "retained_stop_conditions": [
+    "fault",
+    "guard",
+    "disabled",
+    "not AUTO",
+    "manual temperature",
+    "binding change",
+    "other source change",
+    "HTTP/Socket missing inputs",
+    "collector exit",
+    "unknown request termination",
+    "budgets"
+  ],
+  "raw_evidence": "unchanged; default25C not real temperature; native snapshot retained",
+  "result_role": "User-overridden development experiment, not unchanged candidate acceptance",
+  "new_prefix": "/home/rm01/TTO-midload-useroverride-20261014",
+  "original_prefix": "/home/rm01/TTO-midload-0.2.4"
+}

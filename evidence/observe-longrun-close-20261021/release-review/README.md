@@ -1,0 +1,1 @@
+先读有限收尾报告和操作卡；candidate/为最终observe.2源码，根目录有wheel、局部patch与身份。evidence/O1/O2-before是旧原件反例，after为新候选；final-*只对应新wheel的实际CLI自建服务。saved-state-replay为既有资料，非新实测。原observe.1大包及历史输入按SHA引用，不递归打包。21项依赖身份在candidate/docs/dependency-lock.json；无依赖增量，复用原离线wheelhouse。没有设备/部署/负载许可。

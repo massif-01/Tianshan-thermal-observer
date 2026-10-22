@@ -1,0 +1,563 @@
+[
+  {
+    "checked_at_utc": "2026-10-12T17:42:12.120903+00:00",
+    "thor": {
+      "cpu": {
+        "cores": [
+          {
+            "freq": 972,
+            "id": 0,
+            "usage": 0
+          },
+          {
+            "freq": 972,
+            "id": 1,
+            "usage": 1
+          },
+          {
+            "freq": 972,
+            "id": 2,
+            "usage": 0
+          },
+          {
+            "freq": 972,
+            "id": 3,
+            "usage": 0
+          },
+          {
+            "freq": 972,
+            "id": 4,
+            "usage": 1
+          },
+          {
+            "freq": 972,
+            "id": 5,
+            "usage": 0
+          },
+          {
+            "freq": 972,
+            "id": 6,
+            "usage": 1
+          },
+          {
+            "freq": 972,
+            "id": 7,
+            "usage": 0
+          },
+          {
+            "freq": 1350,
+            "id": 8,
+            "usage": 0
+          },
+          {
+            "freq": 1350,
+            "id": 9,
+            "usage": 0
+          },
+          {
+            "freq": 972,
+            "id": 10,
+            "usage": 4
+          },
+          {
+            "freq": 972,
+            "id": 11,
+            "usage": 1
+          }
+        ]
+      },
+      "gpu": {
+        "age_at_telemetry_receive_ms": 898.5605380148627,
+        "device_uuid": "GPU-a7c66ad2-6dbb-0ab8-c1a2-37ba6dba3600",
+        "freshness_timeout_ms": 5000,
+        "sample_interval_ms": 1000,
+        "sampled_at_utc": "2026-10-12T17:42:10.732130+00:00",
+        "schema_version": 1,
+        "source": "nvml",
+        "status": "valid",
+        "utilization_pct": 0
+      },
+      "memory": {
+        "ram": {
+          "total": 125772,
+          "unit": "MB",
+          "used": 1295
+        },
+        "swap": {
+          "cached": 0,
+          "total": 2048,
+          "unit": "MB",
+          "used": 0
+        }
+      },
+      "platform": {
+        "compatible": [
+          "rm01,rm01-thor",
+          "nvidia,p3834-0008",
+          "nvidia,tegra264"
+        ],
+        "family": "jetson_thor",
+        "gpu_backend": "nvml",
+        "identification_source": "device_tree_compatible",
+        "schema_version": 1,
+        "soc": "tegra264"
+      },
+      "power": {
+        "vdd_cpu_soc_mss": {
+          "average": 5954,
+          "current": 5952,
+          "unit": "mW"
+        },
+        "vdd_gpu": {
+          "average": 1853,
+          "current": 1984,
+          "unit": "mW"
+        },
+        "vin_sys_5v0": {
+          "average": 4380,
+          "current": 4392,
+          "unit": "mW"
+        }
+      },
+      "telemetry_meta": {
+        "collector_state": "running",
+        "fresh": true,
+        "freshness_timeout_ms": 5000,
+        "received_at": "2026-10-12T17:42:11.630691Z",
+        "sample_age_ms": 401.8815020099282,
+        "sample_seq": 658,
+        "schema_version": 1,
+        "source_sample_interval_ms": 1000,
+        "stream_id": "23a796fe-a5c4-4ff4-84a1-705dabebb33c",
+        "time_basis": "collector_receive"
+      },
+      "temperature": {
+        "cpu": 42.062,
+        "gpu": 42.656,
+        "soc012": 41.593,
+        "soc345": 41.375,
+        "tj": 42.656
+      },
+      "timestamp": "2026-10-12T17:42:12.032696Z"
+    },
+    "fan": {
+      "code": 0,
+      "data": {
+        "fans": [
+          {
+            "id": 0,
+            "mode": "curve",
+            "duty_valid": true,
+            "duty": 16,
+            "target_duty": 16,
+            "rpm": 0,
+            "temperature": 42.6,
+            "enabled": true,
+            "running": true,
+            "fault": false,
+            "control_temperature": 42.5,
+            "guard_temperature": 42.5,
+            "predicted_temperature": 42.8,
+            "slope_c_per_min": 0.4000000059604645,
+            "controller_gain": 0.75,
+            "cooling_response": 0,
+            "auto_state": "active",
+            "guard_active": false,
+            "temp_stale": false
+          }
+        ],
+        "temperature": 42.5999984741211,
+        "temp_valid": true,
+        "temp_source": "agx_info.temperature.tj"
+      }
+    },
+    "temp": {
+      "code": 0,
+      "data": {
+        "initialized": true,
+        "manual_mode": false,
+        "active_source": "variable",
+        "preferred_source": "variable",
+        "bound_variable": "agx_info.temperature.tj",
+        "temperature_01c": 426,
+        "temperature_c": 42.6,
+        "valid": true,
+        "timestamp_ms": 23131118
+      }
+    }
+  },
+  {
+    "checked_at_utc": "2026-10-12T17:42:17.164823+00:00",
+    "thor": {
+      "cpu": {
+        "cores": [
+          {
+            "freq": 972,
+            "id": 0,
+            "usage": 2
+          },
+          {
+            "freq": 972,
+            "id": 1,
+            "usage": 0
+          },
+          {
+            "freq": 972,
+            "id": 2,
+            "usage": 0
+          },
+          {
+            "freq": 972,
+            "id": 3,
+            "usage": 1
+          },
+          {
+            "freq": 972,
+            "id": 4,
+            "usage": 0
+          },
+          {
+            "freq": 972,
+            "id": 5,
+            "usage": 0
+          },
+          {
+            "freq": 972,
+            "id": 6,
+            "usage": 2
+          },
+          {
+            "freq": 972,
+            "id": 7,
+            "usage": 0
+          },
+          {
+            "freq": 972,
+            "id": 8,
+            "usage": 1
+          },
+          {
+            "freq": 972,
+            "id": 9,
+            "usage": 0
+          },
+          {
+            "freq": 972,
+            "id": 10,
+            "usage": 4
+          },
+          {
+            "freq": 972,
+            "id": 11,
+            "usage": 0
+          }
+        ]
+      },
+      "gpu": {
+        "age_at_telemetry_receive_ms": 913.9461689919699,
+        "device_uuid": "GPU-a7c66ad2-6dbb-0ab8-c1a2-37ba6dba3600",
+        "freshness_timeout_ms": 5000,
+        "sample_interval_ms": 1000,
+        "sampled_at_utc": "2026-10-12T17:42:15.732238+00:00",
+        "schema_version": 1,
+        "source": "nvml",
+        "status": "valid",
+        "utilization_pct": 0
+      },
+      "memory": {
+        "ram": {
+          "total": 125772,
+          "unit": "MB",
+          "used": 1300
+        },
+        "swap": {
+          "cached": 0,
+          "total": 2048,
+          "unit": "MB",
+          "used": 0
+        }
+      },
+      "platform": {
+        "compatible": [
+          "rm01,rm01-thor",
+          "nvidia,p3834-0008",
+          "nvidia,tegra264"
+        ],
+        "family": "jetson_thor",
+        "gpu_backend": "nvml",
+        "identification_source": "device_tree_compatible",
+        "schema_version": 1,
+        "soc": "tegra264"
+      },
+      "power": {
+        "vdd_cpu_soc_mss": {
+          "average": 5954,
+          "current": 5952,
+          "unit": "mW"
+        },
+        "vdd_gpu": {
+          "average": 1854,
+          "current": 1984,
+          "unit": "mW"
+        },
+        "vin_sys_5v0": {
+          "average": 4380,
+          "current": 4293,
+          "unit": "mW"
+        }
+      },
+      "telemetry_meta": {
+        "collector_state": "running",
+        "fresh": true,
+        "freshness_timeout_ms": 5000,
+        "received_at": "2026-10-12T17:42:16.646183Z",
+        "sample_age_ms": 425.26041099336,
+        "sample_seq": 663,
+        "schema_version": 1,
+        "source_sample_interval_ms": 1000,
+        "stream_id": "23a796fe-a5c4-4ff4-84a1-705dabebb33c",
+        "time_basis": "collector_receive"
+      },
+      "temperature": {
+        "cpu": 42.156,
+        "gpu": 42.687,
+        "soc012": 41.468,
+        "soc345": 41.437,
+        "tj": 42.687
+      },
+      "timestamp": "2026-10-12T17:42:17.071575Z"
+    },
+    "fan": {
+      "code": 0,
+      "data": {
+        "fans": [
+          {
+            "id": 0,
+            "mode": "curve",
+            "duty_valid": true,
+            "duty": 16,
+            "target_duty": 16,
+            "rpm": 0,
+            "temperature": 42.6,
+            "enabled": true,
+            "running": true,
+            "fault": false,
+            "control_temperature": 42.5,
+            "guard_temperature": 42.5,
+            "predicted_temperature": 42.8,
+            "slope_c_per_min": 0.4000000059604645,
+            "controller_gain": 0.75,
+            "cooling_response": 0,
+            "auto_state": "active",
+            "guard_active": false,
+            "temp_stale": false
+          }
+        ],
+        "temperature": 42.5999984741211,
+        "temp_valid": true,
+        "temp_source": "agx_info.temperature.tj"
+      }
+    },
+    "temp": {
+      "code": 0,
+      "data": {
+        "initialized": true,
+        "manual_mode": false,
+        "active_source": "variable",
+        "preferred_source": "variable",
+        "bound_variable": "agx_info.temperature.tj",
+        "temperature_01c": 426,
+        "temperature_c": 42.6,
+        "valid": true,
+        "timestamp_ms": 23136145
+      }
+    }
+  },
+  {
+    "checked_at_utc": "2026-10-12T17:42:22.212335+00:00",
+    "thor": {
+      "cpu": {
+        "cores": [
+          {
+            "freq": 972,
+            "id": 0,
+            "usage": 1
+          },
+          {
+            "freq": 972,
+            "id": 1,
+            "usage": 0
+          },
+          {
+            "freq": 972,
+            "id": 2,
+            "usage": 0
+          },
+          {
+            "freq": 972,
+            "id": 3,
+            "usage": 1
+          },
+          {
+            "freq": 972,
+            "id": 4,
+            "usage": 0
+          },
+          {
+            "freq": 972,
+            "id": 5,
+            "usage": 0
+          },
+          {
+            "freq": 972,
+            "id": 6,
+            "usage": 3
+          },
+          {
+            "freq": 972,
+            "id": 7,
+            "usage": 0
+          },
+          {
+            "freq": 972,
+            "id": 8,
+            "usage": 0
+          },
+          {
+            "freq": 972,
+            "id": 9,
+            "usage": 0
+          },
+          {
+            "freq": 972,
+            "id": 10,
+            "usage": 3
+          },
+          {
+            "freq": 972,
+            "id": 11,
+            "usage": 0
+          }
+        ]
+      },
+      "gpu": {
+        "age_at_telemetry_receive_ms": 927.7736999792978,
+        "device_uuid": "GPU-a7c66ad2-6dbb-0ab8-c1a2-37ba6dba3600",
+        "freshness_timeout_ms": 5000,
+        "sample_interval_ms": 1000,
+        "sampled_at_utc": "2026-10-12T17:42:20.732272+00:00",
+        "schema_version": 1,
+        "source": "nvml",
+        "status": "valid",
+        "utilization_pct": 0
+      },
+      "memory": {
+        "ram": {
+          "total": 125772,
+          "unit": "MB",
+          "used": 1304
+        },
+        "swap": {
+          "cached": 0,
+          "total": 2048,
+          "unit": "MB",
+          "used": 0
+        }
+      },
+      "platform": {
+        "compatible": [
+          "rm01,rm01-thor",
+          "nvidia,p3834-0008",
+          "nvidia,tegra264"
+        ],
+        "family": "jetson_thor",
+        "gpu_backend": "nvml",
+        "identification_source": "device_tree_compatible",
+        "schema_version": 1,
+        "soc": "tegra264"
+      },
+      "power": {
+        "vdd_cpu_soc_mss": {
+          "average": 5954,
+          "current": 5952,
+          "unit": "mW"
+        },
+        "vdd_gpu": {
+          "average": 1854,
+          "current": 1984,
+          "unit": "mW"
+        },
+        "vin_sys_5v0": {
+          "average": 4380,
+          "current": 4392,
+          "unit": "mW"
+        }
+      },
+      "telemetry_meta": {
+        "collector_state": "running",
+        "fresh": true,
+        "freshness_timeout_ms": 5000,
+        "received_at": "2026-10-12T17:42:21.660046Z",
+        "sample_age_ms": 456.27792400773615,
+        "sample_seq": 668,
+        "schema_version": 1,
+        "source_sample_interval_ms": 1000,
+        "stream_id": "23a796fe-a5c4-4ff4-84a1-705dabebb33c",
+        "time_basis": "collector_receive"
+      },
+      "temperature": {
+        "cpu": 42.218,
+        "gpu": 42.687,
+        "soc012": 41.531,
+        "soc345": 41.437,
+        "tj": 42.687
+      },
+      "timestamp": "2026-10-12T17:42:22.116447Z"
+    },
+    "fan": {
+      "code": 0,
+      "data": {
+        "fans": [
+          {
+            "id": 0,
+            "mode": "curve",
+            "duty_valid": true,
+            "duty": 16,
+            "target_duty": 16,
+            "rpm": 0,
+            "temperature": 42.7,
+            "enabled": true,
+            "running": true,
+            "fault": false,
+            "control_temperature": 42.5,
+            "guard_temperature": 42.5,
+            "predicted_temperature": 42.8,
+            "slope_c_per_min": 0.4000000059604645,
+            "controller_gain": 0.75,
+            "cooling_response": 0,
+            "auto_state": "active",
+            "guard_active": false,
+            "temp_stale": false
+          }
+        ],
+        "temperature": 42.70000076293945,
+        "temp_valid": true,
+        "temp_source": "agx_info.temperature.tj"
+      }
+    },
+    "temp": {
+      "code": 0,
+      "data": {
+        "initialized": true,
+        "manual_mode": false,
+        "active_source": "variable",
+        "preferred_source": "variable",
+        "bound_variable": "agx_info.temperature.tj",
+        "temperature_01c": 427,
+        "temperature_c": 42.7,
+        "valid": true,
+        "timestamp_ms": 23140165
+      }
+    }
+  }
+]

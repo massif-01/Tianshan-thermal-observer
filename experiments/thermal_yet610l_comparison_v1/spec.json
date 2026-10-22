@@ -1,0 +1,35 @@
+{
+  "contract": "TTO-YET-FROZEN-COMPARE-v1.0",
+  "run_id": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece",
+  "trial_id": "yet610l-sync-shortqa-retry-20261017T162947Z",
+  "primary_model": "primary",
+  "sensitivity_models": ["old_LS", "A24"],
+  "dynamics_frozen": true,
+  "external_temperature_used_for_model": false,
+  "ambient_C": null,
+  "quality": "manifest-matching TTO 0.2.4 native replay, original target isolation, control eligibility, input validity and original TTL; execution continue policy never overrides model eligibility",
+  "segments": "only genuine input/source/control gaps; never request or phase boundaries",
+  "initialization": {
+    "window_s": 60,
+    "method": "existing fixed-dynamics affine past-TJ prefix estimate",
+    "E_bounds_C": [-10, 60],
+    "Ts_initial_bounds_C": [-20, 120],
+    "E_policy": "first legal 60s prefix once per run/model, then fixed; rank-weak fallback median original training E",
+    "A_long": "two-state free response after prefix within each strict segment; no subsequent TJ feedback",
+    "causal_state": "original rolling past60 with fixed E; Tf anchors current TJ, not a prediction",
+    "filters": "same primary G2 QS and LP30/LP120; real irregular dt/left held inputs; no cross-gap carry"
+  },
+  "clock": {
+    "strict_alignment": "unavailable: no established instrument clock uncertainty bound",
+    "nominal_display": "interpret original instrument calendar digits as user-set Asia/Shanghai, offset 0, approximate only",
+    "offset_sensitivity_s": [-30, -10, -5, 0, 5, 10, 30],
+    "sensitivity_is_error_bound": false,
+    "scenario_selection": "none; all reported, no temperature correlation or drift fit",
+    "no_automatic_photo_offset": true
+  },
+  "reference": "one instrument row at or immediately after resident-baseline actual start +150s under nominal display, fixed across all models/scenarios; if its model qualification is absent report unavailable, never choose replacement",
+  "surface_comparison": "local uncalibrated fin contact only; absolute and single-reference delta descriptions, not Ts accuracy or thermal capacity",
+  "horizons_s": [15, 45, 90],
+  "TJ_diagnostics": "primary four-state A-roll and B-HOLD plus B0/B1, independent labels/common sets and coverage; no future load predictor",
+  "mutations_allowed": "new research directory and derived artifacts only; no production, original, model, device or git writes"
+}

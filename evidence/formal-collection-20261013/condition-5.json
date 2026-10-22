@@ -1,0 +1,30 @@
+{
+  "record": {
+    "kind": "condition_transition_reported",
+    "observer_run_id": "c1a1bd6a-7854-4d08-bea7-42ea1335c0eb",
+    "source": "human_report",
+    "verbatim": "工况4单发推理10:43完成的，现在开始工况5并发推理，刚点击运行，继续采集。",
+    "previous_condition_id": 4,
+    "completed_condition_id": 4,
+    "completed_condition_label": "模型单发推理",
+    "completion_status": "normal_completion_reported",
+    "reported_completion_time": {
+      "local_date": "2026-10-13",
+      "local_time": "10:43",
+      "timezone": "Asia/Shanghai",
+      "precision": "minute",
+      "exact_end_at_utc": null,
+      "description": "用户明确上报10:43完成；未提供秒数，不补造秒级结束时间"
+    },
+    "condition_id": 5,
+    "condition_label": "并发推理",
+    "reported_start_time": {
+      "description": "用户报告刚点击并发推理运行，作为近似开始说明",
+      "precision": "approximate_just_started",
+      "exact_start_at_utc": null
+    },
+    "recorded_at_utc": "2026-10-13T02:45:28.223386+00:00",
+    "collection_continues": true
+  },
+  "expected_collection_end_at_utc": "2026-10-13T02:52:46.371313+00:00"
+}

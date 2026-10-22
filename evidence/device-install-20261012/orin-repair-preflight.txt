@@ -1,0 +1,192 @@
+[build-system]
+requires = ["setuptools>=45", "wheel", "setuptools-scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tegrastats-api"
+version = "1.0.1"
+description = "HTTP API and WebSocket server for NVIDIA Jetson tegrastats monitoring"
+readme = "README.md"
+license = "MIT"
+authors = [
+    {name = "Thomas Hiddenpeak", email = "thomashiddenpeak@gmail.com"}
+]
+maintainers = [
+    {name = "Thomas Hiddenpeak", email = "thomashiddenpeak@gmail.com"}
+]
+keywords = ["jetson", "tegrastats", "monitoring", "api", "websocket", "esp32"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: System :: Hardware",
+    "Topic :: System :: Monitoring",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "Flask>=2.3.0",
+    "Flask-SocketIO>=5.3.0",
+    "Flask-CORS>=4.0.0",
+    "python-socketio>=5.9.0",
+    "eventlet>=0.33.0",
+    "psutil>=5.9.0",
+    "requests>=2.31.0",
+    "websocket-client>=1.6.0",
+    "click>=8.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "flake8>=6.0.0",
+    "mypy>=1.0.0",
+]
+test = [
+    "pytest>=7.0.0",
+    "requests>=2.31.0",
+    "websocket-client>=1.6.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/thomas-hiddenpeak/rm01OrinStatus"
+Documentation = "https://github.com/thomas-hiddenpeak/rm01OrinStatus/blob/main/README.md"
+Repository = "https://github.com/thomas-hiddenpeak/rm01OrinStatus.git"
+"Bug Tracker" = "https://github.com/thomas-hiddenpeak/rm01OrinStatus/issues"
+
+[project.scripts]
+tegrastats-api = "tegrastats_api.cli:main"
+tegrastats-server = "tegrastats_api.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+tegrastats_api = ["templates/*", "static/*", "config/*.py"]
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = trueRUNNING_EXE /home/rm01/miniconda3/bin/python3.12
+RUNNING_CMD /home/rm01/.venvs/tegrastats-api/bin/python /home/rm01/.venvs/tegrastats-api/bin/tegrastats-api run --host 0.0.0.0 --port 58090 
+REPO src/tegrastats_api/server.py True False
+REPO src/tegrastats_api/parser.py False True
+No broken requirements found.
+Name: Flask
+Version: 3.1.3
+Summary: A simple framework for building complex web applications.
+Home-page: 
+Author: 
+Author-email: 
+License-Expression: BSD-3-Clause
+Location: /home/rm01/.venvs/tegrastats-api/lib/python3.12/site-packages
+Requires: blinker, click, itsdangerous, jinja2, markupsafe, werkzeug
+Required-by: flask-cors, Flask-SocketIO, tegrastats-api
+---
+Name: Flask-SocketIO
+Version: 5.7.0
+Summary: Socket.IO integration for Flask applications
+Home-page: https://code.miguelgrinberg.com/miguelgrinberg/flask-socketio
+Author: 
+Author-email: Miguel Grinberg <miguel.grinberg@gmail.com>
+License: 
+Location: /home/rm01/.venvs/tegrastats-api/lib/python3.12/site-packages
+Requires: blinker, click, Flask, flask, jinja2, python-socketio, werkzeug
+Required-by: tegrastats-api
+---
+Name: flask-cors
+Version: 6.0.5
+Summary: A Flask extension simplifying CORS support
+Home-page: https://corydolphin.github.io/flask-cors/
+Author: 
+Author-email: Cory Dolphin <corydolphin@gmail.com>
+License-Expression: MIT
+Location: /home/rm01/.venvs/tegrastats-api/lib/python3.12/site-packages
+Requires: flask, Werkzeug
+Required-by: tegrastats-api
+---
+Name: click
+Version: 8.5.0
+Summary: Composable command line interface toolkit
+Home-page: 
+Author: 
+Author-email: 
+License-Expression: BSD-3-Clause
+Location: /home/rm01/.venvs/tegrastats-api/lib/python3.12/site-packages
+Requires: 
+Required-by: Flask, Flask-SocketIO, tegrastats-api
+---
+Name: psutil
+Version: 7.2.2
+Summary: Cross-platform lib for process and system monitoring.
+Home-page: https://github.com/giampaolo/psutil
+Author: Giampaolo Rodola
+Author-email: g.rodola@gmail.com
+License: BSD-3-Clause
+Location: /home/rm01/.venvs/tegrastats-api/lib/python3.12/site-packages
+Requires: 
+Required-by: tegrastats-api
+---
+Name: eventlet
+Version: 0.41.2
+Summary: Highly concurrent networking library
+Home-page: https://github.com/eventlet/eventlet
+Author: 
+Author-email: Sergey Shepelev <temotor@gmail.com>, Jakub Stasiak <jakub@stasiak.at>, Tim Burke <tim.burke@gmail.com>, Nat Goodspeed <nat@lindenlab.com>, Itamar Turner-Trauring <itamar@itamarst.org>, Hervé Beraud <hberaud@redhat.com>
+License: MIT
+Location: /home/rm01/.venvs/tegrastats-api/lib/python3.12/site-packages
+Requires: dnspython, greenlet
+Required-by: tegrastats-api
+---
+Name: python-socketio
+Version: 5.17.0
+Summary: Socket.IO server and client for Python
+Home-page: https://code.miguelgrinberg.com/miguelgrinberg/python-socketio
+Author: 
+Author-email: Miguel Grinberg <miguel.grinberg@gmail.com>
+License: MIT
+Location: /home/rm01/.venvs/tegrastats-api/lib/python3.12/site-packages
+Requires: bidict, python-engineio
+Required-by: Flask-SocketIO, tegrastats-api
+---
+Name: python-engineio
+Version: 4.14.0
+Summary: Engine.IO server and client for Python
+Home-page: https://code.miguelgrinberg.com/miguelgrinberg/python-engineio
+Author: 
+Author-email: Miguel Grinberg <miguel.grinberg@gmail.com>
+License: MIT
+Location: /home/rm01/.venvs/tegrastats-api/lib/python3.12/site-packages
+Requires: simple-websocket
+Required-by: python-socketio

@@ -1,0 +1,36 @@
+{
+  "indexed_files_verified": 7,
+  "observations": 1238,
+  "trigger_raw_frames": [
+    {
+      "ref": "69a567d7-216b-4007-b122-7a946f92bd15/observation:1237",
+      "received_at_utc": "2026-10-17T16:26:24.764495+00:00",
+      "fan": {
+        "auto_state": "stale",
+        "control_temperature": 44.1,
+        "controller_gain": 0.819374918937683,
+        "cooling_response": 7.599999904632568,
+        "duty": 25,
+        "duty_valid": true,
+        "enabled": true,
+        "fault": false,
+        "guard_active": false,
+        "guard_temperature": 44.1,
+        "id": 0,
+        "mode": "auto",
+        "predicted_temperature": 44.1,
+        "rpm": 0,
+        "running": true,
+        "slope_c_per_min": -0.600000023841858,
+        "target_duty": 25,
+        "temp_stale": true,
+        "temperature": 44.1
+      },
+      "global_temp_valid": false
+    }
+  ],
+  "meaning": "Observed trigger flags only; not a root cause diagnosis",
+  "new_load_requests": 1,
+  "requested_plan_complete": false,
+  "status": "stopped_by_native_rule_waiting_CSV_and_end_clock_photo"
+}
