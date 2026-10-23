@@ -105,7 +105,7 @@ def test_foreground_requires_current_window_and_no_old_cpu_permission():
     from datetime import datetime,timedelta,timezone
     c=load_config(environ={});c['orin']['base_url']='http://127.0.0.1:1';c['tianshan']['base_url']='http://127.0.0.1:2'
     reg=dict(device_id='D',thermal_config_id='C',observer_host_id=socket.gethostname(),session_id=str(uuid.uuid4()))
-    now=datetime.now(timezone.utc);g=dict(action='readonly-observe',explicit_user_start=True,evidence='LOCAL TEST',candidate_version='0.2.4+observe.2',config_sha256=digest(public_config(c)),max_duration_s=60,session_max_bytes=8*1024**3,self_owned_loopback=True,not_before_utc=(now-timedelta(seconds=1)).isoformat(),expires_at_utc=(now+timedelta(seconds=90)).isoformat(),**{k:reg[k] for k in ['device_id','thermal_config_id','session_id']})
+    now=datetime.now(timezone.utc);g=dict(action='readonly-observe',explicit_user_start=True,evidence='LOCAL TEST',candidate_version=__import__('tto_field').__version__,config_sha256=digest(public_config(c)),max_duration_s=60,session_max_bytes=8*1024**3,self_owned_loopback=True,not_before_utc=(now-timedelta(seconds=1)).isoformat(),expires_at_utc=(now+timedelta(seconds=90)).isoformat(),**{k:reg[k] for k in ['device_id','thermal_config_id','session_id']})
     import tto_field,hashlib
     package=Path(tto_field.__file__).parent
     g.update(candidate_manifest_sha256=hashlib.sha256((package/'candidate-files.json').read_bytes()).hexdigest(),model_manifest_sha256=hashlib.sha256((package/'g2_model/frozen-model-manifest.json').read_bytes()).hexdigest())

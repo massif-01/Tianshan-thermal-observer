@@ -1,0 +1,34 @@
+{
+  "scope": "offline recorded replay; virtual receive clock; no Web service/device",
+  "source_run": "evidence/formal-collection-20261013/run-2026-10-13T022246.369032_0000-c1a1bd6a",
+  "records": 5572,
+  "recorded_states": 5572,
+  "encoded_packets": 5572,
+  "stateful_observers": 1,
+  "publication_callback_errors": 0,
+  "established_encoder_packets_equal": 5572,
+  "public_model_equal_to_recorded_state": 5572,
+  "shared_G2_HOLD_predictions": 984,
+  "shared_max_absolute_difference_C": 0.0,
+  "backend_G2_origins": 355,
+  "web_G2_origins": 1635,
+  "web_scores": {
+    "15": {
+      "n": 1622,
+      "MAE_C": 0.584473095227952
+    },
+    "45": {
+      "n": 1593,
+      "MAE_C": 1.456014366333761
+    },
+    "90": {
+      "n": 1556,
+      "MAE_C": 2.8160785925431675
+    }
+  },
+  "differences": [
+    "backend stride 5s; Web minimum 1s",
+    "backend accepts provisional; Web tracking/degraded only",
+    "issue times and interruption matching belong to each receiver; whole ledgers/MAE are not equal"
+  ]
+}

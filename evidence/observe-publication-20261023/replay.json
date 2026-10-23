@@ -1,0 +1,193 @@
+{
+  "scope": "offline recorded replay; virtual receive clock; no Web service/device",
+  "source_run": "evidence/formal-collection-20261013/run-2026-10-13T022246.369032_0000-c1a1bd6a",
+  "records": 5572,
+  "recorded_states": 5572,
+  "encoded_packets": 5572,
+  "stateful_observers": 1,
+  "publication_callback_errors": 0,
+  "established_encoder_packets_equal": 5572,
+  "public_model_equal_to_recorded_state": 5572,
+  "shared_G2_HOLD_predictions": 984,
+  "shared_max_absolute_difference_C": 0.0,
+  "backend_G2_origins": 355,
+  "web_G2_origins": 1635,
+  "backend_scoring": {
+    "contract": "TTO-OBSERVE-SCORING-v1",
+    "publication_mode": "live",
+    "stride_s": 5,
+    "valid_TJ_denominator": 1794,
+    "scheduled_origin_denominator": 355,
+    "counts": {
+      "all_valid_TJ": 1794,
+      "scheduled_TJ_origins": 355,
+      "issued/G2-HOLD/15": 355,
+      "valid_predictions/G2-HOLD/15": 355,
+      "issued/B0/15": 355,
+      "valid_predictions/B0/15": 355,
+      "issued/B1/15": 355,
+      "issued/G2-HOLD/45": 355,
+      "valid_predictions/G2-HOLD/45": 355,
+      "issued/B0/45": 355,
+      "valid_predictions/B0/45": 355,
+      "issued/B1/45": 355,
+      "issued/G2-HOLD/90": 355,
+      "valid_predictions/G2-HOLD/90": 355,
+      "issued/B0/90": 355,
+      "valid_predictions/B0/90": 355,
+      "issued/B1/90": 355,
+      "valid_predictions/B1/15": 353,
+      "valid_predictions/B1/45": 353,
+      "valid_predictions/B1/90": 353,
+      "scored": 3102,
+      "unscored/source_epoch_changed": 87
+    },
+    "per_method": {
+      "G2-HOLD/15": {
+        "n": 352,
+        "MAE_C": 0.553359578616186,
+        "bias_C": -0.059566438633918146,
+        "P95_absolute_C": 2.502800062273783,
+        "P95_underestimate_C": 1.0171573050368696,
+        "max_underestimate_C": 7.718859706209429
+      },
+      "B0/15": {
+        "n": 352,
+        "MAE_C": 0.7310170454545453,
+        "bias_C": -0.1976250000000001,
+        "P95_absolute_C": 3.354749999999996,
+        "P95_underestimate_C": 2.0909000000000004,
+        "max_underestimate_C": 7.905999999999999
+      },
+      "B1/15": {
+        "n": 350,
+        "MAE_C": 0.7339093146902016,
+        "bias_C": -0.04018980493875842,
+        "P95_absolute_C": 3.6025533599726516,
+        "P95_underestimate_C": 1.9593656985588592,
+        "max_underestimate_C": 7.323118491377187
+      },
+      "G2-HOLD/45": {
+        "n": 346,
+        "MAE_C": 1.3850401859959507,
+        "bias_C": -0.28645406547544394,
+        "P95_absolute_C": 9.097068912702888,
+        "P95_underestimate_C": 7.358343316093498,
+        "max_underestimate_C": 11.321474424699467
+      },
+      "B0/45": {
+        "n": 346,
+        "MAE_C": 1.8484393063583824,
+        "bias_C": -0.5897630057803468,
+        "P95_absolute_C": 8.913750000000004,
+        "P95_underestimate_C": 7.015499999999998,
+        "max_underestimate_C": 11.5
+      },
+      "B1/45": {
+        "n": 344,
+        "MAE_C": 2.2245077147636283,
+        "bias_C": -0.12222529243001784,
+        "P95_absolute_C": 10.246985260518443,
+        "P95_underestimate_C": 8.7384225952249,
+        "max_underestimate_C": 12.22787963560399
+      },
+      "G2-HOLD/90": {
+        "n": 338,
+        "MAE_C": 2.7536971066796747,
+        "bias_C": -0.7371792277731134,
+        "P95_absolute_C": 13.071843311168243,
+        "P95_underestimate_C": 12.230285352921214,
+        "max_underestimate_C": 14.62262099875366
+      },
+      "B0/90": {
+        "n": 338,
+        "MAE_C": 3.310355029585795,
+        "bias_C": -1.2027218934911248,
+        "P95_absolute_C": 12.062149999999997,
+        "P95_underestimate_C": 10.723649999999996,
+        "max_underestimate_C": 14.061999999999998
+      },
+      "B1/90": {
+        "n": 336,
+        "MAE_C": 4.901886371721742,
+        "bias_C": -0.2632663065328697,
+        "P95_absolute_C": 16.6464670080982,
+        "P95_underestimate_C": 14.593924718590369,
+        "max_underestimate_C": 27.64275927120798
+      }
+    },
+    "same_set_G2_B0": {
+      "G2-HOLD/15": {
+        "n": 352,
+        "MAE_C": 0.553359578616186,
+        "bias_C": -0.059566438633918146,
+        "P95_absolute_C": 2.502800062273783,
+        "P95_underestimate_C": 1.0171573050368696,
+        "max_underestimate_C": 7.718859706209429
+      },
+      "B0/15": {
+        "n": 352,
+        "MAE_C": 0.7310170454545453,
+        "bias_C": -0.1976250000000001,
+        "P95_absolute_C": 3.354749999999996,
+        "P95_underestimate_C": 2.0909000000000004,
+        "max_underestimate_C": 7.905999999999999
+      },
+      "G2-HOLD/45": {
+        "n": 346,
+        "MAE_C": 1.3850401859959507,
+        "bias_C": -0.28645406547544394,
+        "P95_absolute_C": 9.097068912702888,
+        "P95_underestimate_C": 7.358343316093498,
+        "max_underestimate_C": 11.321474424699467
+      },
+      "B0/45": {
+        "n": 346,
+        "MAE_C": 1.8484393063583824,
+        "bias_C": -0.5897630057803468,
+        "P95_absolute_C": 8.913750000000004,
+        "P95_underestimate_C": 7.015499999999998,
+        "max_underestimate_C": 11.5
+      },
+      "G2-HOLD/90": {
+        "n": 338,
+        "MAE_C": 2.7536971066796747,
+        "bias_C": -0.7371792277731134,
+        "P95_absolute_C": 13.071843311168243,
+        "P95_underestimate_C": 12.230285352921214,
+        "max_underestimate_C": 14.62262099875366
+      },
+      "B0/90": {
+        "n": 338,
+        "MAE_C": 3.310355029585795,
+        "bias_C": -1.2027218934911248,
+        "P95_absolute_C": 12.062149999999997,
+        "P95_underestimate_C": 10.723649999999996,
+        "max_underestimate_C": 14.061999999999998
+      }
+    },
+    "percentile": "linear interpolation at (n-1)*.95; full bounded session error arrays",
+    "error": "prediction-actual",
+    "label": "first qualified received TJ at/after target within2s, same session/epoch/domain",
+    "statistical_unit": "one session, overlapping horizons are not independent experiments"
+  },
+  "web_scores": {
+    "15": {
+      "n": 1622,
+      "MAE_C": 0.584473095227952
+    },
+    "45": {
+      "n": 1593,
+      "MAE_C": 1.456014366333761
+    },
+    "90": {
+      "n": 1556,
+      "MAE_C": 2.8160785925431675
+    }
+  },
+  "differences": [
+    "backend stride 5s; Web minimum 1s",
+    "backend accepts provisional; Web tracking/degraded only",
+    "issue times and interruption matching belong to each receiver; whole ledgers/MAE are not equal"
+  ]
+}
