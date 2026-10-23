@@ -379,10 +379,10 @@ const FORECAST_MAX_AGE_MS=15000;
 function currentForecast(h:number):Prediction|undefined{
  if(!current||!['tracking','degraded'].includes(current.model.phase)||lineValue(metric('temperature.tj'))===null||current.run_elapsed_ms==null)return undefined;
  const now=current.run_elapsed_ms;
- return current.predictions.filter(p=>p.horizon_s===h&&p.status==='pending'&&p.target_elapsed_ms>now&&now-p.origin_elapsed_ms<=FORECAST_MAX_AGE_MS).at(-1);
+ return current.predictions.filter(p=>p.horizon_s===h&&p.status==='pending'&&p.target_elapsed_ms>now&&now-p.issued_elapsed_ms<=FORECAST_MAX_AGE_MS).at(-1);
 }
 const leadForecast=()=>currentForecast(45)||currentForecast(15)||currentForecast(90);
-const forecastAge=(p:Prediction)=>Math.max(0,Math.round((current!.run_elapsed_ms!-p.origin_elapsed_ms)/1000));
+const forecastAge=(p:Prediction)=>Math.max(0,Math.round((current!.run_elapsed_ms!-p.issued_elapsed_ms)/1000));
 function renderModel(){
  if(!current)return;
  const inNode=(id:string,top:number,color:string,label:string,u:string,d:number)=>{const m=metric(nodeMetric[id]),v=lineValue(m);return `<button type="button" class="node in${v===null?' inactive':''}${selectedNode===id?' sel':''}" data-node="${id}" style="left:0;top:${top}px" aria-label="${label}"><span class="t-caption"><i class="key" style="background:${color}"></i>${label}</span><span class="v">${v===null?'—':fmt(v,d)+' <span class="t-unit">'+u+'</span>'}</span></button>`;};
