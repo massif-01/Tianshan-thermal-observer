@@ -1,4 +1,5 @@
 """Replays preserved observations through the production causal processor."""
+from .recordio import log_paths, open_log
 from pathlib import Path
 from datetime import datetime, timezone
 from .config import load_config
@@ -39,9 +40,9 @@ def replay(run, model=None):
     clock_consistent = True
     sources = {}
     expected = 0
-    for path in sorted(run.glob('observations-*.jsonl')):
+    for path in log_paths(run,'observations'):
         sources[str(path.name)] = file_hash(path)
-        with path.open() as f:
+        with open_log(path) as f:
             for line in f:
                 if len(line.encode()) > 100000:
                     raise ValueError('oversized stored observation')

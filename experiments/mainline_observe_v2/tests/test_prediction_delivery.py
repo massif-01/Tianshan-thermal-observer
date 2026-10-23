@@ -3,6 +3,7 @@ import asyncio
 import copy
 import json
 import time
+from tto.recordio import read_records
 import pytest
 from types import SimpleNamespace
 
@@ -56,7 +57,7 @@ def test_committed_socket_recovery_terminal_scores_and_new_producer(tmp_path,pub
         try:
             await until(lambda:state.packet is not None and state.prediction_cursor==view.cursor and not state.prediction_syncing)
             assert len(state.predictions)==183  # Requires more than one real 128-row page.
-            logged=[json.loads(x) for x in (store.root/'predictions.jsonl').read_text().splitlines()]
+            logged=list(read_records(store.root/'predictions.jsonl.gz',live=True))
             g2={x['prediction_id']:x for x in logged if x['method']=='G2-HOLD'}
             assert set(g2)==set(state.predictions)
             for id,row in state.predictions.items():assert row['value_C']==g2[id]['value_C'] and row['ledger_run_id']==g2[id]['run_id']
@@ -104,7 +105,7 @@ def test_committed_socket_recovery_terminal_scores_and_new_producer(tmp_path,pub
                 assert not state.prediction_view(45)['records_complete'] and not state.snapshot()['forecast']['latest_prediction_ids']
                 # The recorder remains writable after the publication worker has died.
                 previous=view.cursor;tick(time.monotonic()+5)
-                assert view.cursor>previous and (store.root/'predictions.jsonl').stat().st_size>0
+                assert view.cursor>previous and (store.root/'predictions.jsonl.gz').stat().st_size>0
                 ledger.finish(time.monotonic()+5)
             else:
                 end=time.monotonic()
@@ -141,7 +142,7 @@ def test_committed_socket_recovery_terminal_scores_and_new_producer(tmp_path,pub
                 handler=next(r.handler for r in app.router.routes() if r.method=='GET' and r.resource.canonical=='/api/v1/predictions')
                 api=json.loads((await handler(SimpleNamespace(query={'horizon_s':'45'}))).text)
                 assert api['summary']==response['summary'] and api['records']==response['records']
-                scores=[json.loads(x) for x in (store.root/'scores.jsonl').read_text().splitlines()]
+                scores=list(read_records(store.root/'scores.jsonl.gz',live=True))
                 for r in scores:
                     if r['method']=='G2-HOLD' and r['status']=='scored':
                         actual=state.predictions[r['prediction_id']]

@@ -7,6 +7,7 @@ from pathlib import Path
 from .evaluation import METHODS, group_metrics
 from .model import HORIZONS
 from .util import file_hash, finite
+from .recordio import log_paths, open_log
 
 
 def recorded_results(run, manifest, eligibility):
@@ -19,21 +20,23 @@ def recorded_results(run, manifest, eligibility):
         isolated.setdefault((event['run_id'], event['segment']), []).append(event)
     contract_issues = eligibility.get('contract_issues', [])
     def read_log(name):
-        path = run / name
-        logs[name] = {'present': path.is_file(), 'sha256': file_hash(path) if path.is_file() else None, 'record_count': None}
-        if not path.is_file():
+        paths=log_paths(run,name.removesuffix('.jsonl'))
+        hashes={p.name:file_hash(p) for p in paths}
+        logs[name] = {'present': bool(paths), 'sha256': next(iter(hashes.values())) if len(paths)==1 else None, 'files_sha256': hashes, 'record_count': None}
+        if not paths:
             return []
         rows = []
-        with path.open() as f:
-            for index, line in enumerate(f, 1):
-                ref = f'{name}:{index}'
-                try:
-                    row = json.loads(line)
-                    if not isinstance(row, dict):
-                        raise ValueError('record is not an object')
-                    rows.append((ref, row))
-                except ValueError:
-                    issues.append({'record_ref': ref, 'reason': 'invalid_JSON_record'})
+        for path in paths:
+            with open_log(path) as f:
+                for index, line in enumerate(f, 1):
+                    ref = f'{path.name}:{index}'
+                    try:
+                        row = json.loads(line)
+                        if not isinstance(row, dict):
+                            raise ValueError('record is not an object')
+                        rows.append((ref, row))
+                    except ValueError:
+                        issues.append({'record_ref': ref, 'reason': 'invalid_JSON_record'})
         logs[name]['record_count'] = len(rows)
         return rows
     predictions = {}

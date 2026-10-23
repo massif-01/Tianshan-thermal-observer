@@ -1,4 +1,5 @@
 """Input diagnostics reuse production Engine qualification, never rescore logs."""
+from .recordio import log_paths, open_log
 import json
 from collections import Counter
 from pathlib import Path
@@ -13,8 +14,8 @@ def input_diagnostics(run, config):
     counts = Counter()
     last_gpu, last_t, last_binding = None, None, None
     declaration, period_evidence = None, None
-    for path in sorted(Path(run).glob('observations-*.jsonl')):
-        with path.open() as f:
+    for path in log_paths(run,'observations'):
+        with open_log(path) as f:
             for line in f:
                 r = json.loads(line)
                 last_t = r['mono_s']

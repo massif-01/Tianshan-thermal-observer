@@ -28,5 +28,13 @@
   "state_rotation_reset": false,
   "CPU_sidecar": "paused",
   "Requester": false,
-  "control_writes": false
+  "control_writes": false,
+  "history_contract": "TTO-OBSERVE-HISTORY-v2",
+  "history_encoding": "gzip-jsonl-level1-sync-flush",
+  "full_states_persisted": false,
+  "budgets_count": "compressed stream bytes plus metadata",
+  "status_snapshot_interval_s": 10,
+  "history_retention_days": 30,
+  "retention_unit": "complete sessions grouped by UTC start day; same parent/device/host; current plus preceding29 dates",
+  "retention_scan": "after native lock acquired, then on UTC day change; untagged archives excluded"
 }

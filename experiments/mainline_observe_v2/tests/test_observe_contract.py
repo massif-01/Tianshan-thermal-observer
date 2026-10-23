@@ -1,3 +1,4 @@
+from tto.recordio import read_records
 import copy, json, socket, uuid
 from pathlib import Path
 import pytest
@@ -41,15 +42,28 @@ def test_no_interpolation_or_early_label_and_common_sets():
 def test_rotation_keeps_unique_stream_identity_and_budget(tmp_path):
     now=[0.];store=SessionStore(tmp_path/'s',budget=200000,segment_bytes=1000,chunk_bytes=500,segment_seconds=4,min_free=0,clock=lambda:now[0])
     for n in range(20):
-        store.append(store.root,'observations',dict(native_run_id='one',n=n));now[0]+=.5
+        store.append(store.root,'observations',dict(native_run_id='one',n=n))
+        for stream in ('predictions','scores'):store.append(store.root,stream,dict(n=n))
+        now[0]+=.5
     store.close();index=json.loads((store.root/'stream-index.json').read_text());assert index['rotations']>=2 and index['heat_state_reset_by_rotation'] is False
     records=[]
-    for p in index['streams']['./observations']:records += [json.loads(x) for x in (store.root/p).read_text().splitlines()]
+    for p in index['streams']['./observations']:records += list(read_records(store.root/p))
     assert [x['n'] for x in records]==list(range(20))
     assert {x['native_run_id'] for x in records}=={'one'}
+    from tto.util import file_hash
+    for name,info in json.loads((store.root/'files.json').read_text()).items():
+        assert (store.root/name).stat().st_size==info['bytes'] and file_hash(store.root/name)==info['sha256']
+    assert store.total==sum(p.stat().st_size for p in store.root.rglob('*') if p.is_file())
+    assert all(s['byte_count']<=store.segment_bytes for s in store.segments)
+    assert all(p.stat().st_size<=store.chunk_bytes for p in store.root.glob('*.gz'))
     small=SessionStore(tmp_path/'small',budget=1000,chunk_bytes=500,min_free=0)
     with pytest.raises(LimitReached):
-        for _ in range(100):small.append(small.root,'raw',{'v':'a'*100})
+        for n in range(100):small.append(small.root,'raw',{'v':'a'*100,'n':n})
+    # The rejected record must not change the gzip dictionary/CRC of committed rows.
+    committed=[p for p in small.root.glob('*.gz')]
+    before=[list(read_records(p,live=True)) for p in committed]
+    small.close_prefix(small.root)
+    assert before==[list(read_records(p)) for p in committed]
 
 def test_disk_and_storage_error_not_silent(tmp_path,monkeypatch):
     import tto_field.observe_storage as module
