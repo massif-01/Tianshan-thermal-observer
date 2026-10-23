@@ -8,6 +8,8 @@ Orin 使用 python-socketio 5.13.0 / Engine.IO 4 客户端，path `socket.io`、
 
 ESP32 仅 GET `/api/v1/fan/status`、`/api/v1/temp/status`，HTTP200和整数API code=0共同成功。fan默认1秒，temp默认5秒，一个在途；初始同时到期fan优先，此后最早截止优先避免temp饿死。完成后跳过漏期，不并发追赶；统计漏期和HTTP RTT，RTT不是控制耗时。更改配置只能放慢轮询，不改源采样。
 
+上述共享一个在途请求的规则适用于根目录 `src/tto` 的 0.2.2 入口。当前 `experiments/mainline_observe_v2/src/tto` 的 observe 采集器采用 `TTO-POLL-INDEPENDENT-v1`：fan/temp 各自按默认 1秒/5秒轮询，每类最多一个在途请求，总共最多两个，慢接口不阻塞另一类。每类完成后跳过漏期，不补发追赶；停止时取消并等待两个 worker 退出。请求方法、成功条件、超时和数据新鲜度规则不变。配置中的 `max_inflight_esp32=1` 是旧串行合同的保留字段，不代表当前 observe 的总并发上限；实际合同与观测峰值写入 manifest 的 `polling_contract` 和 summary 的 `polling_health`。
+
 fan：从 `data` 单对象或 `data.fans` 唯一选择 `id=0`。`duty_valid=true` 且有限0..100的 `duty` 才是成功PWM；0有效，`target_duty=70,duty=37`只使用37。未知输出、故障、保护、失温、非AUTO保留记录并撤下正常模型资格。RPM保留原值但不进入特征。
 
 已核对固定参考及本地源码：`temp.status` 用 `temperature_c/temperature_01c/valid/timestamp_ms`，附 `manual_mode/active_source/preferred_source/bound_variable`；另一状态形态 `current_temp_c/current_valid/current_timestamp_ms` 显式识别。ESP32更新时间属于本机时钟域，不能与观察器UTC相减。正常资格要求新鲜fan、有效非测试temp、来源agx或绑定variable；绑定/模式/故障/测试变化断段。温度状态最长年龄 `max(7.5秒,temp周期+请求超时)`，是观察资格，不延长源TTL。
