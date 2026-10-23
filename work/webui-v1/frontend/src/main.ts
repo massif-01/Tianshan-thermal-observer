@@ -381,6 +381,7 @@ function currentForecast(h:number):Prediction|undefined{
  const now=current.run_elapsed_ms;
  return current.predictions.filter(p=>p.horizon_s===h&&p.status==='pending'&&p.target_elapsed_ms>now&&now-p.origin_elapsed_ms<=FORECAST_MAX_AGE_MS).at(-1);
 }
+const leadForecast=()=>currentForecast(45)||currentForecast(15)||currentForecast(90);
 const forecastAge=(p:Prediction)=>Math.max(0,Math.round((current!.run_elapsed_ms!-p.origin_elapsed_ms)/1000));
 function renderModel(){
  if(!current)return;
@@ -414,7 +415,7 @@ function renderAside(){
   const r=resNow();
   rows=rowsHtml([[K_STATE,!connected&&!waiting()?t('未知'):({tracking:t('跟踪中'),degraded:t('降级 · 条件不完整'),unavailable:t('暂不可用'),provisional:t('初始化中')} as Record<string,string>)[phase]||t('未开始')],[t('数据更新到'),connected&&current.run_elapsed_ms!=null?timeLabel(current.run_elapsed_ms):t('未知')],[t('估计与实测的差距'),r===null?'—':sgn(r,2)+' °C'],[t('模型版本'),current.model.model_id?current.model.model_id.slice(0,12):t('尚未加载')]],true);
  }else if(id==='fc'){
-  rows=rowsHtml([[t('+{n} 秒',{n:15}),fmt(currentForecast(15)?.value_C)+' °C'],[t('+{n} 秒',{n:45}),fmt(currentForecast(45)?.value_C)+' °C'],[t('+{n} 秒',{n:90}),fmt(currentForecast(90)?.value_C)+' °C'],[t('预测发出'),(()=>{const p=currentForecast(45)||currentForecast(15)||currentForecast(90);return p?t('{n} 秒前',{n:forecastAge(p)}):'—';})()],[t('场景'),t('假设负载保持')]],true);
+  rows=rowsHtml([[t('+{n} 秒',{n:15}),fmt(currentForecast(15)?.value_C)+' °C'],[t('+{n} 秒',{n:45}),fmt(currentForecast(45)?.value_C)+' °C'],[t('+{n} 秒',{n:90}),fmt(currentForecast(90)?.value_C)+' °C'],[t('预测发出'),(()=>{const p=leadForecast();return p?t('{n} 秒前',{n:forecastAge(p)}):'—';})()],[t('场景'),t('假设负载保持')]],true);
  }else{
   const m=metric(nodeMetric[id]),v=lineValue(m);
   rows=rowsHtml([[t('当前读数'),v===null?t('暂无有效读数'):fmt(v,id==='u'?0:id==='tj'?1:2)+' '+(m?.unit||'')],[t('状态'),m?statusLabels[m.status]||m.status:t('未提供')],[t('来源'),m?.source_ref||'—'],[t('接收时刻'),m?dateLabel(m.received_at_utc):t('未知')]],true);
@@ -462,7 +463,7 @@ function renderFuture(){
  clean($('futureValues'));
  for(const h of [15,45,90]){const p=currentForecast(h),v=document.createElement('div');v.className='row';const label=document.createElement('span'),b=document.createElement('span');label.className='t-label';b.className='t-body num';if(h===45)b.style.fontWeight='600';label.textContent=t('+{n} 秒',{n:h});if(p){const cap=document.createElement('span');cap.className='t-caption';cap.textContent=' · '+t('目标 {time}',{time:timeLabel(p.target_elapsed_ms)});label.append(cap);}b.textContent=p?fmt(p.value_C)+' °C':'—';v.title=p?`origin ${timeLabel(p.origin_elapsed_ms)}\nissued ${timeLabel(p.issued_elapsed_ms)}\ntarget ${timeLabel(p.target_elapsed_ms)}\ncutoff ${timeLabel(p.input_cutoff_elapsed_ms)}\n${p.prediction_id}`:t('没有当前已发布预测');v.append(label,b);$('futureValues').append(v);}
  const ph=current.model.phase;
- const lead=currentForecast(45)||currentForecast(15)||currentForecast(90);const issued=lead?t('最近一次预测 {n} 秒前发出，目标时刻固定。',{n:forecastAge(lead)})+' ':'';
+ const lead=leadForecast();const issued=lead?t('最近一次预测 {n} 秒前发出，目标时刻固定。',{n:forecastAge(lead)})+' ':'';
  text('futureNote',issued+(ph==='unavailable'&&deviceOk()?t('模型暂不可用，未来参考已撤回。'):ph==='degraded'?t('估计可用，条件不完整。')+t('假设负载保持不变，三个时点分别计算，不是连续轨迹，也不是控制指令。'):t('假设负载保持不变，三个时点分别计算，不是连续轨迹，也不是控制指令。')));
 }
 
