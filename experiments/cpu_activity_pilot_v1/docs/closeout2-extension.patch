@@ -1,0 +1,165 @@
+--- closeout.2/tto_field/__init__.py
++++ cpu.1/tto_field/__init__.py
+@@ -1 +1 @@
+-__version__ = "0.2.4+closeout.2"
++__version__ = "0.2.4+cpu.1"
+--- closeout.2/tto_field/gate.py
++++ cpu.1/tto_field/gate.py
+@@ -41,6 +41,10 @@
+     instrument=bool(ins.get('recording') is True and ins.get('probe_fixed') is True and
+                     ins.get('clock_start',{}).get('verified_file_sha256') and ins['clock_start'].get('timezone') and
+                     ins['clock_start'].get('display_resolution_s') and 'uncertainty_s' in ins['clock_start'])
++    if binding.get('cpu_pilot_verified') is True:
++        permit=bool(envelope['mode']=='execute' and binding['authorization']['action']=='cpu-activity-pilot' and
++                    binding['authorization']['explicit_user_start'] is True and binding['authorization']['command_id']==binding['command_id'])
++        if not ins.get('used',True):instrument=True
+     reasons=[]
+     for ok,reason in [(identity_ok and temporal,'identity_or_clock_unverified'),(facts,'measurement_unusable'),
+                       (model,'model_unavailable_or_state_expired'),(safety,'control_context_unready'),
+--- closeout.2/tto_field/runtime.py
++++ cpu.1/tto_field/runtime.py
+@@ -18,14 +18,14 @@
+     return resolve_plan(json.loads((ROOT/'plans/mix-plan.json').read_text()),'fixed-anchors')
+ 
+ 
+-def verify_grant(c,binding,mode,duration):
++def verify_grant(c,binding,mode,duration,pilot=False):
+     from tto.config import public_config
+     from tto.util import digest
+     from tto.storage import source_identity
+     a=binding['authorization']
+     if binding.get('old_overrides') is not False:raise ValueError('old overrides are forbidden')
+     if not binding.get('command_id') or a.get('command_id')!=binding['command_id']:raise ValueError('current command authorization missing')
+-    action='readonly-diagnostic' if mode=='diagnose' else 'fixed-anchors'
++    action='readonly-diagnostic' if mode=='diagnose' else ('cpu-activity-pilot' if pilot else 'fixed-anchors')
+     if a.get('action')!=action or a.get('explicit_user_start') is not True or not a.get('evidence'):
+         raise ValueError('explicit current-run mode authorization required')
+     if binding.get('config_sha256')!=digest(public_config(c)):raise ValueError('configuration identity mismatch')
+@@ -47,14 +47,18 @@
+         if binding.get('request_actor_thread')!=ACTOR:raise ValueError('only the designated inference actor launches execute')
+         m=binding['inference']
+         if m.get('model')!='RM-01 VLM' and not binding.get('synthetic_loopback_only'):raise ValueError('first profile uses original resident RM-01 VLM')
+-        if not binding.get('synthetic_loopback_only') and (not m.get('identity_evidence') or m.get('confirmed_client_slots')!=4):
++        capacity=m.get('confirmed_client_slots')
++        capacity_ok=(type(capacity) is int and capacity>=1) if pilot else capacity==4
++        if not binding.get('synthetic_loopback_only') and (not m.get('identity_evidence') or not capacity_ok):
+             raise ValueError('current model identity and client slot capacity evidence required')
+         if m.get('max_tokens')!=256 or m.get('request_timeout_s')!=30:raise ValueError('request contract changed')
+         if not binding.get('synthetic_loopback_only'):
+             original=json.loads((ROOT/'plans/model-profiles.json').read_text())['existing-dense-27b-confirm-before-live']
+             if m.get('messages')!=original['payload']['messages'] or m.get('stream') is not True or m.get('sampling',{})!=original['sampling']:
+                 raise ValueError('frozen inference payload changed')
+-        ins=binding['instrument'];anchor=ins['clock_start'];p=Path(anchor['path'])
++        ins=binding['instrument']
++        if pilot and ins.get('used') is False:return binding
++        anchor=ins['clock_start'];p=Path(anchor['path'])
+         if not ins.get('recording') or not ins.get('probe_fixed') or anchor.get('command_id')!=binding['command_id'] or digest_file(p)!=anchor['sha256']:
+             raise ValueError('current instrument/clock evidence missing or mismatched')
+         anchor['verified_file_sha256']=anchor['sha256']
+@@ -117,16 +121,25 @@
+         with self.lock:return self.latest
+ 
+ 
+-async def run(config,binding,mode,out,duration=300,probe_profile=None):
++async def run(config,binding,mode,out,duration=300,probe_profile=None,cpu_pilot=False):
+     from tto.collector import collect
+     from tto.storage import InstanceLock,source_identity
+     from tto.config import public_config
+     from tto.util import digest
+-    out=Path(out);binding=copy.deepcopy(binding);verify_grant(config,binding,mode,duration)
++    out=Path(out);binding=copy.deepcopy(binding)
++    if cpu_pilot:
++        from .cpu_pilot import verify_pilot_grant
++        verify_pilot_grant(config,binding,mode,duration)
++    else:verify_grant(config,binding,mode,duration)
+     # Load numerical dependencies before constructing any network client.
+     from .research.observer import ThermalObserver
+     chosen=profile()
++    if cpu_pilot:
++        from .cpu_pilot import pilot_profile
++        chosen=pilot_profile()
+     if probe_profile is not None:
++        if cpu_pilot:raise ValueError('pilot has no live plan override')
++
+         # Internal integration tests only. There is no CLI plan override, and nonloopback is rejected.
+         import ipaddress
+         from urllib.parse import urlsplit
+@@ -154,24 +167,29 @@
+               collector_source_identity=source_identity(),binding=binding,profile=chosen if mode=='execute' else None,
+               diagnostics_seconds=duration if mode=='diagnose' else None,control_changes=False,
+               synthetic_loopback_only=binding.get('synthetic_loopback_only',False),firmware_identity=binding.get('firmware_identity')))
+-        if mode=='execute':
++        if mode=='execute' and binding.get('instrument',{}).get('recording'):
+             p=Path(binding['instrument']['clock_start']['path']);(out/'clock-evidence').mkdir();(out/'clock-evidence/start.original').write_bytes(p.read_bytes())
+         collector_duration=duration if mode=='diagnose' else chosen['hard_limit_seconds']
+         native_task=asyncio.create_task(collect(config,collector_duration,data_root=out/'native',episode=binding['command_id'],
+                    deployment=dict(field_entry_version=__version__,field_command_id=binding['command_id'],field_clock_domain=clock.domain,
+                                    firmware_identity=binding.get('firmware_identity')),stop_event=stop,on_record=pipeline.on_record),name='ONLY-native-collector')
+         emit('native_collector_task_started',task_identity=id(native_task),collector_instances_created=1)
++        sidecar=None
++        if cpu_pilot:
++            from .cpu_transport import Sidecar
++            sidecar=Sidecar(binding.get('sidecar'),out,clock,pipeline,ev,source_duration=30 if mode=='diagnose' else 1170)
+         result=None;error=None
+         try:
+             if mode=='execute':
+                 from .requester import Requester
+                 # One executor owns up to four per-slot sessions; no other request producer exists.
+-                clients=[Requester(binding['inference'],out,clock,emit) for _ in range(4)]
++                clients=[Requester(binding['inference'],out,clock,emit) for _ in range(1 if cpu_pilot else 4)]
+                 for client in clients:await client.open()
+                 resident=await asyncio.wait_for(clients[0].check_resident_idle(),min(30.,chosen['preparation_reserve_seconds']))
+                 write(out/'resident-idle-check.json',resident)
+             while True:
+                 now=clock.now();latest=pipeline.get();run_id=pipeline.run_id or 'PENDING-NATIVE-UUID'
++                if sidecar:await sidecar.tick(now,latest)
+                 gate=readiness(latest,now,run_id,formal=True)
+                 if previous is not None:
+                     dt=now-previous;totals['observed_s']+=dt
+@@ -191,8 +209,14 @@
+                     if native_task.done():stopped_reason='collector_exited';break
+                 else:
+                     if scheduler is None and pipeline.run_id:
+-                        scheduler=Scheduler(chosen,dict(max_data_unready_seconds=60,max_request_seconds=60,max_total_requests=4096),pipeline.run_id,binding['command_id'],formal=True)
++                        scheduler_type=Scheduler
++                        if cpu_pilot:
++                            from .cpu_pilot import PilotScheduler
++                            scheduler_type=PilotScheduler
++                        scheduler=scheduler_type(chosen,dict(max_data_unready_seconds=60,max_request_seconds=60,max_total_requests=4096),pipeline.run_id,binding['command_id'],formal=True)
+                     if scheduler is not None:
++                        if cpu_pilot and now>=chosen['preparation_reserve_seconds'] and sidecar.status!='running':
++                            scheduler.stop('sidecar_unavailable_no_meaningful_pilot',now=now)
+                         if native_task.done():scheduler.stop('collector_exited',now=now)
+                         if stop.is_set():scheduler.stop('collector_or_signal_stop',now=now)
+                         completed=[]
+@@ -221,6 +245,7 @@
+                     p=psutil.Process();ct=p.cpu_times();cpu_total=ct.user+ct.system
+                     cpu_pct=None if resource_prev is None else 100*(cpu_total-resource_prev[1])/(now-resource_prev[0])
+                     resource_prev=(now,cpu_total)
++                    if sidecar:await sidecar.resource(cpu_pct,p.memory_info().rss)
+                     ev.append('resources.jsonl',dict(mono_s=now,rss_bytes=p.memory_info().rss,cpu_times=ct._asdict(),cpu_pct_single_core=cpu_pct,
+                                                 field_log_bytes=ev.bytes,native_log_bytes=sum(f.stat().st_size for f in (out/'native').rglob('*') if f.is_file())))
+                     last_resources=now
+@@ -229,11 +254,12 @@
+             error=exc;stopped_reason='entry_error:'+type(exc).__name__
+         finally:
+             stop.set()
++            if sidecar:await sidecar.close()
+             for task in tasks.values():task.cancel()
+             await asyncio.gather(*tasks.values(),return_exceptions=True)
+             for client in clients:await client.close()
+             try:
+-                result=await asyncio.wait_for(asyncio.shield(native_task),chosen['cleanup_reserve_seconds'] if mode=='execute' else 30.)
++                result=await asyncio.wait_for(asyncio.shield(native_task),max(.01,min(chosen['cleanup_reserve_seconds'],chosen['hard_limit_seconds']-clock.now())) if mode=='execute' else 30.)
+             except BaseException as exc:
+                 native_task.cancel();await asyncio.gather(native_task,return_exceptions=True)
+                 error=error or exc;stopped_reason='collector_cleanup_failed:'+type(exc).__name__
+@@ -267,7 +293,7 @@
+                   I02_shared_engine_instance_id=id(pipeline.communication.view.engine) if pipeline.communication else None,
+                   I02_preprocessed_views=pipeline.communication.view.process_calls if pipeline.communication else 0,
+                   requester_sessions_all_closed=all(client.session.closed for client in clients if client.session is not None),
+-                  requester_instances_created=len(clients),request_executor_instances_created=int(bool(clients)),
++                  cpu_pilot_profile=cpu_pilot,sidecar_status=sidecar.status if sidecar else None,requester_instances_created=len(clients),request_executor_instances_created=int(bool(clients)),
+                   own_async_tasks_remaining=sum(not t.done() for t in [native_task,*tasks.values()]),
+                   collector_summary=result[1] if result else None,clock_end=clock.bracket(),control_changes=False,
+                   field_proven=False,synthetic_loopback_only=binding.get('synthetic_loopback_only',False)))

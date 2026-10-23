@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "/Users/massif/Tianshan-thermal-observer/experiments/autoworkday_integration_v1/tests/lifecycle_loopback.py", line 39, in <module>
+    if __name__=='__main__':asyncio.run(main(Path(sys.argv[1]).resolve(),Path(sys.argv[2]).resolve()))
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Users/massif/Tianshan-thermal-observer/experiments/autoworkday_integration_v1/tests/lifecycle_loopback.py", line 33, in main
+    s=json.loads((run/'summary.json').read_text());assert s['reason']=='user_stop' and s['archive']['returncode']==0 and s['driver']['submissions']==0
+                                                                                                                         ~~~~~~~~~~~^^^^^^^^^^^^^^^
+KeyError: 'submissions'

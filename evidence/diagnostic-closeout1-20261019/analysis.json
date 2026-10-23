@@ -1,0 +1,345 @@
+{
+  "native_run_id": "854efcfd-c498-4491-aba8-dd1564f05bf4",
+  "mode": "diagnose",
+  "reason": "diagnostic_duration",
+  "file_index_verified": 18,
+  "time_basis": "relative seconds in actual host monotonic domain; unavailable spans use preceding gate until next ~0.1s evaluation, not exact source transition times",
+  "layer_unavailability": {
+    "collection_available": {
+      "first_usable_s": 0.6153600559919141,
+      "unavailable_spans": [
+        {
+          "start_s": 0.003439619962591678,
+          "end_s": 0.6153600559919141,
+          "duration_s": 0.6119204360293224
+        }
+      ],
+      "longest_unavailable_s": 0.6119204360293224,
+      "total_unavailable_s": 0.6119204360293224
+    },
+    "model_available": {
+      "first_usable_s": 9.626000846968964,
+      "unavailable_spans": [
+        {
+          "start_s": 0.003439619962591678,
+          "end_s": 9.626000846968964,
+          "duration_s": 9.622561227006372
+        }
+      ],
+      "longest_unavailable_s": 9.622561227006372,
+      "total_unavailable_s": 9.622561227006372
+    },
+    "field_safety_available": {
+      "first_usable_s": 5.563289295008872,
+      "unavailable_spans": [
+        {
+          "start_s": 0.003439619962591678,
+          "end_s": 5.563289295008872,
+          "duration_s": 5.55984967504628
+        }
+      ],
+      "longest_unavailable_s": 5.55984967504628,
+      "total_unavailable_s": 5.55984967504628
+    }
+  },
+  "http": {
+    "fan": {
+      "records": 300,
+      "successful": 300,
+      "errors": 0,
+      "last_phase": {
+        "complete": 300
+      },
+      "rtt_ms": {
+        "n": 300,
+        "min": 9.821993997320533,
+        "mean": 21.957812703331,
+        "p50": 18.503411003621295,
+        "p95": 35.04488500766456,
+        "p99": 44.51059497660026,
+        "max": 56.876573944464326
+      },
+      "success_gap_s": {
+        "n": 299,
+        "min": 0.9555570399970748,
+        "mean": 1.0013146882376052,
+        "p50": 1.0009883999591693,
+        "p95": 1.0239568760152906,
+        "p99": 1.0321251330315135,
+        "max": 1.0465323180542327
+      },
+      "error_records": []
+    },
+    "temp": {
+      "records": 60,
+      "successful": 60,
+      "errors": 0,
+      "last_phase": {
+        "complete": 60
+      },
+      "rtt_ms": {
+        "n": 60,
+        "min": 9.376115980558097,
+        "mean": 22.590755535444867,
+        "p50": 26.022056001238525,
+        "p95": 33.263268996961415,
+        "p99": 64.80917299631983,
+        "max": 64.80917299631983
+      },
+      "success_gap_s": {
+        "n": 59,
+        "min": 4.9771335709956475,
+        "mean": 5.000536659406893,
+        "p50": 5.000214344006963,
+        "p95": 5.021713673952036,
+        "p99": 5.023537068045698,
+        "max": 5.023537068045698
+      },
+      "error_records": []
+    }
+  },
+  "boundaries": [
+    {
+      "episode": "diagnose-20261019-13242df2-9e02-4900-85db-fa3392d57d34",
+      "kind": "boundary",
+      "mono_s": 347971.080255121,
+      "observer_run_id": "854efcfd-c498-4491-aba8-dd1564f05bf4",
+      "payload": null,
+      "reason": "socketio_connecting",
+      "received_at_utc": "2026-10-19T08:54:59.784385+00:00",
+      "ref": "854efcfd-c498-4491-aba8-dd1564f05bf4/observation:1"
+    },
+    {
+      "episode": "diagnose-20261019-13242df2-9e02-4900-85db-fa3392d57d34",
+      "kind": "boundary",
+      "mono_s": 348270.914595434,
+      "observer_run_id": "854efcfd-c498-4491-aba8-dd1564f05bf4",
+      "payload": null,
+      "reason": "socketio_disconnected",
+      "received_at_utc": "2026-10-19T08:59:59.618723+00:00",
+      "ref": "854efcfd-c498-4491-aba8-dd1564f05bf4/observation:961"
+    }
+  ],
+  "source_period_metadata_counts": {
+    "1000": 300
+  },
+  "platforms": [
+    {
+      "compatible": [
+        "rm01,rm01-thor",
+        "nvidia,p3834-0008",
+        "nvidia,tegra264"
+      ],
+      "family": "jetson_thor",
+      "gpu_backend": "nvml",
+      "identification_source": "device_tree_compatible",
+      "schema_version": 1,
+      "soc": "tegra264"
+    }
+  ],
+  "telemetry": {
+    "orin_records": 300,
+    "tj_C": {
+      "n": 300,
+      "min": 45.375,
+      "mean": 45.52162,
+      "p50": 45.531,
+      "p95": 45.593,
+      "p99": 45.656,
+      "max": 45.656
+    },
+    "gpu_utilization_pct": {
+      "n": 300,
+      "min": 0,
+      "mean": 0.12,
+      "p50": 0.0,
+      "p95": 1,
+      "p99": 3,
+      "max": 3
+    },
+    "independent_rail_current_mW": {
+      "vdd_cpu_soc_mss": {
+        "n": 300,
+        "min": 5952,
+        "mean": 5963.88,
+        "p50": 5952.0,
+        "p95": 5952,
+        "p99": 6348,
+        "max": 6348
+      },
+      "vdd_gpu": {
+        "n": 300,
+        "min": 1984,
+        "mean": 1984,
+        "p50": 1984.0,
+        "p95": 1984,
+        "p99": 1984,
+        "max": 1984
+      },
+      "vin_sys_5v0": {
+        "n": 300,
+        "min": 4378,
+        "mean": 4384.656666666667,
+        "p50": 4378.0,
+        "p95": 4478,
+        "p99": 4478,
+        "max": 4577
+      }
+    },
+    "pwm_percent": {
+      "n": 300,
+      "min": 17,
+      "mean": 17,
+      "p50": 17.0,
+      "p95": 17,
+      "p99": 17,
+      "max": 17
+    },
+    "gain": {
+      "n": 300,
+      "min": 0.543590009212494,
+      "mean": 0.543590009212494,
+      "p50": 0.543590009212494,
+      "p95": 0.543590009212494,
+      "p99": 0.543590009212494,
+      "max": 0.543590009212494
+    },
+    "mode_counts": {
+      "auto": 300
+    },
+    "fault_true": 0,
+    "guard_true": 0,
+    "temp_stale_true": 0
+  },
+  "resources": {
+    "samples": 295,
+    "rss_MiB": {
+      "n": 295,
+      "min": 71.4375,
+      "mean": 74.61735963983051,
+      "p50": 74.69921875,
+      "p95": 76.05859375,
+      "p99": 76.16015625,
+      "max": 76.18359375
+    },
+    "cpu_single_core_pct": {
+      "n": 294,
+      "min": 0.9875488176157614,
+      "mean": 2.8287236016253097,
+      "p50": 2.9493004275859205,
+      "p95": 4.9132836874133545,
+      "p99": 4.922211049954536,
+      "max": 5.886335012061064
+    },
+    "cpu_time_average_pct": 2.83171373165994,
+    "final_run_files_bytes": 15391182
+  },
+  "invariant_checks": {
+    "one_native_run": true,
+    "shared_quality_engine": true,
+    "requester_and_inference_zero": true,
+    "all_start_allowed_false_expected": true,
+    "own_tasks_remaining_zero": true
+  },
+  "terminal_evaluation": {
+    "evaluated_mono_s": 348270.991340119,
+    "scheduler_mono_s": 300.08657765196403,
+    "at_utc": "2026-10-19T08:59:59.695469+00:00",
+    "command_id": "diagnose-20261019-13242df2-9e02-4900-85db-fa3392d57d34",
+    "native_run_id": "854efcfd-c498-4491-aba8-dd1564f05bf4",
+    "collection_available": false,
+    "model_available": false,
+    "field_safety_available": false,
+    "execution_authorized": false,
+    "instrument_clock_ready": false,
+    "explicit_stop": false,
+    "start_allowed": false,
+    "reasons": [
+      "measurement_unusable",
+      "model_unavailable_or_state_expired",
+      "control_context_unready",
+      "current_load_authorization_absent",
+      "instrument_or_clock_missing"
+    ],
+    "observer_state": "unavailable",
+    "successful_PWM_age_s": 0.4474863119539805,
+    "measurement_current": {
+      "tj": false,
+      "power": false,
+      "last_successful_pwm": false,
+      "control_context": false
+    },
+    "source_ages_s": {
+      "tj": null,
+      "power": null,
+      "last_successful_pwm": 0.4474863119539805,
+      "control_context": 4.77986091398634
+    },
+    "source_expiry_mono_s": {
+      "tj": null,
+      "power": null,
+      "last_successful_pwm": 348273.043792252,
+      "control_context": 348273.71141765
+    },
+    "model_state_age_s": 0.07151399896247312,
+    "model_consumable_until_mono_s": 348273.414595434,
+    "safety_status": "unknown",
+    "observation_cutoff": "854efcfd-c498-4491-aba8-dd1564f05bf4/observation:961",
+    "native_quality_preserved": true,
+    "model_permission": {
+      "local_demo": true,
+      "formal_field_authorized": false,
+      "device_actions": false
+    }
+  },
+  "last_joint_ready_evaluation": {
+    "evaluated_mono_s": 348270.890830175,
+    "scheduler_mono_s": 299.9860610530013,
+    "at_utc": "2026-10-19T08:59:59.594958+00:00",
+    "command_id": "diagnose-20261019-13242df2-9e02-4900-85db-fa3392d57d34",
+    "native_run_id": "854efcfd-c498-4491-aba8-dd1564f05bf4",
+    "collection_available": true,
+    "model_available": true,
+    "field_safety_available": true,
+    "execution_authorized": false,
+    "instrument_clock_ready": false,
+    "explicit_stop": false,
+    "start_allowed": false,
+    "reasons": [
+      "current_load_authorization_absent",
+      "instrument_or_clock_missing"
+    ],
+    "observer_state": "tracking",
+    "successful_PWM_age_s": 0.34696971299126744,
+    "measurement_current": {
+      "tj": true,
+      "power": true,
+      "last_successful_pwm": true,
+      "control_context": true
+    },
+    "source_ages_s": {
+      "tj": 0.14849661401240155,
+      "power": 0.14849661401240155,
+      "last_successful_pwm": 0.34696971299126744,
+      "control_context": 4.679344315023627
+    },
+    "source_expiry_mono_s": {
+      "tj": 348275.228102363,
+      "power": 348275.228102363,
+      "last_successful_pwm": 348273.043792252,
+      "control_context": 348273.71141765
+    },
+    "model_state_age_s": 0.14610171801177785,
+    "model_consumable_until_mono_s": 348273.242265351,
+    "safety_status": "fresh",
+    "observation_cutoff": "854efcfd-c498-4491-aba8-dd1564f05bf4/observation:960",
+    "native_quality_preserved": true,
+    "model_permission": {
+      "local_demo": true,
+      "formal_field_authorized": false,
+      "device_actions": false
+    }
+  },
+  "terminal_boundary_note": "Native collection ended at configured duration; closing Socket.IO emitted observation:961. Last gate at 300.0866s withdrew current eligibility under I-02. Coverage integrates preceding gate; no interval after final gate is inferred.",
+  "native_index_verified": 7
+}

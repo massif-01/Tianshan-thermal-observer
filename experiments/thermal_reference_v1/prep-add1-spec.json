@@ -1,0 +1,53 @@
+{
+  "contract": "TTO-REF-PREP-v1.0-ADD1",
+  "base_spec_sha256": "2977b8c762db9db3a82857920f6b030a935da61a450a0f4f9ff183bc5e9be894",
+  "written_at_utc": "2026-10-14T05:18:06.996437+00:00",
+  "user_confirmed": {
+    "instrument": "YET-610L",
+    "probe": "K型",
+    "CSV_export": true,
+    "attachment_material": "耐温聚酰亚胺胶带",
+    "purchased": true,
+    "planned_interval_s": 1
+  },
+  "default_path": "numeric_export",
+  "primary_kind": "surface_contact",
+  "backup_paths": [
+    "manual_points",
+    "image_evidence",
+    "sparse_event_cues"
+  ],
+  "physical_meaning": "fixed local surface; NOT outlet air, entire structure average, or directly measured Ts",
+  "import_contract": {
+    "raw_bytes_and_SHA": true,
+    "raw_row_number_and_values": true,
+    "configurable_time_temperature_unit_channel_site": true,
+    "same_temperature_new_row_is_new_sample": true,
+    "missing_or_abnormal": "row ledger; never fill zero or interpolate",
+    "relative_or_index_time": "independent start anchor + explicit interval basis; sample_index requires index_origin",
+    "clock_correction": "independent first/last anchors only; uncertainty preserved"
+  },
+  "contact_session": "run/site/probe/attachment/surface/clock immutable; move, reattach, or loose event needs new session; old session no silent resume",
+  "continuous_card_prompts": [
+    "start recording",
+    "independent start clock check",
+    "independent end clock check + stop recording",
+    "probe integrity changes"
+  ],
+  "not_implemented": [
+    "USB/serial/vendor realtime driver",
+    "second TTO collector",
+    "device access",
+    "load execution",
+    "model refit",
+    "parameter/state update from external readings",
+    "control"
+  ],
+  "acceptance_status": {
+    "generic_software": "offline synthetic checks required",
+    "real_YET_CSV_mapping": "pending 1-2 minute user sample",
+    "field_measurement": "not performed",
+    "physical_mapping": "unverified"
+  },
+  "old_model_trajectory_and_results": "exact SHA unchanged; G2/QS/LP30/LP120 independent comparison only; M24C stays old M"
+}

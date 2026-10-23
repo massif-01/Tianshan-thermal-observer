@@ -1,0 +1,32 @@
+{
+  "input_path": "numeric_export",
+  "columns": {
+    "measured_at_raw": "instrument_datetime_iso",
+    "original_value": "temperature_raw"
+  },
+  "constants": {
+    "session_id": "yet610l-ch1-trial",
+    "original_unit": "C",
+    "original_channel": "CH1",
+    "synthetic": false,
+    "time_source": "instrument_csv_Date_plus_Time_preserved_no_timezone_or_offset",
+    "time_uncertainty_s": null
+  },
+  "time_axis": {
+    "mode": "timestamp",
+    "sample_interval_s": 1,
+    "interval_basis": "CSV Logging Summary + actual 2983 adjacent intervals checked below"
+  },
+  "csv": {
+    "encoding": "utf-8",
+    "delimiter": ","
+  },
+  "exported_at_raw": null,
+  "trial_adapter": {
+    "original_sha256": "53e9fe069055033ff9b32693ecbd623dbf85cb2b2bb2879d94edec60791f4584",
+    "original_header_line": 31,
+    "transform": "extract Data Table; combine Date+Time into ISO local datetime without timezone; retain all original data values and line map",
+    "file_created_at_raw": "2026/10/19 18:27:23",
+    "file_created_time_meaning": "instrument report field; actual USB export time unknown"
+  }
+}

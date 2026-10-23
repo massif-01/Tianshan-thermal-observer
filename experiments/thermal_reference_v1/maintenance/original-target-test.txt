@@ -1,0 +1,10 @@
+def test_two_dimensional_export_and_anchor_not_forecast(real):
+    _,_,_,states=real
+    long=jsonlines(ROOT/'results/states-A-long.jsonl')
+    checks=read(ROOT/'results/replay-checks.json')
+    assert all(c['max_abs_Tf_replay_error_C']<=1e-10 for c in checks)
+    assert all(r['Tf']==r['sealed_Tf'] for r in long)
+    assert sum(abs(r['Tf']-r['Ts'])>.5 for r in long)>.8*len(long)
+    assert all(s['Tf_is_observation_anchor'] and not s['parameter_learning'] for s in states)
+    assert all(s['evidence']['end']<=s['t']+1e-9 for s in states)
+    assert all(s['state_truth_available'] is False for s in states+long)

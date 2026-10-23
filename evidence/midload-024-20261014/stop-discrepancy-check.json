@@ -1,0 +1,26 @@
+{
+  "confirmed": [
+    "00:38:12.389 主板 fan auto_state=active、temp_stale=false、PWM=18",
+    "00:38:13.325 主板 temp valid=false、active_source=default、25°C、timestamp_ms=0",
+    "00:38:13.390 主板 fan auto_state=stale、temp_stale=true、temp_valid=false、PWM=25，fault/guard均false",
+    "00:38:13.519 Thor到TTO的流仍fresh=true、TJ=46.281°C，采样序号继续增长",
+    "本轮fan与temp HTTP errors均为0，异常两次请求分别约9.5ms和10.9ms",
+    "00:38:13.526 runner按卡停止；截至00:41:24.336单次回读主板温度与fan均已正常"
+  ],
+  "classification": "Historical board-reported invalid control-temperature source, not TTO HTTP timeout; not proof of actual temperature data age expiration",
+  "duration": "unknown; only one stale fan sample captured before collection shutdown; not evidence that anomaly lasted exactly one second",
+  "local_source_hypotheses": [
+    "当前本地源码中，非阻塞变量读取取不到锁也返回失败，温度选择可回退default，AUTO可置stale。此路径不等同于数据真正超龄。",
+    "当前本地源码也因last_update_ms无效、age<0、age超限、变量不存在或类型/数值不合法返回无效；现场日志不含具体分支原因。"
+  ],
+  "not_confirmed": [
+    "主板变量订阅为何在该时刻无效",
+    "是否锁竞争或真实超龄",
+    "本地源码是否与现场运行固件逐字一致",
+    "用户界面是否错过该帧及具体刷新周期"
+  ],
+  "TTO_source_evidence": "候选wheel collector.py:304-309 将HTTP回复json.loads后作为原payload落盘；health.py把temp无效、源变化或fan stale锁存为abnormal；trial.py据此停止",
+  "live_reads": "After original run closed, one bounded read each of /api/v1/temp/status and /api/v1/fan/status; no background poller or inference requests",
+  "production_changes": false,
+  "reruns": 0
+}

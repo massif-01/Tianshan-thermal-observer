@@ -1,0 +1,33 @@
+{
+  "metadata_tests_passed": 3,
+  "new_recorded_wire_rows": 27,
+  "original_thermal_origins": 60,
+  "exact_adapter_files": [
+    "frames.jsonl",
+    "thermal-origins.jsonl",
+    "registration.json",
+    "revocations.jsonl",
+    "source-query-diagnostics.jsonl"
+  ],
+  "equivalent_result_files": [
+    "joint/evaluate-stream/actual-arrived-activity_trace.jsonl",
+    "joint/evaluate-stream/actual-arrived-common.jsonl",
+    "joint/evaluate-stream/actual-arrived-coverage.jsonl",
+    "joint/evaluate-stream/actual-arrived-points.jsonl",
+    "joint/evaluate-stream/cadence-joint-common.json",
+    "joint/evaluate-stream/causal-1s-decimation-activity_trace.jsonl",
+    "joint/evaluate-stream/causal-1s-decimation-common.jsonl",
+    "joint/evaluate-stream/causal-1s-decimation-coverage.jsonl",
+    "joint/evaluate-stream/causal-1s-decimation-points.jsonl",
+    "joint/processor.jsonl",
+    "audit/CPU-counter-windows.jsonl",
+    "audit/audit.json"
+  ],
+  "maximum_derived_float_difference": 0.0,
+  "float_tolerance_C": 1e-08,
+  "old150_packets_used_as_new_run": false,
+  "model_fits": 0,
+  "device_access": false,
+  "capability_qualified": false,
+  "recommend_12_requests": false
+}

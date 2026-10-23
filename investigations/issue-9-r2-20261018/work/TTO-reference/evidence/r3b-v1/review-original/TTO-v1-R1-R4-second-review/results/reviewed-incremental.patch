@@ -1,0 +1,1449 @@
+--- a/PROGRESS.md
++++ b/PROGRESS.md
+@@ -13,3 +13,19 @@
+ - 授权边界持续遵守：旧仓库只读；无设备/服务/风扇/采样写入，无CUDA，无提交/推送。
+ 
+ 软件已完成，预测效果待真实数据。下一步只有用户部署后的180秒只读doctor与完整正常过程记录。
++
++## 2026-10-11 有限返修 TTO-REPAIR-v1.0（进行中）
++
++起点源码/wheel与独立复审候选一致；已保存完整未忽略工作树快照、Git状态/差异与逐源SHA于evidence/repair-v1/before，旧候选/报告不覆盖。原复审资料只读保留，不复制candidate覆盖项目。
++
++- R4：锁定aiohttp3.11.18原反例复现；局部TraceConfig在实际握手跳转前拒绝，真实loopback目标请求为0，正常协议回归通过。
++- R1：建立与消费split统一核对全部run接收UTC范围和连续过程分组；拒绝A-B-C-D-E-A，允许A-A-B-C-D-E，跨分区支持区间按UTC锚点purge。遗留数据集时间证据不足时明确拒绝并要求新派生路径。
++- R2：基线/M0/M1三层独立相同起点/标签比较；缺M1时M0层198个45秒起点仍可判断。三格式读同一分层结果，模拟结论保留。
++- R3：报告接实际保存的预测/评分，模型身份与缺项/降级/未评分关联；新增run类型和评分模型身份，兼容旧记录的预测身份关联。正在补齐交叉回归与干净wheel重跑。
++- 本轮仍无设备连接/部署/源服务/风扇/负载/CUDA/Git提交推送；测试仅loopback及自有进程信号。
++
++### 返修最终交付（2026-10-11）
++
++R1—R4均关闭。原0.1.0在完整锁定环境本轮重跑61项通过；0.1.1新wheel干净非editable安装，81项及原反例适配/三类报告/协议/信号全链路通过。最终身份与日志：evidence/repair-v1/delivery；早期final/release文件夹均为中间本机证据，不是正式交付。旧候选、split、model、test-used及原交付保留，全部新增数据为合成夹具。
++
++最终交付：TTO-v1-R1-R4返修与验证报告.md + deliverables/TTO-v1-R1-R4返修证据包.zip。没有真实访问/设备或源服务写入，没有提交/推送/PR。交回复审，不自行进入下一阶段。
+--- a/README.md
++++ b/README.md
+@@ -9,7 +9,7 @@
+ ```sh
+ python3.10 -m venv .venv
+ .venv/bin/python -m pip install -r requirements-locked.txt
+-.venv/bin/python -m pip install --no-deps wheels/tianshan_thermal_observer-0.1.0-py3-none-any.whl
++.venv/bin/python -m pip install --no-deps wheels/tianshan_thermal_observer-0.1.1-py3-none-any.whl
+ .venv/bin/tto doctor --config config/tto.example.json
+ .venv/bin/tto demo --output /tmp/tto-demo-NEW
+ ```
+@@ -68,3 +68,7 @@
+ 时间轴为本机接收时间近似；不是硬件采样时刻，源年龄不含未测网络在途时间。成功 PWM 是最后下发逻辑百分比，target_duty 和 RPM 不能替代它。功耗 rail 单独用 W，不相加为总功耗。没有铝体温度/热容识别，没有 GPU/CUDA/LLM，没有降低 PWM 或降噪收益结论。
+ 
+ 详细合同见 `docs/contracts.md`，所有 CLI/环境覆盖见 `docs/CLI使用卡.md`。验收、失败修正及现场待办见 `TTO-v1-实施与验证报告.md` 和 `PROGRESS.md`。
++
++## 0.1.1 有限返修
++
++R1—R4修复保留原架构与模型路线。跨run分组使用完整接收时间范围，非连续同名过程明确报冲突；分层评估分别比较B0/B1、B0/B1/M0、B0/B1/M0/M1；shadow报告读取当时已保存的预测/评分及模型身份；WebSocket实际握手在跳转前拒绝。原交付保留为历史起点，不作为本轮候选。详见`docs/R1-R4-repair-contract.md`和`TTO-v1-R1-R4返修与验证报告.md`。
+--- a/docs/CLI使用卡.md
++++ b/docs/CLI使用卡.md
+@@ -31,3 +31,7 @@
+ doctor无duration覆盖时用run.doctor_duration_s=180；collect/shadow用生效的default_duration_s。TEGRASTATS_*、.env、任意环境变量不参与TTO。凭据内容、完整环境及模型服务日志不进入manifest/HTML，错误只保留类名或不含选中值的配置解释。
+ 
+ 当前工作区可直接用 `.venv310/bin/tto`；转移到N305按README创建本机隔离环境并安装交付wheel，不依赖此绝对路径。依赖准备可使用本机wheelhouse；`scripts/reproduce_offline.py` 从已安装wheel运行，仅loopback测试，不连接设备，不运行tegrastats、SSH或服务管理工具。
++
++0.1.1返修：`split/train/evaluate`共同检查完整跨run时间/过程顺序；不连续复用过程名需确认，不能静默回训练。旧dataset缺时序锚点时明确拒绝严格未来留出，派生路径必须新建，真实测试使用状态不重置。
++
++`evaluate`输出基线/M0/M1三层同起点结果；`report --run`自动区分采集质量与已保存shadow。旁路统计不接收新模型参数，不重新计算历史预测；缺日志或尚无评分会明确提示。详见`R1-R4-repair-contract.md`。
+--- /dev/null
++++ b/docs/R1-R4-repair-contract.md
+@@ -0,0 +1,43 @@
++# TTO-REPAIR-v1.0：本轮合同补充
++
++软件0.1.1；原方案的只读、身份、新鲜度、成功PWM、特征、Ridge、时距、资源和隐私合同继续有效。原0.1.0交付保留为历史起点，不作为返修候选。
++
++## R4 实际握手
++
++锁定aiohttp3.11.18，不升级依赖。会话局部TraceConfig核对实际请求的origin/path/method，并在request_redirect信号处关闭3xx响应、抛出拒绝；信号发生于跟随Location之前。ws_connect不接收allow_redirects参数。原HTTP不跟随策略、TLS验证、Socket.IO心跳/重连、polling两个传输槽、ESP32单在途GET保留。测试的决定性证据是跨源及同源未授权路径目标请求数0，不以删掉header或事后报错代替。
++
++## R1 跨run顺序与分组
++
++新dataset在每个run记录观测文件中的first_utc/last_utc及first_mono_s锚点，核对接收UTC与本机单调历时一致（1秒校验容差，只用于跨run排序，不改变源TTL、测量年龄或特征时间轴）。不同run只通过各自锚点转换支持区间，不直接比较它们的单调时钟数值。UTC跳变/时间范围交错/缺时间证据明确拒绝跨run未来留出。
++
++freeze_split与check_split独立重建完整run顺序；不能相信传入的去重episodes_order。非连续同名A-B-C-D-E-A报出过程、run与时间范围并拒绝；相邻A-A允许同一已确认过程合组，不自动改名、删段或增加独立实验。跨分区在相邻完整run范围之间取时间边界，purge穿过边界的原始支持区间，保留单run、引用、源哈希隔离。
++
++旧dataset不含足够UTC锚点时，不能继续当严格时间清单使用。可从原始run在新目录生成派生产物；旧split/model/test-used不覆盖，真实已使用测试不能因此恢复未使用身份。本轮所有重复重建是明示合成软件夹具。单run --exploratory仍在本机单调时间上留隔离带，即便UTC跳变也能做“同一热过程时间外推”，不能冒充跨过程泛化。
++
++## R2 三层公平评估
++
++固定基线层B0/B1、M0层B0/B1/M0、M1层B0/B1/M0/M1。每层的15/45/90秒集合独立冻结为同一起点、同一未来标签；记录共同数、计划覆盖率、原始引用、过程、稳定/升温/回落/重新升温与高温诊断。高温诊断与趋势阶段可能重叠，不能相加为总点数。
++
++comparisons是JSON/Markdown/HTML与价值判断共同事实来源。主表三个时距全保留，45秒过程/阶段在可读表中展开；15/90秒的完整分组见JSON及HTML明细。旧same_origin字段继续保留为M1层兼容视图，不再用于阻挡M0判断。M0判断只用M0层内部对照，M1增量只用M1层内部对照，禁止跨层MAE比较。缺项/fallback及每方法全量覆盖继续保留。
++
++模拟、部署未确认、少于两个有效独立测试过程、困难阶段未覆盖和没有稳定收益都保留真实结论。M1不足不抹去M0证据；基线-only正常出报告。训练仍按原共同可训练起点、训练侧字段/缩放及验证45秒小网格合同执行；没有新插补、温度真值修改或超参扩张。
++
++## R3 实际旁路报告
++
++三类report_type：collect采集质量、holdout_evaluation离线分层留出、shadow已发生的旁路运行。新run manifest保存类型和当时模型SHA；新评分保存模型SHA，与预测身份/horizon/method一起关联。旧记录缺模型SHA时，可由唯一预测身份取得当时预测的模型SHA；不能加载当前模型回算。
++
++report/summarize读取本run已保存predictions.jsonl、scores.jsonl，实际已发/评分计数、MAE/RMSE/绝对误差P95/偏差/欠过预测、计划覆盖、实际方法、降级、缺项/跨段/未评分、原始与日志行引用均保留。日志缺失时未知数量是null及明确“缺日志”，不填0；存在但空评分日志表示已发预测尚未评分。日志身份冲突明示，不硬拼。
++
++collect质量可继续辅助诊断；它的回放基线不能冒充历史模型预测。旧run无类型时，可由实际预测中的模型身份识别shadow；日志移走则提示缺证据。新模型文件改变/移开不影响已有统计，report不回写原日志。
++
++旁路表现只描述该次在线观察，不是新的独立留出，不证明降低PWM。模拟标记始终保留；下一步随缺数据、缺日志、无模型、已评分状态变化。CLI只显示重点与报告路径，完整历史原始引用在自包含report.json/HTML中，不建设常驻页面。
++
++## 重跑
++
++安装0.1.1非editable wheel及原依赖锁后：
++
++```sh
++python scripts/reproduce_offline.py --output /tmp/tto-repair-check-NEW
++```
++
++入口包含完整原覆盖和新增回归、离线doctor、模拟采集—切分—训练—评估、真实loopback协议/自有进程信号、模拟Engine/Journal落盘—正式shadow报告及R1-R4原反例适配核对。模型价值仅在决策函数的明示测试副本设置非模拟分支；保存的评估及报告仍标模拟。
+--- a/docs/contracts.md
++++ b/docs/contracts.md
+@@ -43,3 +43,5 @@
+ 资源监测100%=一个逻辑核，记录RSS、CPU、峰值/P95、消息率、漏期、队列和丢弃。实时prediction_ms包含特征与记录写入，独立推理benchmark单列。当前主机模拟与N305预算分列，未测N305不预报通过。
+ 
+ 官方实现参考：[python-socketio](https://python-socketio.readthedocs.io/en/stable/client.html)、[aiohttp](https://docs.aiohttp.org/en/stable/client_reference.html)、[Ridge](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html)。版本以依赖锁与实际测试为准。
++
++2026-10-11：0.1.1返修后的跨run时间校验、三层共同集合及实际旁路报告，以`R1-R4-repair-contract.md`补充为准；其余冻结合同不变。旧四方法交集不再是所有价值判断的唯一入口。
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -3,7 +3,7 @@
+ build-backend = "setuptools.build_meta"
+ [project]
+ name = "tianshan-thermal-observer"
+-version = "0.1.0"
++version = "0.1.1"
+ description = "Read-only, CPU thermal recorder and causal short-term TJ observer"
+ requires-python = ">=3.10"
+ dependencies = ["python-socketio==5.13.0", "aiohttp==3.11.18", "psutil==7.0.0"]
+--- /dev/null
++++ b/scripts/package_repair_evidence.py
+@@ -0,0 +1,42 @@
++#!/usr/bin/env python3
++"""New repair candidate only; original candidate stays historical."""
++import argparse, hashlib, json, shutil, tempfile, zipfile
++from pathlib import Path
++
++def digest(path):
++    h=hashlib.sha256()
++    with path.open('rb') as f:
++        for b in iter(lambda:f.read(1024*1024),b''):h.update(b)
++    return h.hexdigest()
++
++def main():
++    parser=argparse.ArgumentParser();parser.add_argument('--output',required=True);args=parser.parse_args()
++    root=Path(__file__).resolve().parent.parent;output=Path(args.output).resolve();output.parent.mkdir(parents=True,exist_ok=True)
++    identity=json.loads((root/'evidence/repair-v1/delivery/identity.json').read_text());wheel=root/'wheels'/identity['wheel']
++    assert digest(wheel)==identity['wheel_sha256']
++    for name,h in identity['files'].items():assert digest(root/'src/tto'/name)==h,name
++    with tempfile.TemporaryDirectory(prefix='tto-repair-package-') as tmp:
++        base=Path(tmp)/'TTO-v1-R1-R4';base.mkdir()
++        def copy(name):
++            src=root/name;dst=base/name;dst.parent.mkdir(parents=True,exist_ok=True)
++            if src.is_dir():shutil.copytree(src,dst,ignore=shutil.ignore_patterns('__pycache__','*.pyc','.pytest_cache','*.egg-info'))
++            else:shutil.copy2(src,dst)
++        for name in ('src','tests','config/tto.example.json','templates/deployment-record.example.json','pyproject.toml','requirements-locked.txt','.gitignore','README.md','PROGRESS.md','TTO-v1-R1-R4返修与验证报告.md'):copy(Path(name))
++        for name in ('reproduce_offline.py','verify_signals.py','benchmark_offline.py','verify_r1_r4.py','package_repair_evidence.py'):copy(Path('scripts')/name)
++        for name in ('contracts.md','CLI使用卡.md','R1-R4-repair-contract.md','TTO-PLAN-v1.0.md'):copy(Path('docs')/name)
++        copy(wheel.relative_to(root));copy(Path('evidence/repair-v1/delivery'))
++        for name in ('identity.json','files-sha256.json','git-status.txt','tracked.diff','model-probes.json','model-probes.log','ws-redirect.json','ws-redirect.stderr','original61-tests.txt','junit-original61.xml','r4-failing-tests.txt'):copy(Path('evidence/repair-v1/before')/name)
++        for name in ('wheel-build-release.txt','install-release.txt','clean-dependencies.txt','release-replay.txt','r4-protocol-tests.txt','r1-model-tests.txt','r1-r2-tests-first.txt','full-tests-first.txt','markdown-render-check.json','markdown-format-before.txt','markdown-format-after.txt'):copy(Path('evidence/repair-v1/after')/name)
++        review=Path('evidence/repair-v1/review-original')
++        for name in ('TTO-v1-R1-R4有限修复-Codex执行指令.md','TTO-v1-全链路独立复审.md'):copy(review/name)
++        for name in ('README.md','scripts','results'):copy(review/'TTO-v1-review'/name)
++        for name in ('shadow-final.png','layered-final.png'):copy(Path('output/playwright/repair')/name)
++        for manifest in (base/'evidence/repair-v1/delivery').rglob('manifest.json'):assert json.loads(manifest.read_text()).get('simulated') is True
++        files={str(p.relative_to(base)):digest(p) for p in sorted(base.rglob('*')) if p.is_file()}
++        m={'schema_version':1,'repair_contract':'TTO-REPAIR-v1.0','version':identity['version'],'wheel_sha256':identity['wheel_sha256'],'test_count':81,'real_data_included':False,'original_candidate_binary_included':False,'replay':'python scripts/reproduce_offline.py --output NEW_DIRECTORY after non-editable wheel/dependency installation','files':files}
++        (base/'bundle-manifest.json').write_text(json.dumps(m,ensure_ascii=False,indent=2)+'\n');(base/'checksums.sha256').write_text(''.join(h+'  '+name+'\n' for name,h in files.items()))
++        with zipfile.ZipFile(output,'x',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
++            for p in sorted(base.rglob('*')):
++                if p.is_file():z.write(p,str(p.relative_to(base.parent)))
++    print(json.dumps({'output':str(output),'sha256':digest(output),'bytes':output.stat().st_size},ensure_ascii=False))
++if __name__=='__main__':main()
+--- a/scripts/reproduce_offline.py
++++ b/scripts/reproduce_offline.py
+@@ -48,6 +48,7 @@
+     run([sys.executable, str(package / 'scripts/verify_signals.py'), '--output', str(output / 'signals')], output, output / 'signals.txt', env)
+     run([sys.executable, str(package / 'scripts/benchmark_offline.py'), '--model', str(output / 'demo/model-simulation.json'), '--dataset', str(output / 'demo/frozen/dataset.json'), '--output', str(output / 'benchmark.json')], output, output / 'benchmark.txt', guarded)
+     run([sys.executable, '-m', 'tto', 'train', '--dataset', str(output / 'demo/frozen/dataset.json'), '--split', str(output / 'demo/frozen/split.json'), '--output', str(output / 'model-via-cli.json')], output, output / 'train.txt', guarded)
++    run([sys.executable, str(package / 'scripts/verify_r1_r4.py'), '--output', str(output / 'repair-probes')], output, output / 'repair-probes.txt', guarded)
+     write_json(output / 'verification.json', {'passed': True, 'package_import_path': str(location), 'offline': True, 'network_scope': 'loopback_fixture_only', 'real_devices': False, 'prediction_effectiveness_verified': False})
+     print(json.dumps({'passed': True, 'output': str(output), 'prediction_effectiveness': '待真实数据'}, ensure_ascii=False))
+ 
+--- /dev/null
++++ b/scripts/verify_r1_r4.py
+@@ -0,0 +1,131 @@
++#!/usr/bin/env python3
++"""Repair-only production-path probes. Synthetic objects + owned loopback servers.
++Original reviewer scripts are retained separately; this is their labelled adaptation
++for the repaired rejection paths and layered-decision/report contract.
++"""
++import argparse
++import asyncio
++import copy
++import json
++from pathlib import Path
++from aiohttp import web
++import aiohttp
++from tto.demo import record_demo
++from tto.dataset import freeze_split, build_dataset, load_dataset, check_split
++from tto.training import train
++from tto.evaluation import evaluate, value_conclusion
++from tto.model import load_model
++from tto.engine import Engine
++from tto.storage import Journal
++from tto.report import summarize
++from tto.cli import main as cli_main
++from tto.config import load_config
++from tto.collector import sessions
++from tto.util import read_json, write_json, seal, file_hash
++
++
++async def redirects(cross_origin):
++    seen=[];runners=[]
++    async def target(request):
++        seen.append({'path':request.path,'header':request.headers.get('X-TTO-Test')})
++        ws=web.WebSocketResponse();await ws.prepare(request);await ws.close();return ws
++    async def start(app):
++        r=web.AppRunner(app);await r.setup();runners.append(r)
++        site=web.TCPSite(r,'127.0.0.1',0);await site.start()
++        return f'http://127.0.0.1:{site._server.sockets[0].getsockname()[1]}'
++    target_url=None
++    async def redirect(request):raise web.HTTPFound(target_url)
++    try:
++        app=web.Application();app.router.add_get('/socket.io/',redirect);app.router.add_get('/api/v1/fan/status',redirect);app.router.add_get('/not-authorized',target)
++        origin=await start(app)
++        if cross_origin:
++            other=web.Application();other.router.add_get('/not-authorized',target);target_url=await start(other)+'/not-authorized'
++        else:target_url=origin+'/not-authorized'
++        c=load_config(environ={});c['orin']['base_url']=c['tianshan']['base_url']=origin
++        async with sessions(c,'orin',socketio=True) as session:
++            try:
++                await session.ws_connect(origin+'/socket.io/?EIO=4&transport=websocket',headers={'X-TTO-Test':'nonsecret-fixture'})
++                raise AssertionError('redirect was accepted')
++            except ValueError as e:assert 'redirect' in str(e)
++        assert session.closed and seen==[]
++        async with sessions(c,'tianshan') as session:
++            try:
++                await session.get(origin+'/api/v1/fan/status');raise AssertionError('GET redirect was accepted')
++            except ValueError:pass
++        assert session.closed and seen==[]
++        return {'cross_origin':cross_origin,'target_request_count':len(seen),'session_closed':session.closed,'aiohttp':aiohttp.__version__}
++    finally:
++        for r in reversed(runners):await r.cleanup()
++
++
++def verify(root):
++    root=Path(root);root.mkdir(parents=True,exist_ok=False)
++    runs=record_demo(root/'base-runs',count=5,seconds=720)
++    frozen=freeze_split(runs,root/'frozen')
++    base_model=train(frozen/'dataset.json',frozen/'split.json',root/'base-model.json')
++    d,s=load_dataset(frozen/'dataset.json'),read_json(frozen/'split.json')
++    ids=set(s['partitions']['test']);field=next(c for c in base_model['methods']['ridge_full']['columns'] if c.startswith('vdd_'))
++    for r in d['rows']:
++        if r['id'] in ids:
++            for c in list(r['features']):
++                if c==field or c.startswith(field+'_mean_'):r['features'][c]=None
++    d.pop('sha256');d=seal(d);s.pop('sha256');s['dataset_sha256']=d['sha256'];s=seal(s)
++    missing=root/'missing-m1';missing.mkdir();write_json(missing/'dataset.json',d);write_json(missing/'split.json',s)
++    model=train(missing/'dataset.json',missing/'split.json',missing/'model.json')
++    assert model['methods']==base_model['methods']
++    ev=evaluate(missing/'dataset.json',missing/'split.json',missing/'model.json',missing/'evaluation')
++    assert ev['comparisons']['m0']['horizons']['45']['matched_count']==198
++    assert ev['comparisons']['m1']['horizons']['45']['matched_count']==0
++    unit_data=copy.deepcopy(d);unit_data['simulated']=False
++    for r in unit_data['runs']:r['deployment_status']='user_recorded_not_independently_verified'
++    decision=value_conclusion(unit_data,s,[r for r in d['rows'] if r['id'] in ids],ev['comparisons'])
++    assert 'M0有初步价值' in decision
++    r2={'synthetic_only':True,'unchanged_training_methods':True,'missing_field':field,'matched_counts_45s':{k:v['horizons']['45']['matched_count'] for k,v in ev['comparisons'].items()},'decision_function_only_with_explicit_unit_flags':decision,'persisted_evaluation_conclusion':ev['conclusion']}
++    chrono=record_demo(root/'chrono-runs',count=6,seconds=400)
++    for i,path in enumerate(chrono):
++        ep='A' if i in (0,5) else chr(ord('A')+i)
++        m=read_json(path/'manifest.json');m.update(episode=ep,started_at_utc=f'2026-01-{i+1:02d}T00:00:00+00:00');(path/'manifest.json').write_text(json.dumps(m))
++        for file in path.glob('observations-*'):
++            records=[dict(json.loads(l),episode=ep) for l in file.read_text().splitlines()];file.write_text(''.join(json.dumps(r)+'\n' for r in records))
++    try:
++        freeze_split(chrono,root/'invalid-creation');raise AssertionError('non-contiguous grouping accepted')
++    except ValueError as e:creation=str(e);assert '非连续' in creation
++    bad_data=build_dataset(chrono);mapping=dict(A='train',B='train',C='validation',D='test',E='test')
++    bad_split=seal({'schema_version':1,'dataset_sha256':bad_data['sha256'],'sources':bad_data['sources'],'scope':'chronological_episodes','episodes_order':list('ABCDE'),'partitions':{p:[r['id'] for r in bad_data['rows'] if mapping[r['episode']]==p] for p in ('train','validation','test')}})
++    try:
++        check_split(bad_data,bad_split);raise AssertionError('old bad partition accepted')
++    except ValueError as e:validation=str(e);assert '非连续' in validation
++    r1={'synthetic_only':True,'sequence':'A-B-C-D-E-A','creation_rejected':creation,'direct_validation_rejected':validation}
++    # Same 400-second Engine/Journal path as the original reviewer.
++    config=read_json(chrono[1]/'manifest.json')['config'];j=Journal(config,root/'shadow-runs',simulated=True,episode='shadow-fixture',run_type='shadow',model_sha256=base_model['sha256']);e=Engine(config,base_model)
++    pn=sn=0
++    for file in sorted(chrono[1].glob('observations-*')):
++        for line in file.read_text().splitlines():
++            out=e.process(j.observation(json.loads(line)))
++            if out['prediction']:
++                j.append('predictions',out['prediction']);pn+=int('ridge_full' in out['prediction']['values'])
++            for score in out['scores']:
++                j.append('scores',score);sn+=int('ridge_full' in score.get('errors',{}))
++    for score in e.invalidate('run_end'):j.append('scores',score)
++    j.close({'stop_reason':'synthetic_completed'})
++    hashes={name:file_hash(j.path/name) for name in ('predictions.jsonl','scores.jsonl')}
++    assert cli_main(['report','--run',str(j.path),'--output',str(root/'shadow-report')])==0
++    before=summarize(j.path);group=before['recorded_results']['models'][base_model['sha256']]
++    report_scores=sum(data['methods']['ridge_full']['scored'] for data in group['horizons'].values())
++    assert pn==44 and sn==102 and report_scores==sn
++    model_file=root/'base-model.json';backup=model_file.read_bytes();model_file.write_text('{"later_model":true}')
++    assert summarize(j.path)==before;model_file.unlink();assert summarize(j.path)==before;model_file.write_bytes(backup)
++    assert hashes=={name:file_hash(j.path/name) for name in hashes}
++    for name in hashes:(j.path/name).rename(j.path/(name+'.removed-test-copy'))
++    after=summarize(j.path);assert after!=before and len(after['missing_required_logs'])==2
++    # Restore original fixture bytes for independent report replay.
++    for name in hashes:(j.path/(name+'.removed-test-copy')).rename(j.path/name)
++    r3={'synthetic_only':True,'stored_full_model_predictions':pn,'stored_full_model_scores':sn,'report_full_model_scores':report_scores,'changed_model_file_did_not_change_statistics':True,'log_removal_reported':after['missing_required_logs'],'prediction_and_score_logs_unchanged':True,'shadow_run':str(j.path.relative_to(root))}
++    r4=[asyncio.run(redirects(cross)) for cross in (True,False)]
++    findings={'R1':r1,'R2':r2,'R3':r3,'R4':r4,'hardware_executed':False}
++    write_json(root/'findings.json',findings)
++    print(json.dumps(findings,ensure_ascii=False,indent=2))
++
++
++if __name__=='__main__':
++    p=argparse.ArgumentParser();p.add_argument('--output',required=True);a=p.parse_args();verify(a.output)
+--- a/src/tto/__init__.py
++++ b/src/tto/__init__.py
+@@ -1,2 +1,2 @@
+ """Importing TTO performs no I/O, networking or training-library imports."""
+-__version__ = "0.1.0"
++__version__ = "0.1.1"
+--- a/src/tto/cli.py
++++ b/src/tto/cli.py
+@@ -104,7 +104,7 @@
+         if model_error:
+             print(model_error, flush=True)
+         from .collector import collect
+-        path, stats = asyncio.run(collect(c, duration, model=model, episode=args.episode, deployment=deployment))
++        path, stats = asyncio.run(collect(c, duration, model=model, episode=args.episode, deployment=deployment, run_type=args.command))
+         from .report import summarize
+         result = summarize(path)
+         result['run'] = str(path)
+@@ -115,10 +115,13 @@
+         return result
+     if args.command == 'summarize':
+         from .report import summarize
+-        return summarize(args.run)
++        result = summarize(args.run)
++        result['recorded_results'] = {k:v for k,v in result['recorded_results'].items() if k not in ('prediction_references','scored_records')}
++        return result
+     if args.command == 'report':
+         from .report import run_report
+-        return run_report(args.run, args.output)
++        result = run_report(args.run, args.output)
++        return {'output': args.output, 'report_type': result['report_type'], 'conclusion': result['conclusion'], 'next_step': result['next_step'], 'missing_required_logs': result['missing_required_logs'], 'recorded_origins': result['recorded_results']['issued_prediction_origins']}
+     if args.command == 'split':
+         from .dataset import freeze_split
+         return {'output': str(freeze_split(args.runs, args.output, args.exploratory))}
+--- a/src/tto/collector.py
++++ b/src/tto/collector.py
+@@ -91,8 +91,18 @@
+ 
+     class RestrictedSession:
+         def __init__(self):
++            # _ws_connect performs its own session.request; intercept the actual
++            # handshake, including the redirect branch before a second request.
++            trace = aiohttp.TraceConfig()
++            async def check_start(session, context, params):
++                check_request(origin, params.url, params.method, socketio)
++            async def reject_redirect(session, context, params):
++                params.response.close()
++                raise ValueError('redirects are forbidden')
++            trace.on_request_start.append(check_start)
++            trace.on_request_redirect.append(reject_redirect)
+             connector = aiohttp.TCPConnector(ssl=tls_context(c, section), limit=2 if socketio else 1, enable_cleanup_closed=True)
+-            self._session = aiohttp.ClientSession(connector=connector, response_class=LimitedResponse, timeout=aiohttp.ClientTimeout(total=c['network']['request_timeout_s'], connect=c['network']['connect_timeout_s']), trust_env=False, read_bufsize=16384)
++            self._session = aiohttp.ClientSession(connector=connector, response_class=LimitedResponse, timeout=aiohttp.ClientTimeout(total=c['network']['request_timeout_s'], connect=c['network']['connect_timeout_s']), trust_env=False, read_bufsize=16384, trace_configs=[trace])
+ 
+         @property
+         def closed(self):
+@@ -135,11 +145,11 @@
+ 
+ 
+ 
+-async def collect(config, duration, model=None, data_root=None, episode=None, deployment=None):
++async def collect(config, duration, model=None, data_root=None, episode=None, deployment=None, run_type=None):
+     require_live(config, duration)
+     # No networking is constructed until this explicitly live function is called.
+     with InstanceLock():
+-        journal = Journal(config, data_root, episode=episode, deployment=deployment)
++        journal = Journal(config, data_root, episode=episode, deployment=deployment, run_type=run_type or ('shadow' if model else 'collect'), model_sha256=model['sha256'] if model else None)
+         engine = Engine(config, model)
+         q = BoundedQueue(config['storage']['queue_max_items'], config['storage']['queue_max_bytes'])
+         stop = asyncio.Event()
+--- a/src/tto/dataset.py
++++ b/src/tto/dataset.py
+@@ -1,5 +1,6 @@
+ """Replays preserved observations through the production causal processor."""
+ from pathlib import Path
++from datetime import datetime, timezone
+ from .config import load_config
+ from .engine import Engine
+ from .util import file_hash, read_json, seal, verify_seal, write_json
+@@ -22,6 +23,8 @@
+     engine.retain_origins = True
+     scores, accepted, times = [], [], []
+     invalid_segments = set()
++    clock = None
++    clock_consistent = True
+     sources = {}
+     expected = 0
+     for path in sorted(run.glob('observations-*.jsonl')):
+@@ -37,6 +40,15 @@
+                 if times and r['mono_s'] < times[-1]:
+                     raise ValueError('run monotonic clock changed: split run required')
+                 times.append(r['mono_s'])
++                try:
++                    wall = utc_seconds(r['received_at_utc'])
++                    if clock is None:
++                        clock = {'first_mono_s': r['mono_s'], 'first_utc': r['received_at_utc'], 'last_utc': r['received_at_utc']}
++                    elif abs(wall - utc_seconds(clock['first_utc']) - (r['mono_s'] - clock['first_mono_s'])) > 1:
++                        clock_consistent = False
++                    clock['last_utc'] = r['received_at_utc']
++                except (ValueError, TypeError, KeyError):
++                    clock_consistent = False
+                 out = engine.process(r)
+                 scores.extend(out['scores'])
+                 if out['quality'] and out['quality'].get('invalidated_segment') is not None:
+@@ -60,7 +72,8 @@
+             if s.get('status') == 'scored' and row['segment'] not in invalid_segments:
+                 row['labels'][str(h)] = {'value': s['truth'], 'ref': s['label_ref'], 't': s['label_t'], 'offset_s': s['offset_s']}
+         rows.append(row)
+-    return {'manifest': manifest, 'rows': rows, 'quality': dict(engine.q.counts), 'processing': dict(engine.counts), 'source_files': sources, 'accepted_refs': accepted}
++    time_evidence = dict(clock, clock_consistent=clock_consistent, basis='observer_receive_utc_with_run_monotonic_anchor') if clock else None
++    return {'manifest': manifest, 'time_evidence': time_evidence, 'rows': rows, 'quality': dict(engine.q.counts), 'processing': dict(engine.counts), 'source_files': sources, 'accepted_refs': accepted}
+ 
+ 
+ def build_dataset(runs):
+@@ -72,7 +85,7 @@
+         if m['observer_run_id'] in sources:
+             raise ValueError('duplicate run')
+         sources[m['observer_run_id']] = result['source_files']
+-        manifests.append({k: m.get(k) for k in ('observer_run_id', 'episode', 'episode_evidence', 'simulated', 'started_at_utc', 'deployment_status', 'source_period_ms')})
++        manifests.append(dict({k: m.get(k) for k in ('observer_run_id', 'episode', 'episode_evidence', 'simulated', 'started_at_utc', 'deployment_status', 'source_period_ms')}, time_evidence=result['time_evidence']))
+         periods.add(m['source_period_ms'])
+         all_rows.extend(result['rows'])
+     if len(periods) != 1 or None in periods:
+@@ -92,17 +105,62 @@
+     return d
+ 
+ 
++def utc_seconds(value):
++    stamp = datetime.fromisoformat(value.replace('Z', '+00:00'))
++    if stamp.utcoffset() is None:
++        raise ValueError('UTC evidence must contain a timezone')
++    return stamp.timestamp()
++
++
++def chronological_runs(d):
++    """Use every run's actual receive range, never first-occurrence name order."""
++    ordered = []
++    for run in d['runs']:
++        clock = run.get('time_evidence')
++        if not clock:
++            raise ValueError(f"时间证据不足：run {run['observer_run_id']} 缺少稳定的接收UTC范围；从原记录在新路径重建，不重置已使用测试记录。")
++        if not clock['clock_consistent']:
++            raise ValueError(f"时间证据冲突：run {run['observer_run_id']} 接收UTC与单调历时不一致；请核对时钟，不用它证明跨run未来留出。")
++        start, end = utc_seconds(clock['first_utc']), utc_seconds(clock['last_utc'])
++        if end < start:
++            raise ValueError('run receive time range is reversed')
++        ordered.append((start, end, run))
++    ordered.sort(key=lambda x: (x[0], x[1]))
++    episodes, first_run = [], {}
++    previous = None
++    for start, end, run in ordered:
++        ep = run['episode']
++        if previous and start <= previous[1]:
++            raise ValueError(f"跨run时间范围交错：{previous[2]['observer_run_id']} [{previous[2]['time_evidence']['first_utc']}, {previous[2]['time_evidence']['last_utc']}] 与 {run['observer_run_id']} [{run['time_evidence']['first_utc']}, {run['time_evidence']['last_utc']}]；请确认时间和分组。")
++        if not episodes or episodes[-1] != ep:
++            if ep in first_run:
++                old = first_run[ep]
++                raise ValueError(f"非连续过程分组冲突：episode {ep}，run {old['observer_run_id']} [{old['time_evidence']['first_utc']}, {old['time_evidence']['last_utc']}] 后又出现 run {run['observer_run_id']} [{run['time_evidence']['first_utc']}, {run['time_evidence']['last_utc']}]；请确认分组，不自动改名或删段。")
++            episodes.append(ep)
++            first_run[ep] = run
++        previous = (start, end, run)
++    return ordered, episodes
++
++
++def wall_support(row, runs):
++    clock = runs[row['run_id']]['time_evidence']
++    anchor = utc_seconds(clock['first_utc']) - clock['first_mono_s']
++    return anchor + row['support_start'], anchor + row['support_end']
++
++
+ def freeze_split(runs, output, exploratory=False):
+     out = Path(output)
+     out.mkdir(parents=True, exist_ok=False)
+     d = build_dataset(runs)
+     rows = d['rows']
+     episodes = []
+-    for m in sorted(d['runs'], key=lambda x: x['started_at_utc']):
++    if exploratory and len(d['runs']) == 1:
++        ordered, episodes = [], [d['runs'][0]['episode']]
++    else:
++        ordered, episodes = chronological_runs(d)
++    for _, _, m in ordered:
+         if not m.get('episode_evidence') and not d['simulated'] and not exploratory:
+             raise ValueError('episode independence unknown: provide --episode during recording, or use --exploratory')
+-        if m['episode'] not in episodes:
+-            episodes.append(m['episode'])
+     mapping = {}
+     scope = 'chronological_episodes'
+     if len(episodes) >= 3:
+@@ -128,6 +186,14 @@
+                 mapping[r['id']] = 'test'
+     else:
+         raise ValueError('至少需要三段可分配过程；单过程仅支持显式 --exploratory 时间外推。')
++    if scope == 'chronological_episodes':
++        run_map = {r['observer_run_id']: r for r in d['runs']}
++        episode_part = {r['episode']: mapping[r['id']] for r in rows}
++        cuts = [(previous[1] + following[0]) / 2 for previous, following in zip(ordered, ordered[1:]) if episode_part.get(previous[2]['episode']) != episode_part.get(following[2]['episode'])]
++        for r in rows:
++            start, end = wall_support(r, run_map)
++            if any(start <= cut <= end for cut in cuts):
++                mapping.pop(r['id'], None)
+     discarded = [{'id': r['id'], 'reason': 'purge_support_crosses_partition'} for r in rows if r['id'] not in mapping]
+     split = seal({'schema_version': 1, 'dataset_sha256': d['sha256'], 'scope': scope, 'simulated': d['simulated'], 'independence': 'simulated' if d['simulated'] else ('operator_named_episodes' if not exploratory else 'unconfirmed'), 'partitions': {p: [r['id'] for r in rows if mapping.get(r['id']) == p] for p in ('train', 'validation', 'test')}, 'discarded': discarded, 'sources': d['sources'], 'episodes_order': episodes, 'reference_contract': 'TTO-PLAN-v1.0', 'test_use_policy': 'one sealed evaluation; any tuning afterwards needs new unused test processes'})
+     check_split(d, split)
+@@ -163,8 +229,21 @@
+             for groups in intervals.values():
+                 if a in groups and b in groups and max(x[1] for x in groups[a]) >= min(x[0] for x in groups[b]):
+                     raise ValueError('raw temporal support overlap or nonchronological split')
+-    # Whole episodes must be ordered, not arbitrarily interleaved across runs.
+-    order = s['episodes_order']
++    # Reconstruct order independently of the supplied (possibly old) split list.
++    if s['scope'] == 'same_thermal_process_time_extrapolation':
++        if len(d['runs']) != 1:
++            raise ValueError('single-process exploratory scope requires exactly one run')
++        ordered, order = [], [d['runs'][0]['episode']]
++    elif s['scope'] == 'chronological_episodes':
++        ordered, order = chronological_runs(d)
++    else:
++        raise ValueError('unsupported split scope')
++    if s['episodes_order'] != order:
++        raise ValueError('episode order does not match complete run chronology')
++    run_map = {r['observer_run_id']: r for r in d['runs']}
++    for r in d['rows']:
++        if r['run_id'] not in run_map or r['episode'] != run_map[r['run_id']]['episode']:
++            raise ValueError('row episode differs from its run grouping')
+     episode_parts = {}
+     for part, ids in s['partitions'].items():
+         for id_ in ids:
+@@ -172,7 +251,11 @@
+     if s['scope'] == 'chronological_episodes':
+         if any(len(p) != 1 for p in episode_parts.values()):
+             raise ValueError('episode split across partitions')
+-        sequence = [parts.index(next(iter(episode_parts[e]))) for e in order if e in episode_parts]
++        sequence = [parts.index(next(iter(episode_parts[r['episode']]))) for _, _, r in ordered if r['episode'] in episode_parts]
+         if sequence != sorted(sequence):
+             raise ValueError('episodes not chronological')
++        global_support = {part: [wall_support(byid[id_], run_map) for id_ in s['partitions'][part]] for part in parts}
++        for earlier, later in zip(parts, parts[1:]):
++            if max(end for _, end in global_support[earlier]) >= min(start for start, _ in global_support[later]):
++                raise ValueError('cross-run raw temporal support overlap or nonchronological split')
+     return byid
+--- a/src/tto/engine.py
++++ b/src/tto/engine.py
+@@ -36,7 +36,7 @@
+         self.features.clear()
+         self.has_cooled = False
+         self.last_prediction = None
+-        out = [dict(prediction_id=p['id'], horizon_s=h, status='cross_segment', reason=reason) for p in self.pending for h in p['waiting']]
++        out = [dict(prediction_id=p['id'], model_sha256=p['model_sha256'], horizon_s=h, status='cross_segment', reason=reason) for p in self.pending for h in p['waiting']]
+         self.pending.clear()
+         return out
+ 
+@@ -45,7 +45,7 @@
+         for p in self.pending:
+             for h in list(p['waiting']):
+                 if now > p['origin']['t'] + h + self.tolerance:
+-                    out.append(dict(prediction_id=p['id'], horizon_s=h, status='no_future_label', reason='deadline'))
++                    out.append(dict(prediction_id=p['id'], model_sha256=p['model_sha256'], horizon_s=h, status='no_future_label', reason='deadline'))
+                     p['waiting'].remove(h)
+         self.pending = [p for p in self.pending if p['waiting']]
+         return out
+@@ -111,7 +111,7 @@
+                 target = p['origin']['t'] + h
+                 if target <= t <= target + self.tolerance:
+                     status = 'scored' if normal and p['origin']['normal_auto'] else 'abnormal_scope'
+-                    row = {'prediction_id': p['id'], 'horizon_s': h, 'status': status, 'label_ref': r['ref'], 'label_t': t, 'target_t': target, 'offset_s': t - target, 'truth': v['tj']}
++                    row = {'prediction_id': p['id'], 'model_sha256': p['model_sha256'], 'horizon_s': h, 'status': status, 'label_ref': r['ref'], 'label_t': t, 'target_t': target, 'offset_s': t - target, 'truth': v['tj']}
+                     if status == 'scored':
+                         row['errors'] = {name: values[str(h)] - v['tj'] for name, values in p['values'].items()}
+                     result['scores'].append(row)
+@@ -158,7 +158,7 @@
+         diagnostic = self.fan['data'].get('predicted_temperature') if normal and self.fan else None
+         prediction = {'id': f"{r['observer_run_id']}:{self.pred_seq}", 'origin': origin, 'model_sha256': self.model['sha256'] if self.model else None, 'values': methods, 'actual_method': actual, 'fallback': actual != 'ridge_full', 'unavailable': reasons, 'outside_training_range': outside, 'firmware_45s_diagnostic': diagnostic if finite(diagnostic) else None}
+         result['prediction'] = prediction
+-        self.pending.append({'id': prediction['id'], 'origin': origin, 'values': methods, 'waiting': list(HORIZONS)})
++        self.pending.append({'id': prediction['id'], 'model_sha256': prediction['model_sha256'], 'origin': origin, 'values': methods, 'waiting': list(HORIZONS)})
+         if len(self.pending) > 20:
+             raise ValueError('pending scoring queue exceeded bound')
+         if self.retain_origins:
+--- a/src/tto/evaluation.py
++++ b/src/tto/evaluation.py
+@@ -38,27 +38,73 @@
+     return {'time_pooled': metrics([p['error'] for p in points]), 'time_weighted': weighted, 'episodes': per, 'episode_equal_macro': macro}
+ 
+ 
+-def value_conclusion(d, s, rows, common_tables, intersection, points):
++LAYERS = {'baseline': ('persist', 'trend30'), 'm0': ('persist', 'trend30', 'ridge_tj'), 'm1': METHODS}
++PHASES = ('stable', 'warming', 'cooling', 'rewarming', 'higher_temperature')
++
++
++def comparison_layers(rows, points):
++    """Three nested same-origin, same-label cohorts; never compare across cohorts."""
++    layers = {}
++    for layer_name, methods in LAYERS.items():
++        horizons = {}
++        for h in HORIZONS:
++            key = str(h)
++            sets = [{p['id'] for p in points[key][m]} for m in methods]
++            ids = set.intersection(*sets)
++            selected = {m: [p for p in points[key][m] if p['id'] in ids] for m in methods}
++            for m in methods:
++                for p in selected[m]:
++                    p.setdefault('comparison_layers', []).append(layer_name)
++            phase_metrics = {}
++            for phase in PHASES:
++                subset = {m: [p for p in selected[m] if p['high_temperature']] for m in methods} if phase == 'higher_temperature' else {m: [p for p in selected[m] if p['phase'] == phase] for m in methods}
++                phase_metrics[phase] = {'matched_count': len(subset[methods[0]]), 'metrics': {m: group_metrics(v) for m,v in subset.items()}}
++            horizons[key] = {'planned_count': len(rows), 'matched_count': len(ids), 'coverage_fraction': len(ids)/len(rows) if rows else None, 'origin_ids': sorted(ids), 'metrics': {m: group_metrics(v) for m,v in selected.items()}, 'active_metrics': {m: group_metrics([p for p in v if p['phase'] != 'stable']) for m,v in selected.items()}, 'phase_diagnostics': phase_metrics, 'episodes': {e: {'planned_count': sum(r['episode']==e for r in rows), 'matched_count': sum(p['episode']==e for p in selected[methods[0]])} for e in sorted({r['episode'] for r in rows})}}
++        layers[layer_name] = {'methods': list(methods), 'horizons': horizons}
++    return layers
++
++
++def layer_judgements(d, s, rows, comparisons):
++    precondition = None
++    if d['simulated']:
++        precondition = '模拟演示：本层只验证计算，真实价值待数据。'
++    elif any(r['deployment_status'] == 'deployment_unverified' for r in d['runs']):
++        precondition = '证据不足：最终部署身份未核对。'
++    elif s['scope'] != 'chronological_episodes' or len({r['episode'] for r in rows}) < 2:
++        precondition = '证据不足：缺少足够未使用的独立测试过程。'
++    out = {'baseline': {'status': 'descriptive', 'message': '基线层使用B0/B1共同起点；只在本层内比较。'}}
++    for layer, target, baselines in (('m0','ridge_tj',('persist','trend30')),('m1','ridge_full',('persist','trend30','ridge_tj'))):
++        data = comparisons[layer]['horizons']['45']
++        metrics_ = data['metrics']
++        if precondition:
++            out[layer] = {'status': 'simulation' if d['simulated'] else 'evidence_insufficient', 'message': precondition}
++            continue
++        if data['matched_count'] == 0 or len(metrics_[target]['episodes']) < 2:
++            out[layer] = {'status': 'evidence_insufficient', 'message': f'证据不足：{layer.upper()}层缺少共同可评分起点或两个独立测试过程。'}
++            continue
++        active = data['active_metrics']
++        if any(active[m]['time_pooled']['n'] == 0 for m in (target, *baselines)):
++            out[layer] = {'status': 'evidence_insufficient', 'message': f'证据不足：{layer.upper()}层未覆盖升温或回落，不能以待机证明新增价值。'}
++            continue
++        mae = {m: metrics_[m]['episode_equal_macro']['mae'] for m in (target,*baselines)}
++        wins = sum(all(ep['mae'] < metrics_[m]['episodes'][e]['mae'] for m in baselines) for e,ep in metrics_[target]['episodes'].items())
++        better = mae[target] < min(mae[m] for m in baselines) and wins >= 2 and active[target]['time_pooled']['mae'] < min(active[m]['time_pooled']['mae'] for m in baselines)
++        out[layer] = {'status': 'initial_value' if better else 'not_proven', 'message': f'{layer.upper()}在本层有初步新增价值；覆盖代价与欠预测风险仍需核对。' if better else f'暂未证明{layer.upper()}在本层稳定增加价值；不自动扩大搜索。'}
++    return out
++
++
++def value_conclusion(d, s, rows, comparisons):
+     if d['simulated']:
+         return '模拟演示：仅验证软件正确性，不代表实机收益。'
+-    if any(r['deployment_status'] == 'deployment_unverified' for r in d['runs']):
+-        return '证据不足：最终部署身份未核对；本次只作探索性预测比较。'
+-    if s['scope'] != 'chronological_episodes' or not intersection['45'] or len({r['episode'] for r in rows}) < 2:
+-        return '证据不足：缺少足够未使用的独立测试过程或共同可评分起点。'
+-    active = {m: [p['error'] for p in points['45'][m] if p['common'] and p['phase'] != 'stable'] for m in METHODS}
+-    if not all(active.values()):
+-        return '证据不足：共同测试起点尚未覆盖升温或回落，不能用待机成绩证明新增价值。'
+-    macro = common_tables['45']
+-    vals = {m: macro[m]['episode_equal_macro']['mae'] for m in METHODS}
+-    active_mae = {m: metrics(v)['mae'] for m, v in active.items()}
+-    def wins(name, baselines):
+-        per = macro[name]['episodes']
+-        return sum(all(per[e]['mae'] < macro[m]['episodes'][e]['mae'] for m in baselines) for e in per)
+-    if vals['ridge_full'] < min(vals[m] for m in ('persist', 'trend30', 'ridge_tj')) and wins('ridge_full', ('persist', 'trend30', 'ridge_tj')) >= 2 and active_mae['ridge_full'] < min(active_mae[m] for m in ('persist', 'trend30', 'ridge_tj')):
+-        return '有初步新增价值；覆盖代价与欠预测风险仍需人工核对。'
+-    if vals['ridge_tj'] < min(vals[m] for m in ('persist', 'trend30')) and wins('ridge_tj', ('persist', 'trend30')) >= 2 and active_mae['ridge_tj'] < min(active_mae[m] for m in ('persist', 'trend30')):
+-        return '只证明小模型有初步价值，未证明更多输入有用。'
+-    return '暂未证明稳定新增价值；保留采集和基线，不自动扩大搜索。'
++    judgements = layer_judgements(d,s,rows,comparisons)
++    if judgements['m1']['status'] == 'initial_value':
++        return '有初步新增价值：M1层内比较胜出；覆盖代价与欠预测风险仍需人工核对。'
++    if judgements['m0']['status'] == 'initial_value':
++        return '小模型M0有初步价值（M0层内对照）；M1尚未证明更多输入有用：' + judgements['m1']['message']
++    if judgements['m0']['status'] == 'not_proven':
++        return judgements['m0']['message'] + ' ' + judgements['m1']['message']
++    baseline = comparisons['baseline']['horizons']['45']['matched_count']
++    return ('基线层已有可读结果；' if baseline else '') + judgements['m0']['message'] + ' ' + judgements['m1']['message']
+ 
+ 
+ def evaluate(dataset_path, split_path, model_path, output):
+@@ -77,6 +123,7 @@
+     predictions, points = [], {str(h): {m: [] for m in METHODS} for h in HORIZONS}
+     intersection = {str(h): [] for h in HORIZONS}
+     availability_by_origin = {}
++    unavailable = {}
+     for r in rows:
+         values = dict(r['baseline_values'])
+         reasons = {}
+@@ -90,6 +137,7 @@
+             else:
+                 reasons[name] = 'model_or_normal_scope_unavailable'
+         availability_by_origin[r['id']] = set(values)
++        unavailable[r['id']] = {'ref': r['ref'], 'method_reasons': reasons}
+         for h in HORIZONS:
+             k = str(h)
+             label = r['labels'].get(k)
+@@ -137,8 +185,10 @@
+             grouped.setdefault(f"{r['run_id']}:{int(r['t'] // 300)}", []).append(r)
+         time_coverage[k] = {b: {m: subset_coverage(group, h, m) for m in METHODS} for b, group in grouped.items()}
+     ranked = sorted(predictions, key=lambda p: abs(p['error']))
+-    conclusion = value_conclusion(d, s, rows, common_tables, intersection, points)
+-    result = seal({'schema_version': 1, 'simulated': d['simulated'], 'conclusion': conclusion, 'time_axis_note': '接收时间近似，不是硬件采样时刻；未测网络延迟不解释为热滞后。', 'dataset_sha256': d['sha256'], 'split_sha256': s['sha256'], 'model_sha256': model['sha256'] if model else None, 'coverage': {k: {m: dict(v) for m, v in group.items()} for k, group in coverage.items()}, 'episode_coverage': episode_coverage, 'time_coverage': time_coverage, 'all_available_metrics': tables, 'same_origin_intersection_count': {k: len(v) for k, v in intersection.items()}, 'same_origin_metrics': common_tables, 'phase_diagnostics': phases, 'time_bin_diagnostics': time_groups, 'success_examples': ranked[:3], 'worst_examples': ranked[-3:], 'abnormal_origins': sum(not r['normal_auto'] for r in rows), 'firmware_trend_note': '45秒固件趋势仅作诊断，不作训练标签，不判断可减少PWM。', 'firmware_45s_diagnostics': [{'id': r['id'], 'origin_ref': r['ref'], 'prediction': r['firmware_45s_diagnostic'], 'truth': r['labels']['45']['value'], 'error': r['firmware_45s_diagnostic'] - r['labels']['45']['value']} for r in rows if r['normal_auto'] and finite(r['firmware_45s_diagnostic']) and '45' in r['labels']], 'deployment_provenance': d['runs'], 'no_confidence_percentage': True})
++    comparisons = comparison_layers(rows, points)
++    judgements = layer_judgements(d, s, rows, comparisons)
++    conclusion = value_conclusion(d, s, rows, comparisons)
++    result = seal({'schema_version': 1, 'report_type': 'holdout_evaluation', 'comparison_contract': 'TTO-REPAIR-v1.0-layered-v1', 'comparisons': comparisons, 'comparison_judgements': judgements, 'unavailable_methods': unavailable, 'simulated': d['simulated'], 'conclusion': conclusion, 'time_axis_note': '接收时间近似，不是硬件采样时刻；未测网络延迟不解释为热滞后。', 'dataset_sha256': d['sha256'], 'split_sha256': s['sha256'], 'model_sha256': model['sha256'] if model else None, 'coverage': {k: {m: dict(v) for m, v in group.items()} for k, group in coverage.items()}, 'episode_coverage': episode_coverage, 'time_coverage': time_coverage, 'all_available_metrics': tables, 'same_origin_intersection_count': {k: len(v) for k, v in intersection.items()}, 'same_origin_metrics': common_tables, 'phase_diagnostics': phases, 'time_bin_diagnostics': time_groups, 'success_examples': ranked[:3], 'worst_examples': ranked[-3:], 'abnormal_origins': sum(not r['normal_auto'] for r in rows), 'firmware_trend_note': '45秒固件趋势仅作诊断，不作训练标签，不判断可减少PWM。', 'firmware_45s_diagnostics': [{'id': r['id'], 'origin_ref': r['ref'], 'prediction': r['firmware_45s_diagnostic'], 'truth': r['labels']['45']['value'], 'error': r['firmware_45s_diagnostic'] - r['labels']['45']['value']} for r in rows if r['normal_auto'] and finite(r['firmware_45s_diagnostic']) and '45' in r['labels']], 'deployment_provenance': d['runs'], 'no_confidence_percentage': True})
+     write_json(out / 'evaluation.json', result)
+     with (out / 'predictions.jsonl').open('x') as f:
+         from .util import canonical
+--- /dev/null
++++ b/src/tto/recorded.py
+@@ -0,0 +1,106 @@
++"""Historical prediction/score facts only. Never loads or runs a model."""
++import json
++from collections import Counter
++from pathlib import Path
++from .evaluation import METHODS, group_metrics
++from .model import HORIZONS
++from .util import file_hash, finite
++
++
++def recorded_results(run, manifest):
++    run = Path(run)
++    logs, issues = {}, []
++    def read_log(name):
++        path = run / name
++        logs[name] = {'present': path.is_file(), 'sha256': file_hash(path) if path.is_file() else None, 'record_count': None}
++        if not path.is_file():
++            return []
++        rows = []
++        with path.open() as f:
++            for index, line in enumerate(f, 1):
++                ref = f'{name}:{index}'
++                try:
++                    row = json.loads(line)
++                    if not isinstance(row, dict):
++                        raise ValueError('record is not an object')
++                    rows.append((ref, row))
++                except ValueError:
++                    issues.append({'record_ref': ref, 'reason': 'invalid_JSON_record'})
++        logs[name]['record_count'] = len(rows)
++        return rows
++    predictions = {}
++    for ref, p in read_log('predictions.jsonl'):
++        if p.get('id') in predictions:
++            issues.append({'record_ref': ref, 'reason': 'duplicate_prediction_identity'})
++            continue
++        if not isinstance(p.get('id'), str) or p.get('origin', {}).get('run_id') != manifest['observer_run_id']:
++            issues.append({'record_ref': ref, 'reason': 'prediction_run_identity_mismatch'})
++            continue
++        predictions[p['id']] = (ref, p)
++    scores = {}
++    for ref, score in read_log('scores.jsonl'):
++        key = (score.get('prediction_id'), score.get('horizon_s'))
++        if key[0] not in predictions or key[1] not in HORIZONS:
++            issues.append({'record_ref': ref, 'reason': 'unmatched_prediction_or_horizon'})
++            continue
++        _, prediction = predictions[key[0]]
++        if 'model_sha256' in score and score['model_sha256'] != prediction.get('model_sha256'):
++            issues.append({'record_ref': ref, 'reason': 'score_model_identity_mismatch'})
++            continue
++        if key in scores:
++            issues.append({'record_ref': ref, 'reason': 'duplicate_terminal_score'})
++            continue
++        scores[key] = (ref, score)
++    models, points, origins = {}, [], {}
++    for id_, (prediction_ref, p) in predictions.items():
++        model = p.get('model_sha256')
++        key = model or 'baseline_no_model'
++        group = models.setdefault(key, {'model_sha256': model, 'prediction_origins': 0, 'actual_methods': Counter(), 'fallback_origins': 0, 'unavailable_method_reasons': {m:Counter() for m in METHODS}, 'horizons': {str(h): {'issued_origins':0,'scored_origins':0,'unscored_reasons':Counter(),'methods':{m:{'issued':0,'scored':0,'unscored_reasons':Counter()} for m in METHODS}} for h in HORIZONS}})
++        group['prediction_origins'] += 1
++        group['actual_methods'][p.get('actual_method','unknown')] += 1
++        group['fallback_origins'] += int(p.get('fallback') is True)
++        for method,reason in p.get('unavailable',{}).items():
++            if method in METHODS:
++                group['unavailable_method_reasons'][method][reason] += 1
++        origin = p['origin']
++        origins[id_] = {'prediction_record_ref':prediction_ref,'origin_ref':origin['ref'],'raw_refs':origin.get('raw_refs',[]),'model_sha256':model,'actual_method':p.get('actual_method'),'origin_t':origin['t']}
++        for h in HORIZONS:
++            hk = str(h); counts = group['horizons'][hk]; counts['issued_origins'] += 1
++            score_ref, score = scores.get((id_,h), (None,{}))
++            status = score.get('status','no_terminal_score_yet')
++            scored_methods = 0
++            for method in METHODS:
++                predicted = p.get('values',{}).get(method,{}).get(hk)
++                if not finite(predicted):
++                    continue
++                mc = counts['methods'][method]; mc['issued'] += 1
++                error = score.get('errors',{}).get(method)
++                if status != 'scored' or not finite(error) or not finite(score.get('truth')):
++                    reason = status if status != 'scored' else 'method_score_missing'
++                    mc['unscored_reasons'][reason] += 1
++                    continue
++                if abs((predicted-score['truth'])-error)>1e-9:
++                    issues.append({'record_ref':score_ref,'reason':'saved_error_disagrees_with_saved_prediction','method':method})
++                    mc['unscored_reasons']['inconsistent_saved_score'] += 1
++                    continue
++                mc['scored'] += 1; scored_methods += 1
++                points.append({'id':id_,'episode':origin['episode'],'run_id':origin['run_id'],'segment':origin['segment'],'origin_t':origin['t'],'target_t':origin['t']+h,'label_t':score['label_t'],'label_ref':score['label_ref'],'origin_ref':origin['ref'],'prediction_record_ref':prediction_ref,'score_record_ref':score_ref,'horizon_s':h,'method':method,'actual_method':p.get('actual_method'),'model_sha256':model,'prediction':predicted,'truth':score['truth'],'error':error,'phase':origin['phase'],'high_temperature':origin['high_temperature']})
++            if scored_methods:
++                counts['scored_origins'] += 1
++            else:
++                counts['unscored_reasons'][status if status!='scored' else 'method_score_missing'] += 1
++    for key, group in models.items():
++        for h, counts in group['horizons'].items():
++            for method, mc in counts['methods'].items():
++                matching = [p for p in points if (p['model_sha256'] or 'baseline_no_model')==key and p['horizon_s']==int(h) and p['method']==method]
++                mc['output_fraction'] = mc['issued']/counts['issued_origins'] if counts['issued_origins'] else None
++                mc['coverage_fraction'] = mc['scored']/counts['issued_origins'] if counts['issued_origins'] else None
++                mc['score_fraction_of_issued'] = mc['scored']/mc['issued'] if mc['issued'] else None
++                mc['metrics'] = group_metrics(matching)
++                if not logs['scores.jsonl']['present']:
++                    mc['scored'] = mc['coverage_fraction'] = mc['score_fraction_of_issued'] = None
++                    mc['metrics'] = {'time_pooled': {'n': None, 'status': 'evidence_missing'}, 'episode_equal_macro': {'status': 'evidence_missing'}, 'episodes': {}, 'time_weighted': {'status': 'evidence_missing'}}
++            if not logs['scores.jsonl']['present']:
++                counts['scored_origins'] = None
++    missing = [name for name,details in logs.items() if not details['present']]
++    return {'source':'persisted_predictions_and_scores','logs':logs,'missing_logs':missing,'log_evidence_complete':not missing and not issues,'issues':issues,'models':models,'issued_prediction_origins':len(predictions) if logs['predictions.jsonl']['present'] else None,'terminal_score_records':logs['scores.jsonl']['record_count'],'matched_terminal_score_records':len(scores),'scored_method_horizon_records':len(points) if all(v['present'] for v in logs.values()) else None,'prediction_references':origins,'scored_records':points}, points
+--- a/src/tto/report.py
++++ b/src/tto/report.py
+@@ -5,8 +5,9 @@
+ from .dataset import replay
+ from .evaluation import percentile
+ from .util import read_json, write_json
++from .recorded import recorded_results
+ 
+-STYLE = 'body{font-family:system-ui,sans-serif;max-width:1120px;margin:36px auto;padding:0 22px;color:#223029;background:#f6f8f5;line-height:1.7}h1,h2{line-height:1.3}.notice{padding:18px;background:#fff0c9;border-left:5px solid #b36c05}table{border-collapse:collapse;width:100%;background:white}td,th{border:1px solid #d4ddd6;padding:8px;text-align:left}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#eaf0eb;padding:18px}svg{width:100%;height:auto;background:white}.good{color:#146944}details{margin:16px 0}'
++STYLE = 'body{font-family:system-ui,sans-serif;max-width:1120px;margin:36px auto;padding:0 22px;color:#223029;background:#f6f8f5;line-height:1.7}h1,h2{line-height:1.3}.notice{padding:18px;background:#fff0c9;border-left:5px solid #b36c05}table{border-collapse:collapse;width:100%;background:white}td,th{border:1px solid #d4ddd6;padding:8px;text-align:left;overflow-wrap:anywhere}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#eaf0eb;padding:18px}svg{width:100%;height:auto;background:white}.good{color:#146944}details{margin:16px 0}'
+ 
+ 
+ def html_page(title, body):
+@@ -35,18 +36,82 @@
+     differences = [{'origin_ref': r['ref'], 't': r['t'], 'fan_ref': r['fan_diagnostics']['ref'], 'fan_age_s': r['fan_diagnostics']['fan_return_age_s'], 'tj_minus_control_c': r['features']['tj'] - r['fan_diagnostics']['control_temperature']} for r in rows if r.get('fan_diagnostics') and isinstance(r['fan_diagnostics'].get('control_temperature'), (int, float))]
+     source_usable = q.get('new_samples', 0) > 0
+     conclusion = '模拟演示：软件贯通，不代表实机连接或预测收益。' if m['simulated'] else ('软件可用，预测效果待验证。' if source_usable else '数据暂不可用，预测已暂停；核对端点、身份和新鲜度。')
+-    return {'schema_version': 1, 'simulated': m['simulated'], 'conclusion': conclusion, 'deployment_status': m['deployment_status'], 'connection_reliable': 'simulation_only' if m['simulated'] else ('needs_review' if any(q.get(k, 0) for k in ('identity_conflict', 'sequence_regression', 'unsupported_schema', 'stale_or_missing_tj')) or summary.get('dropped') else ('observed_samples_only' if source_usable else 'unavailable')), 'quality': q, 'new_samples': q.get('new_samples', 0), 'duplicate_received': q.get('duplicate', 0), 'origin_count': len(rows), 'normal_auto_origins': normal, 'warm_origins': sum(r['history_ready'] for r in rows), 'label_counts': {str(h): sum(str(h) in r['labels'] for r in rows) for h in (15, 45, 90)}, 'episode': m['episode'], 'episode_evidence': m.get('episode_evidence'), 'independent_episode_count': 'unknown_until_operator_groups_complete_processes', 'availability': availability, 'resource': resource, 'host_scope': 'current_host_only_not_N305', 'poll_missed': summary.get('poll_missed'), 'dropped': summary.get('dropped'), 'observation_rate_hz': summary.get('observations', 0) / summary['elapsed_s'] if summary.get('elapsed_s') else None, 'orin_event_rate_hz': summary.get('orin_event_count', 0) / summary['elapsed_s'] if summary.get('elapsed_s') else None, 'business_payload_bytes': {'maximum': summary.get('business_payload_bytes_max'), 'mean': summary.get('business_payload_bytes_sum', 0) / summary['orin_event_count'] if summary.get('orin_event_count') else None}, 'asynchronous_control_temperature_differences': {'count': len(differences), 'max_absolute_c': max(abs(x['tj_minus_control_c']) for x in differences) if differences else None, 'first': differences[0] if differences else None, 'last': differences[-1] if differences else None, 'note': '异步量化与绑定路径有差别；不据此自动判错误或改绑。'}, 'source_status': result['processing'], 'stop_reason': summary.get('stop_reason'), 'next_step': '由用户填写本机端点并运行180秒只读doctor；确认最终部署身份后，记录正常完整热过程。', 'time_axis_note': '接收时间近似；源年龄是下界，不含未测网络在途时间。'}
++    report = {'schema_version': 1, 'simulated': m['simulated'], 'conclusion': conclusion, 'deployment_status': m['deployment_status'], 'connection_reliable': 'simulation_only' if m['simulated'] else ('needs_review' if any(q.get(k, 0) for k in ('identity_conflict', 'sequence_regression', 'unsupported_schema', 'stale_or_missing_tj')) or summary.get('dropped') else ('observed_samples_only' if source_usable else 'unavailable')), 'quality': q, 'new_samples': q.get('new_samples', 0), 'duplicate_received': q.get('duplicate', 0), 'origin_count': len(rows), 'normal_auto_origins': normal, 'warm_origins': sum(r['history_ready'] for r in rows), 'label_counts': {str(h): sum(str(h) in r['labels'] for r in rows) for h in (15, 45, 90)}, 'episode': m['episode'], 'episode_evidence': m.get('episode_evidence'), 'independent_episode_count': 'unknown_until_operator_groups_complete_processes', 'availability': availability, 'resource': resource, 'host_scope': 'current_host_only_not_N305', 'poll_missed': summary.get('poll_missed'), 'dropped': summary.get('dropped'), 'observation_rate_hz': summary.get('observations', 0) / summary['elapsed_s'] if summary.get('elapsed_s') else None, 'orin_event_rate_hz': summary.get('orin_event_count', 0) / summary['elapsed_s'] if summary.get('elapsed_s') else None, 'business_payload_bytes': {'maximum': summary.get('business_payload_bytes_max'), 'mean': summary.get('business_payload_bytes_sum', 0) / summary['orin_event_count'] if summary.get('orin_event_count') else None}, 'asynchronous_control_temperature_differences': {'count': len(differences), 'max_absolute_c': max(abs(x['tj_minus_control_c']) for x in differences) if differences else None, 'first': differences[0] if differences else None, 'last': differences[-1] if differences else None, 'note': '异步量化与绑定路径有差别；不据此自动判错误或改绑。'}, 'source_status': result['processing'], 'stop_reason': summary.get('stop_reason'), 'next_step': '由用户填写本机端点并运行180秒只读doctor；确认最终部署身份后，记录正常完整热过程。', 'time_axis_note': '接收时间近似；源年龄是下界，不含未测网络在途时间。'}
++    recorded, _ = recorded_results(run, m)
++    shadow = m.get('report_type') == 'shadow' or m.get('model_sha256') is not None or any(v['model_sha256'] is not None for v in recorded['models'].values())
++    report['report_type'] = 'shadow' if shadow else 'collect'
++    report['recorded_results'] = recorded
++    required_missing = recorded['missing_logs'] if rows or recorded['issued_prediction_origins'] else []
++    report['missing_required_logs'] = required_missing
++    prefix = '模拟旁路：' if m['simulated'] else '本次旁路：'
++    if shadow:
++        report['known_model_sha256'] = m.get('model_sha256')
++        if required_missing or recorded['issues']:
++            report['conclusion'] = prefix + '证据缺失或无法关联：' + ', '.join(required_missing or sorted({x['reason'] for x in recorded['issues']})) + '；不能完整评价当时预测。'
++            report['next_step'] = '保留现有记录并找回对应日志；不加载新模型回算历史预测。'
++        elif not recorded['issued_prediction_origins']:
++            report['conclusion'] = prefix + '未产生有效预测记录。'
++            report['next_step'] = '核对有效新TJ、正常AUTO资格和预热状态；本次没有模型效果成绩。'
++        elif not recorded['scored_method_horizon_records']:
++            report['conclusion'] = prefix + '已有已发预测，但尚未能评分；原因和等待状态见实际记录。'
++            report['next_step'] = '查看未评分原因；若记录仍在进行，等待本轮未来标签，不改写已发预测。'
++        elif not any(any(counts['methods'][method]['issued'] for counts in group['horizons'].values() for method in ('ridge_tj','ridge_full')) for group in recorded['models'].values()):
++            report['conclusion'] = prefix + '本次只有基线，尚无可用模型输出；已保存基线评分。'
++            report['next_step'] = '检查本地冻结模型与已保存缺项/预热原因；现有基线记录可继续复核。'
++        else:
++            report['conclusion'] = prefix + '已读取当时保存的模型预测与事后评分；这是该次在线观察，不是新独立留出验证。'
++            report['next_step'] = '查看实际误差、覆盖和降级片段，再决定是否保留该冻结模型；不能据此降低PWM。'
++        if m['simulated']:
++            report['conclusion'] += ' 模拟记录仅验证软件，真实预测效果待数据。'
++    else:
++        if required_missing:
++            report['conclusion'] += ' 预测/评分证据缺失：' + ', '.join(required_missing) + '。'
++            report['next_step'] = '保留记录并找回缺失日志；质量回放不代表历史预测已经完整。'
++        elif source_usable:
++            report['next_step'] = '按完整使用过程确认分组，在新路径冻结合法切分并做离线时间留出评估。'
++    return report
++
++
++def shadow_table_rows(recorded):
++    rows = []
++    for key, group in recorded['models'].items():
++        for h, data in group['horizons'].items():
++            for method, counts in data['methods'].items():
++                if not counts['issued']:
++                    continue
++                pooled = counts['metrics']['time_pooled']
++                val = lambda field: f"{pooled[field]:.4f}" if field in pooled else '未能评分'
++                rows.append([key[:12]+'…' if group['model_sha256'] else '无模型基线', h, method, data['issued_origins'], counts['issued'], counts['scored'] if counts['scored'] is not None else '缺评分日志', f"{counts['coverage_fraction']:.1%}" if counts['coverage_fraction'] is not None else '缺评分证据', val('mae'),val('rmse'),val('under_p95'),val('under_max'),val('over_p95'),val('over_max')])
++    return rows
+ 
+ 
+ def run_report(run, output):
+-    out = Path(output)
+-    out.mkdir(parents=True, exist_ok=False)
+-    r = summarize(run)
+-    write_json(out / 'report.json', r)
+-    md = f"# TTO 记录报告\n\n{r['conclusion']}\n\n连接：{r['connection_reliable']}。部署：{r['deployment_status']}。\n\n有效新测量 {r['new_samples']}；重复接收 {r['duplicate_received']}；预测起点 {r['origin_count']}；正常 AUTO 起点 {r['normal_auto_origins']}。\n\n预测效果：待真实时间隔离评估。\n\n下一步：{r['next_step']}\n\n{r['time_axis_note']}\n\n资源只代表当前运行主机，目标 N305 待测。技术明细见 report.json。\n"
+-    (out / 'report.md').write_text(md, encoding='utf-8')
+-    body = '<p class="notice">' + html.escape(r['conclusion']) + '</p><h2>连接与数据</h2>' + table(['项目', '结果'], [('连接', r['connection_reliable']), ('部署核对', r['deployment_status']), ('有效新测量', r['new_samples']), ('重复缓存', r['duplicate_received']), ('正常AUTO起点', r['normal_auto_origins'])]) + '<h2>预测效果</h2><p>待真实时间隔离评估。采集成功不代表模型有价值。</p><h2>下一步</h2><p>' + html.escape(r['next_step']) + '</p><details><summary>数据质量、覆盖和资源明细</summary><pre>' + html.escape(json.dumps(r, ensure_ascii=False, indent=2)) + '</pre></details>'
+-    (out / 'report.html').write_text(html_page('TTO 模拟记录报告' if r['simulated'] else 'TTO 记录报告', body), encoding='utf-8')
++    out = Path(output); out.mkdir(parents=True, exist_ok=False)
++    r = summarize(run); write_json(out/'report.json',r)
++    shadow = r['report_type']=='shadow'
++    title = ('TTO 模拟旁路运行报告' if r['simulated'] else 'TTO 实际旁路运行报告') if shadow else ('TTO 模拟采集报告' if r['simulated'] else 'TTO 采集质量报告')
++    md = '# '+title+'\n\n'+r['conclusion']+'\n\n下一步：'+r['next_step']+'\n\n'+r['time_axis_note']+'\n\n'
++    body = '<p class="notice">'+html.escape(r['conclusion'])+'</p><h2>下一步</h2><p>'+html.escape(r['next_step'])+'</p><p>'+html.escape(r['time_axis_note'])+'</p>'
++    connection_labels = {'simulation_only':'仅模拟，未连接设备','needs_review':'有质量缺口，请查看明细','observed_samples_only':'已收到新测量，完整可靠性仍需核对','unavailable':'暂无有效测量'}
++    deployment_labels = {'deployment_unverified':'现场部署未核对','user_recorded_not_independently_verified':'用户已登记，尚未独立核对'}
++    quality_rows = [('连接',connection_labels.get(r['connection_reliable'],'状态待核对，见明细')),('部署核对',deployment_labels.get(r['deployment_status'],'状态待核对，见明细')),('有效新测量',r['new_samples']),('重复缓存',r['duplicate_received']),('正常AUTO起点',r['normal_auto_origins'])]
++    body += '<h2>采集质量</h2>'+table(['项目','结果'],quality_rows)
++    md += '## 采集质量\n\n'+markdown_table(['项目','结果'],quality_rows)+'\n'
++    if shadow:
++        headers = ['当时模型SHA/基线','时距s','实际输出方法','计划起点','已发','可评分','计划起点评分率','MAE C','RMSE C','欠预测P95 C','欠预测最大 C','过预测P95 C','过预测最大 C']
++        rows = shadow_table_rows(r['recorded_results'])
++        message = '数值来自本run的predictions.jsonl与scores.jsonl，按预测身份/时距/方法/模型关联；未加载当前模型重算。每方法覆盖单列，不拿不同集合的MAE判断优劣。'
++        body += '<h2>当时实际发出的预测与评分</h2><p>'+html.escape(message)+'</p>'+table(headers,rows)
++        md += '## 当时实际发出的预测与评分\n\n'+message+'\n\n'+markdown_table(headers,rows)+'\n'
++        fallback = {key: {'model_sha256':g['model_sha256'],'actual_methods':g['actual_methods'],'fallback_origins':g['fallback_origins'],'unavailable_method_reasons':g['unavailable_method_reasons'],'unscored':{h:data['unscored_reasons'] for h,data in g['horizons'].items()}} for key,g in r['recorded_results']['models'].items()}
++        body += '<h2>实际方法、降级与未评分原因</h2><pre>'+html.escape(json.dumps(fallback,ensure_ascii=False,indent=2))+'</pre>'+plot_predictions(r['recorded_results']['scored_records'])
++        md += '## 实际方法、降级与未评分原因\n\n```json\n'+json.dumps(fallback,ensure_ascii=False,indent=2)+'\n```\n\n模型身份及每次预测/评分/原始观测引用见report.json；图按目标时刻对齐。\n'
++    else:
++        body += '<h2>模型价值</h2><p>本页是采集质量报告；模型价值使用独立的分层时间留出评估报告。</p>'
++        md += '本页是采集质量报告；模型价值使用独立的分层时间留出评估报告。\n'
++    body += '<details><summary>完整保存记录统计、原始引用及资源</summary><pre>'+html.escape(json.dumps(r,ensure_ascii=False,indent=2))+'</pre></details>'
++    (out/'report.html').write_text(html_page(title,body),encoding='utf-8')
++    (out/'report.md').write_text(md,encoding='utf-8')
+     return r
+ 
+ 
+@@ -80,17 +145,41 @@
+     return svg
+ 
+ 
++def comparison_table_rows(layer):
++    rows = []
++    for h in ('15', '45', '90'):
++        data = layer['horizons'][h]
++        for name, m in data['metrics'].items():
++            macro = m['episode_equal_macro']
++            number = lambda key: f"{macro[key]:.4f}" if key in macro else '未覆盖'
++            rows.append([h, name, data['planned_count'], data['matched_count'], f"{data['coverage_fraction']:.1%}" if data['coverage_fraction'] is not None else '未覆盖', number('mae'), number('under_p95'), number('under_max')])
++    return rows
++
++
++def markdown_table(headers, rows):
++    escape = lambda x: str(x).replace('|', '\\|').replace('\n', ' ')
++    return '|'+'|'.join(headers)+'|\n|'+'|'.join('---' for _ in headers)+'|\n'+''.join('|'+'|'.join(escape(x) for x in row)+'|\n' for row in rows)
++
++
+ def evaluation_report(result, points, out):
+     out = Path(out)
+-    rows = []
+-    for h in ('15', '45', '90'):
+-        for name, m in result['same_origin_metrics'][h].items():
+-            macro = m['episode_equal_macro']
+-            rows.append([h, name, m['time_pooled']['n'], f"{macro.get('mae', float('nan')):.4f}", f"{macro.get('under_p95', float('nan')):.4f}", f"{macro.get('under_max', float('nan')):.4f}"])
+     title = 'TTO 模拟评估报告' if result['simulated'] else 'TTO 时间隔离评估报告'
+-    body = '<p class="notice">' + html.escape(result['conclusion']) + '</p><p>' + html.escape(result['time_axis_note']) + '</p><h2>相同起点、相同标签的比较</h2>' + table(['时距s', '方法', '可评分', 'episode等权MAE°C', '欠预测P95°C', '欠预测最大值宏平均°C'], rows) + '<h2>45秒片段：预测按目标时刻对齐</h2>' + plot_predictions(points) + '<p>这是局部片段；完整数值、覆盖率、最差反例和原始引用在JSON中。</p><details><summary>完整评估证据</summary><pre>' + html.escape(json.dumps(result, ensure_ascii=False, indent=2)) + '</pre></details><p>预测准确性不证明能够降低PWM；没有控制输出。</p>'
+-    (out / 'report.html').write_text(html_page(title, body), encoding='utf-8')
+-    md = '# ' + title + '\n\n' + result['conclusion'] + '\n\n' + result['time_axis_note'] + '\n\n|时距s|方法|共同评分数|宏平均MAE C|欠预测P95 C|欠预测最大宏平均 C|\n|---|---|---|---|---|---|\n'
+-    md += ''.join('|' + '|'.join(map(str, row)) + '|\n' for row in rows)
+-    md += '\n全量、每过程、相同起点、覆盖率、阶段诊断、成功与最差片段、原始引用见 evaluation.json；逐次预测见 predictions.jsonl。\n\n固件趋势仅作诊断。相邻行不视为独立实验，没有置信百分比，没有降噪或调速结论。\n'
+-    (out / 'report.md').write_text(md, encoding='utf-8')
++    note = '每层内部使用相同起点、相同标签；不同层MAE不能直接比较模型优劣。M1缺项不阻挡M0层。'
++    body = '<p class="notice">'+html.escape(result['conclusion'])+'</p><p>'+html.escape(note)+'</p><p>'+html.escape(result['time_axis_note'])+'</p>'
++    md = '# '+title+'\n\n'+result['conclusion']+'\n\n'+note+'\n\n'+result['time_axis_note']+'\n\n'
++    headers = ['时距s','方法','计划起点','共同评分','覆盖率','episode等权MAE C','欠预测P95 C','欠预测最大宏平均 C']
++    for key,label in (('baseline','基线层 B0/B1'),('m0','M0层 B0/B1/M0'),('m1','M1层 B0/B1/M0/M1')):
++        rows = comparison_table_rows(result['comparisons'][key])
++        message = result['comparison_judgements'][key]['message']
++        body += '<h2>'+html.escape(label)+'</h2><p>'+html.escape(message)+'</p>'+table(headers,rows)
++        md += '## '+label+'\n\n'+message+'\n\n'+markdown_table(headers,rows)+'\n'
++        primary = result['comparisons'][key]['horizons']['45']
++        episode_rows = [[ep, method, counts['planned_count'], counts['matched_count'], f"{primary['metrics'][method]['episodes'][ep]['mae']:.4f}" if ep in primary['metrics'][method]['episodes'] else '未覆盖'] for ep,counts in primary['episodes'].items() for method in result['comparisons'][key]['methods']]
++        phase_rows = [[phase, method, facts['matched_count'], f"{facts['metrics'][method]['time_pooled']['mae']:.4f}" if facts['metrics'][method]['time_pooled']['n'] else '未覆盖'] for phase,facts in primary['phase_diagnostics'].items() for method in result['comparisons'][key]['methods']]
++        body += '<h3>45秒：各过程</h3>'+table(['过程','方法','计划','共同评分','MAE C'],episode_rows)+'<h3>45秒：各阶段</h3>'+table(['阶段','方法','共同评分','MAE C'],phase_rows)
++        md += '### 45秒：各过程\n\n'+markdown_table(['过程','方法','计划','共同评分','MAE C'],episode_rows)+'\n### 45秒：各阶段\n\n'+markdown_table(['阶段','方法','共同评分','MAE C'],phase_rows)+'\n'
++
++    body += '<h2>45秒片段：预测按目标时刻对齐</h2>'+plot_predictions(points)+'<p>局部片段只展示预测，正式优劣使用上方分层共同集合。</p><details><summary>过程、阶段、覆盖、缺项与完整证据</summary><pre>'+html.escape(json.dumps(result,ensure_ascii=False,indent=2))+'</pre></details><p>预测准确性不证明能够降低PWM；没有控制输出。</p>'
++    (out/'report.html').write_text(html_page(title,body),encoding='utf-8')
++    md += '每层的过程/阶段明细、全量方法覆盖与不可用原因见evaluation.json；逐次原始引用见predictions.jsonl。固件趋势仅作诊断。相邻行不是独立实验，没有置信百分比或调速结论。\n'
++    (out/'report.md').write_text(md,encoding='utf-8')
+--- a/src/tto/storage.py
++++ b/src/tto/storage.py
+@@ -38,7 +38,7 @@
+ 
+ 
+ class Journal:
+-    def __init__(self, config, root=None, simulated=False, episode=None, deployment=None):
++    def __init__(self, config, root=None, simulated=False, episode=None, deployment=None, run_type='collect', model_sha256=None):
+         self.c = config
+         base = Path(root or config['storage']['data_root'] or Path.home() / '.local/share/tianshan-thermal-observer').expanduser()
+         base.mkdir(parents=True, exist_ok=True, mode=0o700)
+@@ -52,7 +52,7 @@
+         self.handles = {}
+         self.observation_count = 0
+         self.episode = episode or self.run_id
+-        self.manifest = {'record_schema': 1, 'version': __version__, 'source_identity': source_identity(), 'config': public_config(config), 'config_sha256': digest(public_config(config)), 'observer_run_id': self.run_id, 'episode': self.episode, 'episode_evidence': 'operator_named_process' if episode else None, 'simulated': simulated, 'started_at_utc': utc_now(), 'time_axis': 'observer_receive', 'feature_schema': 1, 'model_schema': 1, 'input_schema': 1, 'units': {'temperature': 'C', 'raw_power': 'mW', 'features_power': 'W', 'duty': 'logical_percent', 'cpu_freq': 'MHz', 'gpu_gr3d_freq': 'busy_percent'}, 'fan_id': 0, 'deployment_status': 'deployment_unverified', 'ws_final_package_sha256': None, 'firmware_identity': None, 'source_period_ms': config['orin']['source_sample_interval_ms'], 'source_period_evidence': config['orin']['source_interval_evidence'], 'network_authorization': {'kind': 'offline_simulation' if simulated else 'explicit_bounded_cli', 'endpoints': [] if simulated else [config[s]['base_url'] for s in ('orin', 'tianshan')], 'business_writes': False}, 'operator_environment': 'unknown', 'control_elapsed_time_available': False}
++        self.manifest = {'record_schema': 1, 'report_type': run_type, 'model_sha256': model_sha256, 'version': __version__, 'source_identity': source_identity(), 'config': public_config(config), 'config_sha256': digest(public_config(config)), 'observer_run_id': self.run_id, 'episode': self.episode, 'episode_evidence': 'operator_named_process' if episode else None, 'simulated': simulated, 'started_at_utc': utc_now(), 'time_axis': 'observer_receive', 'feature_schema': 1, 'model_schema': 1, 'input_schema': 1, 'units': {'temperature': 'C', 'raw_power': 'mW', 'features_power': 'W', 'duty': 'logical_percent', 'cpu_freq': 'MHz', 'gpu_gr3d_freq': 'busy_percent'}, 'fan_id': 0, 'deployment_status': 'deployment_unverified', 'ws_final_package_sha256': None, 'firmware_identity': None, 'source_period_ms': config['orin']['source_sample_interval_ms'], 'source_period_evidence': config['orin']['source_interval_evidence'], 'network_authorization': {'kind': 'offline_simulation' if simulated else 'explicit_bounded_cli', 'endpoints': [] if simulated else [config[s]['base_url'] for s in ('orin', 'tianshan')], 'business_writes': False}, 'operator_environment': 'unknown', 'control_elapsed_time_available': False}
+         if deployment:
+             self.manifest.update(deployment)
+         manifest_bytes = len((json.dumps(self.manifest, ensure_ascii=False, indent=2, allow_nan=False) + '\n').encode())
+--- a/tests/test_modeling.py
++++ b/tests/test_modeling.py
+@@ -196,26 +196,27 @@
+ 
+ 
+ def test_value_decision_requires_independent_nonidle_wins():
+-    from tto.evaluation import value_conclusion, METHODS
++    from tto.evaluation import value_conclusion, METHODS, comparison_layers
+     d = {'simulated': False, 'runs': [{'deployment_status': 'user_recorded_not_independently_verified'}]}
+     s = {'scope': 'chronological_episodes'}
+-    rows = [{'episode': 'a'}, {'episode': 'b'}]
++    rows = [{'id': e, 'episode': e} for e in ('a','b')]
+     values = {'persist': 2., 'trend30': 1.5, 'ridge_tj': 1., 'ridge_full': .5}
+-    tables = {'45': {m: {'episode_equal_macro': {'mae': v}, 'episodes': {e: {'mae': v} for e in ('a', 'b')}} for m, v in values.items()}}
+-    pts = {'45': {m: [{'error': v, 'common': True, 'phase': 'stable'}] for m, v in values.items()}}
+-    assert '待机' in value_conclusion(d, s, rows, tables, {'45': ['x']}, pts)
+-    for m in METHODS:
+-        pts['45'][m][0]['phase'] = 'warming'
+-    assert '有初步新增价值' in value_conclusion(d, s, rows, tables, {'45': ['x']}, pts)
+-    tables['45']['ridge_full']['episodes']['b']['mae'] = 3
+-    assert '只证明小模型' in value_conclusion(d, s, rows, tables, {'45': ['x']}, pts)
+-    tables['45']['ridge_tj']['episodes']['b']['mae'] = 4
+-    assert '暂未证明' in value_conclusion(d, s, rows, tables, {'45': ['x']}, pts)
++    points = {str(h): {m: [{'id':e,'episode':e,'error':v,'phase':'stable','high_temperature':False} for e in ('a','b')] for m,v in values.items()} for h in (15,45,90)}
++    assert '待机' in value_conclusion(d,s,rows,comparison_layers(rows,points))
++    for bymethod in points.values():
++        for ps in bymethod.values():
++            for p in ps:p['phase']='warming'
++    assert '有初步新增价值' in value_conclusion(d,s,rows,comparison_layers(rows,points))
++    for bymethod in points.values():bymethod['ridge_full'][1]['error']=3
++    assert '小模型M0有初步价值' in value_conclusion(d,s,rows,comparison_layers(rows,points))
++    for bymethod in points.values():bymethod['ridge_tj'][1]['error']=4
++    assert '暂未证明' in value_conclusion(d,s,rows,comparison_layers(rows,points))
+ 
+ 
+ def test_value_decision_keeps_deployment_and_simulation_separate():
+     from tto.evaluation import value_conclusion
+     d = {'simulated': False, 'runs': [{'deployment_status': 'deployment_unverified'}]}
+-    assert '部署身份' in value_conclusion(d, {}, [], {}, {}, {})
+-    d['simulated'] = True
+-    assert '模拟' in value_conclusion(d, {}, [], {}, {}, {})
++    comparisons={k:{'horizons':{'45':{'matched_count':0,'metrics':{}}}} for k in ('baseline','m0','m1')}
++    assert '部署身份' in value_conclusion(d,{},[],comparisons)
++    d['simulated']=True
++    assert '模拟' in value_conclusion(d,{},[],comparisons)
+--- /dev/null
++++ b/tests/test_repair_r1.py
+@@ -0,0 +1,121 @@
++import copy
++import json
++import pytest
++from tto.demo import record_demo
++from tto.dataset import freeze_split, build_dataset, check_split, load_dataset
++from tto.util import read_json, seal, write_json
++from tto.training import train
++from tto.evaluation import evaluate
++
++
++@pytest.fixture(scope='module')
++def grouped_runs(tmp_path_factory):
++    root = tmp_path_factory.mktemp('r1')
++    runs = record_demo(root / 'runs', count=6, seconds=400)
++    return root, runs
++
++
++def set_groups(runs, names):
++    # Test copies only; the original review used the same receive-date sequence.
++    for path, ep in zip(runs, names):
++        m = read_json(path / 'manifest.json'); m['episode'] = ep
++        (path / 'manifest.json').write_text(json.dumps(m))
++        for file in path.glob('observations-*'):
++            data = [dict(json.loads(line), episode=ep) for line in file.read_text().splitlines()]
++            file.write_text(''.join(json.dumps(r) + '\n' for r in data))
++
++
++def test_noncontiguous_reuse_rejected_at_creation_and_consumption(grouped_runs, tmp_path):
++    import shutil
++    _, original = grouped_runs
++    runs = []
++    for i, src in enumerate(original):
++        dst = tmp_path / str(i); shutil.copytree(src, dst); runs.append(dst)
++    set_groups(runs, 'ABCDEA')
++    with pytest.raises(ValueError, match='非连续.*A'):
++        freeze_split(runs, tmp_path / 'frozen')
++    d = build_dataset(runs)
++    mapping = dict(A='train', B='train', C='validation', D='test', E='test')
++    bad = seal({'schema_version': 1, 'dataset_sha256': d['sha256'], 'sources': d['sources'], 'scope': 'chronological_episodes', 'episodes_order': list('ABCDE'), 'partitions': {p: [r['id'] for r in d['rows'] if mapping[r['episode']] == p] for p in ('train','validation','test')}})
++    with pytest.raises(ValueError, match='非连续.*A'):
++        check_split(d, bad)
++    write_json(tmp_path / 'd.json', d); write_json(tmp_path / 's.json', bad)
++    with pytest.raises(ValueError, match='非连续'):
++        train(tmp_path / 'd.json', tmp_path / 's.json', tmp_path / 'model.json')
++    with pytest.raises(ValueError, match='非连续'):
++        evaluate(tmp_path / 'd.json', tmp_path / 's.json', None, tmp_path / 'eval')
++    assert not (tmp_path / 'test-used.json').exists()
++
++
++def test_adjacent_same_group_allowed_and_hand_changed_partition_rejected(grouped_runs, tmp_path):
++    import shutil
++    _, original = grouped_runs
++    runs = []
++    for i, src in enumerate(original):
++        dst = tmp_path / str(i); shutil.copytree(src, dst); runs.append(dst)
++    set_groups(runs, 'AABCDE')
++    frozen = freeze_split(runs[::-1], tmp_path / 'frozen')
++    d, s = load_dataset(frozen / 'dataset.json'), read_json(frozen / 'split.json')
++    check_split(d, s)
++    assert s['episodes_order'] == list('ABCDE')
++    assert {r['run_id'] for r in d['rows'] if r['id'] in s['partitions']['train'] and r['episode']=='A'} == {run['observer_run_id'] for run in d['runs'] if run['episode'] == 'A'}
++    s.pop('sha256'); s['partitions']['train'],s['partitions']['test'] = s['partitions']['test'],s['partitions']['train']
++    with pytest.raises(ValueError, match='not chronological'):
++        check_split(d, seal(s))
++
++
++def test_missing_time_evidence_and_overlapping_runs_are_explicit(grouped_runs, tmp_path):
++    _, runs = grouped_runs
++    d = build_dataset(runs)
++    from tto.dataset import chronological_runs
++    damaged = copy.deepcopy(d); damaged['runs'][0].pop('time_evidence')
++    with pytest.raises(ValueError, match='时间证据不足'):
++        chronological_runs(damaged)
++    damaged = copy.deepcopy(d); damaged['runs'][1]['time_evidence'] = damaged['runs'][0]['time_evidence']
++    with pytest.raises(ValueError, match='时间范围交错'):
++        chronological_runs(damaged)
++
++
++def test_single_process_exploratory_purge_is_preserved(tmp_path):
++    runs = record_demo(tmp_path / 'runs', count=1, seconds=1800)
++    frozen = freeze_split(runs, tmp_path / 'frozen', exploratory=True)
++    d,s = load_dataset(frozen / 'dataset.json'),read_json(frozen / 'split.json')
++    check_split(d,s)
++    assert s['scope'] == 'same_thermal_process_time_extrapolation'
++    assert s['discarded']
++
++
++def test_cross_run_support_purge_checked_independently(grouped_runs,tmp_path):
++    import shutil
++    from datetime import datetime,timezone,timedelta
++    _,original=grouped_runs; runs=[]
++    for i,source in enumerate(original[:5]):
++        dst=tmp_path/str(i);shutil.copytree(source,dst);runs.append(dst)
++        for file in dst.glob('observations-*'):
++            rows=[json.loads(l) for l in file.read_text().splitlines()]
++            for row in rows:
++                row['received_at_utc']=(datetime(2026,1,1,tzinfo=timezone.utc)+timedelta(seconds=i*400+row['mono_s'])).isoformat()
++            file.write_text(''.join(json.dumps(r)+'\n' for r in rows))
++    frozen=freeze_split(runs,tmp_path/'frozen')
++    d,s=load_dataset(frozen/'dataset.json'),read_json(frozen/'split.json')
++    assert s['discarded']
++    check_split(d,s)
++    # A handcrafted list that assigns all origins skips the required boundary purge.
++    episode_part={r['episode']:p for p,ids in s['partitions'].items() for r in d['rows'] if r['id'] in ids}
++    s.pop('sha256');s['partitions']={p:[r['id'] for r in d['rows'] if episode_part[r['episode']]==p] for p in ('train','validation','test')}
++    with pytest.raises(ValueError,match='cross-run raw temporal support'):
++        check_split(d,seal(s))
++
++
++def test_single_run_exploration_uses_monotonic_time_even_when_utc_jumps(tmp_path):
++    runs=record_demo(tmp_path/'runs',count=1,seconds=1800)
++    for file in runs[0].glob('observations-*'):
++        rows=[json.loads(l) for l in file.read_text().splitlines()]
++        for r in rows:
++            if r['mono_s']>900:r['received_at_utc']='1990-01-01T00:00:00+00:00'
++        file.write_text(''.join(json.dumps(r)+'\n' for r in rows))
++    frozen=freeze_split(runs,tmp_path/'exploration',exploratory=True)
++    d,s=load_dataset(frozen/'dataset.json'),read_json(frozen/'split.json')
++    assert not d['runs'][0]['time_evidence']['clock_consistent']
++    check_split(d,s)
++    assert s['scope']=='same_thermal_process_time_extrapolation'
+--- /dev/null
++++ b/tests/test_repair_r2.py
+@@ -0,0 +1,71 @@
++import copy
++import pytest
++from pathlib import Path
++from tto.dataset import freeze_split, load_dataset
++from tto.demo import record_demo
++from tto.training import train
++from tto.evaluation import evaluate, value_conclusion
++from tto.util import read_json, write_json, seal
++
++
++@pytest.fixture(scope='module')
++def r2_data(tmp_path_factory):
++    root = tmp_path_factory.mktemp('r2')
++    runs = record_demo(root/'runs', count=5, seconds=720)
++    frozen = freeze_split(runs,root/'frozen')
++    model = train(frozen/'dataset.json',frozen/'split.json',root/'model.json')
++    return root, frozen, model
++
++
++@pytest.mark.parametrize('loss', ['all', 'partial', 'none', 'baseline_only'])
++def test_layered_same_origin_comparisons_and_formats(r2_data, tmp_path, loss):
++    root,frozen,original_model = r2_data
++    d,s = load_dataset(frozen/'dataset.json'),read_json(frozen/'split.json')
++    test_ids = set(s['partitions']['test'])
++    field = next(c for c in original_model['methods']['ridge_full']['columns'] if c.startswith('vdd_'))
++    for index,r in enumerate(d['rows']):
++        if r['id'] in test_ids and (loss == 'all' or loss == 'partial' and index%2 == 0):
++            for key in list(r['features']):
++                if key==field or key.startswith(field+'_mean_'):r['features'][key]=None
++    d.pop('sha256');d=seal(d);s.pop('sha256');s['dataset_sha256']=d['sha256'];s=seal(s)
++    write_json(tmp_path/'dataset.json',d);write_json(tmp_path/'split.json',s)
++    if loss != 'baseline_only':
++        model = train(tmp_path/'dataset.json',tmp_path/'split.json',tmp_path/'model.json')
++        assert model['methods'] == original_model['methods']
++    result = evaluate(tmp_path/'dataset.json',tmp_path/'split.json',tmp_path/'model.json' if loss!='baseline_only' else None,tmp_path/'eval')
++    layers = result['comparisons']
++    baseline = layers['baseline']['horizons']['45'];m0=layers['m0']['horizons']['45'];m1=layers['m1']['horizons']['45']
++    assert baseline['matched_count'] > 0
++    if loss == 'baseline_only':
++        assert m0['matched_count']==m1['matched_count']==0
++    else:
++        assert m0['matched_count']==198
++        if loss=='all':assert m1['matched_count']==0
++        elif loss=='partial':assert 0<m1['matched_count']<m0['matched_count']
++        else:assert m1['matched_count']==m0['matched_count']
++        assert set(m1['origin_ids'])<=set(m0['origin_ids'])<=set(baseline['origin_ids'])
++        assert m0['metrics']['ridge_tj']['episode_equal_macro']['mae']==pytest.approx(.29303183723102977)
++    # Explicit decision-only synthetic copy; never save it as real telemetry.
++    unit_data=copy.deepcopy(d);unit_data['simulated']=False
++    for r in unit_data['runs']:r['deployment_status']='user_recorded_not_independently_verified'
++    rows=[r for r in d['rows'] if r['id'] in test_ids]
++    decision=value_conclusion(unit_data,s,rows,layers)
++    if loss=='all':assert 'M0有初步价值' in decision and 'M1层缺少' in decision
++    if loss=='baseline_only':assert '基线层已有可读结果' in decision
++    assert result['simulated'] and '模拟' in result['conclusion']
++    for fmt in ('md','html'):
++        content=(tmp_path/'eval'/f'report.{fmt}').read_text()
++        if fmt=='md':
++            assert len(content.splitlines()) > 20 and '\\n' not in content.splitlines()[0]
++        assert all(label in content for label in ('基线层','M0层','M1层'))
++        assert '不同层MAE不能直接比较' in content
++        if loss in ('all','baseline_only'):assert '未覆盖' in content
++    for layer in layers.values():
++        for horizon in layer['horizons'].values():
++            assert all(m['time_pooled']['n']==horizon['matched_count'] for m in horizon['metrics'].values())
++            assert horizon['phase_diagnostics'] and horizon['episodes']
++
++
++def test_markdown_table_has_real_lines_and_escapes_scene_pipe():
++    from tto.report import markdown_table
++    assert markdown_table(['name'],[['A|B']]) == '|name|\n|---|\n|A\\|B|\n'
+--- /dev/null
++++ b/tests/test_repair_r3.py
+@@ -0,0 +1,135 @@
++import copy
++import json
++import shutil
++import pytest
++from tto.demo import record_demo
++from tto.dataset import freeze_split
++from tto.training import train
++from tto.engine import Engine
++from tto.storage import Journal
++from tto.model import load_model
++from tto.report import summarize, run_report
++from tto.util import read_json, file_hash
++from tto.cli import main
++
++
++def write_shadow(source, root, model, degrade=False):
++    m = read_json(source/'manifest.json')
++    j = Journal(m['config'],root,simulated=True,episode='shadow-synthetic',run_type='shadow',model_sha256=model['sha256'])
++    e = Engine(m['config'],model)
++    for file in sorted(source.glob('observations-*')):
++        for line in file.read_text().splitlines():
++            row = json.loads(line)
++            if degrade and row['kind']=='orin' and row['mono_s']>=250:
++                row['payload']['power'].pop('vdd_gpu_soc',None)
++            out = e.process(j.observation(row))
++            if out['prediction']:j.append('predictions',out['prediction'])
++            for score in out['scores']:j.append('scores',score)
++    for score in e.invalidate('run_end'):j.append('scores',score)
++    j.close({'stop_reason':'synthetic_completed','elapsed_s':400})
++    return j.path
++
++
++@pytest.fixture(scope='module')
++def shadow_fixture(tmp_path_factory):
++    root=tmp_path_factory.mktemp('r3')
++    runs=record_demo(root/'runs',count=5,seconds=400)
++    frozen=freeze_split(runs,root/'frozen')
++    train(frozen/'dataset.json',frozen/'split.json',root/'model.json')
++    model=load_model(root/'model.json')
++    shadow=write_shadow(runs[1],root/'shadow',model)
++    partial=write_shadow(runs[1],root/'partial',model,degrade=True)
++    return root,runs,shadow,partial
++
++
++def test_formal_cli_report_uses_saved_results_and_never_current_model(shadow_fixture,tmp_path):
++    root,runs,shadow,_=shadow_fixture
++    predictions=[json.loads(l) for l in (shadow/'predictions.jsonl').read_text().splitlines()]
++    scores=[json.loads(l) for l in (shadow/'scores.jsonl').read_text().splitlines()]
++    before={p.name:file_hash(p) for p in shadow.glob('*.jsonl')}
++    assert main(['report','--run',str(shadow),'--output',str(tmp_path/'report')])==0
++    report=read_json(tmp_path/'report/report.json')
++    assert report['report_type']=='shadow' and report['simulated']
++    assert report['recorded_results']['issued_prediction_origins']==len(predictions)
++    model_sha=predictions[0]['model_sha256']
++    for h in (15,45,90):
++        actual=[s['errors']['ridge_full'] for s in scores if s['horizon_s']==h and s['status']=='scored' and 'ridge_full' in s.get('errors',{})]
++        mc=report['recorded_results']['models'][model_sha]['horizons'][str(h)]['methods']['ridge_full']
++        assert mc['scored']==len(actual)
++        assert mc['metrics']['time_pooled']['mae']==pytest.approx(sum(abs(x) for x in actual)/len(actual))
++    baseline=summarize(shadow)
++    # Replace/move the exact fixture model that was loaded before this run.
++    model_file = root/'model.json'; original_model_bytes = model_file.read_bytes()
++    try:
++        model_file.write_text('{"new_model_not_for_historical_predictions":true}')
++        assert summarize(shadow)==baseline
++        model_file.unlink();assert summarize(shadow)==baseline
++    finally:
++        model_file.write_bytes(original_model_bytes)
++    assert before=={p.name:file_hash(p) for p in shadow.glob('*.jsonl')}
++    for fmt in ('md','html'):
++        text=(tmp_path/'report'/f'report.{fmt}').read_text()
++        assert model_sha in text and '模拟' in text and '未加载当前模型重算' in text
++        assert '实际方法、降级与未评分原因' in text
++
++
++@pytest.mark.parametrize('missing', ['predictions.jsonl','scores.jsonl'])
++def test_missing_required_logs_is_explicit_not_zero_or_replay(shadow_fixture,tmp_path,missing):
++    _,_,source,_=shadow_fixture
++    dst=tmp_path/'copy';shutil.copytree(source,dst)
++    (dst/missing).rename(dst/(missing+'.fixture-removed'))
++    r=run_report(dst,tmp_path/'report')
++    assert missing in r['missing_required_logs']
++    assert '证据缺失' in r['conclusion']
++    assert not r['recorded_results']['log_evidence_complete']
++    if missing=='scores.jsonl':
++        assert r['recorded_results']['terminal_score_records'] is None
++        assert all(mc['scored'] is None for g in r['recorded_results']['models'].values() for hd in g['horizons'].values() for mc in hd['methods'].values())
++    else:assert r['recorded_results']['issued_prediction_origins'] is None
++
++
++def test_predictions_without_scores_are_pending_and_baseline_collect_is_distinct(shadow_fixture,tmp_path):
++    _,runs,source,_=shadow_fixture
++    dst=tmp_path/'copy';shutil.copytree(source,dst)
++    (dst/'scores.jsonl').write_text('')
++    r=summarize(dst)
++    assert '已有已发预测，但尚未能评分' in r['conclusion']
++    assert r['recorded_results']['terminal_score_records']==0
++    assert any('no_terminal_score_yet' in h['unscored_reasons'] for g in r['recorded_results']['models'].values() for h in g['horizons'].values())
++    collect=run_report(runs[0],tmp_path/'collect-report')
++    assert collect['report_type']=='collect'
++    assert '采集质量报告' in (tmp_path/'collect-report/report.md').read_text()
++    no_model=tmp_path/'no-model';shutil.copytree(runs[0],no_model)
++    m=read_json(no_model/'manifest.json');m['report_type']='shadow';m['model_sha256']=None
++    (no_model/'manifest.json').write_text(json.dumps(m))
++    assert '只有基线' in summarize(no_model)['conclusion']
++
++
++def test_partial_fallback_never_counts_as_m1_and_scores_join_by_identity(shadow_fixture,tmp_path):
++    _,_,_,partial=shadow_fixture
++    r=summarize(partial);g=next(iter(r['recorded_results']['models'].values()))
++    assert g['actual_methods']['ridge_tj']>0 and g['unavailable_method_reasons']['ridge_full']['missing_selected_features']>0
++    assert g['horizons']['45']['methods']['ridge_full']['issued']<g['horizons']['45']['methods']['ridge_tj']['issued']
++    dst=tmp_path/'reordered';shutil.copytree(partial,dst)
++    scores=(dst/'scores.jsonl').read_text().splitlines();(dst/'scores.jsonl').write_text('\n'.join(reversed(scores))+'\n')
++    assert summarize(dst)['recorded_results']['models']==r['recorded_results']['models']
++    altered=[json.loads(l) for l in scores]
++    scored=next(s for s in altered if s['status']=='scored');scored['model_sha256']='b'*64
++    (dst/'scores.jsonl').write_text(''.join(json.dumps(s)+'\n' for s in altered))
++    broken=summarize(dst)
++    assert any(x['reason']=='score_model_identity_mismatch' for x in broken['recorded_results']['issues'])
++    assert '证据缺失' in broken['conclusion']
++
++
++def test_legacy_shadow_detected_from_saved_model_identity(shadow_fixture,tmp_path):
++    _,_,source,_=shadow_fixture
++    dst=tmp_path/'legacy';shutil.copytree(source,dst)
++    m=read_json(dst/'manifest.json');m.pop('report_type');m.pop('model_sha256')
++    (dst/'manifest.json').write_text(json.dumps(m))
++    scores=[json.loads(l) for l in (dst/'scores.jsonl').read_text().splitlines()]
++    for s in scores:s.pop('model_sha256',None)
++    (dst/'scores.jsonl').write_text(''.join(json.dumps(s)+'\n' for s in scores))
++    assert summarize(dst)['report_type']=='shadow'
++    (dst/'predictions.jsonl').unlink();(dst/'scores.jsonl').unlink()
++    r=summarize(dst)
++    assert 'predictions.jsonl' in r['missing_required_logs'] and '证据缺失' in r['conclusion']
+--- /dev/null
++++ b/tests/test_repair_r4.py
+@@ -0,0 +1,71 @@
++"""Real locked-aiohttp handshake checks; all targets are created loopback services."""
++import asyncio
++import pytest
++from aiohttp import web
++from tto.collector import sessions, collect
++
++
++@pytest.mark.parametrize('cross_origin', [True, False])
++async def test_websocket_redirect_never_sends_target_request(config, cross_origin):
++    seen = []
++    runners = []
++    async def target(request):
++        seen.append({'path': request.path, 'fixture_header': request.headers.get('X-TTO-Test')})
++        ws = web.WebSocketResponse(); await ws.prepare(request); await ws.close()
++        return ws
++    async def start(app):
++        runner = web.AppRunner(app); await runner.setup(); runners.append(runner)
++        site = web.TCPSite(runner, '127.0.0.1', 0); await site.start()
++        return f'http://127.0.0.1:{site._server.sockets[0].getsockname()[1]}'
++    target_url = None
++    async def redirect(request):
++        raise web.HTTPFound(target_url)
++    try:
++        app = web.Application(); app.router.add_get('/socket.io/', redirect)
++        app.router.add_get('/api/v1/fan/status', redirect)
++        app.router.add_get('/not-authorized', target)
++        origin = await start(app)
++        if cross_origin:
++            other = web.Application(); other.router.add_get('/not-authorized', target)
++            target_url = await start(other) + '/not-authorized'
++        else:
++            target_url = origin + '/not-authorized'
++        config['orin']['base_url'] = config['tianshan']['base_url'] = origin
++        async with sessions(config, 'orin', socketio=True) as session:
++            with pytest.raises(ValueError, match='redirect'):
++                await session.ws_connect(origin + '/socket.io/?EIO=4&transport=websocket', headers={'X-TTO-Test': 'nonsecret-fixture'})
++        assert session.closed
++        assert len(seen) == 0, seen
++        async with sessions(config, 'tianshan') as session:
++            with pytest.raises(ValueError, match='redirect'):
++                await session.get(origin + '/api/v1/fan/status')
++        assert session.closed and len(seen) == 0
++    finally:
++        for runner in reversed(runners):
++            await runner.cleanup()
++
++
++async def test_redirect_failure_collect_closes_within_attempt_budget(config, tmp_path):
++    seen = []
++    async def target(request):
++        seen.append(request.path)
++        return web.Response()
++    async def redirect(request):
++        raise web.HTTPFound('/not-authorized')
++    app = web.Application(); app.router.add_get('/socket.io/', redirect)
++    app.router.add_get('/not-authorized', target)
++    app.router.add_get('/api/v1/fan/status', redirect)
++    app.router.add_get('/api/v1/temp/status', redirect)
++    runner = web.AppRunner(app); await runner.setup()
++    site = web.TCPSite(runner, '127.0.0.1', 0); await site.start()
++    origin = f'http://127.0.0.1:{site._server.sockets[0].getsockname()[1]}'
++    config['orin']['base_url'] = config['tianshan']['base_url'] = origin
++    config['network'].update(reconnect_max_attempts=2, reconnect_initial_s=.1, reconnect_max_s=.1)
++    try:
++        path, stats = await asyncio.wait_for(collect(config, 3, data_root=tmp_path), 5)
++        assert stats['connection_attempts'] == 2
++        assert stats['stop_reason'] == 'reconnect_attempt_budget'
++        assert seen == []
++        assert (path / 'summary.json').exists()
++    finally:
++        await runner.cleanup()

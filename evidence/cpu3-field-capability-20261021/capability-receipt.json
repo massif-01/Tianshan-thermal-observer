@@ -1,0 +1,1085 @@
+{
+  "schema": "TTO-CPU-CAPABILITY-RECEIPT-v2",
+  "candidate_version": "0.2.4+cpu.3",
+  "config_sha256": "090492dc9570bf69b51cccd9372247b1e063db4aaba7bacdf618c3fd317c7e4f",
+  "sidecar_config_sha256": "b166bb16ee6999176a79f05d24681782043c3be97e8976682dddcca4b845ff3e",
+  "qualified": false,
+  "checks": {
+    "thread_policy": true,
+    "baseline_resources": true,
+    "native_delay_budget": true,
+    "complete_native": true,
+    "packets": false,
+    "clock_identified": true,
+    "cpu_measured": true,
+    "read_budget": true,
+    "jitter_budget": true,
+    "no_sidecar_trip": false,
+    "native_fan_gap": false
+  },
+  "evaluation_scope": "arrival_side",
+  "automatic_work_authorization": false,
+  "actual_sidecar_interval": {
+    "start_mono_s": 30.02949678899313,
+    "stop_mono_s": 34.80680701699748
+  },
+  "baseline_admission": {
+    "evaluated_mono_s": 30.016050799997174,
+    "resource_sample": {
+      "mono_s": 29.507386618002784,
+      "interval_start_mono_s": 28.489563979004743,
+      "cpu_pct_single_core": 1.964978890594171,
+      "rss_bytes": 77176832,
+      "cpu_times": {
+        "user": 1.35,
+        "system": 0.13,
+        "children_user": 0.0,
+        "children_system": 0.0,
+        "iowait": 0.0
+      },
+      "resource_error": null,
+      "resource_seq": 29,
+      "field_log_bytes": 1415673,
+      "native_log_bytes": 182683
+    },
+    "cpu_limit_single_core_percent": 8.0,
+    "rss_limit_bytes": 134217728,
+    "allowed": true,
+    "reason": "baseline_receiver_resources_qualified",
+    "interval_contract": "latest actual1s interval; start>=1s, span0.5..2s, age0..1.5s; no averaging or host-core normalization",
+    "sample_age_s": 0.5086641819943907
+  },
+  "resource_check_evidence": {
+    "native_callback_lag_p95_s": {
+      "before": 0.00468703500519041,
+      "during": 0.006337560000247322,
+      "after": 0.007552090988610871
+    },
+    "read_p95_s": 0.0032321809994755313,
+    "jitter_p95_s": 0.000260344022535719,
+    "resources_by_actual_phase": {
+      "before": [
+        {
+          "mono_s": 1.017359650999424,
+          "interval_start_mono_s": null,
+          "cpu_pct_single_core": null,
+          "rss_bytes": 76398592,
+          "cpu_times": {
+            "user": 0.57,
+            "system": 0.06,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 1,
+          "field_log_bytes": 52171,
+          "native_log_bytes": 18927
+        },
+        {
+          "mono_s": 2.0265459490037756,
+          "interval_start_mono_s": 1.017359650999424,
+          "cpu_pct_single_core": 1.9817946438184577,
+          "rss_bytes": 76513280,
+          "cpu_times": {
+            "user": 0.59,
+            "system": 0.06,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 2,
+          "field_log_bytes": 100717,
+          "native_log_bytes": 28160
+        },
+        {
+          "mono_s": 3.0414917839952977,
+          "interval_start_mono_s": 2.0265459490037756,
+          "cpu_pct_single_core": 3.9410970143381254,
+          "rss_bytes": 76562432,
+          "cpu_times": {
+            "user": 0.62,
+            "system": 0.07,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 3,
+          "field_log_bytes": 149295,
+          "native_log_bytes": 32866
+        },
+        {
+          "mono_s": 4.061127043998567,
+          "interval_start_mono_s": 3.0414917839952977,
+          "cpu_pct_single_core": 2.9422285769034535,
+          "rss_bytes": 76570624,
+          "cpu_times": {
+            "user": 0.65,
+            "system": 0.07,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 4,
+          "field_log_bytes": 186425,
+          "native_log_bytes": 36358
+        },
+        {
+          "mono_s": 5.079788001996349,
+          "interval_start_mono_s": 4.061127043998567,
+          "cpu_pct_single_core": 2.945042682205689,
+          "rss_bytes": 76582912,
+          "cpu_times": {
+            "user": 0.68,
+            "system": 0.07,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 5,
+          "field_log_bytes": 235026,
+          "native_log_bytes": 41082
+        },
+        {
+          "mono_s": 6.099140841004555,
+          "interval_start_mono_s": 5.079788001996349,
+          "cpu_pct_single_core": 2.943043748147986,
+          "rss_bytes": 76636160,
+          "cpu_times": {
+            "user": 0.71,
+            "system": 0.07,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 6,
+          "field_log_bytes": 295202,
+          "native_log_bytes": 46785
+        },
+        {
+          "mono_s": 7.118417612000485,
+          "interval_start_mono_s": 6.099140841004555,
+          "cpu_pct_single_core": 2.9432633857325317,
+          "rss_bytes": 76660736,
+          "cpu_times": {
+            "user": 0.74,
+            "system": 0.07,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 7,
+          "field_log_bytes": 343874,
+          "native_log_bytes": 55382
+        },
+        {
+          "mono_s": 8.138833737000823,
+          "interval_start_mono_s": 7.118417612000485,
+          "cpu_pct_single_core": 2.9399770608280114,
+          "rss_bytes": 76697600,
+          "cpu_times": {
+            "user": 0.77,
+            "system": 0.07,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 8,
+          "field_log_bytes": 392565,
+          "native_log_bytes": 60128
+        },
+        {
+          "mono_s": 9.156589912003255,
+          "interval_start_mono_s": 8.138833737000823,
+          "cpu_pct_single_core": 2.9476608186561313,
+          "rss_bytes": 76713984,
+          "cpu_times": {
+            "user": 0.8,
+            "system": 0.07,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 9,
+          "field_log_bytes": 429830,
+          "native_log_bytes": 63619
+        },
+        {
+          "mono_s": 10.17702932699467,
+          "interval_start_mono_s": 9.156589912003255,
+          "cpu_pct_single_core": 3.919879947045786,
+          "rss_bytes": 76734464,
+          "cpu_times": {
+            "user": 0.83,
+            "system": 0.08,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 10,
+          "field_log_bytes": 478063,
+          "native_log_bytes": 68343
+        },
+        {
+          "mono_s": 11.19454808300361,
+          "interval_start_mono_s": 10.17702932699467,
+          "cpu_pct_single_core": 2.9483486002430457,
+          "rss_bytes": 76759040,
+          "cpu_times": {
+            "user": 0.86,
+            "system": 0.08,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 11,
+          "field_log_bytes": 537648,
+          "native_log_bytes": 74062
+        },
+        {
+          "mono_s": 12.213527799001895,
+          "interval_start_mono_s": 11.19454808300361,
+          "cpu_pct_single_core": 4.906869019567826,
+          "rss_bytes": 76779520,
+          "cpu_times": {
+            "user": 0.9,
+            "system": 0.09,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 12,
+          "field_log_bytes": 597205,
+          "native_log_bytes": 83578
+        },
+        {
+          "mono_s": 13.230154094999307,
+          "interval_start_mono_s": 12.213527799001895,
+          "cpu_pct_single_core": 1.9672912336364485,
+          "rss_bytes": 76791808,
+          "cpu_times": {
+            "user": 0.92,
+            "system": 0.09,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 13,
+          "field_log_bytes": 645409,
+          "native_log_bytes": 88322
+        },
+        {
+          "mono_s": 14.247208938992117,
+          "interval_start_mono_s": 13.230154094999307,
+          "cpu_pct_single_core": 2.949693438578433,
+          "rss_bytes": 76812288,
+          "cpu_times": {
+            "user": 0.95,
+            "system": 0.09,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 14,
+          "field_log_bytes": 693558,
+          "native_log_bytes": 95008
+        },
+        {
+          "mono_s": 15.266044446005253,
+          "interval_start_mono_s": 14.247208938992117,
+          "cpu_pct_single_core": 3.9260508418346958,
+          "rss_bytes": 76832768,
+          "cpu_times": {
+            "user": 0.99,
+            "system": 0.09,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 15,
+          "field_log_bytes": 764520,
+          "native_log_bytes": 101956
+        },
+        {
+          "mono_s": 16.285133390003466,
+          "interval_start_mono_s": 15.266044446005253,
+          "cpu_pct_single_core": 3.9250744731924185,
+          "rss_bytes": 76845056,
+          "cpu_times": {
+            "user": 1.03,
+            "system": 0.09,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 16,
+          "field_log_bytes": 812631,
+          "native_log_bytes": 112028
+        },
+        {
+          "mono_s": 17.30217518900463,
+          "interval_start_mono_s": 16.285133390003466,
+          "cpu_pct_single_core": 3.9329750300611095,
+          "rss_bytes": 76865536,
+          "cpu_times": {
+            "user": 1.06,
+            "system": 0.1,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 17,
+          "field_log_bytes": 860694,
+          "native_log_bytes": 116754
+        },
+        {
+          "mono_s": 18.323131768993335,
+          "interval_start_mono_s": 17.30217518900463,
+          "cpu_pct_single_core": 1.9589471670010945,
+          "rss_bytes": 76886016,
+          "cpu_times": {
+            "user": 1.08,
+            "system": 0.1,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 18,
+          "field_log_bytes": 897374,
+          "native_log_bytes": 120258
+        },
+        {
+          "mono_s": 19.340404331000173,
+          "interval_start_mono_s": 18.323131768993335,
+          "cpu_pct_single_core": 1.9660414275348936,
+          "rss_bytes": 76894208,
+          "cpu_times": {
+            "user": 1.1,
+            "system": 0.1,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 19,
+          "field_log_bytes": 934110,
+          "native_log_bytes": 123761
+        },
+        {
+          "mono_s": 20.35988249600632,
+          "interval_start_mono_s": 19.340404331000173,
+          "cpu_pct_single_core": 3.923575940418358,
+          "rss_bytes": 76935168,
+          "cpu_times": {
+            "user": 1.14,
+            "system": 0.1,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 20,
+          "field_log_bytes": 1005185,
+          "native_log_bytes": 130715
+        },
+        {
+          "mono_s": 21.377384509993135,
+          "interval_start_mono_s": 20.35988249600632,
+          "cpu_pct_single_core": 3.9311961499978327,
+          "rss_bytes": 77053952,
+          "cpu_times": {
+            "user": 1.17,
+            "system": 0.11,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 21,
+          "field_log_bytes": 1053408,
+          "native_log_bytes": 141243
+        },
+        {
+          "mono_s": 22.396458396004164,
+          "interval_start_mono_s": 21.377384509993135,
+          "cpu_pct_single_core": 1.9625662353380697,
+          "rss_bytes": 77066240,
+          "cpu_times": {
+            "user": 1.19,
+            "system": 0.11,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 22,
+          "field_log_bytes": 1101523,
+          "native_log_bytes": 145965
+        },
+        {
+          "mono_s": 23.414203049003845,
+          "interval_start_mono_s": 22.396458396004164,
+          "cpu_pct_single_core": 3.9302589192784816,
+          "rss_bytes": 77074432,
+          "cpu_times": {
+            "user": 1.22,
+            "system": 0.12,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 23,
+          "field_log_bytes": 1138202,
+          "native_log_bytes": 149461
+        },
+        {
+          "mono_s": 24.43454496600316,
+          "interval_start_mono_s": 23.414203049003845,
+          "cpu_pct_single_core": 1.9601272540892256,
+          "rss_bytes": 77082624,
+          "cpu_times": {
+            "user": 1.24,
+            "system": 0.12,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 24,
+          "field_log_bytes": 1174873,
+          "native_log_bytes": 152965
+        },
+        {
+          "mono_s": 25.452447012998164,
+          "interval_start_mono_s": 24.43454496600316,
+          "cpu_pct_single_core": 4.912063999439589,
+          "rss_bytes": 77119488,
+          "cpu_times": {
+            "user": 1.28,
+            "system": 0.13,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 25,
+          "field_log_bytes": 1245904,
+          "native_log_bytes": 159884
+        },
+        {
+          "mono_s": 26.46418206600356,
+          "interval_start_mono_s": 25.452447012998164,
+          "cpu_pct_single_core": 0.9884010611567156,
+          "rss_bytes": 77148160,
+          "cpu_times": {
+            "user": 1.29,
+            "system": 0.13,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 26,
+          "field_log_bytes": 1294080,
+          "native_log_bytes": 170946
+        },
+        {
+          "mono_s": 27.474014444000204,
+          "interval_start_mono_s": 26.46418206600356,
+          "cpu_pct_single_core": 1.9805267127280073,
+          "rss_bytes": 77164544,
+          "cpu_times": {
+            "user": 1.31,
+            "system": 0.13,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 27,
+          "field_log_bytes": 1342232,
+          "native_log_bytes": 175678
+        },
+        {
+          "mono_s": 28.489563979004743,
+          "interval_start_mono_s": 27.474014444000204,
+          "cpu_pct_single_core": 1.969377101818144,
+          "rss_bytes": 77172736,
+          "cpu_times": {
+            "user": 1.33,
+            "system": 0.13,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 28,
+          "field_log_bytes": 1378944,
+          "native_log_bytes": 179179
+        },
+        {
+          "mono_s": 29.507386618002784,
+          "interval_start_mono_s": 28.489563979004743,
+          "cpu_pct_single_core": 1.964978890594171,
+          "rss_bytes": 77176832,
+          "cpu_times": {
+            "user": 1.35,
+            "system": 0.13,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 29,
+          "field_log_bytes": 1415673,
+          "native_log_bytes": 182683
+        }
+      ],
+      "during": [
+        {
+          "mono_s": 30.526262952000252,
+          "interval_start_mono_s": 29.507386618002784,
+          "cpu_pct_single_core": 5.888840283942558,
+          "rss_bytes": 77430784,
+          "cpu_times": {
+            "user": 1.4,
+            "system": 0.14,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 30,
+          "field_log_bytes": 1513325,
+          "native_log_bytes": 189603
+        },
+        {
+          "mono_s": 31.546528870996553,
+          "interval_start_mono_s": 30.526262952000252,
+          "cpu_pct_single_core": 3.9205465217686095,
+          "rss_bytes": 77484032,
+          "cpu_times": {
+            "user": 1.44,
+            "system": 0.14,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 31,
+          "field_log_bytes": 1638206,
+          "native_log_bytes": 201304
+        },
+        {
+          "mono_s": 32.56546761500067,
+          "interval_start_mono_s": 31.546528870996553,
+          "cpu_pct_single_core": 3.925653061617037,
+          "rss_bytes": 77520896,
+          "cpu_times": {
+            "user": 1.47,
+            "system": 0.15,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 32,
+          "field_log_bytes": 1762862,
+          "native_log_bytes": 206053
+        },
+        {
+          "mono_s": 33.58357870900363,
+          "interval_start_mono_s": 32.56546761500067,
+          "cpu_pct_single_core": 2.946633248248719,
+          "rss_bytes": 77549568,
+          "cpu_times": {
+            "user": 1.5,
+            "system": 0.15,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 33,
+          "field_log_bytes": 1876467,
+          "native_log_bytes": 209546
+        },
+        {
+          "mono_s": 34.60149420599919,
+          "interval_start_mono_s": 33.58357870900363,
+          "cpu_pct_single_core": 2.947199456983117,
+          "rss_bytes": 77578240,
+          "cpu_times": {
+            "user": 1.53,
+            "system": 0.15,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 34,
+          "field_log_bytes": 2004939,
+          "native_log_bytes": 213034
+        }
+      ],
+      "after": [
+        {
+          "mono_s": 35.618851075996645,
+          "interval_start_mono_s": 34.60149420599919,
+          "cpu_pct_single_core": 4.914696256007495,
+          "rss_bytes": 77590528,
+          "cpu_times": {
+            "user": 1.57,
+            "system": 0.16,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 35,
+          "field_log_bytes": 2091649,
+          "native_log_bytes": 219991
+        },
+        {
+          "mono_s": 36.638667192004505,
+          "interval_start_mono_s": 35.618851075996645,
+          "cpu_pct_single_core": 2.9417067968524644,
+          "rss_bytes": 77602816,
+          "cpu_times": {
+            "user": 1.6,
+            "system": 0.16,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 36,
+          "field_log_bytes": 2139779,
+          "native_log_bytes": 232079
+        },
+        {
+          "mono_s": 37.65632596099749,
+          "interval_start_mono_s": 36.638667192004505,
+          "cpu_pct_single_core": 2.9479429563296726,
+          "rss_bytes": 77611008,
+          "cpu_times": {
+            "user": 1.62,
+            "system": 0.17,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 37,
+          "field_log_bytes": 2187917,
+          "native_log_bytes": 236807
+        },
+        {
+          "mono_s": 38.673685703994124,
+          "interval_start_mono_s": 37.65632596099749,
+          "cpu_pct_single_core": 2.9488094262148445,
+          "rss_bytes": 77619200,
+          "cpu_times": {
+            "user": 1.65,
+            "system": 0.17,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 38,
+          "field_log_bytes": 2224668,
+          "native_log_bytes": 240312
+        },
+        {
+          "mono_s": 39.69058030399901,
+          "interval_start_mono_s": 38.673685703994124,
+          "cpu_pct_single_core": 1.9667721708723658,
+          "rss_bytes": 77627392,
+          "cpu_times": {
+            "user": 1.67,
+            "system": 0.17,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 39,
+          "field_log_bytes": 2261378,
+          "native_log_bytes": 243817
+        },
+        {
+          "mono_s": 40.70719796899357,
+          "interval_start_mono_s": 39.69058030399901,
+          "cpu_pct_single_core": 3.93461587156409,
+          "rss_bytes": 77651968,
+          "cpu_times": {
+            "user": 1.71,
+            "system": 0.17,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 40,
+          "field_log_bytes": 2332465,
+          "native_log_bytes": 250743
+        },
+        {
+          "mono_s": 41.72524752300524,
+          "interval_start_mono_s": 40.70719796899357,
+          "cpu_pct_single_core": 3.9290818253766053,
+          "rss_bytes": 77680640,
+          "cpu_times": {
+            "user": 1.74,
+            "system": 0.18,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 41,
+          "field_log_bytes": 2380605,
+          "native_log_bytes": 263430
+        },
+        {
+          "mono_s": 42.74276290299895,
+          "interval_start_mono_s": 41.72524752300524,
+          "cpu_pct_single_core": 2.9483583825716186,
+          "rss_bytes": 77692928,
+          "cpu_times": {
+            "user": 1.77,
+            "system": 0.18,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 42,
+          "field_log_bytes": 2428793,
+          "native_log_bytes": 268167
+        },
+        {
+          "mono_s": 43.76055982300022,
+          "interval_start_mono_s": 42.74276290299895,
+          "cpu_pct_single_core": 2.947542816298017,
+          "rss_bytes": 77701120,
+          "cpu_times": {
+            "user": 1.8,
+            "system": 0.18,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 43,
+          "field_log_bytes": 2465566,
+          "native_log_bytes": 271676
+        },
+        {
+          "mono_s": 44.777376947997254,
+          "interval_start_mono_s": 43.76055982300022,
+          "cpu_pct_single_core": 1.9669220264222418,
+          "rss_bytes": 77725696,
+          "cpu_times": {
+            "user": 1.82,
+            "system": 0.18,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 44,
+          "field_log_bytes": 2502324,
+          "native_log_bytes": 275181
+        },
+        {
+          "mono_s": 45.79582425199624,
+          "interval_start_mono_s": 44.777376947997254,
+          "cpu_pct_single_core": 4.909434175305178,
+          "rss_bytes": 77737984,
+          "cpu_times": {
+            "user": 1.86,
+            "system": 0.19,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 45,
+          "field_log_bytes": 2573512,
+          "native_log_bytes": 282146
+        },
+        {
+          "mono_s": 46.81349647999741,
+          "interval_start_mono_s": 45.79582425199624,
+          "cpu_pct_single_core": 2.947903968935387,
+          "rss_bytes": 77750272,
+          "cpu_times": {
+            "user": 1.89,
+            "system": 0.19,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 46,
+          "field_log_bytes": 2621745,
+          "native_log_bytes": 295660
+        },
+        {
+          "mono_s": 47.8305784050026,
+          "interval_start_mono_s": 46.81349647999741,
+          "cpu_pct_single_core": 2.9496148994926665,
+          "rss_bytes": 77766656,
+          "cpu_times": {
+            "user": 1.92,
+            "system": 0.19,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 47,
+          "field_log_bytes": 2669999,
+          "native_log_bytes": 300412
+        },
+        {
+          "mono_s": 48.85005895899667,
+          "interval_start_mono_s": 47.8305784050026,
+          "cpu_pct_single_core": 2.9426750596142024,
+          "rss_bytes": 77774848,
+          "cpu_times": {
+            "user": 1.95,
+            "system": 0.19,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 48,
+          "field_log_bytes": 2706814,
+          "native_log_bytes": 303919
+        },
+        {
+          "mono_s": 49.86792441300349,
+          "interval_start_mono_s": 48.85005895899667,
+          "cpu_pct_single_core": 1.9648962366558458,
+          "rss_bytes": 77783040,
+          "cpu_times": {
+            "user": 1.97,
+            "system": 0.19,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 49,
+          "field_log_bytes": 2743592,
+          "native_log_bytes": 307419
+        },
+        {
+          "mono_s": 50.87900979000551,
+          "interval_start_mono_s": 49.86792441300349,
+          "cpu_pct_single_core": 3.9561446451341746,
+          "rss_bytes": 77791232,
+          "cpu_times": {
+            "user": 2.0,
+            "system": 0.2,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 50,
+          "field_log_bytes": 2814662,
+          "native_log_bytes": 314366
+        },
+        {
+          "mono_s": 51.885597482993035,
+          "interval_start_mono_s": 50.87900979000551,
+          "cpu_pct_single_core": 1.986910841383387,
+          "rss_bytes": 77803520,
+          "cpu_times": {
+            "user": 2.02,
+            "system": 0.2,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 51,
+          "field_log_bytes": 2862841,
+          "native_log_bytes": 328353
+        },
+        {
+          "mono_s": 52.898568585995235,
+          "interval_start_mono_s": 51.885597482993035,
+          "cpu_pct_single_core": 2.9615849762236133,
+          "rss_bytes": 77807616,
+          "cpu_times": {
+            "user": 2.05,
+            "system": 0.2,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 52,
+          "field_log_bytes": 2911124,
+          "native_log_bytes": 333104
+        },
+        {
+          "mono_s": 53.91772003400547,
+          "interval_start_mono_s": 52.898568585995235,
+          "cpu_pct_single_core": 1.9624168752394473,
+          "rss_bytes": 77811712,
+          "cpu_times": {
+            "user": 2.07,
+            "system": 0.2,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 53,
+          "field_log_bytes": 2947934,
+          "native_log_bytes": 336609
+        },
+        {
+          "mono_s": 54.93583545999718,
+          "interval_start_mono_s": 53.91772003400547,
+          "cpu_pct_single_core": 3.928827614122189,
+          "rss_bytes": 77819904,
+          "cpu_times": {
+            "user": 2.1,
+            "system": 0.21,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 54,
+          "field_log_bytes": 2996171,
+          "native_log_bytes": 341341
+        },
+        {
+          "mono_s": 55.95443070499459,
+          "interval_start_mono_s": 54.93583545999718,
+          "cpu_pct_single_core": 2.9452326768004866,
+          "rss_bytes": 77848576,
+          "cpu_times": {
+            "user": 2.13,
+            "system": 0.21,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 55,
+          "field_log_bytes": 3055801,
+          "native_log_bytes": 347036
+        },
+        {
+          "mono_s": 56.970888216994354,
+          "interval_start_mono_s": 55.95443070499459,
+          "cpu_pct_single_core": 3.9352358094441877,
+          "rss_bytes": 77873152,
+          "cpu_times": {
+            "user": 2.17,
+            "system": 0.21,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 56,
+          "field_log_bytes": 3104007,
+          "native_log_bytes": 361573
+        },
+        {
+          "mono_s": 57.98799695300113,
+          "interval_start_mono_s": 56.970888216994354,
+          "cpu_pct_single_core": 1.9663580983996956,
+          "rss_bytes": 77885440,
+          "cpu_times": {
+            "user": 2.19,
+            "system": 0.21,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 57,
+          "field_log_bytes": 3152249,
+          "native_log_bytes": 366323
+        },
+        {
+          "mono_s": 59.00521356999525,
+          "interval_start_mono_s": 57.98799695300113,
+          "cpu_pct_single_core": 2.9492243342082256,
+          "rss_bytes": 77893632,
+          "cpu_times": {
+            "user": 2.22,
+            "system": 0.21,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 58,
+          "field_log_bytes": 3189009,
+          "native_log_bytes": 369830
+        },
+        {
+          "mono_s": 60.03393628699996,
+          "interval_start_mono_s": 59.00521356999525,
+          "cpu_pct_single_core": 4.860396214986163,
+          "rss_bytes": 78090240,
+          "cpu_times": {
+            "user": 2.26,
+            "system": 0.22,
+            "children_user": 0.0,
+            "children_system": 0.0,
+            "iowait": 0.0
+          },
+          "resource_error": null,
+          "resource_seq": 59,
+          "field_log_bytes": 3248143,
+          "native_log_bytes": 386072
+        }
+      ]
+    }
+  },
+  "measured_resolution_evidence": {
+    "cpu_median_read_period_s": 0.20000044100743253,
+    "GPU_independent_resolution": "unknown unless source window/generation provided",
+    "rail_independent_resolution": "unknown; native coarse baseline retained",
+    "exact_cross_host_source_lead": "unknown"
+  },
+  "source_run_id": "ed9de51d-7cb3-4a60-9be4-5ee5ba238a1a",
+  "files": {
+    "launch.json": "92d62da1d2a66988ec61b00d1b8bdd45fa3f640563f953477c2607bed99e35ed",
+    "summary.json": "9895c6eb0770162a30a088ec5a7281115c8b8525325ebf60789eda47db76f384",
+    "thread-policy.json": "01728cf4236729194557d6f078f7b9185ecb5f70d7f1849fd82767874b4d79c7",
+    "resources.jsonl": "1ff9b479eeeb1cdb86d1e8c662a7b928fa0a497f6d73e1c245e6e6fc17e2c48f"
+  }
+}

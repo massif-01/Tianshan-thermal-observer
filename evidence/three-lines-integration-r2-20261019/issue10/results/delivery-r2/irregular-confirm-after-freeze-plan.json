@@ -1,0 +1,78 @@
+{
+  "profile": {
+    "id": "irregular-confirm-after-freeze",
+    "role": "reserve_until_candidate_frozen",
+    "model_profile": "chosen_resident_model",
+    "schedule_origin": "explicit_list_v1_not_temperature_selected",
+    "stages": [
+      {
+        "kind": "background",
+        "seconds": 300
+      },
+      {
+        "kind": "work",
+        "concurrency": 1,
+        "seconds": 345
+      },
+      {
+        "kind": "recovery",
+        "seconds": 45
+      },
+      {
+        "kind": "work",
+        "concurrency": 4,
+        "seconds": 330
+      },
+      {
+        "kind": "recovery",
+        "seconds": 210
+      },
+      {
+        "kind": "work",
+        "concurrency": 2,
+        "seconds": 255
+      },
+      {
+        "kind": "recovery",
+        "seconds": 75
+      },
+      {
+        "kind": "work",
+        "concurrency": 1,
+        "seconds": 480
+      },
+      {
+        "kind": "final_recovery",
+        "seconds": 600
+      }
+    ],
+    "nominal_seconds": 2640,
+    "hard_limit_seconds": 3600,
+    "preparation_reserve_seconds": 300,
+    "drain_per_work_max_seconds": 90,
+    "cleanup_reserve_seconds": 120,
+    "budget": {
+      "nominal_s": 2640,
+      "work_blocks": 4,
+      "worst_reserved_s": 3420,
+      "remaining_s": 180
+    }
+  },
+  "request_policy": {
+    "max_concurrency": 4,
+    "max_total_requests": 4096,
+    "max_request_seconds": 60,
+    "budget_kind": "start_window_then_natural_drain",
+    "unknown_termination": "stop_new_requests_record_server_state_unknown",
+    "payload_policy": "reuse_existing_confirmed_payload_then_freeze_no_new_live_pilot_now",
+    "no_model_plan_leak": true
+  },
+  "irregular_seed": 61018010,
+  "schedule_origin": "explicit list from supplied mix-plan; no thermal selection",
+  "model_configuration": {
+    "model_id": null,
+    "ready_for_live": false
+  },
+  "offline_only": true,
+  "field_authorized": false
+}

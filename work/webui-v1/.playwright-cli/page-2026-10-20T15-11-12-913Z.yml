@@ -1,0 +1,144 @@
+- generic [ref=f2e2]:
+  - banner [ref=f2e3]:
+    - link "T TTO 热观察台 只读观察" [ref=f2e4] [cursor=pointer]:
+      - /url: "#trends"
+      - generic [ref=f2e5]: T
+      - generic [ref=f2e6]: TTO 热观察台
+      - generic [ref=f2e7]: 只读观察
+    - navigation [ref=f2e8]:
+      - link "趋势" [ref=f2e9] [cursor=pointer]:
+        - /url: "#trends"
+      - link "热模型" [ref=f2e10] [cursor=pointer]:
+        - /url: "#model"
+      - link "预测对照" [ref=f2e11] [cursor=pointer]:
+        - /url: "#compare"
+      - link "运行信息" [ref=f2e12] [cursor=pointer]:
+        - /url: "#context"
+    - generic [ref=f2e13]:
+      - generic [ref=f2e14]: 连接中
+      - button "暂停画面" [ref=f2e15] [cursor=pointer]
+      - button "全屏" [ref=f2e16] [cursor=pointer]
+  - main [ref=f2e17]:
+    - generic [ref=f2e18]:
+      - generic [ref=f2e19]:
+        - text: THERMAL OBSERVATORY · V1.0
+        - heading "看清当前，也核对预测。" [level=1] [ref=f2e20]
+        - paragraph [ref=f2e21]: 页面已启动，正在等待TTO数据
+      - generic [ref=f2e22]:
+        - generic [ref=f2e23]: 等待数据
+        - generic [ref=f2e24]: 等待模型
+        - generic [ref=f2e25]: Asia/Shanghai
+    - status [ref=f2e26]: 正在连接本地Web服务。
+    - generic [ref=f2e27]:
+      - generic [ref=f2e28]:
+        - generic [ref=f2e29]:
+          - generic [ref=f2e30]: "01"
+          - heading "实时趋势" [level=2] [ref=f2e31]
+          - generic [ref=f2e32]: 原始采样 · 缺口保留
+        - generic [ref=f2e33]:
+          - generic [ref=f2e34]:
+            - text: 时间范围
+            - combobox "时间范围" [ref=f2e35] [cursor=pointer]:
+              - option "最近5分钟"
+              - option "最近10分钟" [selected]
+              - option "最近30分钟"
+              - option "最近60分钟"
+          - group [ref=f2e36]:
+            - generic "＋显示设置" [ref=f2e37] [cursor=pointer]
+          - button "重置缩放" [ref=f2e38] [cursor=pointer]
+      - generic [ref=f2e40]:
+        - heading "温度" [level=3] [ref=f2e41]
+        - generic [ref=f2e42]: °C · 实测
+      - generic [ref=f2e46]:
+        - heading "功率" [level=3] [ref=f2e47]
+        - generic [ref=f2e48]: W · 独立rail，非整机总功耗
+      - generic [ref=f2e52]:
+        - heading "风扇输出" [level=3] [ref=f2e53]
+        - generic [ref=f2e54]: "% · 天山OS执行"
+      - generic [ref=f2e57]:
+        - generic [ref=f2e58]: A · 事件
+        - generic: 等待有来源的事件
+      - generic [ref=f2e61]: 三图与事件共用时间范围、缩放和光标。每条读数的实际接收时间在提示中列出；不跨缺口连线。
+    - generic [ref=f2e62]:
+      - generic [ref=f2e63]:
+        - generic [ref=f2e64]:
+          - generic [ref=f2e65]:
+            - generic [ref=f2e66]: C
+            - heading "热模型路径" [level=2] [ref=f2e67]
+          - generic [ref=f2e68]: 未加载
+        - img "G2热模型依赖图" [ref=f2e70]
+        - generic [ref=f2e71]:
+          - generic [ref=f2e72]: 实线：模型输入 / 耦合
+          - generic [ref=f2e73]: 虚线：TJ测量校正
+          - generic [ref=f2e74]: 流动点：有效数据关系示意
+        - paragraph [ref=f2e75]: Ts是模型内部慢态，E是等效边界，均非结构或环境测温。RPM、CPU/GPU利用率和RAM属于运行观测。
+        - group [ref=f2e76]:
+          - generic "＋节点与模型详情" [ref=f2e77] [cursor=pointer]
+        - generic [ref=f2e78]:
+          - generic [ref=f2e79]:
+            - generic [ref=f2e80]: 平稳需求（研究）
+            - generic [ref=f2e81]: 本轮未计算
+            - generic [ref=f2e82]: 没有当前合法provider和固定参考；index不是PWM。
+          - generic [ref=f2e83]:
+            - generic [ref=f2e84]: PWM观察建议
+            - generic [ref=f2e85]: 暂无可用建议映射
+            - generic [ref=f2e86]: 实验观察参考，无设备写权限。
+      - generic [ref=f2e87]:
+        - generic [ref=f2e88]:
+          - generic [ref=f2e89]:
+            - generic [ref=f2e90]:
+              - generic [ref=f2e91]: D
+              - heading "预测与实测" [level=2] [ref=f2e92]
+            - combobox "预测时距" [ref=f2e93] [cursor=pointer]:
+              - option "+15秒"
+              - option "+45秒" [selected]
+              - option "+90秒"
+          - paragraph [ref=f2e94]: 过去发出的45秒预测，到了目标时刻，实际TJ是多少？
+          - generic [ref=f2e98]: 等待这条预测对应的实测温度
+          - generic [ref=f2e99]:
+            - text: 现在发出的未来参考 · G2-HOLD
+            - generic [ref=f2e100]: 模型正在等待可消费状态。
+            - paragraph [ref=f2e101]: 保持当时两rail与已声明PWM情景；三点分别实算，不代表连续未来轨迹。
+        - generic [ref=f2e102]:
+          - generic [ref=f2e103]:
+            - generic [ref=f2e104]:
+              - generic [ref=f2e105]: E
+              - heading "当前运行信息" [level=2] [ref=f2e106]
+            - generic [ref=f2e107]: 天山OS控制
+          - paragraph [ref=f2e108]: 未接入任务记录；客户端完成不代表GPU停止。RAM用量不用于推断模型驻留。
+    - group [ref=f2e109]:
+      - generic "＋ B · 数据源详细状态 等待来源" [ref=f2e110] [cursor=pointer]:
+        - text: ＋
+        - generic [ref=f2e111]: B · 数据源详细状态
+        - generic [ref=f2e112]: 等待来源
+    - group [ref=f2e113]:
+      - generic "＋ 事件与告警 0条" [ref=f2e114] [cursor=pointer]:
+        - text: ＋
+        - generic [ref=f2e115]: 事件与告警
+        - generic [ref=f2e116]: 0条
+      - option "全部来源" [selected]
+      - option "source"
+      - option "observer"
+      - option "board"
+      - option "runner"
+      - option "web-source"
+      - option "全部级别" [selected]
+      - option "重要异常"
+      - option "信息"
+    - group [ref=f2e117]:
+      - generic "＋ 全部已接字段 0项" [ref=f2e118] [cursor=pointer]:
+        - text: ＋
+        - generic [ref=f2e119]: 全部已接字段
+        - generic [ref=f2e120]: 0项
+      - option "全部分类" [selected]
+      - option "温度"
+      - option "逐核CPU"
+      - option "利用率"
+      - option "内存"
+      - option "功率"
+      - option "风扇"
+      - option "主板温源"
+      - option "Web主机进程"
+    - generic [ref=f2e121]:
+      - generic [ref=f2e122]: TTO Web UI 1.0 · 固定参数，只读观察
+      - generic [ref=f2e123]: 研究状态与条件预测不构成风扇控制指令

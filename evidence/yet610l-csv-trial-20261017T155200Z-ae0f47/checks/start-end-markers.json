@@ -1,0 +1,47 @@
+{
+  "start": {
+    "event_type": "recording_start",
+    "user_message": "试录开始",
+    "recorded_at_utc": "2026-10-17T15:54:39.055323+00:00",
+    "recorded_monotonic_ns": 694066346325375,
+    "timezone": "Asia/Shanghai",
+    "executing_host": {
+      "hostname": "Massif-MacBook-Pro.local",
+      "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O"
+    },
+    "platform_message_timestamp": null,
+    "platform_message_timestamp_status": "not_available_in_current_message_context",
+    "time_meaning": "host event persistence time; not user send time or instrument button/sample timestamp",
+    "sync_method": "manual_approximate",
+    "sync_uncertainty_s": null,
+    "user_operation_statement": "按用户预先说明，发送开始消息与手动按仪表记录开始键大致同时发生",
+    "instrument_first_sample_time": null,
+    "clock_setting_status": "user previously said setting manually; completion and clock correspondence not independently verified",
+    "tto_run_id": null,
+    "tto_collection_started": false,
+    "inference_load_started": false
+  },
+  "end": {
+    "event_type": "recording_end",
+    "user_message": "试录结束",
+    "recorded_at_utc": "2026-10-17T15:57:38.628614+00:00",
+    "recorded_monotonic_ns": 694245919421333,
+    "timezone": "Asia/Shanghai",
+    "executing_host": {
+      "hostname": "Massif-MacBook-Pro.local",
+      "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O"
+    },
+    "platform_message_timestamp": null,
+    "time_meaning": "host event persistence time; not user send time or instrument button/sample timestamp",
+    "sync_method": "manual_approximate",
+    "sync_uncertainty_s": null,
+    "user_operation_statement": "按用户预先说明，发送结束消息与手动按仪表停止键大致同时发生",
+    "instrument_last_sample_time": null,
+    "tto_run_id": null,
+    "tto_collection_started": false,
+    "inference_load_started": false,
+    "same_host_marker_elapsed_s": 179.573095958,
+    "elapsed_meaning": "interval between host event logging instants; not verified instrument recording duration"
+  },
+  "state": "recording_end_reported_waiting_for_original_csv"
+}

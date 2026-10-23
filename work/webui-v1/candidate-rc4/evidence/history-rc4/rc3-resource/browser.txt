@@ -1,0 +1,12 @@
+### Result
+{"phase":"状态跟踪中","title":"TTO 热观察台","jsHeapBytes":16941603}
+### Ran Playwright code
+```js
+await (async(page)=>({phase:await page.locator('#modelPhase').innerText(),title:await page.title(),jsHeapBytes:await page.evaluate(()=>performance.memory?.usedJSHeapSize)}))(page);
+```
+### Page
+- Page URL: http://127.0.0.1:59009/
+- Page Title: TTO 热观察台
+- Console: 43 errors, 0 warnings
+### Events
+- New console entries: .playwright-cli/console-2026-10-21T14-51-40-606Z.log#L2-L44

@@ -1,0 +1,12 @@
+已连接，正在等待第一份有效温度数据。
+本轮TTO已停止；现有风扇控制未被修改。
+Traceback (most recent call last):
+  File "/source/tests/target_check.py", line 23, in <module>
+    asyncio.run(check(out/'installed-loopback','normal'))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/source/tests/integration.py", line 41, in check
+    if scenario=='normal':assert result['successful_requests']==12 and result['schedule_completed'] and service.peak==1
+AssertionError

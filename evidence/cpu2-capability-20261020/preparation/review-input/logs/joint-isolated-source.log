@@ -1,0 +1,19 @@
+已连接，正在等待第一份有效温度数据。
+本轮TTO已停止；现有风扇控制未被修改。
+Traceback (most recent call last):
+  File "/mnt/data/tto_cpu2_independent_review_20261020/scripts/run_joint_isolated_source.py", line 17, in <module>
+    asyncio.run(g.main(R/'work/joint-isolated-source'))
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "/usr/lib/python3.13/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/usr/lib/python3.13/asyncio/base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "/mnt/data/tto_cpu2_independent_review_20261020/work/field/source/tests/generate_joint_sample.py", line 37, in main
+    assert len(rows)>=100
+           ^^^^^^^^^^^^^^
+AssertionError

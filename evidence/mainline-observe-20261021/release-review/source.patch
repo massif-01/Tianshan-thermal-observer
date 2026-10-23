@@ -1,0 +1,1707 @@
+--- cpu.3/tto/collector.py
++++ observe.1/tto/collector.py
+@@ -166,8 +166,10 @@
+ 
+ 
+ async def collect(config, duration, model=None, data_root=None, episode=None, deployment=None, run_type=None,
+-                  stop_event=None, on_record=None):
+-    require_live(config, duration)
++                  stop_event=None, on_record=None, observe_store=None):
++    if observe_store is not None and run_type != "observe":
++        raise ValueError("observe store requires explicit observe mode")
++    require_live(config, duration, observe=observe_store is not None)
+     # No networking is constructed until this explicitly live function is called.
+     with InstanceLock():
+         recorded_deployment = dict(deployment or {})
+@@ -176,15 +178,27 @@
+             'fan_interval_s': config['tianshan']['fan_poll_interval_s'],
+             'temp_interval_s': config['tianshan']['temp_poll_interval_s'],
+             'legacy_config_max_inflight_esp32': config['network']['max_inflight_esp32']}
+-        journal = Journal(config, data_root, episode=episode, deployment=recorded_deployment, run_type=run_type or ('shadow' if model else 'collect'), model_sha256=model['sha256'] if model else None, record_schema=2)
++        journal_class = Journal
++        if observe_store is not None:
++            from tto_field.observe_storage import ObserveJournal
++            from functools import partial
++            journal_class = partial(ObserveJournal, store=observe_store)
++        journal = journal_class(config, data_root, episode=episode, deployment=recorded_deployment, run_type=run_type or ('shadow' if model else 'collect'), model_sha256=model['sha256'] if model else None, record_schema=2)
+         engine = engine_for(config, model, record_schema=2)
+         q = BoundedQueue(config['storage']['queue_max_items'], config['storage']['queue_max_bytes'])
+         stop = stop_event if stop_event is not None else asyncio.Event()
+         stats = {'stop_reason': 'duration', 'poll_missed': 0, 'poll_count': 0, 'connection_attempts': 0, 'payload_oversize': 0, 'orin_event_count': 0, 'business_payload_bytes_sum': 0, 'business_payload_bytes_max': 0, 'poll_rtt_ms': [], 'prediction_ms': [], 'rss_mib': [], 'cpu_pct_single_core': []}
++        if observe_store is not None:
++            from tto_field.observe_limits import Samples
++            for key in ('poll_rtt_ms','prediction_ms','rss_mib','cpu_pct_single_core'):
++                stats[key]=Samples()
+         clock_start = time.monotonic()
+         polls = {key: {'sent': [], 'received': [], 'rtt_ms': [], 'http_ok': 0, 'errors': 0,
+                        'skipped': 0, 'cancelled': 0, 'inflight': 0, 'peak_inflight': 0}
+                  for key in ('fan', 'temp')}
++        if observe_store is not None:
++            for detail in polls.values():
++                for key in ('sent','received','rtt_ms'): detail[key]=Samples()
+         esp_inflight = 0
+         esp_peak = 0
+         loop = asyncio.get_running_loop()
+@@ -230,8 +244,15 @@
+         async def orin():
+             import socketio
+             network = config['network']
+-            epoch = 0
+-            while not stop.is_set() and stats['connection_attempts'] < network['reconnect_max_attempts']:
++            epoch = 0; burst_attempts = 0
++            while not stop.is_set() and (observe_store is not None or stats['connection_attempts'] < network['reconnect_max_attempts']):
++                if observe_store is not None and burst_attempts >= network['reconnect_max_attempts']:
++                    put('boundary',reason='observe_ws_retry_burst_pause',attempts=burst_attempts,cooldown_s=network['reconnect_max_s'])
++                    with contextlib.suppress(asyncio.TimeoutError):
++                        await asyncio.wait_for(stop.wait(),network['reconnect_max_s'])
++                    burst_attempts=0
++                    if stop.is_set():break
++                burst_attempts+=1
+                 epoch += 1
+                 this_epoch = epoch
+                 stats['connection_attempts'] += 1
+@@ -277,7 +298,7 @@
+                         with contextlib.suppress(Exception):
+                             await asyncio.wait_for(sio.shutdown(), timeout=3)
+                 if not stop.is_set():
+-                    delay = min(network['reconnect_max_s'], network['reconnect_initial_s'] * 2 ** (epoch - 1))
++                    delay = min(network['reconnect_max_s'], network['reconnect_initial_s'] * 2 ** (min(burst_attempts - 1,30) if observe_store is not None else epoch - 1))
+                     delay *= random.uniform(1 - network['reconnect_jitter_ratio'], 1 + network['reconnect_jitter_ratio'])
+                     with contextlib.suppress(asyncio.TimeoutError):
+                         await asyncio.wait_for(stop.wait(), delay)
+@@ -428,19 +449,23 @@
+                     i = (len(ordered)-1)*q
+                     lo, hi = math.floor(i), math.ceil(i)
+                     return ordered[lo]+(ordered[hi]-ordered[lo])*(i-lo)
+-                return {'n': len(values), 'p50': percentile(.5), 'p95': percentile(.95),
++                return {'n': getattr(values, 'total', len(values)), 'retained_n': len(values), 'p50': percentile(.5), 'p95': percentile(.95),
+                         'min': min(values) if values else None, 'max': max(values) if values else None}
+             stats['polling_health'] = {'contract': 'TTO-POLL-INDEPENDENT-v1',
+                 'max_inflight_per_endpoint': 1, 'max_total_inflight_limit': 2,
+                 'max_total_inflight_observed': esp_peak, 'end_inflight': esp_inflight,
+                 'legacy_config_max_inflight_esp32': config['network']['max_inflight_esp32'],
+-                'endpoints': {key: {'sent': len(p['sent']), 'returned': len(p['received']),
++                'endpoints': {key: {'sent': getattr(p['sent'], 'total', len(p['sent'])), 'returned': getattr(p['received'], 'total', len(p['received'])),
+                     'http_ok': p['http_ok'], 'errors': p['errors'], 'skipped': p['skipped'],
+                     'cancelled': p['cancelled'], 'peak_inflight': p['peak_inflight'],
+                     'rtt_ms': summary(p['rtt_ms']),
+                     'send_interval_s': summary([b-a for a,b in zip(p['sent'],p['sent'][1:])]),
+                     'return_interval_s': summary([b-a for a,b in zip(p['received'],p['received'][1:])])}
+                     for key,p in polls.items()}}
++            if observe_store is not None:
++                stats['diagnostic_history_contract']={'max_retained_per_series':4096,'percentiles':'last4096; full raw/resource journals preserved','sample_totals':{k:v.total for k,v in stats.items() if isinstance(v,Samples)}}
++                for k,v in list(stats.items()):
++                    if isinstance(v,Samples):stats[k]=list(v)
+             journal.close(stats)
+         print('本轮TTO已停止；现有风扇控制未被修改。', flush=True)
+         return journal.path, stats
+--- cpu.3/tto/config.py
++++ observe.1/tto/config.py
+@@ -157,8 +157,9 @@
+     return h
+ 
+ 
+-def require_live(c, duration):
+-    if not finite(duration) or not 0 < duration <= c['run']['max_duration_s']:
++def require_live(c, duration, *, observe=False):
++    maximum = 86400 if observe else c['run']['max_duration_s']
++    if not finite(duration) or not 0 < duration <= maximum:
+         raise ValueError('duration must be bounded by configured maximum')
+     if not all(c[s]['base_url'] for s in ('orin', 'tianshan')):
+         raise ValueError('请先在本机配置两路明确端点；没有默认设备地址。')
+--- cpu.3/tto_field/__init__.py
++++ observe.1/tto_field/__init__.py
+@@ -1 +1 @@
+-__version__ = "0.2.4+cpu.3"
++__version__ = "0.2.4+observe.1"
+--- cpu.3/tto_field/business_events.py
++++ observe.1/tto_field/business_events.py
+@@ -0,0 +1,100 @@
++"""Passive protocol.jsonl adapter. No networking, collectors, or Requester imports."""
++import argparse
++from collections import deque
++import hashlib
++import json
++
++CONTRACT = 'TTO-WORKLOAD-EVENTS-v1'
++EVENTS = {'request_submit', 'first_content', 'request_end', 'request_cancel'}
++
++class Adapter:
++    def __init__(self, *, session_id, source_clock_domain, observer_clock_domain,
++                 complete_from_session_start=False, publication_mode='replay'):
++        self.session_id = session_id
++        self.source_clock_domain = source_clock_domain
++        self.observer_clock_domain = observer_clock_domain
++        self.mode = publication_mode
++        self.known = complete_from_session_start
++        self.active = set()
++        self.seen = set()
++        self.recent = deque()
++        self.last_source_mono = None
++        self.sequence = 0
++
++    def unavailable(self, reason, *, received_mono_s=None):
++        self.known = False
++        return dict(contract=CONTRACT, event='source_unknown', reason=reason,
++                    session_id=self.session_id, client_inflight=None,
++                    received_mono_s=received_mono_s,
++                    observer_clock_domain=self.observer_clock_domain,
++                    gpu_kernel_start=None, gpu_kernel_end=None)
++
++    def feed(self, row, *, received_mono_s=None, received_at_utc=None):
++        if row.get('event') not in EVENTS:
++            return None
++        digest = hashlib.sha256(json.dumps(row, sort_keys=True).encode()).hexdigest()
++        if digest in self.seen:
++            return None
++        self.seen.add(digest)
++        self.recent.append(digest)
++        if len(self.recent) > 4096:
++            self.seen.remove(self.recent.popleft())
++        event, rid = row['event'], row.get('request_id')
++        mono = row.get('mono_s')
++        if (row.get('native_run_id') != self.session_id or not rid or
++                not isinstance(mono, (int, float))):
++            return self.unavailable('identity_or_source_time_missing', received_mono_s=received_mono_s)
++        if self.last_source_mono is not None and mono < self.last_source_mono:
++            return self.unavailable('out_of_order_source_event', received_mono_s=received_mono_s)
++        self.last_source_mono = mono
++        terminal = None
++        if event == 'request_submit':
++            if rid in self.active or len(self.active) >= 256:
++                return self.unavailable('duplicate_submit_or_state_budget', received_mono_s=received_mono_s)
++            self.active.add(rid)
++        elif event == 'request_end':
++            if rid not in self.active:
++                self.known = False  # A terminal record cannot invent an earlier live submit.
++            self.active.discard(rid)
++            if row.get('status') == 'completed' and row.get('done') and row.get('finish_reason') is not None:
++                terminal = 'protocol_completed'
++            elif row.get('error_class') == 'CancelledError':
++                terminal = 'client_cancelled_server_end_unknown'
++            else:
++                terminal = 'client_ended_server_end_unknown'
++        elif rid not in self.active:
++            self.known = False
++        self.sequence += 1
++        return dict(contract=CONTRACT, event=event, sequence=self.sequence,
++                    session_id=self.session_id, request_id=rid,
++                    source_event_utc=row.get('at_utc'), source_event_mono_s=mono,
++                    source_clock_domain=self.source_clock_domain,
++                    received_mono_s=received_mono_s, received_at_utc=received_at_utc,
++                    observer_clock_domain=self.observer_clock_domain,
++                    publication_mode=self.mode, client_inflight=len(self.active) if self.known else None,
++                    inflight_scope='this_requester_session_only',
++                    terminal=terminal, finish_reason=row.get('finish_reason'),
++                    done=row.get('done'), usage=row.get('usage'),
++                    server_request_id=row.get('server_request_id'),
++                    content_semantics=row.get('semantics') if event == 'first_content' else None,
++                    gpu_kernel_start=None, gpu_kernel_end=None)
++
++def main():
++    p = argparse.ArgumentParser(description='Offline local JSONL replay; never opens a network connection.')
++    p.add_argument('input'); p.add_argument('--session-id', required=True)
++    p.add_argument('--source-clock-domain', required=True)
++    p.add_argument('--complete-from-session-start', action='store_true')
++    a = p.parse_args()
++    adapter = Adapter(session_id=a.session_id, source_clock_domain=a.source_clock_domain,
++                      observer_clock_domain='offline-replay-arrival-unknown',
++                      complete_from_session_start=a.complete_from_session_start)
++    with open(a.input, encoding='utf8') as f:
++        for line in f:
++            if len(line) > 1048576:
++                raise ValueError('line_budget_exceeded')
++            out = adapter.feed(json.loads(line))
++            if out is not None:
++                print(json.dumps(out, ensure_ascii=False))
++
++if __name__ == '__main__':
++    main()
+--- cpu.3/tto_field/candidate-files.json
++++ observe.1/tto_field/candidate-files.json
+@@ -1,11 +1,11 @@
+ {
+-  "version": "0.2.4+cpu.3",
++  "version": "0.2.4+observe.1",
+   "files": {
+     "tto/__init__.py": "672cde4b34710368c9ecba08ed361a47ef4a7c1f4ed5863a338bcde29549e700",
+     "tto/__main__.py": "79ee6f134c5c5193377cf9b189cbdcc3e2095e49ba9cec310114441c15a917c4",
+     "tto/cli.py": "d6adf47989226d57f798125c8f020bfdb8d1e14b357bf4f85ca82d3150747ce1",
+-    "tto/collector.py": "4c696d3a63cef96d255e0e6e0fd5f56754727a2647801653ed373f0aede22563",
+-    "tto/config.py": "5a05545f28b8b44b3e6f0e7efcf2453e01ee0726ef0bd228cc73d553e01d8e3e",
++    "tto/collector.py": "94f3791bc1b9f4f2a47f06af07491ab0c199237475fe921d0b5df9ad9452c444",
++    "tto/config.py": "a6739022a483de11a5436deed024b13aa017e8161fc7f3dad364d17ad526a7f7",
+     "tto/dataset.py": "32ee485269a521b0540f6d4050eab2dac46cc93a65603086eea263349d9487ee",
+     "tto/defaults.json": "4463c064f6809cf371f447cb133d30e1fdb9854b1483077c8102f0e58b67ebd1",
+     "tto/demo.py": "3e1475ee0753040f35d454138c47a39879c32d315db89824e101563d56b829fb",
+@@ -24,7 +24,8 @@
+     "tto/storage.py": "cda8d22444a0e1fe5fc2f1fa86b73cb4e3f9be4e76edb3cf265520b3285143ec",
+     "tto/training.py": "c8f0d6c83587b18c8a527e9d84e222276ee1bd0edc8e69a828dd1ed33a2de773",
+     "tto/util.py": "0a33bb268e7817ddd19b6ae81562c50e1fdd08a9cdb3fa08f8f2dd3fbb252f16",
+-    "tto_field/__init__.py": "ad02c64181eea81da52a038072ec1f200a92f7255a49080e06187074bf0f574b",
++    "tto_field/__init__.py": "5a3a2869cab8cee2a2bf779439b15a282205dbd8a93326c3f161950e999325c1",
++    "tto_field/business_events.py": "126535545f4e092718a63c45519daaac4a2c26678db6337d91be6ef82f5fd588",
+     "tto_field/cli.py": "827953261847e853e851c75b850a538f2b3a912d1e76dc49bc7310305f13b787",
+     "tto_field/comm_bridge.py": "50f7297b066057323c9a46ffc8713e0a799432ffce95567db5f89b62f2fbe5d1",
+     "tto_field/cpu_cli.py": "4264c0b4a4f019c6d198d30f5b0f6b672fbac371c9cf98a6d71eef3a84842ebc",
+@@ -32,9 +33,23 @@
+     "tto_field/cpu_pilot.py": "36861ae379d9c1a56a8ab2584aa24b23deb0a7d48dc758e6958015bbd1fc2f2f",
+     "tto_field/cpu_source.py": "7f674e6913458dc73e8a677fbb46d6574812da05c5a5ba2938d126b53ca14382",
+     "tto_field/cpu_transport.py": "2691b9c4040a192df6823e293aafbe211386fced0d542c6bd0fb7b550a47bfa0",
++    "tto_field/g2_model/__init__.py": "5c0db97bf3d021c8225199e7a31e9737161867bfb3f326e1b17844b789f218e4",
++    "tto_field/g2_model/frozen-model-manifest.json": "a43cd5d111f169408d71f3fe008e0c03119bb9e4f0dc1ffd63d2f79c5f8834c9",
++    "tto_field/g2_model/g2_runtime/__init__.py": "225fc72920f7b20601c5be23a21179b7afed8bf6acd3b787da4367526b75b713",
++    "tto_field/g2_model/g2_runtime/__main__.py": "bcd02f08c0e2b224b60905b542be28e4ff33761d8a92c7f62911d38c14f211f1",
++    "tto_field/g2_model/g2_runtime/frozen/observer-spec.json": "2080adcf20773650299def2bb0f3ebdb9f87d8f85281d5b87a99d8b406c83c6b",
++    "tto_field/g2_model/g2_runtime/frozen/observer.py": "599e292a0000697615e76a97596f2f48c7527bc82027bacca5aea0c0fe5d4a47",
++    "tto_field/g2_model/g2_runtime/frozen/primary.json": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
++    "tto_field/g2_model/g2_runtime/predict.py": "dc135fcc2cd5e2c8c5ef4b18db4a88806eba8b52079cf645e34375b534e8d7e9",
+     "tto_field/gate.py": "84bad590f2d1f4f85a068eb6e1cfbaf058a7c906f974ca8316cdabfaf0176817",
+     "tto_field/identity.py": "58850200044da1dc1417bec8ee805a3bca44813219a1523f325a6c8f92ee2ef1",
+     "tto_field/numeric_policy.py": "d27f383e49de5512316307250cf97ec1d619f40c7a0133e42ba0df6e0b13c27f",
++    "tto_field/observe_cli.py": "9a9a9910a3422a3106e28ab8708e3fd4f8667f2334b1dbcc69432f26efcf0b80",
++    "tto_field/observe_limits.py": "1dc0b1dd827d1603bf15653fe31bebca5e9b5c07b6a723653601170b3334924a",
++    "tto_field/observe_predictions.py": "205a8b431ab89e444d73d94982151a4dd97d79a06d7791c076885318136ce32e",
++    "tto_field/observe_runtime.py": "5371fb535a1e605229b7886780df7e4a37a6d50e2f68fda0f16e163dc7a711bd",
++    "tto_field/observe_storage.py": "19b063c06e68768079d78f088a72b9406dfcb783034a1e5e1c6186218652b22d",
++    "tto_field/observe_workload.py": "9332d2e3bc2bcf4f410db19557d816bdea222f4ed72a1542471a1e171ae2d93c",
+     "tto_field/plans/cpu-pilot.json": "addb4b2b6c4b143fe5f666742bf8072cc6003a7b2c7763da826fbf44e3f3bb88",
+     "tto_field/plans/execution-policy.json": "60d56e969cb5b8b6542500af00167f65c841ef13552590d75f748c688e1279f0",
+     "tto_field/plans/mix-plan.json": "1ad1f202c72121e86c8e56a1f38dc72a81f23c52de7932814798fd7c8db3e4e7",
+--- cpu.3/tto_field/g2_model/__init__.py
++++ observe.1/tto_field/g2_model/__init__.py
+@@ -0,0 +1 @@
++"""Byte-exact A1 model package, observation only."""
+--- cpu.3/tto_field/g2_model/frozen-model-manifest.json
++++ observe.1/tto_field/g2_model/frozen-model-manifest.json
+@@ -0,0 +1,49 @@
++{
++  "schema": "TTO-READONLY-MODEL-MANIFEST-v1",
++  "model_id": "G2-FROZEN-RM01-v1",
++  "management_label_new": true,
++  "parent_model_id": null,
++  "model_file": "g2_runtime/frozen/primary.json",
++  "observer_spec_file": "g2_runtime/frozen/observer-spec.json",
++  "observer_code_file": "g2_runtime/frozen/observer.py",
++  "files": {
++    "g2_runtime/predict.py": "dc135fcc2cd5e2c8c5ef4b18db4a88806eba8b52079cf645e34375b534e8d7e9",
++    "g2_runtime/__init__.py": "225fc72920f7b20601c5be23a21179b7afed8bf6acd3b787da4367526b75b713",
++    "g2_runtime/__main__.py": "bcd02f08c0e2b224b60905b542be28e4ff33761d8a92c7f62911d38c14f211f1",
++    "g2_runtime/frozen/observer.py": "599e292a0000697615e76a97596f2f48c7527bc82027bacca5aea0c0fe5d4a47",
++    "g2_runtime/frozen/observer-spec.json": "2080adcf20773650299def2bb0f3ebdb9f87d8f85281d5b87a99d8b406c83c6b",
++    "g2_runtime/frozen/primary.json": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0"
++  },
++  "model_sha256": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
++  "observer_spec_sha256": "2080adcf20773650299def2bb0f3ebdb9f87d8f85281d5b87a99d8b406c83c6b",
++  "observer_code_sha256": "599e292a0000697615e76a97596f2f48c7527bc82027bacca5aea0c0fe5d4a47",
++  "fit_runs": [
++    "L",
++    "M",
++    "S"
++  ],
++  "source_model_deployable": false,
++  "readonly_observation_candidate": true,
++  "device_actions": false,
++  "control_permission": false,
++  "automatic_activation": false,
++  "time_contract": "TTO-RECEIVE-ANCHOR-v1",
++  "forecast_anchors": "original accepted TJ observed_mono_s; observed state cutoff must equal anchor",
++  "estimator": "original ThermalObserver.step, no theta update",
++  "forecaster": "original ThermalObserver.mean_step from [current actual TJ, causal Ts, causal E], constant current rails/PWM",
++  "old_results": {
++    "run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
++    "role_now": "seen_development_not_new_holdout",
++    "n_45_common": 2649,
++    "G2_HOLD_MAE_C": 1.544,
++    "B0_MAE_C": 2.23,
++    "A_roll_known_future_inputs_MAE_C": 0.334,
++    "G2_HOLD_abs_error_p95_C": 10.264,
++    "G2_HOLD_max_under_C": 12.712,
++    "B0_abs_error_p95_C": 9.6,
++    "B0_max_under_C": 11.782,
++    "scores_are_historical_not_recomputed_this_turn": true
++  },
++  "CPU_incremental_branch": "paused; never used for defaults",
++  "new_theta_fit": false
++}
+--- cpu.3/tto_field/g2_model/g2_runtime/__init__.py
++++ observe.1/tto_field/g2_model/g2_runtime/__init__.py
+@@ -0,0 +1,4 @@
++from .predict import Predictor
++from .frozen.observer import ThermalObserver
++
++__all__ = ['Predictor', 'ThermalObserver']
+--- cpu.3/tto_field/g2_model/g2_runtime/__main__.py
++++ observe.1/tto_field/g2_model/g2_runtime/__main__.py
+@@ -0,0 +1,15 @@
++"""Offline JSON invocation of the same pure Predictor, not a collector."""
++import argparse
++import json
++from pathlib import Path
++from .predict import Predictor
++
++p = argparse.ArgumentParser(description=__doc__)
++p.add_argument('--input', type=Path, required=True)
++p.add_argument('--output', type=Path, required=True)
++p.add_argument('--manifest', type=Path)
++a = p.parse_args()
++result = Predictor(a.manifest).predict(**json.loads(a.input.read_text()))
++with a.output.open('x') as f:
++    json.dump(result, f, ensure_ascii=False, indent=2, allow_nan=False)
++    f.write('\n')
+--- cpu.3/tto_field/g2_model/g2_runtime/frozen/observer-spec.json
++++ observe.1/tto_field/g2_model/g2_runtime/frozen/observer-spec.json
+@@ -0,0 +1,181 @@
++{
++  "contract": "TTO-REVIEW-R2-20261018-ISSUE8-v1",
++  "deployable": false,
++  "scope": "complete Issue8 model-state line only; no communications/scheduling repair",
++  "dynamic_model": "frozen G2; augmented boundary state E, no theta update",
++  "model_sha256": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
++  "dynamic": {
++    "a": 0.11481067252369034,
++    "c": 0.012174003404921066,
++    "d0": 0.00467375150888984,
++    "d1": 0.008336813700608809,
++    "b_g": 0.01837304741692581,
++    "b_c": 0.06218669600410176
++  },
++  "data_roles": {
++    "M": "development masking; dynamics already fit on L+M+S, not held-out validation",
++    "Y": "candidate frozen before new replay; development replay, no physical Ts truth",
++    "synthetic": "known Tf/Ts/E truth; fixed theta and explicit sensor/noise assumptions"
++  },
++  "prior": {
++    "E_mean_C": 35.28589118494435,
++    "Ts_minus_E_mean_C": 7.545232699745185,
++    "E_std_C": 10.0,
++    "Ts_minus_E_std_C": 8.0,
++    "E_bounds_C": [
++      -10.0,
++      60.0
++    ],
++    "Ts_bounds_C": [
++      -20.0,
++      120.0
++    ],
++    "origin": "Only frozen L/S nuisance entries; never E_M, Ts_M, new-run prefix or YET/ambient",
++    "interpretation": "broad engineering prior, not measured equilibrium or calibrated probability"
++  },
++  "methods": [
++    "AUGMENTED-KF",
++    "CONDITIONAL-HOLD",
++    "OLD60"
++  ],
++  "numerical": {
++    "propagation": "exact affine matrix exponential on actual irregular dt",
++    "covariance": "exact Van Loan discretization; Joseph TJ update; symmetric covariance",
++    "TJ_noise_std_C": 0.2,
++    "process_std_C_per_sqrt_s": [
++      0.1,
++      0.025,
++      0.005
++    ],
++    "PWM_unknown_range": [
++      0.0,
++      1.0
++    ],
++    "power_unknown_relative_std": 0.3,
++    "uncertainty": "internal assumed-model covariance and 2-standard-deviation scale, NOT a calibrated 95% interval",
++    "covariance_includes_theta_or_clock_error": false,
++    "posterior_projection": "original E/Ts bounds; record unconstrained values and projection, never tracking while projected"
++  },
++  "input_policy": {
++    "fan_raw_TTL_s": 2.5,
++    "temp_raw_TTL_s": 7.5,
++    "power_and_TJ_TTL": "original source age/freshness only",
++    "fan_assumption": "last successful fraction held conditionally; startup uses 0.5 with full [0,1] range",
++    "fan_max_actual_age_s": 15.0,
++    "power_or_TJ_max_actual_age_s": 10.0,
++    "control_context_max_actual_age_s": 15.0,
++    "long_gap": "stop public Tf/Ts/E; discard internal state, next fresh TJ/rails cold-start from registered prior",
++    "source_epoch": "reset on raw stream/connection/lifecycle or genuine source-invalid boundary; never task phase",
++    "explicit_guard_fault_or_nonAUTO": "public observer unavailable; raw risk remains visible; never normal",
++    "stale_normalized_or_binding": "degraded, preserve conditional thermal history, no normal/tracking claim",
++    "HTTP_timeout": "observational unknown, conditional propagation without renewing successful PWM"
++  },
++  "phase_gates": {
++    "min_TJ_updates_for_tracking": 10,
++    "max_tracking_std_C": [
++      0.5,
++      2.0,
++      8.0
++    ],
++    "max_output_std_C": [
++      8.0,
++      25.0,
++      20.0
++    ],
++    "normal_context_stable_s": 5.0,
++    "expected_mode": "auto",
++    "expected_binding": "agx_info.temperature.tj",
++    "finite_is_tracking": false,
++    "tracking_is_field_safety_permission": false
++  },
++  "masks": {
++    "selection": "times/event kinds only, never hidden PWM/thermal values or full-M state",
++    "M_cold": [
++      [
++        0.0,
++        12.0
++      ]
++    ],
++    "M_single": [
++      [
++        180.0,
++        186.0
++      ]
++    ],
++    "M_cluster": "copy first 60s Y timeout timing block with >=2 failed fan polls; each exposure [failure-1s,next successful fan), translated to M+300s",
++    "M_transition": "[-2,+6] seconds around first runner work-block start, from recorded event timing only",
++    "M_long": [
++      [
++        600.0,
++        660.0
++      ]
++    ],
++    "projection": "replace whole masked fan response by payload=null/offline_mask; no derived full-input quality/state enters observer"
++  },
++  "evaluation": {
++    "horizons_s": [
++      15,
++      45,
++      90
++    ],
++    "label_tolerance_s": 2.0,
++    "origins": "every valid accepted TJ, not old five-second starts",
++    "forecast_Tf_anchor": "same current real TJ for all methods; filtered Tf reported separately",
++    "B": "HOLD two current rails and known/declared conditional PWM; no future inputs/TJ/end markers",
++    "A": "recorded future two rails and successful PWM within original TTL, no future TJ update; omit when actual future input path unavailable",
++    "A_contract": "R2 physical-input diagnostic, stratify observed context; retain original strict results separately, do not silently rename old scores",
++    "comparisons": "pairwise/common origin+horizon+label refs with cohort SHA; also each method own coverage and all-valid-TJ denominator",
++    "tails": "P95/max positive underprediction; fraction underpredicting >2C is description, not safety threshold",
++    "real_Ts": "difference to separately run unmasked M reference only, never true error",
++    "surface": "not read by new observer/evaluator, no clock fitting or external score",
++    "phase_boundaries_reset": false
++  },
++  "synthetic": {
++    "seed": 20261018,
++    "duration_s": 600,
++    "dt_s": 1.0,
++    "true_E_C": [
++      30.0,
++      40.0
++    ],
++    "true_Ts_minus_E_C": 8.0,
++    "mask_intervals_s": [
++      [
++        0,
++        12
++      ],
++      [
++        150,
++        156
++      ],
++      [
++        260,
++        320
++      ]
++    ],
++    "truth_solver": "independent scipy solve_ivp, no reuse of KF numerical step for truth",
++    "report": "Tf/Ts/E true errors and empirical internal-scale inclusion; not real Ts accuracy"
++  },
++  "budgets": {
++    "candidate_configurations": 1,
++    "naive_configurations": 1,
++    "theta_fits": 0,
++    "optimization_search": 0,
++    "max_study_wall_s": 600,
++    "CPU_BLAS_threads": 1,
++    "CUDA": false
++  },
++  "interface": {
++    "transport": "local read-only JSONL, no extra poll/service",
++    "groups": [
++      "identity",
++      "measurement",
++      "observer",
++      "safety",
++      "permission"
++    ],
++    "field_use": "research_only; external surface never enters state",
++    "permission": "local_demo=true, formal_field_authorized=false, device_actions=false"
++  },
++  "source_rule": "all input archives and old outputs immutable; new masks/spec/results only; no commit/push/software PR"
++}
+--- cpu.3/tto_field/g2_model/g2_runtime/frozen/observer.py
++++ observe.1/tto_field/g2_model/g2_runtime/frozen/observer.py
+@@ -0,0 +1,200 @@
++"""Frozen G2 augmented-state KF and identical-policy conditional-hold reference. No IO/control."""
++import copy
++from functools import lru_cache
++import numpy as np
++from scipy.linalg import expm
++
++
++class ThermalObserver:
++    def __init__(self, spec, method='AUGMENTED-KF'):
++        assert method in ['AUGMENTED-KF', 'CONDITIONAL-HOLD']
++        self.spec, self.method = copy.deepcopy(spec), method
++        self.x = self.P = self.last = None
++        self.updates = self.starts = 0
++        self.last_ref = None
++        self.projected = False
++        self.innovation = None
++        self.last_stop = None
++
++    def matrices(self, u):
++        p = self.spec['dynamic']
++        d = p['d0'] + p['d1'] * u[2]
++        A = np.array([[-p['a'], p['a'], 0], [p['c'], -p['c'] - d, d], [0, 0, 0]], float)
++        b = np.array([p['b_g'] * u[0] + p['b_c'] * u[1], 0, 0], float)
++        return A, b
++
++    def _input(self, frame, t):
++        m = frame['measurement']
++        fan, power = m['last_successful_pwm'], m['power']
++        u = [*(power['rails_W'] if power else [0., 0.]), fan['value_percent'] / 100 if fan else 0.5]
++        assumptions = []
++        for kind, obj, method in [('PWM', fan, 'last_successful_hold' if fan else 'startup_half_scale'), ('rails', power, 'last_observed_hold')]:
++            known = bool(obj and obj['raw_valid'] and t < obj['valid_until_mono_s'])
++            if not known:
++                assumptions.append(dict(input=kind, method=method, age_s=t - (obj['observed_mono_s'] if obj else frame['stream_started_mono_s']),
++                                        last_real_ref=obj['source_ref'] if obj else None,
++                                        real_expiry_mono_s=obj['valid_until_mono_s'] if obj else None,
++                                        range=[0., 1.] if kind == 'PWM' else None,
++                                        renewed_raw_measurement=False))
++        return np.array(u, float), assumptions
++
++    def _supported(self, frame, t):
++        policy = self.spec['input_policy']
++        limits = [('last_successful_pwm', policy['fan_max_actual_age_s']), ('tj', policy['power_or_TJ_max_actual_age_s']),
++                  ('power', policy['power_or_TJ_max_actual_age_s']), ('control_context', policy['control_context_max_actual_age_s'])]
++        reasons = []
++        for name, limit in limits:
++            obj = frame['measurement'][name]
++            age = t - (obj['observed_mono_s'] if obj else frame['stream_started_mono_s'])
++            if age > limit:
++                reasons.append('long_missing_' + name)
++        return reasons
++
++    @lru_cache(maxsize=4096)
++    def _transition(self, dt, pwm):
++        A, _ = self.matrices([0., 0., pwm])
++        Q = np.diag(np.square(self.spec['numerical']['process_std_C_per_sqrt_s']))
++        V = np.block([[A, Q], [np.zeros((3, 3)), -A.T]])
++        e = expm(V * dt)
++        F = e[:3, :3]
++        return F, e[:3, 3:] @ F.T
++
++    def mean_step(self, state, u, dt):
++        A, b = self.matrices(u)
++        M = np.zeros((4, 4))
++        M[:3, :3], M[:3, 3] = A, b
++        return (expm(M * dt) @ np.r_[state, 1.])[:3]
++
++    def _advance(self, frame, end):
++        start = self.last['t']
++        edges = [start, end]
++        for obj in self.last['measurement'].values():
++            if obj and start < obj['valid_until_mono_s'] < end:
++                edges.append(obj['valid_until_mono_s'])
++        edges = sorted(set(edges))
++        for left, right in zip(edges, edges[1:]):
++            dt = right - left
++            if dt <= 0:
++                continue
++            u, assumptions = self._input(self.last, (left + right) / 2)
++            before = self.x.copy()
++            F, Q = self._transition(dt, u[2])
++            self.x = self.mean_step(before, u, dt)
++            self.P = F @ self.P @ F.T + Q
++            for a in assumptions:
++                if a['input'] == 'PWM':
++                    lo, hi = u.copy(), u.copy()
++                    lo[2], hi[2] = 0., 1.
++                    g = self.mean_step(before, hi, dt) - self.mean_step(before, lo, dt)
++                    self.P += np.outer(g, g) / 12
++                else:
++                    b = self.spec['dynamic']
++                    scale = self.spec['numerical']['power_unknown_relative_std'] * (b['b_g'] * abs(u[0]) + b['b_c'] * abs(u[1]))
++                    self.P[0, 0] += (scale * dt) ** 2
++            self.P = (self.P + self.P.T) / 2
++
++    def _initialize(self, frame):
++        tj = frame['measurement']['tj']
++        prior = self.spec['prior']
++        vE, vo = prior['E_std_C'] ** 2, prior['Ts_minus_E_std_C'] ** 2
++        self.x = np.array([tj['value_C'], prior['E_mean_C'] + prior['Ts_minus_E_mean_C'], prior['E_mean_C']])
++        self.P = np.array([[self.spec['numerical']['TJ_noise_std_C'] ** 2, 0., 0.], [0., vE + vo, vE], [0., vE, vE]])
++        self.updates, self.starts = 1, self.starts + 1
++        self.last_ref, self.projected = tj['source_ref'], False
++
++    def step(self, frame):
++        assert self.last is None or frame['t'] >= self.last['t']
++        if self.x is not None and self.last is not None:
++            # A fresh recovery response does not retroactively fill a silent interval.
++            elapsed_stop = self._supported(self.last, frame['t'])
++            if elapsed_stop:
++                self.x = self.P = None
++                self.last_stop = 'input_support_elapsed_between_events:' + ','.join(elapsed_stop)
++            else:
++                self._advance(frame, frame['t'])
++        if frame['source_reset']:
++            self.x = self.P = None
++            self.last_stop = frame['reset_reason']
++        stop = self._supported(frame, frame['t'])
++        if stop:
++            self.x = self.P = None
++            self.last_stop = ','.join(stop)
++        tj, power = frame['measurement']['tj'], frame['measurement']['power']
++        if self.x is None and not stop and tj and tj['raw_valid'] and power and power['raw_valid']:
++            self._initialize(frame)
++        if self.x is not None and frame['new_TJ'] and tj['source_ref'] != self.last_ref:
++            R = self.spec['numerical']['TJ_noise_std_C'] ** 2
++            self.innovation = float(tj['value_C'] - self.x[0])
++            if self.method == 'AUGMENTED-KF':
++                K = self.P[:, 0] / (self.P[0, 0] + R)
++                self.x += K * self.innovation
++                I = np.eye(3)
++                I[:, 0] -= K
++                self.P = I @ self.P @ I.T + R * np.outer(K, K)
++            else:
++                self.x[0] = tj['value_C']
++                self.P[0, :] = self.P[:, 0] = 0.
++                self.P[0, 0] = R
++            self.P = (self.P + self.P.T) / 2
++            self.updates += 1
++            self.last_ref = tj['source_ref']
++            self.projected = False
++            self.unprojected = self.x.tolist()
++            for k, bounds in [(1, self.spec['prior']['Ts_bounds_C']), (2, self.spec['prior']['E_bounds_C'])]:
++                clipped = float(np.clip(self.x[k], *bounds))
++                if clipped != self.x[k]:
++                    self.x[k], self.projected = clipped, True
++                    self.P[k, k] = max(self.P[k, k], 4.)
++        u, assumptions = self._input(frame, frame['t'])
++        reasons, phase = [], 'uninitialized'
++        s = frame['safety']
++        hard = s['guard'] is True or s['fault'] is True or s['mode'] not in [None, 'auto'] or s['enabled'] is False or s['manual_mode'] is True
++        if stop:
++            phase, reasons = 'unavailable', stop
++        elif self.x is None:
++            reasons = ['waiting_for_current_source_valid_TJ_and_rails', self.last_stop]
++        elif hard:
++            phase, reasons = 'unavailable', ['explicit_guard_fault_mode_or_manual_state']
++        else:
++            std = np.sqrt(np.maximum(np.diag(self.P), 0))
++            if not np.isfinite(self.x).all() or not np.isfinite(self.P).all() or np.any(std > self.spec['phase_gates']['max_output_std_C']):
++                phase, reasons = 'unavailable', ['outside_internal_uncertainty_support']
++            else:
++                warm = self.updates >= self.spec['phase_gates']['min_TJ_updates_for_tracking']
++                confident = bool(np.all(std <= self.spec['phase_gates']['max_tracking_std_C']))
++                current = bool(tj and tj['raw_valid'] and power and power['raw_valid'])
++                if warm and confident and current and s['confirmed_normal_now'] and not assumptions and not self.projected:
++                    phase = 'tracking'
++                elif not warm or not confident:
++                    phase = 'provisional'
++                    reasons.append('cold_or_prior_uncertainty_not_resolved')
++                else:
++                    phase = 'degraded'
++                if not s['confirmed_normal_now']:
++                    reasons.append('observed_abnormal_or_unknown_control_context')
++                if assumptions:
++                    reasons.append('conditional_input_assumption')
++                if self.projected:
++                    reasons.append('posterior_boundary_projection')
++                    phase = 'degraded'
++        available = phase in ['provisional', 'tracking', 'degraded']
++        observer = dict(method=self.method, phase=phase, available=available, reasons=[r for r in reasons if r],
++                        Tf_C=float(self.x[0]) if available else None, Ts_C=float(self.x[1]) if available else None,
++                        E_C=float(self.x[2]) if available else None, E_source='L/S training prior plus past TJ sequential inference' if self.method == 'AUGMENTED-KF' else 'L/S training prior, unchanged',
++                        TJ_updates_since_cold_start=self.updates if self.x is not None else 0, cold_starts=self.starts,
++                        unknown_input_assumptions=assumptions, conditional_inputs_rails_W_PWM=u.tolist() if available else None,
++                        uncertainty=dict(meaning=self.spec['numerical']['uncertainty'],
++                                         covariance_C2=self.P.tolist() if available else None,
++                                         marginal_std_C=np.sqrt(np.maximum(np.diag(self.P), 0)).tolist() if available else None,
++                                         includes_theta_error=False, calibrated=False),
++                        latest_innovation_C=self.innovation, boundary_projected=self.projected,
++                        unprojected_state_C=getattr(self, 'unprojected', None) if self.projected else None,
++                        dynamic_parameter_updates=0, external_temperature_used=False, is_measured_Ts=False,
++                        instruction='conditional research state; finite or tracking is not field permission')
++        record = dict(schema='TTO-STATE-READONLY-R2-v1', identity=copy.deepcopy(frame['identity']),
++                      generated_at_mono_s=frame['t'], generated_clock_domain='offline_virtual_observer_clock',
++                      generated_at_utc=frame['utc'], observed_through_ref=frame['ref'], observed_through_utc=frame['utc'],
++                      measurement=copy.deepcopy(frame['measurement']), observer=observer, safety=copy.deepcopy(s),
++                      permission=dict(local_demo=True, formal_field_authorized=False, device_actions=False))
++        self.last = frame
++        return record
+--- cpu.3/tto_field/g2_model/g2_runtime/frozen/primary.json
++++ observe.1/tto_field/g2_model/g2_runtime/frozen/primary.json
+@@ -0,0 +1,179 @@
++{
++  "schema": "TTO-GREYBOX-EXPERIMENT-v1",
++  "deployable": false,
++  "model": "G2",
++  "fit_runs": [
++    "L",
++    "M",
++    "S"
++  ],
++  "selected_seed": "N1",
++  "converged": true,
++  "selection": "training_objective_only",
++  "dynamic": {
++    "a": 0.11481067252369034,
++    "c": 0.012174003404921066,
++    "d0": 0.00467375150888984,
++    "d1": 0.008336813700608809,
++    "b_g": 0.01837304741692581,
++    "b_c": 0.06218669600410176
++  },
++  "parameters": {
++    "a": 0.11481067252369034,
++    "c": 0.012174003404921066,
++    "d0": 0.00467375150888984,
++    "d1": 0.008336813700608809,
++    "b_g": 0.01837304741692581,
++    "b_c": 0.06218669600410176,
++    "E_L": 36.25671340620656,
++    "E_M": 34.9761231524857,
++    "E_S": 34.315068963682144,
++    "Ts_L-00": 43.1628433947408,
++    "Ts_L-01": 42.59410387114837,
++    "Ts_L-02": 43.214688590305904,
++    "Ts_L-03": 43.517850158518556,
++    "Ts_L-04": 43.56475355145619,
++    "Ts_L-05": 44.62138531096121,
++    "Ts_L-06": 47.802363679370075,
++    "Ts_L-07": 43.48598542581556,
++    "Ts_L-08": 44.28299334453275,
++    "Ts_L-09": 45.484569939009255,
++    "Ts_L-10": 42.79985942056287,
++    "Ts_L-11": 43.497873197928335,
++    "Ts_L-12": 49.32996318584145,
++    "Ts_L-13": 52.912597736788655,
++    "Ts_L-14": 51.63286914731363,
++    "Ts_L-15": 53.169350891169586,
++    "Ts_L-16": 51.8767640240596,
++    "Ts_L-17": 52.97011083210766,
++    "Ts_L-18": 53.297111368946034,
++    "Ts_L-19": 52.515264298210916,
++    "Ts_L-20": 50.55018346323336,
++    "Ts_L-21": 55.27520064510152,
++    "Ts_L-22": 51.58577811483808,
++    "Ts_L-23": 52.01025226751466,
++    "Ts_L-24": 49.30145673037024,
++    "Ts_L-25": 45.418968290423194,
++    "Ts_S-00": 42.73592813871289,
++    "Ts_S-01": 41.532998447190984,
++    "Ts_S-02": 41.7542888495776,
++    "Ts_S-03": 40.35120107600446,
++    "Ts_S-04": 39.54238112714305,
++    "Ts_S-05": 41.578079411456194,
++    "Ts_S-06": 42.2157707506574,
++    "Ts_S-07": 41.54138960297751,
++    "Ts_S-08": 28.411367660946013,
++    "Ts_S-09": 42.25275425925365,
++    "Ts_S-10": 40.02006966216033,
++    "Ts_S-11": 41.860987750511626,
++    "Ts_S-12": 29.368918962426868,
++    "Ts_S-13": 41.50720507235131,
++    "Ts_S-14": 53.351849095234215,
++    "Ts_S-15": 39.47154724247254,
++    "Ts_S-16": 42.10290350061728,
++    "Ts_S-17": 41.55305875982789,
++    "Ts_S-18": 41.37384131178531,
++    "Ts_S-19": 41.3997114233758,
++    "Ts_S-20": 41.64526901598327,
++    "Ts_S-21": 41.438768243847726,
++    "Ts_S-22": 41.35167889538294,
++    "Ts_S-23": 41.74376500720206,
++    "Ts_S-24": 41.86933250709173,
++    "Ts_S-25": 41.525161273260494,
++    "Ts_S-26": 41.85961557634303,
++    "Ts_S-27": 41.91619079500971,
++    "Ts_S-28": 41.96052363439416,
++    "Ts_S-29": 41.96241329319016,
++    "Ts_M-00": 42.76593604315409,
++    "Ts_M-01": 43.19493994939093
++  },
++  "x": [
++    0.11481067252369034,
++    0.012174003404921066,
++    0.00467375150888984,
++    0.008336813700608809,
++    0.01837304741692581,
++    0.06218669600410176,
++    36.25671340620656,
++    34.9761231524857,
++    34.315068963682144,
++    43.1628433947408,
++    42.59410387114837,
++    43.214688590305904,
++    43.517850158518556,
++    43.56475355145619,
++    44.62138531096121,
++    47.802363679370075,
++    43.48598542581556,
++    44.28299334453275,
++    45.484569939009255,
++    42.79985942056287,
++    43.497873197928335,
++    49.32996318584145,
++    52.912597736788655,
++    51.63286914731363,
++    53.169350891169586,
++    51.8767640240596,
++    52.97011083210766,
++    53.297111368946034,
++    52.515264298210916,
++    50.55018346323336,
++    55.27520064510152,
++    51.58577811483808,
++    52.01025226751466,
++    49.30145673037024,
++    45.418968290423194,
++    42.73592813871289,
++    41.532998447190984,
++    41.7542888495776,
++    40.35120107600446,
++    39.54238112714305,
++    41.578079411456194,
++    42.2157707506574,
++    41.54138960297751,
++    28.411367660946013,
++    42.25275425925365,
++    40.02006966216033,
++    41.860987750511626,
++    29.368918962426868,
++    41.50720507235131,
++    53.351849095234215,
++    39.47154724247254,
++    42.10290350061728,
++    41.55305875982789,
++    41.37384131178531,
++    41.3997114233758,
++    41.64526901598327,
++    41.438768243847726,
++    41.35167889538294,
++    41.74376500720206,
++    41.86933250709173,
++    41.525161273260494,
++    41.85961557634303,
++    41.91619079500971,
++    41.96052363439416,
++    41.96241329319016,
++    42.76593604315409,
++    43.19493994939093
++  ],
++  "J": 1.1667597706336403,
++  "P10_fit": [
++    1.984,
++    5.952
++  ],
++  "input_min": [
++    1.984,
++    5.952
++  ],
++  "input_max": [
++    40.392,
++    18.619
++  ],
++  "u_range": [
++    0.16,
++    1.0
++  ],
++  "frozen_at": "2026-10-13T19:41:51.096649+00:00",
++  "parameter_count": 67,
++  "spec_sha256": "1ec1888e0d1aeff5febbe95f74b0cfbad82bf1d95470c226261a3c6981f78c06"
++}
+--- cpu.3/tto_field/g2_model/g2_runtime/predict.py
++++ observe.1/tto_field/g2_model/g2_runtime/predict.py
+@@ -0,0 +1,141 @@
++"""Pure read-only forecast facade; all G2 propagation uses the unchanged observer."""
++import copy
++import hashlib
++import json
++import math
++from pathlib import Path
++
++from .frozen.observer import ThermalObserver
++
++HORIZONS = (15, 45, 90)
++TIME_CONTRACT = 'TTO-RECEIVE-ANCHOR-v1'
++
++
++def finite(x):
++    return type(x) in (float, int) and math.isfinite(x)
++
++
++def digest(path):
++    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
++
++
++class Predictor:
++    def __init__(self, manifest=None):
++        self.path = Path(manifest) if manifest else Path(__file__).resolve().parents[1]/'frozen-model-manifest.json'
++        self.manifest = json.loads(self.path.read_text())
++        for name, expected in self.manifest['files'].items():
++            if digest(self.path.parent/name) != expected:
++                raise ValueError('model package SHA mismatch: '+name)
++        self.model = json.loads((self.path.parent/self.manifest['model_file']).read_text())
++        self.spec = json.loads((self.path.parent/self.manifest['observer_spec_file']).read_text())
++        if self.model['dynamic'] != self.spec['dynamic'] or self.model['deployable'] is not False:
++            raise ValueError('model/spec dynamics or read-only scope mismatch')
++        self.engine = ThermalObserver(self.spec)
++
++    def _trend(self, history, origin):
++        # A caller supplies only original quality-engine accepted TJ entries.
++        past = [p for p in history if finite(p.get('received_at_mono_s')) and p['received_at_mono_s'] <= origin['received_at_mono_s']]
++        if any(b['received_at_mono_s'] < a['received_at_mono_s'] for a, b in zip(past, past[1:])):
++            return None, []
++        if not past or past[-1].get('ref') != origin['ref']:
++            past.append(origin)
++        active = []
++        for p in past:
++            if (p.get('raw_valid') is not True or not finite(p.get('value_C'))
++                    or p.get('source_epoch') != origin['source_epoch'] or p.get('clock_domain') != origin['clock_domain']):
++                active = []
++                continue
++            if active and p['received_at_mono_s']-active[-1]['received_at_mono_s'] > 5:
++                active = []
++            active.append(p)
++        chosen = [p for p in active if p['received_at_mono_s'] >= origin['received_at_mono_s']-30]
++        if not chosen or origin['received_at_mono_s']-chosen[0]['received_at_mono_s'] < 10:
++            return None, []
++        first = chosen[0]
++        return ((origin['value_C']-first['value_C'])/(origin['received_at_mono_s']-first['received_at_mono_s']),
++                [first['ref'], origin['ref']])
++
++    def predict(self, state, *, origin, observed_through, issued_at, identity, publication_mode, history=()):
++        """No mutation, sampling, fitting or future inputs. Returns nine ledger items."""
++        reasons = []
++        required = ('device_id', 'thermal_config_id', 'observer_host_id', 'run_id', 'clock_domain')
++        if any(not identity.get(k) for k in required):
++            reasons.append('identity_incomplete')
++        if publication_mode not in ('live', 'replay'):
++            reasons.append('publication_mode_invalid')
++        si = state.get('identity', {})
++        model_sha = self.manifest['model_sha256']
++        spec_sha = self.manifest['observer_spec_sha256']
++        if (si.get('run_id') != identity.get('run_id') or si.get('model_sha256') != model_sha
++                or si.get('spec_sha256') != spec_sha or si.get('source_epoch') != origin.get('source_epoch')):
++            reasons.append('state_model_run_or_epoch_mismatch')
++        clocks = [identity.get('clock_domain'), origin.get('clock_domain'), observed_through.get('clock_domain'), issued_at.get('clock_domain')]
++        if not clocks[0] or len(set(clocks)) != 1:
++            reasons.append('clock_domain_unassociated')
++        anchor, cutoff, issue = origin.get('received_at_mono_s'), observed_through.get('mono_s'), issued_at.get('mono_s')
++        timing = all(finite(v) for v in (anchor, cutoff, issue))
++        if not timing or not finite(state.get('generated_at_mono_s')):
++            reasons.append('time_unknown')
++        elif abs(cutoff-anchor) > 1e-8 or abs(state['generated_at_mono_s']-cutoff) > 1e-8:
++            reasons.append('state_not_at_TJ_origin')
++        elif issue < cutoff:
++            reasons.append('publication_before_information_arrival')
++        if observed_through.get('ref') != state.get('observed_through_ref'):
++            reasons.append('observed_through_ref_mismatch')
++        tj = state.get('measurement', {}).get('tj') or {}
++        if (origin.get('raw_valid') is not True or tj.get('raw_valid') is not True or not finite(origin.get('value_C'))
++                or origin.get('ref') != tj.get('source_ref') or origin.get('value_C') != tj.get('value_C')
++                or not finite(tj.get('valid_until_mono_s')) or not finite(tj.get('observed_mono_s'))
++                or not timing or abs(anchor-tj['observed_mono_s']) > 1e-8 or anchor >= tj['valid_until_mono_s']):
++            reasons.append('original_TJ_unavailable_or_unassociated')
++        observer = state.get('observer', {})
++        phase = observer.get('phase')
++        model_reasons = []
++        u = observer.get('conditional_inputs_rails_W_PWM')
++        x = [origin.get('value_C'), observer.get('Ts_C'), observer.get('E_C')]
++        if observer.get('available') is not True or phase not in ('provisional', 'tracking', 'degraded'):
++            model_reasons += ['observer_unavailable']+observer.get('reasons', [])
++        elif not (all(finite(v) for v in x) and isinstance(u, list) and len(u) == 3 and all(finite(v) for v in u)
++                  and u[0] >= 0 and u[1] >= 0 and 0 <= u[2] <= 1):
++            model_reasons.append('conditional_state_or_inputs_invalid')
++        slope, slope_refs = (self._trend(history, origin) if not reasons else (None, []))
++        results = []
++        for h in HORIZONS:
++            target = anchor+h if finite(anchor) else None
++            late = bool(timing and issue >= target)
++            for method in ('G2-HOLD', 'B0', 'B1'):
++                unavailable = list(reasons)
++                if late:
++                    unavailable.append('issued_at_or_after_target')
++                if method == 'G2-HOLD':
++                    unavailable += model_reasons
++                if method == 'B1' and slope is None:
++                    unavailable.append('past_trend_unavailable')
++                value = None
++                if not unavailable:
++                    if method == 'G2-HOLD':
++                        value = float(self.engine.mean_step(x, u, h)[0])
++                    elif method == 'B0':
++                        value = origin['value_C']
++                    else:
++                        value = origin['value_C']+h*slope
++                    if not finite(value):
++                        value = None
++                        unavailable.append('nonfinite_prediction')
++                fan = state.get('measurement', {}).get('last_successful_pwm') or {}
++                metadata = dict(identity, model_id=self.manifest['model_id'], model_sha256=model_sha, observer_spec_sha256=spec_sha)
++                key = [metadata, origin.get('ref'), h, method, publication_mode, issued_at]
++                prediction_id = hashlib.sha256(json.dumps(key, sort_keys=True, allow_nan=False).encode()).hexdigest()
++                results.append(dict(schema='TTO-CAUSAL-PREDICTION-v1', prediction_id=prediction_id, identity=metadata,
++                    time_contract=TIME_CONTRACT, origin=copy.deepcopy(origin), observed_through=copy.deepcopy(observed_through),
++                    issued_at=copy.deepcopy(issued_at), target_mono_s=target, horizon_s=h,
++                    effective_lead_s=target-issue if timing else None, late=late, publication_mode=publication_mode,
++                    time_evidence='caller actual monotonic/UTC publication' if publication_mode == 'live' else 'explicit replay clock; never live evidence',
++                    method=method, value_C=value, unavailable_reasons=unavailable, origin_phase=phase,
++                    condition=dict(kind='constant current independent rails and declared PWM', rails_W=u[:2], pwm_fraction=u[2],
++                                   PWM_is_current_raw_measurement=bool(fan.get('raw_valid') and finite(fan.get('valid_until_mono_s')) and timing and anchor < fan['valid_until_mono_s']),
++                                   assumptions=copy.deepcopy(observer.get('unknown_input_assumptions', []))) if method == 'G2-HOLD' and isinstance(u, list) and len(u) == 3 else None,
++                    state_used=dict(current_TJ_C=x[0], Ts_C=x[1], E_C=x[2]) if method == 'G2-HOLD' else None,
++                    history_refs=slope_refs if method == 'B1' else [], original_safety=copy.deepcopy(state.get('safety', {})),
++                    dynamic_parameter_updates=0, external_temperature_used=False, is_measured_Ts=False, control_permission=False))
++        return results
+--- cpu.3/tto_field/observe_cli.py
++++ observe.1/tto_field/observe_cli.py
+@@ -0,0 +1,133 @@
++"""Explicit bounded observe, offline status/history/archive, and owned-process STOP."""
++import argparse, asyncio, json, os, socket, sys, time, uuid, zipfile, hashlib
++from datetime import datetime,timezone
++from pathlib import Path
++from collections import deque
++from . import __version__
++
++def validate_start(config,reg,grant,duration,local_loopback=False):
++    from tto.config import public_config
++    from tto.util import digest
++    from urllib.parse import urlsplit
++    import ipaddress
++    if not 0<duration<=86400:raise ValueError('observe duration is explicitly bounded by24h')
++    for key in ('device_id','thermal_config_id','observer_host_id','session_id'):
++        if not isinstance(reg.get(key),str) or not reg[key]:raise ValueError('missing registration '+key)
++    uuid.UUID(reg['session_id'])
++    if grant.get('action')!='readonly-observe' or grant.get('explicit_user_start') is not True or not grant.get('evidence'):
++        raise ValueError('current observation-window permission required')
++    for key in ('device_id','thermal_config_id','session_id'):
++        if grant.get(key)!=reg[key]:raise ValueError('permission identity mismatch:'+key)
++    if reg['observer_host_id']!=socket.gethostname():raise ValueError('observer host identity mismatch')
++    if grant.get('candidate_version')!=__version__ or grant.get('config_sha256')!=digest(public_config(config)):
++        raise ValueError('permission candidate/config mismatch')
++    from .support import digest_file
++    package=Path(__file__).parent
++    if grant.get('candidate_manifest_sha256')!=digest_file(package/'candidate-files.json') or grant.get('model_manifest_sha256')!=digest_file(package/'g2_model/frozen-model-manifest.json'):
++        raise ValueError('permission code/model manifest mismatch')
++    if grant.get('max_duration_s',0)<duration:raise ValueError('window does not cover duration')
++    begin=datetime.fromisoformat(grant['not_before_utc']);end=datetime.fromisoformat(grant['expires_at_utc'])
++    if begin.tzinfo is None or end.tzinfo is None:raise ValueError('window UTC needs timezone')
++    now=datetime.now(timezone.utc)
++    if not begin<=now or (end-now).total_seconds()<duration+10:raise ValueError('current window cannot contain run and cleanup')
++    if not 64*1024**2<=grant.get('session_max_bytes',0)<=8*1024**3:raise ValueError('explicit session byte budget64MiB..8GiB required')
++    expected=reg.get('expected_platform')
++    if expected is not None and not isinstance(expected,dict):raise ValueError('expected_platform must be object or null')
++    events=reg.get('workload_event_source')
++    if events is not None:
++        if not isinstance(events,dict) or not all(isinstance(events.get(k),str) and events[k] for k in ('path','session_id','clock_domain')):
++            raise ValueError('event binding requires path/session/clock strings')
++        if not isinstance(events.get('complete_from_session_start',False),bool):raise ValueError('event completeness must be boolean')
++    # A no-network dry preview cannot turn into access by changing a formal flag.
++    if local_loopback:
++        if not grant.get('self_owned_loopback'):raise ValueError('loopback ownership required')
++        for section in ('orin','tianshan'):
++            if not ipaddress.ip_address(urlsplit(config[section]['base_url']).hostname).is_loopback:
++                raise ValueError('local fixture permits numeric loopback origins only')
++    return True
++
++def archive(root,destination):
++    from tto.util import file_hash
++    if not (root/'summary.json').exists():raise ValueError('normal final summary required; preserve a crashed session separately')
++    if json.loads((root/'status.json').read_text()).get('running'):raise ValueError('stop own observe before archive')
++    index=json.loads((root/'files.json').read_text())
++    for name,v in index.items():
++        p=root/name
++        if p.stat().st_size!=v['bytes'] or file_hash(p)!=v['sha256']:raise ValueError('session file SHA mismatch:'+name)
++    with zipfile.ZipFile(destination,'x',zipfile.ZIP_DEFLATED) as z:
++        for p in sorted(root.rglob('*')):
++            if p.is_file():z.write(p,str(p.relative_to(root)))
++    return dict(archive=str(destination),sha256=file_hash(destination),bytes=destination.stat().st_size,files_verified=len(index))
++
++def stop_owned(root):
++    import psutil,signal
++    launch=json.loads((root/'launch.json').read_text());status=json.loads((root/'status.json').read_text())
++    if not status.get('running'):return dict(stopped=True,already_ended=True)
++    if launch['clock_start']['host']!=socket.gethostname():raise ValueError('cannot stop a process on a different host')
++    pid=status['pid'];p=psutil.Process(pid)
++    if abs(p.create_time()-launch['process_created'])>.001 or p.uids().real!=os.getuid():raise ValueError('owned process identity no longer matches')
++    p.send_signal(signal.SIGTERM)
++    try:p.wait(timeout=8);return dict(stopped=True,forced=False)
++    except psutil.TimeoutExpired:
++        p.kill()
++        try:p.wait(timeout=2);ended=True
++        except psutil.TimeoutExpired:ended=False
++        result=dict(stopped=ended,forced=True,pid=pid,reason='owned_observer_cleanup_timeout',utc=time.time())
++        (root.parent/(root.name+'.stop-escalation.json')).write_text(json.dumps(result,indent=2)+'\n')
++        return result
++
++def main(argv=None):
++    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--version',action='version',version=__version__)
++    sub=p.add_subparsers(dest='cmd',required=True)
++    v=sub.add_parser('verify-install');v.add_argument('--target',action='store_true');v.add_argument('--thread-policy-output',type=Path)
++    for name in ('preview','observe'):
++        q=sub.add_parser(name);q.add_argument('--config',type=Path,required=True);q.add_argument('--registration',type=Path,required=True);q.add_argument('--duration',type=float,required=True)
++        if name=='observe':
++            q.add_argument('--grant',type=Path,required=True);q.add_argument('--output',type=Path,required=True);q.add_argument('--allow-network',action='store_true');q.add_argument('--local-loopback',action='store_true')
++    for name in ('status','stop','history','archive'):
++        q=sub.add_parser(name);q.add_argument('--session',type=Path,required=True)
++        if name=='history':q.add_argument('--stream',choices=('observations','states','predictions','scores','events','resources','workload-events'),default='states');q.add_argument('--last',type=int,default=20)
++        if name=='archive':q.add_argument('--output',type=Path,required=True)
++    a=p.parse_args(argv)
++    if a.cmd in ('status','history','stop','archive'):
++        if a.cmd=='status':result=json.loads((a.session/'status.json').read_text())
++        elif a.cmd=='stop':result=stop_owned(a.session)
++        elif a.cmd=='archive':result=archive(a.session,a.output)
++        else:
++            if not 0<a.last<=1000:raise ValueError('history limit1..1000')
++            index=json.loads((a.session/'stream-index.json').read_text()) if (a.session/'stream-index.json').exists() else None
++            files=[a.session/n for n in index['streams'].get('./'+a.stream,[])] if index else sorted(a.session.glob(a.stream+'*.jsonl'))
++            if index and not files:files=[a.session/n for k,ns in index['streams'].items() if k in ('./'+a.stream,a.stream) for n in ns]
++            records=[]
++            for f in reversed(files):
++                tail=deque(maxlen=a.last)
++                with f.open() as stream:
++                    for line in stream:tail.append(json.loads(line))
++                records=list(tail)+records
++                if len(records)>=a.last:break
++            result=records[-a.last:]
++        print(json.dumps(result,ensure_ascii=False,indent=2));return 0
++    from .numeric_policy import initialize
++    receipt=getattr(a,'thread_policy_output',None)
++    if a.cmd=='observe':receipt=a.output.with_name(a.output.name+'.startup')/'thread-policy.json'
++    initialize(receipt)
++    from .identity import verify
++    if a.cmd=='verify-install':print(json.dumps(verify(a.target),indent=2));return 0
++    from tto.config import load_config,public_config
++    from tto.util import digest
++    c=load_config(a.config,environ={});reg=json.loads(a.registration.read_text())
++    if a.cmd=='preview':
++        if not 0<a.duration<=86400:raise ValueError('duration1..86400s')
++        result=dict(candidate_version=__version__,action='readonly-observe',registration=reg,duration_s=a.duration,
++            config_sha256=digest(public_config(c)),permission_required=True,network_clients_created=0,Requester_count=0,CPU_sidecar=False,
++            prediction_mode='G2-HOLD/B0/B1; real receive-anchor, actual publication',control_permission=False,
++            grant_template=dict(action='readonly-observe',candidate_version=__version__,candidate_manifest_sha256=hashlib.sha256((Path(__file__).parent/'candidate-files.json').read_bytes()).hexdigest(),model_manifest_sha256=hashlib.sha256((Path(__file__).parent/'g2_model/frozen-model-manifest.json').read_bytes()).hexdigest(),device_id=reg.get('device_id'),thermal_config_id=reg.get('thermal_config_id'),session_id=reg.get('session_id'),config_sha256=digest(public_config(c)),max_duration_s=a.duration,session_max_bytes=8*1024**3,explicit_user_start=False,evidence=None,not_before_utc=None,expires_at_utc=None))
++        print(json.dumps(result,ensure_ascii=False,indent=2));return 0
++    if not a.allow_network:p.error('explicit current grant plus --allow-network required')
++    grant=json.loads(a.grant.read_text());validate_start(c,reg,grant,a.duration,a.local_loopback)
++    verify(target=not a.local_loopback)
++    from .observe_runtime import run_observe
++    result=asyncio.run(run_observe(c,reg,a.output,a.duration,local_loopback=a.local_loopback,grant=grant,storage_options=dict(budget=grant['session_max_bytes'],segment_bytes=min(2*1024**3,grant['session_max_bytes']))))
++    print(json.dumps(result,ensure_ascii=False,indent=2))
++    return 0 if result['reason'] in ('duration','SIGINT','SIGTERM','external_stop') and not result['error'] else 2
++if __name__=='__main__':raise SystemExit(main())
+--- cpu.3/tto_field/observe_limits.py
++++ observe.1/tto_field/observe_limits.py
+@@ -0,0 +1,25 @@
++"""Observe-only bounded diagnostics. Full poll/raw/resource events stay on disk."""
++from collections import deque
++class Samples(deque):
++    def __init__(self):super().__init__(maxlen=4096);self.total=0
++    def append(self,value):self.total+=1;super().append(value)
++    def __getitem__(self,item):return list(self)[item] if isinstance(item,slice) else super().__getitem__(item)
++
++class ReceiverBudget:
++    """Predeclared observe policy: 5% target, rolling10s >8% for30s, RSS128MiB, unknown10s."""
++    def __init__(self):self.samples=deque();self.over=None;self.unknown=None;self.mean=None
++    def sample(self,row,t):
++        cpu=row['cpu_pct_single_core'];rss=row['rss_bytes']
++        if cpu is not None:self.samples.append((t,cpu))
++        while self.samples and t-self.samples[0][0]>10:self.samples.popleft()
++        self.mean=sum(v for _,v in self.samples)/len(self.samples) if self.samples else None
++        if rss is None or (cpu is None and t>2):
++            if self.unknown is None:self.unknown=t
++        else:self.unknown=None
++        exceeded=self.mean is not None and len(self.samples)>=8 and self.mean>8
++        if exceeded and self.over is None:self.over=t
++        if not exceeded:self.over=None
++        if rss is not None and rss>128*1024**2:return 'receiver_RSS_budget'
++        if self.over is not None and t-self.over>=30:return 'receiver_sustained_CPU_budget'
++        if self.unknown is not None and t-self.unknown>=10:return 'resource_unavailable'
++        return None
+--- cpu.3/tto_field/observe_predictions.py
++++ observe.1/tto_field/observe_predictions.py
+@@ -0,0 +1,89 @@
++"""Append-only causal issuance and first-qualified-arrival labels, never future-input A."""
++import math, uuid
++from array import array
++from collections import Counter
++
++HORIZONS=(15,45,90)
++METHODS=('G2-HOLD','B0','B1')
++class Metrics:
++    def __init__(self):self.n=0;self.error_sum=0.;self.abs_sum=0.;self.abs=array('d');self.under=array('d')
++    def add(self,error):
++        self.n+=1;self.error_sum+=error;self.abs_sum+=abs(error);self.abs.append(abs(error));self.under.append(max(-error,0.))
++    def result(self):
++        def q(xs):
++            a=sorted(xs)
++            if not a:return None
++            k=(len(a)-1)*.95;lo=math.floor(k);hi=math.ceil(k);return a[lo]+(a[hi]-a[lo])*(k-lo)
++        return dict(n=self.n,MAE_C=self.abs_sum/self.n if self.n else None,bias_C=self.error_sum/self.n if self.n else None,
++                    P95_absolute_C=q(self.abs),P95_underestimate_C=q(self.under),max_underestimate_C=max(self.under,default=None))
++
++class Ledger:
++    def __init__(self,emit,identity,*,publication_mode='live',stride=5):
++        self.emit=emit;self.identity=identity;self.mode=publication_mode;self.stride=stride
++        self.last_time=None;self.pending=[];self.last_anchor=None;self.last_epoch=None;self.counts=Counter();self.stats={};self.common={}
++    def _metric(self,where,key,error):where.setdefault(key,Metrics()).add(error)
++    def consume(self,frame,issued,outputs,*,state_status,wall_clock):
++        t=frame['t']
++        if frame['identity']['run_id']!=self.identity['run_id']:raise ValueError('prediction_session_identity_conflict')
++        if self.last_time is not None and t<self.last_time:raise ValueError('prediction_clock_regression')
++        self.last_time=t
++        epoch=frame['identity']['source_epoch'];m=frame['measurement'];tj=m['tj']
++        if self.last_epoch is not None and epoch!=self.last_epoch:self.finish(t,'source_epoch_changed')
++        self.last_epoch=epoch
++        label=bool(frame['new_TJ'] and tj and tj['raw_valid'] and t<tj['valid_until_mono_s'])
++        for batch in list(self.pending):
++            target=batch['target'];expired=t>target+2
++            if expired:self._missing(batch,'missing_qualified_label_within_2s');self.pending.remove(batch)
++            elif label and t>=target:
++                for p in batch['items']:
++                    error=p['value_C']-tj['value_C']
++                    row=dict(prediction_id=p['prediction_id'],**self.identity,publication_mode=self.mode,
++                        horizon_s=p['horizon_s'],method=p['method'],status='scored',target_mono_s=target,
++                        label_ref=tj['source_ref'],label_received_mono_s=tj['observed_mono_s'],label_value_C=tj['value_C'],
++                        error_C=error,underestimate_C=max(-error,0.),source_epoch=epoch)
++                    self.emit('scores',row);self._metric(self.stats,f"{p['method']}/{p['horizon_s']}",error);self.counts['scored']+=1
++                methods={p['method']:p for p in batch['items']}
++                if 'G2-HOLD' in methods and 'B0' in methods:
++                    for name in ('G2-HOLD','B0'):
++                        p=methods[name];self._metric(self.common,f"{name}/{p['horizon_s']}",p['value_C']-tj['value_C'])
++                self.pending.remove(batch)
++        if not label:return
++        self.counts['all_valid_TJ']+=1
++        if self.last_anchor is not None and t-self.last_anchor<self.stride:return
++        self.last_anchor=t;self.counts['scheduled_TJ_origins']+=1
++        # Bound by session hard24h and stride>=5, independent of offered source frequency.
++        if self.counts['scheduled_TJ_origins']>17281:raise ValueError('prediction_origin_budget')
++        by={(x['method'],x['horizon_s']):x for x in outputs}
++        for horizon in HORIZONS:
++            items=[]
++            for method in METHODS:
++                x=by.get((method,horizon),dict(value_C=None,reason='model_interface_unavailable'))
++                value=x.get('value_C');late=issued>=t+horizon
++                if value is not None and not math.isfinite(value):value=None;x=dict(x,reason='nonfinite_prediction')
++                if late:value=None;x=dict(x,reason='issued_at_or_after_target')
++                p=dict(**self.identity,prediction_id=str(uuid.uuid4()),horizon_s=horizon,method=method,value_C=value,
++                    computation_id=x.get('computation_id'),calculation_started_at=x.get('calculation_started_at'),state_used=x.get('state_used'),history_refs=x.get('history_refs'),
++                    reason=x.get('reason') if value is None else None,conditional_assumptions=x.get('assumptions',[]),
++                    measurement_ref=tj['source_ref'],measurement_received_mono_s=tj['observed_mono_s'],measurement_utc=tj.get('observed_utc'),
++                    observed_through_ref=frame['ref'],observed_through_mono_s=t,source_epoch=epoch,
++                    issued_at=dict(mono_s=issued,utc=wall_clock['utc'],domain=self.identity['clock_domain'],actual_wall_mono_s=wall_clock['mono_s']),
++                    target_anchor='accepted_TJ_receiver_mono',target_mono_s=t+horizon,publication_mode=self.mode,
++                    control_permission=False,device_actions=False,dynamic_parameter_updates=0,
++                    late=late,effective_lead_s=t+horizon-issued,origin_state_status=state_status)
++                self.emit('predictions',p);self.counts[f'issued/{method}/{horizon}']+=1
++                if value is not None:items.append(p);self.counts[f'valid_predictions/{method}/{horizon}']+=1
++            if items:self.pending.append(dict(target=t+horizon,items=items))
++    def _missing(self,batch,reason):
++        for p in batch['items']:
++            self.emit('scores',dict(**self.identity,prediction_id=p['prediction_id'],method=p['method'],horizon_s=p['horizon_s'],status='unscored',reason=reason,publication_mode=self.mode))
++            self.counts['unscored/'+reason]+=1
++    def finish(self,t,reason='session_end'):
++        for batch in self.pending:self._missing(batch,'target_not_mature_at_end' if t<batch['target'] and reason=='session_end' else reason)
++        self.pending.clear()
++    def summary(self):
++        return dict(contract='TTO-OBSERVE-SCORING-v1',publication_mode=self.mode,stride_s=self.stride,
++            valid_TJ_denominator=self.counts['all_valid_TJ'],scheduled_origin_denominator=self.counts['scheduled_TJ_origins'],counts=dict(self.counts),
++            per_method={k:v.result() for k,v in self.stats.items()},same_set_G2_B0={k:v.result() for k,v in self.common.items()},
++            percentile='linear interpolation at (n-1)*.95; full bounded session error arrays',
++            error='prediction-actual',label='first qualified received TJ at/after target within2s, same session/epoch/domain',
++            statistical_unit='one session, overlapping horizons are not independent experiments')
+--- cpu.3/tto_field/observe_runtime.py
++++ observe.1/tto_field/observe_runtime.py
+@@ -0,0 +1,239 @@
++"""One native collector; raw quality and bounded pure model consumption are independent."""
++import asyncio, copy, json, os, queue, signal, socket, threading, time, subprocess
++from collections import deque
++from pathlib import Path
++from .support import Clock, utc, digest_file
++from .observe_storage import SessionStore
++from .observe_predictions import Ledger
++from .receiver_resources import read_sample
++
++def boot_identity():
++    p=Path('/proc/sys/kernel/random/boot_id')
++    if p.exists():return p.read_text().strip()
++    if os.uname().sysname=='Darwin':
++        r=subprocess.run(['/usr/sbin/sysctl','-n','kern.bootsessionuuid'],capture_output=True,text=True,timeout=1)
++        if r.returncode==0:return r.stdout.strip() or None
++    return None
++
++class StopObservation(RuntimeError):
++    """Identity or native recording loss; stop only this program."""
++
++class Consumer:
++    def __init__(self,store,registration,clock,stop,loop,*,lag_limit=.25):
++        self.store=store;self.registration=registration;self.clock=clock;self.stop=stop;self.loop=loop
++        self.queue=queue.Queue(maxsize=64);self.lag_limit=lag_limit;self.closed=threading.Event()
++        self.projection=self.communication=None;self.latest=None;self.engine_id=None;self.native_run_id=None;self.device_uuid=registration.get('expected_gpu_uuid')
++        self.callbacks=0;self.valid_TJ=0;self.projection_disabled=False;self.dropped=0;self.seen_dropped=0;self.fatal=None;self.model_errors=0;self.history=deque(maxlen=181)
++        self.stateful_observers=0;self.ledger=None;self.observer=None;self.predictor=None;self.model_reinitialize=False
++        self.thread=threading.Thread(target=self._work,name='frozen-model-consumer',daemon=True);self.thread.start()
++    def emit(self,name,row):self.store.append(self.store.root,name,row)
++    def event(self,reason,**extra):self.emit('events',dict(reason=reason,mono_s=time.monotonic(),utc=utc(),**extra))
++    def block(self,reason):
++        self.fatal=reason;self.loop.call_soon_threadsafe(self.stop.set)
++    def on_record(self,raw,processed,engine):
++        from .projection import SavedStream
++        from .comm_bridge import CommunicationBridge
++        self.callbacks+=1
++        try:
++            if raw.get('preceding_queue_gap'):raise StopObservation('native_queue_loss_raw_incomplete')
++            if self.projection is None:
++                paths=list((self.store.root/'native').glob('run-*/manifest.json'))
++                if len(paths)!=1:raise StopObservation('native_manifest_identity_conflict')
++                manifest=json.loads(paths[0].read_text())
++                if manifest['observer_run_id']!=raw['observer_run_id']:raise StopObservation('native_run_identity_conflict')
++                spec=json.loads((Path(__file__).parent/'research/observer-spec.json').read_text())
++                self.projection=SavedStream(manifest,spec,engine);self.communication=CommunicationBridge(manifest,engine)
++                self.native_run_id=raw['observer_run_id'];self.engine_id=id(engine)
++                self.store.metadata(self.store.root/'native-binding.json',dict(native_run_id=self.native_run_id,
++                    native_manifest=str(paths[0].relative_to(self.store.root)),collector_engine_instance_id=id(engine),
++                    I02_shared_engine_instance_id=id(self.communication.view.engine),registration=self.registration))
++            if raw['observer_run_id']!=self.native_run_id or id(engine)!=self.engine_id:raise StopObservation('second_engine_or_run_identity')
++            platform=(raw.get('payload')or{}).get('platform',{}) if raw['kind']=='orin' else {}
++            gpu_uuid=(raw.get('payload')or{}).get('gpu',{}).get('device_uuid') if raw['kind']=='orin' else None
++            if gpu_uuid:
++                if self.device_uuid is not None and gpu_uuid!=self.device_uuid:raise StopObservation('device_gpu_identity_conflict')
++                if self.device_uuid is None:
++                    self.device_uuid=gpu_uuid
++                    self.store.metadata(self.store.root/'source-device-identity.json',dict(device_uuid=gpu_uuid,first_ref=raw['ref'],device_id=self.registration['device_id'],scope='observed stable GPU identity; operator thermal configuration remains separate'))
++            for k,v in (self.registration.get('expected_platform') or {}).items():
++                if v is not None and platform and platform.get(k)!=v:raise StopObservation('device_platform_identity_conflict')
++            comm=self.communication.feed(raw,processed)
++            if raw['kind']=='orin' and processed.get('quality',{}).get('accepted') and comm['measurement']['TJ_and_rails']['raw_valid']:
++                self.valid_TJ+=1
++            if self.projection_disabled:
++                self.emit('observations',dict(ref=raw['ref'],native_run_id=self.native_run_id,mono_s=raw['mono_s'],received_at_utc=raw['received_at_utc'],kind=raw['kind'],
++                    measurement=None,communication=comm,raw_quality=processed['quality'],model_component='projection_disabled',experiment_authorization=False,control_permission=False))
++                return
++            frame=self.projection.feed(raw,processed)
++            if not comm['measurement']['TJ_and_rails']['raw_valid']:
++                for k in ('tj','power'):
++                    if frame['measurement'][k]:frame['measurement'][k]['raw_valid']=False
++                frame['new_TJ']=False
++            frame['_communication']=comm
++            # The raw native record and original quality were flushed before this callback.
++            self.emit('observations',dict(ref=raw['ref'],native_run_id=self.native_run_id,mono_s=raw['mono_s'],
++                received_at_utc=raw['received_at_utc'],kind=raw['kind'],measurement=frame['measurement'],safety=frame['safety'],
++                communication=comm,raw_quality=processed['quality'],experiment_authorization=False,control_permission=False))
++            try:self.queue.put_nowait(copy.deepcopy(frame))
++            except queue.Full:
++                self.dropped+=1;self.event('model_queue_full_raw_preserved',ref=raw['ref'],dropped_frames=self.dropped)
++        except StopObservation as exc:self.event(str(exc),ref=raw['ref']);self.block(str(exc))
++        except OSError as exc:self.block('recorder_error:'+type(exc).__name__)
++        except Exception as exc:
++            from tto.storage import LimitReached
++            if isinstance(exc,LimitReached):self.block('recorder_limit:'+str(exc));return
++            self.projection_disabled=True;self.model_errors+=1
++            self.event('projection_error_model_disabled_raw_continues',error=type(exc).__name__,ref=raw['ref'])
++    def _model_import(self):
++        from .g2_model.g2_runtime import Predictor,ThermalObserver
++        self.predictor=Predictor();self.observer=ThermalObserver(self.predictor.spec);self.stateful_observers=1
++    def _reset(self,frame,reason):
++        if self.ledger:self.ledger.finish(frame['t'],reason)
++        self.history.clear()
++        if self.observer is not None:self.observer.x=self.observer.P=None
++        frame['source_reset']=True;frame['reset_reason']=reason
++    def _work(self):
++        try:
++            try:self._model_import()
++            except Exception as exc:self.model_errors+=1;self.event('model_initialization_failed_raw_continues',error=type(exc).__name__)
++            while not self.closed.is_set() or not self.queue.empty():
++                try:frame=self.queue.get(timeout=.1)
++                except queue.Empty:continue
++                try:
++                    if self.projection_disabled:
++                        if self.ledger:self.ledger.finish(frame['t'],'projection_disabled')
++                        continue
++                    if self.ledger is None:
++                        ident=dict(self.registration,session_id=self.registration['session_id'],run_id=frame['identity']['run_id'],
++                            model_id=self.predictor.manifest['model_id'] if self.predictor else None,software_version='0.2.4+observe.1',model_sha256=frame['identity']['model_sha256'],spec_sha256=frame['identity']['spec_sha256'],clock_domain=self.clock.domain)
++                        self.ledger=Ledger(self.emit,ident)
++                    dropped=self.dropped
++                    if dropped!=self.seen_dropped:self._reset(frame,'model_consumer_gap_raw_preserved');self.seen_dropped=dropped
++                    if time.monotonic()-frame['t']>self.lag_limit:
++                        self.event('model_consumer_late_raw_preserved',ref=frame['ref']);self._reset(frame,'model_consumer_lag');continue
++                    try:
++                        if self.observer is None:raise ValueError('model_not_initialized')
++                        state=self.observer.step(frame)
++                    except Exception as exc:
++                        self.model_errors+=1;self.model_reinitialize=True
++                        self.event('model_computation_error_raw_continues',error=type(exc).__name__,ref=frame['ref'])
++                        state=dict(identity=frame['identity'],generated_at_mono_s=frame['t'],observed_through_ref=frame['ref'],
++                            measurement=frame['measurement'],safety=frame['safety'],observer=dict(phase='unavailable',available=False,reasons=['model_error']))
++                    if self.model_reinitialize:
++                        # Next successful step must cold-start; no fabricated continuity through an exception.
++                        frame['source_reset']=True;frame['reset_reason']='model_computation_error';self.model_reinitialize=False
++                        if self.observer:self.observer.x=self.observer.P=None
++                    outputs=[];tj=frame['measurement']['tj']
++                    valid=frame['new_TJ'] and tj and tj['raw_valid']
++                    if valid:
++                        origin=dict(ref=tj['source_ref'],received_at_mono_s=tj['observed_mono_s'],value_C=tj['value_C'],raw_valid=True,
++                            source_epoch=frame['identity']['source_epoch'],clock_domain=self.clock.domain)
++                        self.history.append(origin)
++                        if self.ledger.last_anchor is None or frame['t']-self.ledger.last_anchor>=self.ledger.stride:
++                            try:
++                                if self.predictor is None:raise ValueError('predictor_unavailable')
++                                calc=time.monotonic()
++                                rows=self.predictor.predict(state,origin=origin,observed_through=dict(ref=frame['ref'],mono_s=frame['t'],clock_domain=self.clock.domain),
++                                    issued_at=dict(mono_s=calc,utc=utc(),clock_domain=self.clock.domain),identity=self.ledger.identity,publication_mode='live',history=list(self.history))
++                                outputs=[dict(method=x['method'],horizon_s=x['horizon_s'],value_C=x['value_C'],reason=x['unavailable_reasons'],
++                                    assumptions=x.get('condition'),computation_id=x['prediction_id'],calculation_started_at=x['issued_at'],state_used=x.get('state_used'),history_refs=x.get('history_refs')) for x in rows]
++                            except Exception as exc:
++                                self.model_errors+=1;self.event('prediction_error_raw_continues',error=type(exc).__name__,ref=frame['ref'])
++                                outputs=[dict(method='B0',horizon_s=h,value_C=tj['value_C']) for h in (15,45,90)]
++                    issued=time.monotonic()
++                    if issued-frame['t']>self.lag_limit:
++                        self._reset(frame,'model_computation_late');outputs=[];state['observer']=dict(phase='unavailable',available=False,reasons=['computation_late'])
++                    self.ledger.consume(frame,issued,outputs,state_status=state['observer']['phase'],wall_clock=dict(utc=utc(),mono_s=issued))
++                    env=dict(schema='TTO-FIELD-CONSUMABLE-STATE-v1',observe_contract='TTO-OBSERVE-STATE-v1',mode='observe',
++                        state=state,identity=self.ledger.identity,native_run_id=self.native_run_id,expected_identity=frame['identity'],
++                        communication=frame['_communication'],process_clock_domain=self.clock.domain,
++                        clock=dict(domain=self.clock.domain,session_origin_mono_s=self.clock.origin,observer_input_mono_s=frame['t'],
++                            generated_at_mono_s=issued,generated_at_utc=utc(),model_consumable_until_mono_s=min(issued+2.5,frame['t']+2.5)),native_ref=frame['ref'],
++                        observed_through_mono_s=frame['t'],generated_at_mono_s=issued,generated_at_utc=utc(),
++                        frozen_state_clock_literal=state.get('generated_clock_domain'),state_observation_cutoff_mono_s=state['generated_at_mono_s'],
++                        model=state['observer'],measurement=frame['measurement'],safety=frame['safety'],
++                        experiment_authorization=False,start_allowed=False,control_permission=False,
++                        raw_recording_independent=True,model_lag_s=issued-frame['t'],business_events='unknown')
++                    self.emit('states',env);self.latest=env
++                except (OSError,ValueError) as exc:self.block('derived_recorder_error:'+type(exc).__name__)
++                except Exception as exc:
++                    self.model_errors+=1;self.event('model_consumer_error_raw_continues',error=type(exc).__name__)
++                finally:self.queue.task_done()
++        except Exception as exc:self.block('consumer_worker_failure:'+type(exc).__name__)
++    def close(self):self.closed.set();self.thread.join(timeout=2);return not self.thread.is_alive()
++
++async def run_observe(config,registration,out,duration,*,local_loopback=False,storage_options=None,grant=None):
++    from .numeric_policy import initialize
++    from tto.collector import collect
++    from tto.config import public_config
++    from tto.util import digest
++    import psutil
++    policy=initialize();clock=Clock();stop=asyncio.Event();loop=asyncio.get_running_loop()
++    registration=dict(registration,session_id=registration['session_id'],source_scope='self_owned_loopback' if local_loopback else 'operator_registered_device',observer_host_actual=socket.gethostname(),
++        boot_id=boot_identity(),clock_domain=clock.domain)
++    from .scheduler import Registry
++    Path(out).parent.mkdir(parents=True,exist_ok=True)
++    Registry(Path(out).parent/'.tto-observe-ledger').claim(registration['session_id'],registration['session_id'])
++    store=SessionStore(out,**(storage_options or {}));consumer=Consumer(store,registration,clock,stop,loop)
++    store.metadata(store.root/'thread-policy.json',policy)
++    proc=psutil.Process();creation=proc.create_time();reason='duration';native=None;error=None
++    store.metadata(store.root/'launch.json',dict(version='0.2.4+observe.1',mode='observe',registration=registration,clock_start=clock.bracket(),
++        authorization=grant,duration_s=duration,session_max_s=86400,storage_budget=dict(total_bytes=store.budget,segment_bytes=store.segment_bytes,chunk_bytes=store.chunk_bytes),
++        legacy_native_config=public_config(config),config_sha256=digest(public_config(config)),local_loopback=local_loopback,
++        Requester_count=0,sidecar_count=0,experiment_authorization=False,control_permission=False,process_created=creation))
++    task=asyncio.create_task(collect(config,duration,data_root=store.root/'native',episode=registration['session_id'],run_type='observe',
++        deployment=dict(observe_contract='TTO-OBSERVE-v1',device_registration=registration,simulated=local_loopback,synthetic_loopback_only=local_loopback),stop_event=stop,on_record=consumer.on_record,observe_store=store))
++    workload=None
++    if registration.get('workload_event_source'):
++        from .observe_workload import EventTail
++        source=registration['workload_event_source'];workload=EventTail(source['path'],source,clock.domain,consumer.emit)
++    checkpoint=False
++    from .observe_limits import ReceiverBudget
++    budget=ReceiverBudget();prev=None;start=time.monotonic();resource_state=None
++    try:
++        while not task.done():
++            await asyncio.sleep(1);now=time.monotonic();sample,prev=read_sample(now-start,prev)
++            sample.update(sampled_at_mono_s=now,clock_domain=clock.domain,interval_origin_mono_s=start)
++            store.append(store.root,'resources',sample)
++            budget_reason=budget.sample(sample,now-start)
++            resource_state=dict(cpu_single_core_rolling10s=budget.mean,mean_target_pct=5,hard_mean_pct=8,hard_sustain_s=30,rss_limit_bytes=128*1024**2)
++            if budget_reason:reason=budget_reason;stop.set()
++            if consumer.fatal:reason=consumer.fatal;stop.set()
++            if workload:workload.tick()
++            if not checkpoint and now-start>=7200:
++                store.metadata(store.root/'two-hour-checkpoint.json',dict(elapsed_s=now-start,blocking_reason=consumer.fatal,valid_TJ_observed=consumer.valid_TJ,
++                    model_trial='insufficient_observations_diagnostic_only' if not consumer.valid_TJ else 'conditional_observation',continue_within_same_authorized_window=not stop.is_set()))
++                checkpoint=True
++            store.metadata(store.root/'status.json',dict(running=not stop.is_set(),pid=os.getpid(),process_created=creation,
++                clock_domain=clock.domain,elapsed_s=now-start,reason=reason if stop.is_set() else None,native_run_id=consumer.native_run_id,
++                collection=True,latest_state=None if consumer.projection_disabled else consumer.latest,model_component='disabled_projection_error' if consumer.projection_disabled else 'consuming',model_queue_frames=consumer.queue.qsize(),model_dropped_frames=consumer.dropped,
++                resource=resource_state,experiment_authorization=False,control_permission=False,business_events=dict(last_event=workload.current,source_health='unknown_without_heartbeat',scope='counts_at_event_only') if workload else 'unknown'))
++        native=await task
++        if reason=='duration':reason=native[1]['stop_reason']
++    except Exception as exc:
++        error=type(exc).__name__+':'+str(exc)[:200];reason='observe_software_error';stop.set()
++    finally:
++        stop.set()
++        if not task.done():
++            try:native=await asyncio.wait_for(asyncio.shield(task),3)
++            except (asyncio.TimeoutError,Exception) as exc:reason='native_cleanup_unconfirmed';error=type(exc).__name__
++        closed=await asyncio.to_thread(consumer.close)
++        if not closed:reason='model_cleanup_unconfirmed'
++        end=time.monotonic()
++        if consumer.ledger and closed:consumer.ledger.finish(end,'projection_disabled' if consumer.projection_disabled else 'session_end')
++        scores=consumer.ledger.summary() if consumer.ledger and closed else dict(reason='model_consumer_not_available_or_not_closed')
++        scores['all_native_valid_TJ_denominator']=consumer.valid_TJ
++        summary=dict(reason=reason,error=error,elapsed_s=end-clock.origin,clock_end=clock.bracket(),pid=os.getpid(),
++            native_run_id=consumer.native_run_id,collector_invocation_count=1,collector_count=len(list((store.root/'native').glob('run-*/manifest.json'))),stateful_observer_count=consumer.stateful_observers,
++            valid_TJ_observed=consumer.valid_TJ,model_trial='insufficient_observations_diagnostic_only' if not consumer.valid_TJ else 'conditional_observation',
++            native_callbacks=consumer.callbacks,I02_processed_views=consumer.communication.view.process_calls if consumer.communication else 0,
++            shared_native_engine_id=consumer.engine_id,projection_disabled=consumer.projection_disabled,model_errors=consumer.model_errors,model_dropped_frames=consumer.dropped,consumer_stopped=closed,
++            Requester_count=0,sidecar_count=0,control_permission=False,experiment_authorization=False,scoring=scores,
++            native_summary=native[1] if native else None,thread_policy_same_pid=policy['pid']==os.getpid())
++        try:
++            store.metadata(store.root/'summary.json',summary,final=True)
++            store.metadata(store.root/'status.json',dict(running=False,pid=os.getpid(),reason=reason,summary='summary.json',native_run_id=consumer.native_run_id),final=True)
++            store.close()
++        except (OSError,ValueError) as exc:
++            raise RuntimeError('recording_finalize_failed:'+type(exc).__name__) from exc
++    return summary
+--- cpu.3/tto_field/observe_storage.py
++++ observe.1/tto_field/observe_storage.py
+@@ -0,0 +1,101 @@
++"""One bounded session journal; rotation changes files, never engine/model state."""
++import json, os, shutil, threading, time
++from pathlib import Path
++from tto.storage import Journal, LimitReached
++from tto.util import canonical, file_hash, write_json
++
++class SessionStore:
++    def __init__(self, root, *, budget=8*1024**3, segment_bytes=2*1024**3,
++                 chunk_bytes=64*1024**2, segment_seconds=14400, min_free=1024**3,
++                 clock=time.monotonic):
++        self.root=Path(root); self.root.mkdir(mode=0o700)
++        self.budget=budget; self.segment_bytes=segment_bytes; self.chunk_bytes=chunk_bytes
++        self.segment_seconds=segment_seconds; self.min_free=min_free; self.clock=clock
++        self.reserve=min(8*1024**2,budget//10); self.total=0; self.segment=1
++        self.segment_start=clock(); self.segment_used=0; self.handles={}; self.counts={}
++        self.files={}; self.streams={}; self.segments=[]; self.segment_files=set()
++        self.lock=threading.RLock(); self.closed=False; self.finalizing=False; self.rotation_count=0
++    def metadata(self, path, value, *, final=False):
++        with self.lock:
++            path=Path(path); b=(json.dumps(value,ensure_ascii=False,indent=2,allow_nan=False)+'\n').encode()
++            old=path.stat().st_size if path.exists() else 0
++            if self.total+len(b)-old>self.budget: raise LimitReached('session_metadata_budget')
++            if shutil.disk_usage(self.root).free<len(b)+(0 if final or self.finalizing else self.min_free): raise LimitReached('min_free_bytes')
++            path.parent.mkdir(parents=True,exist_ok=True)
++            if path.exists() and path.name not in ('status.json','input-profile.json'):
++                raise FileExistsError('immutable metadata already exists: '+str(path))
++            if path.name in ('status.json','input-profile.json'):
++                temporary=path.with_name(path.name+'.next')
++                fd=os.open(temporary,os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600)
++                with os.fdopen(fd,'wb') as f:f.write(b);f.flush();os.fsync(f.fileno())
++                os.replace(temporary,path)
++            else:write_json(path,value)
++            self.total+=len(b)-old
++    def adopt(self, path):
++        with self.lock:self.total+=Path(path).stat().st_size
++    def _seal_segment(self):
++        for handle,_ in self.handles.values(): handle.flush(); os.fsync(handle.fileno()); handle.close()
++        self.handles.clear()
++        paths=sorted(self.segment_files)
++        record=dict(segment=self.segment,started_mono_s=self.segment_start,ended_mono_s=self.clock(),
++                    byte_count=self.segment_used,files={p:dict(bytes=(self.root/p).stat().st_size,sha256=file_hash(self.root/p)) for p in paths},
++                    continuity='same process/session/native UUID/thermal state; file rotation only')
++        self.metadata(self.root/'segments'/f'{self.segment:04d}'/'index.json',record)
++        self.segments.append(record);self.segment_files.clear()
++    def append(self, base, stream, row):
++        b=canonical(row)+b'\n'
++        with self.lock:
++            if self.closed: raise OSError('session store is closed')
++            if len(b)>self.chunk_bytes: raise LimitReached('record_exceeds_chunk')
++            if self.total+len(b)>self.budget-self.reserve: raise LimitReached('session_max_bytes')
++            if shutil.disk_usage(self.root).free<self.min_free+len(b): raise LimitReached('min_free_bytes')
++            if self.segment_used and (self.segment_used+len(b)>self.segment_bytes or self.clock()-self.segment_start>=self.segment_seconds):
++                self._seal_segment(); self.segment+=1; self.rotation_count+=1
++                self.segment_start=self.clock();self.segment_used=0
++            key=(str(Path(base).relative_to(self.root)),stream)
++            if key in self.handles and self.handles[key][1]+len(b)>self.chunk_bytes:
++                self.handles[key][0].flush();os.fsync(self.handles[key][0].fileno());self.handles[key][0].close();del self.handles[key]
++            if key not in self.handles:
++                self.counts[key]=self.counts.get(key,0)+1;n=self.counts[key]
++                name=f'{stream}-{n:04d}.jsonl' if stream=='observations' or n>1 else stream+'.jsonl'
++                path=Path(base)/name;path.parent.mkdir(parents=True,exist_ok=True)
++                fd=os.open(path,os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600)
++                self.handles[key]=(os.fdopen(fd,'wb'),0)
++                rel=str(path.relative_to(self.root));self.files[key]=rel
++                self.streams.setdefault('/'.join(key),[]).append(rel)
++            handle,size=self.handles[key];handle.write(b);handle.flush()
++            self.handles[key]=(handle,size+len(b));self.segment_files.add(self.files[key])
++            self.total+=len(b);self.segment_used+=len(b)
++    def flush_prefix(self, base):
++        with self.lock:
++            prefix=str(Path(base).relative_to(self.root))
++            for key,(handle,_) in self.handles.items():
++                if key[0]==prefix: handle.flush();os.fsync(handle.fileno())
++    def close(self):
++        with self.lock:
++            if self.closed:return
++            self.finalizing=True;self._seal_segment();self.closed=True
++            self.metadata(self.root/'stream-index.json',dict(contract='TTO-OBSERVE-SEGMENTS-v1',streams=self.streams,
++                segments=len(self.segments),rotations=self.rotation_count,session_max_bytes=self.budget,
++                segment_max_bytes=self.segment_bytes,file_chunk_max_bytes=self.chunk_bytes,
++                segment_max_seconds=self.segment_seconds,heat_state_reset_by_rotation=False))
++            self.metadata(self.root/'files.json',{str(p.relative_to(self.root)):dict(bytes=p.stat().st_size,sha256=file_hash(p))
++                for p in sorted(self.root.rglob('*')) if p.is_file() and p!=self.root/'files.json'})
++
++class ObserveJournal(Journal):
++    """Native processor still writes raw before invoking its one consumer callback."""
++    def __init__(self,*args,store,**kwargs):
++        self.store=store;super().__init__(*args,**kwargs);store.adopt(self.path/'manifest.json')
++    def append(self,name,row):
++        self.store.append(self.path,name,row)
++        if name=='observations':self.observation_count+=1
++    def metadata(self,name,row):
++        if name!='input-profile.json':raise ValueError('unsupported native metadata')
++        self.store.metadata(self.path/name,row)
++    def close(self,summary):
++        from tto.util import utc_now
++        self.store.flush_prefix(self.path)
++        self.store.metadata(self.path/'summary.json',dict(summary,ended_at_utc=utc_now(),observations=self.observation_count,
++            observation_session_version='TTO-OBSERVE-v1',native_legacy_max_s=14400,
++            session_max_s=86400,session_max_bytes=self.store.budget),final=True)
++        self.store.metadata(self.path/'files.json',{p.name:file_hash(p) for p in self.path.iterdir() if p.is_file() and p.name!='files.json'},final=True)
+--- cpu.3/tto_field/observe_workload.py
++++ observe.1/tto_field/observe_workload.py
+@@ -0,0 +1,38 @@
++"""Bounded local tail of an explicitly supplied existing event log. No polling endpoints."""
++import json,time
++from pathlib import Path
++from .business_events import Adapter
++from .support import utc
++class EventTail:
++    def __init__(self,path,binding,domain,emit):
++        self.path=Path(path);self.emit=emit;self.offset=0;self.inode=None;self.buffer=b'';self.last_problem=None
++        self.adapter=Adapter(session_id=binding['session_id'],source_clock_domain=binding['clock_domain'],
++            observer_clock_domain=domain,complete_from_session_start=binding.get('complete_from_session_start',False),publication_mode='live')
++        self.complete=binding.get('complete_from_session_start',False);self.current=None
++    def unknown(self,reason):
++        self.current=self.adapter.unavailable(reason,received_mono_s=time.monotonic())
++        if reason!=self.last_problem:self.emit('workload-events',self.current)
++        self.last_problem=reason
++    def tick(self):
++        try:
++            info=self.path.stat();key=(info.st_dev,info.st_ino)
++            if self.inode is None:
++                self.inode=key;self.offset=info.st_size
++                if self.complete and self.offset:raise ValueError('not_attached_from_empty_session_start')
++                if not self.complete:self.unknown('mid_session_attachment')
++            if self.inode!=key or info.st_size<self.offset:
++                self.inode=key;self.offset=info.st_size;self.buffer=b'';self.unknown('event_file_rotated_or_truncated');return
++            with self.path.open('rb') as f:f.seek(self.offset);data=f.read(65537)
++            if len(data)>65536:
++                self.offset=info.st_size;self.buffer=b'';self.unknown('event_read_budget_gap');return
++            self.offset+=len(data);self.buffer+=data
++            if len(self.buffer)>65536:self.buffer=b'';self.unknown('event_line_budget');return
++            while b'\n' in self.buffer:
++                line,self.buffer=self.buffer.split(b'\n',1)
++                if not line:continue
++                def invalid_constant(value):raise ValueError('nonfinite event JSON')
++                parsed=json.loads(line,parse_constant=invalid_constant)
++                if not isinstance(parsed,dict):raise ValueError('event row is not an object')
++                row=self.adapter.feed(parsed,received_mono_s=time.monotonic(),received_at_utc=utc())
++                if row is not None:self.last_problem=None;self.current=row;self.emit('workload-events',row)
++        except (OSError,ValueError,KeyError,TypeError):self.unknown('event_source_unavailable_or_invalid')

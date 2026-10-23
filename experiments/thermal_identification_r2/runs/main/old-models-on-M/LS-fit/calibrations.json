@@ -1,0 +1,93 @@
+{
+  "G1": {
+    "M-00": {
+      "E": 31.91395599655994,
+      "Ts_initial": 0.0,
+      "state": [
+        46.29887564664084,
+        0.0
+      ],
+      "start": 7322.613296687,
+      "end": 7382.613296687,
+      "first_ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:4",
+      "last_ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:196",
+      "n": 61,
+      "rank": 1,
+      "normalized_singular_values": [
+        1.0
+      ],
+      "singular_ratio": 1.0,
+      "condition": 1.0,
+      "weak_prefix_calibration": false,
+      "rmse": 0.04801860323681096,
+      "bounds_hit": []
+    },
+    "M-01": {
+      "E": 31.91395599655994,
+      "Ts_initial": 0.0,
+      "state": [
+        46.496957147545906,
+        0.0
+      ],
+      "start": 9660.101661881,
+      "end": 9720.101661881,
+      "first_ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:7476",
+      "last_ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:7665",
+      "n": 60,
+      "rank": 0,
+      "normalized_singular_values": [],
+      "singular_ratio": 0,
+      "condition": null,
+      "weak_prefix_calibration": false,
+      "rmse": 0.13651559822137585,
+      "bounds_hit": []
+    }
+  },
+  "G2": {
+    "M-00": {
+      "E": 36.24981039175457,
+      "Ts_initial": 42.582426573654246,
+      "state": [
+        46.29937888651593,
+        42.56659771986767
+      ],
+      "start": 7322.613296687,
+      "end": 7382.613296687,
+      "first_ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:4",
+      "last_ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:196",
+      "n": 61,
+      "rank": 2,
+      "normalized_singular_values": [
+        1.378288458167737,
+        0.3167347882402586
+      ],
+      "singular_ratio": 0.22980297510531145,
+      "condition": 4.351553758352047,
+      "weak_prefix_calibration": false,
+      "rmse": 0.04800128493646629,
+      "bounds_hit": []
+    },
+    "M-01": {
+      "E": 36.24981039175457,
+      "Ts_initial": 43.02775311877769,
+      "state": [
+        46.675848801215565,
+        42.90753618383392
+      ],
+      "start": 9660.101661881,
+      "end": 9720.101661881,
+      "first_ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:7476",
+      "last_ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:7665",
+      "n": 60,
+      "rank": 1,
+      "normalized_singular_values": [
+        1.0000000000000002
+      ],
+      "singular_ratio": 1.0,
+      "condition": 1.0,
+      "weak_prefix_calibration": false,
+      "rmse": 0.052060617859479956,
+      "bounds_hit": []
+    }
+  }
+}

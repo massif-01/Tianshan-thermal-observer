@@ -1,0 +1,117 @@
+--- original/health.py
++++ override/health.py
+@@ -1,16 +1,19 @@
+ """Observe the one collector's processed stream; no network health poller."""
+ import math
+ import threading
++from health_native import TrialHealth as NativeHealth
+ 
+ 
+ class TrialHealth:
+     def __init__(self):
++        self.native=NativeHealth()
+         self.lock=threading.Lock();self.nodes=[];self.latest_source=None
+         self.source_usable=False;self.source_epoch=0;self.source_rejection='no_accepted_source'
+         self.last_control_context=None;self.observed_abnormal=False
+         self.coverage={'complete_input_s':0.,'unknown_input_s':0.,'longest_continuous_s':0.,'current_continuous_s':0.,'reasons_seconds':{}}
+ 
+     def observe(self,record,out,engine):
++        self.native.observe(record,out,engine)
+         with self.lock:
+             t=record['mono_s'];q=out['quality']
+             if self.nodes:
+@@ -40,17 +43,26 @@
+                     self.source_usable=False;self.source_rejection=q['reason']
+             fan=engine.fan['data'] if engine.fan else {};temp=engine.temp['data'] if engine.temp else {}
+             scope,eligible,reasons=engine.control_qualification(t)
++            override_allowed=(temp.get('bound_variable')=='agx_info.temperature.tj' and
++                              temp.get('manual_mode') is False and temp.get('active_source') in ('variable','default'))
++            ignored=[r for r in reasons if override_allowed and r in
++                     ('control_temperature_stale','control_temperature_invalid','active_temperature_source_untrusted')]
++            reasons=[r for r in reasons if r not in ignored]
++            eligible=not reasons
+             source=self.latest_source
+             source_until=source['valid_until'] if source else t
+             until=min(source_until,engine.fan['t']+2.5 if engine.fan else t,engine.temp['t']+7.5 if engine.temp else t)
+             power=bool(source and all(isinstance(source['values'].get(k),(int,float)) and math.isfinite(source['values'][k]) for k in ('vdd_gpu','vdd_cpu_soc_mss')))
+             context=(fan.get('mode'),fan.get('enabled'),temp.get('manual_mode'),temp.get('active_source'),temp.get('bound_variable'))
++            if override_allowed:context=(*context[:3],'variable_or_default',context[4])
+             known=engine.fan is not None and engine.temp is not None and all(v is not None for v in context[:4])
+             changed=bool(known and self.last_control_context is not None and context!=self.last_control_context)
+             if known:self.last_control_context=context
+-            abnormal=(any(fan.get(k) is True for k in ('guard_active','temp_stale','fault')) or fan.get('enabled') is False or
+-                      temp.get('manual_mode') is True or temp.get('normalized_valid') is False or
++            abnormal=(any(fan.get(k) is True for k in ('guard_active','fault')) or (fan.get('temp_stale') is True and not override_allowed) or fan.get('enabled') is False or
++                      temp.get('manual_mode') is True or (temp.get('normalized_valid') is False and not override_allowed) or
+                       fan.get('mode') is not None and fan.get('mode')!='auto' or changed)
++            if temp.get('bound_variable') is not None and temp.get('bound_variable')!='agx_info.temperature.tj':
++                abnormal=True; reasons=[*reasons,'binding_variable_not_authorized']
+             self.observed_abnormal|=bool(abnormal)
+             good=bool(source and self.source_usable and source_until>t and source['platform'] and source['period_known'] and power and eligible and scope=='auto' and
+                       not engine.q.blocked and not engine.q.quarantined and not engine.mixed_profiles and not abnormal)
+@@ -58,6 +70,7 @@
+             node=dict(t=t,ref=record['ref'],complete=good,valid_until=until,source_valid_until=source_until,
+                       source_usable=self.source_usable,source_epoch=self.source_epoch,source_rejection=self.source_rejection,
+                       observed_abnormal=bool(abnormal),control_context_changed=changed,
++                      operator_override=dict(applied=override_allowed,ignored_admission_reasons=ignored,raw_fan_temp_stale=fan.get('temp_stale'),raw_temperature_valid=temp.get('normalized_valid'),raw_active_source=temp.get('active_source')),
+                       control_mode=scope,reasons=reasons,TJ=source['values'].get('tj') if source else None,
+                       source_ref=source['ref'] if source else None,fan_ref=engine.fan['ref'] if engine.fan else None,
+                       P_g=source['values'].get('vdd_gpu') if source else None,P_c=source['values'].get('vdd_cpu_soc_mss') if source else None,
+@@ -69,7 +82,7 @@
+             # Only the 180-second check history is needed here; original facts remain in TTO logs.
+             while len(self.nodes)>1 and self.nodes[1]['t']<t-180:self.nodes.pop(0)
+ 
+-    def snapshot(self,now):
++    def override_snapshot(self,now):
+         with self.lock:
+             nodes=[dict(n) for n in self.nodes]
+             coverage={**self.coverage,'reasons_seconds':dict(self.coverage['reasons_seconds'])}
+@@ -88,3 +101,9 @@
+         return dict(current_ready=bool(current),continuous_60s=continuous,abnormal=abnormal,
+                     gaps_180s=gaps,latest=last,checked_at_mono_s=now,observed_span_s=now-nodes[0]['t'],
+                     input_coverage=coverage,coverage_measured_until_mono_s=last['t'])
++
++    def snapshot(self,now):
++        result=self.override_snapshot(now)
++        result['original_rule_snapshot']=self.native.snapshot(now)
++        result['operator_override']={'policy':'bound TJ variable/default loss only; no duration threshold','coverage_semantics':'user-overridden request admission; original collector quality unchanged'}
++        return result
+--- original/run_midload.py
++++ override/run_midload.py
+@@ -14,6 +14,9 @@
+ if sys.flags.isolated:sys.path.insert(0,str(Path(__file__).resolve().parent))
+ 
+ EXPECTED_VERSION='0.2.4'
++OVERRIDE_POLICY=json.loads((Path(__file__).resolve().parent.parent/'override-policy.json').read_text())
++def override_identity():
++    return dict(policy=OVERRIDE_POLICY,copy_hashes={x.name:hashlib.sha256(x.read_bytes()).hexdigest() for x in sorted(Path(__file__).resolve().parent.glob('*.py'))},result_role='user_overridden_development_experiment_not_native_acceptance')
+ 
+ 
+ class RuntimeIdentityError(ValueError):pass
+@@ -49,7 +52,7 @@
+ def preview(config,args):
+     from trial import PHASES
+     return dict(trial_id=config['trial_id'],mode='dry_run',connected=False,credentials_read=False,
+-                runtime=runtime_identity(),
++                runtime=runtime_identity(),operator_override=override_identity(),
+                 nominal_duration_s=2480,hard_limit_s=2700,initial_check_within_background_s=180,strict_history_s=60,
+                 phases=[dict(id=i,kind=k,duration_s=d) for i,k,d in PHASES],max_total_requests=256,max_tokens=256,max_inflight=1,
+                 max_request_wall_s=30,max_drain_s=30,model=config['inference']['model'],
+@@ -80,7 +83,7 @@
+             ambient=json.loads(args.ambient_file.read_text()) if args.ambient_file else {'temperature_c':None,'observed_at_utc':None,'written_at_utc':None,'measurement_point':None,'instrument':None}
+             emit('ambient_snapshot',phase=fields['phase'],record=ambient,missing_boundary_measurement=ambient.get('temperature_c') is None)
+     write(out/'frozen-plan.json',{**preview(config,args),'mode':'live_plan','execution_requested':True})
+-    write(out/'identity.json',dict(trial_id=config['trial_id'],tto_version=tto.__version__,tto_import_path=tto.__file__,tto_config=public_config(c),
++    write(out/'identity.json',dict(operator_override=override_identity(),trial_id=config['trial_id'],tto_version=tto.__version__,tto_import_path=tto.__file__,tto_config=public_config(c),
+           tto_config_sha256=sha(args.tto_config),trial_config_sha256=sha(args.trial_config),runner_sha256=sha(__file__),
+           clock_domain='observer_host_monotonic_and_UTC; service timestamps retained in collector payload',
+           source_sampling_changed=False,fan_control_changed=False,data_role='new_development_process_not_independent_confirmation'))
+@@ -109,7 +112,7 @@
+             except (asyncio.TimeoutError,asyncio.CancelledError):
+                 result.update(status='stopped',stop_reason='collector_cleanup_deadline',collector_closed=False)
+             except Exception as e:result.update(status='stopped',stop_reason='collector_failure:'+type(e).__name__)
+-        result.update(output=str(out),elapsed_total_s=clock.now()-start,hard_limit_s=hard_limit_s,
++        result.update(operator_override=override_identity(),output=str(out),elapsed_total_s=clock.now()-start,hard_limit_s=hard_limit_s,
+                       live_validation='requires_independent_review; this executable does not authorize a field run',new_model_training='not_performed',control_authorization='none')
+         write(out/'input-health.json',health.snapshot(clock.now()))
+         write(out/'summary.json',result);events.close();requests.close()

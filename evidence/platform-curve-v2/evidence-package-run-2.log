@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/Users/massif/Tianshan-thermal-observer/scripts/package_platform_evidence.py", line 116, in <module>
+    package(p.parse_args())
+  File "/Users/massif/Tianshan-thermal-observer/scripts/package_platform_evidence.py", line 69, in package
+    for item in changed:assert sha(tree/item['path'])==item['after_sha256'],item['path']
+AssertionError: tests/fixtures/platform-v2/orin-contract.json

@@ -1,0 +1,65 @@
+{
+  "native_run_id": "854efcfd-c498-4491-aba8-dd1564f05bf4",
+  "file_index_verified": 18,
+  "layer_unavailability": {
+    "collection_available": {
+      "first_usable_s": 0.6153600559919141,
+      "unavailable_spans": [
+        {
+          "start_s": 0.003439619962591678,
+          "end_s": 0.6153600559919141,
+          "duration_s": 0.6119204360293224
+        }
+      ],
+      "longest_unavailable_s": 0.6119204360293224,
+      "total_unavailable_s": 0.6119204360293224
+    },
+    "model_available": {
+      "first_usable_s": 9.626000846968964,
+      "unavailable_spans": [
+        {
+          "start_s": 0.003439619962591678,
+          "end_s": 9.626000846968964,
+          "duration_s": 9.622561227006372
+        }
+      ],
+      "longest_unavailable_s": 9.622561227006372,
+      "total_unavailable_s": 9.622561227006372
+    },
+    "field_safety_available": {
+      "first_usable_s": 5.563289295008872,
+      "unavailable_spans": [
+        {
+          "start_s": 0.003439619962591678,
+          "end_s": 5.563289295008872,
+          "duration_s": 5.55984967504628
+        }
+      ],
+      "longest_unavailable_s": 5.55984967504628,
+      "total_unavailable_s": 5.55984967504628
+    }
+  },
+  "resources": {
+    "samples": 295,
+    "rss_MiB": {
+      "n": 295,
+      "min": 71.4375,
+      "mean": 74.61735963983051,
+      "p50": 74.69921875,
+      "p95": 76.05859375,
+      "p99": 76.16015625,
+      "max": 76.18359375
+    },
+    "cpu_single_core_pct": {
+      "n": 294,
+      "min": 0.9875488176157614,
+      "mean": 2.8287236016253097,
+      "p50": 2.9493004275859205,
+      "p95": 4.9132836874133545,
+      "p99": 4.922211049954536,
+      "max": 5.886335012061064
+    },
+    "cpu_time_average_pct": 2.83171373165994,
+    "final_run_files_bytes": 15391182
+  }
+}

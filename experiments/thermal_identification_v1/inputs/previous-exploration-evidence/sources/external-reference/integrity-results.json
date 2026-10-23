@@ -1,0 +1,223 @@
+{
+  "hash_entries": 99,
+  "checks": [
+    {
+      "path": "TTO-第二轮补充与短问答实测报告.md",
+      "match": true
+    },
+    {
+      "path": "normalized-phases.json",
+      "match": true
+    },
+    {
+      "path": "round2-verification.json",
+      "match": true
+    },
+    {
+      "path": "01-Codex执行指令.md",
+      "match": true
+    },
+    {
+      "path": "第二轮核对与补充说明.md",
+      "match": true
+    },
+    {
+      "path": "normalized-requests.json",
+      "match": true
+    },
+    {
+      "path": "input-package-checks.json",
+      "match": true
+    },
+    {
+      "path": "fan-ready.json",
+      "match": true
+    },
+    {
+      "path": "firmware-ready.json",
+      "match": true
+    },
+    {
+      "path": "round2-resource-verification.json",
+      "match": true
+    },
+    {
+      "path": "README.md",
+      "match": true
+    },
+    {
+      "path": "verify-round2.py",
+      "match": true
+    },
+    {
+      "path": "original-run-file-hashes.json",
+      "match": true
+    },
+    {
+      "path": "sanitization-receipt.json",
+      "match": true
+    },
+    {
+      "path": "readiness.json",
+      "match": true
+    },
+    {
+      "path": "02-短问答题目.json",
+      "match": true
+    },
+    {
+      "path": "temp-ready.json",
+      "match": true
+    },
+    {
+      "path": "collection-stop-state.json",
+      "match": true
+    },
+    {
+      "path": "analysis/shortqa-timeline.svg",
+      "match": true
+    },
+    {
+      "path": "analysis/plot-shortqa.py",
+      "match": true
+    },
+    {
+      "path": "analysis/normalize.py",
+      "match": true
+    },
+    {
+      "path": "analysis/shortqa-timeline.png",
+      "match": true
+    },
+    {
+      "path": "analysis/statistics.json",
+      "match": true
+    },
+    {
+      "path": "analysis/plot-round2-supplement.py",
+      "match": true
+    },
+    {
+      "path": "analysis/measurements.csv",
+      "match": true
+    },
+    {
+      "path": "analysis/analyze-shortqa.py",
+      "match": true
+    },
+    {
+      "path": "analysis/fan-snapshots.jsonl",
+      "match": true
+    },
+    {
+      "path": "analysis/request-summary.csv",
+      "match": true
+    },
+    {
+      "path": "analysis/write-report.py",
+      "match": true
+    },
+    {
+      "path": "analysis/round2-gain-supplement.png",
+      "match": true
+    },
+    {
+      "path": "run-2026-10-13T052811.443181_0000-d2a7593a/summary.json",
+      "match": true
+    },
+    {
+      "path": "run-2026-10-13T052811.443181_0000-d2a7593a/predictions.jsonl",
+      "match": true
+    },
+    {
+      "path": "run-2026-10-13T052811.443181_0000-d2a7593a/scores.jsonl",
+      "match": true
+    },
+    {
+      "path": "run-2026-10-13T052811.443181_0000-d2a7593a/observations-0001.jsonl",
+      "match": true
+    },
+    {
+      "path": "run-2026-10-13T052811.443181_0000-d2a7593a/files.json",
+      "match": true
+    },
+    {
+      "path": "run-2026-10-13T052811.443181_0000-d2a7593a/events.jsonl",
+      "match": true
+    },
+    {
+      "path": "run-2026-10-13T052811.443181_0000-d2a7593a/manifest.json",
+      "match": true
+    },
+    {
+      "path": "run-2026-10-13T052811.443181_0000-d2a7593a/input-profile.json",
+      "match": true
+    },
+    {
+      "path": "run-2026-10-13T052811.443181_0000-d2a7593a/operator-records.jsonl",
+      "match": true
+    }
+  ],
+  "missing": [
+    "tto-short-qa-v1-20261013-052807/collection.log",
+    "tto-short-qa-v1-20261013-052807/report.log",
+    "tto-short-qa-v1-20261013-052807/settings.json",
+    "tto-short-qa-v1-20261013-052807/worker.log",
+    "tto-short-qa-v1-20261013-052807/collector-worker.py",
+    "tto-short-qa-v1-20261013-052807/private-current-config.json",
+    "tto-short-qa-v1-20261013-052807/runtime-identity.json",
+    "workload/D01-response.sse",
+    "workload/D06-response.sse",
+    "workload/D04-payload.json",
+    "workload/D03-payload.json",
+    "workload/summary.json",
+    "workload/D11-payload.json",
+    "workload/P01-payload.json",
+    "workload/run.py",
+    "workload/phase-summary.json",
+    "workload/D12-response.sse",
+    "workload/D10-payload.json",
+    "workload/D07-response.sse",
+    "workload/D02-payload.json",
+    "workload/D05-payload.json",
+    "workload/runner.log",
+    "workload/frozen-plan.json",
+    "workload/D08-payload.json",
+    "workload/S04-response.sse",
+    "workload/S03-response.sse",
+    "workload/S01-payload.json",
+    "workload/S06-payload.json",
+    "workload/requests.jsonl",
+    "workload/S02-response.sse",
+    "workload/S05-response.sse",
+    "workload/questions.json",
+    "workload/D09-payload.json",
+    "workload/identity.json",
+    "workload/S02-payload.json",
+    "workload/S05-payload.json",
+    "workload/D09-response.sse",
+    "workload/events.jsonl",
+    "workload/D08-response.sse",
+    "workload/S04-payload.json",
+    "workload/S03-payload.json",
+    "workload/S01-response.sse",
+    "workload/S06-response.sse",
+    "workload/D12-payload.json",
+    "workload/D10-response.sse",
+    "workload/D07-payload.json",
+    "workload/D02-response.sse",
+    "workload/request-audit.json",
+    "workload/D05-response.sse",
+    "workload/SHA256SUMS",
+    "workload/D01-payload.json",
+    "workload/D06-payload.json",
+    "workload/status.json",
+    "workload/D04-response.sse",
+    "workload/D03-response.sse",
+    "workload/D11-response.sse",
+    "workload/P01-response.sse",
+    "workload/timing-semantics.json",
+    "reference/findings.json",
+    "reference/phase-fan-snapshots.json"
+  ]
+}

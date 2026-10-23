@@ -1,0 +1,71 @@
+{
+  "dataset": "../inputs/dataset.json",
+  "dataset_sha256": "8fe3635550cb99f116f49017982a0d5d94335729c8b9804fe931a87d623b0c9c",
+  "runs": [
+    "S"
+  ],
+  "role": "seen_development; not blind or independent confirmation",
+  "all_data_seen": true,
+  "models": [
+    {
+      "model_id": "G2-FROZEN-RM01-v1",
+      "manifest": "../baseline/frozen-model-manifest.json"
+    },
+    {
+      "model_id": "G2-GEN-L-20261021-v1",
+      "manifest": "../runs/generate/model-bundle/model-manifest.json"
+    },
+    {
+      "model_id": "G2-CAL-M-20261021-v1",
+      "manifest": "../runs/calibrate/model-bundle/model-manifest.json"
+    }
+  ],
+  "state_policy": "original R2 past60 then run E fixed; rolling60 Ts, current actual TJ; same budget for every model",
+  "horizons_s": [
+    15,
+    45,
+    90
+  ],
+  "future_label_tolerance_s": 2,
+  "methods": [
+    "G2-HOLD",
+    "G2-RELAX30",
+    "B0",
+    "B1",
+    "baseline-LP30-HOLD",
+    "baseline-LP120-HOLD"
+  ],
+  "selection": "no post-evaluation refit or search",
+  "main_horizon_s": 45,
+  "automatic_activation": false,
+  "baseline_frozen": true,
+  "runtime_profile": "offline_macos_accelerate_v1",
+  "main_metric": "45s same-cohort point_mae; time/balanced metrics separately retained",
+  "plan_source_sha256": "689315e24cd1cc0f565d0f35785801f8885cbec5067ef2d5ea97d5cf69300f4b",
+  "models_frozen": {
+    "G2-FROZEN-RM01-v1": {
+      "path": "/Users/massif/Tianshan-thermal-observer/experiments/thermal_mainline_calibration_v1/baseline/frozen-model-manifest.json",
+      "sha256": "a43cd5d111f169408d71f3fe008e0c03119bb9e4f0dc1ffd63d2f79c5f8834c9"
+    },
+    "G2-GEN-L-20261021-v1": {
+      "path": "/Users/massif/Tianshan-thermal-observer/experiments/thermal_mainline_calibration_v1/runs/generate/model-bundle/model-manifest.json",
+      "sha256": "f495cccab8339c9bf7dfd13f277b2d5dc5d111143d96f446dd53169d58c4ff60"
+    },
+    "G2-CAL-M-20261021-v1": {
+      "path": "/Users/massif/Tianshan-thermal-observer/experiments/thermal_mainline_calibration_v1/runs/calibrate/model-bundle/model-manifest.json",
+      "sha256": "8397a682ac07a916b9e967cd0e75d966ab23918a7ff48aeb9a0ea8abed172e3f"
+    }
+  },
+  "no_further_model_search": true,
+  "legacy_sources": {
+    "common.py": "62b8ec1a34892028119a2c3b3ccaf69387ab6511b97bb108364bd146f1a6bf69",
+    "greybox.py": "8a05128393b38ce32d236e58d1c3dbee34cf0e66f524976bf69ad5d5b5bd7fe4",
+    "propagate.c": "45ad1be491dd6e1c70e3502f9c8db073df8f98173c6d57898d949fa42aeeef33",
+    "initialize.py": "6d35f9a9c09c527050ef367855364f4f057c76724d465d6acaec311c89e80834",
+    "ridge_reference.py": "f9a320fb52956cfe8451f6ce44c2532434fafef87847e31586d662bb307bec90",
+    "data_views.py": "ef3c18e022a35dd4529cdb4846d469e9edcd206d144db91759a4d15ae1659b91",
+    "scoring.py": "7201ff185eb129b8614d8a3fd90e9cb2bd359461287dbe556dd79536240c4eec",
+    "slow_core.py": "4f76a506febfdfd362e82b8bd65248ed1647edc482f24222b70e85a54845d3ea"
+  },
+  "all_results_development": true
+}

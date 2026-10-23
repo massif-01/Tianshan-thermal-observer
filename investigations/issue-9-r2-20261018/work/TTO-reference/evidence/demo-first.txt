@@ -1,0 +1,43 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/massif/Tianshan-thermal-observer/src/tto/__main__.py", line 2, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/Users/massif/Tianshan-thermal-observer/src/tto/cli.py", line 137, in main
+    result = run(args)
+             ^^^^^^^^^
+  File "/Users/massif/Tianshan-thermal-observer/src/tto/cli.py", line 131, in run
+    return {'output': str(demo(args.output)), 'simulated': True, 'message': '模拟演示完成；真实预测效果待验证。'}
+                          ^^^^^^^^^^^^^^^^^
+  File "/Users/massif/Tianshan-thermal-observer/src/tto/demo.py", line 64, in demo
+    train(split_dir / 'dataset.json', split_dir / 'split.json', out / 'model-simulation.json')
+  File "/Users/massif/Tianshan-thermal-observer/src/tto/training.py", line 43, in train
+    from sklearn.linear_model import Ridge
+  File "/Users/massif/Tianshan-thermal-observer/.venv/lib/python3.12/site-packages/sklearn/__init__.py", line 73, in <module>
+    from .base import clone  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/massif/Tianshan-thermal-observer/.venv/lib/python3.12/site-packages/sklearn/base.py", line 19, in <module>
+    from .utils._estimator_html_repr import _HTMLDocumentationLinkMixin, estimator_html_repr
+  File "/Users/massif/Tianshan-thermal-observer/.venv/lib/python3.12/site-packages/sklearn/utils/__init__.py", line 15, in <module>
+    from ._chunking import gen_batches, gen_even_slices
+  File "/Users/massif/Tianshan-thermal-observer/.venv/lib/python3.12/site-packages/sklearn/utils/_chunking.py", line 11, in <module>
+    from ._param_validation import Interval, validate_params
+  File "/Users/massif/Tianshan-thermal-observer/.venv/lib/python3.12/site-packages/sklearn/utils/_param_validation.py", line 14, in <module>
+    from scipy.sparse import csr_matrix, issparse
+  File "/Users/massif/Tianshan-thermal-observer/.venv/lib/python3.12/site-packages/scipy/sparse/__init__.py", line 315, in <module>
+    from . import csgraph
+  File "/Users/massif/Tianshan-thermal-observer/.venv/lib/python3.12/site-packages/scipy/sparse/csgraph/__init__.py", line 187, in <module>
+    from ._laplacian import laplacian
+  File "/Users/massif/Tianshan-thermal-observer/.venv/lib/python3.12/site-packages/scipy/sparse/csgraph/_laplacian.py", line 7, in <module>
+    from scipy.sparse.linalg import LinearOperator
+  File "/Users/massif/Tianshan-thermal-observer/.venv/lib/python3.12/site-packages/scipy/sparse/linalg/__init__.py", line 134, in <module>
+    from ._eigen import *
+  File "/Users/massif/Tianshan-thermal-observer/.venv/lib/python3.12/site-packages/scipy/sparse/linalg/_eigen/__init__.py", line 11, in <module>
+    from ._svds import svds
+  File "/Users/massif/Tianshan-thermal-observer/.venv/lib/python3.12/site-packages/scipy/sparse/linalg/_eigen/_svds.py", line 10, in <module>
+    from scipy.sparse.linalg._svdp import _svdp
+  File "/Users/massif/Tianshan-thermal-observer/.venv/lib/python3.12/site-packages/scipy/sparse/linalg/_svdp.py", line 23, in <module>
+    from ._propack import _spropack  # type: ignore[attr-defined]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ImportError: dlopen(/Users/massif/Tianshan-thermal-observer/.venv/lib/python3.12/site-packages/scipy/sparse/linalg/_propack/_spropack.cpython-312-darwin.so, 0x0002): tried: '/Users/massif/Tianshan-thermal-observer/.venv/lib/python3.12/site-packages/scipy/sparse/linalg/_propack/_spropack.cpython-312-darwin.so' (section '__DATA/__thread_bss' has a zero-fill section type, but offset field is not zero), '/System/Volumes/Preboot/Cryptexes/OS/Users/massif/Tianshan-thermal-observer/.venv/lib/python3.12/site-packages/scipy/sparse/linalg/_propack/_spropack.cpython-312-darwin.so' (no such file), '/Users/massif/Tianshan-thermal-observer/.venv/lib/python3.12/site-packages/scipy/sparse/linalg/_propack/_spropack.cpython-312-darwin.so' (section '__DATA/__thread_bss' has a zero-fill section type, but offset field is not zero)

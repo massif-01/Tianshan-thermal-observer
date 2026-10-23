@@ -1,0 +1,30 @@
+{
+  "scope": "UUID lineage and input validation only; no new fits or score edits",
+  "executed_source_snapshot": "verification/executed-fit-source",
+  "changed_file": "tool/util.py",
+  "current_util_sha256": "fcbcec33cb10dcde444ca546075d96c67ccc9d8233425bc63ea6305e0be4bbc0",
+  "original_util_sha256": "f77de04108d4d3a3ce263d5403ac7e5a93766af0a183529ae625957dfa7029c4",
+  "retained_fitted_artifact_sha256": {
+    "runs/generate/fits/G2/model.json": "022c284390feece689aec34a6b9d873eacc6c752242cecf98e42329c876674ce",
+    "runs/generate/fits/G2/N6.json": "4a094af23c7af6d401ae61d18666e04694308443377ee48db5cc5656bed8dcc5",
+    "runs/generate/fits/G2/N1.json": "4ab137c91c5e0e5963685558b4919d83d8fd3e6083e7b37914a9477f667d68c6",
+    "runs/generate/fits/G2/N2.json": "da902d9f2e6c47865051f1c4f16605fe970bee87d1b22257e824120bc948ea5b",
+    "runs/generate/fits/G2/N3.json": "2619c77d43183ef12edbca6cd6685735bc74a8327e115e245c98f53b8ab1a6bb",
+    "runs/generate/fits/G2/N4.json": "46cebefe9a92971e3e9fabf3aa3e4d9d9c5ba129b0ccc19d02a42e07b83a5744",
+    "runs/generate/fits/G2/N5.json": "b50496c5c956d001b2471abf9ab4e50f9d1a072bd8a69f043a9c089bb34b1f54",
+    "runs/calibrate/fits/G2/model.json": "fdf195d1211fd3a24c5371c70d53719c97c61045e876f3e3946ee4d95b58822d",
+    "runs/calibrate/fits/G2/N6.json": "3e0460357deaa1d660386f6f6c60ac33e4d25f74153e6917656e6b11b3fb5ce4",
+    "runs/calibrate/fits/G2/PARENT.json": "0e994d2fc27cfd6b1fa7c8e2d1baa57c25dc10faf08db7d8cdac89cbf60d1ca4",
+    "runs/calibrate/fits/G2/N2.json": "ed4e517af435beb5836550023350f383b9f9d2e4c99eb90f682e1362fcb94c8f",
+    "runs/calibrate/fits/G2/N3.json": "adc7dad97b019fd827fdc30f8ec8f669e4a6201b8cedadfa867d7b92b6356009",
+    "runs/calibrate/fits/G2/N4.json": "97c9d2d19e124528156169bab61ac52ab51921788bd4a8c2f877cd7798ffa819",
+    "runs/calibrate/fits/G2/N5.json": "5299e7944a22b91e19cdcf597a5a2fc9fc283045faa12886fe31c5c5ba0f39a2"
+  },
+  "preserved_point_outputs": {
+    "runs/compare/predictions.jsonl": "448ca5778cca65cbe215844b2b91ee5a1ce5284b0160b7adcd38f27842dc7b88",
+    "runs/compare/A-long-points.jsonl": "047839e0add542c16ddbeae3c931ab57dc060e8b14961d95822ae8f5d05b187e",
+    "runs/compare/states.jsonl": "af580029290f6bc49b7b1d9f3b11c28af130af68470da3f8e764a15a12c7ef90"
+  },
+  "new_actual_fits": 0,
+  "reason": "Aliases are not process identities; compare true run UUIDs with parent lineage, and carry UUID lineage in future packages"
+}

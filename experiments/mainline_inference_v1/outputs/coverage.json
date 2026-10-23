@@ -1,0 +1,35 @@
+{
+  "new_natural_window": "not_started_no_current_coverage_claim",
+  "coverage": [
+    {
+      "category": "背景",
+      "historical_evidence": "fixed-anchors phase 0; 300.0196s; actor own requests=0",
+      "limit": "不是整机其他业务绝对为零的证据"
+    },
+    {
+      "category": "孤立自然完成",
+      "historical_evidence": "20261013 short-QA S01-S06; 请求协议自然stop，90s间隔；requests.jsonl + raw SSE",
+      "limit": "这是受控历史短问答，不是新自然窗口；间隔不保证热平衡"
+    },
+    {
+      "category": "连续工作",
+      "historical_evidence": "fixed-anchors phase1:23 requests, phase7:23 requests, each configured360s/concurrency1",
+      "limit": "length上限结束；不是每条长业务自然stop"
+    },
+    {
+      "category": "突发多路",
+      "historical_evidence": "fixed-anchors phase3:32 requests/config2; phase5:101 requests/config4; replay client peak4",
+      "limit": "客户端重叠，不是GPU内核并行或日常真实突发已覆盖"
+    },
+    {
+      "category": "任务结束回落",
+      "historical_evidence": "fixed-anchors recovery90/240/120s + final480.0127s; last client end2026-10-19T10:18:28.734898+00:00",
+      "limit": "仅回落观察窗口存在；温降幅度/控制收益须模型测试线判断"
+    },
+    {
+      "category": "热机重复",
+      "historical_evidence": "fixed-anchors phase1/7 same single-anchor payload;23 requests each",
+      "limit": "同模板重复，不保证热状态相等或给出收益结论"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+先读总报告和操作卡。candidate/是唯一最终源码；根目录wheel为最终安装候选。evidence/final-*是最终wheel实际CLI的自建服务验证；replay与development-failures分别标识。components是本次三线实际交付，未递归包含旧历史大包。21个依赖无增量，字节身份见target-wheelhouse-SHA256.json，完整离线wheelhouse位于/Users/massif/Tianshan-thermal-observer/evidence/mainline-observe-20261021/target-wheelhouse。本轮不访问设备。

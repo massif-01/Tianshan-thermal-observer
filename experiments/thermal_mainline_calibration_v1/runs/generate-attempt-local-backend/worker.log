@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/massif/Tianshan-thermal-observer/experiments/thermal_mainline_calibration_v1/tool/worker.py", line 54, in <module>
+    main()
+  File "/Users/massif/Tianshan-thermal-observer/experiments/thermal_mainline_calibration_v1/tool/worker.py", line 13, in main
+    initialize(a.out/'numeric-policy.json')
+  File "/Users/massif/Tianshan-thermal-observer/experiments/thermal_mainline_calibration_v1/tool/numeric_policy.py", line 75, in initialize
+    if not r['verified']:raise RuntimeError('numeric_policy_failed:'+r['error'])
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: numeric_policy_failed:numeric_backend_not_verifiable_by_candidate

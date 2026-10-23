@@ -1,0 +1,62 @@
+WARNING: The directory '/Users/massif/Library/Caches/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.
+Obtaining file:///Users/massif/Tianshan-thermal-observer
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Requirement already satisfied: aiohttp==3.11.18 in ./.venv310/lib/python3.10/site-packages (from tianshan-thermal-observer==0.1.0) (3.11.18)
+Requirement already satisfied: psutil==7.0.0 in ./.venv310/lib/python3.10/site-packages (from tianshan-thermal-observer==0.1.0) (7.0.0)
+Requirement already satisfied: python-socketio==5.13.0 in ./.venv310/lib/python3.10/site-packages (from tianshan-thermal-observer==0.1.0) (5.13.0)
+Requirement already satisfied: numpy==2.2.6 in ./.venv310/lib/python3.10/site-packages (from tianshan-thermal-observer==0.1.0) (2.2.6)
+Collecting scipy==1.14.1
+  Downloading scipy-1.14.1-cp310-cp310-macosx_14_0_arm64.whl (23.1 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 23.1/23.1 MB 20.5 MB/s eta 0:00:00
+Requirement already satisfied: scikit-learn==1.6.1 in ./.venv310/lib/python3.10/site-packages (from tianshan-thermal-observer==0.1.0) (1.6.1)
+Requirement already satisfied: pytest==8.3.5 in ./.venv310/lib/python3.10/site-packages (from tianshan-thermal-observer==0.1.0) (8.3.5)
+Requirement already satisfied: pytest-asyncio==0.26.0 in ./.venv310/lib/python3.10/site-packages (from tianshan-thermal-observer==0.1.0) (0.26.0)
+Requirement already satisfied: aiosignal>=1.1.2 in ./.venv310/lib/python3.10/site-packages (from aiohttp==3.11.18->tianshan-thermal-observer==0.1.0) (1.4.0)
+Requirement already satisfied: async-timeout<6.0,>=4.0 in ./.venv310/lib/python3.10/site-packages (from aiohttp==3.11.18->tianshan-thermal-observer==0.1.0) (5.0.1)
+Requirement already satisfied: propcache>=0.2.0 in ./.venv310/lib/python3.10/site-packages (from aiohttp==3.11.18->tianshan-thermal-observer==0.1.0) (0.5.4)
+Requirement already satisfied: attrs>=17.3.0 in ./.venv310/lib/python3.10/site-packages (from aiohttp==3.11.18->tianshan-thermal-observer==0.1.0) (26.1.0)
+Requirement already satisfied: aiohappyeyeballs>=2.3.0 in ./.venv310/lib/python3.10/site-packages (from aiohttp==3.11.18->tianshan-thermal-observer==0.1.0) (2.7.1)
+Requirement already satisfied: yarl<2.0,>=1.17.0 in ./.venv310/lib/python3.10/site-packages (from aiohttp==3.11.18->tianshan-thermal-observer==0.1.0) (1.25.1)
+Requirement already satisfied: multidict<7.0,>=4.5 in ./.venv310/lib/python3.10/site-packages (from aiohttp==3.11.18->tianshan-thermal-observer==0.1.0) (6.9.1)
+Requirement already satisfied: frozenlist>=1.1.1 in ./.venv310/lib/python3.10/site-packages (from aiohttp==3.11.18->tianshan-thermal-observer==0.1.0) (1.8.0)
+Requirement already satisfied: packaging in ./.venv310/lib/python3.10/site-packages (from pytest==8.3.5->tianshan-thermal-observer==0.1.0) (26.3)
+Requirement already satisfied: pluggy<2,>=1.5 in ./.venv310/lib/python3.10/site-packages (from pytest==8.3.5->tianshan-thermal-observer==0.1.0) (1.6.0)
+Requirement already satisfied: exceptiongroup>=1.0.0rc8 in ./.venv310/lib/python3.10/site-packages (from pytest==8.3.5->tianshan-thermal-observer==0.1.0) (1.3.1)
+Requirement already satisfied: iniconfig in ./.venv310/lib/python3.10/site-packages (from pytest==8.3.5->tianshan-thermal-observer==0.1.0) (2.3.1)
+Requirement already satisfied: tomli>=1 in ./.venv310/lib/python3.10/site-packages (from pytest==8.3.5->tianshan-thermal-observer==0.1.0) (2.5.0)
+Requirement already satisfied: bidict>=0.21.0 in ./.venv310/lib/python3.10/site-packages (from python-socketio==5.13.0->tianshan-thermal-observer==0.1.0) (0.23.1)
+Requirement already satisfied: python-engineio>=4.11.0 in ./.venv310/lib/python3.10/site-packages (from python-socketio==5.13.0->tianshan-thermal-observer==0.1.0) (4.14.0)
+Requirement already satisfied: joblib>=1.2.0 in ./.venv310/lib/python3.10/site-packages (from scikit-learn==1.6.1->tianshan-thermal-observer==0.1.0) (1.6.0)
+Requirement already satisfied: threadpoolctl>=3.1.0 in ./.venv310/lib/python3.10/site-packages (from scikit-learn==1.6.1->tianshan-thermal-observer==0.1.0) (3.7.0)
+Requirement already satisfied: typing-extensions>=4.2 in ./.venv310/lib/python3.10/site-packages (from aiosignal>=1.1.2->aiohttp==3.11.18->tianshan-thermal-observer==0.1.0) (4.16.0)
+Requirement already satisfied: cloudpickle>=3.0 in ./.venv310/lib/python3.10/site-packages (from joblib>=1.2.0->scikit-learn==1.6.1->tianshan-thermal-observer==0.1.0) (3.1.2)
+Requirement already satisfied: simple-websocket>=0.10.0 in ./.venv310/lib/python3.10/site-packages (from python-engineio>=4.11.0->python-socketio==5.13.0->tianshan-thermal-observer==0.1.0) (1.1.0)
+Requirement already satisfied: idna>=2.0 in ./.venv310/lib/python3.10/site-packages (from yarl<2.0,>=1.17.0->aiohttp==3.11.18->tianshan-thermal-observer==0.1.0) (3.20)
+Requirement already satisfied: wsproto in ./.venv310/lib/python3.10/site-packages (from simple-websocket>=0.10.0->python-engineio>=4.11.0->python-socketio==5.13.0->tianshan-thermal-observer==0.1.0) (1.3.2)
+Requirement already satisfied: h11<1,>=0.16.0 in ./.venv310/lib/python3.10/site-packages (from wsproto->simple-websocket>=0.10.0->python-engineio>=4.11.0->python-socketio==5.13.0->tianshan-thermal-observer==0.1.0) (0.16.0)
+Building wheels for collected packages: tianshan-thermal-observer
+  Building editable for tianshan-thermal-observer (pyproject.toml): started
+  Building editable for tianshan-thermal-observer (pyproject.toml): finished with status 'done'
+  Created wheel for tianshan-thermal-observer: filename=tianshan_thermal_observer-0.1.0-0.editable-py3-none-any.whl size=1861 sha256=42ef4c3fcddb46d51c5220fe11bcb3b454dd28b4b0b2dd537ebcedf4ec10f987
+  Stored in directory: /private/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/pip-ephem-wheel-cache-5pf35mg_/wheels/ee/73/d3/0d5bb54024f4b887d2f956f57519ab3781fe8178e01f7a50b9
+Successfully built tianshan-thermal-observer
+Installing collected packages: scipy, tianshan-thermal-observer
+  Attempting uninstall: scipy
+    Found existing installation: scipy 1.15.3
+    Uninstalling scipy-1.15.3:
+      Successfully uninstalled scipy-1.15.3
+  Attempting uninstall: tianshan-thermal-observer
+    Found existing installation: tianshan-thermal-observer 0.1.0
+    Uninstalling tianshan-thermal-observer-0.1.0:
+      Successfully uninstalled tianshan-thermal-observer-0.1.0
+Successfully installed scipy-1.14.1 tianshan-thermal-observer-0.1.0
+
+[notice] A new release of pip is available: 23.0.1 -> 26.2.1
+[notice] To update, run: /Users/massif/Tianshan-thermal-observer/.venv310/bin/python -m pip install --upgrade pip

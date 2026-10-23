@@ -1,0 +1,34 @@
+{
+  "TianshanOS": {
+    "local_head": "bdc987d93d6050de2602528f2750ede89225c276",
+    "reference_commit": "050757bb8046206797804ba5edc110ae3244bf17",
+    "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tracked_diff_bytes": 0,
+    "untracked_count": 8,
+    "key_source_sha256": {
+      "components/ts_api/src/ts_api_fan.c": "9b2fe0f6929ef7beb61b7b1a64ce0745cc896dada97d9bb7bf3deb48945b16ea",
+      "components/ts_api/src/ts_api_temp.c": "76dc78ecc8dac1b468e75e239ef57bef6ff84945510d626b291973f12f4b4b62",
+      "components/ts_webui/src/ts_webui_api.c": "4726ba8992c2ea82bcbd353bd1acf8065fb17fa97d740c8e7c26f38ac978513a",
+      "components/ts_drivers/src/ts_fan.c": "2b226d9df0e2b60204de0fc25e1c5237241763c6e71e9e3a4ee87a4b9a6b1e70"
+    },
+    "read_only": true,
+    "deployment_identity": "unverified",
+    "final_wheel_sha256": null
+  },
+  "rm01OrinStatus": {
+    "local_head": "d53edc444ac76e0aa36fedbfcca0a001f28fef5f",
+    "reference_commit": "4a765acc2ffe2a46135851f7b225c2856336cb9f",
+    "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tracked_diff_bytes": 0,
+    "untracked_count": 90,
+    "key_source_sha256": {
+      "src/tegrastats_api/parser.py": "f5f3d51bbfbad72273ab9b58c1c8dc7a64d8db0176b514803a88957191785211",
+      "src/tegrastats_api/cli.py": "15c92964e877c8d08d132db6e2241c9eebc56b4a2e86a6f39d1403270ec7eb63",
+      "src/tegrastats_api/config.py": "e6caefcb7fa2303969008c9543d37cb6631159dd918eb25fbaa5c092d00c5912",
+      "src/tegrastats_api/server.py": "e005fe62332fc79be6b352ea89b2e4738022562f57051aad13a537fc400bf679"
+    },
+    "read_only": true,
+    "deployment_identity": "unverified",
+    "final_wheel_sha256": null
+  }
+}

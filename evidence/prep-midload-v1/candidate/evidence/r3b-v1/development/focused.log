@@ -1,0 +1,26 @@
+..........F.                                                             [100%]
+=================================== FAILURES ===================================
+_________________ test_reordered_logs_keep_quality_association _________________
+
+cases = (PosixPath('/private/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/pytest-of-massif/pytest-28/r3b0'), {'conflict': {...ently_eligible': 306, 'disputed_label_excluded': 12, 'historical_scored': 816, 'issued_prediction_origins': 125, ...}})
+tmp_path = PosixPath('/private/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/pytest-of-massif/pytest-28/test_reordered_logs_keep_quali0')
+
+    def test_reordered_logs_keep_quality_association(cases,tmp_path):
+        out, results = cases; source = out/results['conflict_then_recovery']['run_relative']
+        run = tmp_path/'copy'; shutil.copytree(source,run)
+        original = summarize(run)['recorded_results']
+        for name in ('scores.jsonl','predictions.jsonl'):
+            p=run/name;p.write_text('\n'.join(reversed(p.read_text().splitlines()))+'\n')
+        result = summarize(run)['recorded_results']
+>       assert result['models']==original['models']
+E       AssertionError: assert {'25a474d843c...7824d0', ...}} == {'25a474d843c...7824d0', ...}}
+E         
+E         Differing items:
+E         {'25a474d843c8b3ef26fe5abb119c619eaa4806a68db52113b61d9fe1267824d0': {'actual_methods': Counter({'trend30': 68, 'ridge... 'scored_origins': 36, ...}}, 'model_sha256': '25a474d843c8b3ef26fe5abb119c619eaa4806a68db52113b61d9fe1267824d0', ...}} != {'25a474d843c8b3ef26fe5abb119c619eaa4806a68db52113b61d9fe1267824d0': {'actual_methods': Counter({'trend30': 68, 'ridge... 'scored_origins': 36, ...}}, 'model_sha256': '25a474d843c8b3ef26fe5abb119c619eaa4806a68db52113b61d9fe1267824d0', ...}}
+E         Use -v to get more diff
+
+tests/test_repair_r3b.py:38: AssertionError
+- generated xml file: /Users/massif/Tianshan-thermal-observer/evidence/r3b-v1/development/focused.xml -
+=========================== short test summary info ============================
+FAILED tests/test_repair_r3b.py::test_reordered_logs_keep_quality_association
+1 failed, 11 passed in 15.90s

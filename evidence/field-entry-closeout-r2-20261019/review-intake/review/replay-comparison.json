@@ -1,0 +1,43 @@
+{
+  "actual-interface-join.json": {
+    "structural_exact": true
+  },
+  "synthetic-chain.json": {
+    "structural_exact": true,
+    "scenarios": [
+      [
+        "normal",
+        71,
+        null
+      ],
+      [
+        "short_gap",
+        66,
+        null
+      ],
+      [
+        "long_gap",
+        56,
+        null
+      ],
+      [
+        "guard",
+        10,
+        "explicit_protection_or_mode_binding"
+      ],
+      [
+        "user_stop",
+        10,
+        "user_stop"
+      ],
+      [
+        "request_unknown",
+        10,
+        "request_termination_unknown"
+      ]
+    ]
+  },
+  "scheduler-real-Y-replay.json": {
+    "structural_exact": true
+  }
+}

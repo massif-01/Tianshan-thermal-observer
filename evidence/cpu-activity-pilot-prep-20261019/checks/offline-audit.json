@@ -1,0 +1,34 @@
+{
+  "existing_run": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+  "data_role": "already-used development, not new experiment",
+  "raw_sha256": "36929dfcd3755934c403ec2ba8d661cab4e3f00a0da2cce0363ada95e7960055",
+  "unique_source_sequences": 2706,
+  "cpu_core_counts": [
+    12
+  ],
+  "recorded_gpu_period_ms": [
+    1000
+  ],
+  "gpu_reported_age_median_ms": 518.3237619930878,
+  "source_files": {
+    "parser.py": {
+      "sha256": "d4750944b133fa576cc94d416e29012a9bbaba2c02d03094809f981d031340ca",
+      "matches_20261013_receipt": false
+    },
+    "platform_gpu.py": {
+      "sha256": "85aed5da4af612357a076cb78c0ed34aea2027fce1dd4b015249c8550b347e52",
+      "matches_20261013_receipt": true
+    },
+    "server.py": {
+      "sha256": "36fbd39e88cb241be81e4706f521792a60d0dc997af94137443af5e4f746346d",
+      "matches_20261013_receipt": true
+    },
+    "matched_historical_parser": "/Users/massif/rm01OrinStatus/evidence/orin-thor-service-closeout-20261012/wheel/tegrastats_api-1.1.1-py3-none-any.whl"
+  },
+  "shared_jtop_conclusion": "local reviewed WS source uses own tegrastats child and NVML reader, no jtop IPC/import. Current installed jtop/version/service interval and 20261019 WS exact parser bytes not yet proven; no UI or interval change authorized.",
+  "original_cpu_read_window": "not in native raw: tegrastats source period1000ms is not an exact per-core counter window",
+  "high_frequency_claim": false,
+  "latency_zero_claim": false,
+  "field_connections_this_phase": 0,
+  "thermal_fits_this_phase": 0
+}

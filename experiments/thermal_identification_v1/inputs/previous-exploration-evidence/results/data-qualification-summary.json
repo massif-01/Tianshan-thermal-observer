@@ -1,0 +1,759 @@
+[
+  {
+    "run_id": "929742d7-6f4d-4d80-b53e-4436d45ac12c",
+    "episode": "rm01-seven-conditions-1h-20261013-034232",
+    "usage": "exploration/development; previously analyzed",
+    "record_counts": {
+      "boundary": 2,
+      "fan": 2316,
+      "temp": 504,
+      "orin": 2534,
+      "tick": 2532
+    },
+    "accepted_count": 2529,
+    "quality_counts": {
+      "boundary_socketio_connecting": 1,
+      "boundary_control_context_change": 8,
+      "boundary_stream": 1,
+      "new_samples": 2529,
+      "boundary_input_boundary": 10,
+      "boundary_input_profile_change": 7,
+      "boundary_fan_unavailable": 3,
+      "boundary_normal_scope_change": 26,
+      "duplicate": 5,
+      "boundary_socketio_disconnected": 1
+    },
+    "continuous_segments": [
+      {
+        "segment": 5,
+        "normal_auto": true,
+        "control_eligible": true,
+        "start_utc": "2026-10-13T03:42:36.745302+00:00",
+        "end_utc": "2026-10-13T03:47:11.009598+00:00",
+        "start_mono_s": 246969.410360171,
+        "end_mono_s": 247243.674660943,
+        "span_s": 274.26430077201803,
+        "n": 275,
+        "first_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:4",
+        "last_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:865",
+        "max_receive_step_s": 1.0051411099848337
+      },
+      {
+        "segment": 9,
+        "normal_auto": false,
+        "control_eligible": false,
+        "start_utc": "2026-10-13T03:47:12.010174+00:00",
+        "end_utc": "2026-10-13T03:47:13.011112+00:00",
+        "start_mono_s": 247244.675237004,
+        "end_mono_s": 247245.676175386,
+        "span_s": 1.000938381999731,
+        "n": 2,
+        "first_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:869",
+        "last_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:871",
+        "max_receive_step_s": 1.000938381999731
+      },
+      {
+        "segment": 13,
+        "normal_auto": true,
+        "control_eligible": true,
+        "start_utc": "2026-10-13T03:47:14.013001+00:00",
+        "end_utc": "2026-10-13T03:47:43.040859+00:00",
+        "start_mono_s": 247246.678059467,
+        "end_mono_s": 247275.705922014,
+        "span_s": 29.027862546994584,
+        "n": 30,
+        "first_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:874",
+        "last_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:958",
+        "max_receive_step_s": 1.0022644179989584
+      },
+      {
+        "segment": 18,
+        "normal_auto": false,
+        "control_eligible": false,
+        "start_utc": "2026-10-13T03:47:44.041754+00:00",
+        "end_utc": "2026-10-13T03:47:44.041754+00:00",
+        "start_mono_s": 247276.706815575,
+        "end_mono_s": 247276.706815575,
+        "span_s": 0.0,
+        "n": 1,
+        "first_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:962",
+        "last_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:962",
+        "max_receive_step_s": 0
+      },
+      {
+        "segment": 21,
+        "normal_auto": false,
+        "control_eligible": false,
+        "start_utc": "2026-10-13T03:47:45.042437+00:00",
+        "end_utc": "2026-10-13T03:47:49.046373+00:00",
+        "start_mono_s": 247277.707499653,
+        "end_mono_s": 247281.711433039,
+        "span_s": 4.00393338597496,
+        "n": 5,
+        "first_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:965",
+        "last_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:975",
+        "max_receive_step_s": 1.0015794149949215
+      },
+      {
+        "segment": 24,
+        "normal_auto": true,
+        "control_eligible": true,
+        "start_utc": "2026-10-13T03:47:50.047213+00:00",
+        "end_utc": "2026-10-13T03:53:12.328380+00:00",
+        "start_mono_s": 247282.712272579,
+        "end_mono_s": 247604.993443776,
+        "span_s": 322.28117119701346,
+        "n": 322,
+        "first_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:979",
+        "last_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:1938",
+        "max_receive_step_s": 2.001284352998482
+      },
+      {
+        "segment": 25,
+        "normal_auto": false,
+        "control_eligible": false,
+        "start_utc": "2026-10-13T03:53:13.329277+00:00",
+        "end_utc": "2026-10-13T03:53:13.329277+00:00",
+        "start_mono_s": 247605.994340186,
+        "end_mono_s": 247605.994340186,
+        "span_s": 0.0,
+        "n": 1,
+        "first_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:1940",
+        "last_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:1940",
+        "max_receive_step_s": 0
+      },
+      {
+        "segment": 26,
+        "normal_auto": true,
+        "control_eligible": true,
+        "start_utc": "2026-10-13T03:53:14.331253+00:00",
+        "end_utc": "2026-10-13T03:58:17.614237+00:00",
+        "start_mono_s": 247606.996312111,
+        "end_mono_s": 247910.279300047,
+        "span_s": 303.2829879359924,
+        "n": 303,
+        "first_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:1943",
+        "last_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:2852",
+        "max_receive_step_s": 2.001670666009886
+      },
+      {
+        "segment": 27,
+        "normal_auto": false,
+        "control_eligible": false,
+        "start_utc": "2026-10-13T03:58:18.615384+00:00",
+        "end_utc": "2026-10-13T03:58:18.615384+00:00",
+        "start_mono_s": 247911.280446719,
+        "end_mono_s": 247911.280446719,
+        "span_s": 0.0,
+        "n": 1,
+        "first_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:2854",
+        "last_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:2854",
+        "max_receive_step_s": 0
+      },
+      {
+        "segment": 28,
+        "normal_auto": true,
+        "control_eligible": true,
+        "start_utc": "2026-10-13T03:58:19.616391+00:00",
+        "end_utc": "2026-10-13T03:58:27.625085+00:00",
+        "start_mono_s": 247912.281454083,
+        "end_mono_s": 247920.290144769,
+        "span_s": 8.008690686023328,
+        "n": 9,
+        "first_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:2857",
+        "last_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:2881",
+        "max_receive_step_s": 1.0015720700030215
+      },
+      {
+        "segment": 29,
+        "normal_auto": false,
+        "control_eligible": false,
+        "start_utc": "2026-10-13T03:58:28.625925+00:00",
+        "end_utc": "2026-10-13T03:58:28.625925+00:00",
+        "start_mono_s": 247921.290984545,
+        "end_mono_s": 247921.290984545,
+        "span_s": 0.0,
+        "n": 1,
+        "first_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:2883",
+        "last_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:2883",
+        "max_receive_step_s": 0
+      },
+      {
+        "segment": 30,
+        "normal_auto": true,
+        "control_eligible": true,
+        "start_utc": "2026-10-13T03:58:29.626741+00:00",
+        "end_utc": "2026-10-13T03:58:32.629340+00:00",
+        "start_mono_s": 247922.29180067,
+        "end_mono_s": 247925.294401231,
+        "span_s": 3.00260056098341,
+        "n": 4,
+        "first_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:2886",
+        "last_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:2895",
+        "max_receive_step_s": 1.001989052980207
+      },
+      {
+        "segment": 31,
+        "normal_auto": false,
+        "control_eligible": false,
+        "start_utc": "2026-10-13T03:58:33.630507+00:00",
+        "end_utc": "2026-10-13T03:58:33.630507+00:00",
+        "start_mono_s": 247926.295567437,
+        "end_mono_s": 247926.295567437,
+        "span_s": 0.0,
+        "n": 1,
+        "first_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:2897",
+        "last_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:2897",
+        "max_receive_step_s": 0
+      },
+      {
+        "segment": 32,
+        "normal_auto": true,
+        "control_eligible": true,
+        "start_utc": "2026-10-13T03:58:34.630633+00:00",
+        "end_utc": "2026-10-13T03:58:37.633229+00:00",
+        "start_mono_s": 247927.295696094,
+        "end_mono_s": 247930.298291136,
+        "span_s": 3.0025950419949368,
+        "n": 4,
+        "first_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:2900",
+        "last_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:2909",
+        "max_receive_step_s": 1.0010159740049858
+      },
+      {
+        "segment": 33,
+        "normal_auto": false,
+        "control_eligible": false,
+        "start_utc": "2026-10-13T03:58:38.634068+00:00",
+        "end_utc": "2026-10-13T03:58:38.634068+00:00",
+        "start_mono_s": 247931.299129305,
+        "end_mono_s": 247931.299129305,
+        "span_s": 0.0,
+        "n": 1,
+        "first_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:2911",
+        "last_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:2911",
+        "max_receive_step_s": 0
+      },
+      {
+        "segment": 34,
+        "normal_auto": true,
+        "control_eligible": true,
+        "start_utc": "2026-10-13T03:58:39.634846+00:00",
+        "end_utc": "2026-10-13T03:58:42.638344+00:00",
+        "start_mono_s": 247932.299908834,
+        "end_mono_s": 247935.303403613,
+        "span_s": 3.0034947790263686,
+        "n": 4,
+        "first_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:2914",
+        "last_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:2923",
+        "max_receive_step_s": 1.0016497069736943
+      },
+      {
+        "segment": 35,
+        "normal_auto": false,
+        "control_eligible": false,
+        "start_utc": "2026-10-13T03:58:43.639459+00:00",
+        "end_utc": "2026-10-13T03:58:43.639459+00:00",
+        "start_mono_s": 247936.304517765,
+        "end_mono_s": 247936.304517765,
+        "span_s": 0.0,
+        "n": 1,
+        "first_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:2925",
+        "last_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:2925",
+        "max_receive_step_s": 0
+      },
+      {
+        "segment": 36,
+        "normal_auto": true,
+        "control_eligible": true,
+        "start_utc": "2026-10-13T03:58:44.640434+00:00",
+        "end_utc": "2026-10-13T03:58:47.643199+00:00",
+        "start_mono_s": 247937.305492982,
+        "end_mono_s": 247940.308259109,
+        "span_s": 3.0027661269996315,
+        "n": 4,
+        "first_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:2928",
+        "last_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:2937",
+        "max_receive_step_s": 1.001003754005069
+      },
+      {
+        "segment": 37,
+        "normal_auto": false,
+        "control_eligible": false,
+        "start_utc": "2026-10-13T03:58:48.644220+00:00",
+        "end_utc": "2026-10-13T03:58:48.644220+00:00",
+        "start_mono_s": 247941.309279032,
+        "end_mono_s": 247941.309279032,
+        "span_s": 0.0,
+        "n": 1,
+        "first_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:2939",
+        "last_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:2939",
+        "max_receive_step_s": 0
+      },
+      {
+        "segment": 38,
+        "normal_auto": true,
+        "control_eligible": true,
+        "start_utc": "2026-10-13T03:58:49.645140+00:00",
+        "end_utc": "2026-10-13T03:58:52.647084+00:00",
+        "start_mono_s": 247942.310199762,
+        "end_mono_s": 247945.312146332,
+        "span_s": 3.001946570002474,
+        "n": 4,
+        "first_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:2942",
+        "last_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:2951",
+        "max_receive_step_s": 1.0010824619967025
+      },
+      {
+        "segment": 39,
+        "normal_auto": false,
+        "control_eligible": false,
+        "start_utc": "2026-10-13T03:58:53.648030+00:00",
+        "end_utc": "2026-10-13T03:58:53.648030+00:00",
+        "start_mono_s": 247946.313093275,
+        "end_mono_s": 247946.313093275,
+        "span_s": 0.0,
+        "n": 1,
+        "first_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:2953",
+        "last_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:2953",
+        "max_receive_step_s": 0
+      },
+      {
+        "segment": 40,
+        "normal_auto": true,
+        "control_eligible": true,
+        "start_utc": "2026-10-13T03:58:54.648847+00:00",
+        "end_utc": "2026-10-13T04:04:58.970523+00:00",
+        "start_mono_s": 247947.313909999,
+        "end_mono_s": 248311.635582972,
+        "span_s": 364.3216729729902,
+        "n": 365,
+        "first_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:2956",
+        "last_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:4116",
+        "max_receive_step_s": 1.0023143400030676
+      },
+      {
+        "segment": 43,
+        "normal_auto": false,
+        "control_eligible": false,
+        "start_utc": "2026-10-13T04:04:59.970403+00:00",
+        "end_utc": "2026-10-13T04:04:59.970403+00:00",
+        "start_mono_s": 248312.635465747,
+        "end_mono_s": 248312.635465747,
+        "span_s": 0.0,
+        "n": 1,
+        "first_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:4119",
+        "last_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:4119",
+        "max_receive_step_s": 0
+      },
+      {
+        "segment": 46,
+        "normal_auto": true,
+        "control_eligible": true,
+        "start_utc": "2026-10-13T04:05:00.971386+00:00",
+        "end_utc": "2026-10-13T04:17:45.618599+00:00",
+        "start_mono_s": 248313.63644841,
+        "end_mono_s": 249078.283658887,
+        "span_s": 764.6472104770073,
+        "n": 763,
+        "first_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:4122",
+        "last_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:6547",
+        "max_receive_step_s": 2.0024698759953026
+      },
+      {
+        "segment": 47,
+        "normal_auto": false,
+        "control_eligible": false,
+        "start_utc": "2026-10-13T04:17:46.619694+00:00",
+        "end_utc": "2026-10-13T04:17:46.619694+00:00",
+        "start_mono_s": 249079.284752104,
+        "end_mono_s": 249079.284752104,
+        "span_s": 0.0,
+        "n": 1,
+        "first_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:6549",
+        "last_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:6549",
+        "max_receive_step_s": 0
+      },
+      {
+        "segment": 48,
+        "normal_auto": true,
+        "control_eligible": true,
+        "start_utc": "2026-10-13T04:17:47.620493+00:00",
+        "end_utc": "2026-10-13T04:22:05.851595+00:00",
+        "start_mono_s": 249080.285552785,
+        "end_mono_s": 249338.516657731,
+        "span_s": 258.2311049459968,
+        "n": 259,
+        "first_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:6553",
+        "last_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:7360",
+        "max_receive_step_s": 1.002477635978721
+      },
+      {
+        "segment": 49,
+        "normal_auto": false,
+        "control_eligible": false,
+        "start_utc": "2026-10-13T04:22:06.851885+00:00",
+        "end_utc": "2026-10-13T04:22:06.851885+00:00",
+        "start_mono_s": 249339.516947416,
+        "end_mono_s": 249339.516947416,
+        "span_s": 0.0,
+        "n": 1,
+        "first_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:7362",
+        "last_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:7362",
+        "max_receive_step_s": 0
+      },
+      {
+        "segment": 52,
+        "normal_auto": false,
+        "control_eligible": false,
+        "start_utc": "2026-10-13T04:22:07.853872+00:00",
+        "end_utc": "2026-10-13T04:22:08.855019+00:00",
+        "start_mono_s": 249340.518932091,
+        "end_mono_s": 249341.520077851,
+        "span_s": 1.0011457599757705,
+        "n": 2,
+        "first_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:7366",
+        "last_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:7368",
+        "max_receive_step_s": 1.0011457599757705
+      },
+      {
+        "segment": 56,
+        "normal_auto": true,
+        "control_eligible": true,
+        "start_utc": "2026-10-13T04:22:09.856092+00:00",
+        "end_utc": "2026-10-13T04:24:52.019735+00:00",
+        "start_mono_s": 249342.521151977,
+        "end_mono_s": 249504.684797554,
+        "span_s": 162.1636455769767,
+        "n": 162,
+        "first_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:7371",
+        "last_ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:7887",
+        "max_receive_step_s": 2.002768969978206
+      }
+    ],
+    "anomalies": [
+      {
+        "ref": "929742d7-6f4d-4d80-b53e-4436d45ac12c/observation:4118",
+        "utc": "2026-10-13T04:04:59.757608+00:00",
+        "kind": "fan",
+        "reason": null,
+        "payload": {
+          "code": 0,
+          "data": {
+            "fans": [
+              {
+                "auto_state": "stale",
+                "control_temperature": 64.7,
+                "controller_gain": 1.487370252609253,
+                "cooling_response": -6,
+                "duty": 25,
+                "duty_valid": true,
+                "enabled": true,
+                "fault": false,
+                "guard_active": false,
+                "guard_temperature": 64.7,
+                "id": 0,
+                "mode": "auto",
+                "predicted_temperature": 64.7,
+                "rpm": 0,
+                "running": true,
+                "slope_c_per_min": 0.800000011920929,
+                "target_duty": 25,
+                "temp_stale": true,
+                "temperature": 64.7
+              }
+            ],
+            "temp_source": "agx_info.temperature.tj",
+            "temp_valid": false,
+            "temperature": 25
+          }
+        }
+      }
+    ],
+    "profile": "thor_auto_v2",
+    "input_contract": {
+      "schema_version": 2,
+      "processing_contract": "TTO-PLATFORM-CURVE-v2.0",
+      "platform_schema": 1,
+      "family": "jetson_thor",
+      "soc": "tegra264",
+      "gpu_backend": "nvml",
+      "gpu_schema": 1,
+      "source_period_ms": 1000,
+      "source_period_basis": "wire_telemetry_meta",
+      "gpu_period_ms": 1000,
+      "gpu_timeout_ms": 5000,
+      "units": {
+        "temperature": "C",
+        "power": "W",
+        "gpu_busy": "percent",
+        "cpu_freq": "MHz",
+        "duty": "logical_percent"
+      }
+    },
+    "original_source_identity": "c17e5080fd97b9ff0d53f887ed5bd28e827909fb68adf847c0d7df3c338a6803",
+    "fields_availability": {
+      "tj": 2529,
+      "cpu_usage": 2529,
+      "cpu_freq": 2529,
+      "cpu_reported_cores": 2529,
+      "gpu_busy": 2529,
+      "temp_cpu": 2529,
+      "temp_gpu": 2529,
+      "temp_soc012": 2529,
+      "temp_soc345": 2529,
+      "vdd_gpu": 2529,
+      "vdd_cpu_soc_mss": 2529,
+      "vin_sys_5v0": 2529,
+      "duty": 2508,
+      "gain": 2508
+    },
+    "source_receive_step_s": {
+      "min": 0.9963580000039656,
+      "max": 2.002768969978206
+    },
+    "origins": 520,
+    "history_ready": 243,
+    "all_label_TJ_eligible": 137,
+    "split": {
+      "scope": "same_thermal_process_time_extrapolation",
+      "independence": "unconfirmed",
+      "counts": {
+        "train": 296,
+        "validation": 46,
+        "test": 67
+      },
+      "eligible_TJ_counts": {
+        "train": 38,
+        "validation": 46,
+        "test": 0
+      },
+      "purged": 111,
+      "ranges": {
+        "train": {
+          "first_utc": "2026-10-13T03:42:36.745302+00:00",
+          "last_utc": "2026-10-13T04:06:22.036638+00:00"
+        },
+        "validation": {
+          "first_utc": "2026-10-13T04:11:02.268617+00:00",
+          "last_utc": "2026-10-13T04:14:47.452311+00:00"
+        },
+        "test": {
+          "first_utc": "2026-10-13T04:19:27.708773+00:00",
+          "last_utc": "2026-10-13T04:24:50.018063+00:00"
+        }
+      },
+      "semantics": "tool test partition is a purged later development window; never an untouched formal test"
+    }
+  },
+  {
+    "run_id": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02",
+    "episode": "tto-short-qa-v1-20261013-052807",
+    "usage": "exploration/development; previously analyzed",
+    "record_counts": {
+      "boundary": 2,
+      "fan": 1261,
+      "temp": 322,
+      "orin": 1613,
+      "tick": 1611
+    },
+    "accepted_count": 1610,
+    "quality_counts": {
+      "boundary_socketio_connecting": 1,
+      "boundary_control_context_change": 3,
+      "boundary_stream": 1,
+      "new_samples": 1610,
+      "boundary_input_boundary": 3,
+      "boundary_input_profile_change": 1,
+      "boundary_normal_scope_change": 4,
+      "duplicate": 3,
+      "boundary_socketio_disconnected": 1
+    },
+    "continuous_segments": [
+      {
+        "segment": 5,
+        "normal_auto": true,
+        "control_eligible": true,
+        "start_utc": "2026-10-13T05:28:11.859380+00:00",
+        "end_utc": "2026-10-13T05:33:29.151574+00:00",
+        "start_mono_s": 253304.524443393,
+        "end_mono_s": 253621.816635778,
+        "span_s": 317.2921923850081,
+        "n": 318,
+        "first_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:4",
+        "last_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:953",
+        "max_receive_step_s": 1.0030668860126752
+      },
+      {
+        "segment": 6,
+        "normal_auto": false,
+        "control_eligible": false,
+        "start_utc": "2026-10-13T05:33:30.152569+00:00",
+        "end_utc": "2026-10-13T05:33:30.152569+00:00",
+        "start_mono_s": 253622.817631936,
+        "end_mono_s": 253622.817631936,
+        "span_s": 0.0,
+        "n": 1,
+        "first_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:955",
+        "last_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:955",
+        "max_receive_step_s": 0
+      },
+      {
+        "segment": 7,
+        "normal_auto": true,
+        "control_eligible": true,
+        "start_utc": "2026-10-13T05:33:31.153533+00:00",
+        "end_utc": "2026-10-13T05:49:13.025415+00:00",
+        "start_mono_s": 253623.818595927,
+        "end_mono_s": 254565.690478013,
+        "span_s": 941.8718820860086,
+        "n": 940,
+        "first_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:958",
+        "last_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3766",
+        "max_receive_step_s": 2.0018025760073215
+      },
+      {
+        "segment": 10,
+        "normal_auto": false,
+        "control_eligible": false,
+        "start_utc": "2026-10-13T05:49:14.027203+00:00",
+        "end_utc": "2026-10-13T05:49:16.028958+00:00",
+        "start_mono_s": 254566.692263533,
+        "end_mono_s": 254568.694016569,
+        "span_s": 2.001753035990987,
+        "n": 3,
+        "first_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3770",
+        "last_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3774",
+        "max_receive_step_s": 1.0016992750170175
+      },
+      {
+        "segment": 13,
+        "normal_auto": true,
+        "control_eligible": true,
+        "start_utc": "2026-10-13T05:49:17.030064+00:00",
+        "end_utc": "2026-10-13T05:55:05.364134+00:00",
+        "start_mono_s": 254569.695122849,
+        "end_mono_s": 254918.029197254,
+        "span_s": 348.33407440502197,
+        "n": 348,
+        "first_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3777",
+        "last_ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:4808",
+        "max_receive_step_s": 2.0026115590007976
+      }
+    ],
+    "anomalies": [
+      {
+        "ref": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02/observation:3769",
+        "utc": "2026-10-13T05:49:13.645377+00:00",
+        "kind": "fan",
+        "reason": null,
+        "payload": {
+          "code": 0,
+          "data": {
+            "fans": [
+              {
+                "auto_state": "stale",
+                "control_temperature": 46.3,
+                "controller_gain": 1.2397300004959106,
+                "cooling_response": 8,
+                "duty": 25,
+                "duty_valid": true,
+                "enabled": true,
+                "fault": false,
+                "guard_active": false,
+                "guard_temperature": 46.3,
+                "id": 0,
+                "mode": "auto",
+                "predicted_temperature": 46.3,
+                "rpm": 0,
+                "running": true,
+                "slope_c_per_min": 1.2000000476837158,
+                "target_duty": 25,
+                "temp_stale": true,
+                "temperature": 46.3
+              }
+            ],
+            "temp_source": "agx_info.temperature.tj",
+            "temp_valid": false,
+            "temperature": 25
+          }
+        }
+      }
+    ],
+    "profile": "thor_auto_v2",
+    "input_contract": {
+      "schema_version": 2,
+      "processing_contract": "TTO-PLATFORM-CURVE-v2.0",
+      "platform_schema": 1,
+      "family": "jetson_thor",
+      "soc": "tegra264",
+      "gpu_backend": "nvml",
+      "gpu_schema": 1,
+      "source_period_ms": 1000,
+      "source_period_basis": "wire_telemetry_meta",
+      "gpu_period_ms": 1000,
+      "gpu_timeout_ms": 5000,
+      "units": {
+        "temperature": "C",
+        "power": "W",
+        "gpu_busy": "percent",
+        "cpu_freq": "MHz",
+        "duty": "logical_percent"
+      }
+    },
+    "original_source_identity": "c17e5080fd97b9ff0d53f887ed5bd28e827909fb68adf847c0d7df3c338a6803",
+    "fields_availability": {
+      "tj": 1610,
+      "cpu_usage": 1610,
+      "cpu_freq": 1610,
+      "cpu_reported_cores": 1610,
+      "gpu_busy": 1610,
+      "temp_cpu": 1610,
+      "temp_gpu": 1610,
+      "temp_soc012": 1610,
+      "temp_soc345": 1610,
+      "vdd_gpu": 1610,
+      "vdd_cpu_soc_mss": 1610,
+      "vin_sys_5v0": 1610,
+      "duty": 1606,
+      "gain": 1606
+    },
+    "source_receive_step_s": {
+      "min": 0.9987473399960436,
+      "max": 2.0026115590007976
+    },
+    "origins": 325,
+    "history_ready": 215,
+    "all_label_TJ_eligible": 161,
+    "split": {
+      "scope": "same_thermal_process_time_extrapolation",
+      "independence": "unconfirmed",
+      "counts": {
+        "train": 176,
+        "validation": 10,
+        "test": 29
+      },
+      "eligible_TJ_counts": {
+        "train": 85,
+        "validation": 5,
+        "test": 11
+      },
+      "purged": 110,
+      "ranges": {
+        "train": {
+          "first_utc": "2026-10-13T05:28:11.859380+00:00",
+          "last_utc": "2026-10-13T05:42:41.663764+00:00"
+        },
+        "validation": {
+          "first_utc": "2026-10-13T05:47:21.924103+00:00",
+          "last_utc": "2026-10-13T05:48:06.966560+00:00"
+        },
+        "test": {
+          "first_utc": "2026-10-13T05:52:42.223756+00:00",
+          "last_utc": "2026-10-13T05:55:02.360966+00:00"
+        }
+      },
+      "semantics": "tool test partition is a purged later development window; never an untouched formal test"
+    }
+  }
+]

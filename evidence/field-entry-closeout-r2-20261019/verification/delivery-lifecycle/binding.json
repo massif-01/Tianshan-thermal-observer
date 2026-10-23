@@ -1,0 +1,22 @@
+{
+  "candidate_version": "0.2.4+closeout.1",
+  "mode": "diagnose",
+  "config_sha256": "e139fe167296b706db78a95913bb3d90395233965a6f83d4e8a1286d6aa19620",
+  "collector_source_sha256": "06d17ec5205cea268d4d42eeeb87169d3ca64c91a81acd0b4bdafe2f57e49806",
+  "observer_model_sha256": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
+  "observer_spec_sha256": "2080adcf20773650299def2bb0f3ebdb9f87d8f85281d5b87a99d8b406c83c6b",
+  "old_overrides": false,
+  "command_id": "LIFECYCLE-CLI-SIGINT",
+  "expected_binding": "agx_info.temperature.tj",
+  "firmware_identity": null,
+  "authorization": {
+    "action": "readonly-diagnostic",
+    "command_id": "LIFECYCLE-CLI-SIGINT",
+    "explicit_user_start": true,
+    "evidence": "OWN LOOPBACK TEST, never a real device grant"
+  },
+  "note": "Preview creates no network clients and never opens credential headers. No device authorization is implied.",
+  "request_actor_thread": null,
+  "profile": null,
+  "synthetic_loopback_only": true
+}

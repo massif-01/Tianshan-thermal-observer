@@ -1,0 +1,17 @@
+{
+  "reason": "G1 subsequent segment with fixed E has zero calibration columns; empty design matrix must be represented explicitly",
+  "affected": "evaluation initialization only; failed before target metrics",
+  "numeric_parameters_unchanged": true,
+  "new_search": false,
+  "tests": "11 passed; including fixed-E G1 and causal counterexamples",
+  "files": {
+    "ridge_reference.py": "f9a320fb52956cfe8451f6ce44c2532434fafef87847e31586d662bb307bec90",
+    "initialize.py": "6d35f9a9c09c527050ef367855364f4f057c76724d465d6acaec311c89e80834",
+    "diagnostics.py": "5cd4a1cb2c69c119d872bafe27578ff319a6660f1767020e47c3cdba020937d3",
+    "evaluation.py": "c327b75829e0675c2e54afdb80a5a2f4abbf528ad1aa24651654438dae771be7",
+    "data_adapter.py": "4365bad9116ade6a6b044f761c4024f1835c80483af61159b059c8e8569844ae",
+    "common.py": "62b8ec1a34892028119a2c3b3ccaf69387ab6511b97bb108364bd146f1a6bf69",
+    "run_experiment.py": "d101697ba22aaba2f076fd2192deb25dd82dd5d0deeb9bf9c4585856a48245be",
+    "greybox.py": "8a05128393b38ce32d236e58d1c3dbee34cf0e66f524976bf69ad5d5b5bd7fe4"
+  }
+}

@@ -1,0 +1,572 @@
+diff --git a/experiments/thermal_cpu_capability_review_v1/audit.py b/experiments/thermal_cpu_capability_review_v1/audit.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_capability_review_v1/audit.py
+@@ -0,0 +1,173 @@
++"""Finite audit of this recorded capability run; calls the unique CPU-window validator."""
++import argparse
++import collections
++import json
++from pathlib import Path
++import statistics
++import sys
++
++ROOT = Path(__file__).resolve().parent
++MODEL = ROOT.parent/'thermal_cpu_activity_bridge_v1'
++sys.path.insert(0, str(MODEL))
++from bridge import cpu_window
++from io_utils import read, lines, write, jsonl, sha
++
++
++def stats(values):
++    return dict(n=len(values), minimum=min(values), median=statistics.median(values),
++                mean=statistics.mean(values), p95=sorted(values)[int(.95*(len(values)-1))], maximum=max(values))
++
++
++def main():
++    p = argparse.ArgumentParser(description=__doc__)
++    p.add_argument('--adapted', type=Path, required=True)
++    p.add_argument('--joint', type=Path, required=True)
++    p.add_argument('--output', type=Path, required=True)
++    a = p.parse_args()
++    a.output.mkdir(parents=True, exist_ok=False)
++    frozen = read(ROOT/'input-freeze.json')
++    for item in frozen['files']:
++        assert sha(ROOT/'inputs'/item['path']) == item['sha256'], item['path']
++    added = read(ROOT/'resource-addendum-freeze.json')
++    assert sha(ROOT/added['path']) == added['sha256']
++    run = ROOT/'inputs/remote-result/run'
++    arrivals, wire = lines(run/'cpu-sidecar-arrivals.jsonl'), lines(run/'cpu-sidecar-wire.jsonl')
++    frames, outputs = lines(a.adapted/'frames.jsonl'), lines(a.joint/'processor.jsonl')
++    origins = lines(a.adapted/'thermal-origins.jsonl')
++    states, resources, events = lines(run/'states.jsonl'), lines(run/'resources.jsonl'), lines(run/'sidecar-events.jsonl')
++    summary = read(run/'summary.json')
++    assert summary['native_run_id'] == frozen['run_id'] and summary['command_id'] == frozen['command_id']
++    assert summary['protocol_requests'] == 0 and summary['requester_instances_created'] == 0
++    windows, invalid = [], []
++    for index, row in enumerate(arrivals, 1):
++        source = row['source']
++        assert row['native_run_id'] == frozen['run_id'] and row['command_id'] == frozen['command_id']
++        assert source['identity']['command_id'] == frozen['command_id']
++        assert row['decision_generated_mono_s'] >= row['received_at_mono_s']
++        try:
++            window = cpu_window(source)
++        except ValueError as exc:
++            invalid.append(dict(seq=source['seq'], reason=str(exc), row=index))
++            continue
++        window.update(seq=source['seq'], row=index, received_at_mono_s=row['received_at_mono_s'],
++                      decision_generated_mono_s=row['decision_generated_mono_s'],
++                      raw_ref=frozen['run_id']+'/cpu-sidecar-arrivals.jsonl:'+str(index))
++        windows.append(window)
++    assert len(arrivals) == len(wire) == 27 and len(windows) == 26
++    assert invalid == [dict(seq=1, reason='missing_complete_raw_counter_window', row=1)]
++    assert [x['source']['seq'] for x in arrivals] == list(range(1, 28))
++    source_domains = {tuple(x['source']['identity'][k] for k in ('host', 'boot_id', 'source_session', 'clock')) for x in arrivals}
++    receiver_domains = {x['receiver_domain'] for x in arrivals}
++    assert len(source_domains) == len(receiver_domains) == 1
++    pre_source = json.loads((ROOT/'inputs/field/thor-clock-source-hashes.stdout').read_text())
++    pre_receiver = json.loads((ROOT/'inputs/field/preflight-clock-locks.stdout').read_text().splitlines()[0])['clock']
++    source_domain = next(iter(source_domains))
++    assert source_domain[:2] == (pre_source['host'], pre_source['boot_id'])
++    assert all(x['receiver_identity']['boot_id'] == pre_receiver['boot_id'] for x in arrivals)
++    assert all(x['receiver_identity']['host'] == pre_receiver['host'] for x in arrivals)
++    assert all(x['source']['identity']['source_script_sha256'] == pre_source['files']['cpu_source.py'] for x in arrivals)
++    config = ROOT/'inputs/remote-result/payload/source-config.json'
++    assert sha(config) == pre_source['files']['source-config.json']
++    assert all(len(x['online']) == 12 and len(x['possible_online_map']) == 14 for x in windows)
++    assert all({k for k, v in x['possible_online_map'].items() if not v} == {'cpu12', 'cpu13'} for x in windows)
++    stop = next(x for x in events if x['event'] == 'stop_sidecar_only')
++    session = states[0]['clock']['session_origin_mono_s']
++    stop_t = session+stop['mono_s']
++    revocations = lines(a.adapted/'revocations.jsonl')
++    revoke = next(x for x in revocations if x['reason'] == 'transport_receiver_total_resource_budget_exceeded')
++    assert revoke['available_at_mono_s'] == stop_t
++    coarse_checks = supports = 0
++    latest_native = None
++    cpu_support_s = 0.
++    for index, frame in enumerate(frames):
++        features = frame['features']
++        t = frame['arrival_mono_s']
++        if frame['adapter_event'] == 'native':
++            latest_native = features
++        if frame['adapter_event'] == 'cpu':
++            for name in ('gpu_pct', 'gpu_W', 'cpu_soc_mss_W'):
++                assert features.get(name) == latest_native.get(name)
++                coarse_checks += 1
++        for name in ('cpu_mean_pct', 'cpu_max_pct'):
++            f = features.get(name, {})
++            if f.get('valid'):
++                assert f['valid_until_mono_s'] <= f['receiver_received_at_mono_s']+1
++                assert f['available_at_mono_s'] >= f['receiver_decision_generated_mono_s'] >= f['receiver_received_at_mono_s']
++                assert f['source_age_s'] is None and f['network_latency_s'] is None
++                supports += 1
++            if t >= stop_t:
++                assert f.get('valid') is not True
++        f = features.get('cpu_mean_pct', {})
++        if index+1 < len(frames) and f.get('valid'):
++            cpu_support_s += max(0., min(frames[index+1]['arrival_mono_s'], f['valid_until_mono_s'])-t)
++    assert len(origins) == 60 and len({x['ref'] for x in origins}) == 60
++    assert all(x['t'] >= x['measurement_received_mono_s'] for x in origins)
++    assert all(x['variants']['INPUT-MEAN']['activity']['state'] == x['variants']['INPUT-CORE']['activity']['state'] for x in outputs)
++    durations = {name: collections.Counter() for name in ('INPUT-BASE', 'INPUT-MEAN', 'INPUT-CORE')}
++    for current, after in zip(outputs, outputs[1:]):
++        t, end = current['arrival_mono_s'], after['arrival_mono_s']
++        for name in durations:
++            state = current['variants'][name]['activity']
++            until = state['supported_until_mono_s']
++            if state['state'] == 'UNKNOWN' or until is None:
++                durations[name]['UNKNOWN'] += end-t
++            else:
++                split = max(t, min(end, until))
++                durations[name][state['state']] += split-t
++                durations[name]['UNKNOWN'] += end-split
++    first_active = next(x for x in outputs if x['variants']['INPUT-MEAN']['activity']['state'] == 'ACTIVE')
++    source_resources = [x['source']['resources'] for x in arrivals]
++    phase = {}
++    for label, rows in [('baseline_before30', [x for x in resources if x['mono_s'] < 30]),
++                        ('actual_sidecar', [x for x in resources if 30 <= x['mono_s'] <= stop['mono_s']]),
++                        ('post_sidecar_stop', [x for x in resources if x['mono_s'] > stop['mono_s']])]:
++        phase[label] = dict(rows=len(rows), cpu_single_core=stats([x['cpu_pct_single_core'] for x in rows if x['cpu_pct_single_core'] is not None]),
++                            rss_peak_MiB=max(x['rss_bytes'] for x in rows)/1024**2)
++    trigger = max((x for x in resources if x['mono_s'] <= stop['mono_s']), key=lambda x:x['mono_s'])
++    assert trigger['cpu_pct_single_core'] > 8 and trigger['rss_bytes'] < 128*1024**2
++    owner = read(ROOT/'inputs/field/metrics.json')
++    for name in phase:
++        assert abs(phase[name]['cpu_single_core']['mean']-owner['receiver_resources_by_actual_phase'][name]['cpu_single_core_mean_pct']) < 1e-8
++    points = lines(a.joint/'evaluate-stream/actual-arrived-points.jsonl')
++    assert all(x['prediction'].get('INPUT-MEAN') == x['prediction'].get('INPUT-CORE') for x in points)
++    common = lines(a.joint/'evaluate-stream/actual-arrived-common.jsonl')
++    assert [(x['h'], x['n']) for x in common] == [(15, 5), (45, 0), (90, 0)]
++    result = dict(run_id=frozen['run_id'], command_id=frozen['command_id'], role=frozen['role'],
++                  frozen_candidate_unchanged=True, new_fits=0, new_parameter_search=0,
++                  source_declaration=read(a.joint/'joint-receipt.json')['data_source']['category'],
++                  independent_identity_refs_checked=dict(source_host_boot_match=True, receiver_host_boot_match=True,
++                                                        source_code_and_config_SHA_match=True, cross_clock_mapping_verified=False),
++                  packets=27, complete_CPU_windows=26, invalid_CPU_windows=invalid,
++                  source_domain=dict(zip(('host', 'boot_id', 'source_session', 'clock'), source_domain)),
++                  receiver_domains=sorted(receiver_domains), online_cores=12, possible_cores=14, offline_cores=['cpu12', 'cpu13'],
++                  source_period_s=stats([b['source']['read_start_mono_s']-a['source']['read_start_mono_s'] for a, b in zip(arrivals, arrivals[1:])]),
++                  source_span_s=arrivals[-1]['source']['read_start_mono_s']-arrivals[0]['source']['read_start_mono_s'],
++                  received_span_s=arrivals[-1]['received_at_mono_s']-arrivals[0]['received_at_mono_s'],
++                  cpu_receiver_support_s=cpu_support_s, receive_plus1s_support_is_source_age=False,
++                  source_mean_pct=stats([x['mean_percent'] for x in windows]), source_max_pct=stats([x['max_percent'] for x in windows]),
++                  source_rss_peak_MiB=max(x['rss_bytes'] for x in source_resources)/1024**2,
++                  source_read_s=stats([x['read_duration_s'] for x in source_resources]),
++                  source_CPU_after5s_pct=stats([100*x['cpu_seconds']/x['elapsed_s'] for x in source_resources if x['elapsed_s'] >= 5]),
++                  cpu_support_checks=supports, coarse_features_unchanged_on_CPU_events=coarse_checks,
++                  stop=stop, stop_revoke_mono_s=stop_t, CPU_revoked_immediately=True,
++                  latest_pre_stop_CPU_deadline=next(x for x in reversed(frames) if x['arrival_mono_s'] < stop_t)['features']['cpu_mean_pct']['valid_until_mono_s'],
++                  activity_state_seconds={k:dict(v) for k, v in durations.items()},
++                  MEAN_CORE_states_and_predictions_identical=True,
++                  first_MEAN_active=dict(ref=first_active['native_ref'], mono_s=first_active['arrival_mono_s'],
++                                         activity=first_active['variants']['INPUT-MEAN']['activity']),
++                  background_CPU_activity_cause='unknown; existing jtop included, no attribution from aggregate CPU',
++                  receiver_phases=phase, resource_trigger=trigger,
++                  receipt_qualified=read(ROOT/'inputs/remote-result/capability-receipt.json')['qualified'],
++                  original_TJ_origins=60, current_TJ_C=stats([x['current'] for x in origins]),
++                  horizon_label_counts={str(h):sum(x['label'] is not None for x in points if x['h'] == h) for h in (15,45,90)},
++                  common_results=common, cadence_joint=read(a.joint/'evaluate-stream/cadence-joint-common.json'),
++                  inference_detection_delay_and_recall='unknown; no new inference requests/ground truth in this capability run',
++                  recommend_12_requests=False, blocker='receiver_total_resource_budget_exceeded; total CPU already high before sidecar',
++                  physical_CPU_GPU_lead_proven=False, new_control_benefit=False, model_line_device_access=False)
++    jsonl(a.output/'CPU-counter-windows.jsonl', windows)
++    write(a.output/'audit.json', result)
++    print('Finite recorded-run audit passed:27 actual packets,26 complete windows, immediate revoke; qualification=false,12-request recommendation=false.')
++
++
++if __name__ == '__main__':
++    main()
+diff --git a/experiments/thermal_cpu_capability_review_v1/replay.py b/experiments/thermal_cpu_capability_review_v1/replay.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_capability_review_v1/replay.py
+@@ -0,0 +1,84 @@
++"""Unpack pinned dependencies and replay only the new 27-packet recorded process."""
++import argparse
++import hashlib
++import importlib.util
++import json
++import os
++from pathlib import Path
++import shutil
++import subprocess
++import sys
++import zipfile
++
++ROOT = Path(__file__).resolve().parent
++
++
++def sha(path):
++    return hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def main():
++    p = argparse.ArgumentParser(description=__doc__)
++    p.add_argument('--output', type=Path, required=True)
++    a = p.parse_args()
++    out = a.output.resolve()
++    out.mkdir(parents=True, exist_ok=False)
++    runtime = out/'runtime'
++    runtime.mkdir()
++    dependencies = json.loads((ROOT/'replay-spec.json').read_text())['dependencies']
++    for name, info in dependencies.items():
++        archive = ROOT/'dependencies'/name
++        assert sha(archive) == info['sha256'], name
++        with zipfile.ZipFile(archive) as z:
++            assert z.testzip() is None
++            z.extractall(runtime/info['extract_directory'])
++    study = runtime/ROOT.name
++    study.mkdir()
++    for name in ['audit.py', 'input-freeze.json', 'resource-addendum-freeze.json']:
++        shutil.copyfile(ROOT/name, study/name)
++    shutil.copytree(ROOT/'inputs', study/'inputs')
++    model = runtime/'thermal_cpu_activity_bridge_v1'
++    reporter = runtime/'thermal_cpu_activity_reporter_v1'
++    run = study/'inputs/remote-result/run'
++    env = dict(os.environ, PYTHONDONTWRITEBYTECODE='1', OPENBLAS_NUM_THREADS='1', OMP_NUM_THREADS='1')
++    commands = [
++        ('metadata-tests', ['-m', 'pytest', '-c', str(reporter/'pytest.ini'), str(reporter/'tests'), '-q', '-p', 'no:cacheprovider']),
++        ('adapt', [str(model/'bridge.py'), '--run-dir', str(run), '--source-config', str(study/'inputs/remote-result/payload/source-config.json'), '--output', str(out/'adapted')]),
++        ('joint', [str(reporter/'joint_check.py'), '--adapted', str(out/'adapted'), '--run-dir', str(run), '--output', str(out/'joint')]),
++        ('audit', [str(study/'audit.py'), '--adapted', str(out/'adapted'), '--joint', str(out/'joint'), '--output', str(out/'audit')])]
++    for label, args in commands:
++        with (out/(label+'.log')).open('w') as log:
++            subprocess.run([sys.executable, *args], env=env, stdout=log, stderr=subprocess.STDOUT, check=True)
++    exact = []
++    for name in ['frames.jsonl', 'thermal-origins.jsonl', 'registration.json', 'revocations.jsonl', 'source-query-diagnostics.jsonl']:
++        assert sha(out/'adapted'/name) == sha(ROOT/'results/adapted'/name), name
++        exact.append(name)
++    sys.path.insert(0, str(model))
++    spec = importlib.util.spec_from_file_location('frozen_comparator', model/'replay.py')
++    module = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(module)
++    equal, differences = [], []
++    for base in ['joint', 'audit']:
++        for path in sorted((ROOT/'results'/base).rglob('*')):
++            if path.suffix not in ('.json', '.jsonl') or path.name in ('joint-receipt.json', 'data-role-and-sources.json'):
++                continue
++            rel = path.relative_to(ROOT/'results')
++            fresh = out/rel
++            left, right = ((module.lines(path), module.lines(fresh)) if path.suffix == '.jsonl' else (module.read(path), module.read(fresh)))
++            differences.extend(module.compare(left, right))
++            equal.append(str(rel))
++    receipt = json.loads((out/'joint/joint-receipt.json').read_text())
++    assert receipt['actual_wire_to_source_rows_verified'] == 27
++    assert receipt['data_source']['run_id'] == '80938521-b659-4160-a7b2-5fdfb6ebc197'
++    assert receipt['data_source']['category'] == 'declared_field_unverified'
++    result = dict(metadata_tests_passed=3, new_recorded_wire_rows=27, original_thermal_origins=60,
++                  exact_adapter_files=exact, equivalent_result_files=equal,
++                  maximum_derived_float_difference=max(differences, default=0), float_tolerance_C=1e-8,
++                  old150_packets_used_as_new_run=False, model_fits=0, device_access=False,
++                  capability_qualified=False, recommend_12_requests=False)
++    (out/'replay-receipt.json').write_text(json.dumps(result, ensure_ascii=False, indent=2)+'\n')
++    print('Independent local replay passed: new27 packets,60 original TJ origins; capability remains NOT qualified.')
++
++
++if __name__ == '__main__':
++    main()
+diff --git a/experiments/thermal_cpu_capability_review_v1/replay-spec.json b/experiments/thermal_cpu_capability_review_v1/replay-spec.json
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_capability_review_v1/replay-spec.json
+@@ -0,0 +1,29 @@
++{
++  "contract": "TTO-CPU-PREP-CLOSE-v1.0 follow-up03, finite new capability readout",
++  "dependencies": {
++    "TTO-CPU旁录离线适配与失效撤销-模型线收尾证据包.zip": {
++      "sha256": "5500ad25357c86bdb53dca7d3d6067d5d397e875e8d85a278f113ae2f6eeabff",
++      "extract_directory": "thermal_cpu_activity_bridge_v1"
++    },
++    "TTO-CPU联合回执来源标签-报告器修订证据.zip": {
++      "sha256": "1eb81c988822819590903850c0479984b5266031f1eb60e4327146ce6d3084cf",
++      "extract_directory": "."
++    }
++  },
++  "run_id": "80938521-b659-4160-a7b2-5fdfb6ebc197",
++  "command_id": "cpu2-capability-20261020-1ca3a249-8ea9-4608-aa05-105f9aff5614",
++  "role": "one new no-inference capability process; examined by frozen candidate, not a new thermal training episode",
++  "data_used_to_select_activity_parameters": false,
++  "metadata_reporter_tests": 3,
++  "new_field_retries": 0,
++  "mathematical_model_or_activity_rule_changes": 0,
++  "parameter_search": 0,
++  "control_permission": false,
++  "source_timing": "source CPU complete count windows and actual receiver arrivals; no cross-host delay inferred",
++  "source_GPU_resolution": "query successful, native source generation/window unknown",
++  "thermal_labels": "60 original1s TJ decision origins, separate15/45/90 eligibility; no artificial high-rate TJ",
++  "cadence": "same27 arrivals; every1s causal selection is delivery selection from200ms windows, not new1s count statistics",
++  "compare": "same origins/labels per horizon, plus cross-cadence intersection; no score selection",
++  "stop": "retain native completion and receiver_total_resource_budget_exceeded; do not relax8pct or128MiB",
++  "scope": "offline only; no device clients, schedulers, requests, training or control"
++}
+diff --git a/experiments/thermal_cpu_capability_review_v1/README.md b/experiments/thermal_cpu_capability_review_v1/README.md
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_capability_review_v1/README.md
+@@ -0,0 +1,22 @@
++# 首次cpu.2真实能力记录：模型线有限离线判读
++
++本目录只消费测试对话已取得的本次资料，不采集或连接设备。run为`80938521-b659-4160-a7b2-5fdfb6ebc197`，command为`cpu2-capability-20261020-1ca3a249-8ea9-4608-aa05-105f9aff5614`。原始记录字节不改；本地副本、原路径及SHA见`input-freeze.json`，随后收到的测试侧资源审计另存`resource-addendum-freeze.json`。
++
++实际流程只有：唯一旧`bridge.py`→来源标签报告器1.0.1→原Activity/evaluate_stream→本目录有限审计。活动阈值、热θ、观察器spec、既有分数和cpu.2 wheel均未改。`audit.py`复用唯一bridge的`cpu_window`，不另写字段映射或温度预测。
++
++完整独立离线复跑：
++
++```sh
++python /Users/massif/Tianshan-thermal-observer/experiments/thermal_cpu_capability_review_v1/replay.py \
++  --output /private/tmp/tto-cpu2-new27-review-NEW
++```
++
++目录必须尚不存在。使用已有Python与NumPy/SciPy/pytest环境（作者验证Python3.12.14、NumPy2.2.6、SciPy1.16.3、pytest8.3.5）；不安装新依赖。独立解包后把上面的脚本路径改成解包目录中的`thermal_cpu_capability_review_v1/replay.py`。
++
++`dependencies/`保留原R1包与新报告器补充包，严格核SHA后只向新输出目录解包运行。原R1依赖包中的150包仅供报告器元数据测试使用；本次适配与数学评价明确只读取新27包，并断言本次run身份。不会运行依赖包里的设备入口、安装器或源采样脚本。
++
++复跑检查5份适配产物严格同字节，10份数学输出和2份本次审计结果按原结构、引用、状态严格一致及派生浮点1e-8容差比较。重定位会改变来源JSON中的路径，所以这些路径清单不做字节等同要求。原始资料与程序/模型身份仍按SHA严格核对。
++
++`results/adapted`保留全部FRAME、60个原TJ起点和撤销记录；`results/joint`保留原数学的逐点15/45/90秒结果、各分支覆盖和两个到达节奏；`results/audit`保存26个完整累计计数窗及资源/失效核对。没有补造高频TJ、未知时间映射、缺少的45/90答案或CPU停止后的状态。
++
++能力未通过、背景ACTIVE及高估都是结果，不能为了“通过”修改本目录的依赖、参数或输入。`replay-spec.json`列出分析规则和冻结身份；本目录不授予12请求或任何设备执行许可。
+diff --git a/experiments/thermal_cpu_capability_review_v1/input-freeze.json b/experiments/thermal_cpu_capability_review_v1/input-freeze.json
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_capability_review_v1/input-freeze.json
+@@ -0,0 +1,228 @@
++{
++  "frozen_at_utc": "2026-10-20T14:06:08.340326+00:00",
++  "run_id": "80938521-b659-4160-a7b2-5fdfb6ebc197",
++  "command_id": "cpu2-capability-20261020-1ca3a249-8ea9-4608-aa05-105f9aff5614",
++  "role": "one new no-inference capability process; analysis only; not model confirmation",
++  "parameter_selection": false,
++  "files": [
++    {
++      "path": "field/installation-identity.json",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/field/installation-identity.json",
++      "bytes": 2658,
++      "sha256": "2769985d71021ab3f382ab1123c5c582e0b782958c5373d704fb39f549e28702"
++    },
++    {
++      "path": "field/integrity-check.json",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/field/integrity-check.json",
++      "bytes": 6199,
++      "sha256": "64639a6f58a1c75043ce62b7799c42a38ba177f5d6b58ee4f6c2b56204456a42"
++    },
++    {
++      "path": "field/openclaw-removal-observed.json",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/field/openclaw-removal-observed.json",
++      "bytes": 1003,
++      "sha256": "0a8a933bef7a68f07ca275b6f68ba8f3eda56e4a4975fb4da9a1ab9db4a1b5a9"
++    },
++    {
++      "path": "field/preflight-clock-locks.stdout",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/field/preflight-clock-locks.stdout",
++      "bytes": 470,
++      "sha256": "28e1437692d44a8fdc712616cb63eca2801dc2207bfdd461e4d46c4903bebae8"
++    },
++    {
++      "path": "field/thor-clock-source-hashes.stdout",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/field/thor-clock-source-hashes.stdout",
++      "bytes": 487,
++      "sha256": "4fce7e8e5d5d25729f2d98af5d9fba9ccfd777b514200cc452ff9500fddd8cfe"
++    },
++    {
++      "path": "remote-result/binding.json",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/remote-result/binding.json",
++      "bytes": 4495,
++      "sha256": "f69fe5326581f45791b5b4c77866c8e2af59e327489c6a8b5cdb32985e5a1f2c"
++    },
++    {
++      "path": "remote-result/capability-receipt.json",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/remote-result/capability-receipt.json",
++      "bytes": 24263,
++      "sha256": "e1055fa5279b4f4b39c5e42bf72d4be7317184424c08401cce79c63677c1de12"
++    },
++    {
++      "path": "remote-result/exit-receipt.json",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/remote-result/exit-receipt.json",
++      "bytes": 231,
++      "sha256": "5ea9a2a3796954c8d7794d63aa55b43e0ca0da32a226316cc3c173357a64f5a8"
++    },
++    {
++      "path": "remote-result/payload/cpu_source.py",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/remote-result/payload/cpu_source.py",
++      "bytes": 8610,
++      "sha256": "7f674e6913458dc73e8a677fbb46d6574812da05c5a5ba2938d126b53ca14382"
++    },
++    {
++      "path": "remote-result/payload/inspect_capability.py",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/remote-result/payload/inspect_capability.py",
++      "bytes": 3690,
++      "sha256": "18528fed310e1daf57b4b96e5eb0920dd99fc866d1c4023592e65cf007cb5dbf"
++    },
++    {
++      "path": "remote-result/payload/source-config.json",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/remote-result/payload/source-config.json",
++      "bytes": 344,
++      "sha256": "651913b5e549d5e3131bd69e261cf8f973c40f5b378641450c361f0c1787cf4a"
++    },
++    {
++      "path": "remote-result/post-clock.json",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/remote-result/post-clock.json",
++      "bytes": 224,
++      "sha256": "e12b2e9d828f20881cfb05a8f2f8c525809c00c9c212434a32193fc5f0be05f4"
++    },
++    {
++      "path": "remote-result/run/admission.jsonl",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/remote-result/run/admission.jsonl",
++      "bytes": 791829,
++      "sha256": "104e6a1373c4498253d89debf432587bb5cb136ef1931ec17fb24190096aa7da"
++    },
++    {
++      "path": "remote-result/run/cpu-sidecar-arrivals.jsonl",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/remote-result/run/cpu-sidecar-arrivals.jsonl",
++      "bytes": 198491,
++      "sha256": "7228d44ac274ce52e04715b4b56ffb4a041de9b074d07d6a131a7867e09ecbcb"
++    },
++    {
++      "path": "remote-result/run/cpu-sidecar-wire.jsonl",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/remote-result/run/cpu-sidecar-wire.jsonl",
++      "bytes": 235515,
++      "sha256": "a838d679c2f78518b1269ad39832b52dfaa7a5338aece0218ecbb0b1de912eb3"
++    },
++    {
++      "path": "remote-result/run/diagnostic-precheck.json",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/remote-result/run/diagnostic-precheck.json",
++      "bytes": 2121,
++      "sha256": "65b80047cef8c7837b41876935c3ce59e21764bcba7db3dd2e7f3ab79e3e427a"
++    },
++    {
++      "path": "remote-result/run/files.json",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/remote-result/run/files.json",
++      "bytes": 3266,
++      "sha256": "252842f06b6a12f0798f0be179add990003afa006b6d6be84cbff9390291f6fc"
++    },
++    {
++      "path": "remote-result/run/instrument-link.pending.json",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/remote-result/run/instrument-link.pending.json",
++      "bytes": 358,
++      "sha256": "9d0bff7588f41c12450af82e59d4a7dc4a53d9df4a9a2a446808af4f985f00e3"
++    },
++    {
++      "path": "remote-result/run/launch.json",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/remote-result/run/launch.json",
++      "bytes": 11238,
++      "sha256": "0b8bd15d923958c60d588b5bb63b835efc7b9cb8a197de31dc6673ecd30472d1"
++    },
++    {
++      "path": "remote-result/run/native/run-2026-10-20T140251.807504_0000-80938521/events.jsonl",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/remote-result/run/native/run-2026-10-20T140251.807504_0000-80938521/events.jsonl",
++      "bytes": 76115,
++      "sha256": "69a677381640f504a7ab8b033de570e5df038a69948ecb917af707d91856db9c"
++    },
++    {
++      "path": "remote-result/run/native/run-2026-10-20T140251.807504_0000-80938521/files.json",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/remote-result/run/native/run-2026-10-20T140251.807504_0000-80938521/files.json",
++      "bytes": 628,
++      "sha256": "78a4ad062888042d0d7a97316047136d6717235076317c9fc0526153bde0727e"
++    },
++    {
++      "path": "remote-result/run/native/run-2026-10-20T140251.807504_0000-80938521/input-profile.json",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/remote-result/run/native/run-2026-10-20T140251.807504_0000-80938521/input-profile.json",
++      "bytes": 1239,
++      "sha256": "0b847c4749c3d8228366cf908ea120a0bec793c2a07e45996c61d1605f0fd697"
++    },
++    {
++      "path": "remote-result/run/native/run-2026-10-20T140251.807504_0000-80938521/manifest.json",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/remote-result/run/native/run-2026-10-20T140251.807504_0000-80938521/manifest.json",
++      "bytes": 7291,
++      "sha256": "0f2cf2b922b74011e9d6d79487ab95068edeaefcd2d5883a14e492c9a8fd5143"
++    },
++    {
++      "path": "remote-result/run/native/run-2026-10-20T140251.807504_0000-80938521/observations-0001.jsonl",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/remote-result/run/native/run-2026-10-20T140251.807504_0000-80938521/observations-0001.jsonl",
++      "bytes": 221570,
++      "sha256": "74826538fbcef8ebbd27180c452743cb6f5437776c08986dec93cded5fb3f699"
++    },
++    {
++      "path": "remote-result/run/native/run-2026-10-20T140251.807504_0000-80938521/predictions.jsonl",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/remote-result/run/native/run-2026-10-20T140251.807504_0000-80938521/predictions.jsonl",
++      "bytes": 83774,
++      "sha256": "db7dd803d088b94d8c895977d45263499886b115de5e12a3ba7534a6d282b7bf"
++    },
++    {
++      "path": "remote-result/run/native/run-2026-10-20T140251.807504_0000-80938521/scores.jsonl",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/remote-result/run/native/run-2026-10-20T140251.807504_0000-80938521/scores.jsonl",
++      "bytes": 7704,
++      "sha256": "a9132788ef1e6c83ce43fd75ff5ded4ced6efeecd23d17ebd8f54b27b571dce0"
++    },
++    {
++      "path": "remote-result/run/native/run-2026-10-20T140251.807504_0000-80938521/summary.json",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/remote-result/run/native/run-2026-10-20T140251.807504_0000-80938521/summary.json",
++      "bytes": 7068,
++      "sha256": "5f0d951b7a29bca76e01e8ec48407a5d46a36bfc22e7edb33daf41e377b3d902"
++    },
++    {
++      "path": "remote-result/run/native-binding.json",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/remote-result/run/native-binding.json",
++      "bytes": 1213,
++      "sha256": "82245831c84a911cb0c09ca67e06d316af79fb7162a73bc963e5f06e6acb297e"
++    },
++    {
++      "path": "remote-result/run/protocol.jsonl",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/remote-result/run/protocol.jsonl",
++      "bytes": 292,
++      "sha256": "ef86106a64553fd18df95488c63068df21ff67579c44ddbb6954f06e01ceda9b"
++    },
++    {
++      "path": "remote-result/run/requests.jsonl",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/remote-result/run/requests.jsonl",
++      "bytes": 0,
++      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
++    },
++    {
++      "path": "remote-result/run/resources.jsonl",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/remote-result/run/resources.jsonl",
++      "bytes": 15228,
++      "sha256": "5a5c60ee4d0765d3a847097d8a42a3e0be97240b51509d1e0c5f9f44b90c18a4"
++    },
++    {
++      "path": "remote-result/run/sidecar-events.jsonl",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/remote-result/run/sidecar-events.jsonl",
++      "bytes": 1410,
++      "sha256": "1240861e5383cf3912e75c0740e439adbb5f20ebb678f677ec3eac907c05ff58"
++    },
++    {
++      "path": "remote-result/run/sidecar-stderr.jsonl",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/remote-result/run/sidecar-stderr.jsonl",
++      "bytes": 388,
++      "sha256": "274c79e22ac9bdd61ad11a121988ad757b87c0548b474a174514b18722b777b4"
++    },
++    {
++      "path": "remote-result/run/states.jsonl",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/remote-result/run/states.jsonl",
++      "bytes": 2204368,
++      "sha256": "6ff7408e0699d6586a8dd5170fb76d1a9a1b5a60a6522c95add47e502bea194f"
++    },
++    {
++      "path": "remote-result/run/summary.json",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/remote-result/run/summary.json",
++      "bytes": 9684,
++      "sha256": "07404dbf83e15ca833787d1d5a2f852f826c9017ccd59c379432e3e32d7848d9"
++    },
++    {
++      "path": "remote-result/transfer-index.json",
++      "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/remote-result/transfer-index.json",
++      "bytes": 5640,
++      "sha256": "98ad052dae46d94b7a913e589334494e51103ef63e7e2382e16c0690fabe4492"
++    }
++  ],
++  "bridge_sha256": "8d6fe5f013e67d2a26c192419b0b82f29a4c1aa794ddd598e2f6ba33a45045e3",
++  "reporter_manifest_sha256": "80285a84bdb6fc7972413f64e2b1820d387718113345184172a2d69ead2fe8da",
++  "no_device_access_by_model_line": true
++}
+diff --git a/experiments/thermal_cpu_capability_review_v1/resource-addendum-freeze.json b/experiments/thermal_cpu_capability_review_v1/resource-addendum-freeze.json
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_capability_review_v1/resource-addendum-freeze.json
+@@ -0,0 +1,6 @@
++{
++  "path": "inputs/field/metrics.json",
++  "original": "/Users/massif/Tianshan-thermal-observer/evidence/cpu2-capability-20261020/field/metrics.json",
++  "sha256": "4a45211370d0205e1f143a37c491cb47bf824b689c060478952f35910a002558",
++  "role": "testing-owner resource audit, independently compared to unchanged raw rows"
++}

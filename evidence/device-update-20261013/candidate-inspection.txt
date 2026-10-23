@@ -1,0 +1,175 @@
+From https://github.com/RMinte-AI/rm01OrinStatus
+ * branch            main       -> FETCH_HEAD
+2c356a105e3c3c6a4c06b9f190e79d653b7c5bd1 Merge pull request #4 from massif-01/feature/orin-thor-telemetry
+ README.md                                          |   4 +
+ docs/ORIN_THOR_CONTRACT_V2.md                      |  90 ++++
+ docs/PLATFORM_TTO_V2.md                            |  46 +++
+ .../fixtures/identity-conflict-platform.json       | 137 ++++++
+ .../fixtures/legacy-empty-gpu.json                 | 105 +++++
+ .../fixtures/legacy-zero.json                      | 107 +++++
+ .../fixtures/lifecycle-conflict-source-period.json | 137 ++++++
+ .../fixtures/manifest.json                         |  32 ++
+ .../fixtures/orin-missing.json                     | 137 ++++++
+ .../fixtures/orin-nonzero.json                     | 138 +++++++
+ .../fixtures/orin-zero.json                        | 138 +++++++
+ .../fixtures/thor-error-with-legacy-zero.json      | 138 +++++++
+ .../fixtures/thor-error.json                       | 137 ++++++
+ .../fixtures/thor-nonzero.json                     | 137 ++++++
+ .../fixtures/thor-repeat.json                      | 137 ++++++
+ .../fixtures/thor-same-value-new-input.json        | 137 ++++++
+ .../fixtures/thor-stale.json                       | 137 ++++++
+ .../fixtures/thor-unavailable.json                 | 137 ++++++
+ .../fixtures/thor-zero.json                        | 137 ++++++
+ .../fixtures/unknown.json                          | 136 ++++++
+ pyproject.toml                                     |   7 +-
+ scripts/check_install_identity.py                  |  44 ++
+ scripts/install_candidate.py                       |  77 ++++
+ scripts/verify_ws_data_offline.py                  |  21 +-
+ src/tegrastats_api/__init__.py                     |   2 +-
+ src/tegrastats_api/cli.py                          |  17 +-
+ src/tegrastats_api/parser.py                       | 155 ++++++-
+ src/tegrastats_api/platform_gpu.py                 | 236 +++++++++++
+ src/tegrastats_api/server.py                       |  55 ++-
+ tests/offline/export_contract_fixtures.py          | 130 ++++++
+ tests/offline/gpu_cli_harness.py                   | 138 +++++++
+ tests/offline/replay_installation.py               | 115 ++++++
+ tests/offline/test_data.py                         |  12 +-
+ tests/offline/test_platform_gpu.py                 | 186 +++++++++
+ tests/offline/test_service_contract.py             | 459 +++++++++++++++++++++
+ tests/offline/thor-recorded-tegrastats.txt         |   3 +
+ tests/offline/verify_resources.py                  |  15 +-
+ 37 files changed, 3942 insertions(+), 34 deletions(-)
+[build-system]
+requires = ["setuptools>=61", "wheel", "setuptools-scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tegrastats-api"
+version = "1.1.1"
+description = "HTTP API and WebSocket server for NVIDIA Jetson tegrastats monitoring"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "Thomas Hiddenpeak", email = "thomashiddenpeak@gmail.com"}
+]
+maintainers = [
+    {name = "Thomas Hiddenpeak", email = "thomashiddenpeak@gmail.com"}
+]
+keywords = ["jetson", "tegrastats", "monitoring", "api", "websocket", "esp32"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: System :: Hardware",
+    "Topic :: System :: Monitoring",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "Flask>=2.3.0",
+    "Flask-SocketIO>=5.3.0",
+    "Flask-CORS>=4.0.0",
+    "python-socketio>=5.9.0",
+    "eventlet>=0.33.0",
+    "psutil>=5.9.0",
+    "requests>=2.31.0",
+    "websocket-client>=1.6.0",
+    "click>=8.0.0",
+]
+
+[project.optional-dependencies]
+thor = ["nvidia-ml-py==13.615.71"]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "flake8>=6.0.0",
+    "mypy>=1.0.0",
+]
+test = [
+    "pytest>=7.0.0",
+    "requests>=2.31.0",
+    "websocket-client>=1.6.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/thomas-hiddenpeak/rm01OrinStatus"
+Documentation = "https://github.com/thomas-hiddenpeak/rm01OrinStatus/blob/main/README.md"
+Repository = "https://github.com/thomas-hiddenpeak/rm01OrinStatus.git"
+"Bug Tracker" = "https://github.com/thomas-hiddenpeak/rm01OrinStatus/issues"
+
+[project.scripts]
+tegrastats-api = "tegrastats_api.cli:main"
+tegrastats-server = "tegrastats_api.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+tegrastats_api = ["templates/*", "static/*", "config/*.py"]
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = trueevidence/closeout/installed-replay.txt
+evidence/closeout/installed-results/loaded_source.json
+evidence/closeout/installed-results/message_sizes.json
+evidence/closeout/installed-results/resources.json
+evidence/closeout/installed-results/wheel_identity.json
+evidence/orin-thor-service-closeout-20261012/fixtures/identity-conflict-platform.json
+evidence/orin-thor-service-closeout-20261012/fixtures/legacy-empty-gpu.json
+evidence/orin-thor-service-closeout-20261012/fixtures/legacy-zero.json
+evidence/orin-thor-service-closeout-20261012/fixtures/lifecycle-conflict-source-period.json
+evidence/orin-thor-service-closeout-20261012/fixtures/manifest.json
+evidence/orin-thor-service-closeout-20261012/fixtures/orin-missing.json
+evidence/orin-thor-service-closeout-20261012/fixtures/orin-nonzero.json
+evidence/orin-thor-service-closeout-20261012/fixtures/orin-zero.json
+evidence/orin-thor-service-closeout-20261012/fixtures/thor-error-with-legacy-zero.json
+evidence/orin-thor-service-closeout-20261012/fixtures/thor-error.json
+evidence/orin-thor-service-closeout-20261012/fixtures/thor-nonzero.json
+evidence/orin-thor-service-closeout-20261012/fixtures/thor-repeat.json
+evidence/orin-thor-service-closeout-20261012/fixtures/thor-same-value-new-input.json
+evidence/orin-thor-service-closeout-20261012/fixtures/thor-stale.json
+evidence/orin-thor-service-closeout-20261012/fixtures/thor-unavailable.json
+evidence/orin-thor-service-closeout-20261012/fixtures/thor-zero.json
+evidence/orin-thor-service-closeout-20261012/fixtures/unknown.json
+requirements.txt
+scripts/check_install_identity.py
+scripts/install.sh
+scripts/install_candidate.py
+scripts/test_all_installations.sh
+scripts/uninstall.sh
+src/tegrastats_api/platform_gpu.py
+tests/offline/gpu_cli_harness.py
+tests/offline/replay_installation.py
+tests/offline/test_platform_gpu.py
+tests/offline/thor-recorded-tegrastats.txt

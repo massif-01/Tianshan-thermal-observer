@@ -1,0 +1,4014 @@
+{
+  "schema": "TTO-AUTOWORKDAY-FROZEN-v1",
+  "status": "OFFLINE_CANDIDATE_NOT_FIELD_AUTHORIZED",
+  "field_authorized": false,
+  "seed": 20261022,
+  "total_elapsed_seconds": 86400,
+  "health_checkpoint_seconds": 7200,
+  "last_new_request_latest_s": 84570,
+  "max_concurrency": 1,
+  "max_submissions": 600,
+  "max_client_inflight_seconds": 18000,
+  "request_max_tokens": 256,
+  "request_protocol_budget_seconds": 30,
+  "unready_grace_seconds": 60,
+  "no_catch_up": true,
+  "pause_extends_window": false,
+  "cache_policy": "unchanged_hit_unknown",
+  "predictor_reads_future_schedule": false,
+  "stages": [
+    {
+      "id": "background_health",
+      "start_s": 0,
+      "end_s": 7200,
+      "workload": "no_added_requests"
+    },
+    {
+      "id": "sparse_qa",
+      "start_s": 7200,
+      "end_s": 21600,
+      "workload": "single_sparse"
+    },
+    {
+      "id": "conversation_clusters",
+      "start_s": 21600,
+      "end_s": 28800,
+      "workload": "single_clusters"
+    },
+    {
+      "id": "bounded_batch",
+      "start_s": 28800,
+      "end_s": 32400,
+      "workload": "single_batch_blocks"
+    },
+    {
+      "id": "cooldown",
+      "start_s": 32400,
+      "end_s": 36000,
+      "workload": "no_added_requests"
+    },
+    {
+      "id": "long_rest",
+      "start_s": 36000,
+      "end_s": 64800,
+      "workload": "no_added_requests"
+    },
+    {
+      "id": "irregular_mix",
+      "start_s": 64800,
+      "end_s": 84600,
+      "workload": "single_mixed"
+    },
+    {
+      "id": "final_recovery",
+      "start_s": 84600,
+      "end_s": 86400,
+      "workload": "no_added_requests"
+    }
+  ],
+  "tasks": [
+    {
+      "task_id": "qa_heat",
+      "kind": "问答",
+      "messages": [
+        {
+          "role": "user",
+          "content": "请用中文解释为什么计算机芯片在不同负载下温度会不同。避免编造具体设备参数。"
+        }
+      ]
+    },
+    {
+      "task_id": "qa_network",
+      "kind": "问答",
+      "messages": [
+        {
+          "role": "user",
+          "content": "请用中文解释网络延迟和吞吐量的区别，举一个日常例子。"
+        }
+      ]
+    },
+    {
+      "task_id": "summary",
+      "kind": "摘要",
+      "messages": [
+        {
+          "role": "user",
+          "content": "请概括以下虚构工作记录：上午整理公开文档，午间休息，下午复核表格，最后归档。列出三项关键安排。"
+        }
+      ]
+    },
+    {
+      "task_id": "rewrite",
+      "kind": "改写",
+      "messages": [
+        {
+          "role": "user",
+          "content": "请把这句话改写得清晰简洁：在完成对已经整理的文件进行再次检查之后，我们准备开始实施归档工作。"
+        }
+      ]
+    },
+    {
+      "task_id": "code_explain",
+      "kind": "代码解释",
+      "messages": [
+        {
+          "role": "user",
+          "content": "只解释、不执行下面的Python代码，并说明结果：values=[2,4,6]; total=sum(v*v for v in values); print(total)。"
+        }
+      ]
+    },
+    {
+      "task_id": "compare",
+      "kind": "比较",
+      "messages": [
+        {
+          "role": "user",
+          "content": "请比较列表和集合的用途，给出适合初学者的例子。不要运行代码。"
+        }
+      ]
+    },
+    {
+      "task_id": "outline",
+      "kind": "提纲",
+      "messages": [
+        {
+          "role": "user",
+          "content": "请为一篇介绍散热器、空气流动与环境温度关系的科普文章拟一个简短提纲。"
+        }
+      ]
+    },
+    {
+      "task_id": "translation",
+      "kind": "翻译",
+      "messages": [
+        {
+          "role": "user",
+          "content": "请将这段非敏感示例译成中文并解释：A clear plan includes work, rest, and a definite stopping time."
+        }
+      ]
+    }
+  ],
+  "slots": [
+    {
+      "slot_id": "W0001",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 7200,
+      "latest_submit_s": 7205,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0002",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 7646,
+      "latest_submit_s": 7651,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 416,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0003",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 7884,
+      "latest_submit_s": 7889,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 208,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0004",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 8157,
+      "latest_submit_s": 8162,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 243,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0005",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 8427,
+      "latest_submit_s": 8432,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 240,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0006",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 8856,
+      "latest_submit_s": 8861,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 399,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0007",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 9036,
+      "latest_submit_s": 9041,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 150,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0008",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 9285,
+      "latest_submit_s": 9290,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 219,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0009",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 9762,
+      "latest_submit_s": 9767,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 447,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0010",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 10011,
+      "latest_submit_s": 10016,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 219,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0011",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 10421,
+      "latest_submit_s": 10426,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 380,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0012",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 10681,
+      "latest_submit_s": 10686,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 230,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0013",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 10833,
+      "latest_submit_s": 10838,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 122,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0014",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 11171,
+      "latest_submit_s": 11176,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 308,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0015",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 11620,
+      "latest_submit_s": 11625,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 419,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0016",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 12013,
+      "latest_submit_s": 12018,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 363,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0017",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 12194,
+      "latest_submit_s": 12199,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 151,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0018",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 12419,
+      "latest_submit_s": 12424,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 195,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0019",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 12602,
+      "latest_submit_s": 12607,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 153,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0020",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 13040,
+      "latest_submit_s": 13045,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 408,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0021",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 13452,
+      "latest_submit_s": 13457,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 382,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0022",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 13650,
+      "latest_submit_s": 13655,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 168,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0023",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 14023,
+      "latest_submit_s": 14028,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 343,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0024",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 14218,
+      "latest_submit_s": 14223,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 165,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0025",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 14601,
+      "latest_submit_s": 14606,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 353,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0026",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 14815,
+      "latest_submit_s": 14820,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 184,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0027",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 15235,
+      "latest_submit_s": 15240,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 390,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0028",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 15414,
+      "latest_submit_s": 15419,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 149,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0029",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 15753,
+      "latest_submit_s": 15758,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 309,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0030",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 16055,
+      "latest_submit_s": 16060,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 272,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0031",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 16207,
+      "latest_submit_s": 16212,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 122,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0032",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 16395,
+      "latest_submit_s": 16400,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 158,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0033",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 16657,
+      "latest_submit_s": 16662,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 232,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0034",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 17052,
+      "latest_submit_s": 17057,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 365,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0035",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 17474,
+      "latest_submit_s": 17479,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 392,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0036",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 17811,
+      "latest_submit_s": 17816,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 307,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0037",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 18264,
+      "latest_submit_s": 18269,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 423,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0038",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 18416,
+      "latest_submit_s": 18421,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 122,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0039",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 18584,
+      "latest_submit_s": 18589,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 138,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0040",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 18748,
+      "latest_submit_s": 18753,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 134,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0041",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 19053,
+      "latest_submit_s": 19058,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 275,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0042",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 19224,
+      "latest_submit_s": 19229,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 141,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0043",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 19613,
+      "latest_submit_s": 19618,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 359,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0044",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 19824,
+      "latest_submit_s": 19829,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 181,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0045",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 20123,
+      "latest_submit_s": 20128,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 269,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0046",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 20295,
+      "latest_submit_s": 20300,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 142,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0047",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 20642,
+      "latest_submit_s": 20647,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 317,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0048",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 21013,
+      "latest_submit_s": 21018,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 341,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0049",
+      "stage_id": "sparse_qa",
+      "block_id": "sparse",
+      "planned_submit_s": 21398,
+      "latest_submit_s": 21403,
+      "issue_window_end_s": 21600,
+      "min_gap_after_previous_end_s": 355,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0050",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g1",
+      "planned_submit_s": 21600,
+      "latest_submit_s": 21605,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0051",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g1",
+      "planned_submit_s": 21637,
+      "latest_submit_s": 21642,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 7,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0052",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g1",
+      "planned_submit_s": 21675,
+      "latest_submit_s": 21680,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 8,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0053",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g1",
+      "planned_submit_s": 21720,
+      "latest_submit_s": 21725,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 15,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0054",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g1",
+      "planned_submit_s": 21764,
+      "latest_submit_s": 21769,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 14,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0055",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g1",
+      "planned_submit_s": 21799,
+      "latest_submit_s": 21804,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 5,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0056",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g2",
+      "planned_submit_s": 22822,
+      "latest_submit_s": 22827,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0057",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g2",
+      "planned_submit_s": 22863,
+      "latest_submit_s": 22868,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 11,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0058",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g2",
+      "planned_submit_s": 22903,
+      "latest_submit_s": 22908,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 10,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0059",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g2",
+      "planned_submit_s": 22946,
+      "latest_submit_s": 22951,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 13,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0060",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g2",
+      "planned_submit_s": 22979,
+      "latest_submit_s": 22984,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 3,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0061",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g3",
+      "planned_submit_s": 24197,
+      "latest_submit_s": 24202,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0062",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g3",
+      "planned_submit_s": 24240,
+      "latest_submit_s": 24245,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 13,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0063",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g3",
+      "planned_submit_s": 24284,
+      "latest_submit_s": 24289,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 14,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0064",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g3",
+      "planned_submit_s": 24329,
+      "latest_submit_s": 24334,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 15,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0065",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g3",
+      "planned_submit_s": 24368,
+      "latest_submit_s": 24373,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 9,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0066",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g3",
+      "planned_submit_s": 24403,
+      "latest_submit_s": 24408,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 5,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0067",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g3",
+      "planned_submit_s": 24439,
+      "latest_submit_s": 24444,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 6,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0068",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g3",
+      "planned_submit_s": 24481,
+      "latest_submit_s": 24486,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 12,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0069",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g4",
+      "planned_submit_s": 25505,
+      "latest_submit_s": 25510,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0070",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g4",
+      "planned_submit_s": 25539,
+      "latest_submit_s": 25544,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 4,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0071",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g4",
+      "planned_submit_s": 25578,
+      "latest_submit_s": 25583,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 9,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0072",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g4",
+      "planned_submit_s": 25623,
+      "latest_submit_s": 25628,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 15,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0073",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g4",
+      "planned_submit_s": 25661,
+      "latest_submit_s": 25666,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 8,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0074",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g4",
+      "planned_submit_s": 25703,
+      "latest_submit_s": 25708,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 12,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0075",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g4",
+      "planned_submit_s": 25736,
+      "latest_submit_s": 25741,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 3,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0076",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g4",
+      "planned_submit_s": 25780,
+      "latest_submit_s": 25785,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 14,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0077",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g5",
+      "planned_submit_s": 26678,
+      "latest_submit_s": 26683,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0078",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g5",
+      "planned_submit_s": 26712,
+      "latest_submit_s": 26717,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 4,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0079",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g5",
+      "planned_submit_s": 26747,
+      "latest_submit_s": 26752,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 5,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0080",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g5",
+      "planned_submit_s": 26787,
+      "latest_submit_s": 26792,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 10,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0081",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g5",
+      "planned_submit_s": 26826,
+      "latest_submit_s": 26831,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 9,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0082",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g5",
+      "planned_submit_s": 26860,
+      "latest_submit_s": 26865,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 4,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0083",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g5",
+      "planned_submit_s": 26900,
+      "latest_submit_s": 26905,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 10,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0084",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g5",
+      "planned_submit_s": 26945,
+      "latest_submit_s": 26950,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 15,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0085",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g6",
+      "planned_submit_s": 27867,
+      "latest_submit_s": 27872,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0086",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g6",
+      "planned_submit_s": 27902,
+      "latest_submit_s": 27907,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 5,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0087",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g6",
+      "planned_submit_s": 27940,
+      "latest_submit_s": 27945,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 8,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0088",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g6",
+      "planned_submit_s": 27985,
+      "latest_submit_s": 27990,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 15,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0089",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g6",
+      "planned_submit_s": 28018,
+      "latest_submit_s": 28023,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 3,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0090",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g6",
+      "planned_submit_s": 28061,
+      "latest_submit_s": 28066,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 13,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0091",
+      "stage_id": "conversation_clusters",
+      "block_id": "conversation-g6",
+      "planned_submit_s": 28102,
+      "latest_submit_s": 28107,
+      "issue_window_end_s": 28800,
+      "min_gap_after_previous_end_s": 11,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0092",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-1",
+      "planned_submit_s": 28800,
+      "latest_submit_s": 28805,
+      "issue_window_end_s": 29160,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0093",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-1",
+      "planned_submit_s": 28810,
+      "latest_submit_s": 28815,
+      "issue_window_end_s": 29160,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0094",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-1",
+      "planned_submit_s": 28820,
+      "latest_submit_s": 28825,
+      "issue_window_end_s": 29160,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0095",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-1",
+      "planned_submit_s": 28830,
+      "latest_submit_s": 28835,
+      "issue_window_end_s": 29160,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0096",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-1",
+      "planned_submit_s": 28840,
+      "latest_submit_s": 28845,
+      "issue_window_end_s": 29160,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0097",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-1",
+      "planned_submit_s": 28850,
+      "latest_submit_s": 28855,
+      "issue_window_end_s": 29160,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0098",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-1",
+      "planned_submit_s": 28860,
+      "latest_submit_s": 28865,
+      "issue_window_end_s": 29160,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0099",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-1",
+      "planned_submit_s": 28870,
+      "latest_submit_s": 28875,
+      "issue_window_end_s": 29160,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0100",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-1",
+      "planned_submit_s": 28880,
+      "latest_submit_s": 28885,
+      "issue_window_end_s": 29160,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0101",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-1",
+      "planned_submit_s": 28890,
+      "latest_submit_s": 28895,
+      "issue_window_end_s": 29160,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0102",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-1",
+      "planned_submit_s": 28900,
+      "latest_submit_s": 28905,
+      "issue_window_end_s": 29160,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0103",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-1",
+      "planned_submit_s": 28910,
+      "latest_submit_s": 28915,
+      "issue_window_end_s": 29160,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0104",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-1",
+      "planned_submit_s": 28920,
+      "latest_submit_s": 28925,
+      "issue_window_end_s": 29160,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0105",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-1",
+      "planned_submit_s": 28930,
+      "latest_submit_s": 28935,
+      "issue_window_end_s": 29160,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0106",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-1",
+      "planned_submit_s": 28940,
+      "latest_submit_s": 28945,
+      "issue_window_end_s": 29160,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0107",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-1",
+      "planned_submit_s": 28950,
+      "latest_submit_s": 28955,
+      "issue_window_end_s": 29160,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0108",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-1",
+      "planned_submit_s": 28960,
+      "latest_submit_s": 28965,
+      "issue_window_end_s": 29160,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0109",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-1",
+      "planned_submit_s": 28970,
+      "latest_submit_s": 28975,
+      "issue_window_end_s": 29160,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0110",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-1",
+      "planned_submit_s": 28980,
+      "latest_submit_s": 28985,
+      "issue_window_end_s": 29160,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0111",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-1",
+      "planned_submit_s": 28990,
+      "latest_submit_s": 28995,
+      "issue_window_end_s": 29160,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0112",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-1",
+      "planned_submit_s": 29000,
+      "latest_submit_s": 29005,
+      "issue_window_end_s": 29160,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0113",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-1",
+      "planned_submit_s": 29010,
+      "latest_submit_s": 29015,
+      "issue_window_end_s": 29160,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0114",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-1",
+      "planned_submit_s": 29020,
+      "latest_submit_s": 29025,
+      "issue_window_end_s": 29160,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0115",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-1",
+      "planned_submit_s": 29030,
+      "latest_submit_s": 29035,
+      "issue_window_end_s": 29160,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0116",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-1",
+      "planned_submit_s": 29040,
+      "latest_submit_s": 29045,
+      "issue_window_end_s": 29160,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0117",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-1",
+      "planned_submit_s": 29050,
+      "latest_submit_s": 29055,
+      "issue_window_end_s": 29160,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0118",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-1",
+      "planned_submit_s": 29060,
+      "latest_submit_s": 29065,
+      "issue_window_end_s": 29160,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0119",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-1",
+      "planned_submit_s": 29070,
+      "latest_submit_s": 29075,
+      "issue_window_end_s": 29160,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0120",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-1",
+      "planned_submit_s": 29080,
+      "latest_submit_s": 29085,
+      "issue_window_end_s": 29160,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0121",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-1",
+      "planned_submit_s": 29090,
+      "latest_submit_s": 29095,
+      "issue_window_end_s": 29160,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0122",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-1",
+      "planned_submit_s": 29100,
+      "latest_submit_s": 29105,
+      "issue_window_end_s": 29160,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0123",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-1",
+      "planned_submit_s": 29110,
+      "latest_submit_s": 29115,
+      "issue_window_end_s": 29160,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0124",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-1",
+      "planned_submit_s": 29120,
+      "latest_submit_s": 29125,
+      "issue_window_end_s": 29160,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0125",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-1",
+      "planned_submit_s": 29130,
+      "latest_submit_s": 29130,
+      "issue_window_end_s": 29160,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0126",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29640,
+      "latest_submit_s": 29645,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0127",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29650,
+      "latest_submit_s": 29655,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0128",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29660,
+      "latest_submit_s": 29665,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0129",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29670,
+      "latest_submit_s": 29675,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0130",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29680,
+      "latest_submit_s": 29685,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0131",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29690,
+      "latest_submit_s": 29695,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0132",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29700,
+      "latest_submit_s": 29705,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0133",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29710,
+      "latest_submit_s": 29715,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0134",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29720,
+      "latest_submit_s": 29725,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0135",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29730,
+      "latest_submit_s": 29735,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0136",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29740,
+      "latest_submit_s": 29745,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0137",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29750,
+      "latest_submit_s": 29755,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0138",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29760,
+      "latest_submit_s": 29765,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0139",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29770,
+      "latest_submit_s": 29775,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0140",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29780,
+      "latest_submit_s": 29785,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0141",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29790,
+      "latest_submit_s": 29795,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0142",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29800,
+      "latest_submit_s": 29805,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0143",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29810,
+      "latest_submit_s": 29815,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0144",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29820,
+      "latest_submit_s": 29825,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0145",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29830,
+      "latest_submit_s": 29835,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0146",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29840,
+      "latest_submit_s": 29845,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0147",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29850,
+      "latest_submit_s": 29855,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0148",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29860,
+      "latest_submit_s": 29865,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0149",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29870,
+      "latest_submit_s": 29875,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0150",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29880,
+      "latest_submit_s": 29885,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0151",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29890,
+      "latest_submit_s": 29895,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0152",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29900,
+      "latest_submit_s": 29905,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0153",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29910,
+      "latest_submit_s": 29915,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0154",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29920,
+      "latest_submit_s": 29925,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0155",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29930,
+      "latest_submit_s": 29935,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0156",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29940,
+      "latest_submit_s": 29945,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0157",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29950,
+      "latest_submit_s": 29955,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0158",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29960,
+      "latest_submit_s": 29965,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0159",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29970,
+      "latest_submit_s": 29975,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0160",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29980,
+      "latest_submit_s": 29985,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0161",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 29990,
+      "latest_submit_s": 29995,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0162",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 30000,
+      "latest_submit_s": 30005,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0163",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 30010,
+      "latest_submit_s": 30015,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0164",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 30020,
+      "latest_submit_s": 30025,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0165",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 30030,
+      "latest_submit_s": 30035,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0166",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 30040,
+      "latest_submit_s": 30045,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0167",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 30050,
+      "latest_submit_s": 30055,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0168",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 30060,
+      "latest_submit_s": 30065,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0169",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 30070,
+      "latest_submit_s": 30075,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0170",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 30080,
+      "latest_submit_s": 30085,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0171",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 30090,
+      "latest_submit_s": 30095,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0172",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 30100,
+      "latest_submit_s": 30105,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0173",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 30110,
+      "latest_submit_s": 30115,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0174",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 30120,
+      "latest_submit_s": 30125,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0175",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 30130,
+      "latest_submit_s": 30135,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0176",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 30140,
+      "latest_submit_s": 30145,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0177",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-2",
+      "planned_submit_s": 30150,
+      "latest_submit_s": 30150,
+      "issue_window_end_s": 30180,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0178",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-3",
+      "planned_submit_s": 30660,
+      "latest_submit_s": 30665,
+      "issue_window_end_s": 30960,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0179",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-3",
+      "planned_submit_s": 30670,
+      "latest_submit_s": 30675,
+      "issue_window_end_s": 30960,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0180",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-3",
+      "planned_submit_s": 30680,
+      "latest_submit_s": 30685,
+      "issue_window_end_s": 30960,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0181",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-3",
+      "planned_submit_s": 30690,
+      "latest_submit_s": 30695,
+      "issue_window_end_s": 30960,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0182",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-3",
+      "planned_submit_s": 30700,
+      "latest_submit_s": 30705,
+      "issue_window_end_s": 30960,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0183",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-3",
+      "planned_submit_s": 30710,
+      "latest_submit_s": 30715,
+      "issue_window_end_s": 30960,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0184",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-3",
+      "planned_submit_s": 30720,
+      "latest_submit_s": 30725,
+      "issue_window_end_s": 30960,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0185",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-3",
+      "planned_submit_s": 30730,
+      "latest_submit_s": 30735,
+      "issue_window_end_s": 30960,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0186",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-3",
+      "planned_submit_s": 30740,
+      "latest_submit_s": 30745,
+      "issue_window_end_s": 30960,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0187",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-3",
+      "planned_submit_s": 30750,
+      "latest_submit_s": 30755,
+      "issue_window_end_s": 30960,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0188",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-3",
+      "planned_submit_s": 30760,
+      "latest_submit_s": 30765,
+      "issue_window_end_s": 30960,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0189",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-3",
+      "planned_submit_s": 30770,
+      "latest_submit_s": 30775,
+      "issue_window_end_s": 30960,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0190",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-3",
+      "planned_submit_s": 30780,
+      "latest_submit_s": 30785,
+      "issue_window_end_s": 30960,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0191",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-3",
+      "planned_submit_s": 30790,
+      "latest_submit_s": 30795,
+      "issue_window_end_s": 30960,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0192",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-3",
+      "planned_submit_s": 30800,
+      "latest_submit_s": 30805,
+      "issue_window_end_s": 30960,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0193",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-3",
+      "planned_submit_s": 30810,
+      "latest_submit_s": 30815,
+      "issue_window_end_s": 30960,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0194",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-3",
+      "planned_submit_s": 30820,
+      "latest_submit_s": 30825,
+      "issue_window_end_s": 30960,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0195",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-3",
+      "planned_submit_s": 30830,
+      "latest_submit_s": 30835,
+      "issue_window_end_s": 30960,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0196",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-3",
+      "planned_submit_s": 30840,
+      "latest_submit_s": 30845,
+      "issue_window_end_s": 30960,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0197",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-3",
+      "planned_submit_s": 30850,
+      "latest_submit_s": 30855,
+      "issue_window_end_s": 30960,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0198",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-3",
+      "planned_submit_s": 30860,
+      "latest_submit_s": 30865,
+      "issue_window_end_s": 30960,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0199",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-3",
+      "planned_submit_s": 30870,
+      "latest_submit_s": 30875,
+      "issue_window_end_s": 30960,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0200",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-3",
+      "planned_submit_s": 30880,
+      "latest_submit_s": 30885,
+      "issue_window_end_s": 30960,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0201",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-3",
+      "planned_submit_s": 30890,
+      "latest_submit_s": 30895,
+      "issue_window_end_s": 30960,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0202",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-3",
+      "planned_submit_s": 30900,
+      "latest_submit_s": 30905,
+      "issue_window_end_s": 30960,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0203",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-3",
+      "planned_submit_s": 30910,
+      "latest_submit_s": 30915,
+      "issue_window_end_s": 30960,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0204",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-3",
+      "planned_submit_s": 30920,
+      "latest_submit_s": 30925,
+      "issue_window_end_s": 30960,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0205",
+      "stage_id": "bounded_batch",
+      "block_id": "batch-3",
+      "planned_submit_s": 30930,
+      "latest_submit_s": 30930,
+      "issue_window_end_s": 30960,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0206",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-1-sparse",
+      "planned_submit_s": 64800,
+      "latest_submit_s": 64805,
+      "issue_window_end_s": 67311,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0207",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-1-sparse",
+      "planned_submit_s": 65135,
+      "latest_submit_s": 65140,
+      "issue_window_end_s": 67311,
+      "min_gap_after_previous_end_s": 305,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0208",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-1-sparse",
+      "planned_submit_s": 65411,
+      "latest_submit_s": 65416,
+      "issue_window_end_s": 67311,
+      "min_gap_after_previous_end_s": 246,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0209",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-1-sparse",
+      "planned_submit_s": 65606,
+      "latest_submit_s": 65611,
+      "issue_window_end_s": 67311,
+      "min_gap_after_previous_end_s": 165,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0210",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-1-sparse",
+      "planned_submit_s": 65873,
+      "latest_submit_s": 65878,
+      "issue_window_end_s": 67311,
+      "min_gap_after_previous_end_s": 237,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0211",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-1-sparse",
+      "planned_submit_s": 66130,
+      "latest_submit_s": 66135,
+      "issue_window_end_s": 67311,
+      "min_gap_after_previous_end_s": 227,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0212",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-1-sparse",
+      "planned_submit_s": 66438,
+      "latest_submit_s": 66443,
+      "issue_window_end_s": 67311,
+      "min_gap_after_previous_end_s": 278,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0213",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-1-sparse",
+      "planned_submit_s": 66700,
+      "latest_submit_s": 66705,
+      "issue_window_end_s": 67311,
+      "min_gap_after_previous_end_s": 232,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0214",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-1-sparse",
+      "planned_submit_s": 66897,
+      "latest_submit_s": 66902,
+      "issue_window_end_s": 67311,
+      "min_gap_after_previous_end_s": 167,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0215",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-1-sparse",
+      "planned_submit_s": 67218,
+      "latest_submit_s": 67223,
+      "issue_window_end_s": 67311,
+      "min_gap_after_previous_end_s": 291,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0216",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-2-sparse",
+      "planned_submit_s": 67798,
+      "latest_submit_s": 67803,
+      "issue_window_end_s": 70071,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0217",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-2-sparse",
+      "planned_submit_s": 67950,
+      "latest_submit_s": 67955,
+      "issue_window_end_s": 70071,
+      "min_gap_after_previous_end_s": 122,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0218",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-2-sparse",
+      "planned_submit_s": 68426,
+      "latest_submit_s": 68431,
+      "issue_window_end_s": 70071,
+      "min_gap_after_previous_end_s": 446,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0219",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-2-sparse",
+      "planned_submit_s": 68737,
+      "latest_submit_s": 68742,
+      "issue_window_end_s": 70071,
+      "min_gap_after_previous_end_s": 281,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0220",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-2-sparse",
+      "planned_submit_s": 69098,
+      "latest_submit_s": 69103,
+      "issue_window_end_s": 70071,
+      "min_gap_after_previous_end_s": 331,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0221",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-2-sparse",
+      "planned_submit_s": 69575,
+      "latest_submit_s": 69580,
+      "issue_window_end_s": 70071,
+      "min_gap_after_previous_end_s": 447,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0222",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-2-sparse",
+      "planned_submit_s": 69867,
+      "latest_submit_s": 69872,
+      "issue_window_end_s": 70071,
+      "min_gap_after_previous_end_s": 262,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0223",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71008,
+      "latest_submit_s": 71013,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0224",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71018,
+      "latest_submit_s": 71023,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0225",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71028,
+      "latest_submit_s": 71033,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0226",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71038,
+      "latest_submit_s": 71043,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0227",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71048,
+      "latest_submit_s": 71053,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0228",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71058,
+      "latest_submit_s": 71063,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0229",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71068,
+      "latest_submit_s": 71073,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0230",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71078,
+      "latest_submit_s": 71083,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0231",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71088,
+      "latest_submit_s": 71093,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0232",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71098,
+      "latest_submit_s": 71103,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0233",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71108,
+      "latest_submit_s": 71113,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0234",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71118,
+      "latest_submit_s": 71123,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0235",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71128,
+      "latest_submit_s": 71133,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0236",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71138,
+      "latest_submit_s": 71143,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0237",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71148,
+      "latest_submit_s": 71153,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0238",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71158,
+      "latest_submit_s": 71163,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0239",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71168,
+      "latest_submit_s": 71173,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0240",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71178,
+      "latest_submit_s": 71183,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0241",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71188,
+      "latest_submit_s": 71193,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0242",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71198,
+      "latest_submit_s": 71203,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0243",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71208,
+      "latest_submit_s": 71213,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0244",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71218,
+      "latest_submit_s": 71223,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0245",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71228,
+      "latest_submit_s": 71233,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0246",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71238,
+      "latest_submit_s": 71243,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0247",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71248,
+      "latest_submit_s": 71253,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0248",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71258,
+      "latest_submit_s": 71263,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0249",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71268,
+      "latest_submit_s": 71273,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0250",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71278,
+      "latest_submit_s": 71283,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0251",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71288,
+      "latest_submit_s": 71293,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0252",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71298,
+      "latest_submit_s": 71303,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0253",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71308,
+      "latest_submit_s": 71313,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0254",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71318,
+      "latest_submit_s": 71323,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0255",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71328,
+      "latest_submit_s": 71333,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0256",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71338,
+      "latest_submit_s": 71343,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0257",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71348,
+      "latest_submit_s": 71353,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0258",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71358,
+      "latest_submit_s": 71363,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0259",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71368,
+      "latest_submit_s": 71373,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0260",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71378,
+      "latest_submit_s": 71383,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0261",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71388,
+      "latest_submit_s": 71393,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0262",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71398,
+      "latest_submit_s": 71403,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0263",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71408,
+      "latest_submit_s": 71413,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0264",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71418,
+      "latest_submit_s": 71423,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0265",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71428,
+      "latest_submit_s": 71433,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0266",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71438,
+      "latest_submit_s": 71443,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0267",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71448,
+      "latest_submit_s": 71453,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0268",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71458,
+      "latest_submit_s": 71463,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0269",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71468,
+      "latest_submit_s": 71473,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0270",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71478,
+      "latest_submit_s": 71483,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0271",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71488,
+      "latest_submit_s": 71493,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0272",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71498,
+      "latest_submit_s": 71503,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0273",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71508,
+      "latest_submit_s": 71513,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0274",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-3-batch",
+      "planned_submit_s": 71518,
+      "latest_submit_s": 71518,
+      "issue_window_end_s": 71548,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0275",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-4-sparse",
+      "planned_submit_s": 72188,
+      "latest_submit_s": 72193,
+      "issue_window_end_s": 74396,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0276",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-4-sparse",
+      "planned_submit_s": 72649,
+      "latest_submit_s": 72654,
+      "issue_window_end_s": 74396,
+      "min_gap_after_previous_end_s": 431,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0277",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-4-sparse",
+      "planned_submit_s": 72895,
+      "latest_submit_s": 72900,
+      "issue_window_end_s": 74396,
+      "min_gap_after_previous_end_s": 216,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0278",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-4-sparse",
+      "planned_submit_s": 73329,
+      "latest_submit_s": 73334,
+      "issue_window_end_s": 74396,
+      "min_gap_after_previous_end_s": 404,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0279",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-4-sparse",
+      "planned_submit_s": 73767,
+      "latest_submit_s": 73772,
+      "issue_window_end_s": 74396,
+      "min_gap_after_previous_end_s": 408,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0280",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-4-sparse",
+      "planned_submit_s": 74012,
+      "latest_submit_s": 74017,
+      "issue_window_end_s": 74396,
+      "min_gap_after_previous_end_s": 215,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0281",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-4-sparse",
+      "planned_submit_s": 74167,
+      "latest_submit_s": 74172,
+      "issue_window_end_s": 74396,
+      "min_gap_after_previous_end_s": 125,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0282",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-5-sparse",
+      "planned_submit_s": 75150,
+      "latest_submit_s": 75155,
+      "issue_window_end_s": 77414,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0283",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-5-sparse",
+      "planned_submit_s": 75621,
+      "latest_submit_s": 75626,
+      "issue_window_end_s": 77414,
+      "min_gap_after_previous_end_s": 441,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0284",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-5-sparse",
+      "planned_submit_s": 75915,
+      "latest_submit_s": 75920,
+      "issue_window_end_s": 77414,
+      "min_gap_after_previous_end_s": 264,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0285",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-5-sparse",
+      "planned_submit_s": 76145,
+      "latest_submit_s": 76150,
+      "issue_window_end_s": 77414,
+      "min_gap_after_previous_end_s": 200,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0286",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-5-sparse",
+      "planned_submit_s": 76573,
+      "latest_submit_s": 76578,
+      "issue_window_end_s": 77414,
+      "min_gap_after_previous_end_s": 398,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0287",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-5-sparse",
+      "planned_submit_s": 76993,
+      "latest_submit_s": 76998,
+      "issue_window_end_s": 77414,
+      "min_gap_after_previous_end_s": 390,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0288",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-5-sparse",
+      "planned_submit_s": 77276,
+      "latest_submit_s": 77281,
+      "issue_window_end_s": 77414,
+      "min_gap_after_previous_end_s": 253,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0289",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-6-batch",
+      "planned_submit_s": 78487,
+      "latest_submit_s": 78492,
+      "issue_window_end_s": 78847,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0290",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-6-batch",
+      "planned_submit_s": 78497,
+      "latest_submit_s": 78502,
+      "issue_window_end_s": 78847,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0291",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-6-batch",
+      "planned_submit_s": 78507,
+      "latest_submit_s": 78512,
+      "issue_window_end_s": 78847,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0292",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-6-batch",
+      "planned_submit_s": 78517,
+      "latest_submit_s": 78522,
+      "issue_window_end_s": 78847,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0293",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-6-batch",
+      "planned_submit_s": 78527,
+      "latest_submit_s": 78532,
+      "issue_window_end_s": 78847,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0294",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-6-batch",
+      "planned_submit_s": 78537,
+      "latest_submit_s": 78542,
+      "issue_window_end_s": 78847,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0295",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-6-batch",
+      "planned_submit_s": 78547,
+      "latest_submit_s": 78552,
+      "issue_window_end_s": 78847,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0296",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-6-batch",
+      "planned_submit_s": 78557,
+      "latest_submit_s": 78562,
+      "issue_window_end_s": 78847,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0297",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-6-batch",
+      "planned_submit_s": 78567,
+      "latest_submit_s": 78572,
+      "issue_window_end_s": 78847,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0298",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-6-batch",
+      "planned_submit_s": 78577,
+      "latest_submit_s": 78582,
+      "issue_window_end_s": 78847,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0299",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-6-batch",
+      "planned_submit_s": 78587,
+      "latest_submit_s": 78592,
+      "issue_window_end_s": 78847,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0300",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-6-batch",
+      "planned_submit_s": 78597,
+      "latest_submit_s": 78602,
+      "issue_window_end_s": 78847,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0301",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-6-batch",
+      "planned_submit_s": 78607,
+      "latest_submit_s": 78612,
+      "issue_window_end_s": 78847,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0302",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-6-batch",
+      "planned_submit_s": 78617,
+      "latest_submit_s": 78622,
+      "issue_window_end_s": 78847,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0303",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-6-batch",
+      "planned_submit_s": 78627,
+      "latest_submit_s": 78632,
+      "issue_window_end_s": 78847,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0304",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-6-batch",
+      "planned_submit_s": 78637,
+      "latest_submit_s": 78642,
+      "issue_window_end_s": 78847,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0305",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-6-batch",
+      "planned_submit_s": 78647,
+      "latest_submit_s": 78652,
+      "issue_window_end_s": 78847,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0306",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-6-batch",
+      "planned_submit_s": 78657,
+      "latest_submit_s": 78662,
+      "issue_window_end_s": 78847,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0307",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-6-batch",
+      "planned_submit_s": 78667,
+      "latest_submit_s": 78672,
+      "issue_window_end_s": 78847,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0308",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-6-batch",
+      "planned_submit_s": 78677,
+      "latest_submit_s": 78682,
+      "issue_window_end_s": 78847,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0309",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-6-batch",
+      "planned_submit_s": 78687,
+      "latest_submit_s": 78692,
+      "issue_window_end_s": 78847,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0310",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-6-batch",
+      "planned_submit_s": 78697,
+      "latest_submit_s": 78702,
+      "issue_window_end_s": 78847,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0311",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-6-batch",
+      "planned_submit_s": 78707,
+      "latest_submit_s": 78712,
+      "issue_window_end_s": 78847,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0312",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-6-batch",
+      "planned_submit_s": 78717,
+      "latest_submit_s": 78722,
+      "issue_window_end_s": 78847,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0313",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-6-batch",
+      "planned_submit_s": 78727,
+      "latest_submit_s": 78732,
+      "issue_window_end_s": 78847,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0314",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-6-batch",
+      "planned_submit_s": 78737,
+      "latest_submit_s": 78742,
+      "issue_window_end_s": 78847,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0315",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-6-batch",
+      "planned_submit_s": 78747,
+      "latest_submit_s": 78752,
+      "issue_window_end_s": 78847,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0316",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-6-batch",
+      "planned_submit_s": 78757,
+      "latest_submit_s": 78762,
+      "issue_window_end_s": 78847,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0317",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-6-batch",
+      "planned_submit_s": 78767,
+      "latest_submit_s": 78772,
+      "issue_window_end_s": 78847,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0318",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-6-batch",
+      "planned_submit_s": 78777,
+      "latest_submit_s": 78782,
+      "issue_window_end_s": 78847,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0319",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-6-batch",
+      "planned_submit_s": 78787,
+      "latest_submit_s": 78792,
+      "issue_window_end_s": 78847,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0320",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-6-batch",
+      "planned_submit_s": 78797,
+      "latest_submit_s": 78802,
+      "issue_window_end_s": 78847,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0321",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-6-batch",
+      "planned_submit_s": 78807,
+      "latest_submit_s": 78812,
+      "issue_window_end_s": 78847,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0322",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-6-batch",
+      "planned_submit_s": 78817,
+      "latest_submit_s": 78817,
+      "issue_window_end_s": 78847,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0323",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-7-batch",
+      "planned_submit_s": 79641,
+      "latest_submit_s": 79646,
+      "issue_window_end_s": 79941,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0324",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-7-batch",
+      "planned_submit_s": 79651,
+      "latest_submit_s": 79656,
+      "issue_window_end_s": 79941,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0325",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-7-batch",
+      "planned_submit_s": 79661,
+      "latest_submit_s": 79666,
+      "issue_window_end_s": 79941,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0326",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-7-batch",
+      "planned_submit_s": 79671,
+      "latest_submit_s": 79676,
+      "issue_window_end_s": 79941,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0327",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-7-batch",
+      "planned_submit_s": 79681,
+      "latest_submit_s": 79686,
+      "issue_window_end_s": 79941,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0328",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-7-batch",
+      "planned_submit_s": 79691,
+      "latest_submit_s": 79696,
+      "issue_window_end_s": 79941,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0329",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-7-batch",
+      "planned_submit_s": 79701,
+      "latest_submit_s": 79706,
+      "issue_window_end_s": 79941,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0330",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-7-batch",
+      "planned_submit_s": 79711,
+      "latest_submit_s": 79716,
+      "issue_window_end_s": 79941,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0331",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-7-batch",
+      "planned_submit_s": 79721,
+      "latest_submit_s": 79726,
+      "issue_window_end_s": 79941,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0332",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-7-batch",
+      "planned_submit_s": 79731,
+      "latest_submit_s": 79736,
+      "issue_window_end_s": 79941,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0333",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-7-batch",
+      "planned_submit_s": 79741,
+      "latest_submit_s": 79746,
+      "issue_window_end_s": 79941,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0334",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-7-batch",
+      "planned_submit_s": 79751,
+      "latest_submit_s": 79756,
+      "issue_window_end_s": 79941,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0335",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-7-batch",
+      "planned_submit_s": 79761,
+      "latest_submit_s": 79766,
+      "issue_window_end_s": 79941,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0336",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-7-batch",
+      "planned_submit_s": 79771,
+      "latest_submit_s": 79776,
+      "issue_window_end_s": 79941,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0337",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-7-batch",
+      "planned_submit_s": 79781,
+      "latest_submit_s": 79786,
+      "issue_window_end_s": 79941,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0338",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-7-batch",
+      "planned_submit_s": 79791,
+      "latest_submit_s": 79796,
+      "issue_window_end_s": 79941,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0339",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-7-batch",
+      "planned_submit_s": 79801,
+      "latest_submit_s": 79806,
+      "issue_window_end_s": 79941,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0340",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-7-batch",
+      "planned_submit_s": 79811,
+      "latest_submit_s": 79816,
+      "issue_window_end_s": 79941,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0341",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-7-batch",
+      "planned_submit_s": 79821,
+      "latest_submit_s": 79826,
+      "issue_window_end_s": 79941,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0342",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-7-batch",
+      "planned_submit_s": 79831,
+      "latest_submit_s": 79836,
+      "issue_window_end_s": 79941,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0343",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-7-batch",
+      "planned_submit_s": 79841,
+      "latest_submit_s": 79846,
+      "issue_window_end_s": 79941,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0344",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-7-batch",
+      "planned_submit_s": 79851,
+      "latest_submit_s": 79856,
+      "issue_window_end_s": 79941,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0345",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-7-batch",
+      "planned_submit_s": 79861,
+      "latest_submit_s": 79866,
+      "issue_window_end_s": 79941,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0346",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-7-batch",
+      "planned_submit_s": 79871,
+      "latest_submit_s": 79876,
+      "issue_window_end_s": 79941,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0347",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-7-batch",
+      "planned_submit_s": 79881,
+      "latest_submit_s": 79886,
+      "issue_window_end_s": 79941,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0348",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-7-batch",
+      "planned_submit_s": 79891,
+      "latest_submit_s": 79896,
+      "issue_window_end_s": 79941,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0349",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-7-batch",
+      "planned_submit_s": 79901,
+      "latest_submit_s": 79906,
+      "issue_window_end_s": 79941,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0350",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-7-batch",
+      "planned_submit_s": 79911,
+      "latest_submit_s": 79911,
+      "issue_window_end_s": 79941,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0351",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-8-sparse",
+      "planned_submit_s": 81023,
+      "latest_submit_s": 81028,
+      "issue_window_end_s": 83606,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0352",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-8-sparse",
+      "planned_submit_s": 81287,
+      "latest_submit_s": 81292,
+      "issue_window_end_s": 83606,
+      "min_gap_after_previous_end_s": 234,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0353",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-8-sparse",
+      "planned_submit_s": 81637,
+      "latest_submit_s": 81642,
+      "issue_window_end_s": 83606,
+      "min_gap_after_previous_end_s": 320,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0354",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-8-sparse",
+      "planned_submit_s": 82004,
+      "latest_submit_s": 82009,
+      "issue_window_end_s": 83606,
+      "min_gap_after_previous_end_s": 337,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0355",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-8-sparse",
+      "planned_submit_s": 82210,
+      "latest_submit_s": 82215,
+      "issue_window_end_s": 83606,
+      "min_gap_after_previous_end_s": 176,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0356",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-8-sparse",
+      "planned_submit_s": 82382,
+      "latest_submit_s": 82387,
+      "issue_window_end_s": 83606,
+      "min_gap_after_previous_end_s": 142,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0357",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-8-sparse",
+      "planned_submit_s": 82861,
+      "latest_submit_s": 82866,
+      "issue_window_end_s": 83606,
+      "min_gap_after_previous_end_s": 449,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0358",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-8-sparse",
+      "planned_submit_s": 83202,
+      "latest_submit_s": 83207,
+      "issue_window_end_s": 83606,
+      "min_gap_after_previous_end_s": 311,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0359",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-9-batch",
+      "planned_submit_s": 84292,
+      "latest_submit_s": 84297,
+      "issue_window_end_s": 84600,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0360",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-9-batch",
+      "planned_submit_s": 84302,
+      "latest_submit_s": 84307,
+      "issue_window_end_s": 84600,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_heat"
+    },
+    {
+      "slot_id": "W0361",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-9-batch",
+      "planned_submit_s": 84312,
+      "latest_submit_s": 84317,
+      "issue_window_end_s": 84600,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0362",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-9-batch",
+      "planned_submit_s": 84322,
+      "latest_submit_s": 84327,
+      "issue_window_end_s": 84600,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0363",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-9-batch",
+      "planned_submit_s": 84332,
+      "latest_submit_s": 84337,
+      "issue_window_end_s": 84600,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0364",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-9-batch",
+      "planned_submit_s": 84342,
+      "latest_submit_s": 84347,
+      "issue_window_end_s": 84600,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0365",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-9-batch",
+      "planned_submit_s": 84352,
+      "latest_submit_s": 84357,
+      "issue_window_end_s": 84600,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0366",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-9-batch",
+      "planned_submit_s": 84362,
+      "latest_submit_s": 84367,
+      "issue_window_end_s": 84600,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0367",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-9-batch",
+      "planned_submit_s": 84372,
+      "latest_submit_s": 84377,
+      "issue_window_end_s": 84600,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0368",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-9-batch",
+      "planned_submit_s": 84382,
+      "latest_submit_s": 84387,
+      "issue_window_end_s": 84600,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0369",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-9-batch",
+      "planned_submit_s": 84392,
+      "latest_submit_s": 84397,
+      "issue_window_end_s": 84600,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0370",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-9-batch",
+      "planned_submit_s": 84402,
+      "latest_submit_s": 84407,
+      "issue_window_end_s": 84600,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0371",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-9-batch",
+      "planned_submit_s": 84412,
+      "latest_submit_s": 84417,
+      "issue_window_end_s": 84600,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "outline"
+    },
+    {
+      "slot_id": "W0372",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-9-batch",
+      "planned_submit_s": 84422,
+      "latest_submit_s": 84427,
+      "issue_window_end_s": 84600,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0373",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-9-batch",
+      "planned_submit_s": 84432,
+      "latest_submit_s": 84437,
+      "issue_window_end_s": 84600,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0374",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-9-batch",
+      "planned_submit_s": 84442,
+      "latest_submit_s": 84447,
+      "issue_window_end_s": 84600,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0375",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-9-batch",
+      "planned_submit_s": 84452,
+      "latest_submit_s": 84457,
+      "issue_window_end_s": 84600,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0376",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-9-batch",
+      "planned_submit_s": 84462,
+      "latest_submit_s": 84467,
+      "issue_window_end_s": 84600,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0377",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-9-batch",
+      "planned_submit_s": 84472,
+      "latest_submit_s": 84477,
+      "issue_window_end_s": 84600,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0378",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-9-batch",
+      "planned_submit_s": 84482,
+      "latest_submit_s": 84487,
+      "issue_window_end_s": 84600,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    },
+    {
+      "slot_id": "W0379",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-9-batch",
+      "planned_submit_s": 84492,
+      "latest_submit_s": 84497,
+      "issue_window_end_s": 84600,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0380",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-9-batch",
+      "planned_submit_s": 84502,
+      "latest_submit_s": 84507,
+      "issue_window_end_s": 84600,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "code_explain"
+    },
+    {
+      "slot_id": "W0381",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-9-batch",
+      "planned_submit_s": 84512,
+      "latest_submit_s": 84517,
+      "issue_window_end_s": 84600,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "translation"
+    },
+    {
+      "slot_id": "W0382",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-9-batch",
+      "planned_submit_s": 84522,
+      "latest_submit_s": 84527,
+      "issue_window_end_s": 84600,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "compare"
+    },
+    {
+      "slot_id": "W0383",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-9-batch",
+      "planned_submit_s": 84532,
+      "latest_submit_s": 84537,
+      "issue_window_end_s": 84600,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0384",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-9-batch",
+      "planned_submit_s": 84542,
+      "latest_submit_s": 84547,
+      "issue_window_end_s": 84600,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "qa_network"
+    },
+    {
+      "slot_id": "W0385",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-9-batch",
+      "planned_submit_s": 84552,
+      "latest_submit_s": 84557,
+      "issue_window_end_s": 84600,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "rewrite"
+    },
+    {
+      "slot_id": "W0386",
+      "stage_id": "irregular_mix",
+      "block_id": "mix-9-batch",
+      "planned_submit_s": 84562,
+      "latest_submit_s": 84567,
+      "issue_window_end_s": 84600,
+      "min_gap_after_previous_end_s": 0,
+      "task_id": "summary"
+    }
+  ],
+  "plan_sha256": "14ed7fedbda1eec0d50a36e0dd3becd6b618820f616a231c394b87bfa603b69f"
+}

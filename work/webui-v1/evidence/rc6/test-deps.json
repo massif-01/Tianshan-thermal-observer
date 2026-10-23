@@ -1,0 +1,19 @@
+{
+  "path": "/private/tmp/tto-rc6-test-deps",
+  "test_only_modules": [
+    "_pytest",
+    "iniconfig",
+    "jsonschema",
+    "jsonschema_specifications",
+    "packaging",
+    "pluggy",
+    "py.py",
+    "pytest",
+    "pytest_asyncio",
+    "referencing",
+    "rpds"
+  ],
+  "production_modules_excluded": true,
+  "pytest_autoload": false,
+  "explicit_plugin": "pytest_asyncio.plugin"
+}

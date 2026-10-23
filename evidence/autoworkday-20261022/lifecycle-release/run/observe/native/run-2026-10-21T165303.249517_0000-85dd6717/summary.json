@@ -1,0 +1,179 @@
+{
+  "stop_reason": "SIGTERM",
+  "poll_missed": 0,
+  "poll_count": 18,
+  "connection_attempts": 1,
+  "payload_oversize": 0,
+  "orin_event_count": 14,
+  "business_payload_bytes_sum": 22125,
+  "business_payload_bytes_max": 1581,
+  "poll_rtt_ms": [
+    3.185209003277123,
+    1.8323330441489816,
+    0.9169999975711107,
+    0.9572920389473438,
+    2.7735409094020724,
+    1.5029999194666743,
+    1.6637080116197467,
+    1.384916016831994,
+    2.106166910380125,
+    1.6622920520603657,
+    1.53870799113065,
+    2.2635830100625753,
+    2.4009589105844498,
+    1.812125090509653,
+    1.7475839704275131,
+    2.229875070042908,
+    2.7411249466240406,
+    2.4093330139294267
+  ],
+  "prediction_ms": [
+    10.393957956694067,
+    0.7382079493254423,
+    0.811041914857924
+  ],
+  "rss_mib": [
+    69.78125,
+    69.921875,
+    70.09375,
+    70.40625,
+    70.46875,
+    70.546875,
+    70.65625,
+    70.671875,
+    70.703125,
+    70.84375,
+    70.859375,
+    70.875,
+    70.875,
+    70.921875
+  ],
+  "cpu_pct_single_core": [
+    2.4253993782294376,
+    1.1428759626989091,
+    1.1734368104466342,
+    1.71738848975546,
+    1.2504630321593995,
+    1.9470442987519243,
+    2.10259296880385,
+    1.1299166473125701,
+    1.5459165250220719,
+    2.2685867376146893,
+    1.5669083022220724,
+    1.4628606920645753,
+    1.710631754898709,
+    1.5055560562018626
+  ],
+  "elapsed_s": 14.24470424989704,
+  "queue_peak_items": 2,
+  "queue_peak_bytes": 1960,
+  "dropped": 0,
+  "quality": {
+    "boundary_socketio_connecting": 1,
+    "boundary_control_context_change": 1,
+    "boundary_stream": 1,
+    "new_samples": 14,
+    "boundary_input_boundary": 1,
+    "boundary_input_profile_change": 1,
+    "boundary_socketio_disconnected": 1,
+    "boundary_run_end": 1
+  },
+  "processing": {
+    "fan_ok": 15,
+    "temp_ok": 3,
+    "origins": 3
+  },
+  "target_host_verified": false,
+  "polling_health": {
+    "contract": "TTO-POLL-INDEPENDENT-v1",
+    "max_inflight_per_endpoint": 1,
+    "max_total_inflight_limit": 2,
+    "max_total_inflight_observed": 2,
+    "end_inflight": 0,
+    "legacy_config_max_inflight_esp32": 1,
+    "endpoints": {
+      "fan": {
+        "sent": 15,
+        "returned": 15,
+        "http_ok": 15,
+        "errors": 0,
+        "skipped": 0,
+        "cancelled": 0,
+        "peak_inflight": 1,
+        "rtt_ms": {
+          "n": 15,
+          "retained_n": 15,
+          "p50": 1.812125090509653,
+          "p95": 2.897041337564587,
+          "min": 0.9169999975711107,
+          "max": 3.185209003277123
+        },
+        "send_interval_s": {
+          "n": 14,
+          "retained_n": 14,
+          "p50": 1.0006606039823964,
+          "p95": 1.0056656523025596,
+          "min": 1.000185834011063,
+          "max": 1.0057972500799224
+        },
+        "return_interval_s": {
+          "n": 14,
+          "retained_n": 14,
+          "p50": 1.0008984374580905,
+          "p95": 1.0056615329289342,
+          "min": 0.997917625005357,
+          "max": 1.0063084999565035
+        }
+      },
+      "temp": {
+        "sent": 3,
+        "returned": 3,
+        "http_ok": 3,
+        "errors": 0,
+        "skipped": 0,
+        "cancelled": 0,
+        "peak_inflight": 1,
+        "rtt_ms": {
+          "n": 3,
+          "retained_n": 3,
+          "p50": 1.8323330441489816,
+          "p95": 2.344096323940903,
+          "min": 1.6637080116197467,
+          "max": 2.4009589105844498
+        },
+        "send_interval_s": {
+          "n": 2,
+          "retained_n": 2,
+          "p50": 5.001468729053158,
+          "p95": 5.002081798267318,
+          "min": 5.000787541037425,
+          "max": 5.002149917068891
+        },
+        "return_interval_s": {
+          "n": 2,
+          "retained_n": 2,
+          "p50": 5.001753041986376,
+          "p95": 5.001958467031363,
+          "min": 5.00152479193639,
+          "max": 5.001981292036362
+        }
+      }
+    }
+  },
+  "diagnostic_history_contract": {
+    "max_retained_per_series": 4096,
+    "percentiles": "last4096; full raw/resource journals preserved",
+    "sample_totals": {
+      "poll_rtt_ms": 18,
+      "prediction_ms": 3,
+      "rss_mib": 14,
+      "cpu_pct_single_core": 14
+    }
+  },
+  "ended_at_utc": "2026-10-21T16:53:17.498051+00:00",
+  "observations": 48,
+  "observation_session_version": "TTO-OBSERVE-v1",
+  "native_legacy_max_s": 14400,
+  "session_max_s": 86400,
+  "session_max_bytes": 8589934592
+}

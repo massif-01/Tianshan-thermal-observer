@@ -1,0 +1,5 @@
+{"event": "startup_scheduled", "mono_s": 59.80218816699926, "at_utc": "2026-10-20T12:30:15.920966+00:00", "status": "starting", "stage": "baseline", "startup_budget_s": 3.0}
+{"event": "stop_sidecar_only", "mono_s": 60.005389750003815, "at_utc": "2026-10-20T12:30:16.124183+00:00", "status": "native_run_ending", "stage": "mux_check"}
+{"event": "startup_cancelled", "mono_s": 60.00560366699938, "at_utc": "2026-10-20T12:30:16.124396+00:00", "status": "native_run_ending", "stage": "mux_check"}
+{"event": "child_exit", "mono_s": 60.006116292090155, "at_utc": "2026-10-20T12:30:16.124909+00:00", "status": "native_run_ending", "stage": "mux_check", "child_stage": "mux_check", "returncode": -15, "child_pid": 1000010}
+{"event": "cleanup_finished", "mono_s": 60.00673900009133, "at_utc": "2026-10-20T12:30:16.125532+00:00", "status": "native_run_ending", "stage": "mux_check", "own_tasks_remaining": 0, "unreaped_children": 0}

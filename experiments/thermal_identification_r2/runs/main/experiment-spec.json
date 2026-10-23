@@ -1,0 +1,668 @@
+{
+  "execution_id": "TTO-ID-R2-v1.0",
+  "created_date": "2026-10-14",
+  "status": "preregistered_before_old_M_scores",
+  "repository": "massif-01/Tianshan-thermal-observer",
+  "remote_head_checked_in_this_handoff": false,
+  "historical_reference_commit": "a27ddb6f41c887fd9f08d4120f98d97eed31f4d0",
+  "allowed_code_scope": "new isolated research directory plus local documentation/indexes",
+  "run_ids": {
+    "L": "929742d7-6f4d-4d80-b53e-4436d45ac12c",
+    "S": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02",
+    "M": "637f114b-563b-4c35-8062-a7588a89ce1c"
+  },
+  "ambient_addendum": "metadata/M-ambient-user-confirmed.json",
+  "pipeline": [
+    "register_and_freeze",
+    "evaluate_frozen_old_models_on_M",
+    "second_identification"
+  ],
+  "freeze_before_stage2": [
+    "source_inventory",
+    "data_roles",
+    "eligibility",
+    "state_initialization",
+    "stage2_old_models",
+    "stage3_fit_matrix",
+    "fit_bounds_and_seeds",
+    "ambient_handling"
+  ],
+  "stage2": {
+    "target": "M",
+    "frozen_models": "references/frozen-old-model-index.json",
+    "primary_reference": "LS-fit",
+    "no_fitting_of_dynamic_or_ridge_parameters": true,
+    "no_overwriting_old_E": true,
+    "target_prefix_seconds": 60,
+    "boundary_rule": "past-prefix effective E then fixed for run; inherited rank fallback",
+    "state_window_seconds": 60,
+    "rollout_horizons_seconds": [
+      15,
+      45,
+      90
+    ],
+    "A_long": "known recorded future inputs; no future TJ feedback after prefix",
+    "A_roll": "same past-only state as B; known recorded future inputs, no future TJ",
+    "B": [
+      "HOLD",
+      "RELAX30"
+    ],
+    "future_floor": "frozen P10_fit only",
+    "eligibility_views": [
+      "strict_legacy_reference",
+      "TTO-EVAL-AVAIL-v2.0_stratified"
+    ],
+    "emit_before_stage3": "stage2-frozen-evaluation.json",
+    "interpretation": "new-process check of pre-existing parameters; not historical live emission or final blind confirmation"
+  },
+  "stage3": {
+    "models_main": [
+      "G1",
+      "G2",
+      "R_TJ",
+      "R_IO"
+    ],
+    "matrices": [
+      {
+        "id": "D-LM",
+        "fit": [
+          "L",
+          "M"
+        ],
+        "score": [
+          "S"
+        ],
+        "compare_to_frozen": "L-fit",
+        "role": "development_cross_workload_check_not_final_confirmation"
+      },
+      {
+        "id": "D-SM",
+        "fit": [
+          "S",
+          "M"
+        ],
+        "score": [
+          "L"
+        ],
+        "compare_to_frozen": "S-fit",
+        "role": "reverse_time_development_stress_check"
+      },
+      {
+        "id": "D-LSM",
+        "fit": [
+          "L",
+          "S",
+          "M"
+        ],
+        "score": [
+          "L",
+          "S",
+          "M"
+        ],
+        "compare_to_frozen": "LS-fit",
+        "role": "in_sample_description_not_generalization"
+      }
+    ],
+    "main_boundary": "E_r free with inherited bounds; record M ambient 24 separately, no physical identity assumption",
+    "ambient_diagnostic": {
+      "id": "D-LSM-G2-A24",
+      "fit": [
+        "L",
+        "S",
+        "M"
+      ],
+      "model": "G2",
+      "fixed_E": {
+        "M": 24.0
+      },
+      "unknown_E": [
+        "L",
+        "S"
+      ],
+      "seeds": [
+        "N1",
+        "N2",
+        "N3",
+        "N4",
+        "N5",
+        "N6"
+      ],
+      "role": "in_sample_boundary_hypothesis_diagnostic_not_primary_winner_selection",
+      "extra_offset_or_heat_input": false
+    },
+    "model_equations_and_bounds": {
+      "G1": {
+        "equation": "dT/dt=-(k0+k1*u)*(T-E_r)+b_g*P_g+b_c*P_c",
+        "dynamic_parameters": [
+          "k0",
+          "k1",
+          "b_g",
+          "b_c"
+        ],
+        "bounds": {
+          "k0": [
+            1e-06,
+            4
+          ],
+          "k1": [
+            0,
+            4
+          ],
+          "b_g": [
+            0,
+            5
+          ],
+          "b_c": [
+            0,
+            5
+          ]
+        }
+      },
+      "G2": {
+        "equations": [
+          "dT_f/dt=-a*(T_f-T_s)+b_g*P_g+b_c*P_c",
+          "dT_s/dt=c*(T_f-T_s)-(d0+d1*u)*(T_s-E_r)"
+        ],
+        "output": "T_f approximately reported TJ, not measured TTP",
+        "dynamic_parameters": [
+          "a",
+          "c",
+          "d0",
+          "d1",
+          "b_g",
+          "b_c"
+        ],
+        "bounds": {
+          "a": [
+            0.0001,
+            4
+          ],
+          "c": [
+            1e-06,
+            1
+          ],
+          "d0": [
+            1e-06,
+            1
+          ],
+          "d1": [
+            0,
+            1
+          ],
+          "b_g": [
+            0,
+            5
+          ],
+          "b_c": [
+            0,
+            5
+          ]
+        }
+      }
+    },
+    "initializations": [
+      {
+        "id": "N1",
+        "G1": {
+          "k0": 0.5,
+          "k1": 0.5,
+          "b_g": 0.08,
+          "b_c": 0.04
+        },
+        "G2": {
+          "a": 1,
+          "c": 0.02,
+          "d0": 0.01,
+          "d1": 0.02,
+          "b_g": 0.08,
+          "b_c": 0.04
+        }
+      },
+      {
+        "id": "N2",
+        "G1": {
+          "k0": 0.1,
+          "k1": 0.1,
+          "b_g": 0.04,
+          "b_c": 0.02
+        },
+        "G2": {
+          "a": 0.33,
+          "c": 0.005,
+          "d0": 0.003,
+          "d1": 0.006,
+          "b_g": 0.04,
+          "b_c": 0.02
+        }
+      },
+      {
+        "id": "N3",
+        "G1": {
+          "k0": 0.02,
+          "k1": 0.02,
+          "b_g": 0.02,
+          "b_c": 0.01
+        },
+        "G2": {
+          "a": 0.1,
+          "c": 0.002,
+          "d0": 0.001,
+          "d1": 0.002,
+          "b_g": 0.02,
+          "b_c": 0.01
+        }
+      },
+      {
+        "id": "N4",
+        "G1": {
+          "k0": 0.005,
+          "k1": 0.005,
+          "b_g": 0.01,
+          "b_c": 0.005
+        },
+        "G2": {
+          "a": 0.033,
+          "c": 0.001,
+          "d0": 0.0003,
+          "d1": 0.0006,
+          "b_g": 0.01,
+          "b_c": 0.005
+        }
+      },
+      {
+        "id": "N5",
+        "G1": {
+          "k0": 0.001,
+          "k1": 0.003,
+          "b_g": 0.03,
+          "b_c": 0.015
+        },
+        "G2": {
+          "a": 1,
+          "c": 0.001,
+          "d0": 0.001,
+          "d1": 0.006,
+          "b_g": 0.03,
+          "b_c": 0.015
+        }
+      },
+      {
+        "id": "N6",
+        "G1": {
+          "k0": 0.0002,
+          "k1": 0.001,
+          "b_g": 0.015,
+          "b_c": 0.0075
+        },
+        "G2": {
+          "a": 0.1,
+          "c": 0.0003,
+          "d0": 0.0001,
+          "d1": 0.001,
+          "b_g": 0.015,
+          "b_c": 0.0075
+        }
+      }
+    ],
+    "fit_weights": "equal run, equal present macroregime, then effective time, same rule for all old-new score comparisons",
+    "main_fit_count": 36,
+    "ambient_diagnostic_fit_count": 6,
+    "total_nonlinear_fit_limit": 42,
+    "max_nfev_each": 300,
+    "max_actual_residual_calls_each": 1500,
+    "huber_transition_C": 0.3,
+    "seed_selection": "training_objective_only",
+    "cv": "inherited training-side whole-valid-segment grouped CV; at most 3 folds; fewer than 2 groups -> lambda=1",
+    "ridge_lambda_grid": [
+      0.01,
+      0.1,
+      1,
+      10
+    ],
+    "ridge_columns": {
+      "R_TJ": 9,
+      "R_IO": 15
+    },
+    "independent_labels_per_horizon": true,
+    "evaluation": {
+      "past_prefix_seconds": 60,
+      "state_window_seconds": 60,
+      "strategies": [
+        "HOLD",
+        "RELAX30"
+      ],
+      "same_model_free_response_vs_rolling_separate": true,
+      "in_sample_fitted_initial_states_not_mixed_with_uniform_prefix_comparison": true
+    },
+    "no_new_model_family": true,
+    "no_online_parameter_updates": true,
+    "no_control_changes": true
+  },
+  "evaluation": {
+    "rule": "TTO-EVAL-AVAIL-v2.0",
+    "source_quality": "original per-run compatible validated processor; no runner-admission override applied to source/model eligibility",
+    "contexts": [
+      "confirmed_normal",
+      "aux_observation_gap",
+      "observed_abnormal_or_changed",
+      "unclassified_gap"
+    ],
+    "horizons_s": [
+      15,
+      45,
+      90
+    ],
+    "primary_horizon_s": 45,
+    "label_tolerance_s": 2,
+    "origin_schedule": "every actual accepted new sample; no invented observations",
+    "A_needs_complete_future_inputs": true,
+    "B_needs_no_future_inputs": true,
+    "current_and_history_inputs_strict": true,
+    "cohort_id_fields": [
+      "origin_ref",
+      "horizon_s",
+      "label_ref"
+    ],
+    "M_thermal_state": "continuous through M20/M60/M180 and recovery unless real qualification break; phase boundary is not state reset",
+    "post_stop_reference_windows_s": [
+      [
+        0,
+        5
+      ],
+      [
+        5,
+        15
+      ],
+      [
+        15,
+        45
+      ],
+      [
+        45,
+        90
+      ],
+      [
+        90,
+        300
+      ]
+    ],
+    "metrics": [
+      "MAE",
+      "RMSE",
+      "absolute_error_P95",
+      "bias",
+      "underprediction_P95",
+      "underprediction_max",
+      "coverage",
+      "peak_temperature_error",
+      "peak_time_offset",
+      "cooldown_window_error"
+    ],
+    "temperature_area_unit": "C*s_not_joules",
+    "comparison_prohibition": "no old MAE vs new MAE with different samples or fitted-state information budgets"
+  },
+  "compute": {
+    "device": "local CPU",
+    "blas_threads": 1,
+    "rss_target_GiB": 2,
+    "soft_compute_budget_s": 7200,
+    "production_dependency_changes": false
+  },
+  "stop": {
+    "device_access": false,
+    "new_load": false,
+    "deployment": false,
+    "fan_write": false,
+    "git_commit_push_pr": false,
+    "deployable": false
+  },
+  "deliverables": [
+    "TTO-旧模型新数据检验与第二轮辨识报告.md",
+    "TTO-旧模型新数据检验与第二轮辨识证据包.zip"
+  ],
+  "frozen_at": "2026-10-13T19:36:37.574821+00:00",
+  "models": {
+    "G1": {
+      "equation": "dT/dt=-(k0+k1*u)*(T-E_r)+b_g*P_g+b_c*P_c",
+      "dynamic_parameters": [
+        "k0",
+        "k1",
+        "b_g",
+        "b_c"
+      ],
+      "bounds": {
+        "k0": [
+          1e-06,
+          4
+        ],
+        "k1": [
+          0,
+          4
+        ],
+        "b_g": [
+          0,
+          5
+        ],
+        "b_c": [
+          0,
+          5
+        ]
+      }
+    },
+    "G2": {
+      "equations": [
+        "dT_f/dt=-a*(T_f-T_s)+b_g*P_g+b_c*P_c",
+        "dT_s/dt=c*(T_f-T_s)-(d0+d1*u)*(T_s-E_r)"
+      ],
+      "output": "T_f approximately reported TJ, not measured TTP",
+      "dynamic_parameters": [
+        "a",
+        "c",
+        "d0",
+        "d1",
+        "b_g",
+        "b_c"
+      ],
+      "bounds": {
+        "a": [
+          0.0001,
+          4
+        ],
+        "c": [
+          1e-06,
+          1
+        ],
+        "d0": [
+          1e-06,
+          1
+        ],
+        "d1": [
+          0,
+          1
+        ],
+        "b_g": [
+          0,
+          5
+        ],
+        "b_c": [
+          0,
+          5
+        ]
+      }
+    }
+  },
+  "fit": {
+    "solver": "scipy.optimize.least_squares",
+    "method": "trf",
+    "x_scale": "jac",
+    "float": "float64",
+    "loss": "time_weighted_huber_on_unweighted_C_residual",
+    "huber_transition_C": 0.3,
+    "weights": "equal_run_then_equal_present_macroregime_then_effective_time",
+    "macroregime_order": [
+      "work_or_short_event_to_end_plus_30s_capped_at_next_submit",
+      "labelled_recovery_not_in_work",
+      "remaining_background"
+    ],
+    "seed_selection": "minimum_finite_converged_training_objective_only",
+    "max_nfev": 300,
+    "max_actual_residual_calls_per_seed": 1500,
+    "main_fits_max": 42,
+    "BLAS_threads": 1,
+    "rss_target_MiB": 2048,
+    "total_soft_budget_s": 7200
+  },
+  "ridge": {
+    "TJ_lags_s": [
+      5,
+      15,
+      30,
+      60
+    ],
+    "TJ_means_s": [
+      10,
+      30
+    ],
+    "TJ_slopes_s": [
+      10,
+      30
+    ],
+    "R_TJ_n_columns": 9,
+    "R_IO_added_groups": [
+      "u_current_and_mean30",
+      "P_g_current_and_mean30",
+      "P_c_current_and_mean30"
+    ],
+    "R_IO_n_columns": 15,
+    "lambda_grid": [
+      0.01,
+      0.1,
+      1,
+      10
+    ],
+    "CV": "fit_side_only_whole_valid_segment_groups_up_to_3_folds",
+    "CV_fallback_lambda": 1,
+    "near_tie_C": 0.01,
+    "label_eligibility": "separate_per_horizon",
+    "alpha_mapping": "lambda * sum_sample_weights",
+    "target": "delta_T"
+  },
+  "initializations": [
+    {
+      "id": "N1",
+      "G1": {
+        "k0": 0.5,
+        "k1": 0.5,
+        "b_g": 0.08,
+        "b_c": 0.04
+      },
+      "G2": {
+        "a": 1,
+        "c": 0.02,
+        "d0": 0.01,
+        "d1": 0.02,
+        "b_g": 0.08,
+        "b_c": 0.04
+      }
+    },
+    {
+      "id": "N2",
+      "G1": {
+        "k0": 0.1,
+        "k1": 0.1,
+        "b_g": 0.04,
+        "b_c": 0.02
+      },
+      "G2": {
+        "a": 0.33,
+        "c": 0.005,
+        "d0": 0.003,
+        "d1": 0.006,
+        "b_g": 0.04,
+        "b_c": 0.02
+      }
+    },
+    {
+      "id": "N3",
+      "G1": {
+        "k0": 0.02,
+        "k1": 0.02,
+        "b_g": 0.02,
+        "b_c": 0.01
+      },
+      "G2": {
+        "a": 0.1,
+        "c": 0.002,
+        "d0": 0.001,
+        "d1": 0.002,
+        "b_g": 0.02,
+        "b_c": 0.01
+      }
+    },
+    {
+      "id": "N4",
+      "G1": {
+        "k0": 0.005,
+        "k1": 0.005,
+        "b_g": 0.01,
+        "b_c": 0.005
+      },
+      "G2": {
+        "a": 0.033,
+        "c": 0.001,
+        "d0": 0.0003,
+        "d1": 0.0006,
+        "b_g": 0.01,
+        "b_c": 0.005
+      }
+    },
+    {
+      "id": "N5",
+      "G1": {
+        "k0": 0.001,
+        "k1": 0.003,
+        "b_g": 0.03,
+        "b_c": 0.015
+      },
+      "G2": {
+        "a": 1,
+        "c": 0.001,
+        "d0": 0.001,
+        "d1": 0.006,
+        "b_g": 0.03,
+        "b_c": 0.015
+      }
+    },
+    {
+      "id": "N6",
+      "G1": {
+        "k0": 0.0002,
+        "k1": 0.001,
+        "b_g": 0.015,
+        "b_c": 0.0075
+      },
+      "G2": {
+        "a": 0.1,
+        "c": 0.0003,
+        "d0": 0.0001,
+        "d1": 0.001,
+        "b_g": 0.015,
+        "b_c": 0.0075
+      }
+    }
+  ],
+  "implementation_decisions": {
+    "source_expiry": "accepted_measurement_anchor_not_later_rejected_message",
+    "processors": {
+      "LS": "archived v1 validated processor; accepted values verified exactly",
+      "M": "22 manifest-SHA-matching source files"
+    },
+    "labels": "first same-source accepted TJ >=nominal h and <=h+2s; independent per horizon",
+    "ridge_training": "current strict-segment origins; own TJ/IO past eligibility; legal future TJ labels need no future auxiliaries; whole strict-segment grouped CV",
+    "state": "60s past only, first qualifying prefix calibrates E once/run; rank<1e-6 fallback median training E; later true breaks reinitialize state only",
+    "fair_joint_comparison": "past prefix E calibration also for training runs; full-fit nuisance reconstruction reported separately",
+    "current_input": "latest actual event power and successful PWM; no gain or 5V sum; unchanged TTL",
+    "context_unknown": "unclassified_gap if unknown context; observed changes/flags never normal",
+    "M_phases": "UTC join to actual phase markers; no reset at work/cooldown boundary"
+  }
+}

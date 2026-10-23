@@ -1,0 +1,5 @@
+{
+  "issue": "Initial audit equated separately sampled client end and duration at 1e-8 seconds.",
+  "resolution": "Comparison tolerance for request timing arithmetic is 0.001 s; actual maximum difference is 0.000022122 s. No source records or product code changed.",
+  "other_limits": "No full software test suite, device access, or new model fitting."
+}

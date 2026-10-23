@@ -1,0 +1,15 @@
+[
+  {
+    "mode": "--plan",
+    "returncode": 0,
+    "stdout": "{\n  \"trial_id\": \"TTO-MIDLOAD-DEV-v1.0\",\n  \"mode\": \"dry_run\",\n  \"connected\": false,\n  \"credentials_read\": false,\n  \"nominal_duration_s\": 2480,\n  \"hard_limit_s\": 2700,\n  \"initial_check_within_background_s\": 180,\n  \"strict_history_s\": 60,\n  \"phases\": [\n    {\n      \"id\": \"resident_background\",\n      \"kind\": \"passive\",\n      \"duration_s\": 600\n    },\n    {\n      \"id\": \"M20\",\n      \"kind\": \"work\",\n      \"duration_s\": 20\n    },\n    {\n      \"id\": \"cooldown_1\",\n      \"kind\": \"passive\",\n      \"duration_s\": 420\n    },\n    {\n      \"id\": \"M60\",\n      \"kind\": \"work\",\n      \"duration_s\": 60\n    },\n    {\n      \"id\": \"cooldown_2\",\n      \"kind\": \"passive\",\n      \"duration_s\": 600\n    },\n    {\n      \"id\": \"M180\",\n      \"kind\": \"work\",\n      \"duration_s\": 180\n    },\n    {\n      \"id\": \"final_cooldown\",\n      \"kind\": \"passive\",\n      \"duration_s\": 600\n    }\n  ],\n  \"max_total_requests\": 256,\n  \"max_tokens\": 256,\n  \"max_inflight\": 1,\n  \"max_request_wall_s\": 30,\n  \"max_drain_s\": 30,\n  \"model\": \"review-owned-model\",\n  \"inference_target_configured\": true,\n  \"tto_config_path\": \"/Users/massif/Tianshan-thermal-observer/evidence/prep-midload-v1/repair-r1-r2/original-reproduction/import-fixture/tto.json\",\n  \"ambient_temperature_default\": null,\n  \"not_thermal_equilibrium\": true,\n  \"message\": \"约41分20秒；20/60/180秒是单路请求发起窗口，已有请求自然结束；最多45分钟。当前只预览，未连接设备。\"\n}\nREVIEW_IMPORT={\"version\": \"0.2.2\", \"file\": \"/Users/massif/Tianshan-thermal-observer/evidence/prep-midload-v1/repair-r1-r2/original-reproduction/legacy-022-source/tto/__init__.py\", \"network_attempts\": []}\n",
+    "stderr": ""
+  },
+  {
+    "mode": "--live",
+    "returncode": 2,
+    "stdout": "REVIEW_IMPORT={\"version\": \"0.2.2\", \"file\": \"/Users/massif/Tianshan-thermal-observer/evidence/prep-midload-v1/repair-r1-r2/original-reproduction/legacy-022-source/tto/__init__.py\", \"network_attempts\": []}\n",
+    "stderr": "本地配置不完整或不可用；未启动测试。请按操作卡核对配置路径。\n"
+  }
+]
+COUNTEREXAMPLE CONFIRMED: installed 0.2.3; plan succeeds; live resolves old 0.2.2 and fails without networking.

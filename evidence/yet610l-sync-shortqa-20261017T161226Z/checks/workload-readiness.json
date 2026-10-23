@@ -1,0 +1,65 @@
+{
+  "checked_at_utc": "2026-10-17T16:12:30.108494+00:00",
+  "status": "preparation_complete_waiting_explicit_start",
+  "model_advertised": {
+    "id": "RM-01 VLM",
+    "root": "/home/rm01/models/dev/llm/Qwen3.8-27B-NVFP4/",
+    "max_model_len": 262144
+  },
+  "weights_hash": "not verified",
+  "model_metrics_at_check": {
+    "vllm:num_requests_running": 0.0,
+    "vllm:num_requests_waiting": 0.0
+  },
+  "known_other_inference_at_check": false,
+  "other_collection_tasks": {
+    "known_process_matches": [],
+    "scope": "N305 known process names; no matches at check"
+  },
+  "existing_software_identity": "unknown: SSH host key mismatch",
+  "ssh": {
+    "authenticated_control_socket": "/private/tmp/yet610l-sync-n305-ssh",
+    "host": "rm01@10.10.99.99",
+    "authentication": "passed via coordinator existing socket",
+    "known_hosts": "/private/tmp/yet610l-n305-known-hosts",
+    "credentials_read_or_saved": false
+  },
+  "reuse_script": "/Users/massif/Tianshan-thermal-observer/evidence/short-qa-20261013/workload/run.py",
+  "reuse_script_sha256": "9590bd36f0c673b347233f27d6a65a8777d470783dd39875f4e6fde88e0cd6ea",
+  "reuse_limitations": [
+    "Old script embeds historical run/path/deadline and an older telemetry gate; cannot run unchanged",
+    "New phase schedule and external native admission binding still required"
+  ],
+  "question_source": "/Users/massif/Tianshan-thermal-observer/evidence/short-qa-20261013/02-短问答题目.json",
+  "all_18_prepared_payloads_match_original_actual_payloads": true,
+  "new_inference_requests": 0,
+  "new_collections": 0,
+  "old_M_override_inherited": false,
+  "pending": [
+    "Collector run/deadline/binding generated only after approved start",
+    "User confirms probe fixed/instrument recording and 可以开始本轮"
+  ],
+  "prepared_plan_path": "/Users/massif/Tianshan-thermal-observer/evidence/yet610l-sync-shortqa-20261017T161226Z/workload/frozen-request-plan.json",
+  "updated_at_utc": "2026-10-17T16:17:32.707512+00:00",
+  "shared_directory": "/Users/massif/Tianshan-thermal-observer/evidence/yet610l-sync-shortqa-20261017T161226Z",
+  "load_only_script": "/Users/massif/Tianshan-thermal-observer/evidence/yet610l-sync-shortqa-20261017T161226Z/workload/run_load_only.py",
+  "current_installed_software": {
+    "checked_prefix": "/home/rm01/TTO-midload-0.2.4",
+    "version": "0.2.4",
+    "isolated_python": "/home/rm01/TTO-midload-0.2.4/conda-env/bin/python",
+    "collector_prefix_selection": "coordinator owns selection",
+    "other_existing_prefix": {
+      "prefix": "/home/rm01/TTO",
+      "version": "0.2.2",
+      "import_path": "/home/rm01/TTO/conda-env/lib/python3.10/site-packages/tto/__init__.py"
+    }
+  },
+  "native_admission_interface": "coordinator file: run_id, clock_host, collection_state, abnormal, current_ready, valid_until_mono_s; no override; needs confirmation/binding",
+  "remote_clock_observation": "Sat Oct 17 16:14:25 UTC 2026",
+  "selected_collector_python": "/home/rm01/TTO-midload-0.2.4/conda-env/bin/python",
+  "native_admission_contract": "Coordinator-confirmed: run_id/clock_host/collection_state/abnormal/current_ready/valid_until_mono_s; original TrialHealth without override",
+  "remote_session": "/home/rm01/TTO-sync-experiments/yet610l-sync-shortqa-20261017T161226Z",
+  "remote_script": "/home/rm01/TTO-sync-experiments/yet610l-sync-shortqa-20261017T161226Z/workload/run_load_only.py",
+  "script_sha256": "b7a71ad3bf258ecf7255a59b2ed8d85eae83103da70ff7538cd99f75c8ad489b",
+  "service_checks": "Before every actual submit: /v1/models original root and /metrics running=waiting=0; stop further requests on conflict/missing data"
+}

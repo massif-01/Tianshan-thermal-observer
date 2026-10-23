@@ -1,0 +1,20 @@
+{
+  "qualified": false,
+  "checks": {
+    "thread_policy": true,
+    "baseline_resources": true,
+    "native_delay_budget": true,
+    "complete_native": true,
+    "packets": true,
+    "clock_identified": true,
+    "cpu_measured": false,
+    "read_budget": true,
+    "jitter_budget": true,
+    "no_sidecar_trip": true,
+    "native_fan_gap": true
+  },
+  "actual_sidecar_interval": {
+    "start_mono_s": 30.07653170800768,
+    "stop_mono_s": 60.03855391591787
+  }
+}

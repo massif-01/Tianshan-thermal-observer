@@ -1,0 +1,1679 @@
+{
+  "id": "PVT_kwHOCoNcq84BnjKJ",
+  "number": 3,
+  "title": "TTO · Product Roadmap",
+  "url": "https://github.com/users/massif-01/projects/3",
+  "public": false,
+  "closed": false,
+  "shortDescription": "TTO 产品路线：P0–P7 / Control；限定历史成果、当前三线离线任务与未来交付。无获批日期，保留未排期入口。",
+  "readme": "<!-- TTO-PROJECTS-R2 -->\n# TTO 产品路线与执行入口\n\n[主 Issue #1](https://github.com/massif-01/Tianshan-thermal-observer/issues/1) 保存当前执行合同；[产品 Roadmap R2 候选](https://github.com/massif-01/Tianshan-thermal-observer/blob/6fcf46dccb99c88564d54381e7228262c54b1cad/docs/roadmap/PRODUCT-ROADMAP.md) 对应 [文档 PR #13](https://github.com/massif-01/Tianshan-thermal-observer/pull/13)，未合并状态以实时 PR 为准。PR #7/#11/#12 已合并。\n\n- [产品路线 / Table](https://github.com/users/massif-01/projects/3/views/1)：全部节点，Phase 分组，Horizon / Priority 排序；Kind 区分总览、交付和任务。\n- [执行状态 / Board](https://github.com/users/massif-01/projects/3/views/2)：Status 分栏，隐藏 Overview；保留历史 Done。\n- [已排期时间轴 / Roadmap](https://github.com/users/massif-01/projects/3/views/3)：Start date → Target date，仅显示两个日期均有值的节点。\n- [未排期 / Table](https://github.com/users/massif-01/projects/3/views/4)：没有 Start date / Target date 的卡片。当前没有获批日期，日期保持为空；先后由 Now / Next / Later 表达。\n\n| 稳定节点 | 既有 Issue |\n|---|---|\n| TTO-RM:OVERVIEW | #1 https://github.com/massif-01/Tianshan-thermal-observer/issues/1 |\n| TTO-RM:P3-STATE | #8 https://github.com/massif-01/Tianshan-thermal-observer/issues/8 |\n| TTO-RM:P3-IO | #9 https://github.com/massif-01/Tianshan-thermal-observer/issues/9 |\n| TTO-RM:P4-PLAN | #10 https://github.com/massif-01/Tianshan-thermal-observer/issues/10 |\n\n其余 draft 以正文 `TTO-RM:<id>` 去重，保留交付、验收、证据、局限和 depends-on。原生 #1 → #8/#9/#10 表示拆解；不添加 #10 blocked-by #8/#9。未来 draft 不转 Issue 来凑原生关系。\n\nDone 仅表示 P0-DATA / P1-MODELS / P2-STATES / P2-YET 四个有证据的限定历史交付，不代表阶段全完成、模型全场景有用或控制获准。#1 为持续总览，不计产品交付完成率；#8/#9/#10 没有执行提交或用户确认前保持 Todo。Blocked 仅用于真实外部阻断，Later 不是 Blocked。\n\nResponsible chat 为职责入口文本，不是 GitHub Assignee。Priority：当前三项 Task 为 High，历史及 Next 为 Normal，未来 Later 为 Low。此排序不授权实施。\n\n本项目 private、owner massif-01。Auto-close issue 已关闭；不自动归档历史 Done。工程、设备、部署、负载、风扇控制分别按各自授权办理，卡片或 Done 均不授予这些权限。\n",
+  "owner": {
+    "login": "massif-01"
+  },
+  "repositories": {
+    "nodes": [
+      {
+        "id": "R_kgDOVFKtLA",
+        "nameWithOwner": "massif-01/Tianshan-thermal-observer"
+      }
+    ],
+    "pageInfo": {
+      "hasNextPage": false,
+      "endCursor": "MQ"
+    }
+  },
+  "fields": {
+    "nodes": [
+      {
+        "id": "PVTF_lAHOCoNcq84BnjKJzhmHQWQ",
+        "name": "Title",
+        "dataType": "TITLE"
+      },
+      {
+        "id": "PVTF_lAHOCoNcq84BnjKJzhmHQWY",
+        "name": "Assignees",
+        "dataType": "ASSIGNEES"
+      },
+      {
+        "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQWg",
+        "name": "Status",
+        "dataType": "SINGLE_SELECT",
+        "options": [
+          {
+            "id": "f75ad846",
+            "name": "Todo",
+            "color": "GREEN",
+            "description": "This item hasn't been started"
+          },
+          {
+            "id": "47fc9ee4",
+            "name": "In Progress",
+            "color": "YELLOW",
+            "description": "This is actively being worked on"
+          },
+          {
+            "id": "98236657",
+            "name": "Done",
+            "color": "PURPLE",
+            "description": "This has been completed"
+          },
+          {
+            "id": "7ad14503",
+            "name": "Blocked",
+            "color": "RED",
+            "description": "真实外部阻断；Later不等于Blocked"
+          }
+        ]
+      },
+      {
+        "id": "PVTF_lAHOCoNcq84BnjKJzhmHQWs",
+        "name": "Labels",
+        "dataType": "LABELS"
+      },
+      {
+        "id": "PVTF_lAHOCoNcq84BnjKJzhmHQW0",
+        "name": "Linked pull requests",
+        "dataType": "LINKED_PULL_REQUESTS"
+      },
+      {
+        "id": "PVTF_lAHOCoNcq84BnjKJzhmHQW8",
+        "name": "Milestone",
+        "dataType": "MILESTONE"
+      },
+      {
+        "id": "PVTF_lAHOCoNcq84BnjKJzhmHQXE",
+        "name": "Repository",
+        "dataType": "REPOSITORY"
+      },
+      {
+        "id": "PVTF_lAHOCoNcq84BnjKJzhmHQXQ",
+        "name": "Reviewers",
+        "dataType": "REVIEWERS"
+      },
+      {
+        "id": "PVTF_lAHOCoNcq84BnjKJzhmHQXU",
+        "name": "Parent issue",
+        "dataType": "PARENT_ISSUE"
+      },
+      {
+        "id": "PVTF_lAHOCoNcq84BnjKJzhmHQXY",
+        "name": "Sub-issues progress",
+        "dataType": "SUB_ISSUES_PROGRESS"
+      },
+      {
+        "id": "PVTF_lAHOCoNcq84BnjKJzhmHQXc",
+        "name": "Created",
+        "dataType": "CREATED"
+      },
+      {
+        "id": "PVTF_lAHOCoNcq84BnjKJzhmHQXg",
+        "name": "Updated",
+        "dataType": "UPDATED"
+      },
+      {
+        "id": "PVTF_lAHOCoNcq84BnjKJzhmHQXk",
+        "name": "Closed",
+        "dataType": "CLOSED"
+      },
+      {
+        "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQoY",
+        "name": "Phase",
+        "dataType": "SINGLE_SELECT",
+        "options": [
+          {
+            "id": "0e95db5f",
+            "name": "P0",
+            "color": "GRAY",
+            "description": ""
+          },
+          {
+            "id": "3110df48",
+            "name": "P1",
+            "color": "GRAY",
+            "description": ""
+          },
+          {
+            "id": "ad68b8f4",
+            "name": "P2",
+            "color": "GRAY",
+            "description": ""
+          },
+          {
+            "id": "e07063e3",
+            "name": "P3",
+            "color": "GRAY",
+            "description": ""
+          },
+          {
+            "id": "8d000284",
+            "name": "P4",
+            "color": "GRAY",
+            "description": ""
+          },
+          {
+            "id": "1f7d8194",
+            "name": "P5",
+            "color": "GRAY",
+            "description": ""
+          },
+          {
+            "id": "2525e6db",
+            "name": "P6",
+            "color": "GRAY",
+            "description": ""
+          },
+          {
+            "id": "649da9e2",
+            "name": "P7",
+            "color": "GRAY",
+            "description": ""
+          },
+          {
+            "id": "41271fb8",
+            "name": "Control",
+            "color": "GRAY",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQ-8",
+        "name": "Horizon",
+        "dataType": "SINGLE_SELECT",
+        "options": [
+          {
+            "id": "f59e7052",
+            "name": "Now",
+            "color": "GRAY",
+            "description": ""
+          },
+          {
+            "id": "83e9003e",
+            "name": "Next",
+            "color": "GRAY",
+            "description": ""
+          },
+          {
+            "id": "beebca67",
+            "name": "Later",
+            "color": "GRAY",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRAA",
+        "name": "Kind",
+        "dataType": "SINGLE_SELECT",
+        "options": [
+          {
+            "id": "6752f2b0",
+            "name": "Overview",
+            "color": "GRAY",
+            "description": ""
+          },
+          {
+            "id": "de7d8720",
+            "name": "Delivery",
+            "color": "GRAY",
+            "description": ""
+          },
+          {
+            "id": "b60f56c8",
+            "name": "Task",
+            "color": "GRAY",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRBU",
+        "name": "Priority",
+        "dataType": "SINGLE_SELECT",
+        "options": [
+          {
+            "id": "39e65c7a",
+            "name": "High",
+            "color": "GRAY",
+            "description": ""
+          },
+          {
+            "id": "2ea5dcc7",
+            "name": "Normal",
+            "color": "GRAY",
+            "description": ""
+          },
+          {
+            "id": "0f58e08e",
+            "name": "Low",
+            "color": "GRAY",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "id": "PVTF_lAHOCoNcq84BnjKJzhmHRCQ",
+        "name": "Responsible chat",
+        "dataType": "TEXT"
+      },
+      {
+        "id": "PVTF_lAHOCoNcq84BnjKJzhmHRCU",
+        "name": "Start date",
+        "dataType": "DATE"
+      },
+      {
+        "id": "PVTF_lAHOCoNcq84BnjKJzhmHRCY",
+        "name": "Target date",
+        "dataType": "DATE"
+      }
+    ],
+    "pageInfo": {
+      "hasNextPage": false,
+      "endCursor": "MjA"
+    }
+  },
+  "views": {
+    "nodes": [
+      {
+        "id": "PVTV_lAHOCoNcq84BnjKJzgMHUXA",
+        "name": "产品路线",
+        "number": 1,
+        "layout": "TABLE_LAYOUT",
+        "filter": ""
+      },
+      {
+        "id": "PVTV_lAHOCoNcq84BnjKJzgMHUc8",
+        "name": "执行状态",
+        "number": 2,
+        "layout": "BOARD_LAYOUT",
+        "filter": "-kind:Overview"
+      },
+      {
+        "id": "PVTV_lAHOCoNcq84BnjKJzgMHUdA",
+        "name": "已排期时间轴",
+        "number": 3,
+        "layout": "ROADMAP_LAYOUT",
+        "filter": "has:start-date has:target-date"
+      },
+      {
+        "id": "PVTV_lAHOCoNcq84BnjKJzgMHUdM",
+        "name": "未排期",
+        "number": 4,
+        "layout": "TABLE_LAYOUT",
+        "filter": "no:start-date no:target-date"
+      }
+    ],
+    "pageInfo": {
+      "hasNextPage": false,
+      "endCursor": "NA"
+    }
+  },
+  "items": {
+    "nodes": [
+      {
+        "id": "PVTI_lAHOCoNcq84BnjKJzhBjbj0",
+        "type": "ISSUE",
+        "isArchived": false,
+        "content": {
+          "id": "I_kwDOVFKtLM8AAAABWhSiEA",
+          "number": 1,
+          "url": "https://github.com/massif-01/Tianshan-thermal-observer/issues/1",
+          "title": "TTO 总路线图：通用自适应热建模与校准",
+          "body": "# TTO 总路线图：通用自适应热建模与校准\n\n<!-- TTO-MASTER-ROADMAP-v1 -->\n**当前版本：TTO-REVIEW-R2-20261018。** 本文是唯一当前行动入口；历史阶段、DEC、原始日志和旧失败成绩保留，不再在正文重复多套“当前下一步”。\n\n## 目标与成功的含义\n\n同一套软件能为不同热源、鳍片厚度、1060铝/铜材料、热容、风道和风扇生成、评价、校准各自的模型，减少人工标定。通用的是方法，不是某组固定参数；G2是当前候选，不要求所有硬件两状态，也不把自动结构搜索设为首版前提。\n\n成功要分别报告：数据是否可信且可用；模型对哪些任务有增量价值；适应新配置要多少数据/时间/人工；更新能否拒绝和回退。物理Ts、真实热容、跨硬件、线上参数学习与风扇收益不能提前完成。\n\n## 已有成果与当前瓶颈\n\n- L/S/M：真实长负载、短问答、中等负载；G1/G2和紧凑Ridge实际研究，36+42次有界拟合。旧LS-fit G2动态参数未用M拟合、过去前缀初始化后的M已知输入自由响应误差约0.369°C；不是提前预测到了未来任务。\n- 固定参数慢态、QS/LP30/LP120对照与平稳需求原型已完成；指数不是PWM，简单滤波也能提供平稳性。\n- YET短CSV映射已通过，Y同步现场记录也已完成：2027条局部鳍片温度、1843条有效TJ。原60秒初始化下352段、最长26.013秒，三套G2合法状态为0；模型—表面对照未完成。同期fan请求1256、1029成功、227超时；349处成功返回间隔>2.5秒。HTTP超时、成功快照的3份失温以及状态边界不相加当硬件故障数。\n- 用户确认：单风扇，1060铝鳍片约2mm，CH1位于出风口附近局部表面；短任务局部冷却与风量变化相容，但不是Ts已经被直接测到。接触/时钟/仪表响应限制保留；旧M的24°C不移到其他run。\n- 在线参数学习、跨材料/设备确认、实际模型控风扇及噪音收益仍未完成。\n\n**已公开Y证据：** [报告](https://github.com/massif-01/Tianshan-thermal-observer/blob/b85ccae98257c21b220d988c1afcfeae9f27c656/docs/reports/2026-10-18-yet610l-sync-shortqa/analysis-report.md)；其他历史材料见[研究索引](https://github.com/massif-01/Tianshan-thermal-observer/blob/b85ccae98257c21b220d988c1afcfeae9f27c656/docs/research/TTO-research-status-20261014.md)。\n\n## 当前三条工程工作线：可并行离线准备\n\n| Issue | 谁做、交什么 | 不应等待/不应越界 |\n|---|---|---|\n| #8 缺测状态与冷启动 | 建模对话；θ冻结，新run E使用有记录的先验或仅过去数据推断；冷启动/短缺口/异常分层与不确定性；只读接口 | 不等新实测；完整M估计不是Ts真值；不伪造PWM、不改TTL、不训练θ |\n| #9 fan/status通讯专项 | 新独立对话；M/Y源码/日志差分、证据分级，有依据可本地改相关TTO/ESP32源码并构建 | 不把本地修源码与部署混同；不改温控行为，不刷机、不连接设备 |\n| #10 混合长负载准备 | 测试总控；长1/2/4路、不等间歇、多模型分run、可复现计划/预算，消费#8/#9接口并离线集成 | 可先用fixture，不等两Issue关闭；真实API请求方唯一，当前不发请求 |\n\n三者用独立工作树，生产通讯候选文件由#9负责；#8/#10只消费接口。模型可用、测量有效、保护状态和用户授权分开。准备结束后一次离线集成复审，再安排用户在场的最小预检和正式混合实验；不再要求任何小缺口都重新连续等60秒，也不把条件估计当实测。\n\n**管理关系：** #8/#9/#10是本主路线的执行工作包。本轮读取原生sub_issues列表为空，当前只有文字关联；Projects管理任务应查重后添加原生父子关系并回读，不得声称文字链接已经完成原生层级。父子关系不等于blocked-by；三条准备任务并不互相串行阻塞。\n\n## 未来开放工作与路线映射\n\n产品P0—P7沿用现有编号；旧研究M0—M5保留：M0→P0；M1→P0/P4；M2→P1/P2/P5；M3→P3/P5；M4→P6；M5→P7。\n\n- [x] P0限定版本的数据链与既有实测。\n- [x] P1首轮/第二轮G1/G2/Ridge研究候选生成。\n- [x] P2固定参数慢态/滤波/需求离线对照，以及YET局部温度取得；不含物理映射验证。\n- [ ] P3缺测可用性与通讯修复证据，#8/#9；准备与现场有效性分开验收。\n- [ ] P4混合测试/新完整确认，#10；未来输入策略和快TJ/局部表面观测诊断保持独立开放，不再遗漏。\n- [ ] P5面向用户的模型生成器、受约束参数更新、候选验收/拒绝/回退；原固定θ状态更新不算完成。\n- [ ] P6不同材料/厚度/有效热容/风道/模组与第三方设备：先比较固定迁移、重训、少量校准；不必等全部在线学习实现才可开始。\n- [ ] P7许可/数据分享边界、可复现安装/示例/支持表与外部复验。\n- [ ] 独立控制后续：温度/性能/声音/故障与回退实证，另行授权，不因进入Project而获准调PWM。\n\n## 当前授权与版本边界\n\n允许本轮离线研究、局部候选源码/构建/模拟、测试工具、文档/Projects治理。用户不在现场：不得连接设备、部署/刷机/重启、发真实推理、修改AUTO/曲线/gain/保护或默默继承M/Y的特定执行override。工程代码本地交回复审，不自动推送或提软件PR。\n\n公开main、现场TTO 0.2.4与本地研究不是一个身份。PR #7、#11、#12已经合并；不得把新修订推回已合并PR的旧分支并声称进入main。产品/技术路线修订通过新的仅文档PR，不自动合并。\n\n## 历史、证据和维护\n\n原0.1.2哈希、DEC-001—020、旧M0—M5含义和方法边界保留在[固定旧技术文档](https://github.com/massif-01/Tianshan-thermal-observer/blob/b85ccae98257c21b220d988c1afcfeae9f27c656/docs/roadmap/TTO-roadmap.md)；旧评论/实验报告不编辑，不删除失败。当前正文替代此前重复的“尚待YET样例/尚未现场”的行动指令。\n\n每次更新只补实际完成、证据、限制、下一步。未开始/处理中/待复审/已接受区分，不因Issue已创建就算在做，更不因拖动Done自动关闭主Issue。Projects、Issue和Roadmap的语义统一，不计算虚假全项目完成率。新增事实/修订需先回读避免覆盖别人进展。\n",
+          "state": "OPEN",
+          "updatedAt": "2026-10-18T02:33:29Z",
+          "assignees": {
+            "nodes": [
+              {
+                "login": "massif-01"
+              }
+            ]
+          }
+        },
+        "fieldValues": {
+          "nodes": [
+            {},
+            {},
+            {},
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHQWQ",
+                "name": "Title"
+              },
+              "text": "TTO 总路线图：通用自适应热建模与校准"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQWg",
+                "name": "Status"
+              },
+              "optionId": "47fc9ee4",
+              "name": "In Progress"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQoY",
+                "name": "Phase"
+              },
+              "optionId": "0e95db5f",
+              "name": "P0"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQ-8",
+                "name": "Horizon"
+              },
+              "optionId": "f59e7052",
+              "name": "Now"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRAA",
+                "name": "Kind"
+              },
+              "optionId": "6752f2b0",
+              "name": "Overview"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRBU",
+                "name": "Priority"
+              },
+              "optionId": "2ea5dcc7",
+              "name": "Normal"
+            },
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHRCQ",
+                "name": "Responsible chat"
+              },
+              "text": "产品协调"
+            }
+          ]
+        }
+      },
+      {
+        "id": "PVTI_lAHOCoNcq84BnjKJzhBjbks",
+        "type": "ISSUE",
+        "isArchived": false,
+        "content": {
+          "id": "I_kwDOVFKtLM8AAAABX8WZxg",
+          "number": 8,
+          "url": "https://github.com/massif-01/Tianshan-thermal-observer/issues/8",
+          "title": "TTO：间歇缺测下的热状态估计、冷启动与可信度（离线研究）",
+          "body": "# #8｜间歇缺测下的热状态估计：冷启动、传播与可信度\n\nTTO-REVIEW-R2-20261018；关联主路线 #1。负责人：灰箱辨识与对照实验对话。状态：已授权离线准备/研究；实现完成与否以最新交付回执为准。本轮不是在线参数学习，不控制设备。\n\n## 要解决的产品问题\n\nYET同步轮有1843条有效TJ，却因原严格输入352段、最长26.013秒，小于60秒连续初始化要求而没有合法模型状态。要避免“有大量真实温度但整轮模型始终起不来”，同时不把未知输入假装为已测值。\n\n## 修订重点与实际任务\n\n1. 保留旧模型SHA、动态θ、旧资格和原0状态结果。先复现旧行为。首次启动、运行中的短缺口、长期缺失、真实身份/控制变更分开。\n2. **澄清E：冻结的是旧model.json和动态θ，不是强行冻结新run不存在的E。** 新run使用训练侧先验，或仅靠已到达TJ/功耗/可知PWM估计边界；在首个结果前登记方法、先验范围和信息预算。不得取完整M/Y的未来前缀结果、真实表面温度、默认24°C作冷启动答案。边界/状态推断与θ自学习分开。\n3. 实际实现一个低阶顺序状态估计候选和一个朴素条件保持参照。可使用线性/扩展滤波或等价有限窗口方法，但不强制大模型、不新增热模型族、不无界搜索。首次Tf可锚定当前有效TJ；Ts/E的未知程度必须显式保存，不能用Tf=Ts冒称热平衡。\n4. 短fan观测缺口可保留热历史并作**条件传播**，明确采用何种u假设、有效年龄及不确定性。到期的PWM原字段仍是无效。长期输入缺失必须降级/停输出；显式guard/fault/模式/绑定/源epoch变化按新合同阻止正常资格，不把“没有读到异常”写成“已确认正常”。HTTP超时与真实控制变更不能混成同一种重置。\n5. 用M较完整输入段制作可复现遮挡：从启动即缺测、建态后单缺口/簇状缺口、与负载转折重叠的缺口、超出支持范围的长缺口。使用Y的时间结构作开发模板，但隐藏M的PWM不可进入估计器、初态/E校准、质量旁路或参数选取；隐藏值只在评估层可见。遮挡副本另存，不改M。另有已知状态的合成系统校验数值与不确定性。\n6. 先冻结候选和有限参数，再回放真实Y；不得反复看Y的表面温度调到吻合。M遮挡用作开发，对完整M估计的偏差只称“与未遮挡参考的差异”；Y不提供真实Ts准确率。时钟映射未知继续限制外部逐秒评分。\n7. 给出相同起点/标签的15/45/90秒TJ误差、欠预测尾部、覆盖及恢复；同时给全量有效TJ分母上的可用覆盖。未来输入已知的A与仅起点信息的B分开，不为输出覆盖增加洗掉精度退化。所有数值门槛、噪声/先验、停止条件在看评估结果前记录；未经校准的带宽不得叫95%置信区间。\n8. 提供只读状态接口及离线消费示例给#10：run/model/spec身份、最新数据截止、phase（uninitialized/provisional/tracking/degraded/unavailable）、原因、当前真实测量资格、条件状态、未知输入年龄、可信度信息。**估计可用不等于安全准入。** 不新增设备轮询或部署服务。\n\n## 完成判据\n\n- [ ] 冷启动与运行中缺测均有实际代码及反例，不只是把60秒换成另一个常数。\n- [ ] 未来信息/隐藏PWM/表面温度泄漏检查通过；显式异常与普通观测缺口区别可复查。\n- [ ] 旧严格结果、朴素参照、新方法的覆盖和误差并列；有限值输出不自动变成tracking。\n- [ ] #10可使用假流/记录流验证同一状态接口，不必等真机。\n- [ ] 交可重跑代码/patch、spec、mask清单、逐点状态/预测/不确定性、测试、资源和中文报告；明确研究接受、现场待验。\n\n可立即离线实施，不依赖#9现场修复或#10新实测。不得改生产质量/TTL、部署风扇或重新拟合θ。\n",
+          "state": "OPEN",
+          "updatedAt": "2026-10-18T02:11:37Z",
+          "assignees": {
+            "nodes": []
+          }
+        },
+        "fieldValues": {
+          "nodes": [
+            {},
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHQWQ",
+                "name": "Title"
+              },
+              "text": "TTO：间歇缺测下的热状态估计、冷启动与可信度（离线研究）"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQWg",
+                "name": "Status"
+              },
+              "optionId": "f75ad846",
+              "name": "Todo"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQoY",
+                "name": "Phase"
+              },
+              "optionId": "e07063e3",
+              "name": "P3"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQ-8",
+                "name": "Horizon"
+              },
+              "optionId": "f59e7052",
+              "name": "Now"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRAA",
+                "name": "Kind"
+              },
+              "optionId": "b60f56c8",
+              "name": "Task"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRBU",
+                "name": "Priority"
+              },
+              "optionId": "39e65c7a",
+              "name": "High"
+            },
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHRCQ",
+                "name": "Responsible chat"
+              },
+              "text": "灰箱辨识"
+            }
+          ]
+        }
+      },
+      {
+        "id": "PVTI_lAHOCoNcq84BnjKJzhBjbk0",
+        "type": "ISSUE",
+        "isArchived": false,
+        "content": {
+          "id": "I_kwDOVFKtLM8AAAABX8WbhA",
+          "number": 9,
+          "url": "https://github.com/massif-01/Tianshan-thermal-observer/issues/9",
+          "title": "TTO：fan/status超时根因与本地修复候选（现场部署另批）",
+          "body": "# #9｜fan/status频繁超时：根因证据与本地修复候选\n\nTTO-REVIEW-R2-20261018；关联 #1。新建“fan/status通讯专项”对话。允许离线调查和有证据的本地源码修复；不允许实际部署或改变风扇行为。\n\n## 现象与数据\n\nY run 1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece：fan请求1256、成功1029、超时227（18.1%）；成功返回间隔超过原2.5秒有效期349处。成功快照中temp_stale=true为3份，TJ有效样本1843。M轮fan请求2508全部HTTP成功，最大成功返回间隔约1.075秒。数字来自原日志/独立统计，计数可能重叠；根因尚未知。\n\n## 范围与顺序\n\n1. 使用新包内Y完整原件、M完整原件、匹配运行源码及来源索引；不要让新对话只拿两行统计就猜固件。核对请求开始/结束/超时阶段、RTT、调度skip、重试/连接复用、响应大小、来源时间与成功PWM。当前main只作源码参考，不能替代当时固件/运行包身份。\n2. 按链路调查：TTO客户端/主机调度与超时 → HTTP连接及ESP-IDF请求处理 → fan/status快照和锁 → 同时发生的温度/WS/UI刷新与其他操作。对比M/Y配置、固件、客户端实际代码与观察负载；手动UI竞争只在存在记录或可复现机制时成立。\n3. 用自建loopback和host测试分别验证客户端慢请求、服务端排队、资源持有与恢复机制；可以构建ESP-IDF候选。模拟证明的是某种机制，不等于证明现场227次都由它造成。没有现场资料就明确指出最小取证需求，但先完成独立工作。\n4. **允许在隔离副本修改与证据直接相关的TTO/HTTP/ESP32源码，形成最小完整修复候选**。不再把“修改固件源码”误写为需要等用户回公司；真正刷入固件、安装部署、重启和连接现场仍要另行批准。若修法改变温控/保护/既有接口含义而非单纯读状态路径，先交方案，不越界实现。\n5. 不靠放宽TTL/吞掉失败/重复旧PWM重打时间戳来取得成功；HTTP超时参数、缓存、锁范围若需修改，说明为什么、资源影响与新鲜度关系。配置合理超时不是绝对禁止，但必须独立于源TTL，不能让“等得更久”冒充源已变新。状态快照必须保持一致性，不能为提速返回半更新字段或假零值。\n6. 对最小相关链做修前反例、修后验证、并发读/取消/超时恢复、版本与部署回退说明。不做无关全仓防御测试。通信侧拥有相关生产源码候选的唯一写入职责，#8/#10消费合同，不抢改同一文件。\n\n## 本轮交付及完成含义\n\n- [ ] 时间线/对比/原因分级：已证实、机制支持但现场未证实、未知。\n- [ ] 有证据则交源码patch、构建/host/loopback证据；无证据则交精确的最小现场取证步骤，不捏造修复。\n- [ ] 给#10可消费的来源健康摘要、版本身份与就绪说明；不另启第二采集器。\n- [ ] 中文报告明确“离线准备完成”和“现场问题已修复”不同。Issue不因论文式猜测或patch存在而自动关闭。\n\n本轮不得连接真实设备、部署/刷机/重启、修改AUTO/曲线/gain/保护、发负载、推送或提软件PR。用户回现场之后才能验证真实超时是否减少；这是下一阶段，不阻塞当前离线准备。\n",
+          "state": "OPEN",
+          "updatedAt": "2026-10-18T02:12:05Z",
+          "assignees": {
+            "nodes": []
+          }
+        },
+        "fieldValues": {
+          "nodes": [
+            {},
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHQWQ",
+                "name": "Title"
+              },
+              "text": "TTO：fan/status超时根因与本地修复候选（现场部署另批）"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQWg",
+                "name": "Status"
+              },
+              "optionId": "f75ad846",
+              "name": "Todo"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQoY",
+                "name": "Phase"
+              },
+              "optionId": "e07063e3",
+              "name": "P3"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQ-8",
+                "name": "Horizon"
+              },
+              "optionId": "f59e7052",
+              "name": "Now"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRAA",
+                "name": "Kind"
+              },
+              "optionId": "b60f56c8",
+              "name": "Task"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRBU",
+                "name": "Priority"
+              },
+              "optionId": "39e65c7a",
+              "name": "High"
+            },
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHRCQ",
+                "name": "Responsible chat"
+              },
+              "text": "新通讯专项"
+            }
+          ]
+        }
+      },
+      {
+        "id": "PVTI_lAHOCoNcq84BnjKJzhBjbk8",
+        "type": "ISSUE",
+        "isArchived": false,
+        "content": {
+          "id": "I_kwDOVFKtLM8AAAABX8WdOQ",
+          "number": 10,
+          "url": "https://github.com/massif-01/Tianshan-thermal-observer/issues/10",
+          "title": "TTO：混合长负载计划、离线调度与三线集成（实测另批）",
+          "body": "# #10｜混合长负载测试：多模型、不等间歇、可复现调度（仅准备）\n\nTTO-REVIEW-R2-20261018；关联 #1。原“实际安装与测试”对话负责；未来“模型推理监控”是唯一API请求端。本轮不实测，只完成软件、计划和离线集成。\n\n## 产品目的\n\n覆盖短/中/长工作、热前史和并发的真实差异，而不把任务数量当发热量。接受用户本机经验：27B稠密单路可高占用；MoE/小模型增加并发可增加占用。记录实际模型/量化/引擎、GPU利用率、各rail、实际执行/排队；未知服务端指标保留未知，不猜。\n\n## 实际准备\n\n1. 保留现有采集器与用户已经满意的AUTO。在独立实验脚本中复用已测试的请求/记录/停止组件，不复制另一套CSV解析或源质量算法；运行环境按真实候选身份加载，不用main覆盖现场0.2.4。\n2. 设计分批实验，不做模型×并发×时长的全组合。首要一轮含单路5–10分钟、双路3–6分钟、四路5–10分钟及热机后重复同一单路块；不同长度回落不自动等待相同温度。再用同一固定方案对本机已有的一个MoE或小模型比较；另有固定seed/清单的打散节奏作为后续完整run。单轮只用一个已驻留模型，加载/切换另记前史；跨run热历史仍保留，不把文件拆分当物理独立。\n3. 具体模板在修订包mix-plan.json：固定44.5分钟名义计划，整轮60分钟封顶，包含独立准备/自然完成/清理预算；另有有界不规则模板。时长是“维持N个请求槽位的发起窗口”，不是单条回复必须持续几分钟。工作块自然drain完成后再计回落；未知终止不能当作服务端已经停止。\n4. 请求长度、上下文/缓存、模型模板/采样及服务并发容量按现有本地信息填写冻结；未知模型ID留未配置，软件仍可用假服务完成。不下载/加载新模型、不在本轮试API。单路/2路/4路指客户端最多在途，真实调度另外报告。\n5. 衔接#8/#9的**单一数据流**。建立轻量readiness适配与假的契约输入：分别显示采集事实、估计器状态、设备保护、现场授权、仪表记录/时钟证据。研究就绪不代替安全准入；控制状态不明不因模型给了数值就放行。\n6. #10离线准备不等#8/#9结案，可先用接口fixture。进入正式“模型对照实验”要通过离线集成与最小现场预检，能证明将持续输出可用状态；不是硬要求两条Issue必须关闭或原连续60秒重新满足。无法满足时可另授权诊断记录，不能冒充正式模型验收。\n7. 沿用真实YET CSV映射，开始/结束以仪表运行钟对采集主机动态时钟建立独立锚点；显示到秒与误差区间分开。单通道CH1测局部鳍片，不同时冒称环境；室温另读/人工注明，无则未知，不复用旧M24°C。不调整探头位置来贴模型。\n8. 测试脚本按本机单调钟排程，聊天只传准备/开始/停止。只一份TTO采集、一条API调度链；幂等run/命令ID防双启动，停止后不自动重跑。不继承旧M/Y特定override。显式保护/故障、未知请求结束、用户停止、硬预算与数据失效分别记录；自然drain/无法确认服务停止须如实区别。\n\n## 交付和验收\n\n- [ ] 可执行离线plan/dry-run、假HTTP/SSE和虚拟时钟检查、单一collector/请求端证明。\n- [ ] 两种节奏/多模型分轮优先级、明确时间和请求上限，model/payload配置未决项列清。\n- [ ] #8/#9接口消费、开始前就绪与停止边界测试，不改原runner/collector的生产准入逻辑。\n- [ ] 一页产品语言操作卡、同run归档、实际时间/配置/探头/环境来源与评估角色。\n- [ ] 交软件patch、冻结plan/seed、模拟证据、唯一现场命令模板及报告；标“准备完成、实测未执行”。\n\n不得连接设备、调风扇、安装/部署或触发推理监控的真实API。本次不重训。新完整记录先评价冻结候选；后来用于开发便不再称独立确认，后续确认另留过程。\n",
+          "state": "OPEN",
+          "updatedAt": "2026-10-18T02:12:34Z",
+          "assignees": {
+            "nodes": []
+          }
+        },
+        "fieldValues": {
+          "nodes": [
+            {},
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHQWQ",
+                "name": "Title"
+              },
+              "text": "TTO：混合长负载计划、离线调度与三线集成（实测另批）"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQWg",
+                "name": "Status"
+              },
+              "optionId": "f75ad846",
+              "name": "Todo"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQoY",
+                "name": "Phase"
+              },
+              "optionId": "8d000284",
+              "name": "P4"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQ-8",
+                "name": "Horizon"
+              },
+              "optionId": "f59e7052",
+              "name": "Now"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRAA",
+                "name": "Kind"
+              },
+              "optionId": "b60f56c8",
+              "name": "Task"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRBU",
+                "name": "Priority"
+              },
+              "optionId": "39e65c7a",
+              "name": "High"
+            },
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHRCQ",
+                "name": "Responsible chat"
+              },
+              "text": "实际安装与测试"
+            }
+          ]
+        }
+      },
+      {
+        "id": "PVTI_lAHOCoNcq84BnjKJzhBjb2Y",
+        "type": "DRAFT_ISSUE",
+        "isArchived": false,
+        "content": {
+          "id": "DI_lAHOCoNcq84BnjKJzgLZ4vE",
+          "title": "[P0-DATA] 数据记录底座及L/S/M已取得",
+          "body": "<!-- TTO-RM:P0-DATA -->\n稳定节点：`TTO-RM:P0-DATA`\n\n用户价值：可追溯地知道机器实际温度、功耗和风扇背景\n\n交付与验收：限定版本/过程的数据与质量可追溯，不等于全场景通讯稳定\n\n依赖：无；见验收与权限边界。这是交付层依赖，不自动创建原生 blocked-by，也不要求前置 Issue 全部关闭。\n\n证据与限制：\n- https://github.com/massif-01/Tianshan-thermal-observer/blob/b85ccae98257c21b220d988c1afcfeae9f27c656/docs/research/TTO-research-status-20261014.md\n- https://github.com/massif-01/Tianshan-thermal-observer/tree/b85ccae98257c21b220d988c1afcfeae9f27c656/docs/reports\n\nDone仅表示上述限定历史交付，不能推断整个阶段完成、未来预测通过或现场控制获准。\n\n排期：未获批，Start date / Target date 保持空白，以 Horizon 表示先后。\n产品依据：#1 当前 R2 合同；文档候选 PR #13（未合并），固定 commit 6fcf46dccb99c88564d54381e7228262c54b1cad。\n",
+          "createdAt": "2026-10-18T02:59:42Z",
+          "updatedAt": "2026-10-18T02:59:42Z"
+        },
+        "fieldValues": {
+          "nodes": [
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHQWQ",
+                "name": "Title"
+              },
+              "text": "[P0-DATA] 数据记录底座及L/S/M已取得"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQWg",
+                "name": "Status"
+              },
+              "optionId": "98236657",
+              "name": "Done"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQoY",
+                "name": "Phase"
+              },
+              "optionId": "0e95db5f",
+              "name": "P0"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQ-8",
+                "name": "Horizon"
+              },
+              "optionId": "beebca67",
+              "name": "Later"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRAA",
+                "name": "Kind"
+              },
+              "optionId": "de7d8720",
+              "name": "Delivery"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRBU",
+                "name": "Priority"
+              },
+              "optionId": "2ea5dcc7",
+              "name": "Normal"
+            },
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHRCQ",
+                "name": "Responsible chat"
+              },
+              "text": "历史交付"
+            }
+          ]
+        }
+      },
+      {
+        "id": "PVTI_lAHOCoNcq84BnjKJzhBjb70",
+        "type": "DRAFT_ISSUE",
+        "isArchived": false,
+        "content": {
+          "id": "DI_lAHOCoNcq84BnjKJzgLZ4vM",
+          "title": "[P1-MODELS] G1/G2与Ridge实际离线候选生成",
+          "body": "<!-- TTO-RM:P1-MODELS -->\n稳定节点：`TTO-RM:P1-MODELS`\n\n用户价值：从真实记录形成可计算的模型候选，减少纯手工猜系数\n\n交付与验收：36+42次拟合及失败保留，不等于通用预测器已上线\n\n依赖：无；见验收与权限边界。这是交付层依赖，不自动创建原生 blocked-by，也不要求前置 Issue 全部关闭。\n\n证据与限制：\n- https://github.com/massif-01/Tianshan-thermal-observer/blob/b85ccae98257c21b220d988c1afcfeae9f27c656/docs/research/TTO-research-status-20261014.md\n\nDone仅表示上述限定历史交付，不能推断整个阶段完成、未来预测通过或现场控制获准。\n\n排期：未获批，Start date / Target date 保持空白，以 Horizon 表示先后。\n产品依据：#1 当前 R2 合同；文档候选 PR #13（未合并），固定 commit 6fcf46dccb99c88564d54381e7228262c54b1cad。\n",
+          "createdAt": "2026-10-18T03:00:03Z",
+          "updatedAt": "2026-10-18T03:00:03Z"
+        },
+        "fieldValues": {
+          "nodes": [
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHQWQ",
+                "name": "Title"
+              },
+              "text": "[P1-MODELS] G1/G2与Ridge实际离线候选生成"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQWg",
+                "name": "Status"
+              },
+              "optionId": "98236657",
+              "name": "Done"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQoY",
+                "name": "Phase"
+              },
+              "optionId": "3110df48",
+              "name": "P1"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQ-8",
+                "name": "Horizon"
+              },
+              "optionId": "beebca67",
+              "name": "Later"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRAA",
+                "name": "Kind"
+              },
+              "optionId": "de7d8720",
+              "name": "Delivery"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRBU",
+                "name": "Priority"
+              },
+              "optionId": "2ea5dcc7",
+              "name": "Normal"
+            },
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHRCQ",
+                "name": "Responsible chat"
+              },
+              "text": "历史交付"
+            }
+          ]
+        }
+      },
+      {
+        "id": "PVTI_lAHOCoNcq84BnjKJzhBjcAw",
+        "type": "DRAFT_ISSUE",
+        "isArchived": false,
+        "content": {
+          "id": "DI_lAHOCoNcq84BnjKJzgLZ4vY",
+          "title": "[P2-STATES] 固定参数慢态/滤波及需求原型",
+          "body": "<!-- TTO-RM:P2-STATES -->\n稳定节点：`TTO-RM:P2-STATES`\n\n用户价值：理解快/慢状态及简单滤波各自价值，不追逐温度每个尖峰\n\n交付与验收：Tf/Ts/需求/PWM分开，非真实控制\n\n依赖：无；见验收与权限边界。这是交付层依赖，不自动创建原生 blocked-by，也不要求前置 Issue 全部关闭。\n\n证据与限制：\n- https://github.com/massif-01/Tianshan-thermal-observer/blob/b85ccae98257c21b220d988c1afcfeae9f27c656/docs/research/TTO-research-status-20261014.md\n\nDone仅表示上述限定历史交付，不能推断整个阶段完成、未来预测通过或现场控制获准。\n\n排期：未获批，Start date / Target date 保持空白，以 Horizon 表示先后。\n产品依据：#1 当前 R2 合同；文档候选 PR #13（未合并），固定 commit 6fcf46dccb99c88564d54381e7228262c54b1cad。\n",
+          "createdAt": "2026-10-18T03:00:23Z",
+          "updatedAt": "2026-10-18T03:00:23Z"
+        },
+        "fieldValues": {
+          "nodes": [
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHQWQ",
+                "name": "Title"
+              },
+              "text": "[P2-STATES] 固定参数慢态/滤波及需求原型"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQWg",
+                "name": "Status"
+              },
+              "optionId": "98236657",
+              "name": "Done"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQoY",
+                "name": "Phase"
+              },
+              "optionId": "ad68b8f4",
+              "name": "P2"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQ-8",
+                "name": "Horizon"
+              },
+              "optionId": "beebca67",
+              "name": "Later"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRAA",
+                "name": "Kind"
+              },
+              "optionId": "de7d8720",
+              "name": "Delivery"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRBU",
+                "name": "Priority"
+              },
+              "optionId": "2ea5dcc7",
+              "name": "Normal"
+            },
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHRCQ",
+                "name": "Responsible chat"
+              },
+              "text": "历史交付"
+            }
+          ]
+        }
+      },
+      {
+        "id": "PVTI_lAHOCoNcq84BnjKJzhBjcJM",
+        "type": "DRAFT_ISSUE",
+        "isArchived": false,
+        "content": {
+          "id": "DI_lAHOCoNcq84BnjKJzgLZ4vg",
+          "title": "[P2-YET] YET CSV导入与局部表面实测取得",
+          "body": "<!-- TTO-RM:P2-YET -->\n稳定节点：`TTO-RM:P2-YET`\n\n用户价值：取得与芯片温度不同的局部结构观测，保留比较限制\n\n交付与验收：2027条表面记录；严格G2零状态和时钟限制保留，非Ts验证\n\n依赖：无；见验收与权限边界。这是交付层依赖，不自动创建原生 blocked-by，也不要求前置 Issue 全部关闭。\n\n证据与限制：\n- https://github.com/massif-01/Tianshan-thermal-observer/blob/b85ccae98257c21b220d988c1afcfeae9f27c656/docs/reports/2026-10-18-yet610l-sync-shortqa/analysis-report.md\n\nDone仅表示上述限定历史交付，不能推断整个阶段完成、未来预测通过或现场控制获准。\n\n排期：未获批，Start date / Target date 保持空白，以 Horizon 表示先后。\n产品依据：#1 当前 R2 合同；文档候选 PR #13（未合并），固定 commit 6fcf46dccb99c88564d54381e7228262c54b1cad。\n",
+          "createdAt": "2026-10-18T03:00:42Z",
+          "updatedAt": "2026-10-18T03:00:42Z"
+        },
+        "fieldValues": {
+          "nodes": [
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHQWQ",
+                "name": "Title"
+              },
+              "text": "[P2-YET] YET CSV导入与局部表面实测取得"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQWg",
+                "name": "Status"
+              },
+              "optionId": "98236657",
+              "name": "Done"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQoY",
+                "name": "Phase"
+              },
+              "optionId": "ad68b8f4",
+              "name": "P2"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQ-8",
+                "name": "Horizon"
+              },
+              "optionId": "beebca67",
+              "name": "Later"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRAA",
+                "name": "Kind"
+              },
+              "optionId": "de7d8720",
+              "name": "Delivery"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRBU",
+                "name": "Priority"
+              },
+              "optionId": "2ea5dcc7",
+              "name": "Normal"
+            },
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHRCQ",
+                "name": "Responsible chat"
+              },
+              "text": "历史交付"
+            }
+          ]
+        }
+      },
+      {
+        "id": "PVTI_lAHOCoNcq84BnjKJzhBjcV4",
+        "type": "DRAFT_ISSUE",
+        "isArchived": false,
+        "content": {
+          "id": "DI_lAHOCoNcq84BnjKJzgLZ4wA",
+          "title": "[P3-INTEGRATE] 三线只读接口与离线集成",
+          "body": "<!-- TTO-RM:P3-INTEGRATE -->\n稳定节点：`TTO-RM:P3-INTEGRATE`\n\n用户价值：三个局部成果能正确接合，不在现场才发现不兼容\n\n交付与验收：测量、估计、保护、授权分开，失效及恢复可重放\n\n依赖：TTO-RM:P3-STATE, TTO-RM:P3-IO, TTO-RM:P4-PLAN。这是交付层依赖，不自动创建原生 blocked-by，也不要求前置 Issue 全部关闭。\n\n证据与限制：\n- 当前无已接受交付；以后以实际回执更新。\n\n规划卡不构成实施、现场实测、部署或控制授权。\n\n排期：未获批，Start date / Target date 保持空白，以 Horizon 表示先后。\n产品依据：#1 当前 R2 合同；文档候选 PR #13（未合并），固定 commit 6fcf46dccb99c88564d54381e7228262c54b1cad。\n",
+          "createdAt": "2026-10-18T03:01:30Z",
+          "updatedAt": "2026-10-18T03:01:30Z"
+        },
+        "fieldValues": {
+          "nodes": [
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHQWQ",
+                "name": "Title"
+              },
+              "text": "[P3-INTEGRATE] 三线只读接口与离线集成"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQWg",
+                "name": "Status"
+              },
+              "optionId": "f75ad846",
+              "name": "Todo"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQoY",
+                "name": "Phase"
+              },
+              "optionId": "e07063e3",
+              "name": "P3"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQ-8",
+                "name": "Horizon"
+              },
+              "optionId": "83e9003e",
+              "name": "Next"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRAA",
+                "name": "Kind"
+              },
+              "optionId": "de7d8720",
+              "name": "Delivery"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRBU",
+                "name": "Priority"
+              },
+              "optionId": "2ea5dcc7",
+              "name": "Normal"
+            },
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHRCQ",
+                "name": "Responsible chat"
+              },
+              "text": "产品协调/三线"
+            }
+          ]
+        }
+      },
+      {
+        "id": "PVTI_lAHOCoNcq84BnjKJzhBjcZY",
+        "type": "DRAFT_ISSUE",
+        "isArchived": false,
+        "content": {
+          "id": "DI_lAHOCoNcq84BnjKJzgLZ4wE",
+          "title": "[P4-MIX] 混合长负载同run同步记录",
+          "body": "<!-- TTO-RM:P4-MIX -->\n稳定节点：`TTO-RM:P4-MIX`\n\n用户价值：得到能解释并发、负载时长与热前史的完整新记录\n\n交付与验收：有模型/质量就绪和本轮现场授权，先评价冻结候选\n\n依赖：TTO-RM:P3-INTEGRATE。这是交付层依赖，不自动创建原生 blocked-by，也不要求前置 Issue 全部关闭。\n\n证据与限制：\n- 当前无已接受交付；以后以实际回执更新。\n\n规划卡不构成实施、现场实测、部署或控制授权。\n\n排期：未获批，Start date / Target date 保持空白，以 Horizon 表示先后。\n产品依据：#1 当前 R2 合同；文档候选 PR #13（未合并），固定 commit 6fcf46dccb99c88564d54381e7228262c54b1cad。\n",
+          "createdAt": "2026-10-18T03:01:44Z",
+          "updatedAt": "2026-10-18T03:01:44Z"
+        },
+        "fieldValues": {
+          "nodes": [
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHQWQ",
+                "name": "Title"
+              },
+              "text": "[P4-MIX] 混合长负载同run同步记录"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQWg",
+                "name": "Status"
+              },
+              "optionId": "f75ad846",
+              "name": "Todo"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQoY",
+                "name": "Phase"
+              },
+              "optionId": "8d000284",
+              "name": "P4"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQ-8",
+                "name": "Horizon"
+              },
+              "optionId": "83e9003e",
+              "name": "Next"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRAA",
+                "name": "Kind"
+              },
+              "optionId": "de7d8720",
+              "name": "Delivery"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRBU",
+                "name": "Priority"
+              },
+              "optionId": "2ea5dcc7",
+              "name": "Normal"
+            },
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHRCQ",
+                "name": "Responsible chat"
+              },
+              "text": "实际安装与测试"
+            }
+          ]
+        }
+      },
+      {
+        "id": "PVTI_lAHOCoNcq84BnjKJzhBjces",
+        "type": "DRAFT_ISSUE",
+        "isArchived": false,
+        "content": {
+          "id": "DI_lAHOCoNcq84BnjKJzgLZ4wM",
+          "title": "[P4-INPUT] 未来输入未知时的预测策略",
+          "body": "<!-- TTO-RM:P4-INPUT -->\n稳定节点：`TTO-RM:P4-INPUT`\n\n用户价值：明确未来任务未知时仍可提供什么预测价值\n\n交付与验收：仅用已到达遥测/可选已发生请求，不看未来计划；HOLD/RELAX对照\n\n依赖：TTO-RM:P3-STATE。这是交付层依赖，不自动创建原生 blocked-by，也不要求前置 Issue 全部关闭。\n\n证据与限制：\n- 当前无已接受交付；以后以实际回执更新。\n\n规划卡不构成实施、现场实测、部署或控制授权。\n\n排期：未获批，Start date / Target date 保持空白，以 Horizon 表示先后。\n产品依据：#1 当前 R2 合同；文档候选 PR #13（未合并），固定 commit 6fcf46dccb99c88564d54381e7228262c54b1cad。\n",
+          "createdAt": "2026-10-18T03:02:01Z",
+          "updatedAt": "2026-10-18T03:02:01Z"
+        },
+        "fieldValues": {
+          "nodes": [
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHQWQ",
+                "name": "Title"
+              },
+              "text": "[P4-INPUT] 未来输入未知时的预测策略"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQWg",
+                "name": "Status"
+              },
+              "optionId": "f75ad846",
+              "name": "Todo"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQoY",
+                "name": "Phase"
+              },
+              "optionId": "8d000284",
+              "name": "P4"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQ-8",
+                "name": "Horizon"
+              },
+              "optionId": "83e9003e",
+              "name": "Next"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRAA",
+                "name": "Kind"
+              },
+              "optionId": "de7d8720",
+              "name": "Delivery"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRBU",
+                "name": "Priority"
+              },
+              "optionId": "2ea5dcc7",
+              "name": "Normal"
+            },
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHRCQ",
+                "name": "Responsible chat"
+              },
+              "text": "灰箱辨识"
+            }
+          ]
+        }
+      },
+      {
+        "id": "PVTI_lAHOCoNcq84BnjKJzhBjckU",
+        "type": "DRAFT_ISSUE",
+        "isArchived": false,
+        "content": {
+          "id": "DI_lAHOCoNcq84BnjKJzgLZ4wc",
+          "title": "[P4-OBSERVE] 快TJ与局部鳍片观测关系诊断",
+          "body": "<!-- TTO-RM:P4-OBSERVE -->\n稳定节点：`TTO-RM:P4-OBSERVE`\n\n用户价值：避免把时序/局部测点差异错误解释成模型或散热失败\n\n交付与验收：先核时间/年龄，后决定最小结构改变；外部点非全局门槛\n\n依赖：TTO-RM:P3-STATE。这是交付层依赖，不自动创建原生 blocked-by，也不要求前置 Issue 全部关闭。\n\n证据与限制：\n- 当前无已接受交付；以后以实际回执更新。\n\n规划卡不构成实施、现场实测、部署或控制授权。\n\n排期：未获批，Start date / Target date 保持空白，以 Horizon 表示先后。\n产品依据：#1 当前 R2 合同；文档候选 PR #13（未合并），固定 commit 6fcf46dccb99c88564d54381e7228262c54b1cad。\n",
+          "createdAt": "2026-10-18T03:02:19Z",
+          "updatedAt": "2026-10-18T03:02:19Z"
+        },
+        "fieldValues": {
+          "nodes": [
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHQWQ",
+                "name": "Title"
+              },
+              "text": "[P4-OBSERVE] 快TJ与局部鳍片观测关系诊断"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQWg",
+                "name": "Status"
+              },
+              "optionId": "f75ad846",
+              "name": "Todo"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQoY",
+                "name": "Phase"
+              },
+              "optionId": "8d000284",
+              "name": "P4"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQ-8",
+                "name": "Horizon"
+              },
+              "optionId": "83e9003e",
+              "name": "Next"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRAA",
+                "name": "Kind"
+              },
+              "optionId": "de7d8720",
+              "name": "Delivery"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRBU",
+                "name": "Priority"
+              },
+              "optionId": "2ea5dcc7",
+              "name": "Normal"
+            },
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHRCQ",
+                "name": "Responsible chat"
+              },
+              "text": "灰箱辨识"
+            }
+          ]
+        }
+      },
+      {
+        "id": "PVTI_lAHOCoNcq84BnjKJzhBjcp0",
+        "type": "DRAFT_ISSUE",
+        "isArchived": false,
+        "content": {
+          "id": "DI_lAHOCoNcq84BnjKJzgLZ4ws",
+          "title": "[P4-CONFIRM] 候选适用范围的新过程确认",
+          "body": "<!-- TTO-RM:P4-CONFIRM -->\n稳定节点：`TTO-RM:P4-CONFIRM`\n\n用户价值：让未参与调参的过程说明候选能在哪些条件工作\n\n交付与验收：候选和规则冻结，新完整过程未被选参；不改旧成绩\n\n依赖：TTO-RM:P4-MIX。这是交付层依赖，不自动创建原生 blocked-by，也不要求前置 Issue 全部关闭。\n\n证据与限制：\n- 当前无已接受交付；以后以实际回执更新。\n\n规划卡不构成实施、现场实测、部署或控制授权。\n\n排期：未获批，Start date / Target date 保持空白，以 Horizon 表示先后。\n产品依据：#1 当前 R2 合同；文档候选 PR #13（未合并），固定 commit 6fcf46dccb99c88564d54381e7228262c54b1cad。\n",
+          "createdAt": "2026-10-18T03:02:38Z",
+          "updatedAt": "2026-10-18T03:02:38Z"
+        },
+        "fieldValues": {
+          "nodes": [
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHQWQ",
+                "name": "Title"
+              },
+              "text": "[P4-CONFIRM] 候选适用范围的新过程确认"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQWg",
+                "name": "Status"
+              },
+              "optionId": "f75ad846",
+              "name": "Todo"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQoY",
+                "name": "Phase"
+              },
+              "optionId": "8d000284",
+              "name": "P4"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQ-8",
+                "name": "Horizon"
+              },
+              "optionId": "83e9003e",
+              "name": "Next"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRAA",
+                "name": "Kind"
+              },
+              "optionId": "de7d8720",
+              "name": "Delivery"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRBU",
+                "name": "Priority"
+              },
+              "optionId": "2ea5dcc7",
+              "name": "Normal"
+            },
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHRCQ",
+                "name": "Responsible chat"
+              },
+              "text": "建模+测试"
+            }
+          ]
+        }
+      },
+      {
+        "id": "PVTI_lAHOCoNcq84BnjKJzhBjcus",
+        "type": "DRAFT_ISSUE",
+        "isArchived": false,
+        "content": {
+          "id": "DI_lAHOCoNcq84BnjKJzgLZ4xA",
+          "title": "[P5-GENERATE] 可重复使用的设备模型生成器",
+          "body": "<!-- TTO-RM:P5-GENERATE -->\n稳定节点：`TTO-RM:P5-GENERATE`\n\n用户价值：让工程师使用明确流程生成本机模型而无需人工整理实验脚本\n\n交付与验收：有限候选/适用范围/数据与CPU成本/拒绝原因\n\n依赖：TTO-RM:P1-MODELS。这是交付层依赖，不自动创建原生 blocked-by，也不要求前置 Issue 全部关闭。\n\n证据与限制：\n- 当前无已接受交付；以后以实际回执更新。\n\n规划卡不构成实施、现场实测、部署或控制授权。\n\n排期：未获批，Start date / Target date 保持空白，以 Horizon 表示先后。\n产品依据：#1 当前 R2 合同；文档候选 PR #13（未合并），固定 commit 6fcf46dccb99c88564d54381e7228262c54b1cad。\n",
+          "createdAt": "2026-10-18T03:02:55Z",
+          "updatedAt": "2026-10-18T03:02:55Z"
+        },
+        "fieldValues": {
+          "nodes": [
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHQWQ",
+                "name": "Title"
+              },
+              "text": "[P5-GENERATE] 可重复使用的设备模型生成器"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQWg",
+                "name": "Status"
+              },
+              "optionId": "f75ad846",
+              "name": "Todo"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQoY",
+                "name": "Phase"
+              },
+              "optionId": "1f7d8194",
+              "name": "P5"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQ-8",
+                "name": "Horizon"
+              },
+              "optionId": "83e9003e",
+              "name": "Next"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRAA",
+                "name": "Kind"
+              },
+              "optionId": "de7d8720",
+              "name": "Delivery"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRBU",
+                "name": "Priority"
+              },
+              "optionId": "2ea5dcc7",
+              "name": "Normal"
+            },
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHRCQ",
+                "name": "Responsible chat"
+              },
+              "text": "模型产品化"
+            }
+          ]
+        }
+      },
+      {
+        "id": "PVTI_lAHOCoNcq84BnjKJzhBjczU",
+        "type": "DRAFT_ISSUE",
+        "isArchived": false,
+        "content": {
+          "id": "DI_lAHOCoNcq84BnjKJzgLZ4xI",
+          "title": "[P5-ADAPT] 受约束参数学习与候选回退",
+          "body": "<!-- TTO-RM:P5-ADAPT -->\n稳定节点：`TTO-RM:P5-ADAPT`\n\n用户价值：热响应变化后降低重新标定成本，同时保留稳定版和回退\n\n交付与验收：先预测后评分再学习；固定与候选并行，失效冻结和遗忘评价\n\n依赖：TTO-RM:P3-STATE, TTO-RM:P5-GENERATE。这是交付层依赖，不自动创建原生 blocked-by，也不要求前置 Issue 全部关闭。\n\n证据与限制：\n- 当前无已接受交付；以后以实际回执更新。\n\n规划卡不构成实施、现场实测、部署或控制授权。\n\n排期：未获批，Start date / Target date 保持空白，以 Horizon 表示先后。\n产品依据：#1 当前 R2 合同；文档候选 PR #13（未合并），固定 commit 6fcf46dccb99c88564d54381e7228262c54b1cad。\n",
+          "createdAt": "2026-10-18T03:03:12Z",
+          "updatedAt": "2026-10-18T03:03:12Z"
+        },
+        "fieldValues": {
+          "nodes": [
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHQWQ",
+                "name": "Title"
+              },
+              "text": "[P5-ADAPT] 受约束参数学习与候选回退"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQWg",
+                "name": "Status"
+              },
+              "optionId": "f75ad846",
+              "name": "Todo"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQoY",
+                "name": "Phase"
+              },
+              "optionId": "1f7d8194",
+              "name": "P5"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQ-8",
+                "name": "Horizon"
+              },
+              "optionId": "beebca67",
+              "name": "Later"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRAA",
+                "name": "Kind"
+              },
+              "optionId": "de7d8720",
+              "name": "Delivery"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRBU",
+                "name": "Priority"
+              },
+              "optionId": "0f58e08e",
+              "name": "Low"
+            },
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHRCQ",
+                "name": "Responsible chat"
+              },
+              "text": "模型产品化"
+            }
+          ]
+        }
+      },
+      {
+        "id": "PVTI_lAHOCoNcq84BnjKJzhBjc3s",
+        "type": "DRAFT_ISSUE",
+        "isArchived": false,
+        "content": {
+          "id": "DI_lAHOCoNcq84BnjKJzgLZ4xo",
+          "title": "[P6-MATERIAL] 鳍片厚薄/铝铜/热容量迁移",
+          "body": "<!-- TTO-RM:P6-MATERIAL -->\n稳定节点：`TTO-RM:P6-MATERIAL`\n\n用户价值：鳍片/材料/热容量改变后复用方法，实际量化校准成本\n\n交付与验收：至少两配置，对比直接迁移/重训/少量校准成本\n\n依赖：TTO-RM:P5-GENERATE。这是交付层依赖，不自动创建原生 blocked-by，也不要求前置 Issue 全部关闭。\n\n证据与限制：\n- 当前无已接受交付；以后以实际回执更新。\n\n规划卡不构成实施、现场实测、部署或控制授权。\n\n排期：未获批，Start date / Target date 保持空白，以 Horizon 表示先后。\n产品依据：#1 当前 R2 合同；文档候选 PR #13（未合并），固定 commit 6fcf46dccb99c88564d54381e7228262c54b1cad。\n",
+          "createdAt": "2026-10-18T03:03:29Z",
+          "updatedAt": "2026-10-18T03:03:29Z"
+        },
+        "fieldValues": {
+          "nodes": [
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHQWQ",
+                "name": "Title"
+              },
+              "text": "[P6-MATERIAL] 鳍片厚薄/铝铜/热容量迁移"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQWg",
+                "name": "Status"
+              },
+              "optionId": "f75ad846",
+              "name": "Todo"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQoY",
+                "name": "Phase"
+              },
+              "optionId": "2525e6db",
+              "name": "P6"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQ-8",
+                "name": "Horizon"
+              },
+              "optionId": "beebca67",
+              "name": "Later"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRAA",
+                "name": "Kind"
+              },
+              "optionId": "de7d8720",
+              "name": "Delivery"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRBU",
+                "name": "Priority"
+              },
+              "optionId": "0f58e08e",
+              "name": "Low"
+            },
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHRCQ",
+                "name": "Responsible chat"
+              },
+              "text": "硬件+建模"
+            }
+          ]
+        }
+      },
+      {
+        "id": "PVTI_lAHOCoNcq84BnjKJzhBjc_I",
+        "type": "DRAFT_ISSUE",
+        "isArchived": false,
+        "content": {
+          "id": "DI_lAHOCoNcq84BnjKJzgLZ4yE",
+          "title": "[P6-DEVICE] 不同模组与第三方设备适配",
+          "body": "<!-- TTO-RM:P6-DEVICE -->\n稳定节点：`TTO-RM:P6-DEVICE`\n\n用户价值：把同一工作流用于其他模组/SoC和厂家设备\n\n交付与验收：语义适配和实机确认分层，不必先完成材料全矩阵\n\n依赖：TTO-RM:P5-GENERATE。这是交付层依赖，不自动创建原生 blocked-by，也不要求前置 Issue 全部关闭。\n\n证据与限制：\n- 当前无已接受交付；以后以实际回执更新。\n\n规划卡不构成实施、现场实测、部署或控制授权。\n\n排期：未获批，Start date / Target date 保持空白，以 Horizon 表示先后。\n产品依据：#1 当前 R2 合同；文档候选 PR #13（未合并），固定 commit 6fcf46dccb99c88564d54381e7228262c54b1cad。\n",
+          "createdAt": "2026-10-18T03:03:49Z",
+          "updatedAt": "2026-10-18T03:03:49Z"
+        },
+        "fieldValues": {
+          "nodes": [
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHQWQ",
+                "name": "Title"
+              },
+              "text": "[P6-DEVICE] 不同模组与第三方设备适配"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQWg",
+                "name": "Status"
+              },
+              "optionId": "f75ad846",
+              "name": "Todo"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQoY",
+                "name": "Phase"
+              },
+              "optionId": "2525e6db",
+              "name": "P6"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQ-8",
+                "name": "Horizon"
+              },
+              "optionId": "beebca67",
+              "name": "Later"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRAA",
+                "name": "Kind"
+              },
+              "optionId": "de7d8720",
+              "name": "Delivery"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRBU",
+                "name": "Priority"
+              },
+              "optionId": "0f58e08e",
+              "name": "Low"
+            },
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHRCQ",
+                "name": "Responsible chat"
+              },
+              "text": "集成+建模"
+            }
+          ]
+        }
+      },
+      {
+        "id": "PVTI_lAHOCoNcq84BnjKJzhBjdFU",
+        "type": "DRAFT_ISSUE",
+        "isArchived": false,
+        "content": {
+          "id": "DI_lAHOCoNcq84BnjKJzgLZ4yU",
+          "title": "[P7-RELEASE] 许可、可复现软件包与外部验证",
+          "body": "<!-- TTO-RM:P7-RELEASE -->\n稳定节点：`TTO-RM:P7-RELEASE`\n\n用户价值：外部工程师可以合法、正确、可复现地使用TTO\n\n交付与验收：许可/分享授权、支持表、可安装和至少一次外部复验\n\n依赖：TTO-RM:P5-GENERATE。这是交付层依赖，不自动创建原生 blocked-by，也不要求前置 Issue 全部关闭。\n\n证据与限制：\n- 当前无已接受交付；以后以实际回执更新。\n\n规划卡不构成实施、现场实测、部署或控制授权。\n\n排期：未获批，Start date / Target date 保持空白，以 Horizon 表示先后。\n产品依据：#1 当前 R2 合同；文档候选 PR #13（未合并），固定 commit 6fcf46dccb99c88564d54381e7228262c54b1cad。\n",
+          "createdAt": "2026-10-18T03:04:06Z",
+          "updatedAt": "2026-10-18T03:04:06Z"
+        },
+        "fieldValues": {
+          "nodes": [
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHQWQ",
+                "name": "Title"
+              },
+              "text": "[P7-RELEASE] 许可、可复现软件包与外部验证"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQWg",
+                "name": "Status"
+              },
+              "optionId": "f75ad846",
+              "name": "Todo"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQoY",
+                "name": "Phase"
+              },
+              "optionId": "649da9e2",
+              "name": "P7"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQ-8",
+                "name": "Horizon"
+              },
+              "optionId": "beebca67",
+              "name": "Later"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRAA",
+                "name": "Kind"
+              },
+              "optionId": "de7d8720",
+              "name": "Delivery"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRBU",
+                "name": "Priority"
+              },
+              "optionId": "0f58e08e",
+              "name": "Low"
+            },
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHRCQ",
+                "name": "Responsible chat"
+              },
+              "text": "产品/维护"
+            }
+          ]
+        }
+      },
+      {
+        "id": "PVTI_lAHOCoNcq84BnjKJzhBjdLk",
+        "type": "DRAFT_ISSUE",
+        "isArchived": false,
+        "content": {
+          "id": "DI_lAHOCoNcq84BnjKJzgLZ4yg",
+          "title": "[CTRL-VALIDATE] 平稳风扇控制的独立授权与验证",
+          "body": "<!-- TTO-RM:CTRL-VALIDATE -->\n稳定节点：`TTO-RM:CTRL-VALIDATE`\n\n用户价值：另行证明温度/性能保障下的真实听感和平稳控制价值\n\n交付与验收：真实温度/性能/声音/故障回退；原型不作为授权\n\n依赖：TTO-RM:P3-INTEGRATE, TTO-RM:P4-CONFIRM。这是交付层依赖，不自动创建原生 blocked-by，也不要求前置 Issue 全部关闭。\n\n证据与限制：\n- 当前无已接受交付；以后以实际回执更新。\n\n规划卡不构成实施、现场实测、部署或控制授权。\n\n排期：未获批，Start date / Target date 保持空白，以 Horizon 表示先后。\n产品依据：#1 当前 R2 合同；文档候选 PR #13（未合并），固定 commit 6fcf46dccb99c88564d54381e7228262c54b1cad。\n",
+          "createdAt": "2026-10-18T03:04:23Z",
+          "updatedAt": "2026-10-18T03:04:23Z"
+        },
+        "fieldValues": {
+          "nodes": [
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHQWQ",
+                "name": "Title"
+              },
+              "text": "[CTRL-VALIDATE] 平稳风扇控制的独立授权与验证"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQWg",
+                "name": "Status"
+              },
+              "optionId": "f75ad846",
+              "name": "Todo"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQoY",
+                "name": "Phase"
+              },
+              "optionId": "41271fb8",
+              "name": "Control"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHQ-8",
+                "name": "Horizon"
+              },
+              "optionId": "beebca67",
+              "name": "Later"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRAA",
+                "name": "Kind"
+              },
+              "optionId": "de7d8720",
+              "name": "Delivery"
+            },
+            {
+              "field": {
+                "id": "PVTSSF_lAHOCoNcq84BnjKJzhmHRBU",
+                "name": "Priority"
+              },
+              "optionId": "0f58e08e",
+              "name": "Low"
+            },
+            {
+              "field": {
+                "id": "PVTF_lAHOCoNcq84BnjKJzhmHRCQ",
+                "name": "Responsible chat"
+              },
+              "text": "另行控制专项"
+            }
+          ]
+        }
+      }
+    ],
+    "pageInfo": {
+      "hasNextPage": false,
+      "endCursor": "Y3Vyc29yOnYyOpK5MDAwMDAwMDAuMDUyNjMxNTc4OTQ3MzY4NM4QY3S5"
+    }
+  }
+}

@@ -1,0 +1,299 @@
+{
+  "version": "0.2.4+closeout.1",
+  "mode": "execute",
+  "command_id": "LOOPBACK-short_gap",
+  "authorization": {
+    "action": "fixed-anchors",
+    "command_id": "LOOPBACK-short_gap",
+    "explicit_user_start": true,
+    "evidence": "OWN LOOPBACK TEST, never a real device grant"
+  },
+  "clock_start": {
+    "domain": "b952afb500f6:21:4dc2d86c-bed2-4477-b0e4-cacb80886ea9",
+    "mono_before_s": 1564.087552177,
+    "utc": "2026-10-19T07:59:14.677948+00:00",
+    "mono_after_s": 1564.087600801,
+    "utc_clock_accuracy_s": null,
+    "host": "b952afb500f6",
+    "platform": "Linux-7.0.11-orbstack-00360-gc9bc4d96ac70-x86_64-with-glibc2.35",
+    "pid": 21
+  },
+  "config": {
+    "schema_version": 1,
+    "mode": "observe_only",
+    "orin": {
+      "source_id": "orin-primary",
+      "base_url": "http://127.0.0.1:46841",
+      "socketio_path": "socket.io",
+      "namespace": "/",
+      "event": "tegrastats_update",
+      "transports": [
+        "websocket"
+      ],
+      "source_sample_interval_ms": 1000,
+      "source_interval_evidence": "SYNTHETIC own 1s timer",
+      "headers_file": null,
+      "ca_file": null
+    },
+    "tianshan": {
+      "source_id": "esp32-primary",
+      "base_url": "http://127.0.0.1:46841",
+      "fan_id": 0,
+      "fan_status_path": "/api/v1/fan/status",
+      "temp_status_path": "/api/v1/temp/status",
+      "fan_poll_interval_s": 1.0,
+      "temp_poll_interval_s": 5.0,
+      "headers_file": null,
+      "ca_file": null
+    },
+    "network": {
+      "request_timeout_s": 2.0,
+      "connect_timeout_s": 5.0,
+      "max_inflight_esp32": 1,
+      "follow_redirects": false,
+      "reconnect_initial_s": 1.0,
+      "reconnect_max_s": 30.0,
+      "reconnect_max_attempts": 10,
+      "reconnect_jitter_ratio": 0.2,
+      "max_business_payload_bytes": 65536
+    },
+    "storage": {
+      "data_root": null,
+      "chunk_bytes": 67108864,
+      "run_max_bytes": 2147483648,
+      "min_free_bytes": 1073741824,
+      "queue_max_items": 256,
+      "queue_max_bytes": 8388608,
+      "overwrite_existing": false
+    },
+    "run": {
+      "default_duration_s": 1800,
+      "max_duration_s": 14400,
+      "doctor_duration_s": 180,
+      "single_instance": true
+    },
+    "features": {
+      "schema_version": 1,
+      "time_axis": "observer_receive",
+      "history_s": 180,
+      "prediction_stride_s": 5,
+      "fan_max_age_s": 2.5,
+      "optional_train_min_availability": 0.95,
+      "max_feature_columns": 64,
+      "missing_optional_policy": "fallback_tj_or_baseline",
+      "power_current_rails": [
+        "vdd_gpu_soc",
+        "vdd_cpu_cv",
+        "vin_sys_5v0"
+      ]
+    },
+    "model": {
+      "schema_version": 1,
+      "horizons_s": [
+        15,
+        45,
+        90
+      ],
+      "primary_horizon_s": 45,
+      "methods": [
+        "persist",
+        "trend30",
+        "ridge_tj",
+        "ridge_full"
+      ],
+      "ridge_lambda_grid": [
+        0.001,
+        0.01,
+        0.1,
+        1.0
+      ],
+      "train_threads": 1,
+      "train_timeout_s": 600,
+      "online_training": false,
+      "automatic_activation": false
+    },
+    "resources": {
+      "observer_rss_target_mib": 256,
+      "observer_cpu_single_core_target_pct": 5.0,
+      "predict_all_horizons_p99_target_ms": 20.0,
+      "train_rss_limit_mib": 2048
+    },
+    "security": {
+      "business_control_writes": false,
+      "production_discovery": false,
+      "telemetry_upload": false,
+      "system_service_install": false,
+      "default_live_access": false
+    }
+  },
+  "config_sha256": "2fdd666f151baaeb917ab3d0e4cd7d03c33b23125dc03b3f6995ee59b46aeb8e",
+  "collector_source_identity": {
+    "kind": "package_source_hashes",
+    "sha256": "06d17ec5205cea268d4d42eeeb87169d3ca64c91a81acd0b4bdafe2f57e49806",
+    "files": {
+      "__init__.py": "672cde4b34710368c9ecba08ed361a47ef4a7c1f4ed5863a338bcde29549e700",
+      "__main__.py": "79ee6f134c5c5193377cf9b189cbdcc3e2095e49ba9cec310114441c15a917c4",
+      "cli.py": "d6adf47989226d57f798125c8f020bfdb8d1e14b357bf4f85ca82d3150747ce1",
+      "collector.py": "4c696d3a63cef96d255e0e6e0fd5f56754727a2647801653ed373f0aede22563",
+      "config.py": "5a05545f28b8b44b3e6f0e7efcf2453e01ee0726ef0bd228cc73d553e01d8e3e",
+      "dataset.py": "32ee485269a521b0540f6d4050eab2dac46cc93a65603086eea263349d9487ee",
+      "demo.py": "3e1475ee0753040f35d454138c47a39879c32d315db89824e101563d56b829fb",
+      "deployment.py": "221b1d098d46623dc0eba5addc9804d917f8ede6cfa850cec1922c5cd177aaf7",
+      "diagnostics.py": "93dfcc32ca5d9fee48d14b71375705f117a81afb2b0d17b89214be3317741055",
+      "engine.py": "c979174d9f78fce54418ed847e9b4e57b155da07eba37c255c7037ecb27bf66c",
+      "evaluation.py": "e6b2fc86f32cc28dbe204519bc74c13a138b9873164318727d4187c6dad78181",
+      "features.py": "d6b32b3584eea3b57eb658c0d9c005b197a420062daec613f78a057bc4462fa2",
+      "model.py": "371a6b81ad32c87654c231dd2e326b002a3e027b7a935b67117dd7508426fe7e",
+      "platform_engine.py": "d1d8e48f10c731beb8a0d0b7195ab7e32553aae875ebff30a73846be88f967ea",
+      "platform_quality.py": "3f7e33e083251eaff8136319495ab682a7f7fdc554d0efad39fe5d990085044e",
+      "profiles.py": "3fb61fbe30bfce73cf7e1079c487e1ddb82b2301ed37d329e1e6da4bfc6944b4",
+      "quality.py": "014e67c7885d291c8bede9ad3a51fb85398b26bc71e7336b3a0f18b81aec3e56",
+      "recorded.py": "029679e59c68735d1ca98daf56553d6226c55e7d64597015712d972a8b7d2679",
+      "report.py": "59834f8fc8f226311edf8376b3a8ecce6f5ca2a48ef79bc4532d551f14e9413e",
+      "storage.py": "cda8d22444a0e1fe5fc2f1fa86b73cb4e3f9be4e76edb3cf265520b3285143ec",
+      "training.py": "c8f0d6c83587b18c8a527e9d84e222276ee1bd0edc8e69a828dd1ed33a2de773",
+      "util.py": "0a33bb268e7817ddd19b6ae81562c50e1fdd08a9cdb3fa08f8f2dd3fbb252f16"
+    },
+    "git_head": null,
+    "dirty": null,
+    "git_state": "not_checked_in_installed_runtime"
+  },
+  "binding": {
+    "candidate_version": "0.2.4+closeout.1",
+    "mode": "execute",
+    "config_sha256": "2fdd666f151baaeb917ab3d0e4cd7d03c33b23125dc03b3f6995ee59b46aeb8e",
+    "collector_source_sha256": "06d17ec5205cea268d4d42eeeb87169d3ca64c91a81acd0b4bdafe2f57e49806",
+    "observer_model_sha256": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
+    "observer_spec_sha256": "2080adcf20773650299def2bb0f3ebdb9f87d8f85281d5b87a99d8b406c83c6b",
+    "old_overrides": false,
+    "command_id": "LOOPBACK-short_gap",
+    "expected_binding": "agx_info.temperature.tj",
+    "firmware_identity": null,
+    "authorization": {
+      "action": "fixed-anchors",
+      "command_id": "LOOPBACK-short_gap",
+      "explicit_user_start": true,
+      "evidence": "OWN LOOPBACK TEST, never a real device grant"
+    },
+    "note": "Preview creates no network clients and never opens credential headers. No device authorization is implied.",
+    "request_actor_thread": "01a1331a-f937-7d91-aef0-ac4f5e50bd8a",
+    "profile": {
+      "id": "fixed-anchors",
+      "role": "development",
+      "model_profile": "existing-dense-27b-confirm-before-live",
+      "same_model_within_run": true,
+      "stages": [
+        {
+          "kind": "background",
+          "seconds": 300
+        },
+        {
+          "kind": "work",
+          "concurrency": 1,
+          "seconds": 360,
+          "repeat_key": "single-anchor"
+        },
+        {
+          "kind": "recovery",
+          "seconds": 90
+        },
+        {
+          "kind": "work",
+          "concurrency": 2,
+          "seconds": 270
+        },
+        {
+          "kind": "recovery",
+          "seconds": 240
+        },
+        {
+          "kind": "work",
+          "concurrency": 4,
+          "seconds": 450
+        },
+        {
+          "kind": "recovery",
+          "seconds": 120
+        },
+        {
+          "kind": "work",
+          "concurrency": 1,
+          "seconds": 360,
+          "repeat_key": "single-anchor"
+        },
+        {
+          "kind": "final_recovery",
+          "seconds": 480
+        }
+      ],
+      "nominal_seconds": 2670,
+      "hard_limit_seconds": 3600,
+      "preparation_reserve_seconds": 300,
+      "drain_per_work_max_seconds": 90,
+      "cleanup_reserve_seconds": 120,
+      "budget": {
+        "nominal_s": 2670,
+        "work_blocks": 4,
+        "worst_reserved_s": 3450,
+        "remaining_s": 150
+      }
+    },
+    "synthetic_loopback_only": true,
+    "instrument": {
+      "recording": true,
+      "probe_fixed": true,
+      "clock_start": {
+        "command_id": "LOOPBACK-short_gap",
+        "path": "/evidence/delivery-loopback/short_gap/SYNTHETIC-clock.txt",
+        "sha256": "c8d13722350733e9784ade041d2abf40c7b3309f5ab8da80d1c89ca8cc2c6774",
+        "timezone": "UTC",
+        "display_resolution_s": 1,
+        "uncertainty_s": null,
+        "verified_file_sha256": "c8d13722350733e9784ade041d2abf40c7b3309f5ab8da80d1c89ca8cc2c6774"
+      }
+    },
+    "inference": {
+      "base_url": "http://127.0.0.1:46841",
+      "model": "SIMULATED-MODEL",
+      "messages": [
+        {
+          "role": "user",
+          "content": "SYNTHETIC ONLY"
+        }
+      ],
+      "max_tokens": 256,
+      "request_timeout_s": 30,
+      "stream": true,
+      "sampling": {},
+      "headers_file": null,
+      "ca_file": null
+    }
+  },
+  "profile": {
+    "id": "INTEGRATION-PLUMBING-PROBE-NOT-FROZEN-EXPERIMENT",
+    "stages": [
+      {
+        "kind": "background",
+        "seconds": 8
+      },
+      {
+        "kind": "work",
+        "seconds": 20,
+        "concurrency": 4
+      },
+      {
+        "kind": "final_recovery",
+        "seconds": 0.5
+      }
+    ],
+    "nominal_seconds": 28.5,
+    "hard_limit_seconds": 65,
+    "preparation_reserve_seconds": 30,
+    "drain_per_work_max_seconds": 3,
+    "cleanup_reserve_seconds": 5
+  },
+  "diagnostics_seconds": null,
+  "control_changes": false,
+  "synthetic_loopback_only": true,
+  "firmware_identity": null
+}

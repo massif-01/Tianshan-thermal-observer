@@ -1,0 +1,87 @@
+{
+  "document_cli_commands": [
+    {
+      "document": "TTO测试者使用说明.md",
+      "command": "~/TTO/tto --version",
+      "syntax_valid": true,
+      "executed": false
+    },
+    {
+      "document": "TTO测试者使用说明.md",
+      "command": "~/TTO/tto doctor --config \"$HOME/TTO/config/local.json\"",
+      "syntax_valid": true,
+      "executed": false
+    },
+    {
+      "document": "TTO测试者使用说明.md",
+      "command": "~/TTO/tto doctor --config \"$HOME/TTO/config/local.json\" --live --duration 180",
+      "syntax_valid": true,
+      "executed": false
+    },
+    {
+      "document": "TTO测试者使用说明.md",
+      "command": "~/TTO/tto collect --config \"$HOME/TTO/config/local.json\" --duration 1800 --episode \"办公使用01\"",
+      "syntax_valid": true,
+      "executed": false
+    },
+    {
+      "document": "TTO测试者使用说明.md",
+      "command": "~/TTO/tto report --run \"$RUN\" --output \"$REPORT\"",
+      "syntax_valid": true,
+      "executed": false
+    },
+    {
+      "document": "TTO测试者使用说明.md",
+      "command": "~/TTO/tto doctor --config \"$HOME/TTO/config/local.json\" --model \"$HOME/TTO/models/真实冻结模型.json\"",
+      "syntax_valid": true,
+      "executed": false
+    },
+    {
+      "document": "TTO测试者使用说明.md",
+      "command": "~/TTO/tto shadow --config \"$HOME/TTO/config/local.json\" --model \"$HOME/TTO/models/真实冻结模型.json\" --duration 1800 --episode \"旁路使用01\"",
+      "syntax_valid": true,
+      "executed": false
+    },
+    {
+      "document": "TTO第一次测试操作卡.md",
+      "command": "~/TTO/tto --version",
+      "syntax_valid": true,
+      "executed": false
+    },
+    {
+      "document": "TTO第一次测试操作卡.md",
+      "command": "~/TTO/tto doctor --config \"$HOME/TTO/config/local.json\"",
+      "syntax_valid": true,
+      "executed": false
+    },
+    {
+      "document": "TTO第一次测试操作卡.md",
+      "command": "~/TTO/tto doctor --config \"$HOME/TTO/config/local.json\" --live --duration 180",
+      "syntax_valid": true,
+      "executed": false
+    },
+    {
+      "document": "TTO第一次测试操作卡.md",
+      "command": "~/TTO/tto collect --config \"$HOME/TTO/config/local.json\" --duration 1800 --episode \"办公使用01\"",
+      "syntax_valid": true,
+      "executed": false
+    },
+    {
+      "document": "TTO第一次测试操作卡.md",
+      "command": "~/TTO/tto report --run \"$RUN\" --output \"$REPORT\"",
+      "syntax_valid": true,
+      "executed": false
+    }
+  ],
+  "checked_command_count": 12,
+  "bash_blocks_syntax_valid": true,
+  "actual_executed": [
+    "--version",
+    "doctor_without_live",
+    "report_from_synthetic_run"
+  ],
+  "real_live_doctor_collect_shadow_executed": false,
+  "real_devices": false,
+  "preserved_record_sha_unchanged": true,
+  "report_output": "/private/tmp/tto-tester-guide-formal-report"
+}

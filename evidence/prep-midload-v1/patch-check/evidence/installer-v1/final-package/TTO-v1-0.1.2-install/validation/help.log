@@ -1,0 +1,10 @@
+usage: install_tto.py [-h] [--prefix PREFIX]
+                      [--offline-wheelhouse OFFLINE_WHEELHOUSE]
+
+TTO本地安装：创建独立环境、安装锁定包、核对身份、离线doctor。
+
+options:
+  -h, --help            show this help message and exit
+  --prefix PREFIX       独立安装目录，默认~/TTO
+  --offline-wheelhouse OFFLINE_WHEELHOUSE
+                        匹配目标系统/CPU/Python的离线依赖wheel目录；指定后pip禁止访问索引

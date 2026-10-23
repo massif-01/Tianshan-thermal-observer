@@ -1,0 +1,37 @@
+{
+  "passed": true,
+  "scope": "owned_cli_processes_loopback_only",
+  "results": [
+    {
+      "signal": "SIGINT",
+      "exit_code": 0,
+      "duplicate_exit": 2,
+      "stop_wall_s": 0.018395749997580424
+    },
+    {
+      "signal": "SIGTERM",
+      "exit_code": 0,
+      "duplicate_exit": 2,
+      "stop_wall_s": 0.018688041003770195
+    }
+  ],
+  "esp_requests": [
+    [
+      "GET",
+      "/api/v1/fan/status"
+    ],
+    [
+      "GET",
+      "/api/v1/temp/status"
+    ],
+    [
+      "GET",
+      "/api/v1/fan/status"
+    ],
+    [
+      "GET",
+      "/api/v1/temp/status"
+    ]
+  ],
+  "source_control_calls": 0
+}

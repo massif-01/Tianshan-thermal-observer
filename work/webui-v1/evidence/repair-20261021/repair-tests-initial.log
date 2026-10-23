@@ -1,0 +1,68 @@
+..F.F.                                                                   [100%]
+=================================== FAILURES ===================================
+____________ test_gpu_native_age_and_same_source_metric_ages[4000] _____________
+
+outer = 4000
+
+    @pytest.mark.parametrize('outer',[4000,2500])
+    def test_gpu_native_age_and_same_source_metric_ages(outer):
+        p=Producer(time.monotonic()-10);s=State(web_config())
+        p.row('fan',0,p.fan());p.row('temp',0,p.temp())
+        payload=p.packet(1,gpu_age=2000);payload['telemetry_meta']['sample_age_ms']=outer
+        packet=p.row('orin',1,payload,connection_epoch=1);s.accept(packet,now=p.start+1.01)
+        metrics={m['id']:m for m in s.snapshot()['metrics']}
+        for id in ['power.gpu','power.cpu_soc_mss','usage.cpu.mean','cpu.cores.0.usage','memory.ram']:
+            assert metrics[id]['age_lower_bound_ms']==pytest.approx(outer+10)
+        gpu=metrics['usage.gpu']
+        assert gpu['age_lower_bound_ms']==pytest.approx(outer+2010)
+>       if outer==4000:assert gpu['value'] is None and gpu['reason_code']=='gpu_effective_stale'
+E       AssertionError: assert (None is None and 'source_expired' == 'gpu_effective_stale'
+E         
+E         - gpu_effective_stale
+E         + source_expired)
+
+tests/test_review_repairs.py:71: AssertionError
+________ test_source_time_label_settlement_through_publication_receive _________
+
+publication_dir = PosixPath('/tmp/tw-kukziy1s')
+
+    @pytest.mark.asyncio
+    async def test_source_time_label_settlement_through_publication_receive(publication_dir):
+        p=Producer(time.monotonic()-120);s=State(web_config())
+        # Explicit receive-clock substitute: UDS Publication/follow/State.accept remain real.
+        receive=[p.start+.01];accept=s.accept
+        s.accept=lambda packet:accept(packet,now=receive[0])
+        config=web_config();descriptor=publication_dir/'active.json';config['source']['active_descriptor']=str(descriptor)
+        stop=asyncio.Event()
+        async with Publication(descriptor) as pub:
+            task=asyncio.create_task(follow(config,s,stop))
+            async def deliver(packet,at):
+                receive[0]=p.start+at;pub.put(packet)
+                for _ in range(100):
+                    if s.packet and s.packet['input_mono_s']==packet['input_mono_s']:return
+                    await asyncio.sleep(.01)
+                raise AssertionError('publication not consumed')
+            try:
+                for t in range(24):await deliver(p.step(t),t+.01)
+                pred=next(v for v in s.predictions if v['origin_elapsed_ms']==9000 and v['horizon_s']==15)
+                original=pred['value_C'];await deliver(p.row('fan',24.5,p.fan()),24.51)
+                s.refresh(p.start+26.1);assert pred['status']=='pending'
+                await deliver(p.step(25,tj=48),26.2)
+                assert pred['status']=='matched' and pred['observed_C']==48 and pred['value_C']==original
+                view=s.prediction_view(15,records_after=26100)
+                assert any(v['prediction_id']==pred['prediction_id'] and v['status']=='matched' for v in view['records'])
+                assert view['summary']['matched_count']==sum(v['status']=='matched' for v in s.predictions if v['horizon_s']==15)
+                assert view['summary']['due_count']==sum(v['target_elapsed_ms']<=26200 and v['horizon_s']==15 for v in s.predictions)
+                await deliver(p.step(28),28.01)
+                late=next(v for v in s.predictions if v['origin_elapsed_ms']==11000 and v['horizon_s']==15)
+>               assert late['status']=='missing_label' # window [26,28], no valid TJ within it? 28 is boundary valid
+E               AssertionError: assert 'matched' == 'missing_label'
+E                 
+E                 - missing_label
+E                 + matched
+
+tests/test_review_repairs.py:106: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_review_repairs.py::test_gpu_native_age_and_same_source_metric_ages[4000]
+FAILED tests/test_review_repairs.py::test_source_time_label_settlement_through_publication_receive
+2 failed, 4 passed in 1.63s

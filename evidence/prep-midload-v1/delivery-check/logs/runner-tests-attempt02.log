@@ -1,0 +1,68 @@
+...............F                                                         [100%]
+=================================== FAILURES ===================================
+____ test_health_uses_one_original_processed_stream_and_does_not_extend_TTL ____
+
+    def test_health_uses_one_original_processed_stream_and_does_not_extend_TTL():
+        c=load_config(environ={});c['orin'].update(source_sample_interval_ms=1000,source_interval_evidence='owned fixture')
+        engine=engine_for(c,record_schema=2);health=TrialHealth()
+        for t in range(71):
+            for kind,payload in [('fan',fan_packet(19)),('temp',temp_packet()),('orin',new_packet(t+1))]:
+                r=dict(kind=kind,payload=payload,mono_s=float(t),ref=f'fixture/{kind}:{t}',connection_epoch=1)
+>               health.observe(r,engine.process(r),engine)
+
+scripts/thermal_trials/tests/test_schedule.py:141: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/tto/platform_engine.py:153: in process
+    self.update_profile(q, r, result)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <tto.platform_engine.PlatformEngine object at 0x102cd5550>
+q = {'accepted': True, 'age_lower_bound_ms': 0, 'gpu': {'age_lower_bound_ms': 0, 'contract_valid': True, 'device_uuid': 'G..., 'input_contract': {'family': 'jetson_thor', 'gpu_backend': 'nvml', 'gpu_period_ms': 1000, 'gpu_schema': 1, ...}, ...}
+record = {'connection_epoch': 1, 'kind': 'orin', 'mono_s': 0.0, 'payload': {'cpu': {'cores': [{'freq': 1320, 'usage': 30}, {'fr...': 99999, 'current': 2000, 'unit': 'mW'}, 'vin_sys_5v0': {'average': 99999, 'current': 4000, 'unit': 'mW'}}, ...}, ...}
+result = {'events': [], 'input_profile': None, 'prediction': None, 'quality': {'accepted': True, 'age_lower_bound_ms': 0, 'gpu'...ut_contract': {'family': 'jetson_thor', 'gpu_backend': 'nvml', 'gpu_period_ms': 1000, 'gpu_schema': 1, ...}, ...}, ...}
+
+    def update_profile(self, q, record, result):
+        current = q['input_contract']
+        if q['source_period']['reason'] == 'configured_source_period_conflict':
+            self.input_conflicts.add('configured_source_period_conflict')
+        if q.get('lifecycle_violation'):
+            self.mixed_profiles = True
+        scope = self.control_qualification(record['mono_s'])[0]
+        # Retain the last evidenced setting as trace. Quality separately flags
+        # a changed/missing fixed wire setting; GPU methods still need current
+        # valid cadence and samples, so this does not restore their eligibility.
+        if current and self.contract and compatible_contract(current, self.contract, False):
+            current = dict(current)
+            if current['gpu_period_ms'] is None:
+                current['gpu_period_ms'] = self.contract['gpu_period_ms']
+                current['gpu_timeout_ms'] = self.contract['gpu_timeout_ms']
+        incompatible = self.contract is not None and current is not None and not compatible_contract(self.contract, current, False)
+        period_change = bool(current and self.contract and current['gpu_period_ms'] is not None and self.contract['gpu_period_ms'] is not None and current['gpu_period_ms'] != self.contract['gpu_period_ms'])
+        uuid = q['gpu'].get('device_uuid') if q['gpu']['contract_valid'] else None
+        uuid_change = bool(uuid and self.known_uuid and uuid != self.known_uuid)
+        if current:
+            if any(not compatible_contract(old, current, False) or (old['gpu_period_ms'] and current['gpu_period_ms'] and old['gpu_period_ms'] != current['gpu_period_ms']) for old in self.known_contracts):
+                self.mixed_profiles = True
+            # Two representative contracts suffice to retain the permanent
+            # mixed flag; the complete sequence remains in raw/profile events.
+            if len(self.known_contracts) < 2 and (not self.known_contracts or not compatible_contract(self.known_contracts[-1], current)):
+                self.known_contracts.append(current)
+            if scope in ('auto', 'curve'):
+                self.known_scopes.add(scope)
+                self.mixed_profiles |= len(self.known_scopes) > 1
+        if uuid_change:
+            self.mixed_profiles = True
+        if uuid:
+            self.known_uuid = uuid
+        next_id = profile_id(current, scope)
+        if incompatible or period_change or uuid_change or (self.contract is None) != (current is None) or next_id != self.profile_id:
+            result['scores'] += self.invalidate('input_profile_change')
+            self.active_segment = self.q.segment
+            q['segment'] = self.q.segment
+>           result['events'].append({'reason': 'input_profile_change', 'ref': record['ref'], 'run_id': record['observer_run_id'], 'segment': self.q.segment, 'previous_contract': self.contract, 'input_contract': current, 'feature_profile_id': next_id, 'control_scope': scope, 'mixed_profiles': self.mixed_profiles, 'device_uuid': uuid})
+E           KeyError: 'observer_run_id'
+
+src/tto/platform_engine.py:64: KeyError
+=========================== short test summary info ============================
+FAILED scripts/thermal_trials/tests/test_schedule.py::test_health_uses_one_original_processed_stream_and_does_not_extend_TTL
+1 failed, 15 passed in 1.77s

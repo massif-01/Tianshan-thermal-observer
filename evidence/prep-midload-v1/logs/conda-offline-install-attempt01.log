@@ -1,0 +1,60 @@
+安装TTO 0.2.3 → /Users/massif/Tianshan-thermal-observer/evidence/prep-midload-v1/conda-clean-install
+1/5 使用预装Conda创建独立Python 3.10环境
+Collecting package metadata (current_repodata.json): ...working... sysctl: sysctl fmt -1 1024 1: Operation not permitted
+sysctl: sysctl fmt -1 1024 1: Operation not permitted
+sysctl: unknown oid 'machdep.cpu.leaf7_features'
+sysctl: unknown oid 'machdep.cpu.vendor'
+sysctl: sysctl fmt -1 1024 1: Operation not permitted
+sysctl: sysctl fmt -1 1024 1: Operation not permitted
+sysctl: sysctl fmt -1 1024 1: Operation not permitted
+sysctl: unknown oid 'machdep.cpu.leaf7_features'
+sysctl: unknown oid 'machdep.cpu.vendor'
+sysctl: sysctl fmt -1 1024 1: Operation not permitted
+sysctl: sysctl fmt -1 1024 1: Operation not permitted
+sysctl: sysctl fmt -1 1024 1: Operation not permitted
+sysctl: unknown oid 'machdep.cpu.leaf7_features'
+sysctl: unknown oid 'machdep.cpu.vendor'
+sysctl: sysctl fmt -1 1024 1: Operation not permitted
+done
+Solving environment: ...working... unsuccessful attempt using repodata from current_repodata.json, retrying with next repodata source.
+Collecting package metadata (repodata.json): ...working... sysctl: sysctl fmt -1 1024 1: Operation not permitted
+sysctl: sysctl fmt -1 1024 1: Operation not permitted
+sysctl: unknown oid 'machdep.cpu.leaf7_features'
+sysctl: unknown oid 'machdep.cpu.vendor'
+sysctl: sysctl fmt -1 1024 1: Operation not permitted
+sysctl: sysctl fmt -1 1024 1: Operation not permitted
+sysctl: sysctl fmt -1 1024 1: Operation not permitted
+sysctl: unknown oid 'machdep.cpu.leaf7_features'
+sysctl: unknown oid 'machdep.cpu.vendor'
+sysctl: sysctl fmt -1 1024 1: Operation not permitted
+sysctl: sysctl fmt -1 1024 1: Operation not permitted
+sysctl: sysctl fmt -1 1024 1: Operation not permitted
+sysctl: unknown oid 'machdep.cpu.leaf7_features'
+sysctl: unknown oid 'machdep.cpu.vendor'
+sysctl: sysctl fmt -1 1024 1: Operation not permitted
+done
+Solving environment: ...working... failed
+
+PackagesNotFoundError: The following packages are not available from current channels:
+
+  - pip
+  - python=3.10
+
+Current channels:
+
+  - https://repo.anaconda.com/pkgs/main/osx-arm64
+  - https://repo.anaconda.com/pkgs/main/noarch
+  - https://repo.anaconda.com/pkgs/r/osx-arm64
+  - https://repo.anaconda.com/pkgs/r/noarch
+
+To search for alternate channels that may provide the conda package you're
+looking for, navigate to
+
+    https://anaconda.org
+
+and use the search bar at the top of the page.
+
+
+
+安装未完成：本地命令失败，退出码 1
+配置和数据不会被覆盖；处理上述问题后可重跑。

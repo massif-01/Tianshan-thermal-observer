@@ -1,0 +1,47 @@
+{
+  "session_id": "yet610l-sync-shortqa-retry-20261017T162947Z",
+  "tto_run_id": null,
+  "state": "authorized_preparing_new_run",
+  "max_total_s": 2400,
+  "phases": [
+    {
+      "name": "resident-baseline",
+      "duration_s": 300
+    },
+    {
+      "name": "sparse",
+      "requests": 6,
+      "gap_after_normal_completion_s": 90,
+      "gap_after_last": false
+    },
+    {
+      "name": "between-groups",
+      "duration_s": 300
+    },
+    {
+      "name": "continuous",
+      "requests": 12,
+      "gap_after_normal_completion_s": 10,
+      "gap_after_last": false
+    },
+    {
+      "name": "final-cooldown",
+      "duration_s": 600
+    }
+  ],
+  "sole_load_executor_thread": "01a1331a-f937-7d91-aef0-ac4f5e50bd8a",
+  "sole_tto_controller": "current_chat",
+  "pilots": 0,
+  "old_override": false,
+  "start_requires": [
+    "user confirms probe fixed",
+    "user confirms instrument recording",
+    "user says 可以开始本轮",
+    "model and native input/protection readiness"
+  ],
+  "no_auto_extend_or_rerun": true,
+  "settings": "AUTO/curve/gain/protection/sampling/TTL unchanged",
+  "unknown_request_completion": "stop subsequent requests; retain evidence",
+  "previous_attempt_run_id": "69a567d7-216b-4007-b122-7a946f92bd15",
+  "explicit_policy_id": "YET-SYNC-TRANSIENT-TEMP-CONTINUE-v1"
+}

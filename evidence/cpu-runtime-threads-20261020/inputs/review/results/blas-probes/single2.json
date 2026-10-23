@@ -1,0 +1,58 @@
+{
+  "scope": "independent local saved-event replay, no network/device/sidecar; not N305 performance",
+  "python": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "numpy": "2.3.5",
+  "scipy": "1.17.0",
+  "env": {
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "OPENBLAS_DEFAULT_NUM_THREADS": null
+  },
+  "loaded_pools": [
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 1,
+      "prefix": "libscipy_openblas",
+      "filepath": "/opt/pyvenv/lib/python3.13/site-packages/numpy.libs/libscipy_openblas64_-fdde5778.so",
+      "version": "0.3.30",
+      "threading_layer": "pthreads",
+      "architecture": "SkylakeX"
+    },
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 1,
+      "prefix": "libscipy_openblas",
+      "filepath": "/opt/pyvenv/lib/python3.13/site-packages/scipy.libs/libscipy_openblas-6cdc3b4a.so",
+      "version": "0.3.30",
+      "threading_layer": "pthreads",
+      "architecture": "SkylakeX"
+    }
+  ],
+  "events": 39,
+  "paced": true,
+  "scheduled_seconds": 12.0,
+  "wall_s": 12.000289806999945,
+  "process_cpu_s": 0.07000000000000005,
+  "process_cpu_pct": 0.58331924583328,
+  "main_thread_id": 1536,
+  "thread_cpu_deltas": [
+    {
+      "tid": 1536,
+      "cpu_s": 0.07000000000000006
+    }
+  ],
+  "max_abs_state_cov_diff_to_saved": 2.220446049250313e-16,
+  "phase_mismatches": [],
+  "callback_ms_p95": 2.686691199994586,
+  "callback_ms_max": 4.154239000058624,
+  "phase_counts": {
+    "uninitialized": 3,
+    "provisional": 28,
+    "tracking": 8
+  },
+  "frozen_observer_sha256": "599e292a0000697615e76a97596f2f48c7527bc82027bacca5aea0c0fe5d4a47"
+}

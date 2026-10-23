@@ -1,0 +1,79 @@
+{
+  "version": "0.2.4+cpu.3",
+  "files": 50,
+  "changed": {
+    "tto_field/__init__.py": {
+      "before": "40d71affd223a7fc7a209caf8afaec266fd4b669e45e413abd317b61cc674ff6",
+      "after": "ad02c64181eea81da52a038072ec1f200a92f7255a49080e06187074bf0f574b"
+    },
+    "tto_field/cli.py": {
+      "before": "e81ca7e714568e08e841b291ba9bcbb2019f1c67a0d747dfd90ba139bd92c649",
+      "after": "827953261847e853e851c75b850a538f2b3a912d1e76dc49bc7310305f13b787"
+    },
+    "tto_field/cpu_cli.py": {
+      "before": "35be48fba52533fcda6dbddeb59175440c1a60bc54d38139985f1499c47981f9",
+      "after": "4264c0b4a4f019c6d198d30f5b0f6b672fbac371c9cf98a6d71eef3a84842ebc"
+    },
+    "tto_field/cpu_pilot.py": {
+      "before": "ce54b3e013801eeffb402d11d387cc08dcd10fd6af1d2040eeb11e681487dd45",
+      "after": "36861ae379d9c1a56a8ab2584aa24b23deb0a7d48dc758e6958015bbd1fc2f2f"
+    },
+    "tto_field/identity.py": {
+      "before": "6d88f1eb2bf0cffb8d7b903df3b68d2fcbea7106c4b7d3efd4aa3cfad2a9c982",
+      "after": "58850200044da1dc1417bec8ee805a3bca44813219a1523f325a6c8f92ee2ef1"
+    },
+    "tto_field/numeric_policy.py": {
+      "before": null,
+      "after": "d27f383e49de5512316307250cf97ec1d619f40c7a0133e42ba0df6e0b13c27f"
+    },
+    "tto_field/receiver_resources.py": {
+      "before": null,
+      "after": "cae3f2deccd16f008711dfbdabcfd53b7b4cf1a159f83752d0a5682495031781"
+    },
+    "tto_field/runtime.py": {
+      "before": "7675b328be4d5511d5152e3de06de694692e9122c28e55a0d4a12a3807fd033a",
+      "after": "82115476aa55ebecb53cde08e805b597e0534368c2072c32ba867d500ba6c281"
+    }
+  },
+  "protected_files_unchanged": [
+    "tto/__init__.py",
+    "tto/__main__.py",
+    "tto/cli.py",
+    "tto/collector.py",
+    "tto/config.py",
+    "tto/dataset.py",
+    "tto/defaults.json",
+    "tto/demo.py",
+    "tto/deployment.py",
+    "tto/diagnostics.py",
+    "tto/engine.py",
+    "tto/evaluation.py",
+    "tto/features.py",
+    "tto/model.py",
+    "tto/platform_engine.py",
+    "tto/platform_quality.py",
+    "tto/profiles.py",
+    "tto/quality.py",
+    "tto/recorded.py",
+    "tto/report.py",
+    "tto/storage.py",
+    "tto/training.py",
+    "tto/util.py",
+    "tto_field/comm_bridge.py",
+    "tto_field/cpu_source.py",
+    "tto_field/cpu_transport.py",
+    "tto_field/plans/cpu-pilot.json",
+    "tto_field/plans/execution-policy.json",
+    "tto_field/plans/mix-plan.json",
+    "tto_field/plans/model-profiles.json",
+    "tto_field/projection.py",
+    "tto_field/requester.py",
+    "tto_field/research/__init__.py",
+    "tto_field/research/models/primary.json",
+    "tto_field/research/observer-spec.json",
+    "tto_field/research/observer.py",
+    "tto_field/scheduler.py",
+    "tto_field/upstream_comm/__init__.py",
+    "tto_field/upstream_comm/source_health.py"
+  ]
+}

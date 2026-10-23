@@ -1,0 +1,140 @@
+{
+  "scope": "final installed wheel, macOS ARM64 local self-owned service only",
+  "pid": 8007,
+  "pools": [
+    1,
+    1
+  ],
+  "same_pid": true,
+  "CPU_mean_pct": 2.0214554987172524,
+  "CPU_max_pct": 2.9772846185627104,
+  "RSS_max_MiB": 71.140625,
+  "resources_samples": 65,
+  "elapsed_s": 65.43293979100417,
+  "approx_all_files_bytes": 4182501,
+  "estimated24h_bytes_from_this_short_synthetic_run": 5522724296.879008,
+  "archive_checks": [
+    {
+      "session": "evidence/mainline-observe-20261021/release-loopback/session",
+      "indexed_files": 21,
+      "all_SHA_pass": true
+    },
+    {
+      "session": "evidence/mainline-observe-20261021/release-stop/session",
+      "indexed_files": 21,
+      "all_SHA_pass": true
+    }
+  ],
+  "scoring": {
+    "contract": "TTO-OBSERVE-SCORING-v1",
+    "publication_mode": "live",
+    "stride_s": 5,
+    "valid_TJ_denominator": 62,
+    "scheduled_origin_denominator": 13,
+    "counts": {
+      "all_valid_TJ": 62,
+      "scheduled_TJ_origins": 13,
+      "issued/G2-HOLD/15": 13,
+      "valid_predictions/G2-HOLD/15": 6,
+      "issued/B0/15": 13,
+      "valid_predictions/B0/15": 13,
+      "issued/B1/15": 13,
+      "issued/G2-HOLD/45": 13,
+      "valid_predictions/G2-HOLD/45": 6,
+      "issued/B0/45": 13,
+      "valid_predictions/B0/45": 13,
+      "issued/B1/45": 13,
+      "issued/G2-HOLD/90": 13,
+      "valid_predictions/G2-HOLD/90": 6,
+      "issued/B0/90": 13,
+      "valid_predictions/B0/90": 13,
+      "issued/B1/90": 13,
+      "unscored/source_epoch_changed": 66,
+      "valid_predictions/B1/15": 9,
+      "valid_predictions/B1/45": 9,
+      "valid_predictions/B1/90": 9,
+      "scored": 18
+    },
+    "per_method": {
+      "G2-HOLD/15": {
+        "n": 1,
+        "MAE_C": 1.5783082721169137,
+        "bias_C": 1.5783082721169137,
+        "P95_absolute_C": 1.5783082721169137,
+        "P95_underestimate_C": 0.0,
+        "max_underestimate_C": 0.0
+      },
+      "B0/15": {
+        "n": 8,
+        "MAE_C": 0.0,
+        "bias_C": 0.0,
+        "P95_absolute_C": 0.0,
+        "P95_underestimate_C": 0.0,
+        "max_underestimate_C": -0.0
+      },
+      "B1/15": {
+        "n": 6,
+        "MAE_C": 0.0,
+        "bias_C": 0.0,
+        "P95_absolute_C": 0.0,
+        "P95_underestimate_C": 0.0,
+        "max_underestimate_C": -0.0
+      },
+      "G2-HOLD/45": {
+        "n": 1,
+        "MAE_C": 1.8112044523086581,
+        "bias_C": 1.8112044523086581,
+        "P95_absolute_C": 1.8112044523086581,
+        "P95_underestimate_C": 0.0,
+        "max_underestimate_C": 0.0
+      },
+      "B0/45": {
+        "n": 2,
+        "MAE_C": 0.0,
+        "bias_C": 0.0,
+        "P95_absolute_C": 0.0,
+        "P95_underestimate_C": 0.0,
+        "max_underestimate_C": -0.0
+      }
+    },
+    "same_set_G2_B0": {
+      "G2-HOLD/15": {
+        "n": 1,
+        "MAE_C": 1.5783082721169137,
+        "bias_C": 1.5783082721169137,
+        "P95_absolute_C": 1.5783082721169137,
+        "P95_underestimate_C": 0.0,
+        "max_underestimate_C": 0.0
+      },
+      "B0/15": {
+        "n": 1,
+        "MAE_C": 0.0,
+        "bias_C": 0.0,
+        "P95_absolute_C": 0.0,
+        "P95_underestimate_C": 0.0,
+        "max_underestimate_C": -0.0
+      },
+      "G2-HOLD/45": {
+        "n": 1,
+        "MAE_C": 1.8112044523086581,
+        "bias_C": 1.8112044523086581,
+        "P95_absolute_C": 1.8112044523086581,
+        "P95_underestimate_C": 0.0,
+        "max_underestimate_C": 0.0
+      },
+      "B0/45": {
+        "n": 1,
+        "MAE_C": 0.0,
+        "bias_C": 0.0,
+        "P95_absolute_C": 0.0,
+        "P95_underestimate_C": 0.0,
+        "max_underestimate_C": -0.0
+      }
+    },
+    "percentile": "linear interpolation at (n-1)*.95; full bounded session error arrays",
+    "error": "prediction-actual",
+    "label": "first qualified received TJ at/after target within2s, same session/epoch/domain",
+    "statistical_unit": "one session, overlapping horizons are not independent experiments",
+    "all_native_valid_TJ_denominator": 62
+  }
+}

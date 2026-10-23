@@ -1,0 +1,46 @@
+{
+  "scope": "Actual unchanged observe.2 + delegated Runner/Requester + live self-owned SSE.\nOnly the injected TEST clock starts at 7200; real field Clock and wheel are untouched.\nGate uses actual live observer/host times. Shift is explicit and NOT a field timing claim.\n",
+  "observer_version": "0.2.4+observe.2",
+  "native_run_id": "fb2eb549-6612-4c8d-81c6-5c5db6f0511f",
+  "same_live_observer_gate": {
+    "action": "allow",
+    "reasons": [],
+    "software_healthy": true,
+    "model_available": true,
+    "model_used_as_permission": false,
+    "instrument_required": false,
+    "raw_expiry_unchanged": true,
+    "observation_ref": "fb2eb549-6612-4c8d-81c6-5c5db6f0511f/observation:20",
+    "native_run_id": "fb2eb549-6612-4c8d-81c6-5c5db6f0511f"
+  },
+  "api_requests": 2,
+  "model_queries": 0,
+  "results": [
+    {
+      "reason": "protocol_end_unknown_no_retry",
+      "submissions": 2,
+      "scheduled_opportunities": 386,
+      "not_submitted_opportunities": 384,
+      "schedule_window_completed": false,
+      "all_planned_requests_protocol_completed": false,
+      "protocol_completed": 1,
+      "skipped_opportunities": 0,
+      "client_inflight_seconds": 0.4109913340071216,
+      "actual_elapsed_s": 7647.798284791992,
+      "requester_closed": true,
+      "unknown_server_end": true,
+      "gpu_busy_seconds": null,
+      "collector_instances_created": 0,
+      "thermal_observer_instances_created": 0,
+      "requester_instances_supplied": 1,
+      "plan_sha256": "14ed7fedbda1eec0d50a36e0dd3becd6b618820f616a231c394b87bfa603b69f",
+      "observer_session_id": "9e53aaec-9de2-406f-9bde-382ef2955c21",
+      "native_run_id": "fb2eb549-6612-4c8d-81c6-5c5db6f0511f",
+      "device_id": "joint-owned",
+      "config_sha256": "b0b0c61c1a371e2950cb5bcb37906da40d59ca3f414c5d96f38a44f2bd4d621c",
+      "clock_domain": "synthetic-test-shifted-relative-only"
+    }
+  ],
+  "second_collector": false,
+  "future_plan_sent_to_observer": false
+}

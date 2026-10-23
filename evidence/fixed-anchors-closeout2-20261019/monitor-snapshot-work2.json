@@ -1,0 +1,265 @@
+{
+  "checked_at_utc": "2026-10-19T09:54:50.670496+00:00",
+  "native_run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+  "runner_alive": true,
+  "admission_rows": 8035,
+  "latest_admission": {
+    "evaluated_mono_s": 351561.734931261,
+    "scheduler_mono_s": 816.2418419529567,
+    "at_utc": "2026-10-19T09:54:50.439061+00:00",
+    "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+    "native_run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+    "collection_available": true,
+    "model_available": true,
+    "field_safety_available": true,
+    "execution_authorized": true,
+    "instrument_clock_ready": true,
+    "explicit_stop": false,
+    "start_allowed": true,
+    "reasons": [],
+    "observer_state": "tracking",
+    "successful_PWM_age_s": 0.8377070279675536,
+    "measurement_current": {
+      "tj": true,
+      "power": true,
+      "last_successful_pwm": true,
+      "control_context": true
+    },
+    "source_ages_s": {
+      "tj": 0.039361108967568725,
+      "power": 0.039361108967568725,
+      "last_successful_pwm": 0.8377070279675536,
+      "control_context": 0.8040753930108622
+    },
+    "source_expiry_mono_s": {
+      "tj": 351566.203223128,
+      "power": 351566.203223128,
+      "last_successful_pwm": 351563.397123271,
+      "control_context": 351568.430754906
+    },
+    "model_state_age_s": 0.03676069597713649,
+    "model_consumable_until_mono_s": 351564.19546919,
+    "safety_status": "fresh",
+    "observation_cutoff": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:2610",
+    "native_quality_preserved": true,
+    "model_permission": {
+      "local_demo": true,
+      "formal_field_authorized": false,
+      "device_actions": false
+    }
+  },
+  "phase_events": [
+    {
+      "event": "phase_start",
+      "mono_s": 9.32121633796487,
+      "run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+      "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+      "index": 0,
+      "stage": {
+        "kind": "background",
+        "seconds": 300
+      },
+      "window_end": 309.32121633796487,
+      "recorded_at_utc": "2026-10-19T09:41:23.518819+00:00"
+    },
+    {
+      "event": "phase_end",
+      "mono_s": 309.3408491969458,
+      "run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+      "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+      "index": 0,
+      "kind": "background",
+      "elapsed_s": 300.0196328589809,
+      "recorded_at_utc": "2026-10-19T09:46:23.538377+00:00"
+    },
+    {
+      "event": "phase_start",
+      "mono_s": 309.3408491969458,
+      "run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+      "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+      "index": 1,
+      "stage": {
+        "kind": "work",
+        "concurrency": 1,
+        "seconds": 360,
+        "repeat_key": "single-anchor"
+      },
+      "window_end": 669.3408491969458,
+      "recorded_at_utc": "2026-10-19T09:46:23.538440+00:00"
+    },
+    {
+      "event": "work_start_window_closed",
+      "mono_s": 669.4338130089454,
+      "run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+      "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+      "index": 1,
+      "inflight": 1,
+      "recorded_at_utc": "2026-10-19T09:52:23.631801+00:00"
+    },
+    {
+      "event": "natural_drain_complete",
+      "mono_s": 686.0020013600006,
+      "run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+      "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+      "index": 1,
+      "recorded_at_utc": "2026-10-19T09:52:40.200188+00:00"
+    },
+    {
+      "event": "phase_end",
+      "mono_s": 686.0020013600006,
+      "run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+      "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+      "index": 1,
+      "kind": "work",
+      "elapsed_s": 376.6611521630548,
+      "recorded_at_utc": "2026-10-19T09:52:40.200279+00:00"
+    },
+    {
+      "event": "phase_start",
+      "mono_s": 686.0020013600006,
+      "run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+      "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+      "index": 2,
+      "stage": {
+        "kind": "recovery",
+        "seconds": 90
+      },
+      "window_end": 776.0020013600006,
+      "recorded_at_utc": "2026-10-19T09:52:40.200351+00:00"
+    },
+    {
+      "event": "phase_end",
+      "mono_s": 776.0245396869723,
+      "run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+      "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+      "index": 2,
+      "kind": "recovery",
+      "elapsed_s": 90.0225383269717,
+      "recorded_at_utc": "2026-10-19T09:54:10.222490+00:00"
+    },
+    {
+      "event": "phase_start",
+      "mono_s": 776.0245396869723,
+      "run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+      "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+      "index": 3,
+      "stage": {
+        "kind": "work",
+        "concurrency": 2,
+        "seconds": 270
+      },
+      "window_end": 1046.0245396869723,
+      "recorded_at_utc": "2026-10-19T09:54:10.222617+00:00"
+    }
+  ],
+  "protocol_counts": {
+    "request_submit": 29,
+    "first_content": 29,
+    "request_end": 27
+  },
+  "current_phase_firsts": {
+    "request_submit": {
+      "event": "request_submit",
+      "mono_s": 776.1298261769698,
+      "at_utc": "2026-10-19T09:54:10.326942+00:00",
+      "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+      "native_run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+      "request_id": "R0024",
+      "submit_mono_s": 776.1297576369834,
+      "submitted_at_utc": "2026-10-19T09:54:10.326879+00:00",
+      "payload_sha256": "8502df772081ad7b9093975b5dbf5801e4c780dd21f6b619d87c13ca06dd00c0",
+      "max_tokens": 256,
+      "status": "termination_unknown",
+      "server_status": "unknown",
+      "first_network_mono_s": null,
+      "first_content_mono_s": null,
+      "finish_reason": null,
+      "done": false,
+      "usage": null,
+      "server_request_id": null
+    },
+    "first_content": {
+      "event": "first_content",
+      "mono_s": 777.0175129269483,
+      "at_utc": "2026-10-19T09:54:11.214628+00:00",
+      "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+      "native_run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+      "request_id": "R0025",
+      "semantics": "first_received_SSE_content"
+    },
+    "request_end": {
+      "event": "request_end",
+      "mono_s": 793.6882350979722,
+      "at_utc": "2026-10-19T09:54:27.885349+00:00",
+      "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+      "native_run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+      "request_id": "R0025",
+      "submit_mono_s": 776.1301166009507,
+      "submitted_at_utc": "2026-10-19T09:54:10.327234+00:00",
+      "payload_sha256": "8502df772081ad7b9093975b5dbf5801e4c780dd21f6b619d87c13ca06dd00c0",
+      "max_tokens": 256,
+      "status": "completed",
+      "server_status": "protocol_completion_observed",
+      "first_network_mono_s": 777.0173114499776,
+      "first_content_mono_s": 777.0175107639516,
+      "finish_reason": "length",
+      "done": true,
+      "usage": {
+        "prompt_tokens": 49,
+        "total_tokens": 305,
+        "completion_tokens": 256
+      },
+      "server_request_id": "chatcmpl-a5e68b769c705567",
+      "http_status": 200,
+      "client_end_mono_s": 793.6882112449966,
+      "client_end_at_utc": "2026-10-19T09:54:27.885328+00:00",
+      "duration_s": 17.55811128404457,
+      "request_end_semantics": "client protocol completion or unknown termination; never GPU kernel end"
+    }
+  },
+  "unknown_request_ends": [],
+  "latest_request_end": {
+    "event": "request_end",
+    "mono_s": 812.9996703039506,
+    "at_utc": "2026-10-19T09:54:47.196785+00:00",
+    "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+    "native_run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+    "request_id": "R0027",
+    "submit_mono_s": 795.8460377369775,
+    "submitted_at_utc": "2026-10-19T09:54:30.043154+00:00",
+    "payload_sha256": "8502df772081ad7b9093975b5dbf5801e4c780dd21f6b619d87c13ca06dd00c0",
+    "max_tokens": 256,
+    "status": "completed",
+    "server_status": "protocol_completion_observed",
+    "first_network_mono_s": 796.2871025479981,
+    "first_content_mono_s": 796.2872823779471,
+    "finish_reason": "length",
+    "done": true,
+    "usage": {
+      "prompt_tokens": 49,
+      "total_tokens": 305,
+      "completion_tokens": 256
+    },
+    "server_request_id": "chatcmpl-8077e46910bbde2d",
+    "http_status": 200,
+    "client_end_mono_s": 812.9996505460003,
+    "client_end_at_utc": "2026-10-19T09:54:47.196767+00:00",
+    "duration_s": 17.153625936014578,
+    "request_end_semantics": "client protocol completion or unknown termination; never GPU kernel end"
+  },
+  "latest_resource": {
+    "mono_s": 815.6337828049436,
+    "rss_bytes": 87728128,
+    "cpu_times": {
+      "user": 23.91,
+      "system": 2.39,
+      "children_user": 0.0,
+      "children_system": 0.0,
+      "iowait": 0.0
+    },
+    "cpu_pct_single_core": 1.9738005764770246,
+    "field_log_bytes": 41955732,
+    "native_log_bytes": 7897297
+  },
+  "summary": null
+}

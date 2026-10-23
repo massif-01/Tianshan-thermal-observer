@@ -1,0 +1,662 @@
+[
+  {
+    "kind": "A_roll",
+    "h": 15,
+    "branch": "AUGMENTED-KF",
+    "all_source_valid_TJ": 2706,
+    "labels": 2690,
+    "predictions": 2691,
+    "scored": 2690,
+    "labels_rejected": {
+      "no_TJ_answer": 16
+    },
+    "error": {
+      "n": 2690,
+      "MAE_C": 0.2821762117919046,
+      "RMSE_C": 0.5218235665976552,
+      "mean_error_C": -0.03455667181054545,
+      "P95_abs_error_C": 0.9956872157238332,
+      "P95_underprediction_C": 0.6590060121042604,
+      "max_underprediction_C": 4.178481044891626,
+      "fraction_underprediction_gt_2C": 0.007806691449814126
+    }
+  },
+  {
+    "kind": "A_roll",
+    "h": 15,
+    "branch": "CONDITIONAL-HOLD",
+    "all_source_valid_TJ": 2706,
+    "labels": 2690,
+    "predictions": 2691,
+    "scored": 2690,
+    "labels_rejected": {
+      "no_TJ_answer": 16
+    },
+    "error": {
+      "n": 2690,
+      "MAE_C": 0.444925521312458,
+      "RMSE_C": 0.6439206588022737,
+      "mean_error_C": 0.34632608211301347,
+      "P95_abs_error_C": 1.0783906700968553,
+      "P95_underprediction_C": 0.1877959199124506,
+      "max_underprediction_C": 3.8113588396025477,
+      "fraction_underprediction_gt_2C": 0.005947955390334572
+    }
+  },
+  {
+    "kind": "A_roll",
+    "h": 15,
+    "branch": "QS",
+    "all_source_valid_TJ": 2706,
+    "labels": 2690,
+    "predictions": 2691,
+    "scored": 2690,
+    "labels_rejected": {
+      "no_TJ_answer": 16
+    },
+    "error": {
+      "n": 2690,
+      "MAE_C": 0.8993716341463432,
+      "RMSE_C": 1.2323486623435538,
+      "mean_error_C": -0.08398180102158767,
+      "P95_abs_error_C": 2.662534840610344,
+      "P95_underprediction_C": 2.531506347747053,
+      "max_underprediction_C": 5.47897321390532,
+      "fraction_underprediction_gt_2C": 0.09553903345724907
+    }
+  },
+  {
+    "kind": "A_roll",
+    "h": 15,
+    "branch": "LP30",
+    "all_source_valid_TJ": 2706,
+    "labels": 2690,
+    "predictions": 2691,
+    "scored": 2690,
+    "labels_rejected": {
+      "no_TJ_answer": 16
+    },
+    "error": {
+      "n": 2690,
+      "MAE_C": 0.4594559544915358,
+      "RMSE_C": 0.6699288836550944,
+      "mean_error_C": -0.08264933242686329,
+      "P95_abs_error_C": 1.0912347748976852,
+      "P95_underprediction_C": 0.8065389413640147,
+      "max_underprediction_C": 4.895368018780957,
+      "fraction_underprediction_gt_2C": 0.010037174721189592
+    }
+  },
+  {
+    "kind": "A_roll",
+    "h": 15,
+    "branch": "LP120",
+    "all_source_valid_TJ": 2706,
+    "labels": 2690,
+    "predictions": 2691,
+    "scored": 2690,
+    "labels_rejected": {
+      "no_TJ_answer": 16
+    },
+    "error": {
+      "n": 2690,
+      "MAE_C": 0.6618697849258637,
+      "RMSE_C": 0.8114693423635922,
+      "mean_error_C": -0.098783279144343,
+      "P95_abs_error_C": 1.3412115127436546,
+      "P95_underprediction_C": 1.2032737644777989,
+      "max_underprediction_C": 3.019988335933327,
+      "fraction_underprediction_gt_2C": 0.0044609665427509295
+    }
+  },
+  {
+    "kind": "A_roll",
+    "h": 45,
+    "branch": "AUGMENTED-KF",
+    "all_source_valid_TJ": 2706,
+    "labels": 2660,
+    "predictions": 2661,
+    "scored": 2660,
+    "labels_rejected": {
+      "no_TJ_answer": 46
+    },
+    "error": {
+      "n": 2660,
+      "MAE_C": 0.3333420644769486,
+      "RMSE_C": 0.5458998222958898,
+      "mean_error_C": -0.05785880084361224,
+      "P95_abs_error_C": 0.9296542396700247,
+      "P95_underprediction_C": 0.6307983922346323,
+      "max_underprediction_C": 4.074771328756377,
+      "fraction_underprediction_gt_2C": 0.008646616541353383
+    }
+  },
+  {
+    "kind": "A_roll",
+    "h": 45,
+    "branch": "CONDITIONAL-HOLD",
+    "all_source_valid_TJ": 2706,
+    "labels": 2660,
+    "predictions": 2661,
+    "scored": 2660,
+    "labels_rejected": {
+      "no_TJ_answer": 46
+    },
+    "error": {
+      "n": 2660,
+      "MAE_C": 0.591332803849234,
+      "RMSE_C": 0.7812019440174944,
+      "mean_error_C": 0.5088150542625961,
+      "P95_abs_error_C": 1.3458530460649158,
+      "P95_underprediction_C": 0.1627002166150598,
+      "max_underprediction_C": 3.503450762538101,
+      "fraction_underprediction_gt_2C": 0.006015037593984963
+    }
+  },
+  {
+    "kind": "A_roll",
+    "h": 45,
+    "branch": "QS",
+    "all_source_valid_TJ": 2706,
+    "labels": 2660,
+    "predictions": 2661,
+    "scored": 2660,
+    "labels_rejected": {
+      "no_TJ_answer": 46
+    },
+    "error": {
+      "n": 2660,
+      "MAE_C": 0.8813596126757643,
+      "RMSE_C": 1.2095972121142327,
+      "mean_error_C": -0.12337118220206963,
+      "P95_abs_error_C": 2.4730560684369345,
+      "P95_underprediction_C": 2.34133846131491,
+      "max_underprediction_C": 5.841367005580771,
+      "fraction_underprediction_gt_2C": 0.08721804511278196
+    }
+  },
+  {
+    "kind": "A_roll",
+    "h": 45,
+    "branch": "LP30",
+    "all_source_valid_TJ": 2706,
+    "labels": 2660,
+    "predictions": 2661,
+    "scored": 2660,
+    "labels_rejected": {
+      "no_TJ_answer": 46
+    },
+    "error": {
+      "n": 2660,
+      "MAE_C": 0.5065281754702115,
+      "RMSE_C": 0.7151666153482348,
+      "mean_error_C": -0.10931776653571067,
+      "P95_abs_error_C": 1.254181845395053,
+      "P95_underprediction_C": 0.8339207635005677,
+      "max_underprediction_C": 4.87978162124427,
+      "fraction_underprediction_gt_2C": 0.010902255639097745
+    }
+  },
+  {
+    "kind": "A_roll",
+    "h": 45,
+    "branch": "LP120",
+    "all_source_valid_TJ": 2706,
+    "labels": 2660,
+    "predictions": 2661,
+    "scored": 2660,
+    "labels_rejected": {
+      "no_TJ_answer": 46
+    },
+    "error": {
+      "n": 2660,
+      "MAE_C": 0.61054189840592,
+      "RMSE_C": 0.7507024040166814,
+      "mean_error_C": -0.10493435866452208,
+      "P95_abs_error_C": 1.2279749485494829,
+      "P95_underprediction_C": 1.0279635773833251,
+      "max_underprediction_C": 3.115904290843666,
+      "fraction_underprediction_gt_2C": 0.005263157894736842
+    }
+  },
+  {
+    "kind": "A_roll",
+    "h": 90,
+    "branch": "AUGMENTED-KF",
+    "all_source_valid_TJ": 2706,
+    "labels": 2615,
+    "predictions": 2616,
+    "scored": 2615,
+    "labels_rejected": {
+      "no_TJ_answer": 91
+    },
+    "error": {
+      "n": 2615,
+      "MAE_C": 0.4023347977152823,
+      "RMSE_C": 0.6206929411065644,
+      "mean_error_C": -0.07837434015730557,
+      "P95_abs_error_C": 1.083295179019741,
+      "P95_underprediction_C": 0.7056736691912859,
+      "max_underprediction_C": 4.254462209325311,
+      "fraction_underprediction_gt_2C": 0.00994263862332696
+    }
+  },
+  {
+    "kind": "A_roll",
+    "h": 90,
+    "branch": "CONDITIONAL-HOLD",
+    "all_source_valid_TJ": 2706,
+    "labels": 2615,
+    "predictions": 2616,
+    "scored": 2615,
+    "labels_rejected": {
+      "no_TJ_answer": 91
+    },
+    "error": {
+      "n": 2615,
+      "MAE_C": 0.7239869218788679,
+      "RMSE_C": 0.914112876288261,
+      "mean_error_C": 0.6430146129074296,
+      "P95_abs_error_C": 1.5743967603613036,
+      "P95_underprediction_C": 0.17945610986460564,
+      "max_underprediction_C": 3.4300908925767644,
+      "fraction_underprediction_gt_2C": 0.005353728489483747
+    }
+  },
+  {
+    "kind": "A_roll",
+    "h": 90,
+    "branch": "QS",
+    "all_source_valid_TJ": 2706,
+    "labels": 2615,
+    "predictions": 2616,
+    "scored": 2615,
+    "labels_rejected": {
+      "no_TJ_answer": 91
+    },
+    "error": {
+      "n": 2615,
+      "MAE_C": 0.7749816289216349,
+      "RMSE_C": 1.069850672482815,
+      "mean_error_C": -0.14559389625376368,
+      "P95_abs_error_C": 2.1128865524723204,
+      "P95_underprediction_C": 1.6670913425283969,
+      "max_underprediction_C": 5.910511303138776,
+      "fraction_underprediction_gt_2C": 0.025621414913957936
+    }
+  },
+  {
+    "kind": "A_roll",
+    "h": 90,
+    "branch": "LP30",
+    "all_source_valid_TJ": 2706,
+    "labels": 2615,
+    "predictions": 2616,
+    "scored": 2615,
+    "labels_rejected": {
+      "no_TJ_answer": 91
+    },
+    "error": {
+      "n": 2615,
+      "MAE_C": 0.5294549097196837,
+      "RMSE_C": 0.745781637214961,
+      "mean_error_C": -0.12002281296684486,
+      "P95_abs_error_C": 1.3355905260247138,
+      "P95_underprediction_C": 0.9320450076294242,
+      "max_underprediction_C": 4.600738015934688,
+      "fraction_underprediction_gt_2C": 0.010707456978967494
+    }
+  },
+  {
+    "kind": "A_roll",
+    "h": 90,
+    "branch": "LP120",
+    "all_source_valid_TJ": 2706,
+    "labels": 2615,
+    "predictions": 2616,
+    "scored": 2615,
+    "labels_rejected": {
+      "no_TJ_answer": 91
+    },
+    "error": {
+      "n": 2615,
+      "MAE_C": 0.466356426940479,
+      "RMSE_C": 0.6264701830948212,
+      "mean_error_C": -0.10074414030167411,
+      "P95_abs_error_C": 1.0064471866310851,
+      "P95_underprediction_C": 0.8212179310409287,
+      "max_underprediction_C": 4.11306662180143,
+      "fraction_underprediction_gt_2C": 0.0076481835564053535
+    }
+  },
+  {
+    "kind": "B_HOLD",
+    "h": 15,
+    "branch": "AUGMENTED-KF",
+    "all_source_valid_TJ": 2706,
+    "labels": 2690,
+    "predictions": 2706,
+    "scored": 2690,
+    "labels_rejected": {
+      "no_TJ_answer": 16
+    },
+    "error": {
+      "n": 2690,
+      "MAE_C": 0.5388336302180231,
+      "RMSE_C": 1.4220184711379746,
+      "mean_error_C": -0.0356768006627259,
+      "P95_abs_error_C": 2.093011433788917,
+      "P95_underprediction_C": 1.0291049519622388,
+      "max_underprediction_C": 8.628496444511974,
+      "fraction_underprediction_gt_2C": 0.027881040892193308
+    }
+  },
+  {
+    "kind": "B_HOLD",
+    "h": 15,
+    "branch": "CONDITIONAL-HOLD",
+    "all_source_valid_TJ": 2706,
+    "labels": 2690,
+    "predictions": 2706,
+    "scored": 2690,
+    "labels_rejected": {
+      "no_TJ_answer": 16
+    },
+    "error": {
+      "n": 2690,
+      "MAE_C": 0.6973194557984549,
+      "RMSE_C": 1.4844969410601527,
+      "mean_error_C": 0.34519625922830044,
+      "P95_abs_error_C": 2.167239063027874,
+      "P95_underprediction_C": 0.434164508865247,
+      "max_underprediction_C": 8.322977553820245,
+      "fraction_underprediction_gt_2C": 0.02453531598513011
+    }
+  },
+  {
+    "kind": "B_HOLD",
+    "h": 15,
+    "branch": "QS",
+    "all_source_valid_TJ": 2706,
+    "labels": 2690,
+    "predictions": 2706,
+    "scored": 2690,
+    "labels_rejected": {
+      "no_TJ_answer": 16
+    },
+    "error": {
+      "n": 2690,
+      "MAE_C": 1.1474419748196418,
+      "RMSE_C": 1.8597580475844415,
+      "mean_error_C": -0.08458015673839696,
+      "P95_abs_error_C": 3.0423471671472355,
+      "P95_underprediction_C": 2.6467806851342344,
+      "max_underprediction_C": 9.779720526186807,
+      "fraction_underprediction_gt_2C": 0.10892193308550185
+    }
+  },
+  {
+    "kind": "B_HOLD",
+    "h": 15,
+    "branch": "LP30",
+    "all_source_valid_TJ": 2706,
+    "labels": 2690,
+    "predictions": 2706,
+    "scored": 2690,
+    "labels_rejected": {
+      "no_TJ_answer": 16
+    },
+    "error": {
+      "n": 2690,
+      "MAE_C": 0.7186888092724817,
+      "RMSE_C": 1.518388616698978,
+      "mean_error_C": -0.08379217032389001,
+      "P95_abs_error_C": 2.148797048017345,
+      "P95_underprediction_C": 0.8910114586415154,
+      "max_underprediction_C": 9.069023034476459,
+      "fraction_underprediction_gt_2C": 0.026394052044609664
+    }
+  },
+  {
+    "kind": "B_HOLD",
+    "h": 15,
+    "branch": "LP120",
+    "all_source_valid_TJ": 2706,
+    "labels": 2690,
+    "predictions": 2706,
+    "scored": 2690,
+    "labels_rejected": {
+      "no_TJ_answer": 16
+    },
+    "error": {
+      "n": 2690,
+      "MAE_C": 0.8723262709116327,
+      "RMSE_C": 1.454727044530563,
+      "mean_error_C": -0.09983272780660686,
+      "P95_abs_error_C": 2.5484067125589034,
+      "P95_underprediction_C": 1.4975171781771697,
+      "max_underprediction_C": 7.856946846319481,
+      "fraction_underprediction_gt_2C": 0.03382899628252788
+    }
+  },
+  {
+    "kind": "B_HOLD",
+    "h": 45,
+    "branch": "AUGMENTED-KF",
+    "all_source_valid_TJ": 2706,
+    "labels": 2660,
+    "predictions": 2706,
+    "scored": 2660,
+    "labels_rejected": {
+      "no_TJ_answer": 46
+    },
+    "error": {
+      "n": 2660,
+      "MAE_C": 1.5385242248821642,
+      "RMSE_C": 3.4770882547623487,
+      "mean_error_C": -0.07364995854478686,
+      "P95_abs_error_C": 10.254077977917456,
+      "P95_underprediction_C": 7.674100096115572,
+      "max_underprediction_C": 12.711931306656723,
+      "fraction_underprediction_gt_2C": 0.07443609022556391
+    }
+  },
+  {
+    "kind": "B_HOLD",
+    "h": 45,
+    "branch": "CONDITIONAL-HOLD",
+    "all_source_valid_TJ": 2706,
+    "labels": 2660,
+    "predictions": 2706,
+    "scored": 2660,
+    "labels_rejected": {
+      "no_TJ_answer": 46
+    },
+    "error": {
+      "n": 2660,
+      "MAE_C": 1.7394687295102154,
+      "RMSE_C": 3.5595027612236114,
+      "mean_error_C": 0.49293169234752593,
+      "P95_abs_error_C": 10.27432131802539,
+      "P95_underprediction_C": 7.09829952763452,
+      "max_underprediction_C": 12.21476213888836,
+      "fraction_underprediction_gt_2C": 0.07180451127819548
+    }
+  },
+  {
+    "kind": "B_HOLD",
+    "h": 45,
+    "branch": "QS",
+    "all_source_valid_TJ": 2706,
+    "labels": 2660,
+    "predictions": 2706,
+    "scored": 2660,
+    "labels_rejected": {
+      "no_TJ_answer": 46
+    },
+    "error": {
+      "n": 2660,
+      "MAE_C": 2.094155673331769,
+      "RMSE_C": 3.8086621013422066,
+      "mean_error_C": -0.13555687211797293,
+      "P95_abs_error_C": 10.80202461410355,
+      "P95_underprediction_C": 8.49274588911619,
+      "max_underprediction_C": 13.317636414011986,
+      "fraction_underprediction_gt_2C": 0.15263157894736842
+    }
+  },
+  {
+    "kind": "B_HOLD",
+    "h": 45,
+    "branch": "LP30",
+    "all_source_valid_TJ": 2706,
+    "labels": 2660,
+    "predictions": 2706,
+    "scored": 2660,
+    "labels_rejected": {
+      "no_TJ_answer": 46
+    },
+    "error": {
+      "n": 2660,
+      "MAE_C": 1.7232186821924618,
+      "RMSE_C": 3.592284238590404,
+      "mean_error_C": -0.12563546176564977,
+      "P95_abs_error_C": 10.51355387452086,
+      "P95_underprediction_C": 8.13427897720652,
+      "max_underprediction_C": 13.039259094468669,
+      "fraction_underprediction_gt_2C": 0.07368421052631578
+    }
+  },
+  {
+    "kind": "B_HOLD",
+    "h": 45,
+    "branch": "LP120",
+    "all_source_valid_TJ": 2706,
+    "labels": 2660,
+    "predictions": 2706,
+    "scored": 2660,
+    "labels_rejected": {
+      "no_TJ_answer": 46
+    },
+    "error": {
+      "n": 2660,
+      "MAE_C": 1.6638321079080254,
+      "RMSE_C": 3.2966997408557863,
+      "mean_error_C": -0.11907439395839083,
+      "P95_abs_error_C": 9.601900540607048,
+      "P95_underprediction_C": 6.855043195952633,
+      "max_underprediction_C": 11.945284824119213,
+      "fraction_underprediction_gt_2C": 0.08421052631578947
+    }
+  },
+  {
+    "kind": "B_HOLD",
+    "h": 90,
+    "branch": "AUGMENTED-KF",
+    "all_source_valid_TJ": 2706,
+    "labels": 2615,
+    "predictions": 2706,
+    "scored": 2615,
+    "labels_rejected": {
+      "no_TJ_answer": 91
+    },
+    "error": {
+      "n": 2615,
+      "MAE_C": 3.525969618287535,
+      "RMSE_C": 6.220604756435854,
+      "mean_error_C": -0.13132577020365263,
+      "P95_abs_error_C": 14.09124800540001,
+      "P95_underprediction_C": 12.81175036257348,
+      "max_underprediction_C": 15.316196866651822,
+      "fraction_underprediction_gt_2C": 0.14990439770554492
+    }
+  },
+  {
+    "kind": "B_HOLD",
+    "h": 90,
+    "branch": "CONDITIONAL-HOLD",
+    "all_source_valid_TJ": 2706,
+    "labels": 2615,
+    "predictions": 2706,
+    "scored": 2615,
+    "labels_rejected": {
+      "no_TJ_answer": 91
+    },
+    "error": {
+      "n": 2615,
+      "MAE_C": 3.6388994579437774,
+      "RMSE_C": 6.313353855174634,
+      "mean_error_C": 0.5896782955994637,
+      "P95_abs_error_C": 14.300183281287731,
+      "P95_underprediction_C": 12.243631207704487,
+      "max_underprediction_C": 14.62663826845941,
+      "fraction_underprediction_gt_2C": 0.14110898661567878
+    }
+  },
+  {
+    "kind": "B_HOLD",
+    "h": 90,
+    "branch": "QS",
+    "all_source_valid_TJ": 2706,
+    "labels": 2615,
+    "predictions": 2706,
+    "scored": 2615,
+    "labels_rejected": {
+      "no_TJ_answer": 91
+    },
+    "error": {
+      "n": 2615,
+      "MAE_C": 3.9016707461143487,
+      "RMSE_C": 6.505107596762925,
+      "mean_error_C": -0.1936211885762726,
+      "P95_abs_error_C": 14.633670174811373,
+      "P95_underprediction_C": 13.594049605230877,
+      "max_underprediction_C": 15.827722325054246,
+      "fraction_underprediction_gt_2C": 0.19732313575525812
+    }
+  },
+  {
+    "kind": "B_HOLD",
+    "h": 90,
+    "branch": "LP30",
+    "all_source_valid_TJ": 2706,
+    "labels": 2615,
+    "predictions": 2706,
+    "scored": 2615,
+    "labels_rejected": {
+      "no_TJ_answer": 91
+    },
+    "error": {
+      "n": 2615,
+      "MAE_C": 3.6599032832239375,
+      "RMSE_C": 6.325101115622627,
+      "mean_error_C": -0.17582169410486712,
+      "P95_abs_error_C": 14.299945008411587,
+      "P95_underprediction_C": 13.17899556847035,
+      "max_underprediction_C": 15.573621036654643,
+      "fraction_underprediction_gt_2C": 0.14875717017208412
+    }
+  },
+  {
+    "kind": "B_HOLD",
+    "h": 90,
+    "branch": "LP120",
+    "all_source_valid_TJ": 2706,
+    "labels": 2615,
+    "predictions": 2706,
+    "scored": 2615,
+    "labels_rejected": {
+      "no_TJ_answer": 91
+    },
+    "error": {
+      "n": 2615,
+      "MAE_C": 3.417571095093873,
+      "RMSE_C": 6.00595732127189,
+      "mean_error_C": -0.1458879484671284,
+      "P95_abs_error_C": 13.607652704825394,
+      "P95_underprediction_C": 12.301609732077083,
+      "max_underprediction_C": 14.713705529532803,
+      "fraction_underprediction_gt_2C": 0.15296367112810708
+    }
+  }
+]

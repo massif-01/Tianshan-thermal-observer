@@ -1,0 +1,125 @@
+.......................F...........                                      [100%]
+=================================== FAILURES ===================================
+___________ test_once_only_baseline_and_native_completion[later_cpu] ___________
+
+tmp_path = PosixPath('/private/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/pytest-of-massif/pytest-623/test_once_only_baseline_and_na4')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b780410>
+scenario = 'later_cpu'
+
+    @pytest.mark.parametrize('scenario',['high_cpu','high_rss','unknown','normal','later_cpu'])
+    def test_once_only_baseline_and_native_completion(tmp_path,monkeypatch,scenario):
+        async def check():
+            async with FakeSource() as server:
+                class FastClock(Clock):
+                    def __init__(self):super().__init__();self.actual_start=time.monotonic()
+                    def now(self):return 28+8*(time.monotonic()-self.actual_start)
+                monkeypatch.setattr(runtime,'Clock',FastClock)
+                real_process=psutil.Process;start=time.monotonic()
+                class Process:
+                    def __init__(self,*a,**k):self.p=real_process(*a,**k)
+                    def __getattr__(self,n):return getattr(self.p,n)
+                    def cpu_times(self):
+                        t=8*(time.monotonic()-start)
+                        rate=.2 if scenario=='high_cpu' else .005
+                        cpu=rate*t
+                        if scenario=='later_cpu' and t>8:cpu+=.20*(t-8)
+                        return self.p.cpu_times()._replace(user=cpu,system=0)
+                    def memory_info(self):
+                        m=self.p.memory_info();return m._replace(rss=129*1024**2 if scenario=='high_rss' else 80*1024**2)
+                # Unknown is represented as an absent candidate sample without emitting nonfinite JSON.
+                if scenario=='unknown':
+                    original=receiver_resources.baseline_admission
+                    monkeypatch.setattr(receiver_resources,'baseline_admission',lambda sample,now:original(None,now))
+                if scenario!='unknown':monkeypatch.setattr(psutil,'Process',Process)
+                # Owned CPU source subprocess, no ssh command or real device call.
+                c=load_config(environ={})
+                for k in ('orin','tianshan'):c[k]['base_url']=server.url
+                c['orin'].update(source_sample_interval_ms=1000,source_interval_evidence='SYNTHETIC loopback')
+                b=preview(c,'capability');b.update(command_id='LOCAL-'+scenario,synthetic_loopback_only=True,
+                    sidecar=dict(command_id='LOCAL-'+scenario,query_target_s=.2,transport='synthetic',argv=[sys.executable,str(Path(__file__).with_name('fake_sidecar.py')),'--command-id','LOCAL-'+scenario]))
+                b['authorization'].update(command_id=b['command_id'],explicit_user_start=True,evidence='OWNED LOOPBACK TEST ONLY')
+                # Fake source CLI has a positional command, matching its existing test-only contract.
+                b['sidecar']['argv']=[sys.executable,str(Path(__file__).with_name('fake_sidecar.py')),b['command_id']]
+                out=tmp_path/'run';s=await runtime.run(c,b,'diagnose',out,duration=60,cpu_pilot=True)
+                admission=json.loads((out/'baseline-resource-admission.json').read_text());events=[json.loads(x) for x in (out/'sidecar-events.jsonl').read_text().splitlines()]
+                starts=[x for x in events if x['event']=='started'];baseline=[x for x in events if x['event']=='baseline_resource_admission']
+                assert len(baseline)==1 and s['reason']=='diagnostic_duration' and s['own_async_tasks_remaining']==0
+                assert s['requester_instances_created']==0 and s['native_run_directories']==1 and s['observer_instances_created']==1
+                assert not server.posts and not server.model_gets
+                if scenario in ('high_cpu','high_rss','unknown'):
+                    assert not starts and not admission['allowed'] and not (out/'cpu-sidecar-wire.jsonl').exists()
+                    assert s['sidecar_status'].startswith('baseline_receiver_')
+                else:
+                    assert admission['allowed'] and len(starts)==1
+                    assert (out/'cpu-sidecar-wire.jsonl').exists()
+                    if scenario=='later_cpu':assert s['sidecar_status']=='receiver_total_resource_budget_exceeded'
+                assert json.loads((out/'thread-policy.json').read_text())['verified']
+>       asyncio.run(check())
+
+experiments/cpu_runtime_threads_v1/tests/test_resource_runtime.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py:194: in run
+    return runner.run(main)
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/base_events.py:687: in run_until_complete
+    return future.result()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def check():
+        async with FakeSource() as server:
+            class FastClock(Clock):
+                def __init__(self):super().__init__();self.actual_start=time.monotonic()
+                def now(self):return 28+8*(time.monotonic()-self.actual_start)
+            monkeypatch.setattr(runtime,'Clock',FastClock)
+            real_process=psutil.Process;start=time.monotonic()
+            class Process:
+                def __init__(self,*a,**k):self.p=real_process(*a,**k)
+                def __getattr__(self,n):return getattr(self.p,n)
+                def cpu_times(self):
+                    t=8*(time.monotonic()-start)
+                    rate=.2 if scenario=='high_cpu' else .005
+                    cpu=rate*t
+                    if scenario=='later_cpu' and t>8:cpu+=.20*(t-8)
+                    return self.p.cpu_times()._replace(user=cpu,system=0)
+                def memory_info(self):
+                    m=self.p.memory_info();return m._replace(rss=129*1024**2 if scenario=='high_rss' else 80*1024**2)
+            # Unknown is represented as an absent candidate sample without emitting nonfinite JSON.
+            if scenario=='unknown':
+                original=receiver_resources.baseline_admission
+                monkeypatch.setattr(receiver_resources,'baseline_admission',lambda sample,now:original(None,now))
+            if scenario!='unknown':monkeypatch.setattr(psutil,'Process',Process)
+            # Owned CPU source subprocess, no ssh command or real device call.
+            c=load_config(environ={})
+            for k in ('orin','tianshan'):c[k]['base_url']=server.url
+            c['orin'].update(source_sample_interval_ms=1000,source_interval_evidence='SYNTHETIC loopback')
+            b=preview(c,'capability');b.update(command_id='LOCAL-'+scenario,synthetic_loopback_only=True,
+                sidecar=dict(command_id='LOCAL-'+scenario,query_target_s=.2,transport='synthetic',argv=[sys.executable,str(Path(__file__).with_name('fake_sidecar.py')),'--command-id','LOCAL-'+scenario]))
+            b['authorization'].update(command_id=b['command_id'],explicit_user_start=True,evidence='OWNED LOOPBACK TEST ONLY')
+            # Fake source CLI has a positional command, matching its existing test-only contract.
+            b['sidecar']['argv']=[sys.executable,str(Path(__file__).with_name('fake_sidecar.py')),b['command_id']]
+            out=tmp_path/'run';s=await runtime.run(c,b,'diagnose',out,duration=60,cpu_pilot=True)
+            admission=json.loads((out/'baseline-resource-admission.json').read_text());events=[json.loads(x) for x in (out/'sidecar-events.jsonl').read_text().splitlines()]
+            starts=[x for x in events if x['event']=='started'];baseline=[x for x in events if x['event']=='baseline_resource_admission']
+            assert len(baseline)==1 and s['reason']=='diagnostic_duration' and s['own_async_tasks_remaining']==0
+            assert s['requester_instances_created']==0 and s['native_run_directories']==1 and s['observer_instances_created']==1
+            assert not server.posts and not server.model_gets
+            if scenario in ('high_cpu','high_rss','unknown'):
+                assert not starts and not admission['allowed'] and not (out/'cpu-sidecar-wire.jsonl').exists()
+                assert s['sidecar_status'].startswith('baseline_receiver_')
+            else:
+                assert admission['allowed'] and len(starts)==1
+                assert (out/'cpu-sidecar-wire.jsonl').exists()
+>               if scenario=='later_cpu':assert s['sidecar_status']=='receiver_total_resource_budget_exceeded'
+E               AssertionError: assert 'source_stale_or_blocked' == 'receiver_tot...dget_exceeded'
+E                 
+E                 - receiver_total_resource_budget_exceeded
+E                 + source_stale_or_blocked
+
+experiments/cpu_runtime_threads_v1/tests/test_resource_runtime.py:57: AssertionError
+----------------------------- Captured stdout call -----------------------------
+已连接，正在等待第一份有效温度数据。
+本轮TTO已停止；现有风扇控制未被修改。
+=========================== short test summary info ============================
+FAILED experiments/cpu_runtime_threads_v1/tests/test_resource_runtime.py::test_once_only_baseline_and_native_completion[later_cpu]
+1 failed, 34 passed in 21.75s

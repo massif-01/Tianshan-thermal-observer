@@ -1,0 +1,26 @@
+{
+  "python": "3.12.3 (v3.12.3:f6650f9ad7, Apr  9 2024, 08:18:47) [Clang 13.0.0 (clang-1300.0.29.30)]",
+  "executable": "/Users/massif/Tianshan-thermal-observer/.venv/bin/python",
+  "prefix": "/Users/massif/Tianshan-thermal-observer/.venv",
+  "system": "macOS-27.0.1-arm64-arm-64bit",
+  "tto_source": "/private/tmp/tto-offline-next-52f571a/src/tto/__init__.py",
+  "reference_commit": "52f571acb128af44f4b06bbba049148e00fd97fb",
+  "dependencies": {
+    "numpy": "2.2.6",
+    "scikit-learn": "1.6.1",
+    "psutil": "7.0.0",
+    "threadpoolctl": "3.7.0"
+  },
+  "selection": "Choose short-QA for one bounded Ridge fit because it is the focus of this task, before inspecting scores; both runs for qualification/B0/B1 descriptions.",
+  "bounds": {
+    "ridge_lambda_grid": [
+      0.001,
+      0.01,
+      0.1,
+      1.0
+    ],
+    "thread_limit": 1,
+    "timeout_s": 600,
+    "rss_mib": 2048
+  }
+}

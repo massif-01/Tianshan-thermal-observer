@@ -1,0 +1,56 @@
+{
+  "record_schema": 1,
+  "status": "pending_user_deployment_check",
+  "recorded_at_utc": null,
+  "ws_candidate": {
+    "final_after_f1_f2": null,
+    "wheel_filename": null,
+    "wheel_sha256": null,
+    "installed_import_path": null,
+    "parser_sha256": null,
+    "cli_sha256": null,
+    "config_sha256": null,
+    "server_sha256": null,
+    "final_closeout_evidence_ref": null,
+    "independent_closeout_review": "not_provided_to_plan_author"
+  },
+  "effective_service_config": {
+    "evidence_ref": null,
+    "listen_host": null,
+    "listen_port": null,
+    "tegrastats_interval_ms": null,
+    "update_interval_s": null,
+    "freshness_timeout_ms": null,
+    "debug": null,
+    "sources_redacted": {}
+  },
+  "tianshan_controller": {
+    "reference_commit": "050757bb8046206797804ba5edc110ae3244bf17",
+    "actual_firmware_identity": null,
+    "actual_identity_evidence": null,
+    "single_fan": true,
+    "fan_id": 0,
+    "primary_sensor": "Jetson tj-thermal",
+    "binding_evidence": null,
+    "config_snapshot_sha256": null
+  },
+  "live_read_authorization": {
+    "authorized_by_user": false,
+    "authorized_endpoints": [],
+    "max_duration_s": null,
+    "record_ref": null
+  },
+  "checks": {
+    "tj_reaches_tianshan": null,
+    "socketio_event_received": null,
+    "new_sequence_progresses": null,
+    "repeated_cache_not_new_sample": null,
+    "power_fields_valid": null,
+    "source_period_confirmed": null,
+    "normal_message_size_bytes": null,
+    "fan_status_usable": null,
+    "existing_control_unchanged": null
+  },
+  "backup_and_rollback_confirmed_by_user": null,
+  "notes": []
+}

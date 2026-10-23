@@ -1,0 +1,47 @@
+{
+  "date": "2026-10-22",
+  "user_authorized_commit_push_merge": true,
+  "threads": [
+    {
+      "id": "01a13486-e0f1-7ab2-b8ce-be7f5a15527f",
+      "title": "TTO灰箱辨识与对照实验"
+    },
+    {
+      "id": "01a1331a-f937-7d91-aef0-ac4f5e50bd8a",
+      "title": "模型推理监控"
+    },
+    {
+      "id": "01a12fd6-393a-7c73-8d46-6e70f9e17e61",
+      "title": "TTO 实机安装与测试"
+    }
+  ],
+  "original_files": 30704,
+  "original_bytes": 19347591225,
+  "excluded_installed_environment_roots": [
+    "evidence/prep-midload-v1/clean-install",
+    "evidence/mainline-observe-20261021/local-env",
+    "evidence/mainline-observe-20261021/release-env",
+    "evidence/cpu-runtime-threads-20261020/local-env",
+    "evidence/observe-longrun-close-20261021/release-env",
+    "evidence/prep-midload-v1/repair-r1-r2/clean-install",
+    "evidence/prep-midload-v1/conda-clean-final/conda-env",
+    "evidence/prep-midload-v1/conda-clean-install/conda-env",
+    "evidence/observe-longrun-close-20261021/release-env-py312",
+    "evidence/prep-midload-v1/repair-r1-r2/conda-install/conda-env"
+  ],
+  "excluded_build_root": "build/",
+  "excluded_common_caches": [
+    ".venv*/",
+    "node_modules/",
+    "__pycache__/",
+    ".pytest_cache/",
+    ".git/",
+    ".DS_Store",
+    "*.pyc",
+    "*.pyo"
+  ],
+  "source_directories_preserved": true,
+  "experimental_success_not_implied_by_archival": true,
+  "devices_accessed": false,
+  "experiments_reexecuted": false
+}

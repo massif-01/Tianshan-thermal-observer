@@ -1,0 +1,48 @@
+{
+  "R1": {
+    "synthetic_only": true,
+    "sequence": "A-B-C-D-E-A",
+    "creation_rejected": "非连续过程分组冲突：episode A，run 04db4560-4194-4959-bf45-75731b708a9e [2026-01-01T00:00:00+00:00, 2026-01-01T00:06:39+00:00] 后又出现 run b653c8c0-60d5-4e44-9d2e-82d26fe9364c [2026-01-06T00:00:00+00:00, 2026-01-06T00:06:39+00:00]；请确认分组，不自动改名或删段。",
+    "direct_validation_rejected": "非连续过程分组冲突：episode A，run 04db4560-4194-4959-bf45-75731b708a9e [2026-01-01T00:00:00+00:00, 2026-01-01T00:06:39+00:00] 后又出现 run b653c8c0-60d5-4e44-9d2e-82d26fe9364c [2026-01-06T00:00:00+00:00, 2026-01-06T00:06:39+00:00]；请确认分组，不自动改名或删段。"
+  },
+  "R2": {
+    "synthetic_only": true,
+    "unchanged_training_methods": true,
+    "missing_field": "vdd_gpu_soc",
+    "matched_counts_45s": {
+      "baseline": 266,
+      "m0": 198,
+      "m1": 0
+    },
+    "decision_function_only_with_explicit_unit_flags": "小模型M0有初步价值（M0层内对照）；M1尚未证明更多输入有用：证据不足：M1层缺少共同可评分起点或两个独立测试过程。",
+    "persisted_evaluation_conclusion": "模拟演示：仅验证软件正确性，不代表实机收益。"
+  },
+  "R3": {
+    "synthetic_only": true,
+    "stored_full_model_predictions": 44,
+    "stored_full_model_scores": 102,
+    "report_full_model_scores": 102,
+    "changed_model_file_did_not_change_statistics": true,
+    "log_removal_reported": [
+      "predictions.jsonl",
+      "scores.jsonl"
+    ],
+    "prediction_and_score_logs_unchanged": true,
+    "shadow_run": "shadow-runs/run-2026-10-10T163517.380318_0000-13c94561"
+  },
+  "R4": [
+    {
+      "cross_origin": true,
+      "target_request_count": 0,
+      "session_closed": true,
+      "aiohttp": "3.11.18"
+    },
+    {
+      "cross_origin": false,
+      "target_request_count": 0,
+      "session_closed": true,
+      "aiohttp": "3.11.18"
+    }
+  ],
+  "hardware_executed": false
+}

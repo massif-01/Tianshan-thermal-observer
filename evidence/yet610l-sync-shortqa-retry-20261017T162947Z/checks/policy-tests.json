@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "cases": [
+    "temp-only fallback does not stop",
+    "recovery does not latch fatal",
+    "fault remains stop",
+    "guard remains stop",
+    "disabled remains stop",
+    "mode remains stop",
+    "manual temperature remains stop",
+    "binding remains stop",
+    "unapproved source remains stop"
+  ],
+  "native_health_unchanged": true,
+  "test_scope": "offline input flags and protected context only; no model request"
+}

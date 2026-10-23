@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/massif/Tianshan-thermal-observer/evidence/prep-midload-v1/candidate/experiments/thermal_identification_prep_v2/coverage_audit.py", line 88, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/Users/massif/Tianshan-thermal-observer/evidence/prep-midload-v1/candidate/experiments/thermal_identification_prep_v2/coverage_audit.py", line 65, in main
+    assert check['raw_TJ']==169 and check['original_method_origins']==166 and check['old_strict_answers']==6
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

@@ -1,0 +1,15 @@
+### Result
+{"duration_s":15.003,"decoded_body_bytes":{"/api/v1/series":51639,"/api/v1/events":14210,"/api/v1/predictions":425552,"/api/v1/context":20674},"completed_requests":{"/api/v1/series":14,"/api/v1/events":14,"/api/v1/predictions":14,"/api/v1/context":14},"ongoing_existing_connection_bytes":665329,"scope":"one existing local installed Chrome tab; decoded response bytes, not Ethernet wire bytes; ongoing connection is pre-existing SSE"}
+### Ran Playwright code
+```js
+await (async (page) => {
+ const cdp=await page.context().newCDPSession(page);await cdp.send('Network.enable');
+ const urls=new Map(),bytes=new Map(),counts=new Map();let unknown=0;
+ cdp.on('Network.requestWillBeSent',e=>{urls.set(e.requestId,new URL(e.request.url).pathname);});
+ cdp.on('Network.dataReceived',e=>{const p=urls.get(e.requestId);if(p){bytes.set(p,(bytes.get(p)||0)+e.dataLength);}else unknown+=e.dataLength;});
+ cdp.on('Network.loadingFinished',e=>{const p=urls.get(e.requestId);if(p)counts.set(p,(counts.get(p)||0)+1);});
+ const t=Date.now();await page.waitForTimeout(15000);await cdp.detach();
+ return {duration_s:(Date.now()-t)/1000,decoded_body_bytes:Object.fromEntries(bytes),completed_requests:Object.fromEntries(counts),ongoing_existing_connection_bytes:unknown,scope:'one existing local installed Chrome tab; decoded response bytes, not Ethernet wire bytes; ongoing connection is pre-existing SSE'};
+}
+)(page);
+```

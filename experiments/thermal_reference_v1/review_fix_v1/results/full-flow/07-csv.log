@@ -1,0 +1,35 @@
+{
+  "status": "imported",
+  "input_sha256": "41c2c66dac0c6a915f94aa7f35769ccbf6a6e9a22be06743df47d7693d5a41a5",
+  "mapping_sha256": "7cfad19294c7377cd7b29b8ebbe546160b079799d16c380bbd0137c5e8182d9d",
+  "input_name": "external.csv",
+  "recorded_at_utc": "2026-10-14T15:53:46.246501+00:00",
+  "rows": 3,
+  "added": 3,
+  "duplicates": 0,
+  "rejected_rows": 0,
+  "rows_with_missing_fields": 1,
+  "raw_stored_relative_path": "imports/raw/41c2c66dac0c6a915f94aa7f35769ccbf6a6e9a22be06743df47d7693d5a41a5.csv",
+  "row_ledger_relative_path": "imports/rows/41c2c66dac0c6a915f94aa7f35769ccbf6a6e9a22be06743df47d7693d5a41a5-7cfad19294c7377cd7b29b8ebbe546160b079799d16c380bbd0137c5e8182d9d.jsonl",
+  "exported_at_raw": null,
+  "cadence": {
+    "SYNTH-fin|None": {
+      "samples_with_time": 2,
+      "declared_interval_s": null,
+      "interval_basis": null,
+      "positive_interval_min_s": 100.34170389175415,
+      "positive_interval_max_s": 100.34170389175415,
+      "positive_interval_median_s": 100.34170389175415,
+      "zero_intervals": 0,
+      "reversed_intervals": 0,
+      "intervals_different_from_declared": null,
+      "equal_adjacent_temperature_pairs": 0,
+      "conclusion": "observed sampling cadence only; no missing samples filled; probe response NOT calibrated"
+    }
+  },
+  "revision_ids": [
+    "d2c1892b-58ff-4d7c-958c-38480fd14e99",
+    "d3d3757f-2928-4440-b75a-34b756511cc4",
+    "2b571cf6-4cfd-4545-bd29-65719e8d6238"
+  ]
+}

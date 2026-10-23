@@ -1,0 +1,58 @@
+[
+  {
+    "title": "NVIDIA nvidia-smi: Utilization",
+    "url": "https://docs.nvidia.com/deploy/nvidia-smi/index.html#utilization",
+    "checked_date": "2026-10-19",
+    "primary": true,
+    "paraphrase": "GPU utilization is a busy-time fraction over a past sample period; documentation states a product-dependent period between 1/6 second and 1 second.",
+    "limit": "This does not establish the actual underlying period for the installed Thor backend, nor the CPU-to-GPU lead. Faster polling alone is not an independent measurement."
+  },
+  {
+    "title": "jetson-stats jtop API",
+    "url": "https://rnext.it/jetson_stats/reference/jtop.html",
+    "checked_date": "2026-10-19",
+    "primary": true,
+    "paraphrase": "Documents per-core CPU properties and JSON export; actual service interval can differ from requested user interval; an existing service can determine the interval.",
+    "limit": "The current online documentation identifies version 7.2.2. It does not identify the installed device version, supported minimum interval, actual update rate or overhead."
+  },
+  {
+    "title": "NVIDIA Tegrastats Utility r38.2.1",
+    "url": "https://docs.nvidia.com/jetson/archives/r38.2.1/DeveloperGuide/AT/JetsonLinuxDevelopmentTools/TegrastatsUtility.html",
+    "checked_date": "2026-10-19",
+    "primary": true,
+    "paraphrase": "Describes per-core CPU utilization/frequency, RAM use, memory-controller activity, thermal and rail statistics; output interval uses milliseconds.",
+    "limit": "A print interval is not proof of the resolution of every metric; original rail meanings and platform-specific data sources must be retained."
+  },
+  {
+    "title": "vLLM Architecture Overview",
+    "url": "https://docs.vllm.ai/en/latest/design/arch_overview/",
+    "checked_date": "2026-10-19",
+    "primary": true,
+    "paraphrase": "API processing, scheduling/KV management and GPU execution have separate roles.",
+    "limit": "Generic architecture is not a timing trace of this installed engine, nor proof that every request reads KV on CPU before GPU work."
+  },
+  {
+    "title": "vLLM Model Runner V2: Async-First",
+    "url": "https://docs.vllm.ai/en/latest/design/model_runner_v2/#2-async-first",
+    "checked_date": "2026-10-19",
+    "primary": true,
+    "paraphrase": "Describes overlapping CPU preparation for a following step with GPU execution of the current step.",
+    "limit": "This design document does not prove the installed engine uses MRV2; it only prevents assuming every inference engine always has a simple non-overlapping CPU-then-GPU sequence."
+  },
+  {
+    "title": "vLLM Engine Arguments: cache configuration",
+    "url": "https://docs.vllm.ai/en/latest/configuration/engine_args/",
+    "checked_date": "2026-10-19",
+    "primary": true,
+    "paraphrase": "KV cache memory budget and CPU offloading are configurable engine behavior.",
+    "limit": "Do not infer allocation size equals active request count, or presume CPU KV offloading was enabled on this run."
+  },
+  {
+    "title": "NVIDIA CUDA for Tegra: Memory Management",
+    "url": "https://docs.nvidia.com/cuda/cuda-for-tegra-appnote/index.html",
+    "checked_date": "2026-10-19",
+    "primary": true,
+    "paraphrase": "Host/device/unified allocations on Tegra share physical SoC DRAM, with different access and caching behavior.",
+    "limit": "RAM allocation is not a direct heat/PWM measurement and does not calibrate the loaded-idle cooling baseline."
+  }
+]

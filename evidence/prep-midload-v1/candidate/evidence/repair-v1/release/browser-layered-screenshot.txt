@@ -1,0 +1,11 @@
+### Result
+- [Screenshot of viewport](output/playwright/repair/layered-final.png)
+### Ran Playwright code
+```js
+// Screenshot viewport and save it as output/playwright/repair/layered-final.png
+await page.screenshot({
+  path: 'output/playwright/repair/layered-final.png',
+  scale: 'css',
+  type: 'png'
+});
+```

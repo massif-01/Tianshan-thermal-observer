@@ -1,0 +1,1155 @@
+{
+  "archive": "/Users/massif/Tianshan-thermal-observer/evidence/midload-024-useroverride-20261014/trial-result.zip",
+  "archive_bytes": 1234664,
+  "archive_sha256": "979d9a4f547d4d2b4506772248606f45c700ee2b44315575be5bf9fc42cd2a5d",
+  "zip_crc_failure": null,
+  "duplicate_members": false,
+  "indexed_files": 32,
+  "file_checks": {
+    "collection/run-2026-10-13T173747.320817_0000-637f114b/events.jsonl": {
+      "bytes_match": true,
+      "sha256_match": true
+    },
+    "collection/run-2026-10-13T173747.320817_0000-637f114b/files.json": {
+      "bytes_match": true,
+      "sha256_match": true
+    },
+    "collection/run-2026-10-13T173747.320817_0000-637f114b/input-profile.json": {
+      "bytes_match": true,
+      "sha256_match": true
+    },
+    "collection/run-2026-10-13T173747.320817_0000-637f114b/manifest.json": {
+      "bytes_match": true,
+      "sha256_match": true
+    },
+    "collection/run-2026-10-13T173747.320817_0000-637f114b/observations-0001.jsonl": {
+      "bytes_match": true,
+      "sha256_match": true
+    },
+    "collection/run-2026-10-13T173747.320817_0000-637f114b/predictions.jsonl": {
+      "bytes_match": true,
+      "sha256_match": true
+    },
+    "collection/run-2026-10-13T173747.320817_0000-637f114b/scores.jsonl": {
+      "bytes_match": true,
+      "sha256_match": true
+    },
+    "collection/run-2026-10-13T173747.320817_0000-637f114b/summary.json": {
+      "bytes_match": true,
+      "sha256_match": true
+    },
+    "events.jsonl": {
+      "bytes_match": true,
+      "sha256_match": true
+    },
+    "frozen-plan.json": {
+      "bytes_match": true,
+      "sha256_match": true
+    },
+    "identity.json": {
+      "bytes_match": true,
+      "sha256_match": true
+    },
+    "input-health.json": {
+      "bytes_match": true,
+      "sha256_match": true
+    },
+    "requests.jsonl": {
+      "bytes_match": true,
+      "sha256_match": true
+    },
+    "responses/M180-007.response": {
+      "bytes_match": true,
+      "sha256_match": true
+    },
+    "responses/M180-008.response": {
+      "bytes_match": true,
+      "sha256_match": true
+    },
+    "responses/M180-009.response": {
+      "bytes_match": true,
+      "sha256_match": true
+    },
+    "responses/M180-010.response": {
+      "bytes_match": true,
+      "sha256_match": true
+    },
+    "responses/M180-011.response": {
+      "bytes_match": true,
+      "sha256_match": true
+    },
+    "responses/M180-012.response": {
+      "bytes_match": true,
+      "sha256_match": true
+    },
+    "responses/M180-013.response": {
+      "bytes_match": true,
+      "sha256_match": true
+    },
+    "responses/M180-014.response": {
+      "bytes_match": true,
+      "sha256_match": true
+    },
+    "responses/M180-015.response": {
+      "bytes_match": true,
+      "sha256_match": true
+    },
+    "responses/M180-016.response": {
+      "bytes_match": true,
+      "sha256_match": true
+    },
+    "responses/M180-017.response": {
+      "bytes_match": true,
+      "sha256_match": true
+    },
+    "responses/M180-018.response": {
+      "bytes_match": true,
+      "sha256_match": true
+    },
+    "responses/M20-001.response": {
+      "bytes_match": true,
+      "sha256_match": true
+    },
+    "responses/M20-002.response": {
+      "bytes_match": true,
+      "sha256_match": true
+    },
+    "responses/M60-003.response": {
+      "bytes_match": true,
+      "sha256_match": true
+    },
+    "responses/M60-004.response": {
+      "bytes_match": true,
+      "sha256_match": true
+    },
+    "responses/M60-005.response": {
+      "bytes_match": true,
+      "sha256_match": true
+    },
+    "responses/M60-006.response": {
+      "bytes_match": true,
+      "sha256_match": true
+    },
+    "summary.json": {
+      "bytes_match": true,
+      "sha256_match": true
+    }
+  },
+  "unindexed_files": [],
+  "all_indexed_file_checks_pass": true,
+  "collector_file_checks": {
+    "events.jsonl": true,
+    "input-profile.json": true,
+    "manifest.json": true,
+    "observations-0001.jsonl": true,
+    "predictions.jsonl": true,
+    "scores.jsonl": true,
+    "summary.json": true
+  },
+  "all_collector_file_checks_pass": true,
+  "collector_run_id": "637f114b-563b-4c35-8062-a7588a89ce1c",
+  "collector_version": "0.2.4",
+  "collector_record_schema": 2,
+  "summary": {
+    "status": "completed",
+    "stop_reason": "completed",
+    "requests": 18,
+    "completed_requests": 18,
+    "elapsed_schedule_s": 2510.867613477999,
+    "hard_limit_s": 2700,
+    "cleanup_reserved_s": 10.0,
+    "checks": [
+      {
+        "current_ready": true,
+        "continuous_60s": true,
+        "abnormal": false,
+        "gaps_180s": [
+          {
+            "from_t": 7322.031494979,
+            "to_t": 7322.613296687,
+            "ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:3",
+            "reasons": [
+              "source_not_usable:socketio_connecting"
+            ]
+          }
+        ],
+        "latest": {
+          "t": 7501.939962237,
+          "ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:579",
+          "complete": true,
+          "valid_until": 7504.439962237,
+          "source_valid_until": 7506.546646953,
+          "source_usable": true,
+          "source_epoch": 2,
+          "source_rejection": null,
+          "observed_abnormal": false,
+          "control_context_changed": false,
+          "operator_override": {
+            "applied": true,
+            "ignored_admission_reasons": [],
+            "raw_fan_temp_stale": false,
+            "raw_temperature_valid": true,
+            "raw_active_source": "variable"
+          },
+          "control_mode": "auto",
+          "reasons": [],
+          "TJ": 46.343,
+          "source_ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:576",
+          "fan_ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:579",
+          "P_g": 1.984,
+          "P_c": 6.348,
+          "fan_age_s": 0.0,
+          "PWM": 19,
+          "gain": 0.991874933242798,
+          "source_age_ms": 393.31528399998206,
+          "source_accepted_t": 7501.676748671,
+          "source_key": [
+            "orin-primary",
+            "8995fdf6-1e20-4aad-af13-97b4b26f625b",
+            8321
+          ],
+          "source_period_ms": 1000
+        },
+        "checked_at_mono_s": 7502.031494979,
+        "observed_span_s": 180.30763430200022,
+        "input_coverage": {
+          "complete_input_s": 179.32666555000014,
+          "unknown_input_s": 0.9557303359997604,
+          "longest_continuous_s": 179.32666555000014,
+          "current_continuous_s": 179.32666555000014,
+          "reasons_seconds": {
+            "unsupported_control_scope,fan_missing_or_stale,temperature_status_missing_or_stale,fan_not_enabled,fan_fault,guard_active,control_temperature_stale,successful_duty_unavailable,manual_temperature,control_temperature_invalid,active_temperature_source_untrusted,temperature_binding_unconfirmed,source_not_usable:socketio_connecting": 0.05066257499947824,
+            "temperature_status_missing_or_stale,manual_temperature,control_temperature_invalid,active_temperature_source_untrusted,temperature_binding_unconfirmed,source_not_usable:socketio_connecting": 0.015631751000000804,
+            "source_not_usable:socketio_connecting": 0.8894360100002814
+          }
+        },
+        "coverage_measured_until_mono_s": 7501.939962237,
+        "original_rule_snapshot": {
+          "current_ready": true,
+          "continuous_60s": true,
+          "abnormal": false,
+          "gaps_180s": [
+            {
+              "from_t": 7322.031494979,
+              "to_t": 7322.613296687,
+              "ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:3",
+              "reasons": [
+                "source_not_usable:socketio_connecting"
+              ]
+            }
+          ],
+          "latest": {
+            "t": 7501.939962237,
+            "ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:579",
+            "complete": true,
+            "valid_until": 7504.439962237,
+            "source_valid_until": 7506.546646953,
+            "source_usable": true,
+            "source_epoch": 2,
+            "source_rejection": null,
+            "observed_abnormal": false,
+            "control_context_changed": false,
+            "control_mode": "auto",
+            "reasons": [],
+            "TJ": 46.343,
+            "source_ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:576",
+            "fan_ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:579",
+            "P_g": 1.984,
+            "P_c": 6.348,
+            "fan_age_s": 0.0,
+            "PWM": 19,
+            "gain": 0.991874933242798,
+            "source_age_ms": 393.31528399998206,
+            "source_accepted_t": 7501.676748671,
+            "source_key": [
+              "orin-primary",
+              "8995fdf6-1e20-4aad-af13-97b4b26f625b",
+              8321
+            ],
+            "source_period_ms": 1000
+          },
+          "checked_at_mono_s": 7502.031494979,
+          "observed_span_s": 180.30763430200022,
+          "input_coverage": {
+            "complete_input_s": 179.32666555000014,
+            "unknown_input_s": 0.9557303359997604,
+            "longest_continuous_s": 179.32666555000014,
+            "current_continuous_s": 179.32666555000014,
+            "reasons_seconds": {
+              "unsupported_control_scope,fan_missing_or_stale,temperature_status_missing_or_stale,fan_not_enabled,fan_fault,guard_active,control_temperature_stale,successful_duty_unavailable,manual_temperature,control_temperature_invalid,active_temperature_source_untrusted,temperature_binding_unconfirmed,source_not_usable:socketio_connecting": 0.05066257499947824,
+              "temperature_status_missing_or_stale,manual_temperature,control_temperature_invalid,active_temperature_source_untrusted,temperature_binding_unconfirmed,source_not_usable:socketio_connecting": 0.015631751000000804,
+              "source_not_usable:socketio_connecting": 0.8894360100002814
+            }
+          },
+          "coverage_measured_until_mono_s": 7501.939962237
+        },
+        "operator_override": {
+          "policy": "bound TJ variable/default loss only; no duration threshold",
+          "coverage_semantics": "user-overridden request admission; original collector quality unchanged"
+        }
+      },
+      {
+        "current_ready": true,
+        "continuous_60s": true,
+        "abnormal": false,
+        "gaps_180s": [],
+        "latest": {
+          "t": 7921.548495705,
+          "ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:1919",
+          "complete": true,
+          "valid_until": 7924.048495705,
+          "source_valid_until": 7925.853758809,
+          "source_usable": true,
+          "source_epoch": 2,
+          "source_rejection": null,
+          "observed_abnormal": false,
+          "control_context_changed": false,
+          "operator_override": {
+            "applied": true,
+            "ignored_admission_reasons": [],
+            "raw_fan_temp_stale": false,
+            "raw_temperature_valid": true,
+            "raw_active_source": "variable"
+          },
+          "control_mode": "auto",
+          "reasons": [],
+          "TJ": 46.281,
+          "source_ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:1917",
+          "fan_ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:1919",
+          "P_g": 1.984,
+          "P_c": 6.348,
+          "fan_age_s": 0.0,
+          "PWM": 18,
+          "gain": 0.991874933242798,
+          "source_age_ms": 694.7368959999949,
+          "source_accepted_t": 7921.323792022,
+          "source_key": [
+            "orin-primary",
+            "8995fdf6-1e20-4aad-af13-97b4b26f625b",
+            8739
+          ],
+          "source_period_ms": 1000
+        },
+        "checked_at_mono_s": 7921.619713795,
+        "observed_span_s": 180.34050588300033,
+        "input_coverage": {
+          "complete_input_s": 598.9351990180003,
+          "unknown_input_s": 0.9557303359997604,
+          "longest_continuous_s": 598.9351990180003,
+          "current_continuous_s": 598.9351990180003,
+          "reasons_seconds": {
+            "unsupported_control_scope,fan_missing_or_stale,temperature_status_missing_or_stale,fan_not_enabled,fan_fault,guard_active,control_temperature_stale,successful_duty_unavailable,manual_temperature,control_temperature_invalid,active_temperature_source_untrusted,temperature_binding_unconfirmed,source_not_usable:socketio_connecting": 0.05066257499947824,
+            "temperature_status_missing_or_stale,manual_temperature,control_temperature_invalid,active_temperature_source_untrusted,temperature_binding_unconfirmed,source_not_usable:socketio_connecting": 0.015631751000000804,
+            "source_not_usable:socketio_connecting": 0.8894360100002814
+          }
+        },
+        "coverage_measured_until_mono_s": 7921.548495705,
+        "original_rule_snapshot": {
+          "current_ready": true,
+          "continuous_60s": true,
+          "abnormal": false,
+          "gaps_180s": [],
+          "latest": {
+            "t": 7921.548495705,
+            "ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:1919",
+            "complete": true,
+            "valid_until": 7924.048495705,
+            "source_valid_until": 7925.853758809,
+            "source_usable": true,
+            "source_epoch": 2,
+            "source_rejection": null,
+            "observed_abnormal": false,
+            "control_context_changed": false,
+            "control_mode": "auto",
+            "reasons": [],
+            "TJ": 46.281,
+            "source_ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:1917",
+            "fan_ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:1919",
+            "P_g": 1.984,
+            "P_c": 6.348,
+            "fan_age_s": 0.0,
+            "PWM": 18,
+            "gain": 0.991874933242798,
+            "source_age_ms": 694.7368959999949,
+            "source_accepted_t": 7921.323792022,
+            "source_key": [
+              "orin-primary",
+              "8995fdf6-1e20-4aad-af13-97b4b26f625b",
+              8739
+            ],
+            "source_period_ms": 1000
+          },
+          "checked_at_mono_s": 7921.619713795,
+          "observed_span_s": 180.34050588300033,
+          "input_coverage": {
+            "complete_input_s": 598.9351990180003,
+            "unknown_input_s": 0.9557303359997604,
+            "longest_continuous_s": 598.9351990180003,
+            "current_continuous_s": 598.9351990180003,
+            "reasons_seconds": {
+              "unsupported_control_scope,fan_missing_or_stale,temperature_status_missing_or_stale,fan_not_enabled,fan_fault,guard_active,control_temperature_stale,successful_duty_unavailable,manual_temperature,control_temperature_invalid,active_temperature_source_untrusted,temperature_binding_unconfirmed,source_not_usable:socketio_connecting": 0.05066257499947824,
+              "temperature_status_missing_or_stale,manual_temperature,control_temperature_invalid,active_temperature_source_untrusted,temperature_binding_unconfirmed,source_not_usable:socketio_connecting": 0.015631751000000804,
+              "source_not_usable:socketio_connecting": 0.8894360100002814
+            }
+          },
+          "coverage_measured_until_mono_s": 7921.548495705
+        },
+        "operator_override": {
+          "policy": "bound TJ variable/default loss only; no duration threshold",
+          "coverage_semantics": "user-overridden request admission; original collector quality unchanged"
+        }
+      },
+      {
+        "current_ready": true,
+        "continuous_60s": true,
+        "abnormal": false,
+        "gaps_180s": [],
+        "latest": {
+          "t": 8374.190345371,
+          "ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:3366",
+          "complete": true,
+          "valid_until": 8376.690345371,
+          "source_valid_until": 8378.011930213,
+          "source_usable": true,
+          "source_epoch": 2,
+          "source_rejection": null,
+          "observed_abnormal": false,
+          "control_context_changed": false,
+          "operator_override": {
+            "applied": true,
+            "ignored_admission_reasons": [],
+            "raw_fan_temp_stale": false,
+            "raw_temperature_valid": true,
+            "raw_active_source": "variable"
+          },
+          "control_mode": "auto",
+          "reasons": [],
+          "TJ": 46.156,
+          "source_ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:3364",
+          "fan_ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:3366",
+          "P_g": 1.984,
+          "P_c": 6.348,
+          "fan_age_s": 0.0,
+          "PWM": 18,
+          "gain": 1.1406561136245728,
+          "source_age_ms": 1178.4151579995523,
+          "source_accepted_t": 8373.711618074,
+          "source_key": [
+            "orin-primary",
+            "8995fdf6-1e20-4aad-af13-97b4b26f625b",
+            9190
+          ],
+          "source_period_ms": 1000
+        },
+        "checked_at_mono_s": 8374.362931606,
+        "observed_span_s": 180.43483913199998,
+        "input_coverage": {
+          "complete_input_s": 1051.5770486840001,
+          "unknown_input_s": 0.9557303359997604,
+          "longest_continuous_s": 1051.5770486840001,
+          "current_continuous_s": 1051.5770486840001,
+          "reasons_seconds": {
+            "unsupported_control_scope,fan_missing_or_stale,temperature_status_missing_or_stale,fan_not_enabled,fan_fault,guard_active,control_temperature_stale,successful_duty_unavailable,manual_temperature,control_temperature_invalid,active_temperature_source_untrusted,temperature_binding_unconfirmed,source_not_usable:socketio_connecting": 0.05066257499947824,
+            "temperature_status_missing_or_stale,manual_temperature,control_temperature_invalid,active_temperature_source_untrusted,temperature_binding_unconfirmed,source_not_usable:socketio_connecting": 0.015631751000000804,
+            "source_not_usable:socketio_connecting": 0.8894360100002814
+          }
+        },
+        "coverage_measured_until_mono_s": 8374.190345371,
+        "original_rule_snapshot": {
+          "current_ready": true,
+          "continuous_60s": true,
+          "abnormal": false,
+          "gaps_180s": [],
+          "latest": {
+            "t": 8374.190345371,
+            "ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:3366",
+            "complete": true,
+            "valid_until": 8376.690345371,
+            "source_valid_until": 8378.011930213,
+            "source_usable": true,
+            "source_epoch": 2,
+            "source_rejection": null,
+            "observed_abnormal": false,
+            "control_context_changed": false,
+            "control_mode": "auto",
+            "reasons": [],
+            "TJ": 46.156,
+            "source_ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:3364",
+            "fan_ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:3366",
+            "P_g": 1.984,
+            "P_c": 6.348,
+            "fan_age_s": 0.0,
+            "PWM": 18,
+            "gain": 1.1406561136245728,
+            "source_age_ms": 1178.4151579995523,
+            "source_accepted_t": 8373.711618074,
+            "source_key": [
+              "orin-primary",
+              "8995fdf6-1e20-4aad-af13-97b4b26f625b",
+              9190
+            ],
+            "source_period_ms": 1000
+          },
+          "checked_at_mono_s": 8374.362931606,
+          "observed_span_s": 180.43483913199998,
+          "input_coverage": {
+            "complete_input_s": 1051.5770486840001,
+            "unknown_input_s": 0.9557303359997604,
+            "longest_continuous_s": 1051.5770486840001,
+            "current_continuous_s": 1051.5770486840001,
+            "reasons_seconds": {
+              "unsupported_control_scope,fan_missing_or_stale,temperature_status_missing_or_stale,fan_not_enabled,fan_fault,guard_active,control_temperature_stale,successful_duty_unavailable,manual_temperature,control_temperature_invalid,active_temperature_source_untrusted,temperature_binding_unconfirmed,source_not_usable:socketio_connecting": 0.05066257499947824,
+              "temperature_status_missing_or_stale,manual_temperature,control_temperature_invalid,active_temperature_source_untrusted,temperature_binding_unconfirmed,source_not_usable:socketio_connecting": 0.015631751000000804,
+              "source_not_usable:socketio_connecting": 0.8894360100002814
+            }
+          },
+          "coverage_measured_until_mono_s": 8374.190345371
+        },
+        "operator_override": {
+          "policy": "bound TJ variable/default loss only; no duration threshold",
+          "coverage_semantics": "user-overridden request admission; original collector quality unchanged"
+        }
+      },
+      {
+        "current_ready": true,
+        "continuous_60s": true,
+        "abnormal": false,
+        "gaps_180s": [],
+        "latest": {
+          "t": 9039.13082104,
+          "ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:5491",
+          "complete": true,
+          "valid_until": 9041.63082104,
+          "source_valid_until": 9042.737446920999,
+          "source_usable": true,
+          "source_epoch": 2,
+          "source_rejection": null,
+          "observed_abnormal": false,
+          "control_context_changed": false,
+          "operator_override": {
+            "applied": true,
+            "ignored_admission_reasons": [],
+            "raw_fan_temp_stale": false,
+            "raw_temperature_valid": true,
+            "raw_active_source": "variable"
+          },
+          "control_mode": "auto",
+          "reasons": [],
+          "TJ": 46.218,
+          "source_ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:5489",
+          "fan_ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:5491",
+          "P_g": 1.984,
+          "P_c": 6.348,
+          "fan_age_s": 0.0,
+          "PWM": 19,
+          "gain": 1.3117544651031494,
+          "source_age_ms": 1393.374119001237,
+          "source_accepted_t": 9038.592992414,
+          "source_key": [
+            "orin-primary",
+            "8995fdf6-1e20-4aad-af13-97b4b26f625b",
+            9853
+          ],
+          "source_period_ms": 1000
+        },
+        "checked_at_mono_s": 9039.400929958,
+        "observed_span_s": 180.52919637299965,
+        "input_coverage": {
+          "complete_input_s": 1716.5175243530002,
+          "unknown_input_s": 0.9557303359997604,
+          "longest_continuous_s": 1716.5175243530002,
+          "current_continuous_s": 1716.5175243530002,
+          "reasons_seconds": {
+            "unsupported_control_scope,fan_missing_or_stale,temperature_status_missing_or_stale,fan_not_enabled,fan_fault,guard_active,control_temperature_stale,successful_duty_unavailable,manual_temperature,control_temperature_invalid,active_temperature_source_untrusted,temperature_binding_unconfirmed,source_not_usable:socketio_connecting": 0.05066257499947824,
+            "temperature_status_missing_or_stale,manual_temperature,control_temperature_invalid,active_temperature_source_untrusted,temperature_binding_unconfirmed,source_not_usable:socketio_connecting": 0.015631751000000804,
+            "source_not_usable:socketio_connecting": 0.8894360100002814
+          }
+        },
+        "coverage_measured_until_mono_s": 9039.13082104,
+        "original_rule_snapshot": {
+          "current_ready": true,
+          "continuous_60s": true,
+          "abnormal": false,
+          "gaps_180s": [],
+          "latest": {
+            "t": 9039.13082104,
+            "ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:5491",
+            "complete": true,
+            "valid_until": 9041.63082104,
+            "source_valid_until": 9042.737446920999,
+            "source_usable": true,
+            "source_epoch": 2,
+            "source_rejection": null,
+            "observed_abnormal": false,
+            "control_context_changed": false,
+            "control_mode": "auto",
+            "reasons": [],
+            "TJ": 46.218,
+            "source_ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:5489",
+            "fan_ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:5491",
+            "P_g": 1.984,
+            "P_c": 6.348,
+            "fan_age_s": 0.0,
+            "PWM": 19,
+            "gain": 1.3117544651031494,
+            "source_age_ms": 1393.374119001237,
+            "source_accepted_t": 9038.592992414,
+            "source_key": [
+              "orin-primary",
+              "8995fdf6-1e20-4aad-af13-97b4b26f625b",
+              9853
+            ],
+            "source_period_ms": 1000
+          },
+          "checked_at_mono_s": 9039.400929958,
+          "observed_span_s": 180.52919637299965,
+          "input_coverage": {
+            "complete_input_s": 1716.5175243530002,
+            "unknown_input_s": 0.9557303359997604,
+            "longest_continuous_s": 1716.5175243530002,
+            "current_continuous_s": 1716.5175243530002,
+            "reasons_seconds": {
+              "unsupported_control_scope,fan_missing_or_stale,temperature_status_missing_or_stale,fan_not_enabled,fan_fault,guard_active,control_temperature_stale,successful_duty_unavailable,manual_temperature,control_temperature_invalid,active_temperature_source_untrusted,temperature_binding_unconfirmed,source_not_usable:socketio_connecting": 0.05066257499947824,
+              "temperature_status_missing_or_stale,manual_temperature,control_temperature_invalid,active_temperature_source_untrusted,temperature_binding_unconfirmed,source_not_usable:socketio_connecting": 0.015631751000000804,
+              "source_not_usable:socketio_connecting": 0.8894360100002814
+            }
+          },
+          "coverage_measured_until_mono_s": 9039.13082104
+        },
+        "operator_override": {
+          "policy": "bound TJ variable/default loss only; no duration threshold",
+          "coverage_semantics": "user-overridden request admission; original collector quality unchanged"
+        }
+      }
+    ],
+    "server_request_completion": "protocol_observed_for_completed_requests_only",
+    "new_model_training": "not_performed",
+    "control_authorization": "none",
+    "collection_path": "collection/run-2026-10-13T173747.320817_0000-637f114b",
+    "collector_stop_reason": "external_stop",
+    "polling_health": {
+      "contract": "TTO-POLL-INDEPENDENT-v1",
+      "max_inflight_per_endpoint": 1,
+      "max_total_inflight_limit": 2,
+      "max_total_inflight_observed": 2,
+      "end_inflight": 0,
+      "legacy_config_max_inflight_esp32": 1,
+      "endpoints": {
+        "fan": {
+          "sent": 2508,
+          "returned": 2508,
+          "http_ok": 2508,
+          "errors": 0,
+          "skipped": 0,
+          "cancelled": 0,
+          "peak_inflight": 1,
+          "rtt_ms": {
+            "n": 2508,
+            "p50": 11.554676500054484,
+            "p95": 14.065938299972913,
+            "min": 9.390838000399526,
+            "max": 85.53528099946561
+          },
+          "send_interval_s": {
+            "n": 2507,
+            "p50": 1.0013460509999277,
+            "p95": 1.0024318846995812,
+            "min": 1.0001502790000814,
+            "max": 1.0070780510004624
+          },
+          "return_interval_s": {
+            "n": 2507,
+            "p50": 1.0014248130009946,
+            "p95": 1.0046116093000819,
+            "min": 0.927901840001141,
+            "max": 1.0748425049987418
+          }
+        },
+        "temp": {
+          "sent": 503,
+          "returned": 503,
+          "http_ok": 503,
+          "errors": 0,
+          "skipped": 0,
+          "cancelled": 0,
+          "peak_inflight": 1,
+          "rtt_ms": {
+            "n": 503,
+            "p50": 10.459948000061559,
+            "p95": 13.07221529968956,
+            "min": 8.08815199889068,
+            "max": 31.050526999933936
+          },
+          "send_interval_s": {
+            "n": 502,
+            "p50": 5.001047749999998,
+            "p95": 5.001987648749855,
+            "min": 5.000213055000131,
+            "max": 5.006295889999819
+          },
+          "return_interval_s": {
+            "n": 502,
+            "p50": 5.001026591500704,
+            "p95": 5.004343565300223,
+            "min": 4.985258025999428,
+            "max": 5.011993226999039
+          }
+        }
+      }
+    },
+    "operator_override": {
+      "policy": {
+        "authorized_at_record_utc": "2026-10-13T17:36:27.725457+00:00",
+        "authority_source": "User authorization relayed by TTO coordination chat 01a12fd6-393a-7c73-8d46-6e70f9e17e61",
+        "authorization_text": "用户现在明确覆盖了先前暂缓决定：认为主板 temp_stale/default/valid=false 可能暂时不可用，要求本轮忽略这类标记、完成完整中等负载流程，并由你对话负责模型调度。",
+        "latest_execution_instruction": "现在请由你完成独立测试执行副本准备、有限离线核验，然后直接启动唯一新一轮完整测试，不再等我启动或再向用户确认。",
+        "conditions": {
+          "bound_variable": "agx_info.temperature.tj",
+          "manual_mode": false,
+          "active_source": [
+            "variable",
+            "default"
+          ]
+        },
+        "ignored_admission_reasons": [
+          "control_temperature_stale",
+          "control_temperature_invalid",
+          "active_temperature_source_untrusted"
+        ],
+        "ignored_context_transition": "variable <-> default only under same authorized binding/manual=false",
+        "native_card_override": "Specified stale/invalid/default flags no longer stop or deny new requests; no invented time threshold",
+        "retained_stop_conditions": [
+          "fault",
+          "guard",
+          "disabled",
+          "not AUTO",
+          "manual temperature",
+          "binding change",
+          "other source change",
+          "HTTP/Socket missing inputs",
+          "collector exit",
+          "unknown request termination",
+          "budgets"
+        ],
+        "raw_evidence": "unchanged; default25C not real temperature; native snapshot retained",
+        "result_role": "User-overridden development experiment, not unchanged candidate acceptance",
+        "new_prefix": "/home/rm01/TTO-midload-useroverride-20261014",
+        "original_prefix": "/home/rm01/TTO-midload-0.2.4"
+      },
+      "copy_hashes": {
+        "health.py": "60acb44c5ddd72d7b6220d2a212649f549e24515a3b5278e10f979948c10b090",
+        "health_native.py": "e479541aeb676823bc9a137936a44c899b7a71d217de3ff0224edb8f5008d300",
+        "requester.py": "ced3134782fe5e21f123317d0da18ad567c2923c2d4592106ac97ef27c1aa670",
+        "run_midload.py": "a3461b79458e5efa1d35144e2e4e88a66b3352ecdc58500093c62984b561223e",
+        "trial.py": "522154d04a8b811221fafddc0d8c65ba116289de7d7034c825528bf6dc8ee0c9"
+      },
+      "result_role": "user_overridden_development_experiment_not_native_acceptance"
+    },
+    "output": "/home/rm01/TTO-midload-useroverride-20261014/trials/midload-20261013T173747161101Z",
+    "elapsed_total_s": 2510.9379144080003,
+    "live_validation": "requires_independent_review; this executable does not authorize a field run"
+  },
+  "phases": [
+    {
+      "phase": "resident_background",
+      "start_utc": "2026-10-13T17:37:47.320421+00:00",
+      "end_utc": "2026-10-13T17:47:47.321834+00:00",
+      "actual_duration_s": 600.001407875,
+      "nominal_window_s": 600
+    },
+    {
+      "phase": "M20",
+      "start_utc": "2026-10-13T17:47:47.323768+00:00",
+      "end_utc": "2026-10-13T17:48:20.061738+00:00",
+      "actual_duration_s": 32.73796948600011,
+      "nominal_window_s": 20
+    },
+    {
+      "phase": "cooldown_1",
+      "start_utc": "2026-10-13T17:48:20.063827+00:00",
+      "end_utc": "2026-10-13T17:55:20.064953+00:00",
+      "actual_duration_s": 420.0011238579991,
+      "nominal_window_s": 420
+    },
+    {
+      "phase": "M60",
+      "start_utc": "2026-10-13T17:55:20.066974+00:00",
+      "end_utc": "2026-10-13T17:56:25.097502+00:00",
+      "actual_duration_s": 65.03052724599911,
+      "nominal_window_s": 60
+    },
+    {
+      "phase": "cooldown_2",
+      "start_utc": "2026-10-13T17:56:25.099543+00:00",
+      "end_utc": "2026-10-13T18:06:25.100393+00:00",
+      "actual_duration_s": 600.000841911,
+      "nominal_window_s": 600
+    },
+    {
+      "phase": "M180",
+      "start_utc": "2026-10-13T18:06:25.104982+00:00",
+      "end_utc": "2026-10-13T18:09:38.025339+00:00",
+      "actual_duration_s": 192.92035570400003,
+      "nominal_window_s": 180
+    },
+    {
+      "phase": "final_cooldown",
+      "start_utc": "2026-10-13T18:09:38.027460+00:00",
+      "end_utc": "2026-10-13T18:19:38.028359+00:00",
+      "actual_duration_s": 600.0008964120007,
+      "nominal_window_s": 600
+    }
+  ],
+  "requests": [
+    {
+      "request_id": "M20-001",
+      "submitted_at_utc": "2026-10-13T17:47:47.330436+00:00",
+      "client_end_at_utc": "2026-10-13T17:48:03.608155+00:00",
+      "duration_s": 16.277740563000407,
+      "first_content_mono_s": 7922.022158633,
+      "submit_mono_s": 7921.626272279,
+      "finish_reason": "length",
+      "done": true,
+      "usage": {
+        "prompt_tokens": 49,
+        "total_tokens": 305,
+        "completion_tokens": 256
+      },
+      "status": "completed",
+      "server_status": "protocol_completion_observed",
+      "request_end_semantics": "client protocol completion or unknown termination; never GPU kernel end"
+    },
+    {
+      "request_id": "M20-002",
+      "submitted_at_utc": "2026-10-13T17:48:03.674795+00:00",
+      "client_end_at_utc": "2026-10-13T17:48:20.057409+00:00",
+      "duration_s": 16.382627025000147,
+      "first_content_mono_s": 7938.35797538,
+      "submit_mono_s": 7937.970629523,
+      "finish_reason": "length",
+      "done": true,
+      "usage": {
+        "prompt_tokens": 49,
+        "total_tokens": 305,
+        "completion_tokens": 256
+      },
+      "status": "completed",
+      "server_status": "protocol_completion_observed",
+      "request_end_semantics": "client protocol completion or unknown termination; never GPU kernel end"
+    },
+    {
+      "request_id": "M60-003",
+      "submitted_at_utc": "2026-10-13T17:55:20.074078+00:00",
+      "client_end_at_utc": "2026-10-13T17:55:37.656548+00:00",
+      "duration_s": 17.582480334000138,
+      "first_content_mono_s": 8374.761382596,
+      "submit_mono_s": 8374.369913456,
+      "finish_reason": "length",
+      "done": true,
+      "usage": {
+        "prompt_tokens": 49,
+        "total_tokens": 305,
+        "completion_tokens": 256
+      },
+      "status": "completed",
+      "server_status": "protocol_completion_observed",
+      "request_end_semantics": "client protocol completion or unknown termination; never GPU kernel end"
+    },
+    {
+      "request_id": "M60-004",
+      "submitted_at_utc": "2026-10-13T17:55:37.713382+00:00",
+      "client_end_at_utc": "2026-10-13T17:55:53.721766+00:00",
+      "duration_s": 16.008395647000725,
+      "first_content_mono_s": 8392.387502986,
+      "submit_mono_s": 8392.009217055,
+      "finish_reason": "length",
+      "done": true,
+      "usage": {
+        "prompt_tokens": 49,
+        "total_tokens": 305,
+        "completion_tokens": 256
+      },
+      "status": "completed",
+      "server_status": "protocol_completion_observed",
+      "request_end_semantics": "client protocol completion or unknown termination; never GPU kernel end"
+    },
+    {
+      "request_id": "M60-005",
+      "submitted_at_utc": "2026-10-13T17:55:53.769074+00:00",
+      "client_end_at_utc": "2026-10-13T17:56:09.339428+00:00",
+      "duration_s": 15.570367358999647,
+      "first_content_mono_s": 8408.401978739,
+      "submit_mono_s": 8408.064908581,
+      "finish_reason": "length",
+      "done": true,
+      "usage": {
+        "prompt_tokens": 49,
+        "total_tokens": 305,
+        "completion_tokens": 256
+      },
+      "status": "completed",
+      "server_status": "protocol_completion_observed",
+      "request_end_semantics": "client protocol completion or unknown termination; never GPU kernel end"
+    },
+    {
+      "request_id": "M60-006",
+      "submitted_at_utc": "2026-10-13T17:56:09.397293+00:00",
+      "client_end_at_utc": "2026-10-13T17:56:25.046101+00:00",
+      "duration_s": 15.64881833400068,
+      "first_content_mono_s": 8424.026937527,
+      "submit_mono_s": 8423.693128362,
+      "finish_reason": "length",
+      "done": true,
+      "usage": {
+        "prompt_tokens": 49,
+        "total_tokens": 305,
+        "completion_tokens": 256
+      },
+      "status": "completed",
+      "server_status": "protocol_completion_observed",
+      "request_end_semantics": "client protocol completion or unknown termination; never GPU kernel end"
+    },
+    {
+      "request_id": "M180-007",
+      "submitted_at_utc": "2026-10-13T18:06:25.111971+00:00",
+      "client_end_at_utc": "2026-10-13T18:06:44.448862+00:00",
+      "duration_s": 19.33690081900022,
+      "first_content_mono_s": 9039.800848383,
+      "submit_mono_s": 9039.407807447,
+      "finish_reason": "length",
+      "done": true,
+      "usage": {
+        "prompt_tokens": 49,
+        "total_tokens": 305,
+        "completion_tokens": 256
+      },
+      "status": "completed",
+      "server_status": "protocol_completion_observed",
+      "request_end_semantics": "client protocol completion or unknown termination; never GPU kernel end"
+    },
+    {
+      "request_id": "M180-008",
+      "submitted_at_utc": "2026-10-13T18:06:44.466710+00:00",
+      "client_end_at_utc": "2026-10-13T18:06:59.665099+00:00",
+      "duration_s": 15.19839827999931,
+      "first_content_mono_s": 9059.093817982,
+      "submit_mono_s": 9058.762545825,
+      "finish_reason": "length",
+      "done": true,
+      "usage": {
+        "prompt_tokens": 49,
+        "total_tokens": 305,
+        "completion_tokens": 256
+      },
+      "status": "completed",
+      "server_status": "protocol_completion_observed",
+      "request_end_semantics": "client protocol completion or unknown termination; never GPU kernel end"
+    },
+    {
+      "request_id": "M180-009",
+      "submitted_at_utc": "2026-10-13T18:06:59.773706+00:00",
+      "client_end_at_utc": "2026-10-13T18:07:15.560557+00:00",
+      "duration_s": 15.786871899001198,
+      "first_content_mono_s": 9074.403863865,
+      "submit_mono_s": 9074.069541824,
+      "finish_reason": "length",
+      "done": true,
+      "usage": {
+        "prompt_tokens": 49,
+        "total_tokens": 305,
+        "completion_tokens": 256
+      },
+      "status": "completed",
+      "server_status": "protocol_completion_observed",
+      "request_end_semantics": "client protocol completion or unknown termination; never GPU kernel end"
+    },
+    {
+      "request_id": "M180-010",
+      "submitted_at_utc": "2026-10-13T18:07:15.596216+00:00",
+      "client_end_at_utc": "2026-10-13T18:07:30.926183+00:00",
+      "duration_s": 15.329982545999883,
+      "first_content_mono_s": 9090.224898794,
+      "submit_mono_s": 9089.892051721,
+      "finish_reason": "length",
+      "done": true,
+      "usage": {
+        "prompt_tokens": 49,
+        "total_tokens": 305,
+        "completion_tokens": 256
+      },
+      "status": "completed",
+      "server_status": "protocol_completion_observed",
+      "request_end_semantics": "client protocol completion or unknown termination; never GPU kernel end"
+    },
+    {
+      "request_id": "M180-011",
+      "submitted_at_utc": "2026-10-13T18:07:30.946112+00:00",
+      "client_end_at_utc": "2026-10-13T18:07:47.649445+00:00",
+      "duration_s": 16.703354321000006,
+      "first_content_mono_s": 9105.572875242,
+      "submit_mono_s": 9105.241947186,
+      "finish_reason": "length",
+      "done": true,
+      "usage": {
+        "prompt_tokens": 49,
+        "total_tokens": 305,
+        "completion_tokens": 256
+      },
+      "status": "completed",
+      "server_status": "protocol_completion_observed",
+      "request_end_semantics": "client protocol completion or unknown termination; never GPU kernel end"
+    },
+    {
+      "request_id": "M180-012",
+      "submitted_at_utc": "2026-10-13T18:07:47.740855+00:00",
+      "client_end_at_utc": "2026-10-13T18:08:01.852198+00:00",
+      "duration_s": 14.111363893000089,
+      "first_content_mono_s": 9122.374544033,
+      "submit_mono_s": 9122.036690421,
+      "finish_reason": "length",
+      "done": true,
+      "usage": {
+        "prompt_tokens": 49,
+        "total_tokens": 305,
+        "completion_tokens": 256
+      },
+      "status": "completed",
+      "server_status": "protocol_completion_observed",
+      "request_end_semantics": "client protocol completion or unknown termination; never GPU kernel end"
+    },
+    {
+      "request_id": "M180-013",
+      "submitted_at_utc": "2026-10-13T18:08:01.894814+00:00",
+      "client_end_at_utc": "2026-10-13T18:08:17.357320+00:00",
+      "duration_s": 15.462516134000907,
+      "first_content_mono_s": 9136.523959696,
+      "submit_mono_s": 9136.190649993,
+      "finish_reason": "length",
+      "done": true,
+      "usage": {
+        "prompt_tokens": 49,
+        "total_tokens": 305,
+        "completion_tokens": 256
+      },
+      "status": "completed",
+      "server_status": "protocol_completion_observed",
+      "request_end_semantics": "client protocol completion or unknown termination; never GPU kernel end"
+    },
+    {
+      "request_id": "M180-014",
+      "submitted_at_utc": "2026-10-13T18:08:17.406010+00:00",
+      "client_end_at_utc": "2026-10-13T18:08:34.112208+00:00",
+      "duration_s": 16.706217495999226,
+      "first_content_mono_s": 9152.036102929,
+      "submit_mono_s": 9151.701846398,
+      "finish_reason": "length",
+      "done": true,
+      "usage": {
+        "prompt_tokens": 49,
+        "total_tokens": 305,
+        "completion_tokens": 256
+      },
+      "status": "completed",
+      "server_status": "protocol_completion_observed",
+      "request_end_semantics": "client protocol completion or unknown termination; never GPU kernel end"
+    },
+    {
+      "request_id": "M180-015",
+      "submitted_at_utc": "2026-10-13T18:08:34.141786+00:00",
+      "client_end_at_utc": "2026-10-13T18:08:51.210425+00:00",
+      "duration_s": 17.068653135000204,
+      "first_content_mono_s": 9168.781887305,
+      "submit_mono_s": 9168.437621832,
+      "finish_reason": "length",
+      "done": true,
+      "usage": {
+        "prompt_tokens": 49,
+        "total_tokens": 305,
+        "completion_tokens": 256
+      },
+      "status": "completed",
+      "server_status": "protocol_completion_observed",
+      "request_end_semantics": "client protocol completion or unknown termination; never GPU kernel end"
+    },
+    {
+      "request_id": "M180-016",
+      "submitted_at_utc": "2026-10-13T18:08:51.315867+00:00",
+      "client_end_at_utc": "2026-10-13T18:09:07.585302+00:00",
+      "duration_s": 16.269454749999568,
+      "first_content_mono_s": 9185.940821701,
+      "submit_mono_s": 9185.6117024,
+      "finish_reason": "length",
+      "done": true,
+      "usage": {
+        "prompt_tokens": 49,
+        "total_tokens": 305,
+        "completion_tokens": 256
+      },
+      "status": "completed",
+      "server_status": "protocol_completion_observed",
+      "request_end_semantics": "client protocol completion or unknown termination; never GPU kernel end"
+    },
+    {
+      "request_id": "M180-017",
+      "submitted_at_utc": "2026-10-13T18:09:07.672822+00:00",
+      "client_end_at_utc": "2026-10-13T18:09:23.209077+00:00",
+      "duration_s": 15.536275473999922,
+      "first_content_mono_s": 9202.304121105,
+      "submit_mono_s": 9201.968657805,
+      "finish_reason": "length",
+      "done": true,
+      "usage": {
+        "prompt_tokens": 49,
+        "total_tokens": 305,
+        "completion_tokens": 256
+      },
+      "status": "completed",
+      "server_status": "protocol_completion_observed",
+      "request_end_semantics": "client protocol completion or unknown termination; never GPU kernel end"
+    },
+    {
+      "request_id": "M180-018",
+      "submitted_at_utc": "2026-10-13T18:09:23.242952+00:00",
+      "client_end_at_utc": "2026-10-13T18:09:37.946660+00:00",
+      "duration_s": 14.703718603999732,
+      "first_content_mono_s": 9217.874161677,
+      "submit_mono_s": 9217.53878761,
+      "finish_reason": "length",
+      "done": true,
+      "usage": {
+        "prompt_tokens": 49,
+        "total_tokens": 305,
+        "completion_tokens": 256
+      },
+      "status": "completed",
+      "server_status": "protocol_completion_observed",
+      "request_end_semantics": "client protocol completion or unknown termination; never GPU kernel end"
+    }
+  ],
+  "request_count": 18,
+  "request_status_counts": {
+    "completed": 18
+  },
+  "finish_reason_counts": {
+    "length": 18
+  },
+  "overlapping_request_ids": [],
+  "unknown_server_completion_ids": [],
+  "event_counts": {
+    "resident_idle_check": 1,
+    "collector_started": 1,
+    "phase_start": 7,
+    "ambient_snapshot": 14,
+    "background_check": 1,
+    "phase_end": 7,
+    "work_admission": 3,
+    "work_gap": 18,
+    "request_submit": 18,
+    "first_network_line": 18,
+    "first_content": 18,
+    "protocol_DONE": 18,
+    "request_end": 18,
+    "schedule_end": 1
+  },
+  "scope": "Archive integrity and recorded execution; not firmware safety certification or independent acceptance"
+}

@@ -1,0 +1,70 @@
+{
+  "snapshot_seq": 33,
+  "service_epoch": "6ebf727f-f840-4811-abe1-55a75de8be63",
+  "run_id": "744ee2c55b275fec",
+  "source_epoch": 1,
+  "model_id": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
+  "spec_id": "2080adcf20773650299def2bb0f3ebdb9f87d8f85281d5b87a99d8b406c83c6b",
+  "series": [
+    {
+      "id": "temperature.tj",
+      "label": "实测结温（模型采样对齐）",
+      "kind": "observed",
+      "unit": "°C",
+      "alignment_group": "tj_model",
+      "time_basis": "tj_sample",
+      "anchor_metric_id": "temperature.tj",
+      "estimate_stage": null,
+      "sampling": "actual_samples",
+      "original_points": 0,
+      "returned_points": 0,
+      "soft_budget_exceeded": false,
+      "points": []
+    },
+    {
+      "id": "model.Tf_C",
+      "label": "快热状态估计",
+      "kind": "estimate",
+      "unit": "°C",
+      "alignment_group": "tj_model",
+      "time_basis": "tj_sample",
+      "anchor_metric_id": "temperature.tj",
+      "estimate_stage": "posterior",
+      "sampling": "actual_samples",
+      "original_points": 0,
+      "returned_points": 0,
+      "soft_budget_exceeded": false,
+      "points": []
+    },
+    {
+      "id": "model.Ts_C",
+      "label": "慢热状态估计",
+      "kind": "estimate",
+      "unit": "°C",
+      "alignment_group": "tj_model",
+      "time_basis": "tj_sample",
+      "anchor_metric_id": "temperature.tj",
+      "estimate_stage": "posterior",
+      "sampling": "actual_samples",
+      "original_points": 0,
+      "returned_points": 0,
+      "soft_budget_exceeded": false,
+      "points": []
+    },
+    {
+      "id": "model.E_C",
+      "label": "等效边界估计",
+      "kind": "estimate",
+      "unit": "°C",
+      "alignment_group": "tj_model",
+      "time_basis": "tj_sample",
+      "anchor_metric_id": "temperature.tj",
+      "estimate_stage": "posterior",
+      "sampling": "actual_samples",
+      "original_points": 0,
+      "returned_points": 0,
+      "soft_budget_exceeded": false,
+      "points": []
+    }
+  ]
+}

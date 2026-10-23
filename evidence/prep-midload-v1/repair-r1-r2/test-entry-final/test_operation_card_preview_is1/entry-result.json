@@ -1,0 +1,71 @@
+{
+  "returncode": 0,
+  "preview": {
+    "trial_id": "TTO-MIDLOAD-DEV-v1.0",
+    "mode": "dry_run",
+    "connected": false,
+    "credentials_read": false,
+    "runtime": {
+      "version": "0.2.4",
+      "import_path": "/Users/massif/Tianshan-thermal-observer/evidence/prep-midload-v1/repair-r1-r2/conda-install/conda-env/lib/python3.10/site-packages/tto/__init__.py",
+      "python": "/Users/massif/Tianshan-thermal-observer/evidence/prep-midload-v1/repair-r1-r2/conda-install/conda-env/bin/python",
+      "isolated": true,
+      "non_editable": true
+    },
+    "nominal_duration_s": 2480,
+    "hard_limit_s": 2700,
+    "initial_check_within_background_s": 180,
+    "strict_history_s": 60,
+    "phases": [
+      {
+        "id": "resident_background",
+        "kind": "passive",
+        "duration_s": 600
+      },
+      {
+        "id": "M20",
+        "kind": "work",
+        "duration_s": 20
+      },
+      {
+        "id": "cooldown_1",
+        "kind": "passive",
+        "duration_s": 420
+      },
+      {
+        "id": "M60",
+        "kind": "work",
+        "duration_s": 60
+      },
+      {
+        "id": "cooldown_2",
+        "kind": "passive",
+        "duration_s": 600
+      },
+      {
+        "id": "M180",
+        "kind": "work",
+        "duration_s": 180
+      },
+      {
+        "id": "final_cooldown",
+        "kind": "passive",
+        "duration_s": 600
+      }
+    ],
+    "max_total_requests": 256,
+    "max_tokens": 256,
+    "max_inflight": 1,
+    "max_request_wall_s": 30,
+    "max_drain_s": 30,
+    "model": "owned-fixture",
+    "inference_target_configured": true,
+    "tto_config_path": "/Users/massif/Tianshan-thermal-observer/evidence/prep-midload-v1/repair-r1-r2/test-entry-final/test_operation_card_preview_is1/absent-tto-config.json",
+    "ambient_temperature_default": null,
+    "not_thermal_equilibrium": true,
+    "message": "\u7ea641\u520620\u79d2\uff1b20/60/180\u79d2\u662f\u5355\u8def\u8bf7\u6c42\u53d1\u8d77\u7a97\u53e3\uff0c\u5df2\u6709\u8bf7\u6c42\u81ea\u7136\u7ed3\u675f\uff1b\u6700\u591a45\u5206\u949f\u3002\u5f53\u524d\u53ea\u9884\u89c8\uff0c\u672a\u8fde\u63a5\u8bbe\u5907\u3002"
+  },
+  "stderr": "",
+  "loopback_calls": [],
+  "legacy_source": "/Users/massif/Tianshan-thermal-observer/evidence/prep-midload-v1/repair-r1-r2/original-reproduction/legacy-022-source"
+}

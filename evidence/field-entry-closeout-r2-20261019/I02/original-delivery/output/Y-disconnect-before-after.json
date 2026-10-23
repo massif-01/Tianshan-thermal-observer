@@ -1,0 +1,150 @@
+{
+  "before": {
+    "identity": {
+      "run_id": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece",
+      "config_sha256": "ef4525ed091c7487d08dea82f6965247867237fafb403791b2383d3e7a1801d1",
+      "model_identity": null,
+      "collector_source_sha256": "a6f98d9761b0f7efafea9ba642bd83e1afa5723c7bee1815dbd0be4303457664",
+      "firmware": null,
+      "spec": "COMM-SOURCE-HEALTH-R2-v1",
+      "generated_from": "offline saved stream",
+      "observed_through_ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:5319",
+      "observed_through_utc": "2026-10-17T17:01:42.837105+00:00",
+      "observed_through_mono_s": 204374.13297692
+    },
+    "measurement": {
+      "TJ_and_rails": {
+        "raw_valid": true,
+        "source": {
+          "key": [
+            "orin-primary",
+            "50ea6d93-8f3a-4991-9211-43cc8129cb90",
+            203771
+          ],
+          "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:5316",
+          "mono_s": 204373.202990384,
+          "values": {
+            "tj": 44.937,
+            "cpu_usage": 0.6666666666666666,
+            "cpu_freq": 972.0,
+            "cpu_reported_cores": 12,
+            "gpu_busy": 0,
+            "temp_cpu": 44.281,
+            "temp_gpu": 44.937,
+            "temp_soc012": 43.687,
+            "temp_soc345": 43.531,
+            "vdd_gpu": 1.984,
+            "vdd_cpu_soc_mss": 5.952,
+            "vin_sys_5v0": 4.392
+          },
+          "valid_until_mono_s": 204378.15494654697
+        }
+      },
+      "PWM": {
+        "raw_valid": false,
+        "value": 17,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:5317",
+        "received_at_utc": "2026-10-17T17:01:42.180393+00:00",
+        "received_mono_s": 204373.476261544,
+        "age_s": 0.6567153759824578,
+        "expires_mono_s": 204375.976261544,
+        "meaning": "last successful observed PWM; value preserved for trace, raw_valid governs use"
+      }
+    },
+    "safety": {
+      "fresh": false,
+      "guard": null,
+      "fault": null,
+      "mode": null,
+      "binding": null,
+      "temp_stale": null
+    },
+    "observer": {
+      "state": "uninitialized",
+      "owner": "Issue8; no state/model estimate performed here"
+    },
+    "permission": {
+      "mode": "offline_replay",
+      "formal_field_authorized": false
+    },
+    "communication": {
+      "endpoint": null,
+      "error_class": null,
+      "timeout_phase": null
+    }
+  },
+  "after": {
+    "identity": {
+      "run_id": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece",
+      "config_sha256": "ef4525ed091c7487d08dea82f6965247867237fafb403791b2383d3e7a1801d1",
+      "model_identity": null,
+      "collector_source_sha256": "a6f98d9761b0f7efafea9ba642bd83e1afa5723c7bee1815dbd0be4303457664",
+      "firmware": null,
+      "spec": "COMM-SOURCE-HEALTH-R2-I02-v1",
+      "generated_from": "offline saved stream",
+      "observed_through_ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:5319",
+      "observed_through_utc": "2026-10-17T17:01:42.837105+00:00",
+      "observed_through_mono_s": 204374.13297692
+    },
+    "measurement": {
+      "TJ_and_rails": {
+        "raw_valid": false,
+        "source": {
+          "key": [
+            "orin-primary",
+            "50ea6d93-8f3a-4991-9211-43cc8129cb90",
+            203771
+          ],
+          "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:5316",
+          "mono_s": 204373.202990384,
+          "values": {
+            "tj": 44.937,
+            "cpu_usage": 0.6666666666666666,
+            "cpu_freq": 972.0,
+            "cpu_reported_cores": 12,
+            "gpu_busy": 0,
+            "temp_cpu": 44.281,
+            "temp_gpu": 44.937,
+            "temp_soc012": 43.687,
+            "temp_soc345": 43.531,
+            "vdd_gpu": 1.984,
+            "vdd_cpu_soc_mss": 5.952,
+            "vin_sys_5v0": 4.392
+          },
+          "valid_until_mono_s": 204378.15494654697
+        }
+      },
+      "PWM": {
+        "raw_valid": false,
+        "value": 17,
+        "ref": "1ae9a7d7-bec7-4e45-a9d6-4415b4a8dece/observation:5317",
+        "received_at_utc": "2026-10-17T17:01:42.180393+00:00",
+        "received_mono_s": 204373.476261544,
+        "age_s": 0.6567153759824578,
+        "expires_mono_s": 204375.976261544,
+        "meaning": "last successful observed PWM; value preserved for trace, raw_valid governs use"
+      }
+    },
+    "safety": {
+      "fresh": false,
+      "guard": null,
+      "fault": null,
+      "mode": null,
+      "binding": null,
+      "temp_stale": null
+    },
+    "observer": {
+      "state": "uninitialized",
+      "owner": "Issue8; no state/model estimate performed here"
+    },
+    "permission": {
+      "mode": "offline_replay",
+      "formal_field_authorized": false
+    },
+    "communication": {
+      "endpoint": null,
+      "error_class": null,
+      "timeout_phase": null
+    }
+  }
+}

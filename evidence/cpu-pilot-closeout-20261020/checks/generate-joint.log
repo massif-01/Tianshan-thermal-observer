@@ -1,0 +1,19 @@
+已连接，正在等待第一份有效温度数据。
+本轮TTO已停止；现有风扇控制未被修改。
+Traceback (most recent call last):
+  File "/Users/massif/Tianshan-thermal-observer/experiments/cpu_activity_pilot_closeout_v1/tests/generate_joint_sample.py", line 37, in <module>
+    if __name__=='__main__':asyncio.run(main(Path(sys.argv[1]).resolve()))
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Users/massif/Tianshan-thermal-observer/experiments/cpu_activity_pilot_closeout_v1/tests/generate_joint_sample.py", line 30, in main
+    assert len(rows)>=100
+           ^^^^^^^^^^^^^^
+AssertionError

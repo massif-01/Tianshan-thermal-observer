@@ -1,0 +1,29 @@
+{
+  "contract": "TTO-CPU-PREP-CLOSE-v1.0 follow-up03, finite new capability readout",
+  "dependencies": {
+    "TTO-CPU旁录离线适配与失效撤销-模型线收尾证据包.zip": {
+      "sha256": "5500ad25357c86bdb53dca7d3d6067d5d397e875e8d85a278f113ae2f6eeabff",
+      "extract_directory": "thermal_cpu_activity_bridge_v1"
+    },
+    "TTO-CPU联合回执来源标签-报告器修订证据.zip": {
+      "sha256": "1eb81c988822819590903850c0479984b5266031f1eb60e4327146ce6d3084cf",
+      "extract_directory": "."
+    }
+  },
+  "run_id": "80938521-b659-4160-a7b2-5fdfb6ebc197",
+  "command_id": "cpu2-capability-20261020-1ca3a249-8ea9-4608-aa05-105f9aff5614",
+  "role": "one new no-inference capability process; examined by frozen candidate, not a new thermal training episode",
+  "data_used_to_select_activity_parameters": false,
+  "metadata_reporter_tests": 3,
+  "new_field_retries": 0,
+  "mathematical_model_or_activity_rule_changes": 0,
+  "parameter_search": 0,
+  "control_permission": false,
+  "source_timing": "source CPU complete count windows and actual receiver arrivals; no cross-host delay inferred",
+  "source_GPU_resolution": "query successful, native source generation/window unknown",
+  "thermal_labels": "60 original1s TJ decision origins, separate15/45/90 eligibility; no artificial high-rate TJ",
+  "cadence": "same27 arrivals; every1s causal selection is delivery selection from200ms windows, not new1s count statistics",
+  "compare": "same origins/labels per horizon, plus cross-cadence intersection; no score selection",
+  "stop": "retain native completion and receiver_total_resource_budget_exceeded; do not relax8pct or128MiB",
+  "scope": "offline only; no device clients, schedulers, requests, training or control"
+}

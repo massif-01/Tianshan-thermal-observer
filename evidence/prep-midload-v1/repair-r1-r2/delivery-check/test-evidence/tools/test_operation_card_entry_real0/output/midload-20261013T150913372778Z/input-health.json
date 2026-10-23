@@ -1,0 +1,126 @@
+{
+  "current_ready": false,
+  "continuous_60s": false,
+  "abnormal": false,
+  "gaps_180s": [
+    {
+      "from_t": 345740.979290166,
+      "to_t": 345740.999244,
+      "ref": "554672a0-cbe5-4ed9-84ce-fd96626cfb5d/observation:1",
+      "reasons": [
+        "unsupported_control_scope",
+        "fan_missing_or_stale",
+        "temperature_status_missing_or_stale",
+        "fan_not_enabled",
+        "fan_fault",
+        "guard_active",
+        "control_temperature_stale",
+        "successful_duty_unavailable",
+        "manual_temperature",
+        "control_temperature_invalid",
+        "active_temperature_source_untrusted",
+        "temperature_binding_unconfirmed",
+        "source_not_usable:socketio_connecting"
+      ]
+    },
+    {
+      "from_t": 345740.999244,
+      "to_t": 345740.999402208,
+      "ref": "554672a0-cbe5-4ed9-84ce-fd96626cfb5d/observation:2",
+      "reasons": [
+        "temperature_status_missing_or_stale",
+        "manual_temperature",
+        "control_temperature_invalid",
+        "active_temperature_source_untrusted",
+        "temperature_binding_unconfirmed",
+        "source_not_usable:socketio_connecting"
+      ]
+    },
+    {
+      "from_t": 345740.999402208,
+      "to_t": 345741.278151583,
+      "ref": "554672a0-cbe5-4ed9-84ce-fd96626cfb5d/observation:3",
+      "reasons": [
+        "source_not_usable:socketio_connecting"
+      ]
+    },
+    {
+      "from_t": 345741.303061833,
+      "to_t": 345741.445513541,
+      "ref": "554672a0-cbe5-4ed9-84ce-fd96626cfb5d/observation:5",
+      "reasons": [
+        "unsupported_control_scope",
+        "fan_missing_or_stale",
+        "temperature_status_missing_or_stale",
+        "fan_not_enabled",
+        "fan_fault",
+        "guard_active",
+        "control_temperature_stale",
+        "successful_duty_unavailable",
+        "manual_temperature",
+        "control_temperature_invalid",
+        "active_temperature_source_untrusted",
+        "temperature_binding_unconfirmed",
+        "source_not_usable:socketio_disconnected"
+      ]
+    }
+  ],
+  "latest": {
+    "t": 345741.303061833,
+    "ref": "554672a0-cbe5-4ed9-84ce-fd96626cfb5d/observation:5",
+    "complete": false,
+    "valid_until": 345741.303061833,
+    "source_valid_until": 345746.278151583,
+    "source_usable": false,
+    "source_epoch": 3,
+    "source_rejection": "socketio_disconnected",
+    "observed_abnormal": false,
+    "control_context_changed": false,
+    "control_mode": "unknown",
+    "reasons": [
+      "unsupported_control_scope",
+      "fan_missing_or_stale",
+      "temperature_status_missing_or_stale",
+      "fan_not_enabled",
+      "fan_fault",
+      "guard_active",
+      "control_temperature_stale",
+      "successful_duty_unavailable",
+      "manual_temperature",
+      "control_temperature_invalid",
+      "active_temperature_source_untrusted",
+      "temperature_binding_unconfirmed",
+      "source_not_usable:socketio_disconnected"
+    ],
+    "TJ": 46,
+    "source_ref": "554672a0-cbe5-4ed9-84ce-fd96626cfb5d/observation:4",
+    "fan_ref": null,
+    "P_g": 2.0,
+    "P_c": 3.0,
+    "fan_age_s": null,
+    "PWM": null,
+    "gain": null,
+    "source_age_ms": 24.910250038374215,
+    "source_accepted_t": 345741.278151583,
+    "source_key": [
+      "orin-primary",
+      "demo-stream",
+      2
+    ],
+    "source_period_ms": 1000
+  },
+  "checked_at_mono_s": 345741.445513541,
+  "observed_span_s": 0.4662233749986626,
+  "input_coverage": {
+    "complete_input_s": 0.024910250038374215,
+    "unknown_input_s": 0.2988614169880748,
+    "longest_continuous_s": 0.024910250038374215,
+    "current_continuous_s": 0.024910250038374215,
+    "reasons_seconds": {
+      "unsupported_control_scope,fan_missing_or_stale,temperature_status_missing_or_stale,fan_not_enabled,fan_fault,guard_active,control_temperature_stale,successful_duty_unavailable,manual_temperature,control_temperature_invalid,active_temperature_source_untrusted,temperature_binding_unconfirmed,source_not_usable:socketio_connecting": 0.019953834009356797,
+      "temperature_status_missing_or_stale,manual_temperature,control_temperature_invalid,active_temperature_source_untrusted,temperature_binding_unconfirmed,source_not_usable:socketio_connecting": 0.00015820801490917802,
+      "source_not_usable:socketio_connecting": 0.2787493749638088
+    }
+  },
+  "coverage_measured_until_mono_s": 345741.303061833
+}

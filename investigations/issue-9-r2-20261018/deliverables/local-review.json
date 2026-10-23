@@ -1,0 +1,25 @@
+{
+  "verdict": "ready_for_offline_integration_review_only",
+  "runtime_diff_scope": [
+    "tto/collector.py"
+  ],
+  "test_results": "baseline8/candidate8 pass",
+  "patch_applies_to_exact_runtime_baseline": true,
+  "temperature_control_changed": false,
+  "polling_timeout_or_TTL_changed": false,
+  "raw_payload_changed": false,
+  "field_root_cause_verified": false,
+  "firmware_patch": "none; insufficient causal evidence",
+  "hardware_access": false,
+  "git_publication": false,
+  "source_health_expiry_checks": {
+    "total_snapshots": 5319,
+    "expired_PWM_raw_valid_false": 964
+  },
+  "residual_limits": [
+    "CPython3.14 host vs target3.10",
+    "No exact field firmware identity",
+    "No historical TCP/server stage traces",
+    "No measured target logging overhead"
+  ]
+}

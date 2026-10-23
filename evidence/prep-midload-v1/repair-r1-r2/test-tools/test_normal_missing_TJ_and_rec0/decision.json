@@ -1,0 +1,244 @@
+{
+  "at": 70,
+  "snapshot": {
+    "current_ready": true,
+    "continuous_60s": true,
+    "abnormal": false,
+    "gaps_180s": [],
+    "latest": {
+      "t": 70.0,
+      "ref": "r1/orin:71:70",
+      "complete": true,
+      "valid_until": 72.5,
+      "source_valid_until": 75.0,
+      "source_usable": true,
+      "source_epoch": 1,
+      "source_rejection": null,
+      "observed_abnormal": false,
+      "control_context_changed": false,
+      "control_mode": "auto",
+      "reasons": [],
+      "TJ": 46,
+      "source_ref": "r1/orin:71:70",
+      "fan_ref": "r1/fan:70",
+      "P_g": 2.0,
+      "P_c": 3.0,
+      "fan_age_s": 0.0,
+      "PWM": 19,
+      "gain": 1.1,
+      "source_age_ms": 0.0,
+      "source_accepted_t": 70.0,
+      "source_key": [
+        "orin-primary",
+        "demo-stream",
+        71
+      ],
+      "source_period_ms": 1000
+    },
+    "checked_at_mono_s": 70,
+    "observed_span_s": 70.0,
+    "input_coverage": {
+      "complete_input_s": 70.0,
+      "unknown_input_s": 0.0,
+      "longest_continuous_s": 70.0,
+      "current_continuous_s": 70.0,
+      "reasons_seconds": {}
+    },
+    "coverage_measured_until_mono_s": 70.0
+  },
+  "requests": [
+    {
+      "id": "R1-admission-001",
+      "t": 70.0,
+      "timeout": 9.5
+    }
+  ],
+  "result": {
+    "status": "completed",
+    "stop_reason": "completed",
+    "requests": 1,
+    "completed_requests": 1,
+    "elapsed_schedule_s": 0.29999999999998295,
+    "hard_limit_s": 10,
+    "cleanup_reserved_s": 0.5,
+    "checks": [
+      {
+        "current_ready": true,
+        "continuous_60s": true,
+        "abnormal": false,
+        "gaps_180s": [],
+        "latest": {
+          "t": 70.0,
+          "ref": "r1/orin:71:70",
+          "complete": true,
+          "valid_until": 72.5,
+          "source_valid_until": 75.0,
+          "source_usable": true,
+          "source_epoch": 1,
+          "source_rejection": null,
+          "observed_abnormal": false,
+          "control_context_changed": false,
+          "control_mode": "auto",
+          "reasons": [],
+          "TJ": 46,
+          "source_ref": "r1/orin:71:70",
+          "fan_ref": "r1/fan:70",
+          "P_g": 2.0,
+          "P_c": 3.0,
+          "fan_age_s": 0.0,
+          "PWM": 19,
+          "gain": 1.1,
+          "source_age_ms": 0.0,
+          "source_accepted_t": 70.0,
+          "source_key": [
+            "orin-primary",
+            "demo-stream",
+            71
+          ],
+          "source_period_ms": 1000
+        },
+        "checked_at_mono_s": 70.0,
+        "observed_span_s": 70.0,
+        "input_coverage": {
+          "complete_input_s": 70.0,
+          "unknown_input_s": 0.0,
+          "longest_continuous_s": 70.0,
+          "current_continuous_s": 70.0,
+          "reasons_seconds": {}
+        },
+        "coverage_measured_until_mono_s": 70.0
+      }
+    ],
+    "server_request_completion": "protocol_observed_for_completed_requests_only",
+    "new_model_training": "not_performed",
+    "control_authorization": "none"
+  },
+  "events": [
+    {
+      "event": "phase_start",
+      "phase": "R1-admission",
+      "kind": "work",
+      "planned_start_mono_s": 70.0,
+      "actual_start_mono_s": 70.0,
+      "window_deadline_mono_s": 70.15,
+      "duration_s": 0.15
+    },
+    {
+      "event": "work_admission",
+      "phase": "R1-admission",
+      "health": {
+        "current_ready": true,
+        "continuous_60s": true,
+        "abnormal": false,
+        "gaps_180s": [],
+        "latest": {
+          "t": 70.0,
+          "ref": "r1/orin:71:70",
+          "complete": true,
+          "valid_until": 72.5,
+          "source_valid_until": 75.0,
+          "source_usable": true,
+          "source_epoch": 1,
+          "source_rejection": null,
+          "observed_abnormal": false,
+          "control_context_changed": false,
+          "control_mode": "auto",
+          "reasons": [],
+          "TJ": 46,
+          "source_ref": "r1/orin:71:70",
+          "fan_ref": "r1/fan:70",
+          "P_g": 2.0,
+          "P_c": 3.0,
+          "fan_age_s": 0.0,
+          "PWM": 19,
+          "gain": 1.1,
+          "source_age_ms": 0.0,
+          "source_accepted_t": 70.0,
+          "source_key": [
+            "orin-primary",
+            "demo-stream",
+            71
+          ],
+          "source_period_ms": 1000
+        },
+        "checked_at_mono_s": 70.0,
+        "observed_span_s": 70.0,
+        "input_coverage": {
+          "complete_input_s": 70.0,
+          "unknown_input_s": 0.0,
+          "longest_continuous_s": 70.0,
+          "current_continuous_s": 70.0,
+          "reasons_seconds": {}
+        },
+        "coverage_measured_until_mono_s": 70.0
+      }
+    },
+    {
+      "event": "work_gap",
+      "phase": "R1-admission",
+      "request_id": "R1-admission-001",
+      "gap_s": null,
+      "health": {
+        "current_ready": true,
+        "continuous_60s": true,
+        "abnormal": false,
+        "gaps_180s": [],
+        "latest": {
+          "t": 70.0,
+          "ref": "r1/orin:71:70",
+          "complete": true,
+          "valid_until": 72.5,
+          "source_valid_until": 75.0,
+          "source_usable": true,
+          "source_epoch": 1,
+          "source_rejection": null,
+          "observed_abnormal": false,
+          "control_context_changed": false,
+          "control_mode": "auto",
+          "reasons": [],
+          "TJ": 46,
+          "source_ref": "r1/orin:71:70",
+          "fan_ref": "r1/fan:70",
+          "P_g": 2.0,
+          "P_c": 3.0,
+          "fan_age_s": 0.0,
+          "PWM": 19,
+          "gain": 1.1,
+          "source_age_ms": 0.0,
+          "source_accepted_t": 70.0,
+          "source_key": [
+            "orin-primary",
+            "demo-stream",
+            71
+          ],
+          "source_period_ms": 1000
+        },
+        "checked_at_mono_s": 70.0,
+        "observed_span_s": 70.0,
+        "input_coverage": {
+          "complete_input_s": 70.0,
+          "unknown_input_s": 0.0,
+          "longest_continuous_s": 70.0,
+          "current_continuous_s": 70.0,
+          "reasons_seconds": {}
+        },
+        "coverage_measured_until_mono_s": 70.0
+      }
+    },
+    {
+      "event": "phase_end",
+      "phase": "R1-admission",
+      "actual_end_mono_s": 70.29999999999998,
+      "planned_end_mono_s": 70.15,
+      "actual_duration_s": 0.29999999999998295,
+      "last_request_end_mono_s": 70.2
+    },
+    {
+      "event": "schedule_end",
+      "reason": "completed",
+      "requests": 1,
+      "actual_end_mono_s": 70.29999999999998,
+      "hard_deadline_mono_s": 80.0
+    }
+  ]
+}

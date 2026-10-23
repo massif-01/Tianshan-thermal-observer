@@ -1,0 +1,41 @@
+F.................................................                       [100%]
+=================================== FAILURES ===================================
+_______ test_original_counterexample_and_independent_production_schedule _______
+
+config = {'features': {'fan_max_age_s': 2.5, 'history_s': 180, 'max_feature_columns': 64, 'missing_optional_policy': 'fallback_...ct_timeout_s': 5.0, 'follow_redirects': False, 'max_business_payload_bytes': 65536, 'max_inflight_esp32': 1, ...}, ...}
+tmp_path = PosixPath('/Users/massif/Tianshan-thermal-observer/evidence/prep-midload-v1/test-installed-core/test_original_counterexample_a0')
+
+    @pytest.mark.asyncio
+    async def test_original_counterexample_and_independent_production_schedule(config,tmp_path):
+        spec=importlib.util.spec_from_file_location('tto._before_polling',Path(__file__).parent/'fixtures/polling/collector-before.py')
+        before=importlib.util.module_from_spec(spec);spec.loader.exec_module(before)
+        result={}
+        for name,implementation in [('before',before.collect),('after',collect)]:
+            origin,trace,peak,close=await owned_server()
+            config['orin']['base_url']=config['tianshan']['base_url']=origin
+            try:
+                path,stats=await implementation(config,9.4,data_root=tmp_path/name)
+                rows=observations(path);fan=[r for r in rows if r['kind']=='fan' and not r.get('error_class')]
+                result[name]=dict(trace=trace,peak=peak,summary=stats,fan_return_times=[r['mono_s'] for r in fan],
+                                  fan_return_gaps=[b['mono_s']-a['mono_s'] for a,b in zip(fan,fan[1:])])
+                if name=='after':
+                    for key,period in [('fan',1),('temp',5)]:
+                        r=[r for r in rows if r['kind']==key]
+                        assert all(b['sent_mono_s']-a['sent_mono_s']>=period for a,b in zip(r,r[1:]))
+                        assert all(x['planned_mono_s']<=x['sent_mono_s']<=x['received_mono_s']<=x['mono_s'] for x in r)
+                    assert peak['fan']==peak['temp']==1 and peak['total']==2
+                    assert stats['polling_health']['end_inflight']==0
+            finally:await close()
+>       assert max(result['before']['fan_return_gaps'])>2.4
+E       assert 1.8621409590123221 > 2.4
+E        +  where 1.8621409590123221 = max([1.8621409590123221, 1.06691100000171, 1.0655529159703292, 1.0624087500036694, 1.065246791986283])
+
+tests/test_polling_schedule.py:71: AssertionError
+----------------------------- Captured stdout call -----------------------------
+已连接，正在等待第一份有效温度数据。
+本轮TTO已停止；现有风扇控制未被修改。
+已连接，正在等待第一份有效温度数据。
+本轮TTO已停止；现有风扇控制未被修改。
+=========================== short test summary info ============================
+FAILED tests/test_polling_schedule.py::test_original_counterexample_and_independent_production_schedule
+1 failed, 49 passed in 42.54s

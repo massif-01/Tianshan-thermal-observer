@@ -1,0 +1,147 @@
+{
+  "scope": "real Chrome; installed rc2 static/API; synthetic source; loopback fault harness",
+  "before": {
+    "link": "Web已连接",
+    "phase": "状态跟踪中",
+    "future": [
+      "44.3 °C",
+      "44.3 °C",
+      "44.3 °C"
+    ],
+    "metrics": [
+      "44.3",
+      "43.8",
+      "44.3",
+      "17",
+      "—",
+      "1.98",
+      "5.95",
+      "0.0",
+      "0.3",
+      "53554"
+    ],
+    "flow": 8,
+    "activeNodes": 8,
+    "advice": "34.3% · 观察参考",
+    "health": "65项有效 / 1项待确认",
+    "source": "Web：已连接；设备数据：valid；模型：状态跟踪中。HTTP成功、源有效与模型可用分别判定。",
+    "comparison": "状态跟踪中 · 同run/epoch/model/HOLD · +45秒 · 样本较少",
+    "notice": "本地自建服务 / 回放验证数据（非实时设备），不作为现场能力证据。"
+  },
+  "pauseStable": true,
+  "disconnect": {
+    "link": "Web数据断开",
+    "phase": "当前无法估计",
+    "future": [
+      "—",
+      "—",
+      "—"
+    ],
+    "metrics": [
+      "—",
+      "—",
+      "—",
+      "—",
+      "—",
+      "—",
+      "—",
+      "—",
+      "—",
+      "—"
+    ],
+    "flow": 0,
+    "activeNodes": 0,
+    "advice": "暂无可用建议映射",
+    "health": "0项有效 / 1项待确认",
+    "source": "Web：断开；设备数据：unavailable；模型：当前无法估计。HTTP成功、源有效与模型可用分别判定。",
+    "comparison": "当前无法估计 · 历史配对同run/epoch/model/HOLD · +45秒",
+    "notice": "Web数据断开；当前值已撤下，后台观察不受此页面影响。"
+  },
+  "historyPreserved": true,
+  "stallInitial": {
+    "link": "Web已连接",
+    "phase": "状态跟踪中",
+    "future": [
+      "44.3 °C",
+      "44.3 °C",
+      "44.3 °C"
+    ],
+    "metrics": [
+      "44.3",
+      "43.8",
+      "44.3",
+      "17",
+      "—",
+      "1.98",
+      "5.95",
+      "0.0",
+      "0.3",
+      "53554"
+    ],
+    "flow": 8,
+    "activeNodes": 8,
+    "advice": "34.3% · 观察参考",
+    "health": "65项有效 / 1项待确认",
+    "source": "Web：已连接；设备数据：valid；模型：状态跟踪中。HTTP成功、源有效与模型可用分别判定。",
+    "comparison": "状态跟踪中 · 历史配对同run/epoch/model/HOLD · +45秒",
+    "notice": "本地自建服务 / 回放验证数据（非实时设备），不作为现场能力证据。"
+  },
+  "stallWaitMs": 7964.953415980563,
+  "stalled": {
+    "link": "Web已连接",
+    "phase": "当前无法估计",
+    "future": [
+      "—",
+      "—",
+      "—"
+    ],
+    "metrics": [
+      "—",
+      "—",
+      "—",
+      "—",
+      "—",
+      "—",
+      "—",
+      "—",
+      "—",
+      "—"
+    ],
+    "flow": 0,
+    "activeNodes": 0,
+    "advice": "暂无可用建议映射",
+    "health": "0项有效 / 1项待确认",
+    "source": "Web：已连接；设备数据：unavailable；模型：当前无法估计。HTTP成功、源有效与模型可用分别判定。",
+    "comparison": "当前无法估计 · 历史配对同run/epoch/model/HOLD · +45秒",
+    "notice": "设备数据不可用或已过期；Web连接不代表设备读数有效。"
+  },
+  "eventBefore": {
+    "id": "4",
+    "source": "runner",
+    "reason": "SYNTHETIC task at 20s",
+    "severity": "info",
+    "elapsed_ms": 20000,
+    "first_at_utc": "2026-10-21T04:41:52.895437+00:00",
+    "last_at_utc": "2026-10-21T04:41:52.895437+00:00",
+    "count": 1,
+    "service_epoch": "b24be85f-875d-405b-a659-8c32bafa347b",
+    "run_id": "7df937d31e44468d",
+    "source_epoch": 0
+  },
+  "selectedBeforeSwitch": true,
+  "newRun": {
+    "mode": "live",
+    "run_id": "7d37c44a69e6ee40",
+    "source_epoch": 0
+  },
+  "oldTaskAbsentAfterRun": true,
+  "selectionClearedAfterRun": true,
+  "newEpoch": {
+    "mode": "live",
+    "run_id": "7d37c44a69e6ee40",
+    "source_epoch": 1
+  },
+  "oldTaskAbsentAfterEpoch": true,
+  "apiEventsScoped": true,
+  "frontendRejectsForeignEvents": true
+}

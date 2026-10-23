@@ -1,0 +1,1533 @@
+--- rc3/src/tto_web/__init__.py
++++ rc4/src/tto_web/__init__.py
+@@ -1,2 +1,2 @@
+ """TTO read-only Web candidate. No controller or workload API."""
+-__version__ = '1.0.0rc3'
++__version__ = '1.0.0rc4'
+--- /dev/null
++++ rc4/src/tto_web/contracts/model-history-contract.md
+@@ -0,0 +1,29 @@
++# 模型状态历史增量合同（TTO-WEB-SERIES-v1）
++
++新序列：model.Tf_C / model.Ts_C / model.E_C，单位 °C、kind=estimate、estimate_stage=posterior。
++它们来自既有冻结观察器吸收该次新 TJ 后的状态，不是未来预测，也不是传感器测温。
++TJ−Tf 为校正后残差；E、Ts−E、Tf−Ts 为带符号温度状态分解，不能解释为热量占比。
++
++显式请求任一新模型 id，启用 tj_model 共同抽样；同请求中的 temperature.tj 为模型采样锚点视图。
++独立 temperature.tj 与默认 ids 保持原指标历史。没有插值、补零或平滑。三个模型状态始终共同取点，
++并保留 TJ、Tf、Ts、E 和三种差值的桶内极值、全部显式缺口及相邻段边界；只请求部分模型时索引仍一致。
++max_points 是软预算，断点密集时可超额；original_points/returned_points/soft_budget_exceeded 明示实际情况。
++每个联合组最多 18002 行，按既有时间裁剪一小时；高于容量的源速率可能不足一小时。
++
++数值资格：新且未重复的 TJ、TJ 有效且未到期、tracking/degraded、三个有限状态、
++now < min(consumable_until_mono_s,TJ._expiry)。t=TJ.as_of_elapsed_ms，且与包 input-origin 的毫秒值相差不超过 0.001ms，
++此容差只吸收浮点运算误差。sample_id/source_ref/received_at_utc 关联 TJ 锚点；phase_at_sample 保留 degraded。
++
++缺口理由：source_disconnected/source_ended/publication_gap/model_expired/tj_invalid/phase_unavailable/
++nonfinite_state/alignment_mismatch。显式缺口四列均 null，status=unknown；过去合格历史不会因当前过期而撤销。
++连续失效区间合并断点。断连、显示发布失败用检测时间；过期用原截止时间；阶段失效用包输入时间。
++断点时间不早于最后已记录行，同位置缺口优先。断点之后到达且源时刻不晚于断点的样本不回填，
++后端最后处置状态为 arrived_after_gap；不额外累积日志/点。只在更新且时间晚于断点的合格 TJ 恢复。
++
++完整响应身份：service_epoch/run_id/source_epoch/model_id/spec_id。run/epoch/model/spec 变化清空历史及去重，
++Web 重启产生新 service_epoch。model/spec 冻结校验不放宽。一个 HTTP 响应内身份与数据同时生成。
++客户端必须在组切换时清空历史、递增请求代次；响应到达时核对完整身份、代次、查询窗口和暂停状态。
++旧响应即使同 run、同参数也不能回填。缺口使用 null 且绘图库须关闭跨空值连线。
++
++bootstrap 新增 series_capabilities 与 available_series；available_fields 仍表示当前 metrics。
++series.schema.json 限制新增字段/枚举；三个 series-example JSON 分别演示正常、缺口和同 run 新 epoch。
+--- /dev/null
++++ rc4/src/tto_web/contracts/series-example-gap.json
+@@ -0,0 +1,154 @@
++{
++  "snapshot_seq": 32,
++  "service_epoch": "6ebf727f-f840-4811-abe1-55a75de8be63",
++  "run_id": "744ee2c55b275fec",
++  "source_epoch": 0,
++  "model_id": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
++  "spec_id": "2080adcf20773650299def2bb0f3ebdb9f87d8f85281d5b87a99d8b406c83c6b",
++  "series": [
++    {
++      "id": "temperature.tj",
++      "label": "实测结温（模型采样对齐）",
++      "kind": "observed",
++      "unit": "°C",
++      "alignment_group": "tj_model",
++      "time_basis": "tj_sample",
++      "anchor_metric_id": "temperature.tj",
++      "estimate_stage": null,
++      "sampling": "actual_samples",
++      "original_points": 2,
++      "returned_points": 2,
++      "soft_budget_exceeded": false,
++      "points": [
++        {
++          "t": 29000.0,
++          "value": 44.3,
++          "status": "valid",
++          "sample_id": "0:744ee2c55b275fec:3433f650167ae390",
++          "received_at_utc": "2026-10-21T14:42:20.414920+00:00",
++          "source_ref": "744ee2c55b275fec:3433f650167ae390",
++          "phase_at_sample": "tracking",
++          "reason_code": null
++        },
++        {
++          "t": 30000.0,
++          "value": 44.3,
++          "status": "valid",
++          "sample_id": "0:744ee2c55b275fec:4324f483f4901a64",
++          "received_at_utc": "2026-10-21T14:42:20.417955+00:00",
++          "source_ref": "744ee2c55b275fec:4324f483f4901a64",
++          "phase_at_sample": "tracking",
++          "reason_code": null
++        }
++      ]
++    },
++    {
++      "id": "model.Tf_C",
++      "label": "快热状态估计",
++      "kind": "estimate",
++      "unit": "°C",
++      "alignment_group": "tj_model",
++      "time_basis": "tj_sample",
++      "anchor_metric_id": "temperature.tj",
++      "estimate_stage": "posterior",
++      "sampling": "actual_samples",
++      "original_points": 2,
++      "returned_points": 2,
++      "soft_budget_exceeded": false,
++      "points": [
++        {
++          "t": 29000.0,
++          "value": 44.30122325256106,
++          "status": "valid",
++          "sample_id": "0:744ee2c55b275fec:3433f650167ae390",
++          "received_at_utc": "2026-10-21T14:42:20.414920+00:00",
++          "source_ref": "744ee2c55b275fec:3433f650167ae390",
++          "phase_at_sample": "tracking",
++          "reason_code": null
++        },
++        {
++          "t": 30000.0,
++          "value": 44.3011700537187,
++          "status": "valid",
++          "sample_id": "0:744ee2c55b275fec:4324f483f4901a64",
++          "received_at_utc": "2026-10-21T14:42:20.417955+00:00",
++          "source_ref": "744ee2c55b275fec:4324f483f4901a64",
++          "phase_at_sample": "tracking",
++          "reason_code": null
++        }
++      ]
++    },
++    {
++      "id": "model.Ts_C",
++      "label": "慢热状态估计",
++      "kind": "estimate",
++      "unit": "°C",
++      "alignment_group": "tj_model",
++      "time_basis": "tj_sample",
++      "anchor_metric_id": "temperature.tj",
++      "estimate_stage": "posterior",
++      "sampling": "actual_samples",
++      "original_points": 2,
++      "returned_points": 2,
++      "soft_budget_exceeded": false,
++      "points": [
++        {
++          "t": 29000.0,
++          "value": 40.76614738063794,
++          "status": "valid",
++          "sample_id": "0:744ee2c55b275fec:3433f650167ae390",
++          "received_at_utc": "2026-10-21T14:42:20.414920+00:00",
++          "source_ref": "744ee2c55b275fec:3433f650167ae390",
++          "phase_at_sample": "tracking",
++          "reason_code": null
++        },
++        {
++          "t": 30000.0,
++          "value": 40.76578562942588,
++          "status": "valid",
++          "sample_id": "0:744ee2c55b275fec:4324f483f4901a64",
++          "received_at_utc": "2026-10-21T14:42:20.417955+00:00",
++          "source_ref": "744ee2c55b275fec:4324f483f4901a64",
++          "phase_at_sample": "tracking",
++          "reason_code": null
++        }
++      ]
++    },
++    {
++      "id": "model.E_C",
++      "label": "等效边界估计",
++      "kind": "estimate",
++      "unit": "°C",
++      "alignment_group": "tj_model",
++      "time_basis": "tj_sample",
++      "anchor_metric_id": "temperature.tj",
++      "estimate_stage": "posterior",
++      "sampling": "actual_samples",
++      "original_points": 2,
++      "returned_points": 2,
++      "soft_budget_exceeded": false,
++      "points": [
++        {
++          "t": 29000.0,
++          "value": 33.76967885066633,
++          "status": "valid",
++          "sample_id": "0:744ee2c55b275fec:3433f650167ae390",
++          "received_at_utc": "2026-10-21T14:42:20.414920+00:00",
++          "source_ref": "744ee2c55b275fec:3433f650167ae390",
++          "phase_at_sample": "tracking",
++          "reason_code": null
++        },
++        {
++          "t": 30000.0,
++          "value": 33.762940387906355,
++          "status": "valid",
++          "sample_id": "0:744ee2c55b275fec:4324f483f4901a64",
++          "received_at_utc": "2026-10-21T14:42:20.417955+00:00",
++          "source_ref": "744ee2c55b275fec:4324f483f4901a64",
++          "phase_at_sample": "tracking",
++          "reason_code": null
++        }
++      ]
++    }
++  ]
++}
+--- /dev/null
++++ rc4/src/tto_web/contracts/series-example-new-epoch.json
+@@ -0,0 +1,70 @@
++{
++  "snapshot_seq": 33,
++  "service_epoch": "6ebf727f-f840-4811-abe1-55a75de8be63",
++  "run_id": "744ee2c55b275fec",
++  "source_epoch": 1,
++  "model_id": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
++  "spec_id": "2080adcf20773650299def2bb0f3ebdb9f87d8f85281d5b87a99d8b406c83c6b",
++  "series": [
++    {
++      "id": "temperature.tj",
++      "label": "实测结温（模型采样对齐）",
++      "kind": "observed",
++      "unit": "°C",
++      "alignment_group": "tj_model",
++      "time_basis": "tj_sample",
++      "anchor_metric_id": "temperature.tj",
++      "estimate_stage": null,
++      "sampling": "actual_samples",
++      "original_points": 0,
++      "returned_points": 0,
++      "soft_budget_exceeded": false,
++      "points": []
++    },
++    {
++      "id": "model.Tf_C",
++      "label": "快热状态估计",
++      "kind": "estimate",
++      "unit": "°C",
++      "alignment_group": "tj_model",
++      "time_basis": "tj_sample",
++      "anchor_metric_id": "temperature.tj",
++      "estimate_stage": "posterior",
++      "sampling": "actual_samples",
++      "original_points": 0,
++      "returned_points": 0,
++      "soft_budget_exceeded": false,
++      "points": []
++    },
++    {
++      "id": "model.Ts_C",
++      "label": "慢热状态估计",
++      "kind": "estimate",
++      "unit": "°C",
++      "alignment_group": "tj_model",
++      "time_basis": "tj_sample",
++      "anchor_metric_id": "temperature.tj",
++      "estimate_stage": "posterior",
++      "sampling": "actual_samples",
++      "original_points": 0,
++      "returned_points": 0,
++      "soft_budget_exceeded": false,
++      "points": []
++    },
++    {
++      "id": "model.E_C",
++      "label": "等效边界估计",
++      "kind": "estimate",
++      "unit": "°C",
++      "alignment_group": "tj_model",
++      "time_basis": "tj_sample",
++      "anchor_metric_id": "temperature.tj",
++      "estimate_stage": "posterior",
++      "sampling": "actual_samples",
++      "original_points": 0,
++      "returned_points": 0,
++      "soft_budget_exceeded": false,
++      "points": []
++    }
++  ]
++}
+--- /dev/null
++++ rc4/src/tto_web/contracts/series-example-tracking.json
+@@ -0,0 +1,154 @@
++{
++  "snapshot_seq": 31,
++  "service_epoch": "6ebf727f-f840-4811-abe1-55a75de8be63",
++  "run_id": "744ee2c55b275fec",
++  "source_epoch": 0,
++  "model_id": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
++  "spec_id": "2080adcf20773650299def2bb0f3ebdb9f87d8f85281d5b87a99d8b406c83c6b",
++  "series": [
++    {
++      "id": "temperature.tj",
++      "label": "实测结温（模型采样对齐）",
++      "kind": "observed",
++      "unit": "°C",
++      "alignment_group": "tj_model",
++      "time_basis": "tj_sample",
++      "anchor_metric_id": "temperature.tj",
++      "estimate_stage": null,
++      "sampling": "actual_samples",
++      "original_points": 2,
++      "returned_points": 2,
++      "soft_budget_exceeded": false,
++      "points": [
++        {
++          "t": 29000.0,
++          "value": 44.3,
++          "status": "valid",
++          "sample_id": "0:744ee2c55b275fec:3433f650167ae390",
++          "received_at_utc": "2026-10-21T14:42:20.414920+00:00",
++          "source_ref": "744ee2c55b275fec:3433f650167ae390",
++          "phase_at_sample": "tracking",
++          "reason_code": null
++        },
++        {
++          "t": 30000.0,
++          "value": 44.3,
++          "status": "valid",
++          "sample_id": "0:744ee2c55b275fec:4324f483f4901a64",
++          "received_at_utc": "2026-10-21T14:42:20.417955+00:00",
++          "source_ref": "744ee2c55b275fec:4324f483f4901a64",
++          "phase_at_sample": "tracking",
++          "reason_code": null
++        }
++      ]
++    },
++    {
++      "id": "model.Tf_C",
++      "label": "快热状态估计",
++      "kind": "estimate",
++      "unit": "°C",
++      "alignment_group": "tj_model",
++      "time_basis": "tj_sample",
++      "anchor_metric_id": "temperature.tj",
++      "estimate_stage": "posterior",
++      "sampling": "actual_samples",
++      "original_points": 2,
++      "returned_points": 2,
++      "soft_budget_exceeded": false,
++      "points": [
++        {
++          "t": 29000.0,
++          "value": 44.30122325256106,
++          "status": "valid",
++          "sample_id": "0:744ee2c55b275fec:3433f650167ae390",
++          "received_at_utc": "2026-10-21T14:42:20.414920+00:00",
++          "source_ref": "744ee2c55b275fec:3433f650167ae390",
++          "phase_at_sample": "tracking",
++          "reason_code": null
++        },
++        {
++          "t": 30000.0,
++          "value": 44.3011700537187,
++          "status": "valid",
++          "sample_id": "0:744ee2c55b275fec:4324f483f4901a64",
++          "received_at_utc": "2026-10-21T14:42:20.417955+00:00",
++          "source_ref": "744ee2c55b275fec:4324f483f4901a64",
++          "phase_at_sample": "tracking",
++          "reason_code": null
++        }
++      ]
++    },
++    {
++      "id": "model.Ts_C",
++      "label": "慢热状态估计",
++      "kind": "estimate",
++      "unit": "°C",
++      "alignment_group": "tj_model",
++      "time_basis": "tj_sample",
++      "anchor_metric_id": "temperature.tj",
++      "estimate_stage": "posterior",
++      "sampling": "actual_samples",
++      "original_points": 2,
++      "returned_points": 2,
++      "soft_budget_exceeded": false,
++      "points": [
++        {
++          "t": 29000.0,
++          "value": 40.76614738063794,
++          "status": "valid",
++          "sample_id": "0:744ee2c55b275fec:3433f650167ae390",
++          "received_at_utc": "2026-10-21T14:42:20.414920+00:00",
++          "source_ref": "744ee2c55b275fec:3433f650167ae390",
++          "phase_at_sample": "tracking",
++          "reason_code": null
++        },
++        {
++          "t": 30000.0,
++          "value": 40.76578562942588,
++          "status": "valid",
++          "sample_id": "0:744ee2c55b275fec:4324f483f4901a64",
++          "received_at_utc": "2026-10-21T14:42:20.417955+00:00",
++          "source_ref": "744ee2c55b275fec:4324f483f4901a64",
++          "phase_at_sample": "tracking",
++          "reason_code": null
++        }
++      ]
++    },
++    {
++      "id": "model.E_C",
++      "label": "等效边界估计",
++      "kind": "estimate",
++      "unit": "°C",
++      "alignment_group": "tj_model",
++      "time_basis": "tj_sample",
++      "anchor_metric_id": "temperature.tj",
++      "estimate_stage": "posterior",
++      "sampling": "actual_samples",
++      "original_points": 2,
++      "returned_points": 2,
++      "soft_budget_exceeded": false,
++      "points": [
++        {
++          "t": 29000.0,
++          "value": 33.76967885066633,
++          "status": "valid",
++          "sample_id": "0:744ee2c55b275fec:3433f650167ae390",
++          "received_at_utc": "2026-10-21T14:42:20.414920+00:00",
++          "source_ref": "744ee2c55b275fec:3433f650167ae390",
++          "phase_at_sample": "tracking",
++          "reason_code": null
++        },
++        {
++          "t": 30000.0,
++          "value": 33.762940387906355,
++          "status": "valid",
++          "sample_id": "0:744ee2c55b275fec:4324f483f4901a64",
++          "received_at_utc": "2026-10-21T14:42:20.417955+00:00",
++          "source_ref": "744ee2c55b275fec:4324f483f4901a64",
++          "phase_at_sample": "tracking",
++          "reason_code": null
++        }
++      ]
++    }
++  ]
++}
+--- /dev/null
++++ rc4/src/tto_web/contracts/series.schema.json
+@@ -0,0 +1,192 @@
++{
++  "$schema": "https://json-schema.org/draft/2020-12/schema",
++  "$id": "TTO-WEB-SERIES-v1",
++  "type": "object",
++  "required": [
++    "snapshot_seq",
++    "service_epoch",
++    "run_id",
++    "source_epoch",
++    "model_id",
++    "spec_id",
++    "series"
++  ],
++  "properties": {
++    "snapshot_seq": {
++      "type": "integer",
++      "minimum": 0
++    },
++    "service_epoch": {
++      "type": "string"
++    },
++    "run_id": {
++      "type": [
++        "string",
++        "null"
++      ]
++    },
++    "source_epoch": {
++      "type": [
++        "integer",
++        "null"
++      ],
++      "minimum": 0
++    },
++    "model_id": {
++      "type": [
++        "string",
++        "null"
++      ]
++    },
++    "spec_id": {
++      "type": [
++        "string",
++        "null"
++      ]
++    },
++    "series": {
++      "type": "array",
++      "maxItems": 32,
++      "items": {
++        "type": "object",
++        "required": [
++          "id",
++          "label",
++          "unit",
++          "sampling",
++          "points"
++        ],
++        "properties": {
++          "id": {
++            "type": "string"
++          },
++          "label": {
++            "type": "string"
++          },
++          "unit": {
++            "type": [
++              "string",
++              "null"
++            ]
++          },
++          "kind": {
++            "enum": [
++              "observed",
++              "estimate"
++            ]
++          },
++          "sampling": {
++            "enum": [
++              "actual_samples",
++              "bucket_first_last_min_max_and_gaps",
++              "joint_bucket_extrema_and_gaps"
++            ]
++          },
++          "alignment_group": {
++            "const": "tj_model"
++          },
++          "time_basis": {
++            "const": "tj_sample"
++          },
++          "anchor_metric_id": {
++            "const": "temperature.tj"
++          },
++          "estimate_stage": {
++            "enum": [
++              "posterior",
++              null
++            ]
++          },
++          "original_points": {
++            "type": "integer",
++            "minimum": 0
++          },
++          "returned_points": {
++            "type": "integer",
++            "minimum": 0
++          },
++          "soft_budget_exceeded": {
++            "type": "boolean"
++          },
++          "points": {
++            "type": "array",
++            "maxItems": 18002,
++            "items": {
++              "type": "object",
++              "required": [
++                "t",
++                "value",
++                "status",
++                "sample_id",
++                "received_at_utc",
++                "source_ref"
++              ],
++              "properties": {
++                "t": {
++                  "type": "number",
++                  "minimum": 0
++                },
++                "value": {
++                  "type": [
++                    "number",
++                    "null"
++                  ]
++                },
++                "status": {
++                  "enum": [
++                    "valid",
++                    "unknown",
++                    "invalid",
++                    "stale",
++                    "unverified"
++                  ]
++                },
++                "sample_id": {
++                  "type": [
++                    "string",
++                    "null"
++                  ]
++                },
++                "received_at_utc": {
++                  "type": [
++                    "string",
++                    "null"
++                  ]
++                },
++                "source_ref": {
++                  "type": [
++                    "string",
++                    "null"
++                  ]
++                },
++                "phase_at_sample": {
++                  "enum": [
++                    "tracking",
++                    "degraded",
++                    null
++                  ]
++                },
++                "reason_code": {
++                  "enum": [
++                    null,
++                    "source_disconnected",
++                    "source_ended",
++                    "publication_gap",
++                    "model_expired",
++                    "tj_invalid",
++                    "phase_unavailable",
++                    "nonfinite_state",
++                    "alignment_mismatch"
++                  ]
++                }
++              },
++              "additionalProperties": false
++            }
++          }
++        },
++        "additionalProperties": false
++      }
++    }
++  },
++  "additionalProperties": false
++}
+--- rc3/src/tto_web/server.py
++++ rc4/src/tto_web/server.py
+@@ -18,7 +18,7 @@
+ from aiohttp import web
+ from . import __version__
+ from .common import load, utc
+-from .state import State
++from .state import State, MODEL_IDS, MODEL_LABELS
+ from .source import follow, observe
+ 
+ STATIC=Path(__file__).parent/'static'
+@@ -79,7 +79,7 @@
+     async def health(r):return response({'web':'running','version':__version__,'pid':os.getpid(),'device_health_is_separate':True})
+     async def bootstrap(r):
+         s=state.snapshot()
+-        return response(dict(version=__version__,schema_version=s['schema_version'],service_epoch=state.epoch,clock_domain_id=s['clock_domain_id'],run_id=s['run_id'],source_mode=config['source']['mode'],timezone=config['web'].get('timezone','Asia/Shanghai'),capabilities=dict(read_only=True,g2_hold=True,task_metadata=s['context']['task_metadata_available'],rpm_verified=False,demand_provider=False,advisory_provider='CURVE-REFERENCE-v1' if state.curve else None),available_fields=[dict(id=m['id'],label=m['label'],unit=m['unit']) for m in s['metrics']]))
++        return response(dict(version=__version__,schema_version=s['schema_version'],service_epoch=state.epoch,clock_domain_id=s['clock_domain_id'],run_id=s['run_id'],source_mode=config['source']['mode'],timezone=config['web'].get('timezone','Asia/Shanghai'),capabilities=dict(read_only=True,g2_hold=True,task_metadata=s['context']['task_metadata_available'],rpm_verified=False,demand_provider=False,advisory_provider='CURVE-REFERENCE-v1' if state.curve else None),available_fields=[dict(id=m['id'],label=m['label'],unit=m['unit']) for m in s['metrics']],series_capabilities=dict(model_state_history=True,alignment_group='tj_model',time_basis='tj_sample',estimate_stage='posterior',max_rows=18002,window_ms=3600000),available_series=[dict(id=id,label=label,unit='°C',kind='estimate') for id,label in zip(MODEL_IDS,MODEL_LABELS)]))
+     async def snapshot(r):return response(state.refresh())
+     async def model(r):
+         s=state.snapshot();p=state.packet
+@@ -98,7 +98,10 @@
+     async def series(r):
+         lo,hi=window(r);n=int(bounded_number(r,'max_points',2000,16,5000))
+         ids=r.query.get('ids','temperature.tj,temperature.cpu,temperature.gpu,power.gpu,power.cpu_soc_mss,fan.pwm.actual,fan.pwm.target').split(',')
+-        return response(dict(snapshot_seq=state.seq,run_id=state.snapshot()['run_id'],source_epoch=state.snapshot()['source_epoch'],series=state.series(ids,lo,hi,n)))
++        s=state.snapshot()
++        return response(dict(snapshot_seq=s['snapshot_seq'],service_epoch=s['service_epoch'],run_id=s['run_id'],
++            source_epoch=s['source_epoch'],model_id=s['model']['model_id'],spec_id=s['model']['spec_id'],
++            series=state.series(ids,lo,hi,n)))
+     async def predictions(r):
+         h=int(bounded_number(r,'horizon_s',45,15,90))
+         if h not in (15,45,90):raise web.HTTPBadRequest(text='horizon must be 15/45/90')
+--- rc3/src/tto_web/state.py
++++ rc4/src/tto_web/state.py
+@@ -5,11 +5,16 @@
+ import time
+ import uuid
+ from itertools import islice
+-from collections import deque
++from collections import deque, namedtuple
+ from .adapter import SPEC, SPEC_ID, TOPOLOGY
+ from .common import utc, finite, boot_id, load, short
+ 
+ HORIZONS = (15,45,90)
++MODEL_IDS = ('model.Tf_C', 'model.Ts_C', 'model.E_C')
++MODEL_LABELS = ('快热状态估计', '慢热状态估计', '等效边界估计')
++MODEL_GROUP = ('temperature.tj',) + MODEL_IDS
++# Shared lineage and one four-value row, rather than three dict histories.
++ModelRow = namedtuple('ModelRow', 't values sample_id received_at_utc source_ref phase reason')
+ 
+ 
+ class State:
+@@ -25,6 +30,10 @@
+         self.source_connected = False
+         self.history = {}
+         self.history_seen = {}
++        self.model_history = deque(maxlen=18002)
++        self.model_history_sample = None
++        self.model_gap_t = -math.inf
++        self.model_history_disposition = None
+         self.predictions = deque(maxlen=11070)
+         self.prediction_labels={}
+         self.events = deque(maxlen=1000)
+@@ -104,12 +113,16 @@
+         old_signature=None if not old else (old['run_id'],old['source_epoch'],old['model_id'],old['spec_id'])
+         if old_signature!=signature:
+             self.history.clear(); self.history_seen.clear(); self.last_origin=-math.inf; self.last_tj=None;self.task_event_seq=0
++            self.model_history.clear(); self.model_history_sample=None
++            self.model_gap_t=-math.inf; self.model_history_disposition=None
+             self.last_signature=None
+             self.events=deque((e for e in self.events if e['run_id'] is None),maxlen=1000)
+             for p in self.predictions:
+                 if p['status']=='pending':p['status']='not_comparable'
+         elif packet['input_mono_s']<old['input_mono_s']:
+             raise ValueError('producer time regression')
++        if old_signature==signature:
++            self.expire_model_history(now)
+         self.packet=copy.deepcopy(packet)
+         if old_signature!=signature:self.event('source','已切换观察过程，曲线从新过程开始',0)
+         self.source_connected=True;self.source_status='正在观察'
+@@ -122,6 +135,7 @@
+                 series.append(dict(t=elapsed,value=None,sample_id=None,received_at_utc=None,status='unknown',source_ref=None))
+         metrics={m['id']:m for m in packet['metrics']}
+         tj=metrics.get('temperature.tj')
++        self.record_model_history(packet, tj, now, elapsed)
+         fresh_tj=bool(packet['new_tj'] and packet['tj_sample_id']!=self.last_tj and tj and tj['status']=='valid' and tj['value'] is not None)
+         if fresh_tj:
+             self.last_tj=packet['tj_sample_id']
+@@ -186,6 +200,9 @@
+ 
+     def disconnect(self, reason='数据暂断', ended=False):
+         if self.source_connected:self.event('web-source',reason,severity='warning')
++        if self.packet:
++            self.model_gap('source_ended' if ended else 'source_disconnected',
++                           (time.monotonic()-self.packet['origin_mono_s'])*1000)
+         self.source_connected=False;self.source_status=reason
+         if not ended:
+             for pred in self.predictions:
+@@ -239,7 +256,8 @@
+                     self.history[m['id']].append(dict(t=min(elapsed,(raw['_expiry']-p['origin_mono_s'])*1000),value=None,sample_id=None,received_at_utc=None,status=m['status'],source_ref=m['source_ref']))
+             metrics={m['id']:m for m in snapshot['metrics']}
+             tj=next((m for m in p['metrics'] if m['id']=='temperature.tj'),{})
+-            model_until=min(p['consumable_until_mono_s'],tj.get('_expiry',now))
++            model_until=self.model_until(p, now)
++            self.expire_model_history(now)
+             current=now<model_until and self.source_connected and metrics.get('temperature.tj',{}).get('status')=='valid'
+             o=p['model'];model=snapshot['model'];model.update(model_id=p['model_id'],spec_id=p['spec_id'],phase=o['phase'] if current else 'unavailable')
+             model['remaining_valid_ms']=max(0.,(model_until-now)*1000) if current else 0.
+@@ -269,6 +287,8 @@
+                 e['animate_allowed']=bool(current and by_id[e['from']].get('status')=='valid' and by_id[e['to']].get('status')=='valid')
+             for series in self.history.values():
+                 while series and series[0]['t']<elapsed-3600000:series.popleft()
++            while self.model_history and self.model_history[0].t<elapsed-3600000:
++                self.model_history.popleft()
+             snapshot['advisory']=self.advisory(snapshot)
+             snapshot['advisory']['remaining_valid_ms']=min(model['remaining_valid_ms'],snapshot['health']['protection_remaining_valid_ms']) if snapshot['advisory']['value_percent'] is not None else 0.
+         for id,value in self.host_values.items():
+@@ -291,9 +311,106 @@
+         records=[copy.deepcopy(p) for p in selected if records_after is None or p['target_elapsed_ms']>=records_after-2000 or p.get('settled_elapsed_ms',-math.inf)>=records_after]
+         return dict(horizon_s=horizon,scenario='HOLD',records=records,records_complete=records_after is None,summary=summary,labels={v['prediction_id']:self.prediction_labels[v['prediction_id']] for v in records if v['prediction_id'] in self.prediction_labels})
+ 
++    @staticmethod
++    def model_until(packet, now):
++        tj=next((m for m in packet['metrics'] if m['id']=='temperature.tj'),{})
++        return min(packet['consumable_until_mono_s'],tj.get('_expiry',now))
++
++    def model_gap(self, reason, t):
++        self.model_history_disposition=reason
++        # One break per continuous invalid interval. Keep the barrier even after trim.
++        self.model_gap_t=max(self.model_gap_t,t)
++        if self.model_history and self.model_history[-1].reason is not None:
++            return
++        if self.model_history:
++            t=max(t,self.model_history[-1].t)
++            if t==self.model_history[-1].t:
++                self.model_history.pop()
++        self.model_gap_t=max(self.model_gap_t,t)
++        self.model_history.append(ModelRow(t,(None,None,None,None),None,None,None,None,reason))
++
++    def expire_model_history(self, now):
++        if self.packet and self.source_connected:
++            until=self.model_until(self.packet,now)
++            if now>=until:
++                self.model_gap('model_expired',(until-self.packet['origin_mono_s'])*1000)
++
++    def record_model_history(self, packet, tj, now, elapsed):
++        if packet.get('publication_gap'):
++            self.model_gap('publication_gap',elapsed)
++            return
++        o=packet['model']
++        fresh=bool(packet['new_tj'] and packet['tj_sample_id']!=self.model_history_sample)
++        if packet['new_tj']:self.model_history_sample=packet['tj_sample_id']
++        reason=None
++        if not tj or tj['status']!='valid' or not finite(tj['value']):reason='tj_invalid'
++        elif now>=self.model_until(packet,now):reason='model_expired'
++        elif o['phase'] not in ('tracking','degraded'):reason='phase_unavailable'
++        elif not all(finite(o.get(k)) for k in ('Tf_C','Ts_C','E_C')):reason='nonfinite_state'
++        if reason:
++            t=(self.model_until(packet,now)-packet['origin_mono_s'])*1000 if reason=='model_expired' else elapsed
++            self.model_gap(reason,t)
++            return
++        if not fresh:
++            return
++        t=tj['as_of_elapsed_ms']
++        # Both values are the same source mono timestamp; tolerate float subtraction only.
++        if tj['sample_id']!=packet['tj_sample_id'] or not finite(t) or not math.isclose(t,elapsed,rel_tol=0.,abs_tol=1e-3):
++            self.model_gap('alignment_mismatch',elapsed)
++            return
++        if t<=self.model_gap_t:
++            self.model_history_disposition='arrived_after_gap'
++            return
++        if self.model_history and t<=self.model_history[-1].t:
++            return
++        self.model_history.append(ModelRow(t,(tj['value'],o['Tf_C'],o['Ts_C'],o['E_C']),
++            tj['sample_id'],tj['received_at_utc'],tj['source_ref'],o['phase'],None))
++        self.model_history_disposition='accepted'
++
++    def model_series(self, ids, start, end, max_points):
++        rows=[r for r in self.model_history if start<=r.t<=end]
++        original=len(rows)
++        sampled=original>max_points
++        if sampled:
++            # Four components + three signed differences: at most 14 extrema,
++            # plus bucket endpoints. Mandatory breaks/segment edges are extra.
++            width=max(1,math.ceil(original/max(1,max_points//16)))
++            indices={0,original-1}
++            for i,r in enumerate(rows):
++                if r.reason is not None:
++                    indices.update(j for j in (i-1,i,i+1) if 0<=j<original)
++            for offset in range(0,original,width):
++                bucket=rows[offset:offset+width]
++                indices.update((offset,offset+len(bucket)-1))
++                features=[(*r.values,r.values[0]-r.values[1],r.values[2]-r.values[3],r.values[1]-r.values[2])
++                          if r.reason is None else (None,)*7 for r in bucket]
++                for column in range(7):
++                    valid=[j for j,f in enumerate(features) if f[column] is not None]
++                    if valid:
++                        indices.add(offset+min(valid,key=lambda j:features[j][column]))
++                        indices.add(offset+max(valid,key=lambda j:features[j][column]))
++            rows=[rows[i] for i in sorted(indices)]
++        result={}
++        for id in ids:
++            if id not in MODEL_GROUP:continue
++            column=MODEL_GROUP.index(id)
++            result[id]=dict(id=id,label='实测结温（模型采样对齐）' if column==0 else MODEL_LABELS[column-1],
++                kind='observed' if column==0 else 'estimate',unit='°C',
++                alignment_group='tj_model',time_basis='tj_sample',anchor_metric_id='temperature.tj',
++                estimate_stage=None if column==0 else 'posterior',
++                sampling='joint_bucket_extrema_and_gaps' if sampled else 'actual_samples',
++                original_points=original,returned_points=len(rows),soft_budget_exceeded=len(rows)>max_points,
++                points=[dict(t=r.t,value=r.values[column],status='valid' if r.reason is None else 'unknown',
++                    sample_id=r.sample_id,received_at_utc=r.received_at_utc,source_ref=r.source_ref,
++                    phase_at_sample=r.phase,reason_code=r.reason) for r in rows])
++        return result
++
+     def series(self, ids, start, end, max_points):
++        joint=self.model_series(ids[:32],start,end,max_points) if any(id in MODEL_IDS for id in ids[:32]) else {}
+         result=[]
+         for id in ids[:32]:
++            if id in joint:
++                result.append(joint[id]);continue
+             points=[p for p in self.history.get(id,()) if start<=p['t']<=end]
+             sampled=False
+             if len(points)>max_points:
+--- rc3/src/tto_web/web-candidate-files.json
++++ rc4/src/tto_web/web-candidate-files.json
+@@ -1,23 +1,29 @@
+ {
+-  "version": "1.0.0rc3",
++  "version": "1.0.0rc4",
+   "baseline": "0.2.4+closeout.2; historical identity retained separately",
+   "frozen_model_sha256": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
++  "frontend": "sealed rc3 static assets; Sonnet redesign not included",
+   "files": {
+-    "tto_web/server.py": "345fa56bea9d7a0dd68fc5b2ef03c904e9adcbeaf31c4b23544de79011a3f8a8",
++    "tto_web/server.py": "41afd059e5f91e19c60913b44c9f8e69625d68b14b4e5d4431bb82a7d1807861",
+     "tto_web/adapter.py": "c0040f321d2fab408580883cfc1109d3ef50b3821a42b4e5bf38f97e4040cce8",
+-    "tto_web/__init__.py": "bf27a420c709e74f2b13bc05c0147db069c3d21e5717fbfb9c58b87c2bcff5aa",
++    "tto_web/__init__.py": "901c2748f1ca095a86e44490ff97fd662e6bac691069754a6d51d964aaa03ba2",
+     "tto_web/display.py": "6abec7aa6f80740395b053b4969abb3fa673f64ef3eb906554290ba92a82b0a2",
+     "tto_web/context.py": "e271998ba8b93e3140c3534ec1a3b6f7c638ccd1dd6f0b4011619c8170aee795",
+     "tto_web/cli.py": "67efba0cc1e32005dfa4c1da48d51453110cb6c4e338867f1e92d21d833ac435",
+     "tto_web/common.py": "09465eb93b3aa324b0143bc29c71f5e5ad035866952a3b42c6a054e4501387a3",
+     "tto_web/identity.py": "8ec4dbc3606946210fcf26981f85220410aabac8cff9a219e30a27eaa98f0a3e",
+     "tto_web/source.py": "92bf0e1ab305e1e640d7538a474f6c793019096a0daccb10a9f5b0019c9354eb",
+-    "tto_web/state.py": "5f68542ee62ead262a16be26b4a9923be2b129438bc6ec75de276c716ffdbb38",
++    "tto_web/state.py": "3cb9722b590588a74c84453e6170467a2f4de9c74d68894f3ab34641a180e8a9",
++    "tto_web/contracts/series-example-gap.json": "7f81c08971f8fa06075f508cf398038448145377dc5ac22eda14ebc3abbafd21",
+     "tto_web/contracts/dashboard.schema.json": "ab4638c2bd20b94084374de4fecef1f2e853f3ce9b9a81733faab5a38d5d6f1c",
+     "tto_web/contracts/example-tracking.json": "232417c594bf24e35459c5ae18f11b7d63f54be6d1d5a43582c748839ca846c3",
+     "tto_web/contracts/example-matured.json": "a477b8b58df60bea33df27e44f07a0a4f379023aa99dc4e854553e836861f1fb",
+     "tto_web/contracts/example-waiting.json": "d32ecbc8f6e17b556e30d52661ae656daad895fc614c66ff8caa7e3d0cb962b8",
++    "tto_web/contracts/series-example-new-epoch.json": "517de8562a21cb2c78b36604a527020642f85879452d749b88435943aaec8003",
+     "tto_web/contracts/model-topology.json": "93efc78ac8548028ed4b298b61aacc4d959ed7c239b8b25dc1d6e7b36ac499fa",
++    "tto_web/contracts/series.schema.json": "286ffeac504e6b284cf41c67ba4d6e7e453e77dc1173e725773a3a1bdfcab194",
++    "tto_web/contracts/series-example-tracking.json": "743af2be78f511dc8f74bce967e07a94048f7b91f02e604d4c9c7403fe230510",
++    "tto_web/contracts/model-history-contract.md": "8edc79c00156e4b6e5f1ca7567f079a6c46fa38002cc0a75085580c4c456d81b",
+     "tto_web/contracts/example-degraded.json": "be29d8efa2dbca95fbe3f94088143bb6b71944b2c71e135a05eefff451e379b4",
+     "tto_web/static/index.html": "33efa855dcdbbb5621b5f0ce58191adf7ecb66cb858568305eeff90062792296",
+     "tto_web/static/assets/index--dJAhGlH.js": "6e89496588a9df87f44304d2010f062eb476ee1e9a5fdc881d68715b81fa13a2",
+--- /dev/null
++++ rc4/tools/browser_history_D_regression.js
+@@ -0,0 +1,38 @@
++async (page) => {
++ const control=await page.evaluate(()=>sessionStorage.getItem('tto-test-control'));if(!control)throw Error('register local harness control URL');
++ const command=async name=>{await page.request.post(control+'/'+name);for(let i=0;i<40;i++){const s=await(await page.request.get('http://127.0.0.1:59009/api/v1/snapshot')).json();if(s.source_epoch!==old.source_epoch)return s;await page.waitForTimeout(100);}throw Error('source epoch not delivered');};
++ await page.setViewportSize({width:1440,height:1100});
++ await page.waitForFunction(()=>document.querySelectorAll('#score b').length===4&&document.querySelector('#contextRows').children.length>0);
++ const health=await (await page.request.get('http://127.0.0.1:59009/healthz')).json();
++ const old=await (await page.request.get('http://127.0.0.1:59009/api/v1/snapshot')).json();
++ let releaseOld,notifyHeld,notifyReturned,holding=false,blockNew=false;
++ const gate=new Promise(resolve=>releaseOld=resolve),held=new Promise(resolve=>notifyHeld=resolve),returned=new Promise(resolve=>notifyReturned=resolve);
++ const result={version:health.version,oldRun:old.run_id,oldEpoch:old.source_epoch,scoreBefore:await page.locator('#score').innerText(),sentinelMAE:777.123};
++ await page.route('**/api/v1/predictions?**',async route=>{
++  if(!holding){
++   holding=true;const response=await route.fetch();const data=await response.json();
++   data.summary.MAE_C=result.sentinelMAE;
++   notifyHeld();await gate;await route.fulfill({response,json:data});notifyReturned();
++  }else if(blockNew)await route.fulfill({status:503,body:'SYNTHETIC new cohort blocked'});
++  else await route.continue();
++ });
++ // Hold the prediction request inside refreshData, keeping its busy flag set.
++ // This is the rc2 race: accept(new epoch) cannot start another refreshData.
++ await Promise.race([held,new Promise((_,reject)=>setTimeout(()=>reject(Error('old request not held')),5000))]);
++ blockNew=true;
++ const epoch=await command('new-epoch');result.newRun=epoch.run_id;result.newEpoch=epoch.source_epoch;
++ if(result.oldRun!==result.newRun||result.oldEpoch===result.newEpoch)throw Error('did not switch epoch in same run');
++ await page.waitForFunction(()=>document.querySelector('#contextRows').children.length===0);
++ result.newSnapshotReceived=true;
++ result.scoreAfterSwitch=await page.locator('#score').innerText();
++ result.clearedBeforeOldResponse=result.scoreAfterSwitch.trim()==='';
++ await page.screenshot({path:'output/playwright/'+health.version+'-epoch-before-late.png',fullPage:true});
++ releaseOld();await returned;await page.waitForTimeout(500);
++ result.oldResponseActuallyReturned=true;result.scoreAfterOldResponse=await page.locator('#score').innerText();
++ result.lateResponseIgnored=result.scoreAfterOldResponse.trim()===''&&!result.scoreAfterOldResponse.includes('777.123');
++ result.latestMatch=await page.locator('#latestMatch').innerText();
++ result.fixed=result.clearedBeforeOldResponse&&result.lateResponseIgnored;
++ await page.screenshot({path:'output/playwright/'+health.version+'-epoch-after-late.png',fullPage:true});
++ blockNew=false;await page.unroute('**/api/v1/predictions?**');
++ return result;
++}
+--- /dev/null
++++ rc4/tools/browser_history_checks.js
+@@ -0,0 +1,39 @@
++async (page) => {
++ const control=await page.evaluate(()=>sessionStorage.getItem('tto-test-control'));if(!control)throw Error('local control not registered');
++ const command=async name=>(await page.request.post(control+'/'+name)).json();
++ const refresh=()=>page.getByRole('button',{name:'刷新历史',exact:true}).click();
++ const result={scope:'installed rc4 API; minimal synthetic verification page, not Sonnet homepage',health:await(await page.request.get('http://127.0.0.1:59009/healthz')).json()};
++ await page.goto('http://127.0.0.1:59009/__history');
++ await page.waitForFunction(()=>window.historyResult?.series[1].points.some(p=>p.value!==null));
++ result.initial=await page.evaluate(()=>({identity:document.querySelector('#identity').textContent,rows:document.querySelector('#rows').textContent,lines:document.querySelector('#chart').children.length}));
++ await command('gap');await page.waitForTimeout(2300);await refresh();
++ await page.waitForFunction(()=>window.historyResult.series[1].points.some(p=>p.reason_code==='publication_gap'));
++ result.gap=await page.evaluate(()=>({nulls:window.historyResult.series[1].points.filter(p=>p.value===null).length,lines:document.querySelector('#chart').children.length}));
++ if(result.gap.lines<8)throw Error('joint curves joined across publication gap');
++ await page.screenshot({path:'output/playwright/rc4-history-gap.png',fullPage:true});
++ await command('silent');await page.waitForTimeout(3200);await refresh();
++ await page.waitForFunction(()=>window.historyResult.series[1].points.at(-1).value===null);
++ result.silent=await page.evaluate(()=>({last:window.historyResult.series[1].points.at(-1),table:document.querySelector('#rows').textContent}));
++ await command('live');await page.waitForTimeout(2300);await refresh();
++ await page.waitForFunction(()=>window.historyResult.series[1].points.at(-1).value!==null);
++ result.recovered=await page.evaluate(()=>window.historyResult.series[1].points.at(-1));
++ const old=await page.evaluate(()=>window.historyResult);let release,heldResolve,returnedResolve;
++ const gate=new Promise(r=>release=r),held=new Promise(r=>heldResolve=r),returned=new Promise(r=>returnedResolve=r);let holding=false;
++ await page.route('**/api/v1/series?ids=**',async route=>{
++  if(!holding){holding=true;const response=await route.fetch();const data=await response.json();data.series[1].points.forEach(p=>{if(p.value!==null)p.value=777.123;});heldResolve();await gate;await route.fulfill({response,json:data});returnedResolve();}
++  else await route.continue();
++ });
++ await refresh();await held;await command('epoch');
++ await page.waitForFunction(epoch=>window.historyResult&&window.historyResult.source_epoch!==epoch&&document.querySelector('#chart').children.length===0,old.source_epoch);
++ result.switched=await page.evaluate(()=>({source_epoch:window.historyResult?.source_epoch,run_id:window.historyResult?.run_id,lines:document.querySelector('#chart').children.length,status:document.querySelector('#status').textContent}));
++ await page.screenshot({path:'output/playwright/rc4-history-epoch-before-late.png',fullPage:true});
++ release();await returned;await page.waitForTimeout(400);
++ result.lateIgnored=await page.evaluate(epoch=>window.historyResult&&window.historyResult.source_epoch!==epoch&&!document.querySelector('#rows').textContent.includes('777.123'),old.source_epoch);
++ if(!result.lateIgnored||result.switched.run_id!==old.run_id)throw Error('history crossed same-run epoch');
++ await page.unroute('**/api/v1/series?ids=**');
++ result.accessibilityTable=await page.getByRole('table',{name:'历史序列检查'}).isVisible();
++ result.jsHeapBytes=await page.evaluate(()=>performance.memory?.usedJSHeapSize??null);
++ result.pass=true;
++ await page.screenshot({path:'output/playwright/rc4-history-epoch-after-late.png',fullPage:true});
++ return result;
++}
+--- /dev/null
++++ rc4/tools/build_history_candidate.py
+@@ -0,0 +1,39 @@
++"""Offline rc4 build/staging. Preserve Sonnet sources and all sealed rc3 artifacts."""
++import hashlib,json,shutil,subprocess,sys,zipfile
++from pathlib import Path
++ROOT=Path(__file__).resolve().parents[1]
++VERSION='1.0.0rc4'
++STAGE=ROOT/'candidate-rc4'
++def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
++def main():
++    old=ROOT/'dist/tto_web_ui-1.0.0rc3-py3-none-any.whl'
++    assert sha(old)=='5f4c9fe5f28e8ab892c83b1309f8b91ad8d6e828489f116f17c4f67c8a35b910'
++    with zipfile.ZipFile(old) as z:
++        for n in z.namelist():
++            if n.startswith('tto_web/static/'):assert (ROOT/'src'/n).read_bytes()==z.read(n), 'static frontend differs; preserve and resolve ownership before packaging'
++    packages={str(p.relative_to(base)):sha(p) for base in (ROOT/'src',ROOT/'vendor') for p in base.rglob('*') if p.is_file() and '__pycache__' not in p.parts and p.suffix in ('.py','.json','.js','.css','.html','.md') and p.name!='web-candidate-files.json'}
++    manifest=dict(version=VERSION,baseline='0.2.4+closeout.2; historical identity retained separately',frozen_model_sha256=sha(ROOT/'vendor/tto_field/research/models/primary.json'),frontend='sealed rc3 static assets; Sonnet redesign not included',files=packages)
++    (ROOT/'src/tto_web/web-candidate-files.json').write_text(json.dumps(manifest,indent=2)+'\n')
++    if (ROOT/'build').exists():shutil.rmtree(ROOT/'build')
++    subprocess.run([sys.executable,'-m','build','--wheel','--no-isolation'],cwd=ROOT,check=True)
++    wheel=ROOT/f'dist/tto_web_ui-{VERSION}-py3-none-any.whl'
++    with zipfile.ZipFile(wheel) as z:
++        assert {n for n in z.namelist() if '.dist-info/' not in n}==set(packages)|{'tto_web/web-candidate-files.json'}
++        for n,digest in packages.items():assert hashlib.sha256(z.read(n)).hexdigest()==digest
++    if STAGE.exists():raise SystemExit('stage exists; do not overwrite a prior candidate')
++    STAGE.mkdir()
++    for name in ('src','vendor','config','tests','tools','requirements'):
++        shutil.copytree(ROOT/name,STAGE/name,ignore=shutil.ignore_patterns('__pycache__'))
++    for name in ('pyproject.toml','requirements.runtime.lock','baseline-identities.json','TTO-WebUI-模型状态历史序列-实施与验收方案-v1.0.md'):
++        shutil.copy2(ROOT/name,STAGE/name)
++    (STAGE/'wheelhouse').mkdir()
++    for p in (ROOT/'wheelhouse').glob('*.whl'):
++        if not p.name.startswith('tto_web_ui-'):shutil.copy2(p,STAGE/'wheelhouse'/p.name)
++    shutil.copy2(wheel,STAGE/'wheelhouse'/wheel.name)
++    identities={str(p.relative_to(STAGE)):sha(p) for d in ('src','vendor','config','tools','tests','requirements','wheelhouse') for p in (STAGE/d).rglob('*') if p.is_file()}
++    for name in ('pyproject.toml','requirements.runtime.lock','baseline-identities.json'):identities[name]=sha(STAGE/name)
++    (STAGE/'candidate-identities.json').write_text(json.dumps(identities,indent=2)+'\n')
++    receipt=dict(version=VERSION,wheel=wheel.name,wheel_bytes=wheel.stat().st_size,wheel_sha256=sha(wheel),package_files=len(packages),installer_files=len(identities),static_from_rc3=True,no_frontend_build=True,offline=True)
++    (ROOT/'evidence/history-rc4/build-receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
++    print(json.dumps(receipt))
++if __name__=='__main__':main()
+--- /dev/null
++++ rc4/tools/history_allocation.py
+@@ -0,0 +1,19 @@
++"""Allocation evidence in a supplied installed interpreter, no source imports."""
++import gc,hashlib,json,os,tracemalloc
++from pathlib import Path
++import tto_web
++from tto_web.state import State
++tracemalloc.start(1)
++s=State({'advisory':{}});gc.collect();before=tracemalloc.get_traced_memory()[0]
++if hasattr(s,'model_history'):
++    from tto_web.state import ModelRow
++    for i in range(18002):
++        s.model_history.append(ModelRow(i*199.9,(float(i%90),float(i%80),float(i%70),float(i%60)),str(i)+'/'+'a'*32,'2026-10-21T00:00:00Z','synthetic/'+str(i)+'/'+'b'*32,'tracking',None))
++gc.collect();after=tracemalloc.get_traced_memory()[0];snap=tracemalloc.take_snapshot()
++result=dict(module=tto_web.__file__,version=tto_web.__version__,rows=len(s.model_history) if hasattr(s,'model_history') else 0,baseline_bytes=before,retained_bytes=after,increment_MiB=(after-before)/1024**2,largest=[str(s) for s in snap.statistics('lineno')[:8]])
++if hasattr(s,'model_history'):
++    for _ in range(5):s.model_series(['temperature.tj','model.Tf_C','model.Ts_C','model.E_C'],0,3600000,2000)
++    gc.collect();result['after_queries_bytes']=tracemalloc.get_traced_memory()[0]
++    s.model_history.clear();gc.collect();result['after_clear_bytes']=tracemalloc.get_traced_memory()[0]
++result['pass']=result['increment_MiB']<=16
++Path(os.environ['TTO_ALLOCATION_OUT']).write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result))
+--- /dev/null
++++ rc4/tools/history_ordering.py
+@@ -0,0 +1,26 @@
++"""Read saved states only. No observer execution, source replay, fitting or device."""
++import hashlib,json,math
++from collections import Counter
++from pathlib import Path
++ROOT=Path(__file__).resolve().parents[1]
++model='dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0'
++spec='2080adcf20773650299def2bb0f3ebdb9f87d8f85281d5b87a99d8b406c83c6b'
++results=[]
++for name in ('experiments/thermal_fixed_anchors_frozen_v1/inputs/field/states.jsonl','evidence/cpu-runtime-threads-20261020/inputs/recorded-run/states.jsonl'):
++    p=ROOT.parents[1]/name;seen=set();excluded=Counter();count=ordered=0;negative=[]
++    with p.open() as f:
++        for line in f:
++            row=json.loads(line);s=row.get('state',row);identity=s.get('identity',{});o=s.get('observer',{});tj=(s.get('measurement') or {}).get('tj') or {}
++            if identity.get('model_sha256')!=model or identity.get('spec_sha256')!=spec:excluded['other_identity']+=1;continue
++            if o.get('phase') not in ('tracking','degraded'):excluded['phase']+=1;continue
++            if not tj.get('raw_valid') or s.get('observed_through_ref')!=tj.get('source_ref'):excluded['not_new_valid_tj']+=1;continue
++            values=[o.get(k) for k in ('Tf_C','Ts_C','E_C')]
++            if not all(isinstance(v,(float,int)) and math.isfinite(v) for v in values):excluded['nonfinite']+=1;continue
++            key=(identity.get('run_id'),identity.get('source_epoch'),tj['source_ref'])
++            if key in seen:excluded['duplicate']+=1;continue
++            seen.add(key);count+=1
++            if values[0]>=values[1]>=values[2]:ordered+=1
++            elif len(negative)<5:negative.append(dict(source_ref=tj['source_ref'],values=values))
++    results.append(dict(input=name,bytes=p.stat().st_size,sha256=hashlib.sha256(p.read_bytes()).hexdigest(),eligible_unique_new_tj=count,ordered=ordered,ordered_fraction=ordered/count if count else None,excluded=dict(excluded),reversal_examples=negative))
++value=dict(scope='existing saved states only, not a fresh replay or field validation; finite sample ordering is not a guarantee',model=model,spec=spec,criterion='same frozen identity; tracking/degraded; raw_valid TJ and observed_through_ref == TJ.source_ref; dedup run/epoch/TJ ref; finite states',results=results)
++(ROOT/'evidence/history-rc4/ordering.json').write_text(json.dumps(value,indent=2)+'\n');print(json.dumps(value))
+--- /dev/null
++++ rc4/tools/history_resource_monitor.py
+@@ -0,0 +1,25 @@
++"""120s installed Web-only measurement; synthetic publisher and Chrome separate."""
++import asyncio,json,os,platform,time
++from pathlib import Path
++import aiohttp,psutil
++async def main():
++    out=Path(os.environ['TTO_HISTORY_OUT']);meta=json.loads((out/'service.json').read_text());p=psutil.Process(meta['pid']);source=psutil.Process(json.loads((out/'source.json').read_text())['pid'])
++    start=time.monotonic();cpu=p.cpu_times();source_cpu=source.cpu_times();samples=[];requests=[]
++    async with aiohttp.ClientSession() as c:
++        health=await(await c.get('http://127.0.0.1:59009/healthz')).json();assert health['pid']==meta['pid']
++        while time.monotonic()-start<120:
++            snap=await(await c.get('http://127.0.0.1:59009/api/v1/snapshot')).json()
++            assert snap['model']['phase'] in ('tracking','degraded'), 'fixture/model not eligible during measurement'
++            samples.append(dict(t=time.monotonic()-start,rss_MiB=p.memory_info().rss/1024**2,source_rss_MiB=source.memory_info().rss/1024**2,model_phase=snap['model']['phase']))
++            if meta['version']=='1.0.0rc4' and len(samples)%2==0:
++                t=time.perf_counter()
++                async with c.get('http://127.0.0.1:59009/api/v1/series?ids=temperature.tj,model.Tf_C,model.Ts_C,model.E_C&max_points=2000') as r:
++                    wire=await r.read();assert r.status==200;data=json.loads(wire)
++                    requests.append(dict(ms=(time.perf_counter()-t)*1000,bytes=len(wire),rows=data['series'][0]['returned_points']))
++            if len(samples)%15==0:(out/'progress.json').write_text(json.dumps(dict(seconds=time.monotonic()-start,samples=len(samples),phase=snap['model']['phase'])))
++            await asyncio.sleep(1)
++    elapsed=time.monotonic()-start;after=p.cpu_times();sa=source.cpu_times()
++    result=dict(version=health['version'],module=meta['module'],identity=meta['identity'],scope='installed Web app_for follow process; synthetic prefill; macOS ARM64; one Chrome page; excludes source and browser from Web budget; not N305',host=platform.platform(),duration_s=elapsed,cpu_mean_single_core_percent=100*(after.user+after.system-cpu.user-cpu.system)/elapsed,rss_peak_MiB=max(s['rss_MiB'] for s in samples),rss_first_MiB=samples[0]['rss_MiB'],rss_last_MiB=samples[-1]['rss_MiB'],source_cpu_percent_separate=100*(sa.user+sa.system-source_cpu.user-source_cpu.system)/elapsed,source_rss_peak_MiB_separate=max(s['source_rss_MiB'] for s in samples),source_rate_Hz=1,preload_rows_per_existing_numeric_series=18002,preload_span_ms=3599800,extra_joint_request_interval_s=2 if requests else None,joint_request_max_ms=max((q['ms'] for q in requests),default=None),joint_request_max_bytes=max((q['bytes'] for q in requests),default=None),joint_request_max_rows=max((q['rows'] for q in requests),default=None),samples=samples,requests=requests)
++    result['pass']=result['rss_peak_MiB']<=192 and result['cpu_mean_single_core_percent']<=5
++    (out/'resources.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps({k:v for k,v in result.items() if k not in ('samples','requests')}),flush=True)
++if __name__=='__main__':asyncio.run(main())
+--- /dev/null
++++ rc4/tools/history_service.py
+@@ -0,0 +1,40 @@
++"""Installed-app verification harness; synthetic prefill is not production history."""
++import asyncio,copy,json,os,signal,sys,time
++from collections import deque
++from pathlib import Path
++from aiohttp import web
++ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/'tests'))
++from producer import web_config
++from tto_web.state import State
++from tto_web.source import follow
++from tto_web.server import app_for
++from tto_web.common import atomic_json
++async def main():
++    out=Path(os.environ['TTO_HISTORY_OUT']);stop=asyncio.Event();c=web_config();c['source']['active_descriptor']='/private/tmp/twh4/active.json'
++    s=State(c);source=asyncio.create_task(follow(c,s,stop))
++    for _ in range(150):
++        if s.packet:break
++        await asyncio.sleep(.1)
++    assert s.packet,'synthetic source not ready'
++    elapsed=(time.monotonic()-s.packet['origin_mono_s'])*1000
++    # Fill existing metrics at 5 Hz for the saturated one-hour comparison.
++    for id,history in s.history.items():
++        if history and history[-1]['value'] is not None:
++            template=history[-1]
++            for i in range(18002):history.append(dict(template,t=elapsed-3599800+i*(3599800/18001),sample_id='prefill:'+str(i)))
++    if hasattr(s,'model_history'):
++        from tto_web.state import ModelRow
++        # Include strings allocated per sample, rather than sharing artificial lineage.
++        s.model_history.clear()
++        for i in range(18002):
++            s.model_history.append(ModelRow(elapsed-3599800+i*(3599800/18001),(44.3,44.2,40.,32.),'prefill:'+str(i),'2026-10-21T00:00:00Z','prefill/ref/'+str(i),'tracking',None))
++    s.refresh();app=app_for(c,start_source=False,state=s)
++    async def page(r):return web.FileResponse(ROOT/'tools/history_view.html')
++    async def script(r):return web.FileResponse(ROOT/'tools/history_view.js')
++    app.router.add_get('/__history',page);app.router.add_get('/__history.js',script)
++    runner=web.AppRunner(app,shutdown_timeout=.2);await runner.setup();await web.TCPSite(runner,'127.0.0.1',59009,reuse_address=True).start()
++    atomic_json(out/'service.json',dict(pid=os.getpid(),module=__import__('tto_web').__file__,version=__import__('tto_web').__version__,identity=__import__('tto_web.identity',fromlist=['verify']).verify(),history_prefill=True,model_rows=len(s.model_history) if hasattr(s,'model_history') else 0,production_cli=False))
++    loop=asyncio.get_running_loop()
++    for sig in (signal.SIGTERM,signal.SIGINT):loop.add_signal_handler(sig,stop.set)
++    await stop.wait();source.cancel();await asyncio.gather(source,return_exceptions=True);await runner.cleanup()
++if __name__=='__main__':asyncio.run(main())
+--- /dev/null
++++ rc4/tools/history_source.py
+@@ -0,0 +1,39 @@
++"""Synthetic loopback publication in its own process. Never contacts a device."""
++import asyncio,json,os,signal,sys,time
++from pathlib import Path
++from aiohttp import web
++ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/'tests'))
++from producer import Producer
++from tto_web.source import Publication
++from tto_web.common import atomic_json
++async def main():
++    stop=asyncio.Event();mode='live';gap_pending=False;p=Producer(time.monotonic()-3600);count=0
++    for t in list(range(31))+list(range(3570,3601)):last=p.step(t)
++    async with Publication(Path('/private/tmp/twh4/active.json')) as pub:
++        pub.put(last)
++        async def command(r):
++            nonlocal mode,count,gap_pending
++            action=r.match_info['action']
++            t=int(time.monotonic()-p.start)
++            if action in ('epoch','new-epoch'):p.row('boundary',t,None,reason='socketio_disconnected')
++            elif action=='gap':gap_pending=True
++            elif action in ('live','silent'):mode=action
++            elif action=='stop':stop.set()
++            else:raise web.HTTPNotFound()
++            return web.json_response(dict(action=action,mode=mode))
++        app=web.Application();app.router.add_post('/{action}',command)
++        runner=web.AppRunner(app);await runner.setup();site=web.TCPSite(runner,'127.0.0.1',0);await site.start()
++        out=Path(os.environ['TTO_HISTORY_OUT']);atomic_json(out/'source.json',dict(pid=os.getpid(),control='http://127.0.0.1:'+str(site._server.sockets[0].getsockname()[1]),module=__import__('tto_web').__file__,loopback_only=True))
++        async def feed():
++            nonlocal count,gap_pending
++            while not stop.is_set():
++                await asyncio.sleep(1)
++                if mode=='live':
++                    count+=1;packet=p.step(int(time.monotonic()-p.start))
++                    if gap_pending:packet=dict(packet,publication_gap=True);gap_pending=False
++                    pub.put(packet)
++        task=asyncio.create_task(feed());loop=asyncio.get_running_loop()
++        for sig in (signal.SIGTERM,signal.SIGINT):loop.add_signal_handler(sig,stop.set)
++        await stop.wait();task.cancel();await asyncio.gather(task,return_exceptions=True);await runner.cleanup()
++        atomic_json(out/'source-exit.json',dict(published=count,publication_dropped=pub.dropped,device_requests=0))
++if __name__=='__main__':asyncio.run(main())
+--- /dev/null
++++ rc4/tools/history_view.html
+@@ -0,0 +1,8 @@
++<!doctype html><html lang="zh-CN"><meta charset="UTF-8"><title>模型历史接口验证</title>
++<style>body{font:16px system-ui;margin:30px;background:#101921;color:#e5edf3}svg{display:block;width:100%;height:180px;border:1px solid #547}table{border-collapse:collapse}td,th{padding:6px 18px;border:1px solid #547}polyline{fill:none;stroke-width:2}button{padding:8px}</style>
++<h1>模型历史接口验证（合成来源）</h1><p>后端接入验证页；不代表 Sonnet 新首页验收。TJ−Tf 为校正后残差；状态差值允许为负。</p>
++<button id="refresh">刷新历史</button><output id="status" role="status">等待快照</output>
++<p id="identity"></p><svg id="chart" role="img" aria-label="TJ与三条估计历史，缺口分段"></svg>
++<svg id="residual" role="img" aria-label="校正后残差"></svg>
++<table aria-label="历史序列检查"><thead><tr><th>序列</th><th>行数</th><th>缺口</th><th>有效段</th><th>末值</th></tr></thead><tbody id="rows"></tbody></table>
++<script src="/__history.js"></script></html>
+--- /dev/null
++++ rc4/tools/history_view.js
+@@ -0,0 +1,17 @@
++const ids=['temperature.tj','model.Tf_C','model.Ts_C','model.E_C'];
++const key=x=>[x.service_epoch,x.run_id,x.source_epoch,x.model_id??x.model?.model_id,x.spec_id??x.model?.spec_id].join('|');
++let cohort='',generation=0,request=0;
++const status=document.querySelector('#status');
++const clear=()=>{document.querySelector('#rows').replaceChildren();document.querySelector('#chart').replaceChildren();document.querySelector('#residual').replaceChildren();};
++function segments(points){const parts=[];let current=[];for(const p of points){if(p.value===null){if(current.length)parts.push(current);current=[];}else current.push(p);}if(current.length)parts.push(current);return parts;}
++function draw(target,points,color,lo,hi){for(const part of segments(points)){const line=document.createElementNS('http://www.w3.org/2000/svg','polyline');line.setAttribute('points',part.map(p=>`${(p.t-lo)/Math.max(1,hi-lo)*1100},${150-p.value*2}`).join(' '));line.setAttribute('stroke',color);target.append(line);}}
++async function refresh(){const expected=cohort,g=generation,r=++request;const response=await fetch('/api/v1/series?ids='+ids.join(',')+'&max_points=2000');const data=await response.json();
++ if(g!==generation||r!==request||expected!==cohort||key(data)!==cohort)return;
++ clear();const all=data.series;const lo=all[0].points[0]?.t??0,hi=all[0].points.at(-1)?.t??1;
++ all.forEach((s,i)=>{const tr=document.createElement('tr');[s.id,s.points.length,s.points.filter(p=>p.value===null).length,segments(s.points).length,s.points.at(-1)?.value??'—'].forEach(value=>{const td=document.createElement('td');td.textContent=String(value);tr.append(td);});document.querySelector('#rows').append(tr);draw(document.querySelector('#chart'),s.points,['#fff','#fa8','#7cf','#9d8'][i],lo,hi);});
++ const residual=all[0].points.map((p,i)=>({...p,value:p.value===null||all[1].points[i].value===null?null:p.value-all[1].points[i].value}));draw(document.querySelector('#residual'),residual,'#fc7',lo,hi);
++ status.textContent='已加载，同采样对齐；缺口不连线';window.historyResult=data;
++}
++const events=new EventSource('/api/v1/stream');
++for(const name of ['snapshot','quality','run_changed','resync'])events.addEventListener(name,event=>{const snapshot=JSON.parse(event.data);const next=key(snapshot);if(next!==cohort){cohort=next;generation++;request++;clear();window.historyResult=null;status.textContent='数据组切换，旧历史已清除';document.querySelector('#identity').textContent=cohort;refresh();}});
++document.querySelector('#refresh').onclick=refresh;
+--- rc3/tools/install.py
++++ rc4/tools/install.py
+@@ -85,7 +85,10 @@
+     if args.service=='system' and os.getuid()==0:p.error('run as the same non-root user as existing TTO; sudo is used only for the service unit')
+     if args.service=='system' and sys.platform!='linux':p.error('system service requires Linux; use --service none for local tests')
+     prefix.mkdir(parents=True,exist_ok=True,mode=0o700)
+-    release=prefix/'releases'/('1.0.0rc3-'+uuid.uuid4().hex[:8]);release.mkdir(parents=True,mode=0o700)
++    wheels=list((ROOT/'wheelhouse').glob('tto_web_ui-*.whl'))
++    if len(wheels)!=1:raise SystemExit('expected one Web wheel')
++    version=wheels[0].name.split('-')[1]
++    release=prefix/'releases'/(version+'-'+uuid.uuid4().hex[:8]);release.mkdir(parents=True,mode=0o700)
+     # Every candidate file is hashed; verify before installing. No base-environment mutation.
+     identities=json.loads((ROOT/'candidate-identities.json').read_text())
+     for name,digest in identities.items():
+--- /dev/null
++++ rc4/tools/verify_final_archive.py
+@@ -0,0 +1,52 @@
++"""Readback final ZIP -> fresh offline install -> real own CLI, never systemd/device."""
++import hashlib,json,os,signal,socket,subprocess,sys,time,zipfile
++from pathlib import Path
++from urllib.request import build_opener,ProxyHandler
++ROOT=Path(__file__).resolve().parents[1]
++def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
++def main():
++    archive=ROOT/'TTO-WebUI-v1-rc4-模型历史与安装候选.zip'
++    dest=Path('/private/tmp/tto-web-rc4-zip-readback');dest.mkdir(exist_ok=False)
++    with zipfile.ZipFile(archive) as z:
++        z.extractall(dest);members=len(z.namelist())
++    bundle=dest/'TTO-WebUI-v1.0-rc4'
++    payload=json.loads((bundle/'PAYLOAD-MANIFEST.json').read_text())
++    for name,digest in payload.items():assert sha(bundle/name)==digest,name
++    rootfiles=[n for n in payload if n.startswith(('src/','vendor/','tools/','tests/')) or n in ('pyproject.toml','candidate-identities.json')]
++    for n in rootfiles:assert (bundle/n).read_bytes()==(ROOT/'candidate-rc4'/n).read_bytes(),n
++    wheel=next((bundle/'wheelhouse').glob('tto_web_ui-*.whl'))
++    assert sha(wheel)==sha(ROOT/'dist'/wheel.name)
++    with zipfile.ZipFile(wheel) as z:
++        sealed=json.loads(z.read('tto_web/web-candidate-files.json'))
++        for name,digest in sealed['files'].items():
++            source=bundle/('src' if name.startswith('tto_web/') else 'vendor')/name
++            assert source.read_bytes()==z.read(name),name
++            assert hashlib.sha256(z.read(name)).hexdigest()==digest
++    prefix=Path('/private/tmp/tto-web-rc4-from-final-zip')
++    install=subprocess.run([sys.executable,str(bundle/'tools/install.py'),'--prefix',str(prefix),'--service','none','--python','/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12'],capture_output=True,text=True)
++    (ROOT/'evidence/history-rc4/zip-offline-install.log').write_text(install.stdout+install.stderr);assert install.returncode==0
++    py=prefix/'current/env/bin/python'
++    identity=json.loads(subprocess.check_output([str(py),'-c','import json,tto_web;from tto_web.identity import verify;print(json.dumps(dict(module=tto_web.__file__,identity=verify())))'],text=True))
++    env=dict(os.environ,TTO_WEB_TEST_BOOT_ID='rc4-final-zip')
++    cli=subprocess.Popen([str(prefix/'tto-web'),'serve','--config',str(prefix/'web.json')],stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True,env=env)
++    opener=build_opener(ProxyHandler({}))
++    try:
++        end=time.monotonic()+15
++        while True:
++            if cli.poll() is not None:raise AssertionError(cli.stderr.read())
++            try:
++                h=json.load(opener.open('http://127.0.0.1:59009/healthz',timeout=.3))
++                if h['pid']==cli.pid:break
++            except OSError:pass
++            assert time.monotonic()<end
++            time.sleep(.1)
++        assert h['version']=='1.0.0rc4'
++        snapshot=json.load(opener.open('http://127.0.0.1:59009/api/v1/snapshot'))
++        result=json.load(opener.open('http://127.0.0.1:59009/api/v1/series?ids=temperature.tj,model.Tf_C,model.Ts_C,model.E_C'))
++        assert snapshot['mode']=='waiting' and all(not s['points'] for s in result['series'])
++    finally:
++        cli.send_signal(signal.SIGTERM);stdout,stderr=cli.communicate(timeout=15)
++    assert cli.returncode==0
++    receipt=dict(version='1.0.0rc4',archive=archive.name,archive_bytes=archive.stat().st_size,archive_sha256=sha(archive),wheel=wheel.name,wheel_bytes=wheel.stat().st_size,wheel_sha256=sha(wheel),zip_members=members,payload_files_checked=len(payload),source_files_byte_equal=len(rootfiles),wheel_source_files_byte_equal=len(sealed['files']),offline_install_from_exact_zip=True,installed=identity,cli_health=h,cli_exit_code=cli.returncode,waiting_mode=snapshot['mode'],empty_model_history=True,service_none=True,no_device=True)
++    (ROOT/'TTO-WebUI-v1-rc4-交付核验回执.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n');print(json.dumps(receipt))
++if __name__=='__main__':main()
+--- /dev/null
++++ rc4/tests/test_model_history.py
+@@ -0,0 +1,241 @@
++"""Model history contract counterexamples; synthetic packets, no device or fitting."""
++import asyncio
++import copy
++import json
++import math
++import time
++from pathlib import Path
++import aiohttp
++import jsonschema
++import pytest
++from aiohttp import web
++from producer import Producer,web_config
++from tto_web.state import State,ModelRow,MODEL_GROUP,MODEL_IDS
++from tto_web.source import Publication,follow
++from tto_web.server import app_for
++from tto_web.display import DisplayPublisher
++from tto_web.common import boot_id
++import tto_web.state as state_module
++
++
++@pytest.fixture
++def factory():
++    producer=Producer(1000.)
++    for t in range(31):template=producer.step(t)
++    def make(t,phase='tracking',values=(43.,41.,32.)):
++        p=copy.deepcopy(template);p.update(origin_mono_s=1000.,input_mono_s=1000.+t,consumable_until_mono_s=1002.5+t)
++        p['model'].update(phase=phase,Tf_C=values[0],Ts_C=values[1],E_C=values[2],conditional_inputs_rails_W_PWM=None)
++        for m in p['metrics']:
++            m.update(as_of_elapsed_ms=t*1000,_at=1000.+t,_expiry=1005.+t)
++            if m['id']=='temperature.tj':m.update(sample_id=str(t),source_ref='synthetic:'+str(t),value=44.)
++        p['tj_sample_id']=str(t)
++        return p
++    return make
++
++
++def put(s,p,now=None):
++    s.accept(p,now=p['input_mono_s']+.01 if now is None else now)
++
++
++def columns(s,n=2000):return s.series(list(MODEL_GROUP),0,math.inf,n)
++
++
++def assert_aligned(series):
++    assert all([(p['t'],p['sample_id']) for p in r['points']]==[(p['t'],p['sample_id']) for p in series[0]['points']] for r in series)
++
++
++def test_post_correction_values_and_only_fresh_tj(factory):
++    s=State(web_config());p=factory(0);put(s,p)
++    assert s.model_history[-1].values==(44.,43.,41.,32.)
++    assert s.model_history[-1].values[1]!=s.model_history[-1].values[0]
++    put(s,p,1000.02)
++    p=factory(.1);p['new_tj']=False;put(s,p)
++    assert len(s.model_history)==1
++    p=factory(.2);put(s,p)
++    series=columns(s);assert_aligned(series)
++    assert series[1]['kind']=='estimate' and series[1]['estimate_stage']=='posterior'
++    assert series[1]['points'][-1]['source_ref']=='synthetic:0.2'
++    assert [r.t for r in s.model_history]==[0,200]
++
++
++@pytest.mark.parametrize('case,reason',[
++    ('provisional','phase_unavailable'),('unavailable','phase_unavailable'),
++    ('invalid_tj','tj_invalid'),('nan','nonfinite_state'),('inf','nonfinite_state'),
++    ('expired','model_expired'),('at_deadline','model_expired'),('alignment','alignment_mismatch'),
++    ('sample_identity','alignment_mismatch'),
++])
++def test_invalid_is_null_never_zero_or_hold(factory,case,reason):
++    s=State(web_config());put(s,factory(0));p=factory(1);now=1001.01
++    if case in ('provisional','unavailable'):p['model']['phase']=case
++    if case=='invalid_tj':next(m for m in p['metrics'] if m['id']=='temperature.tj')['status']='invalid'
++    if case in ('nan','inf'):p['model']['Ts_C']=float(case)
++    if case=='expired':p['consumable_until_mono_s']=1000.9
++    if case=='at_deadline':p['consumable_until_mono_s']=now
++    if case=='alignment':next(m for m in p['metrics'] if m['id']=='temperature.tj')['as_of_elapsed_ms']=999.
++    if case=='sample_identity':p['tj_sample_id']='different'
++    put(s,p,now);assert s.model_history[-1].reason==reason
++    assert s.model_history[-1].values==(None,)*4
++    series=columns(s);assert_aligned(series)
++    assert all(r['points'][-1]['value'] is None for r in series)
++    json.dumps(series,allow_nan=False)
++
++
++def test_invalid_duplicate_cannot_recover_without_new_sample(factory):
++    s=State(web_config());p=factory(0,'provisional');put(s,p)
++    p['model']['phase']='tracking';put(s,p,1000.02)
++    assert s.model_history[-1].reason is not None
++    put(s,factory(.1));assert s.model_history[-1].reason is None
++
++
++def test_gap_barrier_delayed_sample_and_expiry_without_request(factory):
++    s=State(web_config());put(s,factory(0));s.refresh(1002.6)
++    assert s.model_history[-1].t==2500 and s.model_history[-1].reason=='model_expired'
++    for t in range(20):s.refresh(1002.6+t*.01)
++    assert len(s.model_history)==2
++    put(s,factory(2),1003.)
++    assert s.model_history_disposition=='arrived_after_gap' and len(s.model_history)==2
++    put(s,factory(2.5),1003.01)
++    assert s.model_history_disposition=='arrived_after_gap'
++    put(s,factory(3),1003.02);assert s.model_history[-1].values[1]==43
++    assert [r.t for r in s.model_history]==[0,2500,3000]
++
++
++def test_expiry_before_replacing_packet_not_lost(factory):
++    s=State(web_config());put(s,factory(0));put(s,factory(3),1003.01)
++    assert [r.reason for r in s.model_history]==[None,'model_expired',None]
++
++
++def test_gap_same_time_wins_and_disconnect_recovery(factory,monkeypatch):
++    s=State(web_config());p=factory(0);put(s,p)
++    p['publication_gap']=True;put(s,p,1000.02)
++    assert len(s.model_history)==1 and s.model_history[0].reason=='publication_gap'
++    p=factory(1);p['new_tj']=False;put(s,p)
++    assert len(s.model_history)==1
++    put(s,factory(2));assert s.model_history[-1].reason is None
++    monkeypatch.setattr(state_module.time,'monotonic',lambda:1002.5)
++    s.disconnect();assert s.model_history[-1].reason=='source_disconnected'
++    put(s,factory(2.4),1002.6);assert s.model_history_disposition=='arrived_after_gap'
++    put(s,factory(3),1003.01);assert s.model_history[-1].reason is None
++
++
++@pytest.mark.parametrize('identity',['run_id','source_epoch'])
++def test_identity_reset_clears_history_and_dedup(factory,identity):
++    s=State(web_config());put(s,factory(0));p=factory(1)
++    p[identity]=p[identity]+1 if identity=='source_epoch' else 'new-run'
++    put(s,p);assert len(s.model_history)==1 and s.model_history[0].t==1000
++    assert s.model_gap_t==-math.inf
++    assert State(web_config()).epoch!=s.epoch
++
++
++@pytest.mark.parametrize('key',['model_id','spec_id'])
++def test_frozen_mismatch_stays_rejected_and_signature_reset(factory,key,monkeypatch):
++    s=State(web_config());put(s,factory(0));p=factory(1);p[key]='test-alternate'
++    with pytest.raises(ValueError,match='frozen model/spec'):put(s,p)
++    assert len(s.model_history)==1
++    # Exercise legal signature transition only under a scoped alternate test contract.
++    if key=='model_id':monkeypatch.setitem(state_module.SPEC,'model_sha256','test-alternate')
++    else:monkeypatch.setattr(state_module,'SPEC_ID','test-alternate')
++    put(s,p);assert len(s.model_history)==1 and s.model_history[-1].t==1000
++
++
++def test_common_extrema_signed_differences_and_gap_segment_edges():
++    s=State(web_config())
++    # None of the four columns at 40 is an individual min/max; only residual is.
++    for i in range(200):
++        values=(float(i),float(i),float(i),float(i))
++        if i==40:values=(40.,35.,45.,50.)
++        reason='publication_gap' if i in (70,72,100,110,120,130,140,150) else None
++        s.model_history.append(ModelRow(i,(None,)*4 if reason else values,str(i),None,'test', 'tracking',reason))
++    result=columns(s,16);assert_aligned(result)
++    times=[p['t'] for p in result[0]['points']]
++    assert {0,40,69,70,71,72,73,100,199}.issubset(times)
++    assert result[0]['soft_budget_exceeded']
++    assert result[0]['sampling']=='joint_bucket_extrema_and_gaps'
++    assert s.model_series(['model.Tf_C'],0,math.inf,16)['model.Tf_C']['points']==result[1]['points']
++    a=next(i for i,p in enumerate(result[0]['points']) if p['t']==40)
++    assert result[1]['points'][a]['value']-result[2]['points'][a]['value']==-10
++    assert result[2]['points'][a]['value']-result[3]['points'][a]['value']==-5
++
++
++def test_capacity_trim_and_clear(factory):
++    s=State(web_config());put(s,factory(0))
++    for i in range(20000):s.model_history.append(ModelRow(i*200.,(44.,43.,41.,32.),str(i),'time','ref','tracking',None))
++    assert len(s.model_history)==18002
++    s.refresh(5000.)
++    assert s.model_history[0].t>=400000 and len(s.model_history)<=18002
++    p=factory(4001);p['run_id']='next';put(s,p)
++    assert len(s.model_history)==1
++
++
++async def serve(state):
++    runner=web.AppRunner(app_for(web_config(),start_source=False,state=state),shutdown_timeout=.1)
++    await runner.setup();site=web.TCPSite(runner,'127.0.0.1',0);await site.start()
++    return runner,'http://127.0.0.1:'+str(site._server.sockets[0].getsockname()[1])
++
++
++async def test_actual_publication_follow_http_contract_and_silent_expiry(publication_dir):
++    p=Producer(time.monotonic()-30);s=State(web_config())
++    for t in range(30):s.accept(p.step(t),now=p.start+t+.01)
++    c=web_config();c['source']['active_descriptor']=str(publication_dir/'active.json')
++    stop=asyncio.Event()
++    async with Publication(publication_dir/'active.json') as pub:
++        task=asyncio.create_task(follow(c,s,stop));runner,url=await serve(s)
++        try:
++            packet=p.step(30);pub.put(packet);await asyncio.sleep(.25)
++            async with aiohttp.ClientSession(headers={'Host':'127.0.0.1:59009'}) as client:
++                result=await(await client.get(url+'/api/v1/series?ids='+','.join(MODEL_GROUP))).json()
++                schema=json.loads((Path(state_module.__file__).parent/'contracts/series.schema.json').read_text())
++                jsonschema.validate(result,schema);assert_aligned(result['series'])
++                assert result['series'][1]['points'][-1]['value']==packet['model']['Tf_C']
++                assert result['service_epoch']==s.epoch and result['model_id']==packet['model_id']
++                boot=await(await client.get(url+'/api/v1/bootstrap')).json()
++                assert boot['series_capabilities']['model_state_history']
++                assert {m['id'] for m in boot['available_series']}==set(MODEL_IDS)
++                assert not any(m['id'] in MODEL_IDS for m in boot['available_fields'])
++                old=s.series(['temperature.tj'],0,math.inf,2000)[0]
++                assert old['points'][-1]['value']==44.3 and 'alignment_group' not in old
++                default=await(await client.get(url+'/api/v1/series')).json()
++                assert not any(r['id'] in MODEL_IDS for r in default['series'])
++                assert (await client.get(url+'/api/v1/series?from=2&to=1')).status==400
++                await asyncio.sleep(2.6)
++                result=await(await client.get(url+'/api/v1/series?ids='+','.join(MODEL_GROUP))).json()
++                jsonschema.validate(result,schema)
++                assert result['series'][1]['points'][-1]['reason_code']=='model_expired'
++                assert result['series'][1]['points'][-2]['value'] is not None
++                # Actual optional display boundary converts encode failure to an immediate break.
++                DisplayPublisher(pub.put).publish(lambda:(_ for _ in ()).throw(ValueError('SYNTHETIC')))
++                await asyncio.sleep(.2);assert not s.source_connected
++        finally:
++            stop.set();task.cancel();await asyncio.gather(task,return_exceptions=True);await runner.cleanup()
++
++
++def test_series_examples_validate():
++    root=Path(state_module.__file__).parent/'contracts'
++    schema=json.loads((root/'series.schema.json').read_text())
++    examples=list(root.glob('series-example-*.json'));assert len(examples)==3
++    for p in examples:jsonschema.validate(json.loads(p.read_text()),schema)
++
++
++async def test_waiting_series_schema_and_unknown_fields_rejected():
++    runner,url=await serve(State(web_config()))
++    try:
++        async with aiohttp.ClientSession(headers={'Host':'127.0.0.1:59009'}) as client:
++            value=await(await client.get(url+'/api/v1/series?ids='+','.join(MODEL_GROUP))).json()
++            schema=json.loads((Path(state_module.__file__).parent/'contracts/series.schema.json').read_text())
++            jsonschema.validate(value,schema)
++            assert value['run_id'] is None and value['model_id'] is None
++            assert all(row['points']==[] for row in value['series'])
++            wrong=copy.deepcopy(value);wrong['series'][1]['points']=[dict(t=0,value=None,status='unknown',sample_id=None,source_ref=None,received_at_utc=None,reason_code='invented')]
++            with pytest.raises(jsonschema.ValidationError):jsonschema.validate(wrong,schema)
++            wrong=copy.deepcopy(value);wrong['uncontracted']=True
++            with pytest.raises(jsonschema.ValidationError):jsonschema.validate(wrong,schema)
++    finally:await runner.cleanup()
++
++
++def test_installed_selection_loads_sealed_runtime():
++    import os,tto_web
++    from tto_web.identity import verify
++    manifest=verify();assert manifest['version']==tto_web.__version__
++    if os.environ.get('TTO_WEB_TEST_INSTALLED'):
++        assert 'site-packages' in Path(tto_web.__file__).parts
++        assert tto_web.__version__=='1.0.0rc4'
+--- rc3/pyproject.toml
++++ rc4/pyproject.toml
+@@ -3,7 +3,7 @@
+ build-backend = "setuptools.build_meta"
+ [project]
+ name = "tto-web-ui"
+-version = "1.0.0rc3"
++version = "1.0.0rc4"
+ requires-python = ">=3.10"
+ dependencies = ["aiohttp==3.11.18", "python-socketio==5.13.0", "psutil==7.0.0", "numpy==2.2.6", "scipy>=1.14.1,<1.16"]
+ [project.scripts]
+@@ -11,7 +11,7 @@
+ [tool.setuptools.packages.find]
+ where = ["src", "vendor"]
+ [tool.setuptools.package-data]
+-tto_web = ["static/**/*", "contracts/*.json", "web-candidate-files.json"]
++tto_web = ["static/**/*", "contracts/*.json", "contracts/*.md", "web-candidate-files.json"]
+ tto = ["defaults.json"]
+ tto_field = ["research/*.json", "research/models/*.json", "plans/*.json", "candidate-files.json"]
+ [tool.pytest.ini_options]

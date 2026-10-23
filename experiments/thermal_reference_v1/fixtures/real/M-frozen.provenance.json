@@ -1,0 +1,18 @@
+{
+  "source_contract": "TTO-SLOWSTATE-v1.0",
+  "primary_model_sha256": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
+  "source_files": {
+    "states-causal60.jsonl": "0bb560bf4632149905228078529e91ca23c1058e1218f41db967027d208c1fcc",
+    "states-A-long.jsonl": "37491b0a3720a353d3a88233347e93bda3e479afdc3cd918f7ab3948f4f4700b",
+    "four-state-origins.jsonl": "199f14322c2d9562ce70ed586e2725eb4834299cb0cef7dda879fbb723c41826",
+    "normal-demand-origins.jsonl": "3f60b272c9161689e9a2c91400788c103020ef264cf6bf02ffa46cd53e709ebb",
+    "fast-status-and-demand-ledger.jsonl": "59fca95f93ffb75fbc3bc27041e12eeb50f1f4dc70c9c3aaad0ee21073f9d201"
+  },
+  "output_sha256": "17cf1467de3ba522525e28c122304897b099de2f95c2a2af66aa3a57778dc6a5",
+  "output_rows": 2382,
+  "run": "M",
+  "measured_telemetry_file_sha256": "05949e4705835d0cd7efdde4160f513696c4349e606e5c397ea0ce850ac7e038",
+  "original_registered_data_sha256": "688cef4f9a795b66867fb82410c0cd7b2ba63abaa6fd3a8296e2334f557988ec",
+  "behavior": "copy existing frozen states, no interpolation, estimation or fitting",
+  "validity": "sealed original current-qualification intervals including genuinely fresh arrivals; all original snapshot deadlines retained, no new TTL or interpolation"
+}

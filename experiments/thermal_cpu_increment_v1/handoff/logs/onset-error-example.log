@@ -1,0 +1,47 @@
+{
+  "selection": "worst same-phase 45-second underprediction on existing common cohort; descriptive, not a model selection rule",
+  "record": {
+    "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:2482",
+    "t": 351521.662779493,
+    "utc": "2026-10-19T09:54:10.366911+00:00",
+    "h": 45,
+    "phase": "3-work",
+    "source_valid": true,
+    "label": {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:2626",
+      "t": 351566.701574214,
+      "value": 60.875,
+      "offset_s": 0.038794720952864736,
+      "phase": "3-work"
+    },
+    "label_rejection": null,
+    "baselines": {
+      "B0": 50.437,
+      "B1": 48.25817288259814
+    },
+    "A_roll": {
+      "AUGMENTED-KF": 60.80663054256605,
+      "CONDITIONAL-HOLD": 61.610123288313275,
+      "QS": 59.560669769915656,
+      "LP30": 60.191129146112964,
+      "LP120": 61.81979748234835
+    },
+    "B_HOLD": {
+      "AUGMENTED-KF": 48.89826844557395,
+      "CONDITIONAL-HOLD": 49.64681549203362,
+      "QS": 47.557363585988014,
+      "LP30": 48.23586491594255,
+      "LP120": 49.98864023170654
+    },
+    "observer_phase": "tracking",
+    "origin_context": "confirmed_normal",
+    "future_contexts": [
+      "confirmed_normal"
+    ],
+    "input_cutoff_ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:2482"
+  },
+  "first_request": "R0024",
+  "first_submit_utc": "2026-10-19T09:54:10.326879+00:00",
+  "origin_seconds_after_first_submit": 0.040032,
+  "independent_note": "A case just after request submission is not evidence of CPU/GPU physical onset ordering. CPU/GPU/power arrival examples are in field-audit.json."
+}

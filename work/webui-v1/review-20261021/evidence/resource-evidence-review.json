@@ -1,0 +1,97 @@
+{
+  "resources-installed-before-delta.json": {
+    "scope": "macOS ARM64 installed Web follow process only, separate self-built native source; excludes Chrome; not N305 evidence",
+    "completed_requested_duration": false,
+    "elapsed_s": 1057.1635427500587,
+    "samples": 1052,
+    "errors": 0,
+    "cpu_mean_single_core_percent": 5.495430393756528,
+    "rss_peak_MiB": 180.90625,
+    "rss_first_MiB": 71.140625,
+    "rss_last_MiB": 180.90625,
+    "rss_budget_MiB": 192,
+    "cpu_budget_percent": 5,
+    "one_browser_required_for_run": true,
+    "recalculated_rss_peak_MiB": 180.90625,
+    "detail_count": 1052,
+    "last_sample_elapsed_s": 1056.1622254160466
+  },
+  "resources-installed-before-refresh-gating.json": {
+    "scope": "macOS ARM64 installed Web follow process only, separate self-built native source; excludes Chrome; not N305 evidence",
+    "completed_requested_duration": false,
+    "elapsed_s": 778.5213882919634,
+    "samples": 768,
+    "errors": 0,
+    "cpu_mean_single_core_percent": 4.625942263065217,
+    "rss_peak_MiB": 97.03125,
+    "rss_first_MiB": 55.28125,
+    "rss_last_MiB": 85.59375,
+    "rss_budget_MiB": 192,
+    "cpu_budget_percent": 5,
+    "one_browser_required_for_run": true,
+    "recalculated_rss_peak_MiB": 97.03125,
+    "detail_count": 768,
+    "last_sample_elapsed_s": 777.5196791249327
+  },
+  "resources-installed-final-30min.json": {
+    "scope": "macOS ARM64 installed Web follow process only, separate self-built native source; excludes Chrome; not N305 evidence",
+    "completed_requested_duration": true,
+    "elapsed_s": 1800.848478666041,
+    "samples": 1779,
+    "errors": 0,
+    "cpu_mean_single_core_percent": 3.433911542508394,
+    "rss_peak_MiB": 97.5,
+    "rss_first_MiB": 44.203125,
+    "rss_last_MiB": 97.5,
+    "rss_budget_MiB": 192,
+    "cpu_budget_percent": 5,
+    "one_browser_required_for_run": true,
+    "recalculated_rss_peak_MiB": 97.5,
+    "detail_count": 1779,
+    "last_sample_elapsed_s": 1799.8466887910618
+  },
+  "resources-final-wheel-120s.json": {
+    "scope": "macOS ARM64 installed Web follow process only, separate self-built native source; excludes Chrome; not N305 evidence",
+    "completed_requested_duration": true,
+    "elapsed_s": 120.20136983401608,
+    "samples": 111,
+    "errors": 0,
+    "cpu_mean_single_core_percent": 2.242315504159299,
+    "rss_peak_MiB": 82.0625,
+    "rss_first_MiB": 37.65625,
+    "rss_last_MiB": 82.0625,
+    "rss_budget_MiB": 192,
+    "cpu_budget_percent": 5,
+    "one_browser_required_for_run": true,
+    "recalculated_rss_peak_MiB": 82.0625,
+    "detail_count": 111,
+    "last_sample_elapsed_s": 119.1994992090622
+  },
+  "resources-final-waiting-60s.json": {
+    "scope": "final installed wheel unconfigured waiting process on macOS ARM64; one local browser; not N305 evidence",
+    "completed_requested_duration": true,
+    "elapsed_s": 60.18897470808588,
+    "samples": 60,
+    "errors": 0,
+    "cpu_mean_single_core_percent": 0.6375199409210918,
+    "rss_peak_MiB": 40.15625,
+    "rss_first_MiB": 38.203125,
+    "rss_last_MiB": 40.15625,
+    "rss_budget_MiB": 192,
+    "cpu_budget_percent": 5,
+    "one_browser_required_for_run": true,
+    "recalculated_rss_peak_MiB": 40.15625,
+    "detail_count": 60,
+    "last_sample_elapsed_s": 59.185175082995556
+  },
+  "resource_to_final_independent_comparison": {
+    "changed": [
+      "tto_web/server.py",
+      "tto_web/cli.py",
+      "tto_web/static/index.html"
+    ],
+    "removed": [
+      "tto_web/static/assets/index-DN1IzeGQ.js"
+    ]
+  }
+}

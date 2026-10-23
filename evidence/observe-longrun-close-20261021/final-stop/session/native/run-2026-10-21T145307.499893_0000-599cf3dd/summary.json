@@ -1,0 +1,136 @@
+{
+  "stop_reason": "SIGTERM",
+  "poll_missed": 0,
+  "poll_count": 3,
+  "connection_attempts": 1,
+  "payload_oversize": 0,
+  "orin_event_count": 1,
+  "business_payload_bytes_sum": 1580,
+  "business_payload_bytes_max": 1580,
+  "poll_rtt_ms": [
+    7.935459027066827,
+    7.682041963562369,
+    1.2427499750629067
+  ],
+  "prediction_ms": [
+    1.3867090456187725
+  ],
+  "rss_mib": [
+    69.03125
+  ],
+  "cpu_pct_single_core": [
+    1.6624903763558372
+  ],
+  "elapsed_s": 1.118454625015147,
+  "queue_peak_items": 2,
+  "queue_peak_bytes": 1963,
+  "dropped": 0,
+  "quality": {
+    "boundary_socketio_connecting": 1,
+    "boundary_control_context_change": 1,
+    "boundary_stream": 1,
+    "new_samples": 1,
+    "boundary_input_boundary": 1,
+    "boundary_input_profile_change": 1,
+    "boundary_socketio_disconnected": 1,
+    "boundary_run_end": 1
+  },
+  "processing": {
+    "fan_ok": 2,
+    "temp_ok": 1,
+    "origins": 1
+  },
+  "target_host_verified": false,
+  "polling_health": {
+    "contract": "TTO-POLL-INDEPENDENT-v1",
+    "max_inflight_per_endpoint": 1,
+    "max_total_inflight_limit": 2,
+    "max_total_inflight_observed": 2,
+    "end_inflight": 0,
+    "legacy_config_max_inflight_esp32": 1,
+    "endpoints": {
+      "fan": {
+        "sent": 2,
+        "returned": 2,
+        "http_ok": 2,
+        "errors": 0,
+        "skipped": 0,
+        "cancelled": 0,
+        "peak_inflight": 1,
+        "rtt_ms": {
+          "n": 2,
+          "retained_n": 2,
+          "p50": 4.589104501064867,
+          "p95": 7.600823574466631,
+          "min": 1.2427499750629067,
+          "max": 7.935459027066827
+        },
+        "send_interval_s": {
+          "n": 1,
+          "retained_n": 1,
+          "p50": 1.0005902090342715,
+          "p95": 1.0005902090342715,
+          "min": 1.0005902090342715,
+          "max": 1.0005902090342715
+        },
+        "return_interval_s": {
+          "n": 1,
+          "retained_n": 1,
+          "p50": 0.9938974999822676,
+          "p95": 0.9938974999822676,
+          "min": 0.9938974999822676,
+          "max": 0.9938974999822676
+        }
+      },
+      "temp": {
+        "sent": 1,
+        "returned": 1,
+        "http_ok": 1,
+        "errors": 0,
+        "skipped": 0,
+        "cancelled": 0,
+        "peak_inflight": 1,
+        "rtt_ms": {
+          "n": 1,
+          "retained_n": 1,
+          "p50": 7.682041963562369,
+          "p95": 7.682041963562369,
+          "min": 7.682041963562369,
+          "max": 7.682041963562369
+        },
+        "send_interval_s": {
+          "n": 0,
+          "retained_n": 0,
+          "p50": null,
+          "p95": null,
+          "min": null,
+          "max": null
+        },
+        "return_interval_s": {
+          "n": 0,
+          "retained_n": 0,
+          "p50": null,
+          "p95": null,
+          "min": null,
+          "max": null
+        }
+      }
+    }
+  },
+  "diagnostic_history_contract": {
+    "max_retained_per_series": 4096,
+    "percentiles": "last4096; full raw/resource journals preserved",
+    "sample_totals": {
+      "poll_rtt_ms": 3,
+      "prediction_ms": 1,
+      "rss_mib": 1,
+      "cpu_pct_single_core": 1
+    }
+  },
+  "ended_at_utc": "2026-10-21T14:53:08.620804+00:00",
+  "observations": 7,
+  "observation_session_version": "TTO-OBSERVE-v1",
+  "native_legacy_max_s": 14400,
+  "session_max_s": 86400,
+  "session_max_bytes": 8589934592
+}

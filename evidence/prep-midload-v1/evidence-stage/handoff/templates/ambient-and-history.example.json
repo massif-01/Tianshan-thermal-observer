@@ -1,0 +1,69 @@
+{
+  "schema": "TTO-TRIAL-METADATA-v1",
+  "trial_id": null,
+  "run_id": null,
+  "device": {
+    "model": "RM-01",
+    "module_family": "jetson_thor",
+    "module_sku": null,
+    "soc": "tegra264",
+    "fan_id": 0,
+    "control_mode": "auto"
+  },
+  "software": {
+    "tto_version": null,
+    "tto_wheel_sha256": null,
+    "runner_version": null,
+    "runner_sha256": null,
+    "firmware_reported_version": null,
+    "effective_curve_snapshot_reference": null,
+    "source_service_identity_reference": null
+  },
+  "prehistory": {
+    "preceding_10_minutes": "to_be_recorded",
+    "model_resident_since_utc": null,
+    "known_other_workload": null,
+    "known_hardware_or_airflow_change": null,
+    "thermal_equilibrium_claim": false
+  },
+  "ambient": {
+    "sensor_description": null,
+    "location": "进风附近，填写实际位置",
+    "reads": [
+      {
+        "stage": "resident_background_end",
+        "value_c": null,
+        "event_time_utc": null,
+        "written_time_utc": null,
+        "time_approximate": true,
+        "measurement_reference": null
+      },
+      {
+        "stage": "M60_before",
+        "value_c": null,
+        "event_time_utc": null,
+        "written_time_utc": null,
+        "time_approximate": true,
+        "measurement_reference": null
+      },
+      {
+        "stage": "M180_before",
+        "value_c": null,
+        "event_time_utc": null,
+        "written_time_utc": null,
+        "time_approximate": true,
+        "measurement_reference": null
+      },
+      {
+        "stage": "final_cooldown_end",
+        "value_c": null,
+        "event_time_utc": null,
+        "written_time_utc": null,
+        "time_approximate": true,
+        "measurement_reference": null
+      }
+    ],
+    "unknown_policy": "null_not_25C_not_TJ"
+  },
+  "notes": "模板；不含已经发生的现场测量或本轮运行授权。"
+}

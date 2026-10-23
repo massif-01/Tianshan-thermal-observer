@@ -1,0 +1,110 @@
+{
+  "contract": "TTO-REF-PREP-v1.0",
+  "status": "synthetic_demo_only",
+  "physical_mapping_validated": false,
+  "surface_measurement_performed": false,
+  "instrument_profile_confirmed": false,
+  "instrument_selection_confirmed_by_user": "YET-610L + K型探头；耐温聚酰亚胺胶带已购买",
+  "real_YET_CSV_mapping_accepted": false,
+  "continuous_logging_field_verified": false,
+  "model_refit": false,
+  "external_model_input": false,
+  "control_authorization": "none",
+  "distinct_records": 2,
+  "history_revisions": 2,
+  "numeric_points": 2,
+  "real_numeric_points": 0,
+  "synthetic_numeric_points": 2,
+  "paired_points": 2,
+  "unpaired_reasons": {},
+  "reference_statuses": {
+    "not_predeclared": 2
+  },
+  "trajectory_sha256": "17cf1467de3ba522525e28c122304897b099de2f95c2a2af66aa3a57778dc6a5",
+  "coverage": {
+    "637f114b-563b-4c35-8062-a7588a89ce1c": {
+      "rows": 2382,
+      "span_s": 2448.7642860412598,
+      "legal_asof_hold_s": 2387.592563390732,
+      "legal_asof_fraction": 0.9750193503722566,
+      "demand_legal_hold_s": 2387.592563390732,
+      "population": "only supplied frozen trajectory window; not whole-run historical forecast coverage"
+    }
+  },
+  "model_sha256": [
+    "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0"
+  ],
+  "sparse_peak": "peak_not_directly_observed; sparse samples do not establish complete peak or second-scale lag",
+  "import_quality": [
+    {
+      "status": "imported",
+      "input_sha256": "fb1108b2719ab3555be52f8e5b89031dee417abc66aa64bb9cb4e1b120230f2d",
+      "mapping_sha256": "9b6264a45cb4cb98b015f06a9a128a001210e2f333333a61e2025df3e61d05f3",
+      "input_name": "TEST-ONLY-NOT-A-REAL-MEASUREMENT.json",
+      "recorded_at_utc": "2026-10-14T15:54:14.311154+00:00",
+      "rows": 2,
+      "added": 2,
+      "duplicates": 0,
+      "rejected_rows": 0,
+      "rows_with_missing_fields": 0,
+      "raw_stored_relative_path": "imports/raw/fb1108b2719ab3555be52f8e5b89031dee417abc66aa64bb9cb4e1b120230f2d.json",
+      "row_ledger_relative_path": "imports/rows/fb1108b2719ab3555be52f8e5b89031dee417abc66aa64bb9cb4e1b120230f2d-9b6264a45cb4cb98b015f06a9a128a001210e2f333333a61e2025df3e61d05f3.jsonl",
+      "exported_at_raw": null,
+      "cadence": {
+        "TEST-ONLY-NOT-A-REAL-MEASUREMENT|None": {
+          "samples_with_time": 2,
+          "declared_interval_s": null,
+          "interval_basis": null,
+          "positive_interval_min_s": null,
+          "positive_interval_max_s": null,
+          "positive_interval_median_s": null,
+          "zero_intervals": 1,
+          "reversed_intervals": 0,
+          "intervals_different_from_declared": null,
+          "equal_adjacent_temperature_pairs": 0,
+          "conclusion": "observed sampling cadence only; no missing samples filled; probe response NOT calibrated"
+        }
+      },
+      "revision_ids": [
+        "1cd8cfbe-44ad-417e-a4a3-af80ed2292ea",
+        "09d8dd39-8ec5-4bcc-ae14-4caaa3ce36ec"
+      ]
+    }
+  ],
+  "session_events": [],
+  "continuous_limit": "1s target is sampling cadence, not calibrated probe response or automatically valid surface/Ts mapping",
+  "ambient": "only original M had user-confirmed 24C; no automatic assignment to any new run",
+  "sessions": {
+    "TEST-ONLY-NOT-A-REAL-MEASUREMENT": {
+      "run_id": "637f114b-563b-4c35-8062-a7588a89ce1c",
+      "site_id": "fin-A",
+      "measurement_kind": "fin_surface_ir",
+      "statistic": "fixed_point",
+      "absolute_status": "unverified_apparent_surface",
+      "quality_limitations": [
+        "unknown_instrument_model",
+        "unknown_instrument_accuracy",
+        "unknown_instrument_model",
+        "unknown_instrument_accuracy",
+        "unknown_settings_emissivity",
+        "unknown_settings_reflected_temperature_c",
+        "unknown_settings_surface_finish",
+        "unknown_geometry_roi_definition",
+        "unknown_settings_measurement_footprint",
+        "local_apparent_surface_not_air_or_whole_body"
+      ],
+      "reference_record_id": null
+    }
+  },
+  "figures": {
+    "status": "not_requested"
+  },
+  "report_text": {
+    "source_status": "synthetic_only",
+    "measurement_status": "本报告外部数值均为合成演示，不构成现场测温证据。",
+    "counts": "数值点2；声明为外部测量的数值点0；合成点2；配对点2。n是记录点，不是独立试验。",
+    "format_status": "尚无真实YET-610L样例验收回执；通用导入不代表厂商格式已验收。",
+    "validation_status": "输入类别不证明品牌、校准或现场来源；仪表精度、探头安装/响应及表面与Ts的物理对应未验证。"
+  },
+  "measured_telemetry_sha256": "05949e4705835d0cd7efdde4160f513696c4349e606e5c397ea0ce850ac7e038"
+}

@@ -1,0 +1,244 @@
+--- rc3/src/tto_web/state.py
++++ rc4/src/tto_web/state.py
+@@ -5,11 +5,16 @@
+ import time
+ import uuid
+ from itertools import islice
+-from collections import deque
++from collections import deque, namedtuple
+ from .adapter import SPEC, SPEC_ID, TOPOLOGY
+ from .common import utc, finite, boot_id, load, short
+ 
+ HORIZONS = (15,45,90)
++MODEL_IDS = ('model.Tf_C', 'model.Ts_C', 'model.E_C')
++MODEL_LABELS = ('快热状态估计', '慢热状态估计', '等效边界估计')
++MODEL_GROUP = ('temperature.tj',) + MODEL_IDS
++# Shared lineage and one four-value row, rather than three dict histories.
++ModelRow = namedtuple('ModelRow', 't values sample_id received_at_utc source_ref phase reason')
+ 
+ 
+ class State:
+@@ -25,6 +30,10 @@
+         self.source_connected = False
+         self.history = {}
+         self.history_seen = {}
++        self.model_history = deque(maxlen=18002)
++        self.model_history_sample = None
++        self.model_gap_t = -math.inf
++        self.model_history_disposition = None
+         self.predictions = deque(maxlen=11070)
+         self.prediction_labels={}
+         self.events = deque(maxlen=1000)
+@@ -104,12 +113,16 @@
+         old_signature=None if not old else (old['run_id'],old['source_epoch'],old['model_id'],old['spec_id'])
+         if old_signature!=signature:
+             self.history.clear(); self.history_seen.clear(); self.last_origin=-math.inf; self.last_tj=None;self.task_event_seq=0
++            self.model_history.clear(); self.model_history_sample=None
++            self.model_gap_t=-math.inf; self.model_history_disposition=None
+             self.last_signature=None
+             self.events=deque((e for e in self.events if e['run_id'] is None),maxlen=1000)
+             for p in self.predictions:
+                 if p['status']=='pending':p['status']='not_comparable'
+         elif packet['input_mono_s']<old['input_mono_s']:
+             raise ValueError('producer time regression')
++        if old_signature==signature:
++            self.expire_model_history(now)
+         self.packet=copy.deepcopy(packet)
+         if old_signature!=signature:self.event('source','已切换观察过程，曲线从新过程开始',0)
+         self.source_connected=True;self.source_status='正在观察'
+@@ -122,6 +135,7 @@
+                 series.append(dict(t=elapsed,value=None,sample_id=None,received_at_utc=None,status='unknown',source_ref=None))
+         metrics={m['id']:m for m in packet['metrics']}
+         tj=metrics.get('temperature.tj')
++        self.record_model_history(packet, tj, now, elapsed)
+         fresh_tj=bool(packet['new_tj'] and packet['tj_sample_id']!=self.last_tj and tj and tj['status']=='valid' and tj['value'] is not None)
+         if fresh_tj:
+             self.last_tj=packet['tj_sample_id']
+@@ -186,6 +200,9 @@
+ 
+     def disconnect(self, reason='数据暂断', ended=False):
+         if self.source_connected:self.event('web-source',reason,severity='warning')
++        if self.packet:
++            self.model_gap('source_ended' if ended else 'source_disconnected',
++                           (time.monotonic()-self.packet['origin_mono_s'])*1000)
+         self.source_connected=False;self.source_status=reason
+         if not ended:
+             for pred in self.predictions:
+@@ -239,7 +256,8 @@
+                     self.history[m['id']].append(dict(t=min(elapsed,(raw['_expiry']-p['origin_mono_s'])*1000),value=None,sample_id=None,received_at_utc=None,status=m['status'],source_ref=m['source_ref']))
+             metrics={m['id']:m for m in snapshot['metrics']}
+             tj=next((m for m in p['metrics'] if m['id']=='temperature.tj'),{})
+-            model_until=min(p['consumable_until_mono_s'],tj.get('_expiry',now))
++            model_until=self.model_until(p, now)
++            self.expire_model_history(now)
+             current=now<model_until and self.source_connected and metrics.get('temperature.tj',{}).get('status')=='valid'
+             o=p['model'];model=snapshot['model'];model.update(model_id=p['model_id'],spec_id=p['spec_id'],phase=o['phase'] if current else 'unavailable')
+             model['remaining_valid_ms']=max(0.,(model_until-now)*1000) if current else 0.
+@@ -269,6 +287,8 @@
+                 e['animate_allowed']=bool(current and by_id[e['from']].get('status')=='valid' and by_id[e['to']].get('status')=='valid')
+             for series in self.history.values():
+                 while series and series[0]['t']<elapsed-3600000:series.popleft()
++            while self.model_history and self.model_history[0].t<elapsed-3600000:
++                self.model_history.popleft()
+             snapshot['advisory']=self.advisory(snapshot)
+             snapshot['advisory']['remaining_valid_ms']=min(model['remaining_valid_ms'],snapshot['health']['protection_remaining_valid_ms']) if snapshot['advisory']['value_percent'] is not None else 0.
+         for id,value in self.host_values.items():
+@@ -291,9 +311,106 @@
+         records=[copy.deepcopy(p) for p in selected if records_after is None or p['target_elapsed_ms']>=records_after-2000 or p.get('settled_elapsed_ms',-math.inf)>=records_after]
+         return dict(horizon_s=horizon,scenario='HOLD',records=records,records_complete=records_after is None,summary=summary,labels={v['prediction_id']:self.prediction_labels[v['prediction_id']] for v in records if v['prediction_id'] in self.prediction_labels})
+ 
++    @staticmethod
++    def model_until(packet, now):
++        tj=next((m for m in packet['metrics'] if m['id']=='temperature.tj'),{})
++        return min(packet['consumable_until_mono_s'],tj.get('_expiry',now))
++
++    def model_gap(self, reason, t):
++        self.model_history_disposition=reason
++        # One break per continuous invalid interval. Keep the barrier even after trim.
++        self.model_gap_t=max(self.model_gap_t,t)
++        if self.model_history and self.model_history[-1].reason is not None:
++            return
++        if self.model_history:
++            t=max(t,self.model_history[-1].t)
++            if t==self.model_history[-1].t:
++                self.model_history.pop()
++        self.model_gap_t=max(self.model_gap_t,t)
++        self.model_history.append(ModelRow(t,(None,None,None,None),None,None,None,None,reason))
++
++    def expire_model_history(self, now):
++        if self.packet and self.source_connected:
++            until=self.model_until(self.packet,now)
++            if now>=until:
++                self.model_gap('model_expired',(until-self.packet['origin_mono_s'])*1000)
++
++    def record_model_history(self, packet, tj, now, elapsed):
++        if packet.get('publication_gap'):
++            self.model_gap('publication_gap',elapsed)
++            return
++        o=packet['model']
++        fresh=bool(packet['new_tj'] and packet['tj_sample_id']!=self.model_history_sample)
++        if packet['new_tj']:self.model_history_sample=packet['tj_sample_id']
++        reason=None
++        if not tj or tj['status']!='valid' or not finite(tj['value']):reason='tj_invalid'
++        elif now>=self.model_until(packet,now):reason='model_expired'
++        elif o['phase'] not in ('tracking','degraded'):reason='phase_unavailable'
++        elif not all(finite(o.get(k)) for k in ('Tf_C','Ts_C','E_C')):reason='nonfinite_state'
++        if reason:
++            t=(self.model_until(packet,now)-packet['origin_mono_s'])*1000 if reason=='model_expired' else elapsed
++            self.model_gap(reason,t)
++            return
++        if not fresh:
++            return
++        t=tj['as_of_elapsed_ms']
++        # Both values are the same source mono timestamp; tolerate float subtraction only.
++        if tj['sample_id']!=packet['tj_sample_id'] or not finite(t) or not math.isclose(t,elapsed,rel_tol=0.,abs_tol=1e-3):
++            self.model_gap('alignment_mismatch',elapsed)
++            return
++        if t<=self.model_gap_t:
++            self.model_history_disposition='arrived_after_gap'
++            return
++        if self.model_history and t<=self.model_history[-1].t:
++            return
++        self.model_history.append(ModelRow(t,(tj['value'],o['Tf_C'],o['Ts_C'],o['E_C']),
++            tj['sample_id'],tj['received_at_utc'],tj['source_ref'],o['phase'],None))
++        self.model_history_disposition='accepted'
++
++    def model_series(self, ids, start, end, max_points):
++        rows=[r for r in self.model_history if start<=r.t<=end]
++        original=len(rows)
++        sampled=original>max_points
++        if sampled:
++            # Four components + three signed differences: at most 14 extrema,
++            # plus bucket endpoints. Mandatory breaks/segment edges are extra.
++            width=max(1,math.ceil(original/max(1,max_points//16)))
++            indices={0,original-1}
++            for i,r in enumerate(rows):
++                if r.reason is not None:
++                    indices.update(j for j in (i-1,i,i+1) if 0<=j<original)
++            for offset in range(0,original,width):
++                bucket=rows[offset:offset+width]
++                indices.update((offset,offset+len(bucket)-1))
++                features=[(*r.values,r.values[0]-r.values[1],r.values[2]-r.values[3],r.values[1]-r.values[2])
++                          if r.reason is None else (None,)*7 for r in bucket]
++                for column in range(7):
++                    valid=[j for j,f in enumerate(features) if f[column] is not None]
++                    if valid:
++                        indices.add(offset+min(valid,key=lambda j:features[j][column]))
++                        indices.add(offset+max(valid,key=lambda j:features[j][column]))
++            rows=[rows[i] for i in sorted(indices)]
++        result={}
++        for id in ids:
++            if id not in MODEL_GROUP:continue
++            column=MODEL_GROUP.index(id)
++            result[id]=dict(id=id,label='实测结温（模型采样对齐）' if column==0 else MODEL_LABELS[column-1],
++                kind='observed' if column==0 else 'estimate',unit='°C',
++                alignment_group='tj_model',time_basis='tj_sample',anchor_metric_id='temperature.tj',
++                estimate_stage=None if column==0 else 'posterior',
++                sampling='joint_bucket_extrema_and_gaps' if sampled else 'actual_samples',
++                original_points=original,returned_points=len(rows),soft_budget_exceeded=len(rows)>max_points,
++                points=[dict(t=r.t,value=r.values[column],status='valid' if r.reason is None else 'unknown',
++                    sample_id=r.sample_id,received_at_utc=r.received_at_utc,source_ref=r.source_ref,
++                    phase_at_sample=r.phase,reason_code=r.reason) for r in rows])
++        return result
++
+     def series(self, ids, start, end, max_points):
++        joint=self.model_series(ids[:32],start,end,max_points) if any(id in MODEL_IDS for id in ids[:32]) else {}
+         result=[]
+         for id in ids[:32]:
++            if id in joint:
++                result.append(joint[id]);continue
+             points=[p for p in self.history.get(id,()) if start<=p['t']<=end]
+             sampled=False
+             if len(points)>max_points:
+--- rc3/src/tto_web/server.py
++++ rc4/src/tto_web/server.py
+@@ -18,7 +18,7 @@
+ from aiohttp import web
+ from . import __version__
+ from .common import load, utc
+-from .state import State
++from .state import State, MODEL_IDS, MODEL_LABELS
+ from .source import follow, observe
+ 
+ STATIC=Path(__file__).parent/'static'
+@@ -79,7 +79,7 @@
+     async def health(r):return response({'web':'running','version':__version__,'pid':os.getpid(),'device_health_is_separate':True})
+     async def bootstrap(r):
+         s=state.snapshot()
+-        return response(dict(version=__version__,schema_version=s['schema_version'],service_epoch=state.epoch,clock_domain_id=s['clock_domain_id'],run_id=s['run_id'],source_mode=config['source']['mode'],timezone=config['web'].get('timezone','Asia/Shanghai'),capabilities=dict(read_only=True,g2_hold=True,task_metadata=s['context']['task_metadata_available'],rpm_verified=False,demand_provider=False,advisory_provider='CURVE-REFERENCE-v1' if state.curve else None),available_fields=[dict(id=m['id'],label=m['label'],unit=m['unit']) for m in s['metrics']]))
++        return response(dict(version=__version__,schema_version=s['schema_version'],service_epoch=state.epoch,clock_domain_id=s['clock_domain_id'],run_id=s['run_id'],source_mode=config['source']['mode'],timezone=config['web'].get('timezone','Asia/Shanghai'),capabilities=dict(read_only=True,g2_hold=True,task_metadata=s['context']['task_metadata_available'],rpm_verified=False,demand_provider=False,advisory_provider='CURVE-REFERENCE-v1' if state.curve else None),available_fields=[dict(id=m['id'],label=m['label'],unit=m['unit']) for m in s['metrics']],series_capabilities=dict(model_state_history=True,alignment_group='tj_model',time_basis='tj_sample',estimate_stage='posterior',max_rows=18002,window_ms=3600000),available_series=[dict(id=id,label=label,unit='°C',kind='estimate') for id,label in zip(MODEL_IDS,MODEL_LABELS)]))
+     async def snapshot(r):return response(state.refresh())
+     async def model(r):
+         s=state.snapshot();p=state.packet
+@@ -98,7 +98,10 @@
+     async def series(r):
+         lo,hi=window(r);n=int(bounded_number(r,'max_points',2000,16,5000))
+         ids=r.query.get('ids','temperature.tj,temperature.cpu,temperature.gpu,power.gpu,power.cpu_soc_mss,fan.pwm.actual,fan.pwm.target').split(',')
+-        return response(dict(snapshot_seq=state.seq,run_id=state.snapshot()['run_id'],source_epoch=state.snapshot()['source_epoch'],series=state.series(ids,lo,hi,n)))
++        s=state.snapshot()
++        return response(dict(snapshot_seq=s['snapshot_seq'],service_epoch=s['service_epoch'],run_id=s['run_id'],
++            source_epoch=s['source_epoch'],model_id=s['model']['model_id'],spec_id=s['model']['spec_id'],
++            series=state.series(ids,lo,hi,n)))
+     async def predictions(r):
+         h=int(bounded_number(r,'horizon_s',45,15,90))
+         if h not in (15,45,90):raise web.HTTPBadRequest(text='horizon must be 15/45/90')
+--- rc3/src/tto_web/__init__.py
++++ rc4/src/tto_web/__init__.py
+@@ -1,2 +1,2 @@
+ """TTO read-only Web candidate. No controller or workload API."""
+-__version__ = '1.0.0rc3'
++__version__ = '1.0.0rc4'
+--- rc3/tools/install.py
++++ rc4/tools/install.py
+@@ -85,7 +85,10 @@
+     if args.service=='system' and os.getuid()==0:p.error('run as the same non-root user as existing TTO; sudo is used only for the service unit')
+     if args.service=='system' and sys.platform!='linux':p.error('system service requires Linux; use --service none for local tests')
+     prefix.mkdir(parents=True,exist_ok=True,mode=0o700)
+-    release=prefix/'releases'/('1.0.0rc3-'+uuid.uuid4().hex[:8]);release.mkdir(parents=True,mode=0o700)
++    wheels=list((ROOT/'wheelhouse').glob('tto_web_ui-*.whl'))
++    if len(wheels)!=1:raise SystemExit('expected one Web wheel')
++    version=wheels[0].name.split('-')[1]
++    release=prefix/'releases'/(version+'-'+uuid.uuid4().hex[:8]);release.mkdir(parents=True,mode=0o700)
+     # Every candidate file is hashed; verify before installing. No base-environment mutation.
+     identities=json.loads((ROOT/'candidate-identities.json').read_text())
+     for name,digest in identities.items():

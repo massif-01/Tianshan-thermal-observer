@@ -1,0 +1,14 @@
+{
+  "example_only": true,
+  "input_path": "numeric_export",
+  "columns": {
+    "measured_at_raw": "REPLACE_WITH_ACTUAL_TIME_COLUMN",
+    "original_value": "REPLACE_WITH_ACTUAL_TEMPERATURE_COLUMN",
+    "original_channel": "REPLACE_WITH_ACTUAL_CHANNEL_COLUMN"
+  },
+  "constants": {"original_unit": "C", "time_source": "instrument_export", "time_uncertainty_s": null, "synthetic": false},
+  "channels": {"REPLACE_WITH_ACTUAL_CHANNEL": {"session_id": "contact-fin-1", "site_id": "fin-contact-A"}},
+  "time_axis": {"mode": "relative_seconds", "sample_interval_s": 1, "interval_basis": "REPLACE_WITH_INSTRUMENT_SETTING_AND_CSV_INTERVAL_CHECK"},
+  "csv": {"encoding": "utf-8-sig", "delimiter": ","},
+  "exported_at_raw": null
+}

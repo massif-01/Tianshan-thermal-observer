@@ -1,0 +1,30 @@
+test_body_stage (__main__.Tests.test_body_stage) ... ok
+test_concurrent_snapshots (__main__.Tests.test_concurrent_snapshots) ... ok
+test_connector_cancel_recovery (__main__.Tests.test_connector_cancel_recovery) ... ok
+test_fast_reuse (__main__.Tests.test_fast_reuse) ... ok
+test_headers_stage (__main__.Tests.test_headers_stage) ... ok
+test_limits_and_redirect_recovery (__main__.Tests.test_limits_and_redirect_recovery) ... ok
+test_real_collector_records (__main__.Tests.test_real_collector_records) ... Executing <Task pending name='Task-105' coro=<collect.<locals>.monitor() running at /Users/massif/Tianshan-thermal-observer/investigations/issue-9-r2-20261018/sources/candidate-wheel/tto/collector.py:349> wait_for=<Future pending cb=[Task.task_wakeup()] created at /opt/homebrew/Cellar/python@3.14/3.14.2_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py:459> cb=[collect.<locals>.task_done() at /Users/massif/Tianshan-thermal-observer/investigations/issue-9-r2-20261018/sources/candidate-wheel/tto/collector.py:369] created at /opt/homebrew/Cellar/python@3.14/3.14.2_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/tasks.py:395> took 0.872 seconds
+本轮TTO已停止；现有风扇控制未被修改。
+FAIL
+test_server_queue (__main__.Tests.test_server_queue) ... ok
+
+======================================================================
+FAIL: test_real_collector_records (__main__.Tests.test_real_collector_records)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.2_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 127, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.2_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 719, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "/Users/massif/Tianshan-thermal-observer/investigations/issue-9-r2-20261018/tests/loopback.py", line 85, in test_real_collector_records
+    fan=[r for r in seen if r['kind']=='fan'];temp=[r for r in seen if r['kind']=='temp'];self.assertTrue(any(r.get('error_class') for r in fan));self.assertTrue(any(not r.get('error_class') for r in temp))
+                                                                                          ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 8 tests in 1.933s
+
+FAILED (failures=1)

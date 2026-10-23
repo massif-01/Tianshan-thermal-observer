@@ -1,0 +1,51 @@
+{
+  "run_id": "yet610l-sync-shortqa-retry-20261017T162947Z",
+  "session_id": "yet610l-ch1-trial",
+  "site_id": "ch1-location-see-formal-probe-record",
+  "measurement_kind": "surface_contact",
+  "site_description": "散热鳍片上，靠近出风口；更深位置无法固定",
+  "instrument": {
+    "model": "YET-610L",
+    "serial_alias": "26071081",
+    "firmware_version": "2.1.0",
+    "accuracy": null
+  },
+  "contact": {
+    "fixed_position": "散热鳍片上，靠近出风口；更深位置无法固定",
+    "surface_condition": null,
+    "attachment_method": "此前约定的专用耐温聚酰亚胺胶带（用户称专用胶带）",
+    "installation_verified": false,
+    "probe_response_calibrated": false,
+    "installation_verification": "user_confirmation_only; physical calibration not established"
+  },
+  "geometry": {
+    "statistic": "single_probe_reading"
+  },
+  "settings": {
+    "actual_record_interval_s": 1,
+    "interval_evidence": "CSV Logging Summary + actual 2026 adjacent intervals checked below"
+  },
+  "time": {
+    "clock_domain": "instrument_local_datetime",
+    "timezone": null,
+    "sync_anchors": []
+  },
+  "reference_record_id": null,
+  "synthetic": false,
+  "model_input": false,
+  "control_input": false,
+  "probe_integrity_report": {
+    "recorded_at_utc": "2026-10-17T17:05:27.261268+00:00",
+    "source": "direct_user_confirmation",
+    "channel": "CH1",
+    "measurement_kind": "surface_contact",
+    "site_description": "散热鳍片上，靠近出风口；更深位置无法固定",
+    "attachment_method": "此前约定的专用耐温聚酰亚胺胶带（用户称专用胶带）",
+    "probe_moved_during_run": false,
+    "probe_detached_during_run": false,
+    "clock_reset_during_run": false,
+    "installation_verification": "user_confirmation_only",
+    "spatial_limit": "局部鳍片表面接触温度；不等同于出风空气、鳍片深处、整块散热器均温或潜在慢态Ts",
+    "probe_response_calibrated": false
+  }
+}

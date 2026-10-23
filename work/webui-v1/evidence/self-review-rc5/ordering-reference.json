@@ -1,0 +1,35 @@
+{
+  "scope": "existing saved states only, not a fresh replay or field validation; finite sample ordering is not a guarantee",
+  "model": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
+  "spec": "2080adcf20773650299def2bb0f3ebdb9f87d8f85281d5b87a99d8b406c83c6b",
+  "criterion": "same frozen identity; tracking/degraded; raw_valid TJ and observed_through_ref == TJ.source_ref; dedup run/epoch/TJ ref; finite states",
+  "results": [
+    {
+      "input": "experiments/thermal_fixed_anchors_frozen_v1/inputs/field/states.jsonl",
+      "bytes": 104016039,
+      "sha256": "ebf24bbd7e1237d3451909c71a4a41efef5ab251f3c3dadc8992f8af7fd59908",
+      "eligible_unique_new_tj": 2697,
+      "ordered": 2697,
+      "ordered_fraction": 1.0,
+      "excluded": {
+        "phase": 32,
+        "not_new_valid_tj": 5948
+      },
+      "reversal_examples": []
+    },
+    {
+      "input": "evidence/cpu-runtime-threads-20261020/inputs/recorded-run/states.jsonl",
+      "bytes": 2204368,
+      "sha256": "6ff7408e0699d6586a8dd5170fb76d1a9a1b5a60a6522c95add47e502bea194f",
+      "eligible_unique_new_tj": 51,
+      "ordered": 51,
+      "ordered_fraction": 1.0,
+      "excluded": {
+        "phase": 32,
+        "not_new_valid_tj": 110
+      },
+      "reversal_examples": []
+    }
+  ],
+  "rc5_note": "input hashes rechecked on 2026-10-22; statistic inherited unchanged from rc4 read-only scan, no new model replay"
+}

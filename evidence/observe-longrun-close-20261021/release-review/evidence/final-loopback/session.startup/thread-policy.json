@@ -1,0 +1,109 @@
+{
+  "schema": "TTO-NUMERIC-THREAD-POLICY-v1",
+  "candidate_version": "0.2.4+observe.2",
+  "pid": 16265,
+  "host": "Massif-MacBook-Pro.local",
+  "executable": "/Users/massif/Tianshan-thermal-observer/evidence/observe-longrun-close-20261021/release-env-py312/bin/python",
+  "python": "3.12.3 (v3.12.3:f6650f9ad7, Apr  9 2024, 08:18:47) [Clang 13.0.0 (clang-1300.0.29.30)]",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "started_at_utc": "2026-10-21T14:52:01.545759+00:00",
+  "started_at_mono_s": 1035908.934335833,
+  "inherited_environment": {
+    "OPENBLAS_NUM_THREADS": null,
+    "OPENBLAS_DEFAULT_NUM_THREADS": null,
+    "OMP_NUM_THREADS": null,
+    "MKL_NUM_THREADS": null,
+    "NUMEXPR_NUM_THREADS": null
+  },
+  "policy": {
+    "OPENBLAS_NUM_THREADS": "1",
+    "OPENBLAS_DEFAULT_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1"
+  },
+  "policy_scope": "this candidate process numeric libraries only; not Python threads or other applications",
+  "modules_already_loaded": [],
+  "preloaded_versions": {
+    "numpy": null,
+    "scipy": null
+  },
+  "threadpoolctl_version": "3.6.0",
+  "verified": true,
+  "error": null,
+  "applied_at_mono_s": 1035908.941683916,
+  "libraries": {
+    "numpy": {
+      "version": "2.2.6",
+      "module": "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/numpy/__init__.py",
+      "blas": {
+        "name": "scipy-openblas",
+        "found": true,
+        "version": "0.3.29",
+        "detection method": "pkgconfig",
+        "include directory": "/private/var/folders/hn/b1w4xwz56_58rv5ckn7581vw0000gn/T/cibw-run-uqh7mzsf/cp312-macosx_arm64/build/venv/lib/python3.12/site-packages/scipy_openblas64/include",
+        "lib directory": "/private/var/folders/hn/b1w4xwz56_58rv5ckn7581vw0000gn/T/cibw-run-uqh7mzsf/cp312-macosx_arm64/build/venv/lib/python3.12/site-packages/scipy_openblas64/lib",
+        "openblas configuration": "OpenBLAS 0.3.29  USE64BITINT DYNAMIC_ARCH NO_AFFINITY neoversen1 MAX_THREADS=64",
+        "pc file directory": "/private/var/folders/hn/b1w4xwz56_58rv5ckn7581vw0000gn/T/cirrus-ci-build/.openblas"
+      }
+    },
+    "scipy": {
+      "version": "1.15.3",
+      "module": "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/scipy/__init__.py",
+      "blas": {
+        "name": "scipy-openblas",
+        "found": true,
+        "version": "0.3.28",
+        "detection method": "pkgconfig",
+        "include directory": "/private/var/folders/hn/k7g0_sh57112t0xtjxcjcm5r0000gn/T/cibw-run-528_w15_/cp312-macosx_arm64/build/venv/lib/python3.12/site-packages/scipy_openblas32/include",
+        "lib directory": "/private/var/folders/hn/k7g0_sh57112t0xtjxcjcm5r0000gn/T/cibw-run-528_w15_/cp312-macosx_arm64/build/venv/lib/python3.12/site-packages/scipy_openblas32/lib",
+        "openblas configuration": "OpenBLAS 0.3.28 DYNAMIC_ARCH NO_AFFINITY neoversen1 MAX_THREADS=64",
+        "pc file directory": "/Users/runner/work/scipy/scipy"
+      }
+    }
+  },
+  "extension_modules": {
+    "numpy._core._multiarray_umath": "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/numpy/_core/_multiarray_umath.cpython-312-darwin.so",
+    "scipy.linalg._fblas": "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/scipy/linalg/_fblas.cpython-312-darwin.so",
+    "scipy.linalg._flapack": "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/scipy/linalg/_flapack.cpython-312-darwin.so"
+  },
+  "loaded_pools": [
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 1,
+      "prefix": "libscipy_openblas",
+      "filepath": "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/numpy/.dylibs/libscipy_openblas64_.dylib",
+      "version": "0.3.29",
+      "threading_layer": "pthreads",
+      "architecture": "neoversen1"
+    },
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 1,
+      "prefix": "libscipy_openblas",
+      "filepath": "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/scipy/.dylibs/libscipy_openblas.dylib",
+      "version": "0.3.28",
+      "threading_layer": "pthreads",
+      "architecture": "neoversen1"
+    }
+  ],
+  "final_environment": {
+    "OPENBLAS_NUM_THREADS": "1",
+    "OPENBLAS_DEFAULT_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1"
+  },
+  "pool_coverage": {
+    "numpy": [
+      "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/numpy/.dylibs/libscipy_openblas64_.dylib"
+    ],
+    "scipy": [
+      "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/scipy/.dylibs/libscipy_openblas.dylib"
+    ]
+  },
+  "checked_at_utc": "2026-10-21T14:52:01.665041+00:00",
+  "checked_at_mono_s": 1035909.060775666
+}

@@ -1,0 +1,567 @@
+Original candidate excerpts; source files were not modified.
+
+FILE src/tto_web/adapter.py
+  69         def metric(id, label, value, unit, valid, expiry, *, age=0., kind='observed', reason=None, source=None, sample_id=sample, source_time=None):
+  70             # A newly invalid event withdraws the old current value; no backward search.
+  71             prior = self.metrics.get(id)
+  72             last = prior.get('last_observation') if prior else None
+  73             if prior and prior['value'] is not None:
+  74                 last = {'value': prior['value'], 'observed_at_utc': prior['received_at_utc']}
+  75             scalar = value if isinstance(value, (str, bool)) or finite(value) else None
+  76             good = valid and scalar is not None
+  77             self.metrics[id] = dict(id=id, label=label, kind=kind, unit=unit, value=scalar if good else None,
+  78                 status='valid' if good else 'invalid', reason_code=(reason or raw.get('error_class') or 'native_field_invalid_or_missing') if not good else None,
+  79                 source_id=source or raw['kind'], source_ref=ref, sample_id=sample_id,
+  80                 received_at_utc=raw['received_at_utc'], source_time_utc=source_time,
+  81                 as_of_elapsed_ms=elapsed, age_lower_bound_ms=max(0., age),
+  82                 remaining_valid_ms=max(0., (expiry-t)*1000), time_quality='receive_approximation',
+  83                 last_observation=last, _expiry=expiry, _at=t)
+  84 
+  85         if raw['kind'] == 'orin' and quality.get('accepted'):
+  86             meta = payload['telemetry_meta']
+  87             expiry = t + (meta['freshness_timeout_ms'] - quality['age_lower_bound_ms'])/1000
+  88             valid = bool(frame['measurement']['tj'] and frame['measurement']['tj']['raw_valid'])
+  89             for k, v in payload.get('temperature', {}).items():
+  90                 if k in ('tj','cpu','gpu','soc012','soc345','soc0','soc1','soc2'):
+  91                     metric('temperature.'+k, k.upper()+'温度', v, '°C', valid, expiry, age=quality['age_lower_bound_ms'])
+  92             for k, rail in payload.get('power', {}).items():
+  93                 if k not in ('vdd_gpu','vdd_cpu_soc_mss','vin_sys_5v0','vdd_gpu_soc','vdd_cpu_cv','vdd_in'):
+  94                     continue
+  95                 id = {'vdd_gpu':'gpu','vdd_cpu_soc_mss':'cpu_soc_mss'}.get(k, 'other.'+k)
+  96                 for field in ('current','average'):
+  97                     value = rail.get(field)
+  98                     unit_ok = rail.get('unit') in ('mW','W')
+  99                     if finite(value) and rail.get('unit') == 'mW':
+ 100                         value /= 1000
+ 101                     metric('power.'+id+('' if field=='current' else '.average'), k.upper()+(' 瞬时' if field=='current' else ' 平均（平均窗未知）'), value, 'W', valid and unit_ok, expiry)
+ 102             cores = payload.get('cpu', {}).get('cores', [])
+ 103             usage = []
+ 104             for core in cores[:128]:
+ 105                 if not isinstance(core.get('id'), int):
+ 106                     continue
+ 107                 online = core.get('online') is not False
+ 108                 for k, unit in [('usage','%'),('freq','MHz')]:
+ 109                     v = core.get(k)
+ 110                     metric(f'cpu.cores.{core["id"]}.{k}', f'CPU {core["id"]} '+k, v, unit, valid and online and finite(v), expiry)
+ 111                 if online and finite(core.get('usage')):
+ 112                     usage.append(core['usage'])
+ 113             coverage = len(usage) == len(cores) and len(usage)>0
+ 114             metric('usage.cpu.mean', 'Jetson CPU均值'+('（覆盖不完整）' if not coverage else ''), sum(usage)/len(usage) if usage else None, '%', valid and bool(usage), expiry, kind='derived')
+ 115             metric('usage.cpu.max', 'Jetson CPU最大核心', max(usage) if usage else None, '%', valid and bool(usage), expiry, kind='derived')
+ 116             metric('cpu.valid_cores', '有效CPU核心数', len(usage), 'cores', valid, expiry, kind='derived')
+ 117             for group in ('ram','swap'):
+ 118                 mem = payload.get('memory', {}).get(group, {})
+ 119                 for field in ('used','total','cached'):
+ 120                     metric(f'memory.{group}'+('' if field=='used' else '.'+field), group.upper()+' '+field, mem.get(field), mem.get('unit') if mem.get('unit') in ('MB','MiB','GB') else None, valid and finite(mem.get(field)) and mem.get('unit') in ('MB','MiB','GB'), expiry)
+ 121             # NVML has its own sample identity and expiry. A WS sample cannot renew it.
+ 122             gpu = payload.get('gpu', {})
+ 123             gq = quality.get('gpu', {})
+ 124             gpuid = str(epoch)+':gpu:'+short((gpu.get('device_uuid'),gpu.get('sampled_at_utc')))
+ 125             age = gpu.get('age_at_telemetry_receive_ms')
+ 126             timeout = gpu.get('freshness_timeout_ms')
+ 127             gvalid = valid and gpu.get('status')=='valid' and gq.get('contract_valid') is True and finite(age) and finite(timeout) and age<timeout
+ 128             old = self.metrics.get('usage.gpu')
+ 129             gexpiry = t + (timeout-age)/1000 if finite(age) and finite(timeout) else t
+ 130             if old and old['sample_id']==gpuid:
+ 131                 # Same cache can be explicitly revoked, and its expiry may only shrink.
+ 132                 gexpiry = min(gexpiry, old['_expiry'])
+ 133                 if not gvalid:
+ 134                     old.update(value=None,status='invalid',reason_code='gpu_source_invalid')
+ 135                 old['_expiry'] = gexpiry
+ 136             else:
+ 137                 metric('usage.gpu','GPU利用率（NVML独立期限）',gpu.get('utilization_pct'),'%',gvalid,gexpiry,age=age if finite(age) else 0,source='nvml',sample_id=gpuid,source_time=gpu.get('sampled_at_utc'))
+ 138             self.platform = {k:payload.get('platform', {}).get(k) for k in ('family','soc','gpu_backend')}
+
+FILE vendor/tto_field/runtime.py
+  95             comm=self.communication.feed(raw,processed)
+  96             frame=self.projection.feed(raw,processed)
+  97             before_validity={k:(v or {}).get('raw_valid',False) for k,v in frame['measurement'].items()}
+  98             if not comm['measurement']['TJ_and_rails']['raw_valid']:
+  99                 for name in ['tj','power']:
+ 100                     if frame['measurement'][name]:frame['measurement'][name]['raw_valid']=False
+ 101                 frame['new_TJ']=False
+ 102             s=self.observer.step(frame);generated=time.monotonic()
+ 103             if raw['kind']=='fan' and engine.fan and engine.fan['ref']==raw['ref']:self.fan_success_times.append(raw['mono_s'])
+ 104             env=dict(schema='TTO-FIELD-CONSUMABLE-STATE-v1',state=s,mode=self.mode,binding=self.binding,
+ 105                      native_run_id=self.run_id,expected_identity=self.expected,process_clock_domain=self.clock.domain,
+ 106                      communication=comm,native_projected_validity_before_I02=before_validity,
+ 107                      clock=dict(domain=self.clock.domain,session_origin_mono_s=self.clock.origin,observer_input_mono_s=raw['mono_s'],
+ 108                                 generated_at_mono_s=generated,generated_at_utc=utc(),
+ 109                                 model_consumable_until_mono_s=min(generated+MODEL_STATE_MAX_AGE_S,raw['mono_s']+MODEL_STATE_MAX_AGE_S)),
+ 110                      generation_evidence=dict(origin='actual native on_record callback after engine.process',native_ref=raw['ref'],
+ 111                                               native_engine_instance_id=id(engine),I02_shared_native_engine_instance_id=id(self.communication.view.engine),
+ 112                                               I02_processed_views=self.communication.view.process_calls,model_math_source_unchanged=True,
+ 113                                               research_snapshot_clock_label='upstream literal retained; actual clocks are in this envelope'))
+ 114             if self.public_sink is not None:
+ 115                 if self.web_adapter is None:
+ 116                     from tto_web.adapter import Adapter
+ 117                     self.web_adapter=Adapter(self.projection.manifest,engine,owner=self,test_replay=bool(self.binding.get("synthetic_loopback_only")))
+ 118                 packet=self.web_adapter.encode(raw,processed,frame,comm,s)
+ 119                 packet["task"]=self.web_context.snapshot()
+ 120                 self.public_sink(packet)
+ 121             self.evidence.append('states.jsonl',env)
+ 122             with self.lock:self.latest=env
+ 123             self.callbacks+=1
+ 124         except Exception as exc:
+ 125             # Native writer already handles ValueError, preserving its raw journal on a projection failure.
+ 126             raise ValueError('field_projection_failed:'+type(exc).__name__) from exc
+
+FILE vendor/tto/collector.py
+ 209         def process(row):
+ 210             if row.get('preceding_queue_gap'):
+ 211                 journal.append('events', {'reason': 'queue_drop', 'mono_s': row['mono_s'], 'dropped_so_far': q.dropped})
+ 212             r = journal.observation(row)
+ 213             before = time.perf_counter()
+ 214             out = engine.process(r)
+ 215             journal.processing_output(r, out)
+ 216             if on_record is not None:
+ 217                 # Synchronous observation of this same processed stream, no second poller.
+ 218                 on_record(r, out, engine)
+ 219             if out['prediction']:
+ 220                 stats['prediction_ms'].append((time.perf_counter() - before) * 1000)
+ 221 
+ 222         async def writer():
+ 223             while not stop.is_set() or not q.queue.empty():
+ 224                 try:
+ 225                     row = await asyncio.wait_for(q.get(), timeout=0.2)
+ 226                 except asyncio.TimeoutError:
+ 227                     continue
+ 228                 try:
+ 229                     await asyncio.to_thread(process, row)
+ 230                 except (OSError, LimitReached, ValueError) as e:
+ 231                     stats['stop_reason'] = type(e).__name__ + ':' + (str(e) if isinstance(e, LimitReached) else 'observation_processing_failed')
+ 232                     stop.set()
+ 233                     break
+ 234                 finally:
+ 235                     q.queue.task_done()
+ 236 
+ 237         async def orin():
+ 238             import socketio
+ 239             network = config['network']
+ 240             epoch = 0
+ 241             while not stop.is_set() and stats['connection_attempts'] < network['reconnect_max_attempts']:
+ 242                 epoch += 1
+ 243                 this_epoch = epoch
+ 244                 stats['connection_attempts'] += 1
+ 245                 disconnected = asyncio.Event()
+ 246                 async with sessions(config, 'orin', socketio=True) as session:
+ 247                     sio = socketio.AsyncClient(handle_sigint=False, reconnection=False, http_session=session, logger=False, engineio_logger=False, request_timeout=network['connect_timeout_s'])
+ 248 
+ 249                     async def on_data(payload, *unused, callback_epoch=this_epoch):
+ 250                         stats['orin_event_count'] += 1
+ 251                         try:
+ 252                             size = len(canonical(payload))
+ 253                         except (ValueError, TypeError):
+ 254                             put('boundary', reason='invalid_json_object')
+ 255                             return
+ 256                         stats['business_payload_bytes_sum'] += size
+ 257                         stats['business_payload_bytes_max'] = max(stats['business_payload_bytes_max'], size)
+ 258                         if size > network['max_business_payload_bytes']:
+ 259                             stats['payload_oversize'] += 1
+ 260                             put('boundary', reason='business_payload_oversize')
+ 261                             return
+ 262                         put('orin', payload, connection_epoch=callback_epoch)
+ 263 
+ 264                     async def on_disconnect(*args):
+ 265                         put('boundary', reason='socketio_disconnected')
+ 266                         disconnected.set()
+ 267 
+ 268                     sio.on(config['orin']['event'], handler=on_data, namespace='/')
+ 269                     sio.on('disconnect', handler=on_disconnect, namespace='/')
+ 270                     try:
+ 271                         put('boundary', reason='socketio_connecting')
+ 272                         await asyncio.wait_for(sio.connect(config['orin']['base_url'], headers=headers(config, 'orin'), transports=config['orin']['transports'], namespaces=['/'], socketio_path='socket.io', wait_timeout=network['connect_timeout_s']), network['connect_timeout_s'] + 1)
+ 273                         print('已连接，正在等待第一份有效温度数据。', flush=True)
+ 274                         while not stop.is_set() and not disconnected.is_set():
+ 275                             await asyncio.sleep(0.1)
+ 276                     except asyncio.CancelledError:
+ 277                         raise
+ 278                     except Exception as e:
+ 279                         # Exceptions can contain credential-bearing request reprs: retain class only.
+ 280                         put('boundary', reason='socketio_connection_failed', error_class=type(e).__name__)
+ 281                     finally:
+ 282                         with contextlib.suppress(Exception):
+ 283                             await asyncio.wait_for(sio.disconnect(), timeout=3)
+ 284                         with contextlib.suppress(Exception):
+ 285                             await asyncio.wait_for(sio.shutdown(), timeout=3)
+ 286                 if not stop.is_set():
+ 287                     delay = min(network['reconnect_max_s'], network['reconnect_initial_s'] * 2 ** (epoch - 1))
+ 288                     delay *= random.uniform(1 - network['reconnect_jitter_ratio'], 1 + network['reconnect_jitter_ratio'])
+ 289                     with contextlib.suppress(asyncio.TimeoutError):
+ 290                         await asyncio.wait_for(stop.wait(), delay)
+ 291             if not stop.is_set():
+ 292                 stats['stop_reason'] = 'reconnect_attempt_budget'
+ 293                 stop.set()
+
+FILE src/tto_web/source.py
+ 105 async def observe(config, state, stop, publication=None):
+ 106     native=load_config(config['source']['observation_config'],environ={})
+ 107     # Explicitly configured source only; collector obtains /tmp/tto-observer-UID.lock
+ 108     # before constructing its transport. Existing collect/shadow/field use the same lock.
+ 109     journal=None;adapter=None
+ 110     queue=deque(maxlen=8);lock=threading.Lock()
+ 111     def factory(*args,**kwargs):
+ 112         nonlocal journal
+ 113         journal=MemoryJournal(*args,**kwargs);return journal
+ 114     def record(raw,processed,engine):
+ 115         nonlocal adapter
+ 116         if adapter is None:
+ 117             adapter=Adapter(journal.manifest,engine,config['source'].get('observed_device'),config['source'].get('test_replay',False))
+ 118         packet=adapter.feed(raw,processed)
+ 119         if publication:publication.put(packet)
+ 120         else:
+ 121             with lock:
+ 122                 if len(queue)==queue.maxlen:queue.clear();packet=dict(packet,publication_gap=True)
+ 123                 queue.append(packet)
+ 124     task=asyncio.create_task(collect(native,native['run']['max_duration_s'],stop_event=stop,on_record=record,journal_factory=factory,continuous=True,manage_signals=False,run_type='web-observe'))
+ 125     try:
+ 126         while not task.done() and not stop.is_set():
+ 127             with lock:rows=list(queue);queue.clear()
+ 128             if rows:await asyncio.to_thread(state.prepare_model)
+ 129             for row in rows:state.accept(row)
+ 130             await asyncio.sleep(.05)
+ 131         if task.done():
+ 132             try:
+ 133                 _,result=await task
+ 134                 state.disconnect('观察已结束：'+result['stop_reason'],ended=True)
+ 135             except ValueError:
+ 136                 state.disconnect('观察来源冲突或配置无效；未启动第二采集器')
+ 137     finally:
+ 138         stop.set()
+ 139         await asyncio.gather(task,return_exceptions=True)
+
+FILE src/tto_web/server.py
+ 196     async def startup(app):
+ 197         nonlocal source_task,timer_task
+ 198         timer_task=asyncio.create_task(timer())
+ 199         if start_source:
+ 200             async def source_run():
+ 201                 try:
+ 202                     mode=config['source']['mode']
+ 203                     if mode=='observe' and config['source'].get('observation_config'):await observe(config,state,stop)
+ 204                     else:await follow(config,state,stop)
+ 205                 except (ValueError,OSError):state.disconnect('观察配置不可用；等待本地配置或生产者注册')
+ 206             source_task=asyncio.create_task(source_run())
+ 207     async def shutdown(app):
+ 208         stop.set()
+ 209         if source_task:
+ 210             if config['source']['mode']=='follow':source_task.cancel()
+ 211             await asyncio.gather(source_task,return_exceptions=True)
+ 212         if timer_task:timer_task.cancel();await asyncio.gather(timer_task,return_exceptions=True)
+ 213     app.on_startup.append(startup);app.on_shutdown.append(shutdown)
+ 214     routes={'bootstrap':bootstrap,'snapshot':snapshot,'stream':stream,'series':series,'model':model,'predictions':predictions,'events':events,'metrics':metrics,'context':context}
+ 215     for name,handler in routes.items():app.router.add_get('/api/v1/'+name,handler)
+ 216     app.router.add_route('*','/api/v1/session',session)
+
+FILE src/tto_web/state.py
+  71     def event(self, source, reason, t=None, severity='info'):
+  72         now=utc()
+  73         if self.events and (self.events[-1]['source'],self.events[-1]['reason'])==(source,reason):
+  74             self.events[-1].update(last_at_utc=now,count=self.events[-1]['count']+1)
+  75             return
+  76         self.event_seq+=1
+  77         self.events.append(dict(id=str(self.event_seq),source=source,reason=reason,severity=severity,
+  78             elapsed_ms=t,first_at_utc=now,last_at_utc=now,count=1))
+  79 
+  80     def accept(self, packet, now=None):
+  81         accepted_at = time.perf_counter()
+  82         now = time.monotonic() if now is None else now
+  83         if packet.get('schema')!='TTO-WEB-PUBLICATION-v1' or packet.get('boot_id')!=boot_id() or packet.get('clock_domain_id')!='host-monotonic:'+boot_id():
+  84             raise ValueError('unverified producer clock domain')
+  85         if boot_id().startswith('test:') and packet.get('mode')!='test_replay':raise ValueError('test clock cannot be live')
+  86         if packet['model_id']!=SPEC['model_sha256'] or packet['spec_id']!=SPEC_ID:
+  87             raise ValueError('frozen model/spec mismatch')
+  88         if not (finite(packet['input_mono_s']) and finite(packet['origin_mono_s']) and packet['origin_mono_s']<=packet['input_mono_s']<=now+.05):
+  89             raise ValueError('producer monotonic time is not comparable')
+  90         old=self.packet
+  91         signature=(packet['run_id'],packet['source_epoch'],packet['model_id'],packet['spec_id'])
+  92         old_signature=None if not old else (old['run_id'],old['source_epoch'],old['model_id'],old['spec_id'])
+  93         if old_signature!=signature:
+  94             self.history.clear(); self.history_seen.clear(); self.last_origin=-math.inf; self.last_tj=None;self.task_event_seq=0
+  95             for p in self.predictions:
+  96                 if p['status']=='pending':p['status']='not_comparable'
+  97             self.event('source','已切换观察过程，曲线从新过程开始',0)
+  98         elif packet['input_mono_s']<old['input_mono_s']:
+  99             raise ValueError('producer time regression')
+ 100         self.packet=copy.deepcopy(packet)
+ 101         self.source_connected=True;self.source_status='正在观察'
+ 102         elapsed=(packet['input_mono_s']-packet['origin_mono_s'])*1000
+ 103         if packet.get('publication_gap'):
+ 104             self.event('publication','显示发布流丢帧，未跨缺口匹配预测',elapsed,'warning')
+ 105             for pred in self.predictions:
+ 106                 if pred['status']=='pending':pred['status']='not_comparable'
+ 107             for series in self.history.values():
+ 108                 series.append(dict(t=elapsed,value=None,sample_id=None,received_at_utc=None,status='unknown',source_ref=None))
+ 109         metrics={m['id']:m for m in packet['metrics']}
+ 110         tj=metrics.get('temperature.tj')
+ 111         fresh_tj=bool(packet['new_tj'] and packet['tj_sample_id']!=self.last_tj and tj and tj['status']=='valid' and tj['value'] is not None)
+ 112         if fresh_tj:
+ 113             self.last_tj=packet['tj_sample_id']
+ 114             label_time=tj['as_of_elapsed_ms']
+ 115             for p in self.predictions:
+ 116                 if p['status']!='pending' or (p['run_id'],p['source_epoch'],p['model_id'],p['spec_id'])!=signature:
+ 117                     continue
+ 118                 if p['target_elapsed_ms']<=label_time<=p['target_elapsed_ms']+2000:
+ 119                     p.update(status='matched',observed_C=tj['value'],error_C=p['value_C']-tj['value'])
+ 120                     self.prediction_labels[p['prediction_id']]={'label_elapsed_ms':label_time,'received_at_utc':tj['received_at_utc'],'sample_id':tj['sample_id'],'source_ref':tj['source_ref']}
+
+FILE src/tto_web/state.py
+ 221             current=now<p['consumable_until_mono_s'] and self.source_connected
+ 222             o=p['model'];model=snapshot['model'];model.update(model_id=p['model_id'],spec_id=p['spec_id'],phase=o['phase'] if current else 'unavailable')
+ 223             for key in ('Tf_C','Ts_C','E_C'):model[key]=o[key] if current else None
+ 224             metrics={m['id']:m for m in snapshot['metrics']}
+ 225             safety=p['safety'];fans=metrics.get('fan.pwm.actual',{});control=metrics.get('control.valid',{})
+ 226             protection='unknown'
+ 227             if fans.get('status')=='valid' and control.get('status')=='valid':
+ 228                 if any(safety.get(k) is True for k in ('guard','fault','temp_stale','manual_mode')):protection='active'
+ 229                 elif all(safety.get(k) is False for k in ('guard','fault','temp_stale','manual_mode')) and safety.get('normalized_valid') is True:protection='no_reported_protection'
+ 230             status='valid' if metrics.get('temperature.tj',{}).get('value') is not None else 'unavailable'
+ 231             snapshot['health'].update(measurement_status=status,protection_status=protection)
+ 232             for pred in self.predictions:
+ 233                 if pred['status']=='pending' and elapsed>pred['target_elapsed_ms']+2000:pred['status']='missing_label'
+ 234             signature=(p['run_id'],p['source_epoch'],p['model_id'],p['spec_id'])
+ 235             while self.predictions and (self.predictions[0]['run_id']!=p['run_id'] or self.predictions[0]['origin_elapsed_ms']<elapsed-3690000):
+ 236                 removed=self.predictions.popleft();self.prediction_labels.pop(removed['prediction_id'],None)
+ 237             snapshot['predictions']=list(reversed([copy.deepcopy(v) for v in islice((v for v in reversed(self.predictions) if (v['run_id'],v['source_epoch'],v['model_id'],v['spec_id'])==signature),6)]))
+ 238             for node in model['nodes']:
+ 239                 if 'metric_id' in node:node['status']=metrics.get(node['metric_id'],{}).get('status','unknown')
+ 240                 elif node['role']=='estimate':node['status']='valid' if model.get(node['state_path']) is not None and current else 'unknown'
+ 241                 elif node['id']=='forecast':node['status']='valid' if current and any(v['status']=='pending' for v in snapshot['predictions']) else 'unknown'
+ 242                 elif node['id']=='risk':node['status']='valid' if protection!='unknown' else 'unknown'
+ 243                 else:node['status']='unknown'
+ 244             by_id={n['id']:n for n in model['nodes']}
+ 245             for e in model['edges']:
+ 246                 e['animate_allowed']=bool(current and by_id[e['from']].get('status')=='valid' and by_id[e['to']].get('status')=='valid')
+ 247             for series in self.history.values():
+ 248                 while series and series[0]['t']<elapsed-3600000:series.popleft()
+ 249             snapshot['advisory']=self.advisory(snapshot)
+ 250         for id,value in self.host_values.items():
+ 251             snapshot['metrics'].append(dict(id=id,label='Web进程单核等效CPU' if id=='host.cpu' else 'Web进程RSS',kind='observed',unit='%' if id=='host.cpu' else 'MiB',value=value,status='valid',reason_code=None,source_id='tto-web-process',source_ref='process:'+self.epoch,sample_id=str(self.host_sample_mono),received_at_utc=self.host_sample_utc,source_time_utc=None,as_of_elapsed_ms=snapshot['run_elapsed_ms'],age_lower_bound_ms=max(0.,(now-self.host_sample_mono)*1000),remaining_valid_ms=max(0.,2000-(now-self.host_sample_mono)*1000),time_quality='same_clock',last_observation=None))
+ 252         snapshot['event_cursor']=str(self.event_seq) if self.events else None
+ 253         self._snapshot=snapshot
+ 254         return snapshot
+ 255 
+ 256     def snapshot(self):
+ 257         return copy.deepcopy(self._snapshot)
+ 258 
+ 259     def prediction_view(self, horizon=45, start=0, end=math.inf, records_after=None):
+ 260         s=self._snapshot
+ 261         selected=[p for p in self.predictions if (p['run_id'],p['source_epoch'],p['model_id'],p['spec_id'],p['horizon_s'])==(s['run_id'],s['source_epoch'],s['model']['model_id'],s['model']['spec_id'],horizon) and start<=p['origin_elapsed_ms']<=end]
+ 262         matched=[p for p in selected if p['status']=='matched'];errors=[abs(p['error_C']) for p in matched]
+ 263         elapsed=s['run_elapsed_ms'] or 0
+ 264         ordered=sorted(errors);rank=.95*(len(ordered)-1) if ordered else 0
+ 265         p95=(ordered[math.floor(rank)]*(1-(rank%1))+ordered[math.ceil(rank)]*(rank%1)) if ordered else None
+ 266         summary=dict(issued_count=len(selected),due_count=sum(p['target_elapsed_ms']<=elapsed and p['status'] not in ('late_publication','not_comparable') for p in selected),matched_count=len(matched),missing_label_count=sum(p['status']=='missing_label' for p in selected),unmatched_future_count=sum(p['target_elapsed_ms']>elapsed and p['status']=='pending' for p in selected),late_publication_count=sum(p['status']=='late_publication' for p in selected),not_comparable_count=sum(p['status']=='not_comparable' for p in selected),MAE_C=sum(errors)/len(errors) if errors else None,P95_absolute_C=p95 if errors else None,max_underprediction_C=max((max(-p['error_C'],0) for p in matched),default=None))
+ 267         records=[copy.deepcopy(p) for p in selected if records_after is None or p['target_elapsed_ms']>=records_after-2000]
+ 268         return dict(horizon_s=horizon,scenario='HOLD',records=records,records_complete=records_after is None,summary=summary,labels={v['prediction_id']:self.prediction_labels[v['prediction_id']] for v in records if v['prediction_id'] in self.prediction_labels})
+
+FILE vendor/tto/profiles.py
+ 114     result = dict(empty, source_status=status, sample_interval_ms=period, timeout_ms=ttl, device_uuid=g.get('device_uuid'))
+ 115     def failed(reason):return dict(result, reason=reason)
+ 116     if not GPU_FIELDS.issubset(g) or type(g.get('schema_version')) is not int or g['schema_version'] != 1:
+ 117         return failed('gpu_contract_missing_or_invalid')
+ 118     backend = FAMILIES.get(family, (None, 'unavailable'))[1]
+ 119     if status not in ('valid', 'stale', 'error', 'unavailable'): return failed('gpu_status_invalid')
+ 120     if backend == 'unavailable':
+ 121         if period is not None or ttl is not None: return failed('gpu_period_or_timeout_invalid')
+ 122     elif not positive_ms(period) or not positive_ms(ttl) or ttl != max(5000, 3*period):
+ 123         return failed('gpu_period_or_timeout_invalid')
+ 124     if family == 'jetson_orin' and positive_ms(m.get('source_sample_interval_ms')) and period != m['source_sample_interval_ms']:
+ 125         return failed('gpu_orin_source_period_mismatch')
+ 126     expected_source = 'unavailable' if status == 'unavailable' else backend
+ 127     if g['source'] != expected_source or status != 'unavailable' and backend == 'unavailable':
+ 128         return failed('gpu_source_platform_mismatch')
+ 129     uuid = g['device_uuid']
+ 130     if backend == 'nvml':
+ 131         if uuid is not None and (not isinstance(uuid, str) or not uuid): return failed('gpu_device_identity_invalid')
+ 132         if status in ('valid', 'stale') and uuid is None: return failed('gpu_device_identity_missing')
+ 133     elif uuid is not None: return failed('gpu_device_identity_invalid')
+ 134     if status in ('error', 'unavailable'):
+ 135         if value is not None or g['sampled_at_utc'] is not None or base is not None:
+ 136             return failed('gpu_state_fields_inconsistent')
+ 137         return dict(result, reason='gpu_source_'+status, contract_valid=True)
+ 138     if not utc_stamp(g['sampled_at_utc']): return failed('gpu_timestamp_invalid')
+ 139     if not finite(base) or base < 0: return failed('gpu_age_invalid')
+ 140     if status == 'stale':
+ 141         if value is not None or base < ttl: return failed('gpu_state_fields_inconsistent')
+ 142         return dict(result, reason='gpu_source_stale', age_lower_bound_ms=base+outer if finite(outer) else None, contract_valid=True)
+ 143     if not finite(value) or not 0 <= value <= 100: return failed('gpu_value_invalid')
+ 144     if base >= ttl: return failed('gpu_state_fields_inconsistent')
+ 145     old = g.get('gr3d_freq')
+ 146     if backend == 'tegrastats' and finite(old) and 0 <= old <= 100 and old != value:
+ 147         return failed('gpu_same_source_value_conflict')
+ 148     age = base+outer if finite(outer) and outer >= 0 else None
+ 149     if age is None: return failed('gpu_age_invalid')
+ 150     if age >= ttl: return dict(result, reason='gpu_effective_stale', age_lower_bound_ms=age, contract_valid=True)
+ 151     return dict(result, value=value, age_lower_bound_ms=age, valid_until=t+(ttl-age)/1000, contract_valid=True)
+ 152 
+ 153 
+ 154 def lifecycle_signature(payload):
+ 155     g, m = payload.get('gpu') or {}, payload.get('telemetry_meta') or {}
+
+FILE vendor/tto/platform_quality.py
+  90         out = super().accept(record)
+  91         if not isinstance(record['payload'], dict) or out['reason'] not in ('new_sample', 'duplicate'):
+  92             self.c['orin']['source_sample_interval_ms'] = previous_period
+  93             return self.contract_result(out)
+  94         out['source_period'] = info
+  95         out['period_known'] = info is not None and info['period_ms'] is not None and info['reason'] is None
+  96         if info and info['reason']:
+  97             self.counts[info['reason']] += 1
+  98         contract, reason = platform_contract(record['payload'], self.c['orin']['source_sample_interval_ms'])
+  99         out['platform_reason'] = reason
+ 100         out['input_contract'] = contract
+ 101         # Source age can rise on retransmission. Use the quality layer's single
+ 102         # monotonic anchor, never add local elapsed time a second time.
+ 103         payload = dict(record['payload'])
+ 104         meta = dict(payload.get('telemetry_meta') or {})
+ 105         if out['reason'] in ('new_sample', 'duplicate') and finite(self.anchor_age):
+ 106             meta['sample_age_ms'] = self.anchor_age
+ 107         payload['telemetry_meta'] = meta
+ 108         gpu = uniform_gpu(payload, contract['family'] if contract else None, record['mono_s'])
+ 109         if contract is None:
+ 110             family, _ = identified_family(payload)
+ 111             gpu = uniform_gpu(payload, family, record['mono_s'])
+ 112         out['gpu'] = gpu
+ 113         if out['accepted']:
+ 114             out['values']['gpu_busy'] = gpu['value']
+ 115         return self.contract_result(out)
+
+FILE frontend/src/main.ts
+ 116  const records:Prediction[]=[...predictionCache.values()].sort((a,b)=>a.target_elapsed_ms-b.target_elapsed_ms), matched=records.filter(p=>p.status==='matched');
+ 117  const s=data.summary;clean($('score'));
+ 118  [['MAE',fmt(s.MAE_C,3)+' °C'],['绝对误差P95',fmt(s.P95_absolute_C,3)+' °C'],['最大低估',fmt(s.max_underprediction_C,3)+' °C'],['匹配 / 应到期',`${s.matched_count} / ${s.due_count}`]].forEach(([name,value])=>{const v=document.createElement('div'),small=document.createElement('small'),b=document.createElement('b');small.textContent=name;b.textContent=value;v.append(small,b);$('score').append(v);});
+ 119  text('comparisonStatus',`${phaseLabels[current.model.phase]} · 同run/epoch/model/HOLD · +${horizon}秒 · ${matched.length<30?'样本较少':'当前窗口'}`);
+ 120  const last=matched.at(-1);text('latestMatch',last?`目标 ${timeLabel(last.target_elapsed_ms)} · 预测 ${fmt(last.value_C)}°C / 实测 ${fmt(last.observed_C)}°C · 误差 ${last.error_C!>=0?'+':''}${fmt(last.error_C,3)}°C（预测${last.error_C!>=0?'偏高':'偏低'}）`:`等待这条预测对应的实测温度 · 缺标签 ${s.missing_label_count} · 未到期 ${s.unmatched_future_count}`);
+ 121  buildChart(charts[3],[{id:'matched.actual',label:'目标后首个有效TJ',unit:'°C',sampling:'actual_samples',points:records.filter(p=>['matched','missing_label'].includes(p.status)).map(p=>({t:p.target_elapsed_ms,value:p.observed_C,sample_id:p.prediction_id,received_at_utc:data.labels?.[p.prediction_id]?.received_at_utc||null,status:p.status,source_ref:data.labels?.[p.prediction_id]?.source_ref||null}))},{id:'matched.forecast',label:`已发布+${horizon}秒预测`,unit:'°C',sampling:'actual_samples',points:records.filter(p=>['matched','missing_label'].includes(p.status)).map(p=>({t:p.target_elapsed_ms,value:p.value_C,sample_id:p.prediction_id,received_at_utc:null,status:p.status,source_ref:null}))}],'°C');
+ 122  charts[3].setOption({legend:{textStyle:{fontSize:10}},grid:{left:48,right:12,top:34,bottom:27},series:[{lineStyle:{type:'solid'}},{lineStyle:{type:'dashed'}}]});
+ 123  clean($('futureValues'));
+ 124  for(const h of [15,45,90]){const p=currentForecast(h),v=document.createElement('div');const label=document.createElement('small'),b=document.createElement('b');label.textContent=`+${h}秒`;b.textContent=p?fmt(p.value_C)+' °C':'—';v.title=p?`origin ${timeLabel(p.origin_elapsed_ms)}\nissued ${timeLabel(p.issued_elapsed_ms)}\ntarget ${timeLabel(p.target_elapsed_ms)}\ncutoff ${timeLabel(p.input_cutoff_elapsed_ms)}\n${p.prediction_id}`:'没有当前已发布预测';v.append(label,b);$('futureValues').append(v);}
+ 125 }
+ 126 
+ 127 async function renderContext(){
+ 128  if(!current)return;const ctx=await api('context');if(paused)return;
+ 129  text('sourceDiagnostics','显示链重新同步 '+(ctx.display_resync_count||0)+' 次 ｜ '+Object.values(ctx.source_health||{}).map((s:any)=>`${s.source}: ${s.quality_reason||s.error_class||'已接收'} ${s.timeout_phase||''} · RTT ${fmt(s.round_trip_ms)}ms · ${dateLabel(s.last_received_at_utc)}`).join(' ｜ '));
+ 130  text('contextNote',(ctx.task_metadata_available?'任务信息来自runner登记':'未接入任务记录')+'；客户端完成不代表GPU停止。RAM用量不用于推断模型驻留。');
+ 131  const dl=$('contextRows');clean(dl);
+ 132  const ram=metric('memory.ram');
+ 133  [['观察对象 / 平台',`${ctx.observed_device||'未知'} / ${ctx.platform?.soc||'未知'}`],['TTO主机',ctx.tto_host],['观察状态',ctx.observation_status],['工作阶段',ctx.task_metadata_available?`${({background:'背景',work:'工作',final_recovery:'回落'} as Record<string,string>)[ctx.task_phase]||'等待阶段'} · 客户端在途 ${ctx.active_requests??'未知'} / 槽位 ${ctx.client_slots??'未知'}`:'未接入任务记录'],['推理模型',ctx.task_model?'任务登记：'+ctx.task_model:'未接入任务模型登记'],['服务端执行 / 排队','未接入'],['热模型',current.model.model_id?'冻结 G2 · '+current.model.model_id.slice(0,12):'尚未加载'],['风扇控制',`天山OS：${lineValue(metric('fan.mode'))??'未知'}；TTO：只读建议`],['过程 / 源epoch',`${current.run_id||'—'} / ${current.source_epoch??'—'}`],['Web进程开销',`${fmt(lineValue(metric('host.cpu')))} %单核等效 / ${fmt(lineValue(metric('host.rss')))} MiB RSS`],['观察时长',fmt((current.run_elapsed_ms||0)/1000,0)+' s'],['Jetson RAM',`${fmt(lineValue(ram),0)} / ${fmt(lineValue(metric('memory.ram.total')),0)} ${ram?.unit||'MB'}`]].forEach(([k,v])=>row(dl,k,v));
+ 134 }
+ 135 function renderFields(){
+ 136  if(!current)return;const query=$<HTMLInputElement>('search').value.toLowerCase(),group=$<HTMLSelectElement>('group').value;
+ 137  const tbody=$<HTMLTableSectionElement>('fieldRows');clean(tbody);
+ 138  current.metrics.filter(m=>(m.id+' '+m.label).toLowerCase().includes(query)&&m.id.startsWith(group)).forEach(m=>{const tr=document.createElement('tr');cell(tr,m.label+' / '+m.id);cell(tr,lineValue(m)??(m.last_observation?'上次 '+m.last_observation.value:'—'));cell(tr,m.unit);cell(tr,m.kind+' / '+statusLabels[m.status]);cell(tr,m.source_ref);tr.title=`${m.reason_code||''}；${m.sample_id}；${dateLabel(m.received_at_utc)}`;tbody.append(tr);});text('fieldCount',`${current.metrics.length}项`);
+ 139  const health=$<HTMLTableSectionElement>('healthRows');clean(health);current.metrics.forEach(m=>{const tr=document.createElement('tr');cell(tr,m.source_id);cell(tr,m.label);cell(tr,statusLabels[m.status]);cell(tr,`${fmt((m.age_lower_bound_ms||0)/1000)}s / ${fmt(Math.max(0,(m.remaining_valid_ms||0)-(performance.now()-received))/1000)}s`);cell(tr,dateLabel(m.received_at_utc));health.append(tr);});
+ 140  text('healthSummary',`${current.metrics.filter(m=>m.status==='valid').length}项有效 / ${current.metrics.filter(m=>m.status==='unverified').length}项待确认`);
+ 141  text('sourceStatus',`Web：${connected?'已连接':'断开'}；设备数据：${current.health.measurement_status}；模型：${phaseLabels[current.model.phase]}。HTTP成功、源有效与模型可用分别判定。`);
+ 142 }
+ 143 function renderEvents(){
+ 144  const source=$<HTMLSelectElement>('eventSource').value,level=$<HTMLSelectElement>('eventLevel').value;clean($('eventList'));
+ 145  events.filter(e=>(!source||source===e.source)&&(!level||level===e.severity)).slice().reverse().forEach(e=>{const div=document.createElement('div');div.className='event-row';div.textContent=`${dateLabel(e.first_at_utc)} — ${dateLabel(e.last_at_utc)}　${e.source} · ${e.reason} ×${e.count}`;$('eventList').append(div);});text('eventCount',`${events.length}条`);
+ 146 }
+ 147 function renderEventTimeline(){
+ 148  if(!current)return;const end=current.run_elapsed_ms||0,start=Math.max(0,end-range*60000),visible=events.filter(e=>e.elapsed_ms!==null&&e.elapsed_ms>=start&&e.elapsed_ms<=end);
+ 149  $('eventEmpty').style.display=visible.length?'none':'block';
+ 150  const bucketWidth=Math.max(1000,(end-start)/6),buckets=new Map<number,number[]>();visible.forEach((e,i)=>{const bin=Math.floor((e.elapsed_ms-start)/bucketWidth);buckets.set(bin,[...(buckets.get(bin)||[]),i]);});
+ 151  charts[4].setOption({animation:false,grid:{left:65,right:30,top:4,bottom:4},xAxis:{type:'value',min:start,max:Math.max(end,start+1000),show:false},yAxis:{type:'value',min:0,max:1,show:false},tooltip:{formatter:(p:any)=>{const e=events.find(e=>e.id===p.data.eventId);return e?`${esc(e.source)} · ${esc(e.reason)}<br>发生 ${esc(timeLabel(e.elapsed_ms))}<br>Web首次到达/记录 ${esc(dateLabel(e.first_at_utc))}<br>最近记录 ${esc(dateLabel(e.last_at_utc))} · ${e.count}次`:'—';}},dataZoom:[{type:'inside',filterMode:'none'}],series:[{type:'scatter',symbol:'diamond',symbolSize:7,itemStyle:{color:'#b58a46'},data:visible.map((e,i)=>({eventId:e.id,value:[e.elapsed_ms,.5,e.reason],label:{show:buckets.get(Math.floor((e.elapsed_ms-start)/bucketWidth))?.[0]===i,formatter:(buckets.get(Math.floor((e.elapsed_ms-start)/bucketWidth))?.length||0)>1?'此处'+buckets.get(Math.floor((e.elapsed_ms-start)/bucketWidth))!.length+'条事件':e.reason,fontSize:9,position:'top',align:'left'}}))}]});
+ 152 }
+ 153 
+ 154 charts[4].on('click',(params:any)=>{const e=events.find(e=>e.id===params.data.eventId);if(!e)return;text('eventSelection',`${e.source} · ${e.reason} ｜ 发生 ${timeLabel(e.elapsed_ms)} ｜ Web首次到达/记录 ${dateLabel(e.first_at_utc)} ｜ 最近 ${dateLabel(e.last_at_utc)} ｜ 重复 ${e.count}次`);$('eventSelection').hidden=false;});
+ 155 
+ 156 async function refreshData(){
+ 157  if(!current||paused||busy)return;busy=true;
+ 158  try{const end=current.run_elapsed_ms||0,from=Math.max(0,end-range*60000);let ids=current.metrics.filter(m=>m.id.startsWith('temperature.')||m.id.startsWith('power.')&&!m.id.endsWith('.average')||m.id.startsWith('fan.pwm.')||m.id==='fan.rpm').map(m=>m.id).slice(0,32);const run=current.run_id;
+ 159  const group=[current.service_epoch,current.run_id,current.source_epoch,range,ids.join(',')].join(':');
+ 160  if(group!==seriesGroup){seriesCache.clear();lastSeriesFetch=null;seriesGroup=group;}
+ 161  const deltaFrom=Math.max(from,lastSeriesFetch??from);
+ 162  const [s,e]=await Promise.all([api(`series?ids=${encodeURIComponent(ids.join(','))}&from=${deltaFrom}&to=${end}&max_points=2000`),api('events?limit=1000')]);if(run!==current?.run_id||paused||seriesGroup!==group)return;
+ 163  for(const incoming of s.series as Series[]){const prior=seriesCache.get(incoming.id);const points=new Map<string,any>();for(const p of [...(prior?.points||[]),...incoming.points])if(p.t>=from)points.set([p.t,p.sample_id,p.status].join(':'),p);seriesCache.set(incoming.id,{...incoming,sampling:prior?.sampling==='bucket_first_last_min_max_and_gaps'?prior.sampling:incoming.sampling,points:[...points.values()].sort((a,b)=>a.t-b.t).slice(-18002)});}
+ 164  lastSeriesFetch=end;seriesData=[...seriesCache.values()];events=e.events;renderCharts();renderEvents();await Promise.all([renderComparison(),renderContext()]);
+ 165  }catch{/* HTTP/API failure never creates measurements. SSE owns connection state. */}finally{busy=false;}
+ 166 }
+ 167 function accept(s:Snapshot){
+ 168  latest=s;if(paused)return;received=performance.now();current=structuredClone(s);
+ 169  const run=s.run_id+':'+s.source_epoch;if(lastRun!==run){charts.forEach(c=>c.dispatchAction({type:'dataZoom',start:0,end:100}));seriesData=[];lastRun=run;originUtc=Date.parse(s.server_time_utc)-(s.run_elapsed_ms||0);}
+ 170  renderHeader();renderMetrics();renderModel();renderFields();void refreshData();
+ 171 }
+ 172 function connect(){const stream=new EventSource('/api/v1/stream');['snapshot','quality','resync','run_changed'].forEach(name=>stream.addEventListener(name,e=>{connected=true;accept(JSON.parse((e as MessageEvent).data));}));stream.addEventListener('heartbeat',()=>{connected=true;renderHeader();});stream.onerror=()=>{connected=false;if(current){current.metrics.forEach(m=>{m.value=null;m.status='stale';});current.model.Tf_C=current.model.Ts_C=current.model.E_C=null;current.model.phase='unavailable';current.advisory.value_percent=null;current.predictions=[];renderMetrics();renderModel();}renderHeader();};}
+ 173 $('pause').onclick=()=>{paused=!paused;text('pause',paused?'恢复实时':'暂停画面');document.body.classList.toggle('paused',paused);if(!paused&&latest)accept(latest);renderHeader();renderModel();};
+ 174 $('fullscreen').onclick=()=>{if(document.fullscreenElement)void document.exitFullscreen();else void document.documentElement.requestFullscreen();};
+ 175 $('range').onchange=()=>{range=Number($<HTMLSelectElement>('range').value);localStorage.setItem('tto-range',String(range));void refreshData();};
+ 176 $('horizon').onchange=()=>{horizon=Number($<HTMLSelectElement>('horizon').value);void renderComparison();};
+ 177 $('resetZoom').onclick=()=>charts[0].dispatchAction({type:'dataZoom',start:0,end:100});
+ 178 $('motion').onchange=()=>{const checked=$<HTMLInputElement>('motion').checked;document.body.classList.toggle('reduced-motion',checked);localStorage.setItem('tto-motion',String(checked));};
+ 179 $('extra').onchange=()=>{extra=$<HTMLInputElement>('extra').checked;localStorage.setItem('tto-extra',String(extra));renderCharts();};
+ 180 ['search','group'].forEach(id=>$(id).addEventListener('input',renderFields));['eventSource','eventLevel'].forEach(id=>$(id).addEventListener('change',renderEvents));
+ 181 document.addEventListener('visibilitychange',()=>document.body.classList.toggle('background',document.hidden));
+ 182 $('loginForm').onsubmit=async e=>{e.preventDefault();const r=await fetch('/api/v1/session',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:$<HTMLInputElement>('password').value}),credentials:'same-origin'});if(r.ok){$<HTMLInputElement>('password').value='';$<HTMLDialogElement>('login').close();location.reload();}else text('loginMessage','口令不匹配或请求过于频繁。');};
+ 183 setInterval(()=>{if(!current||paused||!connected)return;let changed=false;for(const m of current.metrics){if(m.value!==null&&m.remaining_valid_ms!==null&&m.remaining_valid_ms<=performance.now()-received){m.value=null;m.status='stale';changed=true;}}if(changed){renderMetrics();renderModel();renderFields();}},200);
+ 184 (async()=>{try{const boot=await api('bootstrap');tz=boot.timezone;connected=true;accept(await api('snapshot'));connect();}catch{renderHeader();}})();
+
+FILE requirements/03-接口与计算合同.md
+  65 
+  66 `model.nodes[]`携带node_id、role、metric_id/state_path、status、description；`edges[]`携带from/to、relation(power_input/measurement_correction/coupling/cooling_input/prediction_input/reference_mapping)、animate_allowed。前端只绘制服务端实际模型定义的依赖；RPM不接入G2热方程。
+  67 
+  68 Tf/Ts/E复用被冻结估计器的结果；若当前数据模式只有raw无状态，可在**同一个观察拥有者**内执行已验证observer而不新增collector。不能在每浏览器各做一遍。内部不确定性原字段可展开，不渲染0.78之类主观分数。状态不同步/不可消费时允许展示“上次估计”，但不用于当前预测。
+  69 
+  70 ## 6. 新增G2-HOLD实时预测发布
+  71 
+  72 若生产者已发同model/spec/scenario的合法预测，直接消费；否则由后端唯一prediction provider在新有效TJ/状态起点最多1Hz计算。必须复用已有冻结G2传播实现或其等价独立已验证函数，不重新拟合。
+  73 
+  74 基于本项目已有比较合同：动态θ固定；预测快温度起点锚定当前有效TJ，慢态Ts/E取当时已到达的因果状态；保持当时可用的两rail和PWM情景，使用真实秒长精确/稳定离散传播。是否采用条件保持PWM必须遵守当前observer合同并随预测明确列出，不能在UI侧擅自将过期PWM改有效。
+  75 
+  76 若实际最新比较代码的锚定/初始化规则与此不同，先在baseline.md具体指出，以已接受合同校对实现；不默认把Tf与实测TJ互换。预测产生时间为真实完成时刻，原点是输入截止。公开支持15/45/90秒；不额外做5分钟、新θ、CPU活动增强、自动HOLD/RELAX挑优。
+  77 
+  78 预测记录不可原地改值。每条带`origin_elapsed_ms, issued_elapsed_ms, target_elapsed_ms, horizon_s, value_C, model_id, spec_id, scenario, input_cutoff, assumption_codes, phase_at_origin, evidence_mode=issued_online`。开发回放样例用`test_replay`，不能显示LIVE。
+  79 
+  80 ## 7. 未来标签和当前观察误差
+  81 
+  82 本次核对的冻结analysis-spec规定：同source epoch，目标时刻之后（含目标）的第一条有效accepted TJ，延后最多2秒。以此实现并在adapter-baseline.md记录源函数/版本；若最新已接受版本有明确变更，先报告差异再对齐，不能静默借旧生产Ridge另一套容差。成熟匹配只使用新到达的真实有效TJ和同run身份。前端的最近点悬停与科学标签匹配不是同一逻辑。
+  83 
+  84 `error_C=forecast_C-observed_C`，`underprediction_C=max(observed_C-forecast_C,0)`。对比表按horizon、model/spec、scenario、run/epoch分组，MAE/P95及count用同一matched集合。保留issued_count、due_count、matched_count、missing_label_count、unmatched_future_count；未到期不进误差分母。
+  85 
+  86 观察窗口跨run/模型切换停止合并。即使模型后续失效，也不能改写已经发布的预测；随到期答案追加质量层和失效/恢复备注，不能因为预测错就删除。没有匹配标签不得用后续任意最近点填补。
+  87 
+  88 ## 8. 观察建议provider
+  89 
+  90 公开`advisory`对象：`status, provider_id, provider_version, value_percent, basis, issued/expiry, input_refs, model_ref, curve_ref, scope_note, unavailable_reason, device_write_permitted=false`。
+  91 
+  92 优先真实已定义provider；否则CURVE-REFERENCE-v1只消费经过核对的已有本地温度-PWM曲线，使用`T_ref=max(TJ_now, forecast45_hold)`并执行原曲线查表/限值语义。需要曲线与当前控制设备绑定证据。没有则status=not_configured、数值null。target_duty只作为主板目标，不冒充advisory。
+  93 
+  94 保护/控制上下文未知或显式异常时status=withheld；曲线范围外status=out_of_domain，禁止外推。输出过期立即撤数字。PRD允许显示这个实验参考，但不允许接入任何控制写口或声称已验证减少噪音。
+  95 
+  96 平稳需求独立`demand`对象，单位默认`index`，带reference_id/raw_value/shaped_value/validity；provider没接上就是not_available。原离线算法未迁移/未满足参考不能填0或拿历史曲线循环播放。
+  97 
+  98 ## 9. 运行上下文
+
+FILE requirements/01-TTO-WebUI-产品需求文档-PRD.md
+ 258 ## 12. 服务与采集生命周期
+ 259 
+ 260 ### 12.1 安装以后是什么样
+ 261 
+ 262 安装候选包含后端、编译后静态资源、配置模板、服务文件和独立卸载/回退。**正式获准安装以后**启动`tto-web.service`并开机自启，监听59009；没有数据也能打开页面并显示准确等待原因，不能将“装了包但端口没起来”算完成。运行不依赖Node、CDN或外网。
+ 263 
+ 264 ### 12.2 数据来源模式（一次配置，不在网页里启动实验）
+ 265 
+ 266 - **follow（实验/现有采集首选）：**消费当前明确注册的本地active-run描述及只读发布流。已有测试进程拥有唯一collector/observer，Web只追踪它。源未注册/已结束就显示等待/结束，不扫描最新mtime文件并认作现场。
+ 267 - **observe（日常持续监看）：**安装时显式配置只读观察进程，复用现有collector和冻结observer，不构造Requester，不执行测试计划。只有确认公共采集锁及端点配置后可启动；已有活跃生产者时不争抢、不重复读取。不能仅改一个诊断duration为无穷而产生无限原始日志。
+ 268 
+ 269 默认follow避免打断既有实验；安装器必须说明怎样选择observe来实现无人值守日常监看，并给实际可运行入口。两种路径都需要实施/本地验证，不以“后续再接”代替。若安装时缺设备配置，仅起Web壳并明确“尚未配置观察来源”。
+ 270 
+ 271 不自动杀或接管其他进程。observe与实验的切换在主机CLI/明确操作卡中完成，原实验关闭/开启有原权限边界；网页没有停止collector或启动负载的按钮。若旧入口未参与共享锁，必须接入最小统一拥有权或要求安装配置显式follow；不能在无法确认单实例时自动开observe。
+ 272 
+ 273 ### 12.3 展示不反向影响观察
+ 274 
+ 275 生产者每个更新只做一次非阻塞只读发布；慢浏览器/后端队列溢出允许显示侧丢帧并标注，不反压采集和状态估计，不改原始证据。Web重启不让外部实验停掉；观察进程重启导致数据epoch变化，曲线明确断开。只清理自己的资源。
+ 276 
+ 277 ## 13. 后端和接口原则
+ 278 
+ 279 优先沿用现有aiohttp依赖提供HTTP+SSE，前端TypeScript+Vite+ECharts，节点使用SVG/CSS。不是强制升级底层依赖；如现有前端工程已用等价栈，记录差异后复用，避免并行两套框架。
+ 280 
+ 281 后端负责字段单位、来源/质量、时间轴、模型只读预测、成熟配对和建议provider。前端只格式化、交互、画图，不自己训练、不重建质量规则。SSE单向推送，心跳只证明UI链路，不给设备字段续龄。
+ 282 
+ 283 完整接口见`03-接口与计算合同.md`与`contracts/dashboard.schema.json`：boot/capabilities、snapshot、series、model、predictions、events、context均由一个版本化公开快照派生，接口不返回原始敏感对象。
+ 284 
+ 285 ## 14. 性能、可用性和边界
+ 286 
+ 287 默认UI更新1Hz；已有200ms数据可以缓存保留，由显示侧按预算合并，不能驱动源提频。SSE心跳5秒，快照与质量到期按自身事件发布；前端依据后端给的剩余有效期本地撤销数字，UI网络断开时立即标断开，不必等最后一条device数据再次到达。

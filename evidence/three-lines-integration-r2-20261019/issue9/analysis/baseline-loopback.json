@@ -1,0 +1,49 @@
+{
+  "variant": "baseline",
+  "tests": 8,
+  "failures": 0,
+  "errors": 0,
+  "results": [
+    {
+      "test": "body_timeout",
+      "phase": "response_body",
+      "recovery": true
+    },
+    {
+      "test": "concurrent_host_snapshot_coherence",
+      "responses": 10,
+      "note": "synthetic immutable response; does not prove firmware atomicity"
+    },
+    {
+      "test": "connector_queue_cancel_recovery",
+      "queued_phase": "none",
+      "recovery": true
+    },
+    {
+      "test": "fast_reuse",
+      "trace_events": []
+    },
+    {
+      "test": "headers_timeout",
+      "phase": "none",
+      "recovery": true
+    },
+    {
+      "test": "oversize_redirect_recovery",
+      "passed": true
+    },
+    {
+      "test": "real_collector",
+      "fan_errors": 6,
+      "temp_success": 6,
+      "diagnostic_fields": false,
+      "max_inflight": 2
+    },
+    {
+      "test": "serialized_server_resource",
+      "two_requests_timed_out": true,
+      "client_phase": "none",
+      "note": "in-memory server lock; not field ESP proof"
+    }
+  ]
+}

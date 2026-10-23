@@ -1,0 +1,22 @@
+{
+  "dataset": "../inputs/dataset.json",
+  "dataset_sha256": "8fe3635550cb99f116f49017982a0d5d94335729c8b9804fe931a87d623b0c9c",
+  "solver_spec": "solver-spec.json",
+  "solver_spec_sha256": "813d104943fd0c1bd6907c185c3b3b6f7c19cbb0519a6712fc5647ae34cad5f4",
+  "device_id": "RM01-reference-LSM",
+  "thermal_config_id": "RM01-original-development-config-unverified-revision",
+  "validation_runs": [
+    "S"
+  ],
+  "future_confirmation_runs": [],
+  "all_data_seen": true,
+  "data_role": "development_example",
+  "full_run_partition_only": true,
+  "operation": "generate",
+  "model_id": "G2-GEN-L-20261021-v1",
+  "train_runs": [
+    "L"
+  ],
+  "parent_model_id": "G2-FROZEN-RM01-v1",
+  "runtime_profile": "offline_macos_accelerate_v1"
+}

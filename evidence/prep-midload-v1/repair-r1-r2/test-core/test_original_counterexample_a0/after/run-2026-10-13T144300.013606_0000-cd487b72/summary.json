@@ -1,0 +1,151 @@
+{
+  "stop_reason": "duration",
+  "poll_missed": 0,
+  "poll_count": 14,
+  "connection_attempts": 1,
+  "payload_oversize": 0,
+  "orin_event_count": 11,
+  "business_payload_bytes_sum": 12686,
+  "business_payload_bytes_max": 1154,
+  "poll_rtt_ms": [
+    67.88849999429658,
+    62.27524997666478,
+    1802.9742909711786,
+    62.21987499156967,
+    63.62425000406802,
+    61.67958298465237,
+    62.369792023673654,
+    64.10704099107534,
+    1802.7338330284692,
+    63.5083339875564,
+    61.653041979297996,
+    61.559249996207654,
+    61.4947919966653,
+    61.57233298290521
+  ],
+  "prediction_ms": [
+    1.232457987498492,
+    0.44587498996406794,
+    1.2960419990122318
+  ],
+  "rss_mib": [
+    50.65625,
+    50.65625,
+    50.671875,
+    50.6875,
+    50.6875,
+    50.6875,
+    50.703125,
+    50.703125,
+    50.703125,
+    50.703125,
+    50.703125
+  ],
+  "cpu_pct_single_core": [
+    2.1968401465544893,
+    0.8497030812952492,
+    0.8565037434585469,
+    0.8705917693461889,
+    0.4782455779332336,
+    1.250094883857836,
+    1.6109915709162386,
+    1.3423909222711703,
+    0.3571217910207824,
+    0.3647544515798621,
+    0.36893310567046256
+  ],
+  "elapsed_s": 11.402586291951593,
+  "queue_peak_items": 2,
+  "queue_peak_bytes": 1280,
+  "dropped": 0,
+  "quality": {
+    "boundary_socketio_connecting": 1,
+    "boundary_stream": 1,
+    "new_samples": 11,
+    "boundary_input_boundary": 2,
+    "boundary_input_profile_change": 1,
+    "boundary_control_context_change": 1,
+    "boundary_normal_scope_change": 1,
+    "boundary_socketio_disconnected": 1,
+    "boundary_run_end": 1
+  },
+  "processing": {
+    "fan_ok": 12,
+    "origins": 3,
+    "temp_ok": 2
+  },
+  "target_host_verified": false,
+  "polling_health": {
+    "contract": "TTO-POLL-INDEPENDENT-v1",
+    "max_inflight_per_endpoint": 1,
+    "max_total_inflight_limit": 2,
+    "max_total_inflight_observed": 2,
+    "end_inflight": 0,
+    "legacy_config_max_inflight_esp32": 1,
+    "endpoints": {
+      "fan": {
+        "sent": 12,
+        "returned": 12,
+        "http_ok": 12,
+        "errors": 0,
+        "skipped": 0,
+        "cancelled": 0,
+        "peak_inflight": 1,
+        "rtt_ms": {
+          "n": 12,
+          "p50": 62.247562484117225,
+          "p95": 65.8086975425249,
+          "min": 61.4947919966653,
+          "max": 67.88849999429658
+        },
+        "send_interval_s": {
+          "n": 11,
+          "p50": 1.00055858399719,
+          "p95": 1.0011173539678566,
+          "min": 1.000146834005136,
+          "max": 1.0012339999666438
+        },
+        "return_interval_s": {
+          "n": 11,
+          "p50": 1.000091459020041,
+          "p95": 1.0024323119723704,
+          "min": 0.9953237909940071,
+          "max": 1.002459540963173
+        }
+      },
+      "temp": {
+        "sent": 3,
+        "returned": 2,
+        "http_ok": 2,
+        "errors": 0,
+        "skipped": 0,
+        "cancelled": 1,
+        "peak_inflight": 1,
+        "rtt_ms": {
+          "n": 2,
+          "p50": 1802.854061999824,
+          "p95": 1802.962268074043,
+          "min": 1802.7338330284692,
+          "max": 1802.9742909711786
+        },
+        "send_interval_s": {
+          "n": 2,
+          "p50": 5.000322041509207,
+          "p95": 5.00042569139041,
+          "min": 5.000206874974538,
+          "max": 5.000437208043877
+        },
+        "return_interval_s": {
+          "n": 1,
+          "p50": 4.999966417031828,
+          "p95": 4.999966417031828,
+          "min": 4.999966417031828,
+          "max": 4.999966417031828
+        }
+      }
+    }
+  },
+  "ended_at_utc": "2026-10-13T14:43:11.419275+00:00",
+  "raw_bytes": 55045,
+  "observations": 39
+}

@@ -1,0 +1,51 @@
+{
+  "recorded_at_utc": "2026-10-19T09:28:30.788144+00:00",
+  "meaning": "two bounded GET status snapshots; not a collector or health qualification interval",
+  "results": {
+    "fan": {
+      "code": 0,
+      "data": {
+        "fans": [
+          {
+            "id": 0,
+            "mode": "auto",
+            "duty_valid": true,
+            "duty": 17,
+            "target_duty": 17,
+            "rpm": 0,
+            "temperature": 45.7,
+            "enabled": true,
+            "running": true,
+            "fault": false,
+            "control_temperature": 45.7,
+            "guard_temperature": 45.7,
+            "predicted_temperature": 45.7,
+            "slope_c_per_min": 0,
+            "controller_gain": 0.543590009212494,
+            "cooling_response": 12,
+            "auto_state": "active",
+            "guard_active": false,
+            "temp_stale": false
+          }
+        ],
+        "temperature": 45.70000076293945,
+        "temp_valid": true,
+        "temp_source": "agx_info.temperature.tj"
+      }
+    },
+    "temp": {
+      "code": 0,
+      "data": {
+        "initialized": true,
+        "manual_mode": false,
+        "active_source": "variable",
+        "preferred_source": "variable",
+        "bound_variable": "agx_info.temperature.tj",
+        "temperature_01c": 457,
+        "temperature_c": 45.7,
+        "valid": true,
+        "timestamp_ms": 350024752
+      }
+    }
+  }
+}

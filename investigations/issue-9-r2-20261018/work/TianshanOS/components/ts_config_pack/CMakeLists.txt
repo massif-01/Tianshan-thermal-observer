@@ -1,0 +1,15 @@
+idf_component_register(
+    SRCS
+        "src/ts_config_pack.c"
+        "src/ts_config_pack_trust.c"
+    INCLUDE_DIRS
+        "include"
+    REQUIRES
+        ts_core
+        ts_cert
+        ts_security
+        json
+    PRIV_REQUIRES
+        ts_storage
+        mbedtls
+)

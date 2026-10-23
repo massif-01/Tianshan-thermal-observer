@@ -1,0 +1,35 @@
+{
+  "status": "imported",
+  "input_sha256": "09f6aaa4cafeb8daa7963c98202101f12ef23f4d74596140f4d7f499ea6e6f45",
+  "mapping_sha256": "c8022b34ea13779e97d071e20053c6b9f8e03093552396445e006eb79b56ee6a",
+  "input_name": "extracted-data.csv",
+  "recorded_at_utc": "2026-10-19T08:07:39.038907+00:00",
+  "rows": 3,
+  "added": 3,
+  "duplicates": 0,
+  "rejected_rows": 0,
+  "rows_with_missing_fields": 0,
+  "raw_stored_relative_path": "imports/raw/09f6aaa4cafeb8daa7963c98202101f12ef23f4d74596140f4d7f499ea6e6f45.csv",
+  "row_ledger_relative_path": "imports/rows/09f6aaa4cafeb8daa7963c98202101f12ef23f4d74596140f4d7f499ea6e6f45-c8022b34ea13779e97d071e20053c6b9f8e03093552396445e006eb79b56ee6a.jsonl",
+  "exported_at_raw": null,
+  "cadence": {
+    "yet610l-ch1-trial|CH1": {
+      "samples_with_time": 3,
+      "declared_interval_s": 1,
+      "interval_basis": "CSV Logging Summary + actual 2 adjacent intervals checked below",
+      "positive_interval_min_s": 1.0,
+      "positive_interval_max_s": 1.0,
+      "positive_interval_median_s": 1.0,
+      "zero_intervals": 0,
+      "reversed_intervals": 0,
+      "intervals_different_from_declared": 0,
+      "equal_adjacent_temperature_pairs": 1,
+      "conclusion": "observed sampling cadence only; no missing samples filled; probe response NOT calibrated"
+    }
+  },
+  "revision_ids": [
+    "42d3ebb4-9b8b-4040-85ca-1777bb3aefa6",
+    "44294f05-5395-462b-880d-4a729fb03907",
+    "0ec21181-ef50-439b-b8a4-6ebe473052da"
+  ]
+}

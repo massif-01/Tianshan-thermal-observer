@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/Users/massif/Tianshan-thermal-observer/scripts/verify_platform_upgrade.py", line 85, in <module>
+    verify(p.parse_args())
+  File "/Users/massif/Tianshan-thermal-observer/scripts/verify_platform_upgrade.py", line 56, in verify
+    run('new-upgrade',['sh',str(new/'install.sh'),*args])
+  File "/Users/massif/Tianshan-thermal-observer/scripts/verify_platform_upgrade.py", line 28, in run
+    assert r.returncode==0,(name,r.returncode,r.stdout[-300:],r.stderr[-500:])
+           ^^^^^^^^^^^^^^^
+AssertionError: ('new-upgrade', 127, '', 'sh: /Users/massif/Tianshan-thermal-observer/deliverables/TTO-v1-0.2.0-Conda安装包/install.sh: No such file or directory\n')

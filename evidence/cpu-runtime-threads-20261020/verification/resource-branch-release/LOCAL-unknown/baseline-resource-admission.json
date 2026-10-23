@@ -1,0 +1,19 @@
+{
+  "evaluated_mono_s": 30.473872336558998,
+  "resource_sample": {
+    "mono_s": 29.64213267248124,
+    "interval_start_mono_s": null,
+    "cpu_pct_single_core": null,
+    "rss_bytes": null,
+    "cpu_times": null,
+    "resource_error": "TEST_RESOURCE_UNAVAILABLE",
+    "resource_seq": 2,
+    "field_log_bytes": 28363,
+    "native_log_bytes": 9363
+  },
+  "cpu_limit_single_core_percent": 8.0,
+  "rss_limit_bytes": 134217728,
+  "allowed": false,
+  "reason": "baseline_receiver_resources_unavailable",
+  "interval_contract": "latest actual1s interval; start>=1s, span0.5..2s, age0..1.5s; no averaging or host-core normalization"
+}

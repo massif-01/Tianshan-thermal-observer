@@ -1,0 +1,14 @@
+.F........                                                               [100%]
+=================================== FAILURES ===================================
+______________ test_demand_fixed_limits_amplitude_and_hysteresis _______________
+
+    def test_demand_fixed_limits_amplitude_and_hysteresis():
+        first=shape(45,45,0,0)
+        assert first['z_output']==0
+>       assert shape(45.2,45,0,1)['deadband']
+E       assert False
+
+experiments/thermal_slowstate_v1/tests/test_slowstate.py:51: AssertionError
+=========================== short test summary info ============================
+FAILED experiments/thermal_slowstate_v1/tests/test_slowstate.py::test_demand_fixed_limits_amplitude_and_hysteresis
+1 failed, 9 passed in 2.36s

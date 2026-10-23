@@ -1,0 +1,156 @@
+{
+  "actual_start_beijing": "2026-10-14T01:37:47.320421+08:00",
+  "actual_schedule_end_beijing": "2026-10-14T02:19:38.028529+08:00",
+  "elapsed_total_s": 2510.9379144080003,
+  "work_windows": {
+    "M20": {
+      "window_s": 20,
+      "actual_duration_s": 32.73796948600011,
+      "requests": 2,
+      "submissions_in_window": true
+    },
+    "M60": {
+      "window_s": 60,
+      "actual_duration_s": 65.03052724599911,
+      "requests": 4,
+      "submissions_in_window": true
+    },
+    "M180": {
+      "window_s": 180,
+      "actual_duration_s": 192.92035570400003,
+      "requests": 12,
+      "submissions_in_window": true
+    }
+  },
+  "fan_stale_samples": 1,
+  "fan_fault_samples": 0,
+  "fan_guard_samples": 0,
+  "temperature_invalid_samples": 0,
+  "raw_abnormal_fan_records": [
+    {
+      "ref": "637f114b-563b-4c35-8062-a7588a89ce1c/observation:7472",
+      "utc": "2026-10-13T18:16:44.697428+00:00",
+      "fan": {
+        "auto_state": "stale",
+        "control_temperature": 46.8,
+        "controller_gain": 1.5085176229476929,
+        "cooling_response": -9.40000057220459,
+        "duty": 25,
+        "duty_valid": true,
+        "enabled": true,
+        "fault": false,
+        "guard_active": false,
+        "guard_temperature": 46.8,
+        "id": 0,
+        "mode": "auto",
+        "predicted_temperature": 46.8,
+        "rpm": 0,
+        "running": true,
+        "slope_c_per_min": 0,
+        "target_duty": 25,
+        "temp_stale": true,
+        "temperature": 46.8
+      }
+    }
+  ],
+  "raw_invalid_temperature_records": [],
+  "polling_event_count": 0,
+  "polling_event_reasons": {},
+  "polling_health": {
+    "contract": "TTO-POLL-INDEPENDENT-v1",
+    "max_inflight_per_endpoint": 1,
+    "max_total_inflight_limit": 2,
+    "max_total_inflight_observed": 2,
+    "end_inflight": 0,
+    "legacy_config_max_inflight_esp32": 1,
+    "endpoints": {
+      "fan": {
+        "sent": 2508,
+        "returned": 2508,
+        "http_ok": 2508,
+        "errors": 0,
+        "skipped": 0,
+        "cancelled": 0,
+        "peak_inflight": 1,
+        "rtt_ms": {
+          "n": 2508,
+          "p50": 11.554676500054484,
+          "p95": 14.065938299972913,
+          "min": 9.390838000399526,
+          "max": 85.53528099946561
+        },
+        "send_interval_s": {
+          "n": 2507,
+          "p50": 1.0013460509999277,
+          "p95": 1.0024318846995812,
+          "min": 1.0001502790000814,
+          "max": 1.0070780510004624
+        },
+        "return_interval_s": {
+          "n": 2507,
+          "p50": 1.0014248130009946,
+          "p95": 1.0046116093000819,
+          "min": 0.927901840001141,
+          "max": 1.0748425049987418
+        }
+      },
+      "temp": {
+        "sent": 503,
+        "returned": 503,
+        "http_ok": 503,
+        "errors": 0,
+        "skipped": 0,
+        "cancelled": 0,
+        "peak_inflight": 1,
+        "rtt_ms": {
+          "n": 503,
+          "p50": 10.459948000061559,
+          "p95": 13.07221529968956,
+          "min": 8.08815199889068,
+          "max": 31.050526999933936
+        },
+        "send_interval_s": {
+          "n": 502,
+          "p50": 5.001047749999998,
+          "p95": 5.001987648749855,
+          "min": 5.000213055000131,
+          "max": 5.006295889999819
+        },
+        "return_interval_s": {
+          "n": 502,
+          "p50": 5.001026591500704,
+          "p95": 5.004343565300223,
+          "min": 4.985258025999428,
+          "max": 5.011993226999039
+        }
+      }
+    }
+  },
+  "native_rule_abnormal_ever": true,
+  "original_input_coverage": {
+    "complete_input_s": 2508.7134311109994,
+    "unknown_input_s": 1.9561976109998795,
+    "longest_continuous_s": 2336.37996234,
+    "current_continuous_s": 172.3334687709994,
+    "reasons_seconds": {
+      "unsupported_control_scope,fan_missing_or_stale,temperature_status_missing_or_stale,fan_not_enabled,fan_fault,guard_active,control_temperature_stale,successful_duty_unavailable,manual_temperature,control_temperature_invalid,active_temperature_source_untrusted,temperature_binding_unconfirmed,source_not_usable:socketio_connecting": 0.05066257499947824,
+      "temperature_status_missing_or_stale,manual_temperature,control_temperature_invalid,active_temperature_source_untrusted,temperature_binding_unconfirmed,source_not_usable:socketio_connecting": 0.015631751000000804,
+      "source_not_usable:socketio_connecting": 0.8894360100002814,
+      "control_temperature_stale": 1.0004672750001191
+    }
+  },
+  "user_override_input_coverage": {
+    "complete_input_s": 2509.7138983859995,
+    "unknown_input_s": 0.9557303359997604,
+    "longest_continuous_s": 2509.7138983859995,
+    "current_continuous_s": 2509.7138983859995,
+    "reasons_seconds": {
+      "unsupported_control_scope,fan_missing_or_stale,temperature_status_missing_or_stale,fan_not_enabled,fan_fault,guard_active,control_temperature_stale,successful_duty_unavailable,manual_temperature,control_temperature_invalid,active_temperature_source_untrusted,temperature_binding_unconfirmed,source_not_usable:socketio_connecting": 0.05066257499947824,
+      "temperature_status_missing_or_stale,manual_temperature,control_temperature_invalid,active_temperature_source_untrusted,temperature_binding_unconfirmed,source_not_usable:socketio_connecting": 0.015631751000000804,
+      "source_not_usable:socketio_connecting": 0.8894360100002814
+    }
+  },
+  "TJ_peak_c": 62.375,
+  "last_TJ_c": 46.5,
+  "interpretation": "Full schedule under explicit user override; one stale fan snapshot during final cooldown, next sampled fan state recovered. Exact failure branch and interval duration are not established. Raw/native eligibility preserved."
+}

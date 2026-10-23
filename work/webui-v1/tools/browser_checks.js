@@ -1,0 +1,64 @@
+async (page) => {
+  const pageErrors=[];page.on('pageerror',e=>pageErrors.push(String(e)));
+  await page.waitForFunction(() => document.querySelector('#stripSt')?.textContent.includes('网页已连接'));
+  await page.setViewportSize({width:1440,height:1100});
+  await page.waitForTimeout(1500);
+  const checks={lanes:await page.locator('#trends .lane').count(),nodes:await page.locator('#topology [data-node]').count(),charts:await page.locator('#trends .chart canvas').count(),chips:await page.locator('#stripSt .st').count()};
+  if(checks.lanes!==7||checks.nodes!==6||checks.charts<9||checks.chips<4)throw new Error('missing lanes/nodes/charts/status chips '+JSON.stringify(checks));
+  const strip=await page.locator('#stripSt').innerText();
+  if(!strip.includes('网页已连接')||!strip.includes('设备数据有效'))throw new Error('three states not shown: '+strip);
+  checks.nonRealtime=await page.locator('#stripSt .st').first().innerText();
+  checks.collapsed=await page.locator('#health').evaluate(e=>!e.open)&&await page.locator('#events').evaluate(e=>!e.open)&&await page.locator('#fields').evaluate(e=>!e.open);
+  if(!checks.collapsed)throw new Error('drawers expanded by default');
+  // 暂停/全屏/重置缩放/减少动效都在“…”菜单里。
+  await page.locator('#moreBtn').click();
+  await page.getByRole('button',{name:'暂停显示',exact:true}).click();
+  const freeze=await page.locator('#context .cards').innerText();
+  await page.waitForTimeout(1300);
+  checks.pauseStable=freeze===await page.locator('#context .cards').innerText();
+  if(!checks.pauseStable)throw new Error('pause did not freeze display');
+  checks.pausedChip=(await page.locator('#stripSt').innerText()).includes('已暂停显示');
+  await page.locator('#moreBtn').click();
+  await page.getByRole('button',{name:'继续（恢复实时）',exact:true}).click();
+  await page.locator('#horizon [data-v="15"]').click();await page.waitForTimeout(1000);
+  checks.horizon15=(await page.locator('#predName').innerText()).includes('+15 秒');
+  await page.locator('#horizon [data-v="90"]').click();await page.waitForTimeout(1000);
+  checks.horizon90=(await page.locator('#predName').innerText()).includes('+90 秒');
+  await page.locator('#horizon [data-v="45"]').click();
+  await page.locator('[data-node="tj"]').click();
+  await page.waitForFunction(()=>document.querySelector('#nodeAside')?.textContent?.includes('校正'));
+  await page.locator('[data-node="est"]').click();
+  await page.waitForFunction(()=>document.querySelector('#nodeAside')?.textContent?.includes('模型内部的慢变量'));
+  checks.nodeDetail=true;
+  checks.forecastTargets=await page.evaluate(()=>{const r=[...document.querySelectorAll('#futureValues .row')];return r.length===3&&r.every(x=>/\d{2}:\d{2}:\d{2}/.test(x.textContent||''))&&/秒前发出/.test(document.querySelector('#futureNote')?.textContent||'');});
+  await page.locator('#fields summary').click();await page.getByLabel('字段搜索').fill('cpu.cores.0');
+  checks.coreFields=await page.locator('#fieldRows tr').count();
+  if(checks.coreFields!==2)throw new Error('core field search failed');
+  await page.getByLabel('字段搜索').fill('');await page.locator('#fields summary').click();
+  await page.locator('#moreBtn').click();await page.locator('#motion').check();
+  checks.reducedMotion=await page.locator('body').evaluate(e=>e.classList.contains('reduced-motion'));
+  await page.locator('#moreBtn').click();await page.evaluate(()=>window.scrollTo(0,0));
+  await page.screenshot({path:'output/playwright/1440-final.png',fullPage:true});
+  await page.setViewportSize({width:1920,height:1080});await page.waitForTimeout(500);
+  await page.screenshot({path:'output/playwright/1920-final.png',fullPage:true});
+  await page.setViewportSize({width:390,height:844});await page.waitForTimeout(500);
+  checks.narrowNoPageOverflow=await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+1);
+  checks.cdeNarrow=await page.locator('#model').isVisible()&&await page.locator('#compare').isVisible()&&await page.locator('#context').isVisible();
+  checks.narrowMenuButton=await page.locator('#menuBtn').isVisible();
+  checks.narrowStatusVisible=(await page.locator('#stripSt').innerText()).includes('网页已连接');
+  await page.screenshot({path:'output/playwright/390-final.png',fullPage:true});
+  if(!checks.narrowNoPageOverflow||!checks.cdeNarrow||!checks.narrowMenuButton||!checks.narrowStatusVisible)throw new Error('narrow layout failed');
+  await page.setViewportSize({width:1440,height:1100});await page.locator('#moreBtn').click();await page.getByRole('button',{name:'全屏',exact:true}).click();
+  checks.fullscreen=await page.evaluate(()=>!!document.fullscreenElement);await page.evaluate(()=>document.exitFullscreen());
+  // 语言切换：菜单里选 English → 页面刷新并保持；再切回中文。
+  await page.setViewportSize({width:1440,height:1100});
+  await page.locator('#langBtn').click();await page.locator('#langMenu [data-lang="en"]').click();
+  await page.waitForFunction(()=>document.documentElement.lang==='en'&&document.querySelector('#nav a')?.textContent==='Model vs. measured'&&document.querySelector('#stripSt')?.textContent.includes('Web connected'));
+  checks.langEnglish=await page.evaluate(()=>localStorage.getItem('tto-lang')==='en'&&!/[\u4e00-\u9fff]/.test([...document.querySelectorAll('main h2,main h3,#nav a,#stripSt')].map(e=>e.textContent).join('')));
+  await page.locator('#langBtn').click();await page.locator('#langMenu [data-lang="zh"]').click();
+  await page.waitForFunction(()=>document.documentElement.lang==='zh-CN'&&document.querySelector('#nav a')?.textContent==='模型与实测');
+  checks.langBackToChinese=await page.evaluate(()=>localStorage.getItem('tto-lang')==='zh');
+  checks.noPageErrors=pageErrors.length===0;
+  for(const [key,value] of Object.entries(checks)){if(typeof value==="boolean"&&!value)throw new Error("failed "+key);}
+  return checks;
+}

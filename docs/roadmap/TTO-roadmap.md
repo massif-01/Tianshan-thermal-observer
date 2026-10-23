@@ -4,6 +4,8 @@
 
 本文件保留技术含义与当前修订，不再复制不断变化的完成清单。原完整技术文档（含0.1.2身份/哈希、M0—M5、DEC-001—020、公式与参考文献）以原字节保存在[历史副本](history/TTO-roadmap-before-review-20261018.md)，同时可读取[原固定commit](https://github.com/massif-01/Tianshan-thermal-observer/blob/b85ccae98257c21b220d988c1afcfeae9f27c656/docs/roadmap/TTO-roadmap.md)。历史中的“当前尚无真实YET/待样例”等是旧快照，不是本轮指令。
 
+> 2026-10-23 整合：未来功率预测专项见 [专项 Roadmap](WORKLOAD-PREDICTION-ROADMAP.md) 与 [#17](https://github.com/massif-01/Tianshan-thermal-observer/issues/17)。当前 generate/calibrate/compare、版本工具和 observe.2 已归档，学习型功率轨迹适配与正式验收按专项区分。当前成果见 [成果索引](../repository-results-index.md)，不以 2026-10-18 的计划状态否定后续交付。
+
 ## 不变的目标与数学含义
 
 同一工具面向不同模组、热源、材料、几何、热容和风量组合，生成/评价/校准设备专属模型。低阶灰箱优先、Ridge与简单基线保留，模型结构在有证据时可变化；无需一开始搭全面自动结构搜索。
@@ -44,6 +46,6 @@ DEC-001—020完整原文未删除，见历史副本。新决定只替代冲突�
 
 ## 版本与执行位置
 
-公开main历史基线b85ccae已含PR #7/#11/#12。生产版本、记录manifest、研究模型与新工具分别核身份。本轮#8、#9、#10只离线准备，工程候选本地交付；不设备连接、刷机、部署、负载或控制。旧软件/旧记录保留，无全仓重构。
+2026-10-18 复审的公开历史基线 b85ccae 已含 PR #7/#11/#12；当轮 #8/#9/#10 仅授权离线准备。这是历史范围，不替代后续具体授权。生产版本、记录 manifest、研究模型与新工具分别核身份；当前成果与缺口见产品路线和成果索引。旧软件/旧记录保留，无全仓重构；本文不授予设备连接、刷机、部署、负载或控制权限。
 
 方法细节归对应Issue与版本spec；产品依赖归PRODUCT-ROADMAP；Projects只作投影。本文不虚构已完成的在线参数校准或跨硬件成果。

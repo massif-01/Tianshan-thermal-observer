@@ -1,0 +1,32 @@
+idf_component_register(
+    SRCS
+        "src/ts_security.c"
+        "src/ts_crypto.c"
+        "src/ts_auth.c"
+        "src/ts_ssh_client.c"
+        "src/ts_sftp.c"
+        "src/ts_scp.c"
+        "src/ts_known_hosts.c"
+        "src/ts_port_forward.c"
+        "src/ts_ssh_shell.c"
+        "src/ts_keystore.c"
+        "src/ts_ssh_hosts_config.c"
+        "src/ts_ssh_commands_config.c"
+        "src/ts_ssh_log_watch.c"
+        "src/ts_ssh_probe.c"
+        "src/ts_ssh_service.c"
+    INCLUDE_DIRS
+        "include"
+    REQUIRES
+        ts_core
+        ts_automation
+        ts_auth_layout
+        mbedtls
+        nvs_flash
+        lwip
+        ch405labs_esp_libssh2
+        json
+    PRIV_REQUIRES
+        esp_timer
+        ts_config_pack
+)

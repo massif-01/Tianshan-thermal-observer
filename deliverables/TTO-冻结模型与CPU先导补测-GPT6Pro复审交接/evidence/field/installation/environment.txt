@@ -1,0 +1,7 @@
+lpmu305
+2026-10-19T09:25:19.201608053Z
+Linux x86_64
+/home/rm01/TTO-midload-0.2.4/conda-env/bin/python 3.10.22 (main, Oct  1 2026, 20:14:04) [GCC 14.3.0]
+Filesystem                            1B-blocks        Used    Available Use% Mounted on
+/dev/mapper/ubuntu--vg-ubuntu--lv 1000033497088 33208844288 915950477312   4% /
+578824 bash -c hostname; date -u +%FT%T.%NZ; uname -sm; /home/rm01/TTO-midload-0.2.4/conda-env/bin/python -c "import sys,venv,ensurepip;print(sys.executable,sys.version)"; df -B1 /home/rm01; pgrep -af "tto-field|python.*tto|runner|inference"; test ! -e /home/rm01/TTO-field-closeout-2-fixed-anchors-20261019; test ! -e /home/rm01/TTO-fixed-anchors-closeout2-20261019

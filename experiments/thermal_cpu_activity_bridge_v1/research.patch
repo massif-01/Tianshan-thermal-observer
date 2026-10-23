@@ -1,0 +1,2628 @@
+diff --git a/experiments/thermal_cpu_activity_bridge_v1/README.md b/experiments/thermal_cpu_activity_bridge_v1/README.md
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_activity_bridge_v1/README.md
+@@ -0,0 +1,20 @@
++# CPU旁录适配与失效撤销：模型线有限收尾
++
++执行TTO-CPU-PREP-CLOSE-v1.0的R1。只新增本研究目录；不做测试线SSH/运行候选修复，不重训、不扩活动搜索。原`thermal_cpu_increment_v1`、活动参数、G2/spec和旧成绩保持原样。`frozen/`是调用所需旧代码/参数的逐字节副本。
++
++唯一实际旁录转换入口：
++
++```sh
++python bridge.py --run-dir inputs/joint-complete/run --source-config inputs/joint-complete/source-config.json --output /private/tmp/tto-cpu-adapt-NEW
++python joint_check.py --adapted /private/tmp/tto-cpu-adapt-NEW --run-dir inputs/joint-complete/run --output /private/tmp/tto-cpu-joint-NEW
++```
++
++用已有NumPy/SciPy/pytest环境；本机验证Python3.12.14、NumPy2.2.6、SciPy1.16.3、pytest8.3.5。目录必须不存在。首条读取实际旁录信封/native/state/source config，交`frames.jsonl`、`thermal-origins.jsonl`、`registration.json`、撤销/诊断/来源清单。第二条逐行核实真实wire与接收source一致，再运行原Activity、原evaluate_stream；不创建网络客户端。
++
++独立完整复跑：`python replay.py --output /private/tmp/tto-cpu-bridge-replay-NEW`。原件、代码、模型、参数用严格SHA；派生浮点用1e-8绝对容差，结构/引用/状态/计数严格相同，避免把跨数值库舍入差当成新的科研失败。
++
++本包输入确由测试线`cpu_source.stream/read_cpu/utilization → Sidecar.receive`产生，原样保留wire/base64、150份arrival、native/state、配置、回执与源码SHA。CPU/proc及原生服务是**合成自建服务**，不是Thor/N305实测。正常、计数回退、离线/恢复及原生断连来自同一真实收发过程；额外负向回归从这些信封做明确变异，不使用手写模型FRAME替代联调。
++
++详细时间、资格与撤销合同见[接口说明](接口说明.md)，新冻结身份见`interface-freeze.json`。原一秒adapter和旧评分未改。`results/final-v2`与`results/joint-final-v2`是本轮权威结果；先前目录仅为实现阶段保留，不是多次选参。
++
++模型线交回本目录与最小证据后，由“实际安装与测试”汇总cpu.2候选、适配身份、操作卡。这里没有安装器/旁录源/现场runner或新的风扇算法。当前不访问设备、不部署、不发12请求、不提交GitHub；一次60秒真实能力检查也仍需用户当次批准。
+diff --git a/experiments/thermal_cpu_activity_bridge_v1/TTO-CPU旁录离线适配与失效撤销-模型线收尾报告.md b/experiments/thermal_cpu_activity_bridge_v1/TTO-CPU旁录离线适配与失效撤销-模型线收尾报告.md
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_activity_bridge_v1/TTO-CPU旁录离线适配与失效撤销-模型线收尾报告.md
+@@ -0,0 +1,53 @@
++# TTO-CPU旁录离线适配与失效撤销：模型线收尾报告
++
++**R1已完成：实际旁录原件已能通过唯一离线适配，进入原Activity与原evaluate_stream；最新失效立即撤销旧资格。** 本轮没有重做旧研究、调整活动阈值、热模型或旧成绩，也没有代做测试线的SSH/运行候选修复。
++
++联合验证使用测试线真实`cpu_source.stream/read_cpu/utilization → Sidecar.receive`代码生成的150包，逐行核对wire原字节与接收source一致，再完成342个事件帧、56个原TJ决策起点的模型联调。输入是合成/proc和自建原生服务；不是Thor/N305新实测，不是12请求或新的CPU先导结论。
++
++**14项有限回归通过；模型线代码/接口身份已冻结，“实际安装与测试”已从独立副本实际调用并复核通过；由其汇总cpu.2候选、必要证据与操作卡。** 真实60秒能力核对及12请求仍均未获本轮授权，不自动继续。
++
++## 本次改动
++
++新增`bridge.py`是唯一实际信封→冻结FRAME/thermal origins入口，读取同run的arrival、native/state、source config及明确失效事件。旧一秒adapter和旧资料未修改，`cpu_interface`旧平面helper不被调用。测试线负责将旧helper明确废弃/修正及完成有界SSH，本线没有复制另一套活动算法或现场调度器。
++
++CPU均值与最大值从完整在线集合的原始累计计数和同一前后读取窗重算：first8差分中扣idle/iowait，guest不重复加；完整性核对possible/online文本、状态映射、原proc文本与计数。全部核心原值/在线状态保存在原件，适配帧保留完整在线结果与引用，不能只挑几个核。
++
++计数回退、online集合切换、缺窗、明确incomplete、source身份/序号问题、native epoch及传输停止立即撤销；下一完整合法新窗恢复。不先过滤invalid再找旧valid。相同数值的新合法计数窗保留，重复buffer不续期。测试直接证明失效发生时旧值原截止尚未到，仍被立即撤销。
++
++GPU/两rail取保存的原生来源、原update_id及原截止，不让200ms CPU包更新可用时间或续龄。原生断连时，即使CPU仍在接收，BASE继续不可用；直到原生实际恢复。旁录直接查询而独立窗/generation未知的GPU/rail只存诊断，不伪造generation、不替换BASE或与原功率相加。
++
++## 时间、身份与资格
++
++接收实际received_at/decision_generated及host/boot/domain、native UUID与命令绑定；未知receiver boot保留null。Thor独立host/boot/session、原始计数和读取窗保留在源时钟域，不与接收单调钟直接相减。不把源时刻改名成接收时间，不填0传输延迟或精确源龄。
++
++明确采用**接收顺序研究资格**：CPU最早在真实decision完成后可用，截止不晚于真实received_at+1秒，沿用已有旁录无包预算，较晚解析不能续期。这不是生产TTL或CPU源龄验收。接收domain不能关联时明确拒绝放上此时间轴；源时钟不明则撤销CPU，保留BASE自身真实资格。
++
++thermal origin每个原接受TJ仅一条：在实际state envelope生成/可用时刻预测，另存原measurement_received_mono_s，不把计算状态倒填到较早raw接收时刻。此新接口时间基准单独登记；所有分支同起点/同标签，仍用原15/45/90秒、+2秒及逐时距资格规则，无高频TJ标签。旧run评分时间轴和成绩不改。原Ts/E、当前TJ、条件PWM及安全字段直接复用，CPU不更新热状态/参数或安全资格。
++
++causal-1s-decimation只在每秒选最后已到达的200ms窗结果，改变交付节奏；**不重建真正1秒CPU累计统计窗**。60秒能力检查将来只检查可读信息、时间与开销，不要求空闲段先证明先导收益；是否做12请求由能力和用户另批决定。
++
++## 实际联合结果
++
++唯一run：`b1a4248e-7274-4991-91ce-d8d61644006b`；命令`SYNTHETIC-CPU2-JOINT-20261020`。测试线提供的完整样例目录与source config已原样封存；首个不完整/资源超限尝试由测试线另外保留，没有拿它冒充完整联调。
++
++| 冻结分支 | ACTIVE事件帧 | UNKNOWN事件帧 |
++| --- | --- | --- |
++| INPUT-BASE | 314 | 28 |
++| INPUT-MEAN | 214 | 128 |
++| INPUT-CORE | 214 | 128 |
++
++不是全UNKNOWN，也不将这些合成状态计数称精度或CPU收益。撤销ledger有计数回退1次、online切换2次、native epoch切换5次、源初包缺前窗1次及停止1次。真实断连/恢复、CPU重置/offline来自同一次实际收发样例；其他异run/时钟等负向回归明确标记为对这些实际信封的变异，不以手工模型FRAME替代两端联调。
++
++原evaluate_stream已经运行真实到达与因果1秒交付选择两条分支；各自产生25个CORE温度预测起点。15秒仅1个合格共同温度答案，45/90秒没有合格共同答案，分别保留，不删除15秒。这些是接口与标签资格证明，**没有新物理温度成绩或活动增益结论**。原CORE=MEAN及CPU策略未胜HOLD的开发负结果完全保留。
++
++## 有限验证与交回
++
++14项新回归覆盖：实际发送/接收原字节与源码身份、完整CPU窗口、真实计数回退/online/native epoch撤销及恢复、失效早于旧到期、旧粗缓存不续期、缺粗来源不造值、重复buffer、相同值新窗、异run/源session/序号/时钟、部分核拒绝、未来数据不可提前使用、原时距资格及解析不能延长支持。未重跑原17项科研研究或旧拟合。
++
++独立离线复跑对5份适配产物逐字节核对；11份模型联调产物结构/引用/状态/计数严格一致，派生浮点按1e-8°C容差，实际最大差0。原件/代码/参数/模型继续严格SHA，未强行要求不同数值库的科学浮点JSON逐字节相同。测试总控另从独立副本用其原始样例实际运行bridge/joint_check及14项测试，5份适配输出逐字节一致，回执原样附verification。2173份受保护原文件核对未变；原活动candidate、analysis-spec字节和模型/spec身份未改。
++
++转换入口仅需Python标准库。模型联调用原冻结NumPy/SciPy，验证参考环境为Python3.12.14、NumPy2.2.6、SciPy1.16.3、pytest8.3.5；本研究requirements记录参考环境，不是生产依赖锁或N305安装候选。目标3.10安装、SSH预算、cpu.2版本/清单与操作卡由测试线单独汇总。
++
++代码在本目录；唯一CLI、样例和复跑命令见README.md，细节见接口说明.md，新身份见interface-freeze.json，权威数据为results/final-v2及results/joint-final-v2。证据包含新研究patch、原样输入/源码身份、适配/撤销/诊断/模型消费结果、测试与复跑回执及逐文件SHA。`model-handoff.json`给测试线绑定，不替代其整体验收。
++
++本轮设备连接、部署、真实请求、重训练/参数搜索及GitHub写入均为0。模型线有限收尾结束，等待两线汇总与独立复审。
+diff --git a/experiments/thermal_cpu_activity_bridge_v1/adapter-spec.json b/experiments/thermal_cpu_activity_bridge_v1/adapter-spec.json
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_activity_bridge_v1/adapter-spec.json
+@@ -0,0 +1,30 @@
++{
++  "contract": "TTO-CPU-PREP-CLOSE-v1.0-R1",
++  "adapter_version": "cpu-arrival-bridge-1.0.0",
++  "owner": "model line; only adapter from actual field files to frozen activity inputs",
++  "activity_and_thermal_parameters": "original candidate.json and analysis-spec.json byte-exact; no search/refit",
++  "time": {
++    "event_availability": "actual receiver decision_generated_mono_s; original received_at retained; native features available no earlier than actual state generated_at_mono_s",
++    "source_windows": "Thor CPU count/read windows remain on identified Thor clock; never subtract from N305 clock without a mapping",
++    "CPU_support": "arrival-side research only, at most1s after actual received_at, available no earlier than decision_generated, using existing sidecar no-arrival budget. This is NOT source age or a production TTL change",
++    "transport_latency": "null if unknown, never0",
++    "temperature_origins": "one per original accepted TJ, at actual saved state generation/decision; original measurement receive time retained separately. No backdating state to raw receive. Original old-run scores untouched; same decision origins/labels for all branches",
++    "labels": "original approximately1s TJ answers only; unchanged frozen15/45/90,+2s,per-horizon lookup on qualified decision origins",
++    "decimation": "select last already-arrived200ms-window record each1s; delivery cadence only, NOT reconstruction of a true1s CPU counter window"
++  },
++  "CPU": {
++    "formula": "all current online cores, same previous/current raw read pair; total=sum first8 counter deltas; busy=total-idle-iowait; guest not added twice; unweighted mean and maximum",
++    "invalid": "latest missing raw/count fields, explicit incomplete CPU, counter decrease/zero delta, changed online set, source identity change, source sequence regression, source/receiver timing invalid or transport stop revokes both CPU summaries immediately",
++    "recovery": "later valid complete window, matching current identity, fresh real update; never search backwards for older valid",
++    "online": "online set change invalidates that transition window; later stable complete actual online set may recover; retain all possible/online statuses, never silently subset cores",
++    "identity": "source host/boot/session/seq and actual source read window, not numeric value; same values from legal new windows retained"
++  },
++  "native": {
++    "inputs": "same-run manifest/native UUID+command and saved native state generation evidence; do not rerun I02 or observer",
++    "GPU_rails": "original source ref/sequence and original expiry; repeated CPU arrivals do not renew source identity, available_at, or expiry",
++    "source_query_GPU_rails": "diagnostics only when independent window/generation unknown; no invented generation_id",
++    "epoch": "native epoch change revokes old CPU and coarse eligibility; no thermal reset added by this adapter",
++    "safety": "original safety/conditional PWM kept; activity is never normal control or field permission"
++  },
++  "boundaries": {"offline_only": true,"network_clients":0,"device_actions":false,"deployable":false,"model_fits":0,"parameter_search":0,"old_scores_rewritten":false}
++}
+diff --git a/experiments/thermal_cpu_activity_bridge_v1/bridge.py b/experiments/thermal_cpu_activity_bridge_v1/bridge.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_activity_bridge_v1/bridge.py
+@@ -0,0 +1,273 @@
++"""Only offline adapter: actual sidecar envelopes/native states -> frozen FRAME/origins."""
++import argparse
++import copy
++import math
++from pathlib import Path
++from io_utils import ROOT,read,lines,write,jsonl,sha
++
++CPU_NAMES=('cpu_mean_pct','cpu_max_pct')
++BASE_NAMES=('gpu_pct','gpu_W','cpu_soc_mss_W')
++FIELDS=['user','nice','system','idle','iowait','irq','softirq','steal','guest','guest_nice']
++
++
++def finite(x):
++    return type(x) in (int,float) and math.isfinite(x)
++
++
++def cpu_list(text):
++    if not isinstance(text,str) or not text:raise ValueError('CPU_set_text_unknown')
++    result=set()
++    for part in text.split(','):
++        pair=[int(v) for v in part.split('-')]
++        if len(pair) not in (1,2) or pair[0]<0 or pair[-1]<pair[0]:raise ValueError('CPU_set_text_invalid')
++        result.update('cpu'+str(k) for k in range(pair[0],pair[-1]+1))
++    return result
++
++
++def cpu_window(source):
++    """Recompute only complete actual online sets; never trust summary-only input."""
++    current,previous=source.get('raw_cpu'),source.get('previous_raw_cpu')
++    if not current or not previous:raise ValueError('missing_complete_raw_counter_window')
++    for obj in (previous,current):
++        if obj.get('fields',[])[:8]!=FIELDS[:8] or not finite(obj.get('SC_CLK_TCK')) or obj['SC_CLK_TCK']<=0:
++            raise ValueError('counter_units_or_fields_unknown')
++        if not isinstance(obj.get('per_core_online'),dict) or not obj['per_core_online']:
++            raise ValueError('online_set_unknown')
++        if any(type(v) is not bool for v in obj['per_core_online'].values()):raise ValueError('online_status_unknown')
++        possible=cpu_list(obj.get('possible_text'));online=cpu_list(obj.get('online_text'))
++        if (set(obj['per_core_online'])!=possible or not online<=possible
++            or {k for k,v in obj['per_core_online'].items() if v}!=online):
++            raise ValueError('incomplete_possible_or_online_set')
++        parsed={x.split()[0]:[int(v) for v in x.split()[1:]] for x in obj.get('raw_proc_stat','').splitlines() if x.split()}
++        if parsed!=obj.get('counters'):raise ValueError('raw_counter_text_mismatch')
++    if previous['SC_CLK_TCK']!=current['SC_CLK_TCK']:raise ValueError('counter_tick_unit_changed')
++    prev_online={k for k,v in previous['per_core_online'].items() if v}
++    online={k for k,v in current['per_core_online'].items() if v}
++    if online!=prev_online:raise ValueError('online_set_changed')
++    if not online:raise ValueError('no_online_cores')
++    window=[previous.get('read_start_mono_s'),previous.get('read_end_mono_s'),current.get('read_start_mono_s'),current.get('read_end_mono_s')]
++    if not all(finite(v) for v in window) or not window[0]<=window[1]<window[2]<=window[3]:raise ValueError('invalid_source_read_window')
++    if not finite(source.get('read_end_mono_s')) or window[3]>source['read_end_mono_s']:raise ValueError('counter_window_after_source_read')
++    values={}
++    for name in sorted(online):
++        a=previous.get('counters',{}).get(name,[]);b=current.get('counters',{}).get(name,[])
++        if len(a)<8 or len(b)<8 or not all(type(v) is int and v>=0 for v in a[:8]+b[:8]):raise ValueError('incomplete_online_counter_set')
++        delta=[y-x for x,y in zip(a[:8],b[:8])]
++        if any(v<0 for v in delta) or sum(delta)<=0:raise ValueError('counter_reset_iowait_decrease_or_zero_window')
++        values[name]=100*(sum(delta)-delta[3]-delta[4])/sum(delta)
++    reported=source.get('cpu')
++    if not isinstance(reported,dict) or reported.get('complete_online_set') is not True:
++        raise ValueError('source_explicit_incomplete_CPU')
++    if set(reported.get('per_core_percent',{}))!=online:
++        raise ValueError('reported_online_core_set_incomplete')
++    if any(not finite(reported['per_core_percent'][k]) or abs(reported['per_core_percent'][k]-v)>1e-8 for k,v in values.items()):
++        raise ValueError('reported_counter_summary_mismatch')
++    if source.get('stop_reasons'):raise ValueError('source_stop_reasons')
++    return dict(per_core_percent=values,online=sorted(online),possible_online_map=current['per_core_online'],
++        mean_percent=sum(values.values())/len(values),max_percent=max(values.values()),
++        source_read_window=window,SC_CLK_TCK=current['SC_CLK_TCK'])
++
++
++class Bridge:
++    def __init__(self,manifest,binding,launch,source_config):
++        self.manifest,self.binding,self.launch=manifest,binding,launch
++        self.run=binding['native_run_id'];self.command=binding['command_id']
++        self.domain=binding['clock']['domain'];self.source_config=source_config
++        self.immutable=read(ROOT/'frozen/candidate.json')['immutable']
++        assert manifest['observer_run_id']==self.run and manifest['field_command_id']==self.command
++        assert launch['command_id']==self.command and manifest['field_clock_domain']==self.domain
++        assert launch['clock_start']['domain']==self.domain
++        assert binding['expected_identity']['model_sha256']==self.immutable['model_sha256']
++        assert binding['expected_identity']['spec_sha256']==self.immutable['observer_spec_sha256']
++        self.epoch=None;self.native=None;self.features={};self.cpu_identity=None;self.cpu_seq=None
++        self.last_source=None;self.retired=set();self.audit=[];self.diagnostic=[]
++        self.receiver_identity=dict(binding['clock'],boot_id=binding['clock'].get('boot_id'))
++
++    def revoke_cpu(self,reason,ref,t):
++        for name in CPU_NAMES:self.features[name]=dict(value=None,valid=False,reason=reason,original_ref=ref,available_at_mono_s=t)
++        self.audit.append(dict(event='CPU_qualification_revoked',reason=reason,ref=ref,available_at_mono_s=t))
++
++    def feature(self,name,value,t,until,uid,ref,**metadata):
++        old=self.features.get(name)
++        if old and old.get('update_id')==uid:
++            if value!=old.get('value'):
++                return dict(value=None,valid=False,reason='same_source_identity_changed_value',original_ref=ref,available_at_mono_s=t)
++            until=min(until,old['valid_until_mono_s']);available=old['available_at_mono_s']
++        else:available=t
++        return dict(value=value,valid=finite(value) and finite(until) and until>t,
++            available_at_mono_s=available,valid_until_mono_s=until,update_id=uid,source_order=None,
++            original_ref=ref,**metadata)
++
++    def native_event(self,env,raw,t):
++        ident=env['state']['identity'];clock=env['clock'];ref=raw['ref']
++        if (env['native_run_id']!=self.run or ident['run_id']!=self.run or raw['observer_run_id']!=self.run
++            or env['process_clock_domain']!=self.domain or clock['domain']!=self.domain
++            or env['generation_evidence']['native_ref']!=ref):raise ValueError('native_run_clock_or_ref_mismatch')
++        if ident['model_sha256']!=self.immutable['model_sha256'] or ident['spec_sha256']!=self.immutable['observer_spec_sha256']:
++            raise ValueError('frozen_model_identity_mismatch')
++        if t<raw['mono_s']:raise ValueError('native_generation_before_input')
++        epoch=ident['source_epoch']
++        if self.epoch!=epoch:
++            self.features={};self.epoch=epoch;self.revoke_cpu('native_epoch_changed',ref,t)
++        self.native=(env,raw)
++        m=env['state']['measurement'];power=m.get('power');tj=m.get('tj')
++        valid=bool(power and power.get('raw_valid') and env['communication']['measurement']['TJ_and_rails']['raw_valid'])
++        if valid:
++            source_ref=power['source_ref'];u=power['rails_W'];until=power['valid_until_mono_s']
++            for name,v in zip(BASE_NAMES[1:],u):
++                self.features[name]=self.feature(name,v,t,until,source_ref+':'+name,source_ref,
++                    feature_source='saved original native independent rail',raw_unit='W',
++                    original_observed_mono_s=power['observed_mono_s'],source_age_s=None,transport_delay_ms=None,
++                    validity_basis='original native power eligibility/expiry, unchanged')
++            source_raw=self.raw_by_ref[source_ref];g=source_raw['payload'].get('gpu',{})
++            age=(tj or {}).get('source_age_lower_bound_ms')
++            gpu_age=g.get('age_at_telemetry_receive_ms');timeout=g.get('freshness_timeout_ms')
++            good=bool(g.get('status')=='valid' and finite(g.get('utilization_pct')) and 0<=g['utilization_pct']<=100
++                and finite(age) and finite(gpu_age) and gpu_age>=0 and finite(timeout) and timeout>0
++                and g.get('sampled_at_utc') and g.get('device_uuid'))
++            if good:
++                expiry=source_raw['mono_s']+(timeout-age-gpu_age)/1000
++                self.features['gpu_pct']=self.feature('gpu_pct',g['utilization_pct'],t,expiry,
++                    str(g['device_uuid'])+':'+g['sampled_at_utc'],source_ref,feature_source='saved original GPU record',
++                    source_sampled_at_utc=g['sampled_at_utc'],source_age_lower_bound_ms=age+gpu_age,
++                    source_window=None,transport_delay_ms=None,validity_basis='original GPU source age lower bound and expiry')
++            else:self.features['gpu_pct']=dict(value=None,valid=False,reason='native_GPU_unavailable',original_ref=ref,available_at_mono_s=t)
++        else:
++            for name in BASE_NAMES:self.features[name]=dict(value=None,valid=False,reason='latest_native_source_invalid',original_ref=ref,available_at_mono_s=t)
++        is_origin=bool(tj and tj.get('source_ref')==ref and raw['kind']=='orin')
++        origin=None
++        if is_origin:
++            ob=env['state']['observer'];source_valid=bool(valid and tj.get('raw_valid'))
++            thermal=dict(available=bool(source_valid and ob['available']),current_TJ_C=tj['value_C'],Ts_C=ob['Ts_C'],E_C=ob['E_C'],
++                conditional_inputs_rails_W_PWM=ob['conditional_inputs_rails_W_PWM'],state_native_ref=ref,
++                model_sha256=ident['model_sha256'],observer_spec_sha256=ident['spec_sha256'],
++                saved_state_generated_mono_s=t,original_PWM=m.get('last_successful_pwm'),safety=env['state']['safety'])
++            source_key=env['communication']['measurement']['TJ_and_rails'].get('source') or {}
++            key=source_key.get('key')
++            if key is None:key=[self.manifest['config']['orin']['source_id'],raw['payload']['telemetry_meta']['stream_id']]
++            origin=dict(ref=ref,t=t,measurement_received_mono_s=raw['mono_s'],current=tj['value_C'],source_valid=source_valid,
++                source_key=key[:2],epoch=self.epoch,arrival_clock_id=self.domain,thermal=thermal,
++                decision_time_basis='actual saved state generation; original raw receive retained, no backdating',
++                synthetic=self.launch.get('synthetic_loopback_only',False))
++        return origin
++
++    def cpu_event(self,row,ref,t):
++        if row.get('receiver_domain')!=self.domain:raise ValueError('receiver_clock_unmapped: cannot place foreign mono time')
++        if row.get('native_run_id')!=self.run or row.get('command_id')!=self.command:
++            self.revoke_cpu('sidecar_foreign_run_or_command',ref,t);return
++        if row.get('receiver_identity'):
++            self.receiver_identity=copy.deepcopy(row['receiver_identity'])
++            if self.receiver_identity.get('domain')!=self.domain:
++                raise ValueError('receiver_identity_domain_mismatch')
++        s=row.get('source') or {};ident=s.get('identity') or {}
++        if (s.get('schema')!='TTO-CPU-SOURCE-v1' or ident.get('command_id')!=self.command
++            or not all(ident.get(k) for k in ['host','boot_id','source_session']) or ident.get('clock')!='CLOCK_MONOTONIC'):
++            self.revoke_cpu('source_identity_or_clock_unknown',ref,t);return
++        received=row.get('received_at_mono_s')
++        if not finite(received) or received>t:
++            self.revoke_cpu('receiver_decision_before_arrival',ref,t);return
++        identity=tuple(ident[k] for k in ['host','boot_id','source_session','clock'])
++        seq=s.get('seq')
++        if type(seq) is not int or seq<=0:self.revoke_cpu('source_seq_unknown',ref,t);return
++        changed=self.cpu_identity is not None and self.cpu_identity!=identity
++        if changed:
++            self.retired.add(self.cpu_identity);self.cpu_seq=None;self.last_source=None
++        if identity in self.retired:
++            self.revoke_cpu('retired_source_identity',ref,t);return
++        self.cpu_identity=identity
++        if self.cpu_seq is not None and seq==self.cpu_seq and self.last_source==s:
++            self.audit.append(dict(event='duplicate_buffer_no_renewal',ref=ref,available_at_mono_s=t));return
++        if self.cpu_seq is not None and seq<=self.cpu_seq:
++            self.revoke_cpu('source_sequence_regression',ref,t);return
++        self.cpu_seq=seq;self.last_source=copy.deepcopy(s)
++        self.diagnostic.append(dict(ref=ref,source_GPU=s.get('gpu'),source_rails=s.get('rails'),
++            use='diagnostic_only; unknown independent generation/window never substituted into BASE',
++            network_latency_s=row.get('network_latency_s'),source_identity=ident,receiver_identity=row.get('receiver_identity')))
++        if changed:self.revoke_cpu('source_identity_changed',ref,t);return
++        try:values=cpu_window(s)
++        except ValueError as e:self.revoke_cpu(str(e),ref,t);return
++        uid='|'.join(map(str,identity))+'|'+str(seq)+'|'+repr(values['source_read_window'])
++        for name,key in zip(CPU_NAMES,('mean_percent','max_percent')):
++            self.features[name]=self.feature(name,values[key],t,received+1.,uid+':'+name,ref,
++                feature_source='actual CPU cumulative-counter window, all online cores',source_identity=ident,
++                receiver_received_at_mono_s=received,receiver_decision_generated_mono_s=t,
++                source_read_window=values['source_read_window'],source_clock_mapping='unknown',
++                per_core_percent=values['per_core_percent'],online=values['online'],possible_online_map=values['possible_online_map'],
++                source_age_s=None,transport_delay_ms=None,network_latency_s=None,
++                source_order_original=seq,validity_basis='receiver research support <=received_at+1s, NOT source freshness')
++
++    def frame(self,t,ref,kind,thermal=None):
++        return dict(schema='TTO-CPU-ACTIVITY-FRAME-v1',native_ref=ref,arrival_mono_s=t,
++            arrival_clock_id=self.domain,arrival_host=self.receiver_identity.get('host'),
++            arrival_boot_id=self.receiver_identity.get('boot_id'),epoch=self.epoch,source_only=False,
++            synthetic=self.launch.get('synthetic_loopback_only',False),features=copy.deepcopy(self.features),
++            thermal=thermal,adapter_event=kind,receiver_domain=self.domain,
++            evaluation_scope='receiver_arrival_order_research; source age/physical lead unknown',
++            latest_native_state_ref=self.native[0]['generation_evidence']['native_ref'] if self.native else None,
++            deployable=False)
++
++
++def adapt(run,config):
++    binding=read(run/'native-binding.json');launch=read(run/'launch.json')
++    mp=run/binding['native_manifest'];manifest=read(mp)
++    b=Bridge(manifest,binding,launch,config)
++    raw=list(lines(mp.parent/'observations-0001.jsonl'));b.raw_by_ref={r['ref']:r for r in raw}
++    envs=lines(run/'states.jsonl');arrivals=lines(run/'cpu-sidecar-arrivals.jsonl')
++    origins_clock={e['clock']['session_origin_mono_s'] for e in envs}
++    if len(origins_clock)!=1:raise ValueError('receiver session origin changed within run')
++    origin_clock=next(iter(origins_clock))
++    events=[]
++    for i,e in enumerate(envs,1):
++        ref=e['generation_evidence']['native_ref'];events.append((e['clock']['generated_at_mono_s'],0,i,'native',(e,b.raw_by_ref[ref])))
++    for i,r in enumerate(arrivals,1):
++        t=r.get('decision_generated_mono_s')
++        if not finite(t):raise ValueError('missing_actual_receiver_decision_time')
++        if r.get('receiver_domain')!=b.domain:raise ValueError('receiver_clock_unmapped: cannot compare foreign clocks')
++        events.append((t,1,i,'cpu',r))
++    for i,e in enumerate(lines(run/'sidecar-events.jsonl'),1):
++        if e.get('event') in ('source_error','source_rejected','source_eof','stop_sidecar_only','connection_missing','connection_invalid','missing_source'):
++            t=e.get('decision_generated_mono_s',e.get('received_at_mono_s'))
++            if not finite(t):t=origin_clock+e['mono_s']
++            events.append((t,2,i,'revoke',e))
++    frames=[];origins=[]
++    for t,_,i,kind,payload in sorted(events,key=lambda x:x[:3]):
++        if kind=='native':
++            e,r=payload;o=b.native_event(e,r,t);ref=r['ref']
++            if o:origins.append(o)
++            frames.append(b.frame(t,ref,kind,o['thermal'] if o else None))
++        elif kind=='cpu':
++            ref=b.run+'/cpu-sidecar-arrivals.jsonl:'+str(i);b.cpu_event(payload,ref,t)
++            frames.append(b.frame(t,ref,kind))
++        else:
++            ref=b.run+'/sidecar-events.jsonl:'+str(i)
++            b.revoke_cpu('transport_'+payload.get('status',payload['event']),ref,t)
++            b.audit[-1]['original_transport_event']=copy.deepcopy(payload)
++            frames.append(b.frame(t,ref,kind))
++    return b,frames,origins
++
++
++def main():
++    p=argparse.ArgumentParser(description=__doc__)
++    p.add_argument('--run-dir',type=Path,required=True);p.add_argument('--source-config',type=Path,required=True)
++    p.add_argument('--output',type=Path,required=True);a=p.parse_args()
++    a.output.mkdir(parents=True,exist_ok=False)
++    try:b,frames,origins=adapt(a.run_dir.resolve(),read(a.source_config))
++    except (ValueError,KeyError,AssertionError) as e:
++        write(a.output/'failure.json',dict(status='unavailable',error=str(e),no_clock_mapping_invented=True));raise
++    jsonl(a.output/'frames.jsonl',frames);jsonl(a.output/'thermal-origins.jsonl',origins)
++    jsonl(a.output/'revocations.jsonl',b.audit);jsonl(a.output/'source-query-diagnostics.jsonl',b.diagnostic)
++    write(a.output/'registration.json',dict(run_id=b.run,command_id=b.command,
++        declared_role='synthetic_actual_sender_receiver_integration' if b.launch.get('synthetic_loopback_only') else 'targeted_recorded_arrival_research',
++        saw_new_data_for_parameter_selection=False,candidate_sha256=sha(ROOT/'frozen/candidate.json'),
++        analysis_spec_sha256=sha(ROOT/'frozen/analysis-spec.json'),adapter_spec_sha256=sha(ROOT/'adapter-spec.json'),
++        physical_CPU_GPU_lead_validated=False,source_to_receiver_latency_s=None,
++        origin_time_basis='actual state decision readiness; one per original TJ, original measurement time retained',
++        decimation='200ms counter-window values selected every1s, not reconstructed1s statistics'))
++    sources=[p for p in a.run_dir.rglob('*') if p.is_file()]+[a.source_config]
++    write(a.output/'sources.json',dict(run_dir=str(a.run_dir.resolve()),
++        files=[dict(path=str(p.resolve()),bytes=p.stat().st_size,sha256=sha(p)) for p in sorted(sources)],
++        frames=len(frames),original_TJ_origins=len(origins),source_config_binding='explicit supplied file SHA; retain original launch/source config bindings separately'))
++    print('Adapted',len(frames),'real-shaped arrival events;',len(origins),'original TJ decision origins; parameters unchanged.')
++
++
++if __name__=='__main__':main()
+diff --git a/experiments/thermal_cpu_activity_bridge_v1/frozen/activity.py b/experiments/thermal_cpu_activity_bridge_v1/frozen/activity.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_activity_bridge_v1/frozen/activity.py
+@@ -0,0 +1,184 @@
++"""One frozen activity rule and one future-input conversion. No source acquisition."""
++import math
++from functools import lru_cache
++import numpy as np
++from scipy.linalg import expm
++from common import ROOT, read, sha
++
++
++def finite(v):
++    return isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v)
++
++
++class Activity:
++    def __init__(self, config, variant):
++        self.config, self.variant = config, variant
++        self.names = config['variants'][variant]
++        self.epoch = self.clock = self.last_t = None
++        self.state = 'UNKNOWN'
++        self.low_since = None
++        self.latest = {}
++        self.supported_until = None
++
++    def step(self, frame, cutoff=None):
++        t = frame.get('arrival_mono_s')
++        if not finite(t):
++            return self._unknown('arrival_time_unknown')
++        if cutoff is not None and t > cutoff:
++            raise ValueError('future frame cannot be consumed at cutoff')
++        if self.last_t is not None and t < self.last_t:
++            raise ValueError('arrival monotonic regression')
++        self.last_t = t
++        identity = (frame.get('epoch'), frame.get('arrival_clock_id'))
++        if identity != (self.epoch, self.clock):
++            self.epoch, self.clock = identity
++            self.state, self.low_since, self.latest = 'UNKNOWN', None, {}
++            self.supported_until = None
++        if self.supported_until is not None and t >= self.supported_until:
++            self.state, self.low_since = 'UNKNOWN', None
++        if frame.get('source_only') or not self.clock or self.epoch is None:
++            return self._unknown('no_observed_receiver_clock_or_arrival')
++        values, deadlines, new = {}, [], False
++        problems = []
++        for name in self.names:
++            f = frame.get('features', {}).get(name, {})
++            v, at, until = (f.get(k) for k in ('value', 'available_at_mono_s', 'valid_until_mono_s'))
++            if (not finite(v) or not finite(at) or not finite(until) or at > t or t >= until
++                    or f.get('valid') is not True or not f.get('update_id')):
++                problems.append(name + ':missing_invalid_expired_or_not_arrived')
++                continue
++            if v < 0 or (name.endswith('_pct') and v > 100):
++                problems.append(name + ':out_of_range')
++                continue
++            previous = self.latest.get(name)
++            if previous and previous['update_id'] == f['update_id']:
++                # Reading an old buffer again does not renew its support or become new evidence.
++                until = min(until, previous['until'])
++                if v != previous['value'] or t >= until:
++                    problems.append(name + ':repeated_identity_changed_or_expired')
++                    continue
++                previous['until'] = until
++            else:
++                if previous and finite(f.get('source_order')) and finite(previous.get('source_order')) and f['source_order'] <= previous['source_order']:
++                    problems.append(name + ':source_order_regression')
++                    continue
++                new = True
++                self.latest[name] = dict(update_id=f['update_id'], value=v, until=until,
++                                          source_order=f.get('source_order'))
++            values[name] = v
++            deadlines.append(until)
++        if problems:
++            return self._unknown(';'.join(problems))
++        lo, hi = self.config['levels']['idle'], self.config['levels']['active']
++        scores = {n:(values[n]-lo[n])/(hi[n]-lo[n]) for n in self.names}
++        score = max(scores.values())
++        before = self.state
++        if new:
++            if score >= self.config['on']:
++                self.state, self.low_since = 'ACTIVE', None
++            elif score <= self.config['off']:
++                if self.state == 'UNKNOWN':
++                    self.state = 'IDLE'
++                if self.state == 'ACTIVE':
++                    if self.low_since is None:
++                        self.low_since = t
++                    if t-self.low_since >= self.config['low_confirmation_s']:
++                        self.state, self.low_since = 'IDLE', None
++            else:
++                self.low_since = None
++        self.supported_until = min(deadlines)
++        return dict(variant=self.variant, state=self.state, score=score, feature_scores=scores,
++                    new_evidence=new, transition=before != self.state,
++                    supported_until_mono_s=min(deadlines), reason=None,
++                    deployable=False, control_permission=False)
++
++    def _unknown(self, reason):
++        changed = self.state != 'UNKNOWN'
++        self.state, self.low_since = 'UNKNOWN', None
++        self.supported_until = None
++        return dict(variant=self.variant, state='UNKNOWN', score=None, feature_scores={},
++                    new_evidence=False, transition=changed, supported_until_mono_s=None,
++                    reason=reason, deployable=False, control_permission=False)
++
++
++class FutureInputs:
++    """Analytic affine propagation with constant or exponentially relaxing rail inputs."""
++    def __init__(self, config, dynamic):
++        self.config, self.p = config, dynamic
++
++    @lru_cache(maxsize=4096)
++    def operator(self, mode, h, pwm):
++        p = self.p
++        d = p['d0'] + p['d1']*pwm
++        m = np.zeros((6,6))
++        m[0,0], m[0,1] = -p['a'], p['a']
++        m[1,0], m[1,1], m[1,2] = p['c'], -p['c']-d, d
++        m[0,3], m[0,4] = p['b_g'], p['b_c']
++        if mode == 'IDLE':
++            m[3,3] = m[4,4] = -1/self.config['relaxation_tau_s']
++            idle = self.config['levels']['idle']
++            m[0,5] = p['b_g']*idle['gpu_W'] + p['b_c']*idle['cpu_soc_mss_W']
++        return expm(m*h)
++
++    def predict(self, thermal, state, horizon):
++        if state == 'UNKNOWN' or not thermal or not thermal.get('available'):
++            return None
++        if thermal.get('model_sha256') != self.config['immutable']['model_sha256'] or thermal.get('observer_spec_sha256') != self.config['immutable']['observer_spec_sha256']:
++            raise ValueError('frozen thermal identity mismatch')
++        x = [thermal.get(k) for k in ('current_TJ_C','Ts_C','E_C')]
++        u = thermal.get('conditional_inputs_rails_W_PWM')
++        if not all(finite(v) for v in x) or not isinstance(u,list) or len(u)!=3 or not all(finite(v) for v in u) or not 0 <= u[2] <= 1:
++            raise ValueError('invalid thermal state or original conditional inputs')
++        if horizon not in (15,45,90):
++            raise ValueError('only frozen 15/45/90-second horizons')
++        if state == 'ACTIVE':
++            level = self.config['levels']['active']
++            powers = [max(u[0],level['gpu_W']), max(u[1],level['cpu_soc_mss_W'])]
++        elif state == 'IDLE':
++            level = self.config['levels']['idle']
++            powers = [u[0]-level['gpu_W'],u[1]-level['cpu_soc_mss_W']]
++        elif state == 'HOLD':
++            powers = u[:2]
++        else:
++            raise ValueError('unknown input scenario')
++        result = self.operator(state,float(horizon),float(u[2])) @ np.array(x+powers+[1.])
++        return float(result[0])
++
++    def scenario(self, thermal, state):
++        if state == 'UNKNOWN' or not thermal or not thermal.get('available'):
++            return None
++        return dict(name='ACTIVE-FLOOR-IDLE-RELAX30-v1', state=state,
++            current_rails_W=thermal['conditional_inputs_rails_W_PWM'][:2],
++            active_rail_floor_W=[self.config['levels']['active'][n] for n in ('gpu_W','cpu_soc_mss_W')],
++            idle_rails_W=[self.config['levels']['idle'][n] for n in ('gpu_W','cpu_soc_mss_W')],
++            idle_relaxation_tau_s=self.config['relaxation_tau_s'],
++            conditional_held_PWM_fraction=thermal['conditional_inputs_rails_W_PWM'][2],
++            observed_future_inputs_used=False, future_end_known=False)
++
++
++def load_candidate(root=ROOT):
++    freeze=read(root/'freeze.json')
++    if sha(root/'candidate.json') != freeze['candidate_sha256'] or sha(root/'analysis-spec.json') != freeze['spec_sha256']:
++        raise ValueError('frozen candidate/spec changed')
++    c=read(root/'candidate.json')
++    p=root/c['dynamic_spec_path']
++    if sha(p) != c['immutable']['observer_spec_sha256']:
++        raise ValueError('observer spec changed')
++    return c, FutureInputs(c, read(p)['dynamic'])
++
++
++class Processor:
++    def __init__(self, config, forecast):
++        self.models={k:Activity(config,k) for k in config['variants']}
++        self.forecast=forecast
++
++    def process(self, frame):
++        variants={}
++        for name, model in self.models.items():
++            state=model.step(frame)
++            variants[name]=dict(activity=state,
++                future_inputs=self.forecast.scenario(frame.get('thermal'),state['state']),
++                temperature_C={str(h):self.forecast.predict(frame.get('thermal'),state['state'],h) for h in (15,45,90)})
++        return dict(native_ref=frame.get('native_ref'), arrival_mono_s=frame.get('arrival_mono_s'),
++            variants=variants, deployable=False, field_safety_available=False,
++            note='research candidate; activity is not inference/GPU ground truth or control permission')
+diff --git a/experiments/thermal_cpu_activity_bridge_v1/frozen/adapter.py b/experiments/thermal_cpu_activity_bridge_v1/frozen/adapter.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_activity_bridge_v1/frozen/adapter.py
+@@ -0,0 +1,56 @@
++"""Adapt sealed source-valid observations and states; no native processor replay."""
++import statistics
++from common import ROOT, read, lines
++
++
++def old_frames(root=ROOT):
++    samples = {s['ref']:s for s in lines(root/'inputs/results/samples-and-causal-states.jsonl') if s['source_valid']}
++    quality = {q['ref']:q['quality'] for q in lines(root/'inputs/results/quality-ledger.jsonl')}
++    config = read(root/'candidate.json')
++    run = read(root/'analysis-spec.json')['run_id']
++    for raw in lines(root/'inputs/inputs/native/observations-0001.jsonl'):
++        if raw['ref'] not in samples:
++            continue
++        s, p, q = samples[raw['ref']], raw['payload'], quality[raw['ref']]
++        assert q['accepted'] and raw['kind']=='orin'
++        meta, gpu, t = p['telemetry_meta'], p['gpu'], raw['mono_s']
++        cpu = [c['usage'] for c in p['cpu']['cores']]
++        until = t+(meta['freshness_timeout_ms']-q['age_lower_bound_ms'])/1000
++        common = dict(available_at_mono_s=t, valid=True, transport_delay_ms=None,
++            source_host='Thor', source_clock_id=None, source_boot_id=None,
++            source_sample_mono_s=None, source_read_start_mono_s=None, source_read_end_mono_s=None,
++            window_start_mono_s=None, window_end_mono_s=None, source_window_verified=False,
++            original_ref=raw['ref'], original_seq=meta['sample_seq'],
++            source_received_at_utc=meta['received_at'], source_recorded_at_utc=p['timestamp'],
++            raw_unit=None, effective_backend_update_interval_ms=None,
++            unknowns=['source monotonic/read/statistical window','transport delay','cross-host UTC offset','CPU backend update independence'])
++        values = dict(gpu_pct=gpu['utilization_pct'], gpu_W=p['power']['vdd_gpu']['current']/1000,
++            cpu_soc_mss_W=p['power']['vdd_cpu_soc_mss']['current']/1000,
++            cpu_mean_pct=statistics.mean(cpu), cpu_max_pct=max(cpu))
++        features = {}
++        for name, value in values.items():
++            features[name] = dict(common, value=value, valid_until_mono_s=until,
++                update_id=f"{meta['stream_id']}:{meta['sample_seq']}:{name}", source_order=meta['sample_seq'],
++                feature_source='original cpu.cores[].usage; backend/window unverified' if name.startswith('cpu_') and name.endswith('_pct') else 'original independent rail',
++                reported_period_ms=meta['source_sample_interval_ms'],
++                age_lower_bound_ms=q['age_lower_bound_ms'], raw_unit='percent' if name.endswith('_pct') else 'mW',
++                update_evidence='new original accepted telemetry sequence; backend window not verified')
++        features['gpu_pct'].update(feature_source=gpu['source'],
++            update_id=f"{gpu['device_uuid']}:{gpu['sampled_at_utc']}",
++            source_order=None, sampled_at_utc=gpu['sampled_at_utc'],
++            age_at_source_receive_ms=gpu['age_at_telemetry_receive_ms'],
++            age_lower_bound_ms=q['gpu']['age_lower_bound_ms'], valid_until_mono_s=q['gpu']['valid_until'],
++            reported_period_ms=gpu['sample_interval_ms'],
++            update_evidence='original sampled_at identity; statistics window unknown')
++        ob=s['states']['AUGMENTED-KF']
++        yield dict(schema='TTO-CPU-ACTIVITY-FRAME-v1', synthetic=False, source_only=False,
++            native_ref=raw['ref'], epoch=s['epoch'], arrival_clock_id='recorded-N305-monotonic:'+run,
++            arrival_host='N305', arrival_boot_id=None,
++            arrival_mono_s=t, arrived_at_utc=raw['received_at_utc'], source_original=raw,
++            original_origin_eligible=True, features=features,
++            thermal=dict(available=ob['available'], current_TJ_C=s['current'], Ts_C=ob['Ts_C'], E_C=ob['E_C'],
++                conditional_inputs_rails_W_PWM=ob['conditional_inputs_rails_W_PWM'],
++                model_sha256=config['immutable']['model_sha256'],
++                observer_spec_sha256=config['immutable']['observer_spec_sha256'],
++                state_native_ref=raw['ref'], phase=ob['phase'],
++                safety=s['safety'], thermal_state_updated_by_activity=False))
+diff --git a/experiments/thermal_cpu_activity_bridge_v1/frozen/analyse.py b/experiments/thermal_cpu_activity_bridge_v1/frozen/analyse.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_activity_bridge_v1/frozen/analyse.py
+@@ -0,0 +1,296 @@
++"""Finite old-development comparison and event stratification. No refit or device I/O."""
++import os
++for _key in ('OPENBLAS_NUM_THREADS','OMP_NUM_THREADS','MKL_NUM_THREADS','VECLIB_MAXIMUM_THREADS'):
++    os.environ[_key]='1'
++import argparse
++import bisect
++import collections
++import datetime as dt
++import platform
++import resource
++import sys
++import time
++import numpy as np
++import scipy
++from common import ROOT, read, lines, write, jsonl, sha, cohort
++from activity import load_candidate, Processor
++from adapter import old_frames
++
++
++def seconds(s):
++    return dt.datetime.fromisoformat(s.replace('Z','+00:00')).timestamp()
++
++
++def score(errors):
++    e=np.asarray(errors,float)
++    if not len(e):
++        return dict(n=0,MAE_C=None,P95_absolute_C=None,P95_under_C=None,max_under_C=None,bias_C=None,fraction_under_gt2C=None)
++    u=np.maximum(-e,0)
++    return dict(n=len(e),MAE_C=float(abs(e).mean()),P95_absolute_C=float(np.percentile(abs(e),95)),
++        P95_under_C=float(np.percentile(u,95)),max_under_C=float(u.max()),bias_C=float(e.mean()),
++        fraction_under_gt2C=float((u>2).mean()))
++
++
++def request_reference(root):
++    requests=list(lines(root/'inputs/field/requests.jsonl'))
++    protocol=list(lines(root/'inputs/field/protocol.jsonl'))
++    ends={r['request_id']:r for r in protocol if r['event']=='protocol_DONE'}
++    result=[]
++    for r in requests:
++        end=ends.get(r['request_id'])
++        result.append(dict(request_id=r['request_id'],stage_index=r['stage_index'],
++            submit_utc=r['submitted_at_utc'],submit_wall=seconds(r['submitted_at_utc']),
++            done_utc=end['at_utc'] if end else None,done_wall=seconds(end['at_utc']) if end else None,
++            submit_source='field/requests.jsonl:'+r['request_id'],done_source='field/protocol.jsonl:protocol_DONE:'+r['request_id'],
++            role='dependent client protocol reference, not GPU kernel activity truth'))
++    return result
++
++
++def block_reference(requests,frames,outputs):
++    blocks=[]
++    for stage in sorted({r['stage_index'] for r in requests}):
++        rs=[r for r in requests if r['stage_index']==stage]
++        start=min(r['submit_wall'] for r in rs)
++        end=max(r['done_wall'] for r in rs if r['done_wall'] is not None)
++        onset=next((f for f,o in zip(frames,outputs) if start <= seconds(f['arrived_at_utc']) <= end
++                    and o['variants']['INPUT-BASE']['activity']['state']=='ACTIVE'),None)
++        blocks.append(dict(stage=stage,start=start,end=end,
++            first_submit_ref=min(rs,key=lambda r:r['submit_wall'])['submit_source'],
++            last_done_ref=max(rs,key=lambda r:r['done_wall'] or -1)['done_source'],
++            first_BASE_arrived_active_wall=seconds(onset['arrived_at_utc']) if onset else None,
++            first_BASE_active_ref=onset['native_ref'] if onset else None,requests=len(rs)))
++    return blocks
++
++
++def stratum(wall,blocks):
++    for b in blocks:
++        if b['start'] <= wall < b['end']:
++            onset=b['first_BASE_arrived_active_wall']
++            if onset is None or wall < onset:
++                return 'submitted_not_yet_observed'
++            if wall < onset+15:
++                return 'observed_startup_15s'
++            return 'sustained'
++    if any(0 < b['start']-wall <= 90 for b in blocks):
++        return 'pre_submit_90s'
++    if any(0 <= wall-b['end'] <= 90 for b in blocks):
++        return 'after_DONE_90s'
++    return 'background'
++
++
++def stale_audit(root,out):
++    raw=list(lines(root/'inputs/inputs/native/observations-0001.jsonl'))
++    fans=[r for r in raw if r['kind']=='fan']
++    index=next(i for i,r in enumerate(fans) if r['ref'].endswith('observation:4682'))
++    a,b,c=fans[index-1:index+2]
++    f=b['payload']['data']['fans'][0]
++    assert f['temp_stale'] is True and f['auto_state']=='stale' and f['duty']==25
++    assert a['payload']['data']['fans'][0]['duty']==66 and c['payload']['data']['fans'][0]['duty']==37
++    audit=dict(role='new explanatory addendum; old scores and control policy unchanged',
++        raw_records=[a,b,c],start_mono_s=b['mono_s'],recovery_observation_mono_s=c['mono_s'],
++        observed_stale_feedback=True,HTTP_returned_success=True,successful_PWM_percent=25,
++        packet_temp_valid=b['payload']['data']['temp_valid'],
++        interval_s=c['mono_s']-b['mono_s'],
++        interpretation='explicit temp_stale feedback, not merely unknown context; observed recovery does not identify the exact unobserved recovery instant')
++    write(out/'stale4682-addendum.json',audit)
++    return audit
++
++
++def at_state(frame_times,frames,outputs,name,wall):
++    i=bisect.bisect_right(frame_times,wall)-1
++    if i<0:
++        return 'UNKNOWN',None
++    f,o=frames[i],outputs[i]['variants'][name]['activity']
++    until=o['supported_until_mono_s']
++    if until is None or wall-frame_times[i] >= until-f['arrival_mono_s']:
++        return 'UNKNOWN',None
++    return o['state'],f['native_ref']
++
++
++def activity_metrics(requests,blocks,frames,outputs,out,config):
++    walls=[seconds(f['arrived_at_utc']) for f in frames]
++    native_refs=[f['native_ref'] for f in frames]
++    onset_rows=[]; per_request=[]; totals=[]; discrepancy_intervals_all=[]
++    end=walls[-1]
++    def busy(t):
++        return any(r['submit_wall']<=t<(r['done_wall'] if r['done_wall'] is not None else end) for r in requests)
++    for name in config['variants']:
++        known_s=unknown_s=background_active_s=settled_background_active_s=0.
++        false_events=settled_false_events=0; prev_background_active=prev_settled=False
++        discrepancy_intervals=[]
++        total_s=walls[-1]-walls[0]
++        for i,(f,o) in enumerate(zip(frames,outputs)):
++            left=walls[i]
++            right=walls[i+1] if i+1<len(walls) else left
++            state=o['variants'][name]['activity']
++            until=state['supported_until_mono_s']
++            supported=min(right,left+max(0,until-f['arrival_mono_s'])) if until is not None else left
++            cuts={left,supported,right}
++            for r in requests:
++                for t in (r['submit_wall'],r['done_wall']):
++                    if t is not None and left<t<right:cuts.add(t)
++            for b in blocks:
++                if left<b['end']+3<right:cuts.add(b['end']+3)
++            cuts=sorted(cuts)
++            for a,b in zip(cuts,cuts[1:]):
++                current=state['state'] if a<supported else 'UNKNOWN'
++                known_s+=(b-a)*(current!='UNKNOWN')
++                unknown_s+=(b-a)*(current=='UNKNOWN')
++                active_bg=current=='ACTIVE' and not busy((a+b)/2)
++                settled=False
++                if active_bg:
++                    background_active_s+=b-a
++                    # A separate settled-background diagnostic avoids treating the
++                    # tiny protocol gap between serial requests as known GPU idle.
++                    if not any(q['start'] <= (a+b)/2 < q['end']+3 for q in blocks):
++                        settled_background_active_s+=b-a
++                        settled=True
++                    discrepancy_intervals.append(dict(variant=name,start_wall=a,end_wall=b,
++                        seconds=b-a,source_ref=f['native_ref'],settled_background=settled,
++                        interpretation='no client request in flight; true GPU inactivity unknown'))
++                if active_bg and not prev_background_active:false_events+=1
++                if settled and not prev_settled:settled_false_events+=1
++                prev_background_active=active_bg
++                prev_settled=settled
++        for b in blocks:
++            idxs=[i for i,t in enumerate(walls) if b['start']<=t<=b['end']]
++            active=[i for i in idxs if outputs[i]['variants'][name]['activity']['state']=='ACTIVE']
++            before,ref=at_state(walls,frames,outputs,name,b['start'])
++            first=active[0] if active else None
++            release=next((i for i,t in enumerate(walls) if t>=b['end'] and outputs[i]['variants'][name]['activity']['state']=='IDLE'),None)
++            transitions=[i for i in idxs if outputs[i]['variants'][name]['activity']['transition']
++                and outputs[i]['variants'][name]['activity']['state']=='ACTIVE']
++            known=any(outputs[i]['variants'][name]['activity']['state']!='UNKNOWN' for i in idxs)
++            onset_rows.append(dict(variant=name,stage=b['stage'],submit_wall=b['start'],done_wall=b['end'],
++                state_at_submit=before,state_at_submit_ref=ref,
++                status='already_active' if before=='ACTIVE' else ('detected' if first is not None else ('miss' if known else 'unknown')),
++                first_after_submit_ref=native_refs[first] if first is not None else None,
++                delay_s=walls[first]-b['start'] if first is not None and before!='ACTIVE' else None,
++                repeated_ACTIVEs_during_block=max(0,len(transitions)-1),
++                first_IDLE_after_DONE_ref=native_refs[release] if release is not None else None,
++                recovery_delay_s=walls[release]-b['end'] if release is not None else None,
++                semantics='N305 arrived information relative to client event; not physical CPU/GPU onset'))
++        for r in requests:
++            state,ref=at_state(walls,frames,outputs,name,r['submit_wall'])
++            idxs=[i for i,t in enumerate(walls) if r['submit_wall']<=t<=(r['done_wall'] or end)]
++            active=next((i for i in idxs if outputs[i]['variants'][name]['activity']['state']=='ACTIVE'),None)
++            known=any(outputs[i]['variants'][name]['activity']['state']!='UNKNOWN' for i in idxs)
++            per_request.append(dict(variant=name,request_id=r['request_id'],state_at_submit=state,source_ref=ref,
++                result='already_active' if state=='ACTIVE' else ('detected' if active is not None else ('miss' if known else 'unknown')),
++                first_active_ref=native_refs[active] if active is not None else None,
++                delay_s=walls[active]-r['submit_wall'] if active is not None and state!='ACTIVE' else None,
++                independent_thermal_episode=False))
++        totals.append(dict(variant=name,frames=len(frames),observed_span_s=total_s,known_s=known_s,unknown_s=unknown_s,
++            coverage_fraction=known_s/total_s,
++            active_while_no_client_inflight_s=background_active_s,
++            no_client_inflight_active_events=false_events,
++            settled_background_active_s=settled_background_active_s,
++            settled_background_active_events=settled_false_events,
++            false_trigger_truth='client-reference discrepancy only; true inference/GPU label unknown',
++            all_request_results=dict(collections.Counter(r['result'] for r in per_request if r['variant']==name))))
++        discrepancy_intervals_all.extend(discrepancy_intervals)
++    write(out/'activity-metrics.json',dict(groups=totals,block_onsets=onset_rows,
++        independent_real_episodes=1,recorded_dependent_workblock_onsets=len(blocks),physical_lead_ms=None,
++        high_frequency_real_evidence=False,all_variants_same_arrival_cadence=True))
++    jsonl(out/'all-request-activity-reference.jsonl',per_request)
++    jsonl(out/'background-active-intervals.jsonl',discrepancy_intervals_all)
++    return onset_rows
++
++
++def evaluate(root,out):
++    wall_start=time.perf_counter(); cpu_start=time.process_time()
++    c,f=load_candidate(root)
++    frames=list(old_frames(root)); processor=Processor(c,f)
++    outputs=[processor.process(frame) for frame in frames]
++    assert len(frames)==2706
++    jsonl(out/'feature-frames.jsonl',frames)
++    jsonl(out/'activity-and-candidate-predictions.jsonl',outputs)
++    mapping={f['native_ref']: (f,o) for f,o in zip(frames,outputs)}
++    requests=request_reference(root)
++    jsonl(out/'actual-client-events.jsonl',requests)
++    blocks=block_reference(requests,frames,outputs)
++    write(out/'block-onset-reference.json',blocks)
++    activity_metrics(requests,blocks,frames,outputs,out,c)
++    stale=stale_audit(root,out)
++    originals=list(lines(root/'inputs/results/predictions.jsonl'))
++    points=[]; max_hold_diff=0.
++    for r in originals:
++        frame,derived=mapping.get(r['ref'],(None,None))
++        row=dict(ref=r['ref'],t=r['t'],utc=r['utc'],h=r['h'],label=r['label'],
++            label_rejection=r['label_rejection'],phase=r['phase'],source_valid=r['source_valid'],
++            origin_context=r['origin_context'],prediction={},activity={},
++            posthoc_stratum=stratum(seconds(r['utc']),blocks),
++            posthoc_stale_intersection=r['t']<=stale['recovery_observation_mono_s'] and r['t']+r['h']>=stale['start_mono_s'],
++            old_common=bool(r['label'] and 'B1' in r['baselines'] and all(b in r['B_HOLD'] for b in ['AUGMENTED-KF','CONDITIONAL-HOLD','QS','LP30','LP120'])))
++        row['prediction'].update(r['baselines'])
++        if 'AUGMENTED-KF' in r['B_HOLD']:
++            row['prediction']['G2-HOLD']=r['B_HOLD']['AUGMENTED-KF']
++            assert frame is not None
++            val=f.predict(frame['thermal'],'HOLD',r['h'])
++            max_hold_diff=max(max_hold_diff,abs(val-row['prediction']['G2-HOLD']))
++        if derived:
++            for name, result in derived['variants'].items():
++                row['activity'][name]=result['activity']['state']
++                val=result['temperature_C'][str(r['h'])]
++                if val is not None:row['prediction'][name]=val
++        points.append(row)
++    assert max_hold_diff<1e-8
++    jsonl(out/'temperature-points.jsonl',points)
++    methods=['B0','B1','G2-HOLD']+list(c['variants'])
++    common_tables=[];coverage=[];sensitivity=[]
++    for h in (15,45,90):
++        base=[r for r in points if r['h']==h]
++        common=[r for r in base if r['old_common'] and all(n in r['prediction'] for n in methods)]
++        strata=['all']+sorted({r['posthoc_stratum'] for r in base})
++        for category in strata:
++            rows=[r for r in common if category=='all' or r['posthoc_stratum']==category]
++            common_tables.append(dict(h=h,posthoc_stratum=category,n=len(rows),cohort_SHA256=cohort(rows),
++                errors={n:score([r['prediction'][n]-r['label']['value'] for r in rows]) for n in methods}))
++        for name in methods:
++            rows=[r for r in base if r['label'] and name in r['prediction']]
++            coverage.append(dict(h=h,method=name,source_valid_origins=sum(r['source_valid'] for r in base),
++                total_origins=len(base),valid_labels=sum(r['label'] is not None for r in base),
++                predictions=sum(name in r['prediction'] for r in base),scored=len(rows),cohort_SHA256=cohort(rows),
++                own_score=score([r['prediction'][name]-r['label']['value'] for r in rows]),
++                original_rejections=dict(collections.Counter(r['label_rejection'] for r in base if not r['label']))))
++        for criterion in ('origin_context','posthoc_stale_intersection'):
++            for value in sorted({r[criterion] for r in common},key=str):
++                rows=[r for r in common if r[criterion]==value]
++                sensitivity.append(dict(h=h,criterion=criterion,value=value,n=len(rows),cohort_SHA256=cohort(rows),
++                    role='new descriptive sensitivity, no old score rewritten',
++                    errors={n:score([r['prediction'][n]-r['label']['value'] for r in rows]) for n in methods}))
++    write(out/'temperature-common.json',common_tables)
++    write(out/'temperature-coverage.json',coverage)
++    write(out/'stale-and-context-sensitivity.json',sensitivity)
++    r45=[r for r in originals if r['h']==45 and r['label'] and 'B1' in r['baselines'] and all(b in r['B_HOLD'] for b in ['AUGMENTED-KF','CONDITIONAL-HOLD','QS','LP30','LP120'])]
++    cross=[r for r in r45 if r['phase']!=r['label']['phase']]
++    fraction=sum(abs(r['B_HOLD']['AUGMENTED-KF']-r['label']['value']) for r in cross)/sum(abs(r['B_HOLD']['AUGMENTED-KF']-r['label']['value']) for r in r45)
++    review=read(root/'handoff/results/numeric-audit.json')
++    assert len(cross)==360 and abs(fraction-review['cross_fraction_of_total_absolute_error'])<1e-12
++    case=next(r for r in points if r['h']==45 and r['ref'].endswith('observation:2482'))
++    write(out/'A1-independent-audit-readback.json',dict(independent_review_sources=['handoff/results/field-audit.json','handoff/results/numeric-audit.json','handoff/results/onset-error-example.json'],
++        old45_common_n=len(r45),cross_stage_n=len(cross),cross_fraction_absolute_error=fraction,
++        onset_after_submit_case=case,old_HOLD_max_abs_numerical_difference_C=max_hold_diff,
++        old_A_long=read(root/'inputs/results/A-long-summary.json'),
++        old90_LP120_better_than_KF=True,field_runs=1,new_field_runs=0,theta_fits=0))
++    agreements={}
++    for a,b in [('INPUT-BASE','INPUT-MEAN'),('INPUT-MEAN','INPUT-CORE')]:
++        different=[dict(ref=f['native_ref'],arrival_mono_s=f['arrival_mono_s'],left=o['variants'][a]['activity']['state'],right=o['variants'][b]['activity']['state'])
++            for f,o in zip(frames,outputs) if o['variants'][a]['activity']['state']!=o['variants'][b]['activity']['state']]
++        agreements[a+' vs '+b]=dict(different_state_frames=len(different),examples=different)
++    write(out/'incremental-activity-information.json',dict(comparisons=agreements,
++        role='development-only recorded arrival result; not independent high-frequency conclusion',
++        no_CPU_GPU_lag_search=True,no_best_core_selection=True,parameter_attempts=1))
++    write(out/'environment-resource.json',dict(python=sys.version,platform=platform.platform(),numpy=np.__version__,scipy=scipy.__version__,
++        wall_s=time.perf_counter()-wall_start,process_cpu_s=time.process_time()-cpu_start,
++        peak_RSS_bytes=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*(1 if sys.platform=='darwin' else 1024),
++        theta_fits=0,CUDA=False,network_connections=0,producer_acquisition=False,production_modules_imported=False))
++    print('Old development analysis completed; all h label contracts retained; no parameter search.',flush=True)
++
++
++if __name__=='__main__':
++    ap=argparse.ArgumentParser(description=__doc__)
++    ap.add_argument('--output',type=lambda v:__import__('pathlib').Path(v),required=True)
++    args=ap.parse_args()
++    args.output.mkdir(parents=True,exist_ok=False)
++    evaluate(ROOT,args.output)
+diff --git a/experiments/thermal_cpu_activity_bridge_v1/frozen/analysis-spec.json b/experiments/thermal_cpu_activity_bridge_v1/frozen/analysis-spec.json
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_activity_bridge_v1/frozen/analysis-spec.json
+@@ -0,0 +1,81 @@
++{
++  "contract": "TTO-CPU-ACTIVITY-PREP-v1.0-model-line",
++  "version": "1.0.0",
++  "deployable": false,
++  "run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
++  "data_roles": {
++    "existing_fixed_anchors": "one already analysed continuous development episode; includes calibration, descriptive stratification and in-development comparison, never new independent confirmation",
++    "2706_CPU_rows": "same episode, not a new experiment",
++    "synthetic": "interface/numerical/causality tests only; not Thor high-frequency evidence",
++    "future_12_requests": "one targeted new continuous episode; frozen check first. If inspected for thresholds/windows it becomes development; no automatic repeat"
++  },
++  "immutable": {
++    "model_sha256": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
++    "observer_spec_sha256": "2080adcf20773650299def2bb0f3ebdb9f87d8f85281d5b87a99d8b406c83c6b",
++    "comparison_spec_sha256": "9b2c5586ffbd9b3daae1bddf8dd77eaf8a40d5b6b27e5e5be864cc7b3ecb7711"
++  },
++  "candidate_budget": {
++    "activity_methods": 1,
++    "calibrations": 1,
++    "threshold_grids": 0,
++    "lag_searches": 0,
++    "core_selection": "only per-timestamp maximum of all numeric online cores; never fixed winning core",
++    "future_conversions": 1,
++    "theta_fits": 0
++  },
++  "calibration": {
++    "role": "already analysed development data, feature levels only; no temperature labels/scores used",
++    "background": "first recorded background +60 to +240 seconds",
++    "active": "first recorded single work +60 to +300 seconds",
++    "level_estimator": "median per feature; active/idle rail medians separately, no rail summation",
++    "selection": "one proposed rule; normalized on=0.25, off=0.10, low confirmation=3s fixed before scores; no score-based selection"
++  },
++  "features": {
++    "INPUT-BASE": ["gpu_pct", "gpu_W", "cpu_soc_mss_W"],
++    "INPUT-MEAN": ["gpu_pct", "gpu_W", "cpu_soc_mss_W", "cpu_mean_pct"],
++    "INPUT-CORE": ["gpu_pct", "gpu_W", "cpu_soc_mss_W", "cpu_mean_pct", "cpu_max_pct"],
++    "availability": "all required fields must be received, finite, original-valid and before their original deadlines; age is an eligibility gate, never set unknown transport delay to zero",
++    "timing": "same arrival frames and history budget across variants; retain source windows, source/read/arrival clock identities, update evidence, original refs, values and unknowns; no high-frequency TJ interpolation",
++    "old_cpu_update": "new telemetry generation is evidence of a new delivered frame, not proof of an independent CPU backend window",
++    "repeat_buffer": "same feature update identity does not renew deadline or confirm a transition; equal numeric values with new identities are retained",
++    "source_only": "no real N305 arrival means arrival-side result unavailable; source-potential results must be separately labelled"
++  },
++  "activity_rule": {
++    "score": "max over available required features of (value-idle_median)/(active_median-idle_median)",
++    "on": 0.25,
++    "off": 0.10,
++    "low_confirmation_s": 3.0,
++    "history_budget_s": 3.0,
++    "missing": "UNKNOWN immediately; no normal/idle substitution, recovery starts fresh; epoch change resets activity only, never thermal observer",
++    "initial": "UNKNOWN; one genuinely new high observation activates; one new low observation establishes IDLE when previously UNKNOWN; ACTIVE releases after 3s of supported low observations"
++  },
++  "future_input_conversion": {
++    "name": "ACTIVE-FLOOR-IDLE-RELAX30-v1",
++    "active": "independently for GPU and CPU_SOC_MSS: hold max(current observed rail, frozen active median) for each requested horizon; no assumed unseen end",
++    "idle": "each rail P(t)=idle_median+(P_current-idle_median)*exp(-t/30s)",
++    "PWM": "same conditional PWM fraction as original frozen observer at origin, held; no fabricated successful PWM",
++    "unknown": "new strategy unavailable; original HOLD remains separately reported",
++    "solver": "exact affine G2 augmented with exponential input states; no TJ feedback after origin; same current TJ, causal Ts/E, theta and state availability as sealed outputs",
++    "limits": "resident-model/domain prior, development proposal, no reliable forecast of arbitrary new starts or future task ends; no CPU extra heat term or TJ correction"
++  },
++  "temperature_evaluation": {
++    "origins": "unchanged original accepted approximately 1s sequence, original source_valid; no high-frequency origins",
++    "horizons_s": [15, 45, 90],
++    "labels": "reuse original first valid accepted TJ at/after h within +2s; same source epoch; each horizon independent",
++    "references": ["B0", "original G2-HOLD", "B1"],
++    "common": "same ref/horizon/label across all 3 candidates and references; preserve original common cohort additionally and own coverage separately",
++    "tails": ["P95 absolute", "P95 underprediction", "max underprediction", "fraction under >2C (descriptive only)"],
++    "strata": "posthoc actual submit/protocol_DONE and first arrived BASE high observation: pre-submit within 90s; submitted-not-yet-observed; observed-startup first15s; sustained; after-DONE first90s; background; short inter-request gaps retained. Never candidate features",
++    "sensitivity": "separate new tables for original origin normal/abnormal and for origins/labels whose prediction interval intersects explicit stale4682 to recovery4685; old totals remain untouched"
++  },
++  "activity_evaluation": {
++    "reference": "client request_submit/protocol_DONE only, not GPU kernel truth; four work block onsets primary, all179 request events retained as dependent secondary descriptions",
++    "metrics": ["onset delays at actual arrival", "misses and unknowns", "background active seconds/events", "repeated transitions while continuous requests", "recovery delay", "coverage and unavailable seconds"],
++    "integration": "hold previous state only to earliest required original feature deadline; rest UNKNOWN, no integration across unsupported gaps",
++    "high_frequency": "new data not yet available. At future same arrival cadence compare BASE/MEAN/CORE; additionally deterministic latest-arrived 1s downsample versus native cadence. No lag maximization, curve/video alignment or numeric deduplication",
++    "future_conclusion": "report physical timing unknown unless actual windows support it; better than GPU% alone is insufficient; no automatic retry/extra experiment"
++  },
++  "optional_event_assist": "not implemented in this one-candidate preparation; no future schedule enters features",
++  "ordinary_demand": "not modified this round; prior KF/QS/LP30/LP120 same-postprocessing descriptions retained, no new fan algorithm",
++  "permissions": {"offline": true, "self_created_loopback_tests": true, "device_access": false, "field_preflight": false, "real_requests": false, "deployment": false, "git_publication": false}
++}
+diff --git a/experiments/thermal_cpu_activity_bridge_v1/frozen/candidate.json b/experiments/thermal_cpu_activity_bridge_v1/frozen/candidate.json
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_activity_bridge_v1/frozen/candidate.json
+@@ -0,0 +1,483 @@
++{
++  "version": "CPU-ACTIVITY-1.0.0",
++  "deployable": false,
++  "levels": {
++    "idle": {
++      "gpu_pct": 0.0,
++      "gpu_W": 1.984,
++      "cpu_soc_mss_W": 5.952,
++      "cpu_mean_pct": 0.9166666666666666,
++      "cpu_max_pct": 5.0
++    },
++    "active": {
++      "gpu_pct": 96,
++      "gpu_W": 26.532,
++      "cpu_soc_mss_W": 17.827,
++      "cpu_mean_pct": 4.666666666666667,
++      "cpu_max_pct": 42
++    }
++  },
++  "on": 0.25,
++  "off": 0.1,
++  "low_confirmation_s": 3.0,
++  "relaxation_tau_s": 30.0,
++  "variants": {
++    "INPUT-BASE": [
++      "gpu_pct",
++      "gpu_W",
++      "cpu_soc_mss_W"
++    ],
++    "INPUT-MEAN": [
++      "gpu_pct",
++      "gpu_W",
++      "cpu_soc_mss_W",
++      "cpu_mean_pct"
++    ],
++    "INPUT-CORE": [
++      "gpu_pct",
++      "gpu_W",
++      "cpu_soc_mss_W",
++      "cpu_mean_pct",
++      "cpu_max_pct"
++    ]
++  },
++  "dynamic_spec_path": "inputs/vendor/src/tto_field/research/observer-spec.json",
++  "immutable": {
++    "model_sha256": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
++    "observer_spec_sha256": "2080adcf20773650299def2bb0f3ebdb9f87d8f85281d5b87a99d8b406c83c6b",
++    "comparison_spec_sha256": "9b2c5586ffbd9b3daae1bddf8dd77eaf8a40d5b6b27e5e5be864cc7b3ecb7711"
++  },
++  "calibration_refs": {
++    "idle": [
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:224",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:228",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:231",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:234",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:236",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:239",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:242",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:245",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:248",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:251",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:254",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:258",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:261",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:264",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:267",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:270",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:274",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:277",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:280",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:283",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:286",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:289",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:293",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:296",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:299",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:302",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:305",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:309",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:312",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:315",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:318",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:322",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:325",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:328",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:331",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:334",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:338",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:341",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:344",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:347",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:350",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:353",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:357",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:360",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:363",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:366",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:369",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:373",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:376",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:379",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:382",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:386",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:389",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:392",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:395",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:398",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:402",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:405",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:408",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:411",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:414",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:418",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:421",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:424",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:427",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:430",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:434",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:437",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:440",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:443",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:446",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:450",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:453",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:456",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:459",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:462",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:466",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:469",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:472",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:475",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:478",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:482",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:485",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:488",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:491",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:494",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:498",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:501",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:504",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:507",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:510",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:514",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:517",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:520",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:523",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:526",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:530",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:533",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:536",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:539",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:542",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:546",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:549",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:552",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:555",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:558",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:562",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:565",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:568",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:571",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:574",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:578",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:581",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:584",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:587",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:590",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:594",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:597",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:600",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:603",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:606",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:610",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:613",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:616",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:619",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:622",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:626",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:629",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:632",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:635",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:638",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:642",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:645",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:648",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:651",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:654",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:658",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:661",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:664",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:667",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:670",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:674",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:677",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:680",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:683",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:686",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:690",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:693",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:696",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:699",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:702",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:706",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:709",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:712",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:715",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:718",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:722",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:725",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:728",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:731",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:734",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:738",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:741",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:744",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:747",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:750",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:754",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:757",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:760",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:763",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:766",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:770",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:773",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:776",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:779",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:782",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:786",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:789",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:792",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:795"
++    ],
++    "active": [
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1182",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1186",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1189",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1192",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1195",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1198",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1202",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1205",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1208",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1211",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1214",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1218",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1221",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1224",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1227",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1230",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1234",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1237",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1240",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1243",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1246",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1250",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1253",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1256",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1259",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1262",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1266",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1269",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1272",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1275",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1278",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1282",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1285",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1288",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1291",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1294",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1298",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1301",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1304",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1307",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1310",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1314",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1317",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1320",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1323",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1326",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1330",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1333",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1336",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1339",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1342",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1346",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1349",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1352",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1355",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1358",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1362",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1365",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1368",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1371",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1374",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1378",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1381",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1384",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1387",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1390",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1394",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1397",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1400",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1403",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1406",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1410",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1413",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1416",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1419",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1422",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1426",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1429",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1432",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1435",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1438",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1442",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1445",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1448",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1451",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1454",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1458",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1461",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1464",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1467",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1470",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1474",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1477",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1480",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1483",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1486",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1490",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1493",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1496",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1499",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1502",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1506",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1509",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1512",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1515",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1518",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1522",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1525",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1528",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1531",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1534",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1538",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1541",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1544",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1547",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1550",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1554",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1557",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1560",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1563",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1566",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1570",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1573",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1576",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1579",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1582",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1586",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1589",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1592",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1595",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1598",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1602",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1605",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1608",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1611",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1614",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1618",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1621",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1624",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1627",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1630",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1634",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1637",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1640",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1643",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1646",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1650",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1653",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1656",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1659",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1662",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1666",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1669",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1672",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1675",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1678",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1682",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1685",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1688",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1691",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1694",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1698",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1701",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1704",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1707",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1710",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1714",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1717",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1720",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1723",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1726",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1730",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1733",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1736",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1739",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1742",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1746",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1749",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1752",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1755",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1758",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1762",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1765",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1768",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1771",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1774",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1778",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1781",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1784",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1787",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1790",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1794",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1797",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1800",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1803",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1806",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1810",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1813",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1816",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1822",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1826",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1829",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1832",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1835",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1838",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1842",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1845",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1848",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1851",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1854",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1858",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1861",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1864",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1867",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1870",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1874",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1877",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1880",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1883",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1886",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1890",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1893",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1896",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1899",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1902",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1906",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1909",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1912",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1915",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1918",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1922",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1925",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1928",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1931",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1934",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1938",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1941",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1944",
++      "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:1947"
++    ]
++  },
++  "attempts": [
++    {
++      "id": 1,
++      "method": "max-normalized-contrast hysteresis",
++      "selected": true,
++      "reason": "single preregistered candidate; amplitude medians only, no temperature or detection scores used"
++    }
++  ]
++}
+diff --git a/experiments/thermal_cpu_activity_bridge_v1/frozen/common.py b/experiments/thermal_cpu_activity_bridge_v1/frozen/common.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_activity_bridge_v1/frozen/common.py
+@@ -0,0 +1,39 @@
++"""Local research file helpers. No production imports or device clients."""
++import hashlib
++import json
++from pathlib import Path
++
++ROOT = Path(__file__).resolve().parent
++
++
++def read(path):
++    return json.loads(Path(path).read_text())
++
++
++def lines(path):
++    with Path(path).open() as stream:
++        for line in stream:
++            if line.strip():
++                yield json.loads(line)
++
++
++def write(path, obj):
++    Path(path).write_text(json.dumps(obj, ensure_ascii=False, indent=2, allow_nan=False) + '\n')
++
++
++def jsonl(path, rows):
++    with Path(path).open('w') as stream:
++        for row in rows:
++            stream.write(json.dumps(row, ensure_ascii=False, allow_nan=False) + '\n')
++
++
++def sha(path):
++    h = hashlib.sha256()
++    with Path(path).open('rb') as stream:
++        for chunk in iter(lambda: stream.read(2**20), b''):
++            h.update(chunk)
++    return h.hexdigest()
++
++
++def cohort(rows):
++    return hashlib.sha256('\n'.join(f"{r['ref']}|{r['h']}|{r['label']['ref']}" for r in rows).encode()).hexdigest()
+diff --git a/experiments/thermal_cpu_activity_bridge_v1/frozen/evaluate_stream.py b/experiments/thermal_cpu_activity_bridge_v1/frozen/evaluate_stream.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_activity_bridge_v1/frozen/evaluate_stream.py
+@@ -0,0 +1,153 @@
++"""Future recorded-arrival evaluation, offline only. No acquisition or scheduling.
++
++Inputs: original ~1s qualified thermal origins; independent timestamped activity
++frames; a data-role registration. Both cadence conditions use identical origins.
++"""
++import os
++os.environ['OPENBLAS_NUM_THREADS']='1'
++os.environ['OMP_NUM_THREADS']='1'
++import argparse
++import bisect
++import copy
++import math
++from pathlib import Path
++from common import ROOT, read, lines, jsonl, write, cohort, sha
++from activity import Activity, load_candidate
++from analyse import score
++from stream_metrics import metrics as activity_metrics
++
++
++def downsample_1s(frames):
++    """Causal latest-arrived at integer receiver-monotonic seconds; never backdate."""
++    if not frames:return []
++    times=[f['arrival_mono_s'] for f in frames]
++    result=[]
++    for tick in range(math.ceil(times[0]),math.floor(times[-1])+1):
++        i=bisect.bisect_right(times,tick)-1
++        if i<0:continue
++        f=copy.deepcopy(frames[i])
++        f['actual_original_arrival_mono_s']=f['arrival_mono_s']
++        f['arrival_mono_s']=float(tick)
++        f['cadence_condition']='causal simulated 1s delivery selection from same recorded arrivals'
++        result.append(f)
++    return result
++
++
++def evaluate(frames,origins,config,forecast):
++    times=[f['arrival_mono_s'] for f in frames]
++    origin_times=[s['t'] for s in origins]
++    if times!=sorted(times) or origin_times!=sorted(origin_times):
++        raise ValueError('input arrival/origin regression; do not sort away original evidence')
++    activity={n:Activity(config,n) for n in config['variants']}
++    latest={};index=0;history=[];points=[];trace=[]
++    for s in origins:
++        t=s['t']
++        while index<len(frames) and frames[index]['arrival_mono_s']<=t:
++            f=frames[index]
++            states={n:a.step(f,cutoff=t) for n,a in activity.items()}
++            latest={n:(f,r) for n,r in states.items()}
++            trace.append(dict(native_ref=f.get('native_ref'),arrival_mono_s=f['arrival_mono_s'],states=states))
++            index+=1
++        if not s['source_valid'] or (history and (s['epoch']!=history[-1]['epoch'] or t-history[-1]['t']>5)):
++            history=[]
++        if s['source_valid']:history.append(s)
++        j=bisect.bisect_left([h['t'] for h in history],t-30)
++        slope=(s['current']-history[j]['current'])/(t-history[j]['t']) if j<len(history) and t-history[j]['t']>=10 else None
++        for h in (15,45,90):
++            target=bisect.bisect_left(origin_times,t+h)
++            label=None;reject=None
++            if not s['source_valid']:reject='origin_source_invalid'
++            elif target>=len(origins) or origins[target]['t']>t+h+2:reject='no_TJ_answer'
++            else:
++                a=origins[target]
++                if not a['source_valid']:reject='target_source_invalid'
++                elif a['epoch']!=s['epoch'] or a['source_key']!=s['source_key']:reject='source_identity_or_validity_boundary'
++                else:label=dict(ref=a['ref'],t=a['t'],value=a['current'],offset_s=a['t']-t-h)
++            predictions={};states={};used={}
++            if s['source_valid']:
++                predictions['B0']=s['current']
++                if slope is not None:predictions['B1']=s['current']+h*slope
++                hold=forecast.predict(s.get('thermal'),'HOLD',h)
++                if hold is not None:predictions['G2-HOLD']=hold
++                for name in activity:
++                    state='UNKNOWN'
++                    if name in latest:
++                        f,r=latest[name]
++                        # Clock/epoch equality is required, not inferred by matching curves.
++                        if (f.get('arrival_clock_id')==s.get('arrival_clock_id') and f.get('epoch')==s['epoch']
++                                and r['supported_until_mono_s'] is not None and t<r['supported_until_mono_s']):
++                            state=r['state']
++                            used[name]=f.get('native_ref')
++                    states[name]=state
++                    value=forecast.predict(s.get('thermal'),state,h)
++                    if value is not None:predictions[name]=value
++            points.append(dict(ref=s['ref'],t=t,h=h,label=label,label_rejection=reject,prediction=predictions,
++                activity=states,activity_input_refs=used,source_valid=s['source_valid'],
++                future_activity_or_inputs_used=False))
++    methods=['B0','B1','G2-HOLD']+list(activity)
++    tables=[];coverage=[]
++    for h in (15,45,90):
++        rows=[r for r in points if r['h']==h]
++        common=[r for r in rows if r['label'] and all(n in r['prediction'] for n in methods)]
++        tables.append(dict(h=h,n=len(common),cohort_SHA256=cohort(common),
++            errors={n:score([r['prediction'][n]-r['label']['value'] for r in common]) for n in methods}))
++        for n in methods:
++            own=[r for r in rows if r['label'] and n in r['prediction']]
++            coverage.append(dict(h=h,method=n,valid_labels=sum(r['label'] is not None for r in rows),scored=len(own),
++                predictions=sum(n in r['prediction'] for r in rows),source_valid_origins=sum(r['source_valid'] for r in rows),
++                cohort_SHA256=cohort(own),errors=score([r['prediction'][n]-r['label']['value'] for r in own])))
++    return dict(points=points,common=tables,coverage=coverage,activity_trace=trace)
++
++
++def main():
++    ap=argparse.ArgumentParser(description=__doc__)
++    ap.add_argument('--frames',type=Path,required=True)
++    ap.add_argument('--origins',type=Path,required=True)
++    ap.add_argument('--registration',type=Path,required=True)
++    ap.add_argument('--actual-events',type=Path,help='optional actual client event refs in matching receiver monotonic clock')
++    ap.add_argument('--output',type=Path,required=True)
++    a=ap.parse_args();config,forecast=load_candidate()
++    registration=read(a.registration)
++    if registration['candidate_sha256']!=sha(ROOT/'candidate.json') or registration['analysis_spec_sha256']!=sha(ROOT/'analysis-spec.json'):
++        raise ValueError('registration must bind the frozen candidate and spec')
++    if registration.get('saw_new_data_for_parameter_selection'):
++        role='development_exploration'
++    else:
++        role=registration['declared_role']
++    if registration['run_id']=='5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3' and role=='independent_confirmation':
++        raise ValueError('old run is already development')
++    frames=list(lines(a.frames));origins=list(lines(a.origins))
++    if any(not math.isfinite(f.get('arrival_mono_s',math.nan)) for f in frames):
++        raise ValueError('no receiver arrival: source-side potential only, not arrival-side scoring')
++    a.output.mkdir(parents=True,exist_ok=False)
++    results={}
++    events=list(lines(a.actual_events)) if a.actual_events else None
++    for cadence,fs in [('actual-arrived',frames),('causal-1s-decimation',downsample_1s(frames))]:
++        result=evaluate(fs,origins,config,forecast);results[cadence]=result
++        for key,rows in result.items():
++            jsonl(a.output/f'{cadence}-{key}.jsonl',rows)
++        if events is not None:
++            fs=fs[:len(result['activity_trace'])]
++            write(a.output/f'{cadence}-activity-metrics.json',activity_metrics(fs,result['activity_trace'],events,list(config['variants'])))
++    # A cadence difference must also be scored on the intersection of origins/labels
++    # across both cadence conditions, not just on each condition's own coverage.
++    joint=[]
++    actual={ (r['ref'],r['h']):r for r in results['actual-arrived']['points'] }
++    coarse={ (r['ref'],r['h']):r for r in results['causal-1s-decimation']['points'] }
++    methods=['B0','B1','G2-HOLD']+list(config['variants'])
++    for h in (15,45,90):
++        keys=[k for k,r in actual.items() if r['h']==h and r['label'] and k in coarse
++            and coarse[k]['label']==r['label'] and all(n in r['prediction'] and n in coarse[k]['prediction'] for n in methods)]
++        joint.append(dict(h=h,n=len(keys),cohort_SHA256=cohort([actual[k] for k in keys]),
++            conditions={name:{n:score([data[k]['prediction'][n]-data[k]['label']['value'] for k in keys]) for n in methods}
++                for name,data in [('actual-arrived',actual),('causal-1s-decimation',coarse)]}))
++    write(a.output/'cadence-joint-common.json',joint)
++    write(a.output/'data-role-and-sources.json',dict(registration=registration,effective_role=role,
++        inputs={str(p):sha(p) for p in [a.frames,a.origins,a.registration]},
++        theta_fits=0,labels_interpolated=False,device_access=False,
++        field_time_resolution_verified_by_this_program=False,
++        note='declaration cannot by itself establish source timing validity; retain source windows/arrival evidence and unknowns'))
++
++
++if __name__=='__main__':
++    main()
+diff --git a/experiments/thermal_cpu_activity_bridge_v1/frozen/freeze.json b/experiments/thermal_cpu_activity_bridge_v1/frozen/freeze.json
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_activity_bridge_v1/frozen/freeze.json
+@@ -0,0 +1,10 @@
++{
++  "frozen_at_utc": "2026-10-19T14:10:38.386430+00:00",
++  "spec_sha256": "df26198dd631a45564d88c10b7b30433ab8b272cb4cf5d3726d7be6eacbab716",
++  "candidate_sha256": "89ae53229af3e84b3bae1140a1ce013d6bf16e374cd5d3ffcde6fc7d28b78831",
++  "source_manifest_sha256": "ce1142b9a8cd7b419adff4d9407693a70b267e2b34f83fc94e57d5108123c8fe",
++  "parameters_selected_before_evaluation": true,
++  "candidate_attempts": 1,
++  "theta_fits": 0,
++  "field_authorized": false
++}
+diff --git a/experiments/thermal_cpu_activity_bridge_v1/frozen/inputs/vendor/src/tto_field/research/models/primary.json b/experiments/thermal_cpu_activity_bridge_v1/frozen/inputs/vendor/src/tto_field/research/models/primary.json
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_activity_bridge_v1/frozen/inputs/vendor/src/tto_field/research/models/primary.json
+@@ -0,0 +1,179 @@
++{
++  "schema": "TTO-GREYBOX-EXPERIMENT-v1",
++  "deployable": false,
++  "model": "G2",
++  "fit_runs": [
++    "L",
++    "M",
++    "S"
++  ],
++  "selected_seed": "N1",
++  "converged": true,
++  "selection": "training_objective_only",
++  "dynamic": {
++    "a": 0.11481067252369034,
++    "c": 0.012174003404921066,
++    "d0": 0.00467375150888984,
++    "d1": 0.008336813700608809,
++    "b_g": 0.01837304741692581,
++    "b_c": 0.06218669600410176
++  },
++  "parameters": {
++    "a": 0.11481067252369034,
++    "c": 0.012174003404921066,
++    "d0": 0.00467375150888984,
++    "d1": 0.008336813700608809,
++    "b_g": 0.01837304741692581,
++    "b_c": 0.06218669600410176,
++    "E_L": 36.25671340620656,
++    "E_M": 34.9761231524857,
++    "E_S": 34.315068963682144,
++    "Ts_L-00": 43.1628433947408,
++    "Ts_L-01": 42.59410387114837,
++    "Ts_L-02": 43.214688590305904,
++    "Ts_L-03": 43.517850158518556,
++    "Ts_L-04": 43.56475355145619,
++    "Ts_L-05": 44.62138531096121,
++    "Ts_L-06": 47.802363679370075,
++    "Ts_L-07": 43.48598542581556,
++    "Ts_L-08": 44.28299334453275,
++    "Ts_L-09": 45.484569939009255,
++    "Ts_L-10": 42.79985942056287,
++    "Ts_L-11": 43.497873197928335,
++    "Ts_L-12": 49.32996318584145,
++    "Ts_L-13": 52.912597736788655,
++    "Ts_L-14": 51.63286914731363,
++    "Ts_L-15": 53.169350891169586,
++    "Ts_L-16": 51.8767640240596,
++    "Ts_L-17": 52.97011083210766,
++    "Ts_L-18": 53.297111368946034,
++    "Ts_L-19": 52.515264298210916,
++    "Ts_L-20": 50.55018346323336,
++    "Ts_L-21": 55.27520064510152,
++    "Ts_L-22": 51.58577811483808,
++    "Ts_L-23": 52.01025226751466,
++    "Ts_L-24": 49.30145673037024,
++    "Ts_L-25": 45.418968290423194,
++    "Ts_S-00": 42.73592813871289,
++    "Ts_S-01": 41.532998447190984,
++    "Ts_S-02": 41.7542888495776,
++    "Ts_S-03": 40.35120107600446,
++    "Ts_S-04": 39.54238112714305,
++    "Ts_S-05": 41.578079411456194,
++    "Ts_S-06": 42.2157707506574,
++    "Ts_S-07": 41.54138960297751,
++    "Ts_S-08": 28.411367660946013,
++    "Ts_S-09": 42.25275425925365,
++    "Ts_S-10": 40.02006966216033,
++    "Ts_S-11": 41.860987750511626,
++    "Ts_S-12": 29.368918962426868,
++    "Ts_S-13": 41.50720507235131,
++    "Ts_S-14": 53.351849095234215,
++    "Ts_S-15": 39.47154724247254,
++    "Ts_S-16": 42.10290350061728,
++    "Ts_S-17": 41.55305875982789,
++    "Ts_S-18": 41.37384131178531,
++    "Ts_S-19": 41.3997114233758,
++    "Ts_S-20": 41.64526901598327,
++    "Ts_S-21": 41.438768243847726,
++    "Ts_S-22": 41.35167889538294,
++    "Ts_S-23": 41.74376500720206,
++    "Ts_S-24": 41.86933250709173,
++    "Ts_S-25": 41.525161273260494,
++    "Ts_S-26": 41.85961557634303,
++    "Ts_S-27": 41.91619079500971,
++    "Ts_S-28": 41.96052363439416,
++    "Ts_S-29": 41.96241329319016,
++    "Ts_M-00": 42.76593604315409,
++    "Ts_M-01": 43.19493994939093
++  },
++  "x": [
++    0.11481067252369034,
++    0.012174003404921066,
++    0.00467375150888984,
++    0.008336813700608809,
++    0.01837304741692581,
++    0.06218669600410176,
++    36.25671340620656,
++    34.9761231524857,
++    34.315068963682144,
++    43.1628433947408,
++    42.59410387114837,
++    43.214688590305904,
++    43.517850158518556,
++    43.56475355145619,
++    44.62138531096121,
++    47.802363679370075,
++    43.48598542581556,
++    44.28299334453275,
++    45.484569939009255,
++    42.79985942056287,
++    43.497873197928335,
++    49.32996318584145,
++    52.912597736788655,
++    51.63286914731363,
++    53.169350891169586,
++    51.8767640240596,
++    52.97011083210766,
++    53.297111368946034,
++    52.515264298210916,
++    50.55018346323336,
++    55.27520064510152,
++    51.58577811483808,
++    52.01025226751466,
++    49.30145673037024,
++    45.418968290423194,
++    42.73592813871289,
++    41.532998447190984,
++    41.7542888495776,
++    40.35120107600446,
++    39.54238112714305,
++    41.578079411456194,
++    42.2157707506574,
++    41.54138960297751,
++    28.411367660946013,
++    42.25275425925365,
++    40.02006966216033,
++    41.860987750511626,
++    29.368918962426868,
++    41.50720507235131,
++    53.351849095234215,
++    39.47154724247254,
++    42.10290350061728,
++    41.55305875982789,
++    41.37384131178531,
++    41.3997114233758,
++    41.64526901598327,
++    41.438768243847726,
++    41.35167889538294,
++    41.74376500720206,
++    41.86933250709173,
++    41.525161273260494,
++    41.85961557634303,
++    41.91619079500971,
++    41.96052363439416,
++    41.96241329319016,
++    42.76593604315409,
++    43.19493994939093
++  ],
++  "J": 1.1667597706336403,
++  "P10_fit": [
++    1.984,
++    5.952
++  ],
++  "input_min": [
++    1.984,
++    5.952
++  ],
++  "input_max": [
++    40.392,
++    18.619
++  ],
++  "u_range": [
++    0.16,
++    1.0
++  ],
++  "frozen_at": "2026-10-13T19:41:51.096649+00:00",
++  "parameter_count": 67,
++  "spec_sha256": "1ec1888e0d1aeff5febbe95f74b0cfbad82bf1d95470c226261a3c6981f78c06"
++}
+diff --git a/experiments/thermal_cpu_activity_bridge_v1/frozen/inputs/vendor/src/tto_field/research/observer-spec.json b/experiments/thermal_cpu_activity_bridge_v1/frozen/inputs/vendor/src/tto_field/research/observer-spec.json
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_activity_bridge_v1/frozen/inputs/vendor/src/tto_field/research/observer-spec.json
+@@ -0,0 +1,181 @@
++{
++  "contract": "TTO-REVIEW-R2-20261018-ISSUE8-v1",
++  "deployable": false,
++  "scope": "complete Issue8 model-state line only; no communications/scheduling repair",
++  "dynamic_model": "frozen G2; augmented boundary state E, no theta update",
++  "model_sha256": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
++  "dynamic": {
++    "a": 0.11481067252369034,
++    "c": 0.012174003404921066,
++    "d0": 0.00467375150888984,
++    "d1": 0.008336813700608809,
++    "b_g": 0.01837304741692581,
++    "b_c": 0.06218669600410176
++  },
++  "data_roles": {
++    "M": "development masking; dynamics already fit on L+M+S, not held-out validation",
++    "Y": "candidate frozen before new replay; development replay, no physical Ts truth",
++    "synthetic": "known Tf/Ts/E truth; fixed theta and explicit sensor/noise assumptions"
++  },
++  "prior": {
++    "E_mean_C": 35.28589118494435,
++    "Ts_minus_E_mean_C": 7.545232699745185,
++    "E_std_C": 10.0,
++    "Ts_minus_E_std_C": 8.0,
++    "E_bounds_C": [
++      -10.0,
++      60.0
++    ],
++    "Ts_bounds_C": [
++      -20.0,
++      120.0
++    ],
++    "origin": "Only frozen L/S nuisance entries; never E_M, Ts_M, new-run prefix or YET/ambient",
++    "interpretation": "broad engineering prior, not measured equilibrium or calibrated probability"
++  },
++  "methods": [
++    "AUGMENTED-KF",
++    "CONDITIONAL-HOLD",
++    "OLD60"
++  ],
++  "numerical": {
++    "propagation": "exact affine matrix exponential on actual irregular dt",
++    "covariance": "exact Van Loan discretization; Joseph TJ update; symmetric covariance",
++    "TJ_noise_std_C": 0.2,
++    "process_std_C_per_sqrt_s": [
++      0.1,
++      0.025,
++      0.005
++    ],
++    "PWM_unknown_range": [
++      0.0,
++      1.0
++    ],
++    "power_unknown_relative_std": 0.3,
++    "uncertainty": "internal assumed-model covariance and 2-standard-deviation scale, NOT a calibrated 95% interval",
++    "covariance_includes_theta_or_clock_error": false,
++    "posterior_projection": "original E/Ts bounds; record unconstrained values and projection, never tracking while projected"
++  },
++  "input_policy": {
++    "fan_raw_TTL_s": 2.5,
++    "temp_raw_TTL_s": 7.5,
++    "power_and_TJ_TTL": "original source age/freshness only",
++    "fan_assumption": "last successful fraction held conditionally; startup uses 0.5 with full [0,1] range",
++    "fan_max_actual_age_s": 15.0,
++    "power_or_TJ_max_actual_age_s": 10.0,
++    "control_context_max_actual_age_s": 15.0,
++    "long_gap": "stop public Tf/Ts/E; discard internal state, next fresh TJ/rails cold-start from registered prior",
++    "source_epoch": "reset on raw stream/connection/lifecycle or genuine source-invalid boundary; never task phase",
++    "explicit_guard_fault_or_nonAUTO": "public observer unavailable; raw risk remains visible; never normal",
++    "stale_normalized_or_binding": "degraded, preserve conditional thermal history, no normal/tracking claim",
++    "HTTP_timeout": "observational unknown, conditional propagation without renewing successful PWM"
++  },
++  "phase_gates": {
++    "min_TJ_updates_for_tracking": 10,
++    "max_tracking_std_C": [
++      0.5,
++      2.0,
++      8.0
++    ],
++    "max_output_std_C": [
++      8.0,
++      25.0,
++      20.0
++    ],
++    "normal_context_stable_s": 5.0,
++    "expected_mode": "auto",
++    "expected_binding": "agx_info.temperature.tj",
++    "finite_is_tracking": false,
++    "tracking_is_field_safety_permission": false
++  },
++  "masks": {
++    "selection": "times/event kinds only, never hidden PWM/thermal values or full-M state",
++    "M_cold": [
++      [
++        0.0,
++        12.0
++      ]
++    ],
++    "M_single": [
++      [
++        180.0,
++        186.0
++      ]
++    ],
++    "M_cluster": "copy first 60s Y timeout timing block with >=2 failed fan polls; each exposure [failure-1s,next successful fan), translated to M+300s",
++    "M_transition": "[-2,+6] seconds around first runner work-block start, from recorded event timing only",
++    "M_long": [
++      [
++        600.0,
++        660.0
++      ]
++    ],
++    "projection": "replace whole masked fan response by payload=null/offline_mask; no derived full-input quality/state enters observer"
++  },
++  "evaluation": {
++    "horizons_s": [
++      15,
++      45,
++      90
++    ],
++    "label_tolerance_s": 2.0,
++    "origins": "every valid accepted TJ, not old five-second starts",
++    "forecast_Tf_anchor": "same current real TJ for all methods; filtered Tf reported separately",
++    "B": "HOLD two current rails and known/declared conditional PWM; no future inputs/TJ/end markers",
++    "A": "recorded future two rails and successful PWM within original TTL, no future TJ update; omit when actual future input path unavailable",
++    "A_contract": "R2 physical-input diagnostic, stratify observed context; retain original strict results separately, do not silently rename old scores",
++    "comparisons": "pairwise/common origin+horizon+label refs with cohort SHA; also each method own coverage and all-valid-TJ denominator",
++    "tails": "P95/max positive underprediction; fraction underpredicting >2C is description, not safety threshold",
++    "real_Ts": "difference to separately run unmasked M reference only, never true error",
++    "surface": "not read by new observer/evaluator, no clock fitting or external score",
++    "phase_boundaries_reset": false
++  },
++  "synthetic": {
++    "seed": 20261018,
++    "duration_s": 600,
++    "dt_s": 1.0,
++    "true_E_C": [
++      30.0,
++      40.0
++    ],
++    "true_Ts_minus_E_C": 8.0,
++    "mask_intervals_s": [
++      [
++        0,
++        12
++      ],
++      [
++        150,
++        156
++      ],
++      [
++        260,
++        320
++      ]
++    ],
++    "truth_solver": "independent scipy solve_ivp, no reuse of KF numerical step for truth",
++    "report": "Tf/Ts/E true errors and empirical internal-scale inclusion; not real Ts accuracy"
++  },
++  "budgets": {
++    "candidate_configurations": 1,
++    "naive_configurations": 1,
++    "theta_fits": 0,
++    "optimization_search": 0,
++    "max_study_wall_s": 600,
++    "CPU_BLAS_threads": 1,
++    "CUDA": false
++  },
++  "interface": {
++    "transport": "local read-only JSONL, no extra poll/service",
++    "groups": [
++      "identity",
++      "measurement",
++      "observer",
++      "safety",
++      "permission"
++    ],
++    "field_use": "research_only; external surface never enters state",
++    "permission": "local_demo=true, formal_field_authorized=false, device_actions=false"
++  },
++  "source_rule": "all input archives and old outputs immutable; new masks/spec/results only; no commit/push/software PR"
++}
+diff --git a/experiments/thermal_cpu_activity_bridge_v1/frozen/stream_metrics.py b/experiments/thermal_cpu_activity_bridge_v1/frozen/stream_metrics.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_activity_bridge_v1/frozen/stream_metrics.py
+@@ -0,0 +1,77 @@
++"""Activity metrics on common receiver time and availability. No physical truth inference."""
++import bisect
++
++
++def metrics(frames,trace,events,variant_names):
++    """events carry actual submit/done in the same receiver clock, never a plan."""
++    if not frames:
++        return dict(status='unknown:no_frames',groups=[],events=[])
++    times=[f['arrival_mono_s'] for f in frames]
++    clocks={f.get('arrival_clock_id') for f in frames}
++    if len(clocks)!=1 or None in clocks or any(e.get('arrival_clock_id') not in clocks for e in events):
++        return dict(status='unknown:unmatched_receiver_clock',groups=[],events=events)
++    if any(e.get('submit_mono_s') is None for e in events):
++        return dict(status='unknown:missing_actual_submit',groups=[],events=events)
++    def state_at(name,t):
++        i=bisect.bisect_right(times,t)-1
++        if i<0:return 'UNKNOWN',None
++        a=trace[i]['states'][name]
++        if a['supported_until_mono_s'] is None or t>=a['supported_until_mono_s']:
++            return 'UNKNOWN',None
++        return a['state'],frames[i].get('native_ref')
++    def busy(t):
++        return any(e['submit_mono_s']<=t<(e['done_mono_s'] if e.get('done_mono_s') is not None else times[-1]+1) for e in events)
++    groups=[];event_rows=[]
++    for name in variant_names:
++        background_s=unknown_s=common_s=active_bg_s=0.;active_bg_events=0;prev=False
++        for i,t in enumerate(times[:-1]):
++            right=times[i+1]
++            cuts={t,right}
++            for n in variant_names:
++                until=trace[i]['states'][n]['supported_until_mono_s']
++                if until is not None and t<until<right:cuts.add(until)
++            for e in events:
++                for v in (e['submit_mono_s'],e.get('done_mono_s')):
++                    if v is not None and t<v<right:cuts.add(v)
++            cuts=sorted(cuts)
++            for a,b in zip(cuts,cuts[1:]):
++                states={n:state_at(n,(a+b)/2)[0] for n in variant_names}
++                common=all(s!='UNKNOWN' for s in states.values())
++                common_s+=(b-a)*common
++                unknown_s+=(b-a)*(states[name]=='UNKNOWN')
++                is_bg=common and not busy((a+b)/2)
++                background_s+=(b-a)*is_bg
++                active_bg=is_bg and states[name]=='ACTIVE'
++                active_bg_s+=(b-a)*active_bg
++                if active_bg and not prev:active_bg_events+=1
++                prev=active_bg
++        for e in events:
++            end=e.get('done_mono_s')
++            submit=e['submit_mono_s'];initial,ref=state_at(name,submit)
++            indices=[i for i,t in enumerate(times) if submit<=t<=(end if end is not None else times[-1])]
++            common_indices=[i for i in indices if all(trace[i]['states'][n]['state']!='UNKNOWN' for n in variant_names)]
++            first=next((i for i in common_indices if trace[i]['states'][name]['state']=='ACTIVE'),None)
++            release=next((i for i,t in enumerate(times) if end is not None and t>=end and trace[i]['states'][name]['state']=='IDLE'),None)
++            event_rows.append(dict(variant=name,event_id=e['event_id'],state_at_submit=initial,state_at_submit_ref=ref,
++                result='already_active' if initial=='ACTIVE' else ('detected' if first is not None else ('miss_on_client_reference' if common_indices else 'unknown')),
++                delay_s=times[first]-submit if first is not None and initial!='ACTIVE' else None,
++                first_active_ref=frames[first].get('native_ref') if first is not None else None,
++                protocol_done_known=end is not None,
++                first_IDLE_after_DONE_delay_s=times[release]-end if release is not None else None,
++                thermal_process_independent=False))
++        groups.append(dict(variant=name,common_available_s=common_s,own_unknown_s=unknown_s,
++            common_no_client_inflight_s=background_s,common_no_client_inflight_ACTIVE_s=active_bg_s,
++            common_no_client_inflight_ACTIVE_events=active_bg_events))
++    repeats=[]
++    for group in sorted({str(e.get('continuous_group')) for e in events if e.get('continuous_group') is not None}):
++        es=[e for e in events if str(e.get('continuous_group'))==group]
++        start=min(e['submit_mono_s'] for e in es)
++        end=max(e['done_mono_s'] if e.get('done_mono_s') is not None else times[-1] for e in es)
++        for name in variant_names:
++            activations=[f.get('native_ref') for f,r in zip(frames,trace) if start<=f['arrival_mono_s']<=end
++                and r['states'][name]['transition'] and r['states'][name]['state']=='ACTIVE']
++            repeats.append(dict(variant=name,continuous_group=group,activation_refs=activations,
++                additional_activation_count=max(0,len(activations)-1),independent_thermal_processes=1))
++    return dict(status='descriptive_client_reference_only',groups=groups,events=event_rows,
++        continuous_groups=repeats,physical_CPU_GPU_onset_truth=None,
++        unknown_end_is_not_idle=True,independent_thermal_processes=1)
+diff --git a/experiments/thermal_cpu_activity_bridge_v1/frozen-source.json b/experiments/thermal_cpu_activity_bridge_v1/frozen-source.json
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_activity_bridge_v1/frozen-source.json
+@@ -0,0 +1,17 @@
++{
++  "original_root": "/Users/massif/Tianshan-thermal-observer/experiments/thermal_cpu_increment_v1",
++  "files": {
++    "analyse.py": "80f2d4964cff18487561b95e1b4e8477cd4c7a68d3c7dd2bb4a14a08bc8c18c2",
++    "candidate.json": "89ae53229af3e84b3bae1140a1ce013d6bf16e374cd5d3ffcde6fc7d28b78831",
++    "adapter.py": "68c10275c2a67a745fd89fc2c1cd665822185c8cfe8c398ce0f093dec941bb5f",
++    "activity.py": "81a605571d64a1f3818cfdcc4f811cf09a29872424bc93519682d0bbd707e97d",
++    "evaluate_stream.py": "f7f4849a42820575517216744375f73d7aa69a4a97d350d0bf04cb2e050cae0f",
++    "common.py": "b99664f1263e694721fde8c3eba744f21102915e7c35ee69e6b53629cd01d52b",
++    "stream_metrics.py": "2bcd3adde68d634cc40de293d215838a7c8ac56a2d310beeb1aeadfa6d7b043a",
++    "analysis-spec.json": "df26198dd631a45564d88c10b7b30433ab8b272cb4cf5d3726d7be6eacbab716",
++    "freeze.json": "85f063a8002b0d0723cd91315d7e12b151f33cda0fc2a5267611012981d0e267",
++    "inputs/vendor/src/tto_field/research/observer-spec.json": "2080adcf20773650299def2bb0f3ebdb9f87d8f85281d5b87a99d8b406c83c6b",
++    "inputs/vendor/src/tto_field/research/models/primary.json": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0"
++  },
++  "protected_files": 2173
++}
+diff --git a/experiments/thermal_cpu_activity_bridge_v1/interface-freeze.json b/experiments/thermal_cpu_activity_bridge_v1/interface-freeze.json
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_activity_bridge_v1/interface-freeze.json
+@@ -0,0 +1,36 @@
++{
++  "contract": "TTO-CPU-PREP-CLOSE-v1.0-R1",
++  "adapter_version": "cpu-arrival-bridge-1.0.0",
++  "frozen_at_utc": "2026-10-20T12:39:39.780156+00:00",
++  "files": {
++    "adapter-spec.json": "13fc98f9825e60ca47ff346167edab0c500d5f80609befd9c5c5c4474c5a09c0",
++    "bridge.py": "8d6fe5f013e67d2a26c192419b0b82f29a4c1aa794ddd598e2f6ba33a45045e3",
++    "frozen/activity.py": "81a605571d64a1f3818cfdcc4f811cf09a29872424bc93519682d0bbd707e97d",
++    "frozen/adapter.py": "68c10275c2a67a745fd89fc2c1cd665822185c8cfe8c398ce0f093dec941bb5f",
++    "frozen/analyse.py": "80f2d4964cff18487561b95e1b4e8477cd4c7a68d3c7dd2bb4a14a08bc8c18c2",
++    "frozen/analysis-spec.json": "df26198dd631a45564d88c10b7b30433ab8b272cb4cf5d3726d7be6eacbab716",
++    "frozen/candidate.json": "89ae53229af3e84b3bae1140a1ce013d6bf16e374cd5d3ffcde6fc7d28b78831",
++    "frozen/common.py": "b99664f1263e694721fde8c3eba744f21102915e7c35ee69e6b53629cd01d52b",
++    "frozen/evaluate_stream.py": "f7f4849a42820575517216744375f73d7aa69a4a97d350d0bf04cb2e050cae0f",
++    "frozen/freeze.json": "85f063a8002b0d0723cd91315d7e12b151f33cda0fc2a5267611012981d0e267",
++    "frozen/inputs/vendor/src/tto_field/research/models/primary.json": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
++    "frozen/inputs/vendor/src/tto_field/research/observer-spec.json": "2080adcf20773650299def2bb0f3ebdb9f87d8f85281d5b87a99d8b406c83c6b",
++    "frozen/stream_metrics.py": "2bcd3adde68d634cc40de293d215838a7c8ac56a2d310beeb1aeadfa6d7b043a",
++    "io_utils.py": "d5fa11209ac2d4355570f114d61ed0f98c2e19cba824ee76ac90bddd0327987d",
++    "joint_check.py": "18a14eb63883a785f334d58320d2f613c7da56ca56b1b3ecd2e4b721ee8d3a3c",
++    "pytest.ini": "37b7898dd0df68d7bacac4726b4836010200403a1abe9542fe229caebe39b8a3",
++    "replay.py": "3d8234f6a7d3da04319726f885eeba0d363f8a94a6f7465c343357fde40b1c2f",
++    "requirements.txt": "630ac856f45600848ad70e8b180b63c9dff66626edeaae3e952a607dc2694c28",
++    "tests/test_bridge.py": "27e8173dcc61934c9331a18b195cf0c669068e199b30935e4a1b2b11339f26ff"
++  },
++  "old_candidate_sha256": "89ae53229af3e84b3bae1140a1ce013d6bf16e374cd5d3ffcde6fc7d28b78831",
++  "old_analysis_spec_sha256": "df26198dd631a45564d88c10b7b30433ab8b272cb4cf5d3726d7be6eacbab716",
++  "sample_receipt_sha256": "58b5a89d655d8109a554ee2c0536e41e16ba19aaa76219178ed49dd344e4fbdb",
++  "receiver_code_sha256": "2691b9c4040a192df6823e293aafbe211386fced0d542c6bd0fb7b550a47bfa0",
++  "source_code_sha256": "7f674e6913458dc73e8a677fbb46d6574812da05c5a5ba2938d126b53ca14382",
++  "source_config_sha256": "2a95903313122cd7ff3488d83b0a62725f2fdd82c5247c287ec76b83aee9a160",
++  "new_real_field_data": false,
++  "new_models": 0,
++  "parameter_search": 0,
++  "deployable": false
++}
+diff --git a/experiments/thermal_cpu_activity_bridge_v1/io_utils.py b/experiments/thermal_cpu_activity_bridge_v1/io_utils.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_activity_bridge_v1/io_utils.py
+@@ -0,0 +1,27 @@
++import hashlib
++import json
++from pathlib import Path
++
++ROOT=Path(__file__).resolve().parent
++
++
++def read(p):
++    return json.loads(Path(p).read_text())
++
++
++def lines(p):
++    if not Path(p).exists():return []
++    return [json.loads(s) for s in Path(p).read_text().splitlines() if s.strip()]
++
++
++def write(p,obj):
++    Path(p).write_text(json.dumps(obj,ensure_ascii=False,indent=2,allow_nan=False)+'\n')
++
++
++def jsonl(p,rows):
++    with Path(p).open('w') as f:
++        for r in rows:f.write(json.dumps(r,ensure_ascii=False,allow_nan=False)+'\n')
++
++
++def sha(p):
++    return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+diff --git a/experiments/thermal_cpu_activity_bridge_v1/joint_check.py b/experiments/thermal_cpu_activity_bridge_v1/joint_check.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_activity_bridge_v1/joint_check.py
+@@ -0,0 +1,49 @@
++"""Actual producer/receiver artifact -> unique adapter -> unchanged model consumers."""
++import argparse
++import base64
++import collections
++import json
++import os
++from pathlib import Path
++import subprocess
++import sys
++from io_utils import ROOT,read,lines,write,jsonl,sha
++
++
++def main():
++    p=argparse.ArgumentParser(description=__doc__)
++    p.add_argument('--adapted',type=Path,required=True);p.add_argument('--run-dir',type=Path,required=True)
++    p.add_argument('--output',type=Path,required=True);a=p.parse_args()
++    a.output.mkdir(parents=True,exist_ok=False)
++    wire={x['wire_seq']:x for x in lines(a.run_dir/'cpu-sidecar-wire.jsonl')}
++    arrivals=lines(a.run_dir/'cpu-sidecar-arrivals.jsonl')
++    for row in arrivals:
++        w=wire[row['wire_seq']]
++        assert not w['truncated'] and json.loads(base64.b64decode(w['raw_base64']))==row['source']
++        assert w['received_at_mono_s']==row['received_at_mono_s'] and w['receiver_domain']==row['receiver_domain']
++    sys.path.insert(0,str(ROOT/'frozen'))
++    from activity import load_candidate,Processor
++    c,f=load_candidate(ROOT/'frozen');processor=Processor(c,f)
++    frames=lines(a.adapted/'frames.jsonl');outputs=[processor.process(x) for x in frames]
++    jsonl(a.output/'processor.jsonl',outputs)
++    counts={n:dict(collections.Counter(r['variants'][n]['activity']['state'] for r in outputs)) for n in c['variants']}
++    assert all(sum(count for state,count in x.items() if state!='UNKNOWN')>0 for x in counts.values())
++    env=dict(os.environ,PYTHONDONTWRITEBYTECODE='1',OPENBLAS_NUM_THREADS='1',OMP_NUM_THREADS='1')
++    args=[sys.executable,str(ROOT/'frozen/evaluate_stream.py'),'--frames',str(a.adapted.resolve()/'frames.jsonl'),
++        '--origins',str(a.adapted.resolve()/'thermal-origins.jsonl'),'--registration',str(a.adapted.resolve()/'registration.json'),
++        '--output',str(a.output.resolve()/'evaluate-stream')]
++    with (a.output/'evaluate-stream.log').open('w') as log:
++        subprocess.run(args,env=env,stdout=log,stderr=subprocess.STDOUT,check=True)
++    write(a.output/'joint-receipt.json',dict(contract='TTO-CPU-PREP-CLOSE-v1.0-R1',
++        actual_wire_to_source_rows_verified=len(arrivals),frames=len(frames),Activity_counts=counts,
++        actual_sender_receiver_artifacts_used=True,manual_model_FRAME_used=False,
++        original_TJ_origins=len(lines(a.adapted/'thermal-origins.jsonl')),
++        revocations=dict(collections.Counter(x['reason'] for x in lines(a.adapted/'revocations.jsonl'))),
++        candidate_sha256=sha(ROOT/'frozen/candidate.json'),analysis_spec_sha256=sha(ROOT/'frozen/analysis-spec.json'),
++        evaluate_stream_called=True,actual_and_1s_delivery_conditions_written=True,
++        synthetic_only=True,new_physical_temperature_scores=False,source_lead_or_control_benefit=False,
++        network_clients=0,device_connections=0,parameter_search=0))
++    print('Joint chain passed:',len(arrivals),'actual serialized/received rows ->',len(frames),'frames -> frozen Activity/evaluate_stream.')
++
++
++if __name__=='__main__':main()
+diff --git a/experiments/thermal_cpu_activity_bridge_v1/model-handoff.json b/experiments/thermal_cpu_activity_bridge_v1/model-handoff.json
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_activity_bridge_v1/model-handoff.json
+@@ -0,0 +1,24 @@
++{
++  "contract": "TTO-CPU-PREP-CLOSE-v1.0-R1",
++  "status": "model_line_ready_for_testing_owner_integration",
++  "adapter_directory": "/Users/massif/Tianshan-thermal-observer/experiments/thermal_cpu_activity_bridge_v1",
++  "entry": "bridge.py",
++  "adapter_sha256": "8d6fe5f013e67d2a26c192419b0b82f29a4c1aa794ddd598e2f6ba33a45045e3",
++  "interface_freeze_sha256": "9278f1a6db1e0e9bc4ee488bb2958168799733a0d884f1ef771ddf57313c38dd",
++  "sample_native_run_id": "b1a4248e-7274-4991-91ce-d8d61644006b",
++  "source_sample_directory": "/Users/massif/Tianshan-thermal-observer/experiments/thermal_cpu_activity_bridge_v1/inputs/joint-complete",
++  "source_config": "/Users/massif/Tianshan-thermal-observer/experiments/thermal_cpu_activity_bridge_v1/inputs/joint-complete/source-config.json",
++  "frozen_candidate_sha256": "89ae53229af3e84b3bae1140a1ce013d6bf16e374cd5d3ffcde6fc7d28b78831",
++  "frozen_analysis_spec_sha256": "df26198dd631a45564d88c10b7b30433ab8b272cb4cf5d3726d7be6eacbab716",
++  "new_tests": 14,
++  "joint_receipt": "/Users/massif/Tianshan-thermal-observer/experiments/thermal_cpu_activity_bridge_v1/results/joint-final-v2/joint-receipt.json",
++  "adapter_outputs": "/Users/massif/Tianshan-thermal-observer/experiments/thermal_cpu_activity_bridge_v1/results/final-v2",
++  "replay_entry": "replay.py --output NEWDIR",
++  "bridge_requires_only_standard_library": true,
++  "field_or_target_install_verified": false,
++  "field_actions_authorized": false,
++  "testing_owner": "01a12fd6-393a-7c73-8d46-6e70f9e17e61",
++  "model_line_complete": true,
++  "testing_owner_independent_verified": true,
++  "testing_owner_independent_receipt_sha256": "6db768474cdffae5f081fa2047360ad83e10f926a39c6f988912c66033df4714"
++}
+diff --git a/experiments/thermal_cpu_activity_bridge_v1/pytest.ini b/experiments/thermal_cpu_activity_bridge_v1/pytest.ini
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_activity_bridge_v1/pytest.ini
+@@ -0,0 +1,4 @@
++[pytest]
++pythonpath = .
++testpaths = tests
++addopts = -ra
+diff --git a/experiments/thermal_cpu_activity_bridge_v1/replay.py b/experiments/thermal_cpu_activity_bridge_v1/replay.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_activity_bridge_v1/replay.py
+@@ -0,0 +1,55 @@
++"""Portable finite offline replay; raw/code identities exact, derived floats tolerate1e-8."""
++import argparse
++import os
++import subprocess
++import sys
++from pathlib import Path
++from io_utils import ROOT,read,lines,write,sha
++
++
++def compare(a,b,path='',maximum=None):
++    maximum=[] if maximum is None else maximum
++    if type(a) is float:
++        assert type(b) in (int,float) and abs(a-b)<=1e-8,(path,a,b)
++        maximum.append(abs(a-b))
++    elif isinstance(a,dict):
++        assert set(a)==set(b),path
++        for k in a:compare(a[k],b[k],path+'/'+str(k),maximum)
++    elif isinstance(a,list):
++        assert len(a)==len(b),path
++        for i,(x,y) in enumerate(zip(a,b)):compare(x,y,path+'/'+str(i),maximum)
++    else:assert type(a)==type(b) and a==b,(path,a,b)
++    return maximum
++
++
++def main():
++    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',type=Path,required=True);a=p.parse_args()
++    out=a.output.resolve();out.mkdir(parents=True,exist_ok=False)
++    freeze=read(ROOT/'interface-freeze.json')
++    for name,digest in freeze['files'].items():assert sha(ROOT/name)==digest,name
++    env=dict(os.environ,PYTHONDONTWRITEBYTECODE='1',OPENBLAS_NUM_THREADS='1',OMP_NUM_THREADS='1')
++    sample=ROOT/'inputs/joint-complete'
++    cmds=[('tests',[sys.executable,'-m','pytest','-c',str(ROOT/'pytest.ini'),str(ROOT/'tests'),'-q','-p','no:cacheprovider']),
++        ('adapt',[sys.executable,str(ROOT/'bridge.py'),'--run-dir',str(sample/'run'),'--source-config',str(sample/'source-config.json'),'--output',str(out/'adapted')]),
++        ('joint',[sys.executable,str(ROOT/'joint_check.py'),'--adapted',str(out/'adapted'),'--run-dir',str(sample/'run'),'--output',str(out/'joint')])]
++    for label,cmd in cmds:
++        with (out/(label+'.log')).open('w') as log:
++            subprocess.run(cmd,cwd=ROOT,env=env,stdout=log,stderr=subprocess.STDOUT,check=True)
++    exact=[]
++    for name in ['frames.jsonl','thermal-origins.jsonl','registration.json','revocations.jsonl','source-query-diagnostics.jsonl']:
++        assert sha(ROOT/'results/final-v2'/name)==sha(out/'adapted'/name),name
++        exact.append(name)
++    checked=[];differences=[]
++    for old in sorted((ROOT/'results/joint-final-v2').rglob('*')):
++        if not old.is_file() or old.suffix not in ('.json','.jsonl') or old.name=='data-role-and-sources.json':continue
++        rel=old.relative_to(ROOT/'results/joint-final-v2');new=out/'joint'/rel
++        av,bv=(lines(old),lines(new)) if old.suffix=='.jsonl' else (read(old),read(new))
++        differences.extend(compare(av,bv));checked.append(str(rel))
++    write(out/'replay-receipt.json',dict(exact_adapted_files=exact,model_output_files_semantically_equal=checked,
++        max_derived_float_abs_difference=max(differences,default=0.),float_tolerance=1e-8,
++        identifiers_flags_counts_exact=True,raw_code_model_SHA_exact=True,new_tests_passed=14,
++        actual_source_receiver_rows=150,device_connections=0,model_fits=0,old_scores_recomputed=False))
++    print('Offline replay passed:14 tests, actual150-row joint chain, exact adapter files and tolerant derived model values.')
++
++
++if __name__=='__main__':main()
+diff --git a/experiments/thermal_cpu_activity_bridge_v1/requirements.txt b/experiments/thermal_cpu_activity_bridge_v1/requirements.txt
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_activity_bridge_v1/requirements.txt
+@@ -0,0 +1,3 @@
++numpy==2.2.6
++scipy==1.16.3
++pytest==8.3.5
+diff --git a/experiments/thermal_cpu_activity_bridge_v1/tests/test_bridge.py b/experiments/thermal_cpu_activity_bridge_v1/tests/test_bridge.py
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_activity_bridge_v1/tests/test_bridge.py
+@@ -0,0 +1,154 @@
++import base64
++import copy
++import json
++from pathlib import Path
++import sys
++import pytest
++
++ROOT=Path(__file__).resolve().parents[1]
++sys.path.insert(0,str(ROOT))
++from io_utils import read,lines,sha
++from bridge import Bridge,adapt,cpu_window
++sys.path.insert(0,str(ROOT/'frozen'))
++from activity import load_candidate,Processor
++from evaluate_stream import evaluate,downsample_1s
++
++SAMPLE=ROOT/'inputs/joint-complete'
++RUN=SAMPLE/'run'
++
++
++def all_data():
++    b,frames,origins=adapt(RUN,read(SAMPLE/'source-config.json'))
++    return b,frames,origins
++
++
++def start_with_actual_window():
++    binding=read(RUN/'native-binding.json');launch=read(RUN/'launch.json')
++    mp=RUN/binding['native_manifest'];b=Bridge(read(mp),binding,launch,read(SAMPLE/'source-config.json'))
++    b.raw_by_ref={r['ref']:r for r in lines(mp.parent/'observations-0001.jsonl')}
++    rows=lines(RUN/'cpu-sidecar-arrivals.jsonl')
++    for e in lines(RUN/'states.jsonl'):
++        if e['clock']['generated_at_mono_s']>rows[1]['decision_generated_mono_s']:break
++        b.native_event(e,b.raw_by_ref[e['generation_evidence']['native_ref']],e['clock']['generated_at_mono_s'])
++    for i,r in enumerate(rows[:2],1):b.cpu_event(r,'actual-arrival:'+str(i),r['decision_generated_mono_s'])
++    assert b.features['cpu_mean_pct']['valid']
++    return b,rows
++
++
++def test_actual_wire_and_code_identity_and_all_variants_usable():
++    receipt=read(SAMPLE/'sample-receipt.json')
++    assert sha(ROOT/'inputs/emitter-receiver-source/cpu_source.py')==receipt['source_code_sha256']
++    assert sha(ROOT/'inputs/emitter-receiver-source/cpu_transport.py')==receipt['receiver_code_sha256']
++    wires={x['wire_seq']:x for x in lines(RUN/'cpu-sidecar-wire.jsonl')}
++    for row in lines(RUN/'cpu-sidecar-arrivals.jsonl'):
++        w=wires[row['wire_seq']]
++        assert json.loads(base64.b64decode(w['raw_base64']))==row['source']
++        assert row['received_at_mono_s']==w['received_at_mono_s']
++    b,frames,origins=all_data();c,f=load_candidate(ROOT/'frozen');p=Processor(c,f)
++    outputs=[p.process(x) for x in frames]
++    assert all(any(r['variants'][n]['activity']['state']!='UNKNOWN' for r in outputs) for n in c['variants'])
++    assert len(origins)==len({r['ref'] for r in origins})
++    assert all(r['t']>=r['measurement_received_mono_s'] for r in origins)
++
++
++@pytest.mark.parametrize('reason',['counter_reset_iowait_decrease_or_zero_window','online_set_changed','native_epoch_changed'])
++def test_actual_invalid_revokes_and_later_actual_valid_window_recovers(reason):
++    b,frames,_=all_data()
++    event=next(e for e in b.audit if e['reason']==reason and (reason!='native_epoch_changed' or e['available_at_mono_s']>frames[0]['arrival_mono_s']+30))
++    i=next(i for i,f in enumerate(frames) if f['arrival_mono_s']==event['available_at_mono_s'] and not f['features']['cpu_mean_pct'].get('valid'))
++    assert not frames[i]['features']['cpu_max_pct'].get('valid')
++    if reason!='native_epoch_changed':
++        previous=next(f for f in reversed(frames[:i]) if f['features'].get('cpu_mean_pct',{}).get('valid'))
++        assert previous['features']['cpu_mean_pct']['valid_until_mono_s']>frames[i]['arrival_mono_s']
++    assert any(x['features'].get('cpu_mean_pct',{}).get('valid') for x in frames[i+1:])
++    c,f=load_candidate(ROOT/'frozen');p=Processor(c,f)
++    outputs=[p.process(x) for x in frames]
++    assert outputs[i]['variants']['INPUT-MEAN']['activity']['state']=='UNKNOWN'
++    assert outputs[i]['variants']['INPUT-CORE']['activity']['state']=='UNKNOWN'
++
++
++def test_actual_new_CPU_never_renews_old_coarse_cache_and_native_gap_stays_unknown():
++    _,frames,_=all_data();checked=0
++    for a,b in zip(frames,frames[1:]):
++        if b['adapter_event']=='cpu' and a['epoch']==b['epoch']:
++            for name in ('gpu_pct','gpu_W','cpu_soc_mss_W'):
++                assert a['features'].get(name)==b['features'].get(name)
++            checked+=1
++    assert checked>100
++    gap=[x for x in frames if x['adapter_event']=='cpu' and x['features'].get('cpu_mean_pct',{}).get('valid')
++         and not x['features'].get('gpu_W',{}).get('valid')]
++    assert gap
++    c,f=load_candidate(ROOT/'frozen');p=Processor(c,f)
++    lookup={x['native_ref']:p.process(x) for x in frames}
++    assert all(lookup[x['native_ref']]['variants']['INPUT-BASE']['activity']['state']=='UNKNOWN' for x in gap)
++
++
++def test_repeated_actual_packet_does_not_renew_and_equal_new_windows_survive():
++    b,rows=start_with_actual_window();old=copy.deepcopy(b.features['cpu_mean_pct'])
++    duplicate=copy.deepcopy(rows[1]);t=rows[1]['decision_generated_mono_s']+.4
++    duplicate['received_at_mono_s']+=.4;duplicate['decision_generated_mono_s']=t
++    b.cpu_event(duplicate,'reread-actual-buffer',t)
++    assert b.features['cpu_mean_pct']==old
++    next_row=rows[2]
++    assert cpu_window(rows[1]['source'])['mean_percent']==cpu_window(next_row['source'])['mean_percent']
++    b.cpu_event(next_row,'actual-next-window',next_row['decision_generated_mono_s'])
++    assert b.features['cpu_mean_pct']['update_id']!=old['update_id']
++    assert b.features['cpu_mean_pct']['value']==old['value']
++
++
++@pytest.mark.parametrize('mutation,reason',[
++    ('foreign_run','sidecar_foreign_run_or_command'),
++    ('unknown_source_clock','source_identity_or_clock_unknown'),
++    ('regressed_seq','source_sequence_regression'),
++    ('new_session','source_identity_changed')])
++def test_negative_derivatives_of_actual_envelopes_never_fall_back(mutation,reason):
++    b,rows=start_with_actual_window();x=copy.deepcopy(rows[2]);t=x['decision_generated_mono_s']
++    if mutation=='foreign_run':x['native_run_id']='other-run'
++    elif mutation=='unknown_source_clock':x['source']['identity']['clock']=None
++    elif mutation=='regressed_seq':x['source']['seq']=1
++    else:x['source']['identity']['source_session']='new-source-session'
++    b.cpu_event(x,'negative-derivative-of-real-envelope',t)
++    assert not b.features['cpu_mean_pct'].get('valid') and not b.features['cpu_max_pct'].get('valid')
++    assert b.audit[-1]['reason']==reason
++    assert b.features['gpu_W']['valid']
++
++
++def test_partial_online_set_is_not_silently_averaged_and_unmapped_receiver_rejected():
++    b,rows=start_with_actual_window();x=copy.deepcopy(rows[2]);t=x['decision_generated_mono_s']
++    for name in ('raw_cpu','previous_raw_cpu'):x['source'][name]['per_core_online'].pop('cpu1')
++    b.cpu_event(x,'incomplete-online-map',t)
++    assert not b.features['cpu_mean_pct'].get('valid')
++    assert b.audit[-1]['reason']=='incomplete_possible_or_online_set'
++    x=copy.deepcopy(rows[3]);x['receiver_domain']='unknown-other-clock'
++    with pytest.raises(ValueError,match='receiver_clock_unmapped'):b.cpu_event(x,'unknown-receiver',x['decision_generated_mono_s'])
++
++
++def test_future_source_records_cannot_change_earlier_predictions_and_horizons_independent():
++    _,frames,origins=all_data();c,f=load_candidate(ROOT/'frozen')
++    original=evaluate(frames,origins,c,f)
++    cutoff=origins[len(origins)//2]['t']
++    # Keep the actual artifact prefix. Changing/deleting future delivered records
++    # cannot change an already-generated prediction (labels may legitimately differ).
++    prefix=[x for x in frames if x['arrival_mono_s']<=cutoff]
++    short=evaluate(prefix,origins,c,f)
++    assert [x['prediction'] for x in original['points'] if x['t']<=cutoff]==[x['prediction'] for x in short['points'] if x['t']<=cutoff]
++    cov={(x['method'],x['h']):x for x in original['coverage']}
++    assert cov['B0',15]['valid_labels']>0 and cov['B0',90]['valid_labels']==0
++    assert cov['INPUT-CORE',15]['predictions']>0 and cov['INPUT-CORE',45]['predictions']>0
++    coarse=downsample_1s(frames)
++    assert all(x['actual_original_arrival_mono_s']<=x['arrival_mono_s'] for x in coarse)
++    assert all(x['features'].get('cpu_mean_pct',{}).get('source_read_window') is None or
++               x['features']['cpu_mean_pct']['source_clock_mapping']=='unknown' for x in coarse)
++
++
++def test_original_model_and_activity_files_stay_byte_exact():
++    manifest=read(ROOT/'frozen-source.json')
++    for rel,digest in manifest['files'].items():assert sha(ROOT/'frozen'/rel)==digest
++
++
++def test_receiver_budget_anchors_actual_receive_not_late_parse_or_duplicate_reads():
++    b,rows=start_with_actual_window();row=copy.deepcopy(rows[2])
++    row['decision_generated_mono_s']=row['received_at_mono_s']+1.1
++    b.cpu_event(row,'delayed-actual-envelope-decision',row['decision_generated_mono_s'])
++    assert not b.features['cpu_mean_pct']['valid']
++    assert b.features['cpu_mean_pct']['valid_until_mono_s']==row['received_at_mono_s']+1.
+diff --git a/experiments/thermal_cpu_activity_bridge_v1/接口说明.md b/experiments/thermal_cpu_activity_bridge_v1/接口说明.md
+new file mode 100644
+--- /dev/null
++++ b/experiments/thermal_cpu_activity_bridge_v1/接口说明.md
+@@ -0,0 +1,19 @@
++# 唯一离线适配合同
++
++输入为同run的`cpu-sidecar-arrivals.jsonl`、`sidecar-events.jsonl`、`states.jsonl`、`native-binding.json`、`launch.json`、native manifest/raw及source-config。wire仅作原始字节/接收一致性核对，不绕过测试端错误判定。拒绝/EOF/停止以sidecar-events最新语义撤销，完整被拒行仍在wire中；撤销ledger保留原事件/引用。
++
++旁录CPU的source host/boot/session/seq、全部possible/online状态、累计计数、SC_CLK_TCK、前后读取窗保留。完整在线集合用同一对窗口，`busy=(sum首8差分−idle−iowait)/sum首8差分`；guest不重复加。CPU mean为完整在线集合的非加权均值，max为每时刻最大值。缺一项、计数回退/零窗、source明确incomplete或在线集切换窗口均撤销两者；不回找以前valid，也不缩小集合制造可用值。之后真实完整的新合法窗恢复。实际在线集合稳定后可恢复，离线核仍在原始possible/online映射中。
++
++CPU update_id由真实source身份、seq与源读取窗构成，不能按数值去重。相同值的新合法窗保留；同一个buffer再次出现不增加确认/不续截止。新source session先撤销旧资格，下一合法窗才恢复；已退休source不得回来覆盖。native epoch变更撤销旧CPU/粗特征，不调用或重置原热观察器。
++
++接收端时刻只用实际`received_at_mono_s`和`decision_generated_mono_s`，domain与native-binding/launch/真实state envelope一致。Mac联合样例的receiver boot未知就是null，不把domain中的会话UUID冒充boot。源端独立clock及前后窗不改名为接收时刻；source→receiver映射、传输延迟和精确源龄均未知。若接收端domain都不能关联，则拒绝把该文件放上此时间轴，输出明确failure，不作跨钟相减。
++
++本轮冻结的是**接收顺序研究资格**：CPU只能在实际decision完成之后使用，支持截止不晚于真实received_at+1秒，与已有旁录无包停线预算对齐。这不是CPU源龄测量、不是0时延，也不修改生产TTL。若解析已经超过支持截止，立即不可用。真实60秒能力核对仍要补源时间/有效信息与开销证据，不能把此资格当成物理先导验收。
++
++GPU与两rail只取同run保存的原生处理结果/raw，采用原source ref、GPU身份/采样标记和原有效截止。CPU包只携带这些粗来源的原值及原截止，不更新update_id、available_at或valid_until。最新原生失效/断连撤销BASE；CPU还在收包不能让BASE恢复。旁录直接查询的GPU/rail若独立窗/generation未知，原样放诊断，不造新身份、不与原生功率相加。
++
++每个原有效TJ只生成一个thermal origin。该新接口的t为真实state envelope生成/可用时刻，原TJ接收时刻另存`measurement_received_mono_s`；不把刚计算出的状态倒填到较早raw接收时刻。全部分支共享这组约1秒起点及15/45/90秒/+2秒逐时距标签规则，缺90秒不删45秒。原旧run的raw时间起点评分原样保留，本接口不替换旧评分。Ts/E、当前TJ、条件PWM和安全状态完全取原state，不以CPU修正状态或热θ，不产生高频TJ标签。
++
++顶层FRAME epoch是原native epoch，CPU source session/seq单独保留；不因CPU重启切断热过程或重置慢态。CPU跨session序号不可比较，所以FRAME中不伪造单调source_order，原序号在`source_order_original`，严格顺序/退休检查由本唯一适配层完成。原Activity仍只执行原冻结规则。
++
++causal-1s-decimation是每秒选最后已到达的200ms统计窗结果，改变交付节奏，不重建真正1秒累计计数窗。正常/不适用/unknown分别保留。本轮只证明两端可执行衔接和撤销语义，没有新的CPU先导、温度预测增益、风扇控制或现场放行结论。

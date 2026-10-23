@@ -1,0 +1,38 @@
+{
+  "inference": {
+    "base_url": null,
+    "model": "RM-01 VLM",
+    "messages": [
+      {
+        "role": "user",
+        "content": "请用中文写一篇连续、详细的科普文章，解释计算机芯片在不同负载下为什么会升温，以及散热器、风扇和环境温度各自怎样影响降温。请按自然段展开，不要输出代码。"
+      }
+    ],
+    "stream": true,
+    "sampling": {},
+    "max_tokens": 256,
+    "request_timeout_s": 30,
+    "headers_file": null,
+    "ca_file": null,
+    "reported_root": "/home/rm01/models/dev/llm/Qwen3.8-27B-NVFP4/",
+    "engine": "historical vLLM; current evidence required",
+    "quantization": "historical NVFP4; current evidence required",
+    "weights_sha256": null,
+    "identity_evidence": null,
+    "confirmed_client_slots": null,
+    "template_identity": null,
+    "cache_policy": null
+  },
+  "instrument": {
+    "recording": false,
+    "probe_fixed": false,
+    "clock_start": {
+      "path": null,
+      "sha256": null,
+      "command_id": null,
+      "timezone": "UTC+08:00",
+      "display_resolution_s": 1,
+      "uncertainty_s": null
+    }
+  }
+}

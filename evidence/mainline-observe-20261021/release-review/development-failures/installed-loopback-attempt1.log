@@ -1,0 +1,52 @@
+Traceback (most recent call last):
+  File "/Users/massif/Tianshan-thermal-observer/experiments/mainline_observe_v1/tests/installed_service.py", line 61, in <module>
+    if __name__=='__main__':asyncio.run(main(Path(sys.argv[1]).resolve(),Path(sys.argv[2]).resolve()))
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Users/massif/Tianshan-thermal-observer/experiments/mainline_observe_v1/tests/installed_service.py", line 39, in main
+    assert p.returncode==0,(out/'stderr.log').read_text()
+           ^^^^^^^^^^^^^^^
+AssertionError: Traceback (most recent call last):
+  File "/Users/massif/Tianshan-thermal-observer/evidence/mainline-observe-20261021/local-env/lib/python3.12/site-packages/tto_field/observe_runtime.py", line 203, in run_observe
+    store.metadata(store.root/'status.json',dict(running=False,pid=os.getpid(),reason=reason,summary='summary.json',native_run_id=consumer.native_run_id))
+  File "/Users/massif/Tianshan-thermal-observer/evidence/mainline-observe-20261021/local-env/lib/python3.12/site-packages/tto_field/observe_storage.py", line 24, in metadata
+    path.parent.mkdir(parents=True,exist_ok=True); write_json(path,value); self.total+=len(b)-old
+                                                   ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/massif/Tianshan-thermal-observer/evidence/mainline-observe-20261021/local-env/lib/python3.12/site-packages/tto/util.py", line 35, in write_json
+    with path.open('x', encoding='utf-8') as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileExistsError: [Errno 17] File exists: '/Users/massif/Tianshan-thermal-observer/evidence/mainline-observe-20261021/installed-loopback-attempt1/session/status.json'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/massif/Tianshan-thermal-observer/evidence/mainline-observe-20261021/local-env/bin/tto-observe", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/Users/massif/Tianshan-thermal-observer/evidence/mainline-observe-20261021/local-env/lib/python3.12/site-packages/tto_field/observe_cli.py", line 116, in main
+    result=asyncio.run(run_observe(c,reg,a.output,a.duration,local_loopback=a.local_loopback,grant=grant,storage_options=dict(budget=grant['session_max_bytes'],segment_bytes=min(2*1024**3,grant['session_max_bytes']))))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Users/massif/Tianshan-thermal-observer/evidence/mainline-observe-20261021/local-env/lib/python3.12/site-packages/tto_field/observe_runtime.py", line 206, in run_observe
+    raise RuntimeError('recording_finalize_failed:'+type(exc).__name__) from exc
+RuntimeError: recording_finalize_failed:FileExistsError
+

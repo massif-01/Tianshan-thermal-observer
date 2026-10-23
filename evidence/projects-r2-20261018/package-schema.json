@@ -1,0 +1,469 @@
+{
+  "schema_version": "TTO-PROJECTS-R2",
+  "repo": "https://github.com/massif-01/Tianshan-thermal-observer",
+  "project_title": "TTO · Product Roadmap",
+  "owner": "massif-01",
+  "new_visibility": "PRIVATE",
+  "preserve_existing_visibility": true,
+  "fields": {
+    "Phase": {
+      "type": "SINGLE_SELECT",
+      "options": [
+        "P0",
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5",
+        "P6",
+        "P7",
+        "Control"
+      ]
+    },
+    "Horizon": {
+      "type": "SINGLE_SELECT",
+      "options": [
+        "Now",
+        "Next",
+        "Later"
+      ]
+    },
+    "Kind": {
+      "type": "SINGLE_SELECT",
+      "options": [
+        "Overview",
+        "Delivery",
+        "Task"
+      ]
+    },
+    "Priority": {
+      "type": "SINGLE_SELECT",
+      "options": [
+        "High",
+        "Normal",
+        "Low"
+      ]
+    },
+    "Responsible chat": {
+      "type": "TEXT"
+    },
+    "Start date": {
+      "type": "DATE"
+    },
+    "Target date": {
+      "type": "DATE"
+    }
+  },
+  "native_parent": {
+    "parent_issue": 1,
+    "children": [
+      8,
+      9,
+      10
+    ],
+    "replace_existing_parent": false
+  },
+  "views": [
+    {
+      "name": "产品路线",
+      "layout": "table",
+      "group_by": "Phase",
+      "all_undated_visible": true
+    },
+    {
+      "name": "执行状态",
+      "layout": "board",
+      "group_by": "Status",
+      "exclude_overview_from_progress": true
+    },
+    {
+      "name": "已排期时间轴",
+      "layout": "roadmap",
+      "start_field": "Start date",
+      "target_field": "Target date",
+      "invent_dates": false
+    }
+  ],
+  "items": [
+    {
+      "id": "OVERVIEW",
+      "phase": "P0",
+      "title": "TTO总路线与决策入口",
+      "kind": "Overview",
+      "status_seed": "In progress",
+      "status_requires_latest_readback": true,
+      "horizon": "Now",
+      "issue_number": 1,
+      "responsible_chat": "产品协调",
+      "acceptance": "长期主Issue保持开放，不参与Done成果比例",
+      "depends_on": [],
+      "evidence": [
+        "https://github.com/massif-01/Tianshan-thermal-observer/issues/1"
+      ],
+      "start_date": null,
+      "target_date": null,
+      "body_marker": "TTO-RM:OVERVIEW",
+      "user_value": "保存项目方向与当前动作，避免不同对话靠记忆协作"
+    },
+    {
+      "id": "P0-DATA",
+      "phase": "P0",
+      "title": "数据记录底座及L/S/M已取得",
+      "kind": "Delivery",
+      "status_seed": "Done",
+      "status_requires_latest_readback": true,
+      "horizon": "Later",
+      "issue_number": null,
+      "responsible_chat": "历史交付",
+      "acceptance": "限定版本/过程的数据与质量可追溯，不等于全场景通讯稳定",
+      "depends_on": [],
+      "evidence": [
+        "https://github.com/massif-01/Tianshan-thermal-observer/blob/b85ccae98257c21b220d988c1afcfeae9f27c656/docs/research/TTO-research-status-20261014.md",
+        "https://github.com/massif-01/Tianshan-thermal-observer/tree/b85ccae98257c21b220d988c1afcfeae9f27c656/docs/reports"
+      ],
+      "start_date": null,
+      "target_date": null,
+      "body_marker": "TTO-RM:P0-DATA",
+      "user_value": "可追溯地知道机器实际温度、功耗和风扇背景"
+    },
+    {
+      "id": "P1-MODELS",
+      "phase": "P1",
+      "title": "G1/G2与Ridge实际离线候选生成",
+      "kind": "Delivery",
+      "status_seed": "Done",
+      "status_requires_latest_readback": true,
+      "horizon": "Later",
+      "issue_number": null,
+      "responsible_chat": "历史交付",
+      "acceptance": "36+42次拟合及失败保留，不等于通用预测器已上线",
+      "depends_on": [],
+      "evidence": [
+        "https://github.com/massif-01/Tianshan-thermal-observer/blob/b85ccae98257c21b220d988c1afcfeae9f27c656/docs/research/TTO-research-status-20261014.md"
+      ],
+      "start_date": null,
+      "target_date": null,
+      "body_marker": "TTO-RM:P1-MODELS",
+      "user_value": "从真实记录形成可计算的模型候选，减少纯手工猜系数"
+    },
+    {
+      "id": "P2-STATES",
+      "phase": "P2",
+      "title": "固定参数慢态/滤波及需求原型",
+      "kind": "Delivery",
+      "status_seed": "Done",
+      "status_requires_latest_readback": true,
+      "horizon": "Later",
+      "issue_number": null,
+      "responsible_chat": "历史交付",
+      "acceptance": "Tf/Ts/需求/PWM分开，非真实控制",
+      "depends_on": [],
+      "evidence": [
+        "https://github.com/massif-01/Tianshan-thermal-observer/blob/b85ccae98257c21b220d988c1afcfeae9f27c656/docs/research/TTO-research-status-20261014.md"
+      ],
+      "start_date": null,
+      "target_date": null,
+      "body_marker": "TTO-RM:P2-STATES",
+      "user_value": "理解快/慢状态及简单滤波各自价值，不追逐温度每个尖峰"
+    },
+    {
+      "id": "P2-YET",
+      "phase": "P2",
+      "title": "YET CSV导入与局部表面实测取得",
+      "kind": "Delivery",
+      "status_seed": "Done",
+      "status_requires_latest_readback": true,
+      "horizon": "Later",
+      "issue_number": null,
+      "responsible_chat": "历史交付",
+      "acceptance": "2027条表面记录；严格G2零状态和时钟限制保留，非Ts验证",
+      "depends_on": [],
+      "evidence": [
+        "https://github.com/massif-01/Tianshan-thermal-observer/blob/b85ccae98257c21b220d988c1afcfeae9f27c656/docs/reports/2026-10-18-yet610l-sync-shortqa/analysis-report.md"
+      ],
+      "start_date": null,
+      "target_date": null,
+      "body_marker": "TTO-RM:P2-YET",
+      "user_value": "取得与芯片温度不同的局部结构观测，保留比较限制"
+    },
+    {
+      "id": "P3-STATE",
+      "phase": "P3",
+      "title": "缺测状态与冷启动",
+      "kind": "Task",
+      "status_seed": "Todo",
+      "status_requires_latest_readback": true,
+      "horizon": "Now",
+      "issue_number": 8,
+      "responsible_chat": "灰箱辨识",
+      "acceptance": "以#8 R2合同及最新回执为准",
+      "depends_on": [],
+      "evidence": [],
+      "start_date": null,
+      "target_date": null,
+      "body_marker": "TTO-RM:P3-STATE",
+      "user_value": "辅助输入短缺时仍有诚实、有信任边界的观察结果"
+    },
+    {
+      "id": "P3-IO",
+      "phase": "P3",
+      "title": "fan/status根因与本地候选",
+      "kind": "Task",
+      "status_seed": "Todo",
+      "status_requires_latest_readback": true,
+      "horizon": "Now",
+      "issue_number": 9,
+      "responsible_chat": "新通讯专项",
+      "acceptance": "离线候选完成与现场修复分开",
+      "depends_on": [],
+      "evidence": [],
+      "start_date": null,
+      "target_date": null,
+      "body_marker": "TTO-RM:P3-IO",
+      "user_value": "减小通讯丢失对产品可用性和实验成本的影响"
+    },
+    {
+      "id": "P4-PLAN",
+      "phase": "P4",
+      "title": "混合长负载计划与离线调度",
+      "kind": "Task",
+      "status_seed": "Todo",
+      "status_requires_latest_readback": true,
+      "horizon": "Now",
+      "issue_number": 10,
+      "responsible_chat": "实际安装与测试",
+      "acceptance": "计划/预算/fixture/操作卡，当前不实测",
+      "depends_on": [],
+      "evidence": [],
+      "start_date": null,
+      "target_date": null,
+      "body_marker": "TTO-RM:P4-PLAN",
+      "user_value": "用可复现而不单调的任务覆盖真实使用场景"
+    },
+    {
+      "id": "P3-INTEGRATE",
+      "phase": "P3",
+      "title": "三线只读接口与离线集成",
+      "kind": "Delivery",
+      "status_seed": "Todo",
+      "status_requires_latest_readback": true,
+      "horizon": "Next",
+      "issue_number": null,
+      "responsible_chat": "产品协调/三线",
+      "acceptance": "测量、估计、保护、授权分开，失效及恢复可重放",
+      "depends_on": [
+        "P3-STATE",
+        "P3-IO",
+        "P4-PLAN"
+      ],
+      "evidence": [],
+      "start_date": null,
+      "target_date": null,
+      "body_marker": "TTO-RM:P3-INTEGRATE",
+      "user_value": "三个局部成果能正确接合，不在现场才发现不兼容"
+    },
+    {
+      "id": "P4-MIX",
+      "phase": "P4",
+      "title": "混合长负载同run同步记录",
+      "kind": "Delivery",
+      "status_seed": "Todo",
+      "status_requires_latest_readback": true,
+      "horizon": "Next",
+      "issue_number": null,
+      "responsible_chat": "实际安装与测试",
+      "acceptance": "有模型/质量就绪和本轮现场授权，先评价冻结候选",
+      "depends_on": [
+        "P3-INTEGRATE"
+      ],
+      "evidence": [],
+      "start_date": null,
+      "target_date": null,
+      "body_marker": "TTO-RM:P4-MIX",
+      "user_value": "得到能解释并发、负载时长与热前史的完整新记录"
+    },
+    {
+      "id": "P4-INPUT",
+      "phase": "P4",
+      "title": "未来输入未知时的预测策略",
+      "kind": "Delivery",
+      "status_seed": "Todo",
+      "status_requires_latest_readback": true,
+      "horizon": "Next",
+      "issue_number": null,
+      "responsible_chat": "灰箱辨识",
+      "acceptance": "仅用已到达遥测/可选已发生请求，不看未来计划；HOLD/RELAX对照",
+      "depends_on": [
+        "P3-STATE"
+      ],
+      "evidence": [],
+      "start_date": null,
+      "target_date": null,
+      "body_marker": "TTO-RM:P4-INPUT",
+      "user_value": "明确未来任务未知时仍可提供什么预测价值"
+    },
+    {
+      "id": "P4-OBSERVE",
+      "phase": "P4",
+      "title": "快TJ与局部鳍片观测关系诊断",
+      "kind": "Delivery",
+      "status_seed": "Todo",
+      "status_requires_latest_readback": true,
+      "horizon": "Next",
+      "issue_number": null,
+      "responsible_chat": "灰箱辨识",
+      "acceptance": "先核时间/年龄，后决定最小结构改变；外部点非全局门槛",
+      "depends_on": [
+        "P3-STATE"
+      ],
+      "evidence": [],
+      "start_date": null,
+      "target_date": null,
+      "body_marker": "TTO-RM:P4-OBSERVE",
+      "user_value": "避免把时序/局部测点差异错误解释成模型或散热失败"
+    },
+    {
+      "id": "P4-CONFIRM",
+      "phase": "P4",
+      "title": "候选适用范围的新过程确认",
+      "kind": "Delivery",
+      "status_seed": "Todo",
+      "status_requires_latest_readback": true,
+      "horizon": "Next",
+      "issue_number": null,
+      "responsible_chat": "建模+测试",
+      "acceptance": "候选和规则冻结，新完整过程未被选参；不改旧成绩",
+      "depends_on": [
+        "P4-MIX"
+      ],
+      "evidence": [],
+      "start_date": null,
+      "target_date": null,
+      "body_marker": "TTO-RM:P4-CONFIRM",
+      "user_value": "让未参与调参的过程说明候选能在哪些条件工作"
+    },
+    {
+      "id": "P5-GENERATE",
+      "phase": "P5",
+      "title": "可重复使用的设备模型生成器",
+      "kind": "Delivery",
+      "status_seed": "Todo",
+      "status_requires_latest_readback": true,
+      "horizon": "Next",
+      "issue_number": null,
+      "responsible_chat": "模型产品化",
+      "acceptance": "有限候选/适用范围/数据与CPU成本/拒绝原因",
+      "depends_on": [
+        "P1-MODELS"
+      ],
+      "evidence": [],
+      "start_date": null,
+      "target_date": null,
+      "body_marker": "TTO-RM:P5-GENERATE",
+      "user_value": "让工程师使用明确流程生成本机模型而无需人工整理实验脚本"
+    },
+    {
+      "id": "P5-ADAPT",
+      "phase": "P5",
+      "title": "受约束参数学习与候选回退",
+      "kind": "Delivery",
+      "status_seed": "Todo",
+      "status_requires_latest_readback": true,
+      "horizon": "Later",
+      "issue_number": null,
+      "responsible_chat": "模型产品化",
+      "acceptance": "先预测后评分再学习；固定与候选并行，失效冻结和遗忘评价",
+      "depends_on": [
+        "P3-STATE",
+        "P5-GENERATE"
+      ],
+      "evidence": [],
+      "start_date": null,
+      "target_date": null,
+      "body_marker": "TTO-RM:P5-ADAPT",
+      "user_value": "热响应变化后降低重新标定成本，同时保留稳定版和回退"
+    },
+    {
+      "id": "P6-MATERIAL",
+      "phase": "P6",
+      "title": "鳍片厚薄/铝铜/热容量迁移",
+      "kind": "Delivery",
+      "status_seed": "Todo",
+      "status_requires_latest_readback": true,
+      "horizon": "Later",
+      "issue_number": null,
+      "responsible_chat": "硬件+建模",
+      "acceptance": "至少两配置，对比直接迁移/重训/少量校准成本",
+      "depends_on": [
+        "P5-GENERATE"
+      ],
+      "evidence": [],
+      "start_date": null,
+      "target_date": null,
+      "body_marker": "TTO-RM:P6-MATERIAL",
+      "user_value": "鳍片/材料/热容量改变后复用方法，实际量化校准成本"
+    },
+    {
+      "id": "P6-DEVICE",
+      "phase": "P6",
+      "title": "不同模组与第三方设备适配",
+      "kind": "Delivery",
+      "status_seed": "Todo",
+      "status_requires_latest_readback": true,
+      "horizon": "Later",
+      "issue_number": null,
+      "responsible_chat": "集成+建模",
+      "acceptance": "语义适配和实机确认分层，不必先完成材料全矩阵",
+      "depends_on": [
+        "P5-GENERATE"
+      ],
+      "evidence": [],
+      "start_date": null,
+      "target_date": null,
+      "body_marker": "TTO-RM:P6-DEVICE",
+      "user_value": "把同一工作流用于其他模组/SoC和厂家设备"
+    },
+    {
+      "id": "P7-RELEASE",
+      "phase": "P7",
+      "title": "许可、可复现软件包与外部验证",
+      "kind": "Delivery",
+      "status_seed": "Todo",
+      "status_requires_latest_readback": true,
+      "horizon": "Later",
+      "issue_number": null,
+      "responsible_chat": "产品/维护",
+      "acceptance": "许可/分享授权、支持表、可安装和至少一次外部复验",
+      "depends_on": [
+        "P5-GENERATE"
+      ],
+      "evidence": [],
+      "start_date": null,
+      "target_date": null,
+      "body_marker": "TTO-RM:P7-RELEASE",
+      "user_value": "外部工程师可以合法、正确、可复现地使用TTO"
+    },
+    {
+      "id": "CTRL-VALIDATE",
+      "phase": "Control",
+      "title": "平稳风扇控制的独立授权与验证",
+      "kind": "Delivery",
+      "status_seed": "Todo",
+      "status_requires_latest_readback": true,
+      "horizon": "Later",
+      "issue_number": null,
+      "responsible_chat": "另行控制专项",
+      "acceptance": "真实温度/性能/声音/故障回退；原型不作为授权",
+      "depends_on": [
+        "P3-INTEGRATE",
+        "P4-CONFIRM"
+      ],
+      "evidence": [],
+      "start_date": null,
+      "target_date": null,
+      "body_marker": "TTO-RM:CTRL-VALIDATE",
+      "user_value": "另行证明温度/性能保障下的真实听感和平稳控制价值"
+    }
+  ],
+  "dependency_semantics": "delivery-level only; not auto native blocked-by; issue close is not an integration prerequisite"
+}

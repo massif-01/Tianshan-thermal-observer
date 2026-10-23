@@ -1,0 +1,163 @@
+{
+  "version": "0.2.4+observe.1",
+  "mode": "observe",
+  "registration": {
+    "device_id": "OWNED-STOP",
+    "thermal_config_id": "OWNED-STOP",
+    "observer_host_id": "Massif-MacBook-Pro.local",
+    "session_id": "ec76ee80-e114-484f-87db-f08408b07b24",
+    "source_scope": "self_owned_loopback",
+    "observer_host_actual": "Massif-MacBook-Pro.local",
+    "boot_id": "1CD69A33-78DB-48B9-A4F2-A5CBFCD90DEF",
+    "clock_domain": "Massif-MacBook-Pro.local:10161:ce8cdec3-7816-4cbe-9287-8277723b50e4"
+  },
+  "clock_start": {
+    "domain": "Massif-MacBook-Pro.local:10161:ce8cdec3-7816-4cbe-9287-8277723b50e4",
+    "mono_before_s": 1032458.367933,
+    "utc": "2026-10-21T13:54:31.022907+00:00",
+    "mono_after_s": 1032458.367943583,
+    "utc_clock_accuracy_s": null,
+    "host": "Massif-MacBook-Pro.local",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "pid": 10161
+  },
+  "authorization": {
+    "action": "readonly-observe",
+    "candidate_version": "0.2.4+observe.1",
+    "candidate_manifest_sha256": "d6de6b97370fbca02102a7af784a590958116c8db6696339a2da8c2918d0ee18",
+    "model_manifest_sha256": "a43cd5d111f169408d71f3fe008e0c03119bb9e4f0dc1ffd63d2f79c5f8834c9",
+    "device_id": "OWNED-STOP",
+    "thermal_config_id": "OWNED-STOP",
+    "session_id": "ec76ee80-e114-484f-87db-f08408b07b24",
+    "config_sha256": "b060a51a9efcb22f67e1bcfe2ca4bc68eb0f3a416b05ad927e9f1f40a88b94da",
+    "max_duration_s": 300.0,
+    "session_max_bytes": 8589934592,
+    "explicit_user_start": true,
+    "evidence": "LOCAL STOP TEST ONLY",
+    "not_before_utc": "2026-10-21T13:54:29.823472+00:00",
+    "expires_at_utc": "2026-10-21T14:01:10.823472+00:00",
+    "self_owned_loopback": true
+  },
+  "duration_s": 300.0,
+  "session_max_s": 86400,
+  "storage_budget": {
+    "total_bytes": 8589934592,
+    "segment_bytes": 2147483648,
+    "chunk_bytes": 67108864
+  },
+  "legacy_native_config": {
+    "schema_version": 1,
+    "mode": "observe_only",
+    "orin": {
+      "source_id": "orin-primary",
+      "base_url": "http://127.0.0.1:51111",
+      "socketio_path": "socket.io",
+      "namespace": "/",
+      "event": "tegrastats_update",
+      "transports": [
+        "websocket"
+      ],
+      "source_sample_interval_ms": 1000,
+      "source_interval_evidence": "owned1s",
+      "headers_file": null,
+      "ca_file": null
+    },
+    "tianshan": {
+      "source_id": "esp32-primary",
+      "base_url": "http://127.0.0.1:51111",
+      "fan_id": 0,
+      "fan_status_path": "/api/v1/fan/status",
+      "temp_status_path": "/api/v1/temp/status",
+      "fan_poll_interval_s": 1.0,
+      "temp_poll_interval_s": 5.0,
+      "headers_file": null,
+      "ca_file": null
+    },
+    "network": {
+      "request_timeout_s": 2.0,
+      "connect_timeout_s": 5.0,
+      "max_inflight_esp32": 1,
+      "follow_redirects": false,
+      "reconnect_initial_s": 1.0,
+      "reconnect_max_s": 30.0,
+      "reconnect_max_attempts": 10,
+      "reconnect_jitter_ratio": 0.2,
+      "max_business_payload_bytes": 65536
+    },
+    "storage": {
+      "data_root": null,
+      "chunk_bytes": 67108864,
+      "run_max_bytes": 2147483648,
+      "min_free_bytes": 1073741824,
+      "queue_max_items": 256,
+      "queue_max_bytes": 8388608,
+      "overwrite_existing": false
+    },
+    "run": {
+      "default_duration_s": 1800,
+      "max_duration_s": 14400,
+      "doctor_duration_s": 180,
+      "single_instance": true
+    },
+    "features": {
+      "schema_version": 1,
+      "time_axis": "observer_receive",
+      "history_s": 180,
+      "prediction_stride_s": 5,
+      "fan_max_age_s": 2.5,
+      "optional_train_min_availability": 0.95,
+      "max_feature_columns": 64,
+      "missing_optional_policy": "fallback_tj_or_baseline",
+      "power_current_rails": [
+        "vdd_gpu_soc",
+        "vdd_cpu_cv",
+        "vin_sys_5v0"
+      ]
+    },
+    "model": {
+      "schema_version": 1,
+      "horizons_s": [
+        15,
+        45,
+        90
+      ],
+      "primary_horizon_s": 45,
+      "methods": [
+        "persist",
+        "trend30",
+        "ridge_tj",
+        "ridge_full"
+      ],
+      "ridge_lambda_grid": [
+        0.001,
+        0.01,
+        0.1,
+        1.0
+      ],
+      "train_threads": 1,
+      "train_timeout_s": 600,
+      "online_training": false,
+      "automatic_activation": false
+    },
+    "resources": {
+      "observer_rss_target_mib": 256,
+      "observer_cpu_single_core_target_pct": 5.0,
+      "predict_all_horizons_p99_target_ms": 20.0,
+      "train_rss_limit_mib": 2048
+    },
+    "security": {
+      "business_control_writes": false,
+      "production_discovery": false,
+      "telemetry_upload": false,
+      "system_service_install": false,
+      "default_live_access": false
+    }
+  },
+  "config_sha256": "b060a51a9efcb22f67e1bcfe2ca4bc68eb0f3a416b05ad927e9f1f40a88b94da",
+  "local_loopback": true,
+  "Requester_count": 0,
+  "sidecar_count": 0,
+  "experiment_authorization": false,
+  "control_permission": false,
+  "process_created": 1792590870.824023
+}

@@ -1,0 +1,88 @@
+{
+  "status": "stopped",
+  "stop_reason": "collector_or_operator_stop",
+  "requests": 0,
+  "completed_requests": 0,
+  "elapsed_schedule_s": 1.0553834170568734,
+  "hard_limit_s": 2700,
+  "cleanup_reserved_s": 10.0,
+  "checks": [],
+  "server_request_completion": "unknown",
+  "new_model_training": "not_performed",
+  "control_authorization": "none",
+  "collection_path": "collection/run-2026-10-13T144741.420506_0000-cd96cbc0",
+  "collector_stop_reason": "SIGINT",
+  "polling_health": {
+    "contract": "TTO-POLL-INDEPENDENT-v1",
+    "max_inflight_per_endpoint": 1,
+    "max_total_inflight_limit": 2,
+    "max_total_inflight_observed": 2,
+    "end_inflight": 0,
+    "legacy_config_max_inflight_esp32": 1,
+    "endpoints": {
+      "fan": {
+        "sent": 1,
+        "returned": 1,
+        "http_ok": 1,
+        "errors": 0,
+        "skipped": 0,
+        "cancelled": 0,
+        "peak_inflight": 1,
+        "rtt_ms": {
+          "n": 1,
+          "p50": 5.024957994464785,
+          "p95": 5.024957994464785,
+          "min": 5.024957994464785,
+          "max": 5.024957994464785
+        },
+        "send_interval_s": {
+          "n": 0,
+          "p50": null,
+          "p95": null,
+          "min": null,
+          "max": null
+        },
+        "return_interval_s": {
+          "n": 0,
+          "p50": null,
+          "p95": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "temp": {
+        "sent": 1,
+        "returned": 1,
+        "http_ok": 1,
+        "errors": 0,
+        "skipped": 0,
+        "cancelled": 0,
+        "peak_inflight": 1,
+        "rtt_ms": {
+          "n": 1,
+          "p50": 1.4432499883696437,
+          "p95": 1.4432499883696437,
+          "min": 1.4432499883696437,
+          "max": 1.4432499883696437
+        },
+        "send_interval_s": {
+          "n": 0,
+          "p50": null,
+          "p95": null,
+          "min": null,
+          "max": null
+        },
+        "return_interval_s": {
+          "n": 0,
+          "p50": null,
+          "p95": null,
+          "min": null,
+          "max": null
+        }
+      }
+    }
+  },
+  "output": "/Users/massif/Tianshan-thermal-observer/evidence/prep-midload-v1/repair-r1-r2/test-entry-clean/test_operation_card_entry_real0/output/midload-20261013T144741368433Z",
+  "elapsed_total_s": 1.0582386670284905,
+  "live_validation": "requires_independent_review; this executable does not authorize a field run"
+}

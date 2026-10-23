@@ -1,0 +1,145 @@
+{
+  "stop_reason": "duration",
+  "poll_missed": 0,
+  "poll_count": 12,
+  "connection_attempts": 1,
+  "payload_oversize": 0,
+  "orin_event_count": 9,
+  "business_payload_bytes_sum": 10378,
+  "business_payload_bytes_max": 1154,
+  "poll_rtt_ms": [
+    67.45450000744313,
+    63.1473750108853,
+    1804.1632920503616,
+    63.54200001806021,
+    63.459582976065576,
+    63.43083397950977,
+    61.963125015608966,
+    63.11275000916794,
+    1804.126541945152,
+    63.70066601084545,
+    62.33108299784362,
+    62.69150000298396
+  ],
+  "prediction_ms": [
+    1.6924170195125043,
+    1.0548339923843741,
+    1.1336670140735805
+  ],
+  "rss_mib": [
+    51.84375,
+    51.84375,
+    51.875,
+    51.875,
+    51.875,
+    51.875,
+    51.875,
+    51.90625,
+    51.90625
+  ],
+  "cpu_pct_single_core": [
+    2.2714985880787633,
+    1.9571961413669006,
+    1.2430334661363822,
+    1.3096449720094634,
+    1.4040601711938194,
+    1.2821450408246362,
+    1.8071043288996287,
+    1.5331678716269943,
+    1.1782013580813038
+  ],
+  "elapsed_s": 9.408646332973149,
+  "queue_peak_items": 1,
+  "queue_peak_bytes": 1280,
+  "dropped": 0,
+  "quality": {
+    "boundary_socketio_connecting": 1,
+    "boundary_stream": 1,
+    "new_samples": 9,
+    "boundary_input_boundary": 2,
+    "boundary_input_profile_change": 1,
+    "boundary_control_context_change": 1,
+    "boundary_normal_scope_change": 1,
+    "boundary_socketio_disconnected": 1,
+    "boundary_run_end": 1
+  },
+  "processing": {
+    "fan_ok": 10,
+    "origins": 3,
+    "temp_ok": 2
+  },
+  "target_host_verified": false,
+  "polling_health": {
+    "contract": "TTO-POLL-INDEPENDENT-v1",
+    "max_inflight_per_endpoint": 1,
+    "max_total_inflight_limit": 2,
+    "max_total_inflight_observed": 2,
+    "end_inflight": 0,
+    "legacy_config_max_inflight_esp32": 1,
+    "endpoints": {
+      "fan": {
+        "sent": 10,
+        "returned": 10,
+        "http_ok": 10,
+        "errors": 0,
+        "skipped": 0,
+        "cancelled": 0,
+        "peak_inflight": 1,
+        "rtt_ms": {
+          "n": 10,
+          "p50": 63.289104495197535,
+          "p95": 65.76527470897418,
+          "min": 61.963125015608966,
+          "max": 67.45450000744313
+        },
+        "send_interval_s": {
+          "n": 9,
+          "p50": 1.0004497080226429,
+          "p95": 1.0009294081944973,
+          "min": 1.0002455830108374,
+          "max": 1.0009333749767393
+        },
+        "return_interval_s": {
+          "n": 9,
+          "p50": 1.0006060000159778,
+          "p95": 1.001386483386159,
+          "min": 0.9966262499801815,
+          "max": 1.0016411669785157
+        }
+      },
+      "temp": {
+        "sent": 2,
+        "returned": 2,
+        "http_ok": 2,
+        "errors": 0,
+        "skipped": 0,
+        "cancelled": 0,
+        "peak_inflight": 1,
+        "rtt_ms": {
+          "n": 2,
+          "p50": 1804.1449169977568,
+          "p95": 1804.1614545451012,
+          "min": 1804.126541945152,
+          "max": 1804.1632920503616
+        },
+        "send_interval_s": {
+          "n": 1,
+          "p50": 5.000248292053584,
+          "p95": 5.000248292053584,
+          "min": 5.000248292053584,
+          "max": 5.000248292053584
+        },
+        "return_interval_s": {
+          "n": 1,
+          "p50": 5.000211541948374,
+          "p95": 5.000211541948374,
+          "min": 5.000211541948374,
+          "max": 5.000211541948374
+        }
+      }
+    }
+  },
+  "ended_at_utc": "2026-10-13T13:35:04.103928+00:00",
+  "raw_bytes": 47580,
+  "observations": 32
+}

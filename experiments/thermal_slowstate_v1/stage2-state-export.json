@@ -1,0 +1,36 @@
+{
+  "finished_at": "2026-10-14T03:11:11.148790+00:00",
+  "spec_sha256": "5f13140ff8dbfcb69424006feede4b4dc8b1ec5cc67afa7992fc8ff284777e76",
+  "no_fit": true,
+  "checks": [
+    {
+      "model": "primary",
+      "A_long_n": 5430,
+      "max_abs_Tf_replay_error_C": 0.0,
+      "tolerance_C": 1e-10,
+      "causal_n": 5430,
+      "match": true
+    },
+    {
+      "model": "old_LS",
+      "A_long_n": 5430,
+      "max_abs_Tf_replay_error_C": 0.0,
+      "tolerance_C": 1e-10,
+      "causal_n": 5430,
+      "match": true
+    },
+    {
+      "model": "A24",
+      "A_long_n": 5430,
+      "max_abs_Tf_replay_error_C": 0.0,
+      "tolerance_C": 1e-10,
+      "causal_n": 5430,
+      "match": true
+    }
+  ],
+  "outputs": {
+    "states-A-long.jsonl": "37491b0a3720a353d3a88233347e93bda3e479afdc3cd918f7ab3948f4f4700b",
+    "states-causal60.jsonl": "0bb560bf4632149905228078529e91ca23c1058e1218f41db967027d208c1fcc",
+    "rolling-jumps.jsonl": "e0a17c43d74cd6574b9b60c6f4a168ac707aec0ad28fb56cb18f3145508a53ab"
+  }
+}

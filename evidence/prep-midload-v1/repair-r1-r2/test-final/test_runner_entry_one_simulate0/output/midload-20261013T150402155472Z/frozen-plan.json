@@ -1,0 +1,66 @@
+{
+  "trial_id": "TTO-MIDLOAD-DEV-v1.0",
+  "mode": "live_plan",
+  "connected": false,
+  "credentials_read": false,
+  "runtime": {
+    "version": "0.2.4",
+    "import_path": "/Users/massif/Tianshan-thermal-observer/evidence/prep-midload-v1/repair-r1-r2/clean-install/lib/python3.10/site-packages/tto/__init__.py",
+    "python": "/Users/massif/Tianshan-thermal-observer/evidence/prep-midload-v1/candidate/../repair-r1-r2/clean-install/bin/python",
+    "isolated": false,
+    "non_editable": true
+  },
+  "nominal_duration_s": 2480,
+  "hard_limit_s": 2700,
+  "initial_check_within_background_s": 180,
+  "strict_history_s": 60,
+  "phases": [
+    {
+      "id": "resident_background",
+      "kind": "passive",
+      "duration_s": 600
+    },
+    {
+      "id": "M20",
+      "kind": "work",
+      "duration_s": 20
+    },
+    {
+      "id": "cooldown_1",
+      "kind": "passive",
+      "duration_s": 420
+    },
+    {
+      "id": "M60",
+      "kind": "work",
+      "duration_s": 60
+    },
+    {
+      "id": "cooldown_2",
+      "kind": "passive",
+      "duration_s": 600
+    },
+    {
+      "id": "M180",
+      "kind": "work",
+      "duration_s": 180
+    },
+    {
+      "id": "final_cooldown",
+      "kind": "passive",
+      "duration_s": 600
+    }
+  ],
+  "max_total_requests": 256,
+  "max_tokens": 256,
+  "max_inflight": 1,
+  "max_request_wall_s": 30,
+  "max_drain_s": 30,
+  "model": "RM-01 VLM",
+  "inference_target_configured": true,
+  "tto_config_path": "/Users/massif/Tianshan-thermal-observer/evidence/prep-midload-v1/repair-r1-r2/test-final/test_runner_entry_one_simulate0/tto.json",
+  "ambient_temperature_default": null,
+  "not_thermal_equilibrium": true,
+  "message": "约41分20秒；20/60/180秒是单路请求发起窗口，已有请求自然结束；最多45分钟。当前只预览，未连接设备。",
+  "execution_requested": true
+}

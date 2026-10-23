@@ -1,0 +1,51 @@
+### Result
+{"scope":"real Chrome; installed rc2 static/API; synthetic source; loopback fault harness","before":{"link":"Web已连接","phase":"状态跟踪中","future":["44.3 °C","44.3 °C","44.3 °C"],"metrics":["44.3","43.8","44.3","17","—","1.98","5.95","0.0","0.3","53554"],"flow":8,"activeNodes":8,"advice":"暂无可用建议映射","health":"65项有效 / 1项待确认","source":"Web：已连接；设备数据：valid；模型：状态跟踪中。HTTP成功、源有效与模型可用分别判定。","comparison":"状态跟踪中 · 同run/epoch/model/HOLD · +45秒 · 当前窗口","notice":"本地自建服务 / 回放验证数据（非实时设备），不作为现场能力证据。"},"pauseStable":true,"disconnect":{"link":"Web数据断开","phase":"当前无法估计","future":["—","—","—"],"metrics":["—","—","—","—","—","—","—","—","—","—"],"flow":0,"activeNodes":0,"advice":"暂无可用建议映射","health":"0项有效 / 1项待确认","source":"Web：断开；设备数据：unavailable；模型：当前无法估计。HTTP成功、源有效与模型可用分别判定。","comparison":"当前无法估计 · 历史配对同run/epoch/model/HOLD · +45秒","notice":"Web数据断开；当前值已撤下，后台观察不受此页面影响。"},"stallInitial":{"link":"Web已连接","phase":"状态跟踪中","future":["44.3 °C","44.3 °C","44.3 °C"],"metrics":["44.3","43.8","44.3","17","—","1.98","5.95","0.0","0.3","53554"],"flow":8,"activeNodes":8,"advice":"暂无可用建议映射","health":"65项有效 / 1项待确认","source":"Web：已连接；设备数据：valid；模型：状态跟踪中。HTTP成功、源有效与模型可用分别判定。","comparison":"状态跟踪中 · 历史配对同run/epoch/model/HOLD · +45秒","notice":"本地自建服务 / 回放验证数据（非实时设备），不作为现场能力证据。"},"stallWaitMs":5653.115958045237,"stalled":{"link":"Web已连接","phase":"当前无法估计","future":["—","—","—"],"metrics":["—","—","—","—","—","—","—","—","—","—"],"flow":0,"activeNodes":0,"advice":"暂无可用建议映射","health":"0项有效 / 1项待确认","source":"Web：已连接；设备数据：unavailable；模型：当前无法估计。HTTP成功、源有效与模型可用分别判定。","comparison":"当前无法估计 · 历史配对同run/epoch/model/HOLD · +45秒","notice":"设备数据不可用或已过期；Web连接不代表设备读数有效。"},"eventBefore":{"id":"4","source":"runner","reason":"SYNTHETIC task at 20s","severity":"info","elapsed_ms":20000,"first_at_utc":"2026-10-21T04:39:27.986596+00:00","last_at_utc":"2026-10-21T04:39:27.986596+00:00","count":1,"service_epoch":"8a236f8e-cde1-455f-aaf1-d616ac8f21fc","run_id":"a9e5b76b01e4841a","source_epoch":0},"selectedBeforeSwitch":true,"newRun":{"mode":"live","run_id":"791ebe269976806e","source_epoch":0},"oldTaskAbsentAfterRun":true,"selectionClearedAfterRun":true,"newEpoch":{"mode":"live","run_id":"791ebe269976806e","source_epoch":1},"oldTaskAbsentAfterEpoch":true,"apiEventsScoped":true}
+### Ran Playwright code
+```js
+await (async (page) => {
+ const control='http://127.0.0.1:53473';
+ const command=async name=>(await page.request.post(control+'/'+name)).json();
+ const read=()=>page.evaluate(()=>({link:document.querySelector('#link').textContent,phase:document.querySelector('#modelPhase').textContent,future:[...document.querySelectorAll('#futureValues b')].map(e=>e.textContent),metrics:[...document.querySelectorAll('#metrics b')].map(e=>e.textContent),flow:document.querySelectorAll('#topology .flow').length,activeNodes:document.querySelectorAll('#topology .node.valid').length,advice:document.querySelector('#advice').textContent,health:document.querySelector('#healthSummary').textContent,source:document.querySelector('#sourceStatus').textContent,comparison:document.querySelector('#comparisonStatus').textContent,notice:document.querySelector('#notice').textContent}));
+ const valid=()=>page.waitForFunction(()=>[...document.querySelectorAll('#futureValues b')].some(e=>e.textContent.includes('°C')));
+ const withdrawn=async()=>{const r=await read();if(r.future.some(v=>v!=='—')||r.flow||r.activeNodes||r.metrics.some(v=>v!=='—')||!r.health.startsWith('0项有效')||!r.phase.includes('无法估计'))throw Error('incomplete withdrawal '+JSON.stringify(r));return r;};
+ await page.setViewportSize({width:1440,height:1100});await valid();
+ const result={scope:'real Chrome; installed rc2 static/API; synthetic source; loopback fault harness'};
+ result.before=await read();await page.screenshot({path:'output/playwright/rc2-live.png',fullPage:true});
+ await page.getByRole('button',{name:'暂停画面',exact:true}).click();
+ const freeze=await page.locator('#metrics').innerText();await page.waitForTimeout(1200);
+ result.pauseStable=freeze===await page.locator('#metrics').innerText();if(!result.pauseStable)throw Error('pause changed');
+ await page.getByRole('button',{name:'恢复实时',exact:true}).click();
+ await command('drop');await page.waitForFunction(()=>document.querySelector('#link').textContent==='Web数据断开');
+ result.disconnect=await withdrawn();await page.screenshot({path:'output/playwright/rc2-disconnected.png',fullPage:true});
+ await command('live');await valid();
+ await command('stall');await page.reload();await valid();result.stallInitial=await read();
+ // Deadline comes from a real backend snapshot; no frontend TTL is fabricated.
+ const snap=await (await page.request.get('http://127.0.0.1:59009/api/v1/snapshot')).json();
+ result.stallWaitMs=Math.max(...snap.metrics.map(m=>m.remaining_valid_ms||0),snap.model.remaining_valid_ms||0)+1300;
+ await page.waitForTimeout(result.stallWaitMs);result.stalled=await withdrawn();
+ if(result.stalled.link!=='Web已连接')throw Error('stall was a disconnected stream');
+ await page.screenshot({path:'output/playwright/rc2-stalled.png',fullPage:true});
+ await command('live');await page.reload();await valid();await command('event');
+ await page.waitForFunction(()=>document.querySelector('#eventList').textContent.includes('SYNTHETIC task at 20s'));
+ const old=await (await page.request.get('http://127.0.0.1:59009/api/v1/events?limit=1000')).json();
+ result.eventBefore=old.events.find(e=>e.reason==='SYNTHETIC task at 20s');
+ const elapsed=(await (await page.request.get('http://127.0.0.1:59009/api/v1/snapshot')).json()).run_elapsed_ms;
+ const box=await page.locator('#eventTimeline').boundingBox();
+ await page.locator('#eventTimeline').click({position:{x:65+20000/elapsed*(box.width-95),y:box.height/2}});
+ result.selectedBeforeSwitch=await page.locator('#eventSelection').isVisible();
+ const switched=await command('new-run');await page.waitForTimeout(1600);
+ result.newRun=switched;result.oldTaskAbsentAfterRun=!(await page.locator('#eventList').innerText()).includes('SYNTHETIC task at 20s');
+ result.selectionClearedAfterRun=!(await page.locator('#eventSelection').isVisible());
+ await command('event');await page.waitForFunction(()=>document.querySelector('#eventList').textContent.includes('SYNTHETIC task at 20s'));
+ const epoch=await command('new-epoch');await page.waitForTimeout(1600);
+ result.newEpoch=epoch;result.oldTaskAbsentAfterEpoch=!(await page.locator('#eventList').innerText()).includes('SYNTHETIC task at 20s');
+ const current=await (await page.request.get('http://127.0.0.1:59009/api/v1/events?limit=1000')).json();
+ result.apiEventsScoped=current.events.every(e=>e.run_id===null||(e.run_id===epoch.run_id&&e.source_epoch===epoch.source_epoch));
+ for(const k of ['oldTaskAbsentAfterRun','selectionClearedAfterRun','oldTaskAbsentAfterEpoch','apiEventsScoped'])if(!result[k])throw Error('event scope '+k);
+ await page.screenshot({path:'output/playwright/rc2-event-epoch.png',fullPage:true});
+ return result;
+}
+)(page);
+```
+### Events
+- New console entries: .playwright-cli/console-2026-10-21T04-37-49-456Z.log#L2-L9

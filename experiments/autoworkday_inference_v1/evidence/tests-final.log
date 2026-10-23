@@ -1,0 +1,21 @@
+test_frozen_reproducibility_and_rest (test_runner.PlanTests.test_frozen_reproducibility_and_rest) ... ok
+test_background_health_pending_then_automatic_allow (test_runner.RunTests.test_background_health_pending_then_automatic_allow) ... ok
+test_busy_slots_are_skipped_no_catchup (test_runner.RunTests.test_busy_slots_are_skipped_no_catchup) ... ok
+test_client_budget_reserved_not_shortened (test_runner.RunTests.test_client_budget_reserved_not_shortened) ... ok
+test_final_recovery_and_late_start_no_catchup (test_runner.RunTests.test_final_recovery_and_late_start_no_catchup) ... ok
+test_full_day_actual_requester_emit_and_no_network (test_runner.RunTests.test_full_day_actual_requester_emit_and_no_network) ... ok
+test_observer_exit_stops_new_work_with_original_drain (test_runner.RunTests.test_observer_exit_stops_new_work_with_original_drain) ... ok
+test_pause_grace_stops_after_sixty (test_runner.RunTests.test_pause_grace_stops_after_sixty) ... ok
+test_pause_skips_then_resumes_no_extension (test_runner.RunTests.test_pause_skips_then_resumes_no_extension) ... ok
+test_protocol_thirty_second_deadline (test_runner.RunTests.test_protocol_thirty_second_deadline) ... ok
+test_reject_changed_plan_or_identity (test_runner.RunTests.test_reject_changed_plan_or_identity) ... ok
+test_stop_before_queued_request_starts (test_runner.RunTests.test_stop_before_queued_request_starts) ... ok
+test_stop_in_background (test_runner.RunTests.test_stop_in_background) ... ok
+test_stop_inflight_natural_drain (test_runner.RunTests.test_stop_inflight_natural_drain) ... ok
+test_submission_ceiling_includes_failure (test_runner.RunTests.test_submission_ceiling_includes_failure) ... ok
+test_truncated_unknown_no_retry (test_runner.RunTests.test_truncated_unknown_no_retry) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 10.503s
+
+OK

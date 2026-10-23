@@ -1,0 +1,321 @@
+{
+  "runs": {
+    "L": "929742d7-6f4d-4d80-b53e-4436d45ac12c",
+    "S": "d2a7593a-e68a-4b6f-9d4d-875fafa73c02",
+    "M": "637f114b-563b-4c35-8062-a7588a89ce1c"
+  },
+  "all_development": true,
+  "episodes": 3,
+  "M_blocks_are_one_episode": true,
+  "stage2": {
+    "target": "M",
+    "frozen_models": "references/frozen-old-model-index.json",
+    "primary_reference": "LS-fit",
+    "no_fitting_of_dynamic_or_ridge_parameters": true,
+    "no_overwriting_old_E": true,
+    "target_prefix_seconds": 60,
+    "boundary_rule": "past-prefix effective E then fixed for run; inherited rank fallback",
+    "state_window_seconds": 60,
+    "rollout_horizons_seconds": [
+      15,
+      45,
+      90
+    ],
+    "A_long": "known recorded future inputs; no future TJ feedback after prefix",
+    "A_roll": "same past-only state as B; known recorded future inputs, no future TJ",
+    "B": [
+      "HOLD",
+      "RELAX30"
+    ],
+    "future_floor": "frozen P10_fit only",
+    "eligibility_views": [
+      "strict_legacy_reference",
+      "TTO-EVAL-AVAIL-v2.0_stratified"
+    ],
+    "emit_before_stage3": "stage2-frozen-evaluation.json",
+    "interpretation": "new-process check of pre-existing parameters; not historical live emission or final blind confirmation"
+  },
+  "stage3": {
+    "models_main": [
+      "G1",
+      "G2",
+      "R_TJ",
+      "R_IO"
+    ],
+    "matrices": [
+      {
+        "id": "D-LM",
+        "fit": [
+          "L",
+          "M"
+        ],
+        "score": [
+          "S"
+        ],
+        "compare_to_frozen": "L-fit",
+        "role": "development_cross_workload_check_not_final_confirmation"
+      },
+      {
+        "id": "D-SM",
+        "fit": [
+          "S",
+          "M"
+        ],
+        "score": [
+          "L"
+        ],
+        "compare_to_frozen": "S-fit",
+        "role": "reverse_time_development_stress_check"
+      },
+      {
+        "id": "D-LSM",
+        "fit": [
+          "L",
+          "S",
+          "M"
+        ],
+        "score": [
+          "L",
+          "S",
+          "M"
+        ],
+        "compare_to_frozen": "LS-fit",
+        "role": "in_sample_description_not_generalization"
+      }
+    ],
+    "main_boundary": "E_r free with inherited bounds; record M ambient 24 separately, no physical identity assumption",
+    "ambient_diagnostic": {
+      "id": "D-LSM-G2-A24",
+      "fit": [
+        "L",
+        "S",
+        "M"
+      ],
+      "model": "G2",
+      "fixed_E": {
+        "M": 24.0
+      },
+      "unknown_E": [
+        "L",
+        "S"
+      ],
+      "seeds": [
+        "N1",
+        "N2",
+        "N3",
+        "N4",
+        "N5",
+        "N6"
+      ],
+      "role": "in_sample_boundary_hypothesis_diagnostic_not_primary_winner_selection",
+      "extra_offset_or_heat_input": false
+    },
+    "model_equations_and_bounds": {
+      "G1": {
+        "equation": "dT/dt=-(k0+k1*u)*(T-E_r)+b_g*P_g+b_c*P_c",
+        "dynamic_parameters": [
+          "k0",
+          "k1",
+          "b_g",
+          "b_c"
+        ],
+        "bounds": {
+          "k0": [
+            1e-06,
+            4
+          ],
+          "k1": [
+            0,
+            4
+          ],
+          "b_g": [
+            0,
+            5
+          ],
+          "b_c": [
+            0,
+            5
+          ]
+        }
+      },
+      "G2": {
+        "equations": [
+          "dT_f/dt=-a*(T_f-T_s)+b_g*P_g+b_c*P_c",
+          "dT_s/dt=c*(T_f-T_s)-(d0+d1*u)*(T_s-E_r)"
+        ],
+        "output": "T_f approximately reported TJ, not measured TTP",
+        "dynamic_parameters": [
+          "a",
+          "c",
+          "d0",
+          "d1",
+          "b_g",
+          "b_c"
+        ],
+        "bounds": {
+          "a": [
+            0.0001,
+            4
+          ],
+          "c": [
+            1e-06,
+            1
+          ],
+          "d0": [
+            1e-06,
+            1
+          ],
+          "d1": [
+            0,
+            1
+          ],
+          "b_g": [
+            0,
+            5
+          ],
+          "b_c": [
+            0,
+            5
+          ]
+        }
+      }
+    },
+    "initializations": [
+      {
+        "id": "N1",
+        "G1": {
+          "k0": 0.5,
+          "k1": 0.5,
+          "b_g": 0.08,
+          "b_c": 0.04
+        },
+        "G2": {
+          "a": 1,
+          "c": 0.02,
+          "d0": 0.01,
+          "d1": 0.02,
+          "b_g": 0.08,
+          "b_c": 0.04
+        }
+      },
+      {
+        "id": "N2",
+        "G1": {
+          "k0": 0.1,
+          "k1": 0.1,
+          "b_g": 0.04,
+          "b_c": 0.02
+        },
+        "G2": {
+          "a": 0.33,
+          "c": 0.005,
+          "d0": 0.003,
+          "d1": 0.006,
+          "b_g": 0.04,
+          "b_c": 0.02
+        }
+      },
+      {
+        "id": "N3",
+        "G1": {
+          "k0": 0.02,
+          "k1": 0.02,
+          "b_g": 0.02,
+          "b_c": 0.01
+        },
+        "G2": {
+          "a": 0.1,
+          "c": 0.002,
+          "d0": 0.001,
+          "d1": 0.002,
+          "b_g": 0.02,
+          "b_c": 0.01
+        }
+      },
+      {
+        "id": "N4",
+        "G1": {
+          "k0": 0.005,
+          "k1": 0.005,
+          "b_g": 0.01,
+          "b_c": 0.005
+        },
+        "G2": {
+          "a": 0.033,
+          "c": 0.001,
+          "d0": 0.0003,
+          "d1": 0.0006,
+          "b_g": 0.01,
+          "b_c": 0.005
+        }
+      },
+      {
+        "id": "N5",
+        "G1": {
+          "k0": 0.001,
+          "k1": 0.003,
+          "b_g": 0.03,
+          "b_c": 0.015
+        },
+        "G2": {
+          "a": 1,
+          "c": 0.001,
+          "d0": 0.001,
+          "d1": 0.006,
+          "b_g": 0.03,
+          "b_c": 0.015
+        }
+      },
+      {
+        "id": "N6",
+        "G1": {
+          "k0": 0.0002,
+          "k1": 0.001,
+          "b_g": 0.015,
+          "b_c": 0.0075
+        },
+        "G2": {
+          "a": 0.1,
+          "c": 0.0003,
+          "d0": 0.0001,
+          "d1": 0.001,
+          "b_g": 0.015,
+          "b_c": 0.0075
+        }
+      }
+    ],
+    "fit_weights": "equal run, equal present macroregime, then effective time, same rule for all old-new score comparisons",
+    "main_fit_count": 36,
+    "ambient_diagnostic_fit_count": 6,
+    "total_nonlinear_fit_limit": 42,
+    "max_nfev_each": 300,
+    "max_actual_residual_calls_each": 1500,
+    "huber_transition_C": 0.3,
+    "seed_selection": "training_objective_only",
+    "cv": "inherited training-side whole-valid-segment grouped CV; at most 3 folds; fewer than 2 groups -> lambda=1",
+    "ridge_lambda_grid": [
+      0.01,
+      0.1,
+      1,
+      10
+    ],
+    "ridge_columns": {
+      "R_TJ": 9,
+      "R_IO": 15
+    },
+    "independent_labels_per_horizon": true,
+    "evaluation": {
+      "past_prefix_seconds": 60,
+      "state_window_seconds": 60,
+      "strategies": [
+        "HOLD",
+        "RELAX30"
+      ],
+      "same_model_free_response_vs_rolling_separate": true,
+      "in_sample_fitted_initial_states_not_mixed_with_uniform_prefix_comparison": true
+    },
+    "no_new_model_family": true,
+    "no_online_parameter_updates": true,
+    "no_control_changes": true
+  }
+}

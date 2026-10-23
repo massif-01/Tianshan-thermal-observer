@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/bin/tto-cpu-pilot", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/tto_field/cpu_cli.py", line 32, in main
+    initialize(receipt)
+  File "/Users/massif/Tianshan-thermal-observer/evidence/cpu-runtime-threads-20261020/local-env/lib/python3.12/site-packages/tto_field/numeric_policy.py", line 75, in initialize
+    if not r['verified']:raise RuntimeError('numeric_policy_failed:'+r['error'])
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: numeric_policy_failed:numeric_backend_not_verifiable_by_candidate

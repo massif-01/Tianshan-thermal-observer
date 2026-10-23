@@ -1,0 +1,92 @@
+{
+  "review_purpose": "Web UI PRD source-field feasibility inspection, not a repeated scientific/field review",
+  "accessed_live_devices": false,
+  "changed_source_models": false,
+  "fixed_anchors_archive": {
+    "filename": "TTO-冻结模型与CPU先导补测-GPT6Pro复审交接包.zip",
+    "sha256": "74c442362d6ac28ffc9032c15f7ad8276b5e6b20ea8fa24fa0a4ac9e190c46a6"
+  },
+  "raw_member": {
+    "path": "evidence/field/remote-result/run/native/run-2026-10-19T094114.374987_0000-5d5e5a4a/observations-0001.jsonl",
+    "sha256": "36929dfcd3755934c403ec2ba8d661cab4e3f00a0da2cce0363ada95e7960055",
+    "records": 8677
+  },
+  "fan_observations": {
+    "success_records": 2710,
+    "raw_rpm_unique_values": [
+      0
+    ],
+    "running_unique_values": [
+      true
+    ],
+    "rpm_related_fields": [
+      "rpm"
+    ],
+    "conclusion": "No independent tachometer-validity evidence from these payloads; do not infer stopped fan or generate RPM from PWM."
+  },
+  "ws_field_shapes": {
+    "temperature_keys": [
+      "cpu",
+      "gpu",
+      "soc012",
+      "soc345",
+      "tj"
+    ],
+    "power_rails": {
+      "vdd_cpu_soc_mss": {
+        "keys": [
+          "average",
+          "current",
+          "unit"
+        ],
+        "unit": "mW"
+      },
+      "vdd_gpu": {
+        "keys": [
+          "average",
+          "current",
+          "unit"
+        ],
+        "unit": "mW"
+      },
+      "vin_sys_5v0": {
+        "keys": [
+          "average",
+          "current",
+          "unit"
+        ],
+        "unit": "mW"
+      }
+    },
+    "cpu_core_keys": [
+      "freq",
+      "id",
+      "usage"
+    ],
+    "memory_keys": [
+      "ram",
+      "swap"
+    ],
+    "gpu_keys": [
+      "age_at_telemetry_receive_ms",
+      "device_uuid",
+      "freshness_timeout_ms",
+      "sample_interval_ms",
+      "sampled_at_utc",
+      "schema_version",
+      "source",
+      "status",
+      "utilization_pct"
+    ]
+  },
+  "candidate_reference": {
+    "filename": "TTO-CPU旁录与针对性补测-运行准备证据包.zip",
+    "sha256": "bc6cf12b845d11f964253346c24b254fe2bf558eb183004a2d8b0d595c5d3693",
+    "status": "cpu.1 reference has known pending narrow repairs; do not deploy as Web UI baseline without checking latest accepted candidate"
+  },
+  "limitations": [
+    "No current runtime/RPM calibration/curve mapping verified",
+    "Only source shapes and frozen observer fields inspected",
+    "Original archive is not bundled or republished; no private raw records copied"
+  ]
+}

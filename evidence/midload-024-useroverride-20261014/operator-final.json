@@ -1,0 +1,90 @@
+{
+  "recorded_at_utc": "2026-10-13T18:20:54.931910+00:00",
+  "status": "completed",
+  "stop_reason": "completed",
+  "actual_schedule_end_utc": "2026-10-13T18:19:38.028529+00:00",
+  "elapsed_total_s": 2510.9379144080003,
+  "initiating_chat_id": "01a1331a-f937-7d91-aef0-ac4f5e50bd8a",
+  "foreground_exec_session_id": 88342,
+  "launch_evidence": "launch.json",
+  "verified_runner_pid": 14537,
+  "runner_exit_verified": true,
+  "runner_exit_code": 0,
+  "stop_signals_sent": 0,
+  "runner_launch_count": 1,
+  "extra_API_requests": 0,
+  "collector_run_id": "637f114b-563b-4c35-8062-a7588a89ce1c",
+  "requests": 18,
+  "completed_requests": 18,
+  "request_ids": [
+    "M20-001",
+    "M20-002",
+    "M60-003",
+    "M60-004",
+    "M60-005",
+    "M60-006",
+    "M180-007",
+    "M180-008",
+    "M180-009",
+    "M180-010",
+    "M180-011",
+    "M180-012",
+    "M180-013",
+    "M180-014",
+    "M180-015",
+    "M180-016",
+    "M180-017",
+    "M180-018"
+  ],
+  "all_requests_protocol_completed": true,
+  "phases": [
+    {
+      "phase": "resident_background",
+      "occurred_at_utc": "2026-10-13T17:47:47.321834+00:00",
+      "actual_duration_s": 600.001407875
+    },
+    {
+      "phase": "M20",
+      "occurred_at_utc": "2026-10-13T17:48:20.061738+00:00",
+      "actual_duration_s": 32.73796948600011
+    },
+    {
+      "phase": "cooldown_1",
+      "occurred_at_utc": "2026-10-13T17:55:20.064953+00:00",
+      "actual_duration_s": 420.0011238579991
+    },
+    {
+      "phase": "M60",
+      "occurred_at_utc": "2026-10-13T17:56:25.097502+00:00",
+      "actual_duration_s": 65.03052724599911
+    },
+    {
+      "phase": "cooldown_2",
+      "occurred_at_utc": "2026-10-13T18:06:25.100393+00:00",
+      "actual_duration_s": 600.000841911
+    },
+    {
+      "phase": "M180",
+      "occurred_at_utc": "2026-10-13T18:09:38.025339+00:00",
+      "actual_duration_s": 192.92035570400003
+    },
+    {
+      "phase": "final_cooldown",
+      "occurred_at_utc": "2026-10-13T18:19:38.028359+00:00",
+      "actual_duration_s": 600.0008964120007
+    }
+  ],
+  "original_rule_abnormal": true,
+  "overridden_rule_abnormal": false,
+  "raw_marker_counts": {
+    "fan_temp_stale_true": 1,
+    "temperature_valid_false": 0,
+    "temperature_active_default": 0,
+    "fan_fault_true": 0,
+    "fan_guard_true": 0
+  },
+  "result_role": "Completed user-overridden development test; native-rule acceptance not passed",
+  "root_cause_investigation": "not performed",
+  "archive_verification": "archive-verification.json",
+  "archive_path": "/Users/massif/Tianshan-thermal-observer/evidence/midload-024-useroverride-20261014/trial-result.zip"
+}

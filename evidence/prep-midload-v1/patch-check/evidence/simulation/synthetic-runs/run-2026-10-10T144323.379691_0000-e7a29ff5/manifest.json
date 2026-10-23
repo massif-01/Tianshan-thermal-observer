@@ -1,0 +1,169 @@
+{
+  "record_schema": 1,
+  "version": "0.1.0",
+  "source_identity": {
+    "kind": "package_source_hashes",
+    "sha256": "362a2694ea267b88f8aa303fa7613cbe7e3af30bd199039639dd57e0eaae9aba",
+    "files": {
+      "__init__.py": "710e218788f46b57838a26ea2fd168497327863fb8baafdb3f4ffd96aa4e0047",
+      "__main__.py": "79ee6f134c5c5193377cf9b189cbdcc3e2095e49ba9cec310114441c15a917c4",
+      "cli.py": "ac30f8b03bc2e692a3ae05f0964a81a23c6bbe7abbd7bae4f701bd840b88925e",
+      "collector.py": "5587f224dc87f855fe87f4de12ff56d7c778bd00d8d55bf4bc5993a546acef22",
+      "config.py": "5a05545f28b8b44b3e6f0e7efcf2453e01ee0726ef0bd228cc73d553e01d8e3e",
+      "dataset.py": "5225c926ce6e7e0c6a662b12aa358f9842b42fe677fd6b52d135924f5f2515f8",
+      "demo.py": "c41e1fc3a6c4f5454e32418e9784278786a5e315dcb60590d036b1cc1dfd5d67",
+      "deployment.py": "221b1d098d46623dc0eba5addc9804d917f8ede6cfa850cec1922c5cd177aaf7",
+      "engine.py": "cac8381a8ef63556e4740389e56c6211e5eb5600c81d3e6ab7864a7096f9d247",
+      "evaluation.py": "5a91a0192db426721456f0289a238f8d6947616b65c46776aea34070180b4d95",
+      "features.py": "e01d25b52f6aec2b584b9382b46a665b6be790aa6a2eec76884b08fbed208b60",
+      "model.py": "1b998ac04883ebdc59ed5abde442a5c1455d825ddd51ec1f69fe6a72532f919e",
+      "quality.py": "72f3886fdd0becf7168b87901181cfb7afd130579c411c71c3414e1d94b72218",
+      "report.py": "daedf4d612abfa352ea86c5f3ac8b09c3146884478d5fde60a4f43e3e7a0e327",
+      "storage.py": "00449d1e33489f4ee419e637923618768df05a868ca77cf9ef62d46218665e34",
+      "training.py": "7cb331f65f76bff7489acd8457fa7b69101933ee461168139d615b8511f5ad8c",
+      "util.py": "0a33bb268e7817ddd19b6ae81562c50e1fdd08a9cdb3fa08f8f2dd3fbb252f16"
+    },
+    "git_head": null,
+    "dirty": null,
+    "git_state": "not_checked_in_installed_runtime"
+  },
+  "config": {
+    "schema_version": 1,
+    "mode": "observe_only",
+    "orin": {
+      "source_id": "orin-primary",
+      "base_url": null,
+      "socketio_path": "socket.io",
+      "namespace": "/",
+      "event": "tegrastats_update",
+      "transports": [
+        "websocket"
+      ],
+      "source_sample_interval_ms": 1000,
+      "source_interval_evidence": "fixed_simulation_1Hz",
+      "headers_file": null,
+      "ca_file": null
+    },
+    "tianshan": {
+      "source_id": "esp32-primary",
+      "base_url": null,
+      "fan_id": 0,
+      "fan_status_path": "/api/v1/fan/status",
+      "temp_status_path": "/api/v1/temp/status",
+      "fan_poll_interval_s": 1.0,
+      "temp_poll_interval_s": 5.0,
+      "headers_file": null,
+      "ca_file": null
+    },
+    "network": {
+      "request_timeout_s": 2.0,
+      "connect_timeout_s": 5.0,
+      "max_inflight_esp32": 1,
+      "follow_redirects": false,
+      "reconnect_initial_s": 1.0,
+      "reconnect_max_s": 30.0,
+      "reconnect_max_attempts": 10,
+      "reconnect_jitter_ratio": 0.2,
+      "max_business_payload_bytes": 65536
+    },
+    "storage": {
+      "data_root": null,
+      "chunk_bytes": 67108864,
+      "run_max_bytes": 2147483648,
+      "min_free_bytes": 1073741824,
+      "queue_max_items": 256,
+      "queue_max_bytes": 8388608,
+      "overwrite_existing": false
+    },
+    "run": {
+      "default_duration_s": 1800,
+      "max_duration_s": 14400,
+      "doctor_duration_s": 180,
+      "single_instance": true
+    },
+    "features": {
+      "schema_version": 1,
+      "time_axis": "observer_receive",
+      "history_s": 180,
+      "prediction_stride_s": 5,
+      "fan_max_age_s": 2.5,
+      "optional_train_min_availability": 0.95,
+      "max_feature_columns": 64,
+      "missing_optional_policy": "fallback_tj_or_baseline",
+      "power_current_rails": [
+        "vdd_gpu_soc",
+        "vdd_cpu_cv",
+        "vin_sys_5v0"
+      ]
+    },
+    "model": {
+      "schema_version": 1,
+      "horizons_s": [
+        15,
+        45,
+        90
+      ],
+      "primary_horizon_s": 45,
+      "methods": [
+        "persist",
+        "trend30",
+        "ridge_tj",
+        "ridge_full"
+      ],
+      "ridge_lambda_grid": [
+        0.001,
+        0.01,
+        0.1,
+        1.0
+      ],
+      "train_threads": 1,
+      "train_timeout_s": 600,
+      "online_training": false,
+      "automatic_activation": false
+    },
+    "resources": {
+      "observer_rss_target_mib": 256,
+      "observer_cpu_single_core_target_pct": 5.0,
+      "predict_all_horizons_p99_target_ms": 20.0,
+      "train_rss_limit_mib": 2048
+    },
+    "security": {
+      "business_control_writes": false,
+      "production_discovery": false,
+      "telemetry_upload": false,
+      "system_service_install": false,
+      "default_live_access": false
+    }
+  },
+  "config_sha256": "7837c81a58bbe3cfcc7ed73c949dde71e296856bf85541dbea76cf7bd5d551f1",
+  "observer_run_id": "e7a29ff5-cb60-4a93-974e-0a29015ee5f0",
+  "episode": "simulation-process-0",
+  "episode_evidence": "operator_named_process",
+  "simulated": true,
+  "started_at_utc": "2026-10-10T14:43:23.380578+00:00",
+  "time_axis": "observer_receive",
+  "feature_schema": 1,
+  "model_schema": 1,
+  "input_schema": 1,
+  "units": {
+    "temperature": "C",
+    "raw_power": "mW",
+    "features_power": "W",
+    "duty": "logical_percent",
+    "cpu_freq": "MHz",
+    "gpu_gr3d_freq": "busy_percent"
+  },
+  "fan_id": 0,
+  "deployment_status": "deployment_unverified",
+  "ws_final_package_sha256": null,
+  "firmware_identity": null,
+  "source_period_ms": 1000,
+  "source_period_evidence": "fixed_simulation_1Hz",
+  "network_authorization": {
+    "kind": "offline_simulation",
+    "endpoints": [],
+    "business_writes": false
+  },
+  "operator_environment": "unknown",
+  "control_elapsed_time_available": false
+}

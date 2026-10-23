@@ -1,0 +1,31 @@
+{
+  "resource_monitor": {
+    "initial": "system process enumeration rejected by sandbox before computation output",
+    "resolution": "getrusage of own subprocess; no escalation or device/network access"
+  },
+  "postprocessing": [
+    {
+      "issue": "A-long point schema has UTC/ref, not wall",
+      "resolution": "join frozen accepted wall via exact source reference; fits and main score artifacts unchanged"
+    },
+    {
+      "issue": "S peak-only-during-request misses immediately post-completion peak",
+      "resolution": "inherited submit to client end+5s; added actual-peak-time error and overlap; M actual-block window unchanged"
+    },
+    {
+      "issue": "B plot connected filtered qualification gaps",
+      "resolution": "break lines at actual >2.5s point gaps or strict segment boundaries; no predictions synthesized"
+    }
+  ],
+  "protocol_difference": {
+    "stage2_seal": "state/point forecasts/main metrics/coverage sealed before fitting",
+    "event_aggregation_and_written_report": "post-freeze derivation during delivery; not a pre-stage3 written report",
+    "old_predictions_and_metrics_changed": false,
+    "requires_independent_review": true
+  },
+  "extra_real_fit_attempts": 0,
+  "independent_replay_interpreter": {
+    "initial": "Resolving the .venv python symlink selected the base interpreter without NumPy",
+    "resolution": "Preserved virtual-environment executable path; full independent readback passed; optional plot interpreter uses absolute path without resolving symlink"
+  }
+}

@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/mnt/data/tto_cpu_prep_independent_review_20261020/work/model/rerun.py", line 55, in <module>
+    main()
+    ~~~~^^
+  File "/mnt/data/tto_cpu_prep_independent_review_20261020/work/model/rerun.py", line 37, in main
+    assert sha(p)==sha(new),p.name
+           ^^^^^^^^^^^^^^^^
+AssertionError: A1-independent-audit-readback.json

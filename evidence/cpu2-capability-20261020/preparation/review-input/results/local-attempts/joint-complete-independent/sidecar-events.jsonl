@@ -1,0 +1,5 @@
+{"event": "startup_scheduled", "mono_s": 30.06874830000004, "at_utc": "2026-10-20T13:28:18.875097+00:00", "status": "starting", "stage": "baseline", "startup_budget_s": 3.0}
+{"event": "started", "mono_s": 30.07240261100003, "at_utc": "2026-10-20T13:28:18.878749+00:00", "status": "running", "stage": "receive"}
+{"event": "stop_sidecar_only", "mono_s": 33.98546162499997, "at_utc": "2026-10-20T13:28:22.791805+00:00", "status": "source_budget_exceeded", "stage": "receive"}
+{"event": "child_exit", "mono_s": 60.051936831000035, "at_utc": "2026-10-20T13:28:48.858283+00:00", "status": "source_budget_exceeded", "stage": "receive", "child_stage": "source_start", "returncode": -15, "child_pid": 1781}
+{"event": "cleanup_finished", "mono_s": 60.061105525000016, "at_utc": "2026-10-20T13:28:48.867450+00:00", "status": "source_budget_exceeded", "stage": "receive", "own_tasks_remaining": 0, "unreaped_children": 0}

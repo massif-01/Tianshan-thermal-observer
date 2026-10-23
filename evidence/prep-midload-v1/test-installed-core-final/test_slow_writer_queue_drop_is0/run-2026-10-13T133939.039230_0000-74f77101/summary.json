@@ -1,0 +1,115 @@
+{
+  "stop_reason": "duration",
+  "poll_missed": 0,
+  "poll_count": 2,
+  "connection_attempts": 1,
+  "payload_oversize": 0,
+  "orin_event_count": 84,
+  "business_payload_bytes_sum": 58961,
+  "business_payload_bytes_max": 702,
+  "poll_rtt_ms": [
+    6.183041026815772,
+    1.623750024009496
+  ],
+  "prediction_ms": [
+    70.56579197524115,
+    172.35012497985736,
+    171.8510000500828,
+    165.69845902267843,
+    168.13445795560256,
+    168.52674999972805
+  ],
+  "rss_mib": [],
+  "cpu_pct_single_core": [],
+  "elapsed_s": 1.5117794169927947,
+  "queue_peak_items": 1,
+  "queue_peak_bytes": 855,
+  "dropped": 80,
+  "quality": {
+    "boundary_socketio_connecting": 1,
+    "boundary_queue_drop": 6,
+    "boundary_stream": 1,
+    "new_samples": 6,
+    "boundary_input_boundary": 6,
+    "missing_sequences": 72,
+    "boundary_run_end": 1
+  },
+  "processing": {
+    "fan_ok": 1,
+    "origins": 6
+  },
+  "target_host_verified": false,
+  "polling_health": {
+    "contract": "TTO-POLL-INDEPENDENT-v1",
+    "max_inflight_per_endpoint": 1,
+    "max_total_inflight_limit": 2,
+    "max_total_inflight_observed": 2,
+    "end_inflight": 0,
+    "legacy_config_max_inflight_esp32": 1,
+    "endpoints": {
+      "fan": {
+        "sent": 1,
+        "returned": 1,
+        "http_ok": 1,
+        "errors": 0,
+        "skipped": 0,
+        "cancelled": 0,
+        "peak_inflight": 1,
+        "rtt_ms": {
+          "n": 1,
+          "p50": 6.183041026815772,
+          "p95": 6.183041026815772,
+          "min": 6.183041026815772,
+          "max": 6.183041026815772
+        },
+        "send_interval_s": {
+          "n": 0,
+          "p50": null,
+          "p95": null,
+          "min": null,
+          "max": null
+        },
+        "return_interval_s": {
+          "n": 0,
+          "p50": null,
+          "p95": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "temp": {
+        "sent": 1,
+        "returned": 1,
+        "http_ok": 1,
+        "errors": 0,
+        "skipped": 0,
+        "cancelled": 0,
+        "peak_inflight": 1,
+        "rtt_ms": {
+          "n": 1,
+          "p50": 1.623750024009496,
+          "p95": 1.623750024009496,
+          "min": 1.623750024009496,
+          "max": 1.623750024009496
+        },
+        "send_interval_s": {
+          "n": 0,
+          "p50": null,
+          "p95": null,
+          "min": null,
+          "max": null
+        },
+        "return_interval_s": {
+          "n": 0,
+          "p50": null,
+          "p95": null,
+          "min": null,
+          "max": null
+        }
+      }
+    }
+  },
+  "ended_at_utc": "2026-10-13T13:39:40.555236+00:00",
+  "raw_bytes": 32008,
+  "observations": 8
+}

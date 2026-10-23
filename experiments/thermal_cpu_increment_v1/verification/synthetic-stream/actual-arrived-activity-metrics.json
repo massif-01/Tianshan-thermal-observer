@@ -1,0 +1,135 @@
+{
+  "status": "descriptive_client_reference_only",
+  "groups": [
+    {
+      "variant": "INPUT-BASE",
+      "common_available_s": 60.0,
+      "own_unknown_s": 0.0,
+      "common_no_client_inflight_s": 26.5,
+      "common_no_client_inflight_ACTIVE_s": 25.0,
+      "common_no_client_inflight_ACTIVE_events": 2
+    },
+    {
+      "variant": "INPUT-MEAN",
+      "common_available_s": 60.0,
+      "own_unknown_s": 0.0,
+      "common_no_client_inflight_s": 26.5,
+      "common_no_client_inflight_ACTIVE_s": 25.0,
+      "common_no_client_inflight_ACTIVE_events": 2
+    },
+    {
+      "variant": "INPUT-CORE",
+      "common_available_s": 60.0,
+      "own_unknown_s": 0.0,
+      "common_no_client_inflight_s": 26.5,
+      "common_no_client_inflight_ACTIVE_s": 25.0,
+      "common_no_client_inflight_ACTIVE_events": 2
+    }
+  ],
+  "events": [
+    {
+      "variant": "INPUT-BASE",
+      "event_id": "synthetic-request-1",
+      "state_at_submit": "IDLE",
+      "state_at_submit_ref": "synthetic:1.4",
+      "result": "detected",
+      "delay_s": 1.1,
+      "first_active_ref": "synthetic:2.6",
+      "protocol_done_known": true,
+      "first_IDLE_after_DONE_delay_s": null,
+      "thermal_process_independent": false
+    },
+    {
+      "variant": "INPUT-BASE",
+      "event_id": "synthetic-request-2",
+      "state_at_submit": "ACTIVE",
+      "state_at_submit_ref": "synthetic:25.0",
+      "result": "already_active",
+      "delay_s": null,
+      "first_active_ref": "synthetic:25.0",
+      "protocol_done_known": true,
+      "first_IDLE_after_DONE_delay_s": null,
+      "thermal_process_independent": false
+    },
+    {
+      "variant": "INPUT-MEAN",
+      "event_id": "synthetic-request-1",
+      "state_at_submit": "IDLE",
+      "state_at_submit_ref": "synthetic:1.4",
+      "result": "detected",
+      "delay_s": 1.1,
+      "first_active_ref": "synthetic:2.6",
+      "protocol_done_known": true,
+      "first_IDLE_after_DONE_delay_s": null,
+      "thermal_process_independent": false
+    },
+    {
+      "variant": "INPUT-MEAN",
+      "event_id": "synthetic-request-2",
+      "state_at_submit": "ACTIVE",
+      "state_at_submit_ref": "synthetic:25.0",
+      "result": "already_active",
+      "delay_s": null,
+      "first_active_ref": "synthetic:25.0",
+      "protocol_done_known": true,
+      "first_IDLE_after_DONE_delay_s": null,
+      "thermal_process_independent": false
+    },
+    {
+      "variant": "INPUT-CORE",
+      "event_id": "synthetic-request-1",
+      "state_at_submit": "IDLE",
+      "state_at_submit_ref": "synthetic:1.4",
+      "result": "detected",
+      "delay_s": 0.5,
+      "first_active_ref": "synthetic:2.0",
+      "protocol_done_known": true,
+      "first_IDLE_after_DONE_delay_s": null,
+      "thermal_process_independent": false
+    },
+    {
+      "variant": "INPUT-CORE",
+      "event_id": "synthetic-request-2",
+      "state_at_submit": "ACTIVE",
+      "state_at_submit_ref": "synthetic:25.0",
+      "result": "already_active",
+      "delay_s": null,
+      "first_active_ref": "synthetic:25.0",
+      "protocol_done_known": true,
+      "first_IDLE_after_DONE_delay_s": null,
+      "thermal_process_independent": false
+    }
+  ],
+  "continuous_groups": [
+    {
+      "variant": "INPUT-BASE",
+      "continuous_group": "synthetic",
+      "activation_refs": [
+        "synthetic:2.6"
+      ],
+      "additional_activation_count": 0,
+      "independent_thermal_processes": 1
+    },
+    {
+      "variant": "INPUT-MEAN",
+      "continuous_group": "synthetic",
+      "activation_refs": [
+        "synthetic:2.6"
+      ],
+      "additional_activation_count": 0,
+      "independent_thermal_processes": 1
+    },
+    {
+      "variant": "INPUT-CORE",
+      "continuous_group": "synthetic",
+      "activation_refs": [
+        "synthetic:2.0"
+      ],
+      "additional_activation_count": 0,
+      "independent_thermal_processes": 1
+    }
+  ],
+  "physical_CPU_GPU_onset_truth": null,
+  "unknown_end_is_not_idle": true,
+  "independent_thermal_processes": 1
+}

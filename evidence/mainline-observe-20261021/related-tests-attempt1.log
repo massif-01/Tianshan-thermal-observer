@@ -1,0 +1,154 @@
+FF.............                                                          [100%]
+=================================== FAILURES ===================================
+___________ test_model_exception_keeps_native_raw_and_later_recovers ___________
+
+tmp_path = PosixPath('/private/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/pytest-of-massif/pytest-700/test_model_exception_keeps_nat0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1067dca70>
+
+    def test_model_exception_keeps_native_raw_and_later_recovers(tmp_path,monkeypatch):
+>       s=run_case(tmp_path,monkeypatch,FaultObserver)
+
+experiments/mainline_observe_v1/tests/test_model_isolation.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+experiments/mainline_observe_v1/tests/test_model_isolation.py:39: in run_case
+    return asyncio.run(go())
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py:194: in run
+    return runner.run(main)
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/base_events.py:687: in run_until_complete
+    return future.result()
+experiments/mainline_observe_v1/tests/test_model_isolation.py:36: in go
+    s=await run_observe(c,reg,tmp_path/'session',5,local_loopback=True,storage_options=dict(min_free=0))
+experiments/mainline_observe_v1/src/tto_field/observe_runtime.py:143: in run_observe
+    policy=initialize();clock=Clock();stop=asyncio.Event();loop=asyncio.get_running_loop()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+receipt_path = None
+
+    def initialize(receipt_path=None):
+        global _receipt
+        from . import __version__
+        from threadpoolctl import threadpool_info,__version__ as threadpoolctl_version
+        started=time.monotonic()
+        if _receipt is not None and _receipt['pid']==os.getpid():
+            r=copy.deepcopy(_receipt)
+            r['checked_at_utc']=_utc();r['checked_at_mono_s']=started
+            r['loaded_pools']=threadpool_info()
+            r['pool_coverage']=_pool_coverage(r['loaded_pools'],r['libraries'])
+            r['verified']=all(r['pool_coverage'].values()) and all(p['num_threads']==1 for p in r['loaded_pools']) and all(os.environ.get(k)=='1' for k in ENV_KEYS)
+            r['error']=None if r['verified'] else 'numeric_policy_changed_after_initialization'
+            _save(receipt_path,r)
+            if not r['verified']:raise RuntimeError(r['error'])
+            return r
+        r=dict(schema='TTO-NUMERIC-THREAD-POLICY-v1',candidate_version=__version__,pid=os.getpid(),host=socket.gethostname(),
+               executable=sys.executable,python=sys.version,platform=platform.platform(),started_at_utc=_utc(),started_at_mono_s=started,
+               inherited_environment={k:os.environ.get(k) for k in ENV_KEYS},policy={k:'1' for k in ENV_KEYS},
+               policy_scope='this candidate process numeric libraries only; not Python threads or other applications',
+               modules_already_loaded=[n for n in ('numpy','scipy') if n in sys.modules],
+               preloaded_versions={n:getattr(sys.modules.get(n),'__version__',None) for n in ('numpy','scipy')},threadpoolctl_version=threadpoolctl_version,verified=False,error=None)
+        try:
+            if r['modules_already_loaded']:raise RuntimeError('numeric_libraries_loaded_before_policy')
+            for key in ENV_KEYS:os.environ[key]='1'
+            r['applied_at_mono_s']=time.monotonic()
+            import numpy as np
+            import scipy
+            import scipy.linalg as la
+            # Force both pinned backends to load, without loading a thermal model.
+            np.dot(np.eye(2),np.eye(2));la.expm(np.zeros((2,2)))
+            r['libraries']=dict(numpy=dict(version=np.__version__,module=np.__file__,blas=np.__config__.CONFIG['Build Dependencies']['blas']),
+                                scipy=dict(version=scipy.__version__,module=scipy.__file__,blas=scipy.__config__.CONFIG['Build Dependencies']['blas']))
+            r['extension_modules']={n:getattr(sys.modules.get(n),'__file__',None) for n in ('numpy._core._multiarray_umath','scipy.linalg._fblas','scipy.linalg._flapack')}
+            r['loaded_pools']=threadpool_info()
+            r['final_environment']={k:os.environ.get(k) for k in ENV_KEYS}
+            supported=all('openblas' in x['blas']['name'].lower() for x in r['libraries'].values())
+            r['pool_coverage']=_pool_coverage(r['loaded_pools'],r['libraries'])
+            if not supported or not all(r['pool_coverage'].values()):raise RuntimeError('numeric_backend_not_verifiable_by_candidate')
+            if any(p['num_threads']!=1 for p in r['loaded_pools']):raise RuntimeError('numeric_thread_pool_is_not_single_threaded')
+            r['verified']=True
+        except Exception as exc:
+            r['error']=str(exc);r['error_class']=type(exc).__name__;r['loaded_pools']=threadpool_info()
+        r['checked_at_utc']=_utc();r['checked_at_mono_s']=time.monotonic()
+        _save(receipt_path,r)
+>       if not r['verified']:raise RuntimeError('numeric_policy_failed:'+r['error'])
+E       RuntimeError: numeric_policy_failed:numeric_libraries_loaded_before_policy
+
+experiments/mainline_observe_v1/src/tto_field/numeric_policy.py:75: RuntimeError
+________ test_queue_overrun_and_lag_keep_raw_with_explicit_loss_marker _________
+
+tmp_path = PosixPath('/private/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/pytest-of-massif/pytest-700/test_queue_overrun_and_lag_kee0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x112a59790>
+
+    def test_queue_overrun_and_lag_keep_raw_with_explicit_loss_marker(tmp_path,monkeypatch):
+>       s=run_case(tmp_path,monkeypatch,BlockOnce)
+
+experiments/mainline_observe_v1/tests/test_model_isolation.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+experiments/mainline_observe_v1/tests/test_model_isolation.py:39: in run_case
+    return asyncio.run(go())
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py:194: in run
+    return runner.run(main)
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/base_events.py:687: in run_until_complete
+    return future.result()
+experiments/mainline_observe_v1/tests/test_model_isolation.py:36: in go
+    s=await run_observe(c,reg,tmp_path/'session',5,local_loopback=True,storage_options=dict(min_free=0))
+experiments/mainline_observe_v1/src/tto_field/observe_runtime.py:143: in run_observe
+    policy=initialize();clock=Clock();stop=asyncio.Event();loop=asyncio.get_running_loop()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+receipt_path = None
+
+    def initialize(receipt_path=None):
+        global _receipt
+        from . import __version__
+        from threadpoolctl import threadpool_info,__version__ as threadpoolctl_version
+        started=time.monotonic()
+        if _receipt is not None and _receipt['pid']==os.getpid():
+            r=copy.deepcopy(_receipt)
+            r['checked_at_utc']=_utc();r['checked_at_mono_s']=started
+            r['loaded_pools']=threadpool_info()
+            r['pool_coverage']=_pool_coverage(r['loaded_pools'],r['libraries'])
+            r['verified']=all(r['pool_coverage'].values()) and all(p['num_threads']==1 for p in r['loaded_pools']) and all(os.environ.get(k)=='1' for k in ENV_KEYS)
+            r['error']=None if r['verified'] else 'numeric_policy_changed_after_initialization'
+            _save(receipt_path,r)
+            if not r['verified']:raise RuntimeError(r['error'])
+            return r
+        r=dict(schema='TTO-NUMERIC-THREAD-POLICY-v1',candidate_version=__version__,pid=os.getpid(),host=socket.gethostname(),
+               executable=sys.executable,python=sys.version,platform=platform.platform(),started_at_utc=_utc(),started_at_mono_s=started,
+               inherited_environment={k:os.environ.get(k) for k in ENV_KEYS},policy={k:'1' for k in ENV_KEYS},
+               policy_scope='this candidate process numeric libraries only; not Python threads or other applications',
+               modules_already_loaded=[n for n in ('numpy','scipy') if n in sys.modules],
+               preloaded_versions={n:getattr(sys.modules.get(n),'__version__',None) for n in ('numpy','scipy')},threadpoolctl_version=threadpoolctl_version,verified=False,error=None)
+        try:
+            if r['modules_already_loaded']:raise RuntimeError('numeric_libraries_loaded_before_policy')
+            for key in ENV_KEYS:os.environ[key]='1'
+            r['applied_at_mono_s']=time.monotonic()
+            import numpy as np
+            import scipy
+            import scipy.linalg as la
+            # Force both pinned backends to load, without loading a thermal model.
+            np.dot(np.eye(2),np.eye(2));la.expm(np.zeros((2,2)))
+            r['libraries']=dict(numpy=dict(version=np.__version__,module=np.__file__,blas=np.__config__.CONFIG['Build Dependencies']['blas']),
+                                scipy=dict(version=scipy.__version__,module=scipy.__file__,blas=scipy.__config__.CONFIG['Build Dependencies']['blas']))
+            r['extension_modules']={n:getattr(sys.modules.get(n),'__file__',None) for n in ('numpy._core._multiarray_umath','scipy.linalg._fblas','scipy.linalg._flapack')}
+            r['loaded_pools']=threadpool_info()
+            r['final_environment']={k:os.environ.get(k) for k in ENV_KEYS}
+            supported=all('openblas' in x['blas']['name'].lower() for x in r['libraries'].values())
+            r['pool_coverage']=_pool_coverage(r['loaded_pools'],r['libraries'])
+            if not supported or not all(r['pool_coverage'].values()):raise RuntimeError('numeric_backend_not_verifiable_by_candidate')
+            if any(p['num_threads']!=1 for p in r['loaded_pools']):raise RuntimeError('numeric_thread_pool_is_not_single_threaded')
+            r['verified']=True
+        except Exception as exc:
+            r['error']=str(exc);r['error_class']=type(exc).__name__;r['loaded_pools']=threadpool_info()
+        r['checked_at_utc']=_utc();r['checked_at_mono_s']=time.monotonic()
+        _save(receipt_path,r)
+>       if not r['verified']:raise RuntimeError('numeric_policy_failed:'+r['error'])
+E       RuntimeError: numeric_policy_failed:numeric_libraries_loaded_before_policy
+
+experiments/mainline_observe_v1/src/tto_field/numeric_policy.py:75: RuntimeError
+=========================== short test summary info ============================
+FAILED experiments/mainline_observe_v1/tests/test_model_isolation.py::test_model_exception_keeps_native_raw_and_later_recovers
+FAILED experiments/mainline_observe_v1/tests/test_model_isolation.py::test_queue_overrun_and_lag_keep_raw_with_explicit_loss_marker
+2 failed, 13 passed in 0.48s

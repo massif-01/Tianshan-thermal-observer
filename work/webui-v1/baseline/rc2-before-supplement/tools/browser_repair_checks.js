@@ -1,0 +1,48 @@
+async (page) => {
+ const control='http://127.0.0.1:53703';
+ const command=async name=>(await page.request.post(control+'/'+name)).json();
+ const read=()=>page.evaluate(()=>({link:document.querySelector('#link').textContent,phase:document.querySelector('#modelPhase').textContent,future:[...document.querySelectorAll('#futureValues b')].map(e=>e.textContent),metrics:[...document.querySelectorAll('#metrics b')].map(e=>e.textContent),flow:document.querySelectorAll('#topology .flow').length,activeNodes:document.querySelectorAll('#topology .node.valid').length,advice:document.querySelector('#advice').textContent,health:document.querySelector('#healthSummary').textContent,source:document.querySelector('#sourceStatus').textContent,comparison:document.querySelector('#comparisonStatus').textContent,notice:document.querySelector('#notice').textContent}));
+ const valid=()=>page.waitForFunction(()=>[...document.querySelectorAll('#futureValues b')].some(e=>e.textContent.includes('°C')));
+ const withdrawn=async()=>{const r=await read();if(r.future.some(v=>v!=='—')||r.flow||r.activeNodes||r.metrics.some(v=>v!=='—')||!r.health.startsWith('0项有效')||!r.phase.includes('无法估计'))throw Error('incomplete withdrawal '+JSON.stringify(r));return r;};
+ await page.setViewportSize({width:1440,height:1100});await valid();
+ const result={scope:'real Chrome; installed rc2 static/API; synthetic source; loopback fault harness'};
+ result.before=await read();if(!result.before.advice.includes('%'))throw Error('synthetic advisory absent');const historical=await page.locator('#latestMatch').innerText();await page.screenshot({path:'output/playwright/rc2-live.png',fullPage:true});
+ await page.getByRole('button',{name:'暂停画面',exact:true}).click();
+ const freeze=await page.locator('#metrics').innerText();await page.waitForTimeout(1200);
+ result.pauseStable=freeze===await page.locator('#metrics').innerText();if(!result.pauseStable)throw Error('pause changed');
+ await page.getByRole('button',{name:'恢复实时',exact:true}).click();
+ await command('drop');await page.waitForFunction(()=>document.querySelector('#link').textContent==='Web数据断开');
+ result.disconnect=await withdrawn();result.historyPreserved=historical===await page.locator('#latestMatch').innerText();if(!result.historyPreserved)throw Error('history withdrawn');await page.screenshot({path:'output/playwright/rc2-disconnected.png',fullPage:true});
+ await command('live');await valid();
+ await command('stall');await page.reload();await valid();result.stallInitial=await read();
+ // Deadline comes from a real backend snapshot; no frontend TTL is fabricated.
+ const snap=await (await page.request.get('http://127.0.0.1:59009/api/v1/snapshot')).json();
+ result.stallWaitMs=Math.max(...snap.metrics.map(m=>m.remaining_valid_ms||0),snap.model.remaining_valid_ms||0)+1300;
+ await page.waitForTimeout(result.stallWaitMs);result.stalled=await withdrawn();
+ if(result.stalled.link!=='Web已连接')throw Error('stall was a disconnected stream');
+ await page.screenshot({path:'output/playwright/rc2-stalled.png',fullPage:true});
+ await command('live');await page.reload();await valid();await command('event');
+ await page.waitForFunction(()=>document.querySelector('#eventList').textContent.includes('SYNTHETIC task at 20s'));
+ const old=await (await page.request.get('http://127.0.0.1:59009/api/v1/events?limit=1000')).json();
+ result.eventBefore=old.events.find(e=>e.reason==='SYNTHETIC task at 20s');
+ const elapsed=(await (await page.request.get('http://127.0.0.1:59009/api/v1/snapshot')).json()).run_elapsed_ms;
+ const box=await page.locator('#eventTimeline').boundingBox();
+ await page.locator('#eventTimeline').click({position:{x:65+20000/elapsed*(box.width-95),y:box.height/2}});
+ result.selectedBeforeSwitch=await page.locator('#eventSelection').isVisible();
+ const switched=await command('new-run');await page.waitForTimeout(1600);
+ result.newRun=switched;result.oldTaskAbsentAfterRun=!(await page.locator('#eventList').innerText()).includes('SYNTHETIC task at 20s');
+ result.selectionClearedAfterRun=!(await page.locator('#eventSelection').isVisible());
+ await command('event');await page.waitForFunction(()=>document.querySelector('#eventList').textContent.includes('SYNTHETIC task at 20s'));
+ const epoch=await command('new-epoch');await page.waitForTimeout(1600);
+ result.newEpoch=epoch;result.oldTaskAbsentAfterEpoch=!(await page.locator('#eventList').innerText()).includes('SYNTHETIC task at 20s');
+ const current=await (await page.request.get('http://127.0.0.1:59009/api/v1/events?limit=1000')).json();
+ result.apiEventsScoped=current.events.every(e=>e.run_id===null||(e.run_id===epoch.run_id&&e.source_epoch===epoch.source_epoch));
+ for(const k of ['oldTaskAbsentAfterRun','selectionClearedAfterRun','oldTaskAbsentAfterEpoch','apiEventsScoped'])if(!result[k])throw Error('event scope '+k);
+ await page.route('**/api/v1/events?limit=1000',route=>route.fulfill({contentType:'application/json',body:JSON.stringify({events:[result.eventBefore]})}));
+ await page.waitForFunction(()=>document.querySelector('#eventCount').textContent==='0条');
+ result.frontendRejectsForeignEvents=await page.locator('#eventEmpty').evaluate(e=>e.style.display==='block');
+ if(!result.frontendRejectsForeignEvents)throw Error('foreign event plotted');
+ await page.unroute('**/api/v1/events?limit=1000');
+ await page.screenshot({path:'output/playwright/rc2-event-epoch.png',fullPage:true});
+ return result;
+}

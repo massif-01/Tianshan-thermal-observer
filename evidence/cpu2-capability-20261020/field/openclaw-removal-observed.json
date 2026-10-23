@@ -1,0 +1,30 @@
+{
+  "recorded_at_utc": "2026-10-20T14:03:20.032394+00:00",
+  "evidence_kind": "transcription of successful command result in this task, subsequent independent verification pending",
+  "npm_uninstall_exit": 0,
+  "npm_removed_packages_reported": 300,
+  "disabled_services": [
+    "user/openclaw-gateway.service",
+    "user/wukong.service",
+    "system/wukong.service"
+  ],
+  "removed_paths": [
+    "/home/rm01/.openclaw",
+    "/home/rm01/.openclaw-wukong",
+    "/home/rm01/start-wukong.sh",
+    "/home/rm01/.config/systemd/user/openclaw-gateway.service",
+    "/home/rm01/.config/systemd/user/openclaw-gateway.service.bak",
+    "/home/rm01/.config/systemd/user/wukong.service",
+    "/etc/systemd/system/wukong.service",
+    "/tmp/openclaw-1000",
+    "/tmp/openclaw"
+  ],
+  "post_command_binary_exists": false,
+  "post_command_global_package_exists": false,
+  "post_command_remaining_processes": [],
+  "preserved": [
+    "Node/npm shared runtime",
+    "TTO",
+    "cpu2 candidate and base interpreter"
+  ]
+}

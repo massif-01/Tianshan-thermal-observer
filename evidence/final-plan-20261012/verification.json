@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-12",
+  "plan_contract": "TTO-PLATFORM-CURVE-v2.0",
+  "plan": "/Users/massif/Tianshan-thermal-observer/docs/plans/TTO-Orin-Thor-CURVE最终执行方案-20261012.md",
+  "plan_sha256": "7e3ea4abd95ef3a52ce3a5d03076e33434992dbfaf88857c29f9e9b7f3f08385",
+  "goal_prompt": "/Users/massif/Tianshan-thermal-observer/docs/plans/TTO-Orin-Thor-CURVE离线实施Goal启动指令-20261012.txt",
+  "goal_prompt_sha256": "87aaa287957e4bd6b6bb8043145538b033f9eda6c65c1da92c33a0f9116ecb9e",
+  "recommendation": "normal用于本次方案重写；goal用于后续S0-S4离线实施；现场另行授权",
+  "goal_created": false,
+  "old_plans_review_source_wheel_and_installer_unchanged": true,
+  "local_links_validated": 3,
+  "profile_counts": {
+    "orin_auto": 54,
+    "orin_curve": 53,
+    "thor_auto": 51,
+    "thor_curve": 50
+  },
+  "review_findings_mapping": {
+    "R01": [
+      "3",
+      "6",
+      "9",
+      "11"
+    ],
+    "R02": [
+      "4.2",
+      "11"
+    ],
+    "R03": [
+      "4.3",
+      "5",
+      "11"
+    ],
+    "R04": [
+      "5",
+      "11"
+    ],
+    "R05": [
+      "8.1",
+      "11"
+    ],
+    "R06": [
+      "8.2",
+      "11"
+    ],
+    "R07": [
+      "7",
+      "8.3",
+      "11"
+    ],
+    "R08": [
+      "6",
+      "11"
+    ]
+  },
+  "official_goal_reference": "https://developers.openai.com/cookbook/examples/codex/using_goals_in_codex",
+  "software_tests_rerun_this_document_only_turn": false,
+  "real_device_operations": false,
+  "schema_dispatch_checked": "明确旧schema1回放；schema2缺字段/冲突不能回退schema1"
+}

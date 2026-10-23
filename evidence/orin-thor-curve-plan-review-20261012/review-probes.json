@@ -1,0 +1,66 @@
+{
+  "scope": "离线方案审查；负向模拟不完整改法，不是新合同完整实现",
+  "real_connections": false,
+  "original_records_sha256_unchanged": true,
+  "platform_only_change_same_seq": {
+    "reason": "duplicate",
+    "quarantined": false
+  },
+  "real_control_state": {
+    "fan_modes": {
+      "curve": 194
+    },
+    "temp_valid": {
+      "False": 40
+    },
+    "active_sources": {
+      "default": 40
+    },
+    "timestamps_ms": [
+      0
+    ],
+    "mode_only_normal_origins": 0
+  },
+  "synthetic_widened_bool": {
+    "actual_mode": "curve",
+    "old_normal_auto_relabelled": true,
+    "auto_firmware_diagnostic_emitted": 47.5
+  },
+  "synthetic_legacy_replay_boundary": {
+    "original_valid_scores": 510,
+    "after_incomplete_migration_valid_scores": 0,
+    "issues": {
+      "quality_origin_identity_mismatch": 71,
+      "quality_score_reference_mismatch": 510
+    },
+    "logs_missing": []
+  },
+  "remove_config_key_without_migration": "unknown configuration key: features.power_current_rails",
+  "proposed_profile_counts": {
+    "orin_auto": 54,
+    "orin_curve": 53,
+    "thor_auto": 51,
+    "thor_curve": 50
+  },
+  "original_record_sha256": {
+    "evidence/device-install-20261012/runs/run-2026-10-12T113943.639076_0000-7113c960": {
+      "summary.json": "16daeaddd0db1ee2556d46e79f4b86e6314d557fb3ff080494415a27ef354e01",
+      "predictions.jsonl": "3cfcbfe9437cad9f7a2c3c263baf7558d66aae65967b134e3cc8f307fea54ba6",
+      "scores.jsonl": "f6fa42666ee3e64f407cb11514740b2ef4dbd80f3b78ed8e7ca0b644372f5673",
+      "observations-0001.jsonl": "5e748fb62a4be7539f4aa3396862d09d62714b17afd1851fb130206413d29486",
+      "files.json": "13d459774bcb2984eec2e27dd712be8e883d8a44e2bbd17c025c520e840c9a6c",
+      "events.jsonl": "d78d5c9434e8782b561f69c5bb829e1d2874aeabda2c0ae1ff233bd3ee782aca",
+      "manifest.json": "234e3865ea12343a79eebb2281b17a211c3a059dfe0e33b712abe929168937c0",
+      "operator-records.jsonl": "b367761bbaa0df202ddd240c4da40dd1e7817eb0edafa03d684470cff71e0c30"
+    },
+    "evidence/r3b-v1/before/reproduction/normal/run-2026-10-10T191150.922292_0000-18c4564d": {
+      "summary.json": "8ad082c9eda5efd5429712b30b6d9201be9c191c65abd059cf55d8afa16a20c6",
+      "predictions.jsonl": "d6b7cca7d7e40f65489f9138ee4b1d91aa2972fbe2dfe8a8299e56c050e32d41",
+      "scores.jsonl": "c6673862904212efed129778beaaae87688a9828dfaf32967294f6850d29ba6d",
+      "observations-0001.jsonl": "92524374f229903f13a1f035f5ad5b734ba737d0ded1d359a1034f57a336079b",
+      "files.json": "77d3eb9596eb05b5f08a6f451b140dcb08d29dda2e6dbcfbceec33351728b150",
+      "events.jsonl": "0370971d8177eecaea9ac66af174b8d5e1449f589ce249ef8ddd5f2180659a5b",
+      "manifest.json": "ce246e2268bc05b84b89ee51163fa5d3a02d4da7084ae9da56ce93aeb2171f52"
+    }
+  }
+}

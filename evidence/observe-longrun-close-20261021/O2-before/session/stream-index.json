@@ -1,0 +1,19 @@
+{
+  "contract": "TTO-OBSERVE-SEGMENTS-v1",
+  "streams": {
+    "./states": [
+      "states.jsonl",
+      "states-0002.jsonl",
+      "states-0003.jsonl",
+      "states-0004.jsonl",
+      "states-0005.jsonl"
+    ]
+  },
+  "segments": 1,
+  "rotations": 0,
+  "session_max_bytes": 1000000,
+  "segment_max_bytes": 100000,
+  "file_chunk_max_bytes": 160,
+  "segment_max_seconds": 14400,
+  "heat_state_reset_by_rotation": false
+}

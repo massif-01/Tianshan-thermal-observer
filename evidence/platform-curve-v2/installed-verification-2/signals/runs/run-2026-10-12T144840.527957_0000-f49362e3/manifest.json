@@ -1,0 +1,189 @@
+{
+  "record_schema": 2,
+  "report_type": "collect",
+  "model_sha256": null,
+  "version": "0.2.0",
+  "source_identity": {
+    "kind": "package_source_hashes",
+    "sha256": "f7ea843e42d4fe011d2d74e9e5ac84a38751353180fc0e8400847a1ab67010de",
+    "files": {
+      "__init__.py": "7a5679bad3c48c1658e4aa476b31323ad5e08afb2d65c43fe54a213a7773fc6c",
+      "__main__.py": "79ee6f134c5c5193377cf9b189cbdcc3e2095e49ba9cec310114441c15a917c4",
+      "cli.py": "d6adf47989226d57f798125c8f020bfdb8d1e14b357bf4f85ca82d3150747ce1",
+      "collector.py": "648670f3873b987eb0320a3f61b1d1cfa1ce317282ca6fc0ad4c4cf15f9f4df3",
+      "config.py": "5a05545f28b8b44b3e6f0e7efcf2453e01ee0726ef0bd228cc73d553e01d8e3e",
+      "dataset.py": "d6857d26d3c42101e5226a3b30f05064538f17ef57dc5bd4fe271d3b90de1dcc",
+      "demo.py": "82f7f94b54a56bacfc32db608089fb509d1262194c351a0a2a2e719cff104826",
+      "deployment.py": "221b1d098d46623dc0eba5addc9804d917f8ede6cfa850cec1922c5cd177aaf7",
+      "diagnostics.py": "62b09aa6eaa07231dcd87bd910a094c8943f4102492143b5e401bbea632a98f1",
+      "engine.py": "c979174d9f78fce54418ed847e9b4e57b155da07eba37c255c7037ecb27bf66c",
+      "evaluation.py": "e6b2fc86f32cc28dbe204519bc74c13a138b9873164318727d4187c6dad78181",
+      "features.py": "d51176f797dd3b8e47b1ab9c7583f4b29c7ac6b566c8356bbcbe52f303278911",
+      "model.py": "acbd0f72c834fa63e4a1209222fecb845001d08b93db138043665a3e17ac7cfa",
+      "platform_engine.py": "7d1356c6a1fb6fe94988b29837af0978b570c4c4d972e35f68e90fc4d08d2eba",
+      "platform_quality.py": "20712f91743cef802f602584ea7d14283f6b1ee31fab5825810a2c08346e16c3",
+      "profiles.py": "1376321b25e0bfd122d7dcd02b0d957acff98eb817ed34c45f9025f8086cb7ae",
+      "quality.py": "6241244f7bba1dbaee2f8c4106c68829116cddfc88a4b4f5f2db60235debaf6d",
+      "recorded.py": "029679e59c68735d1ca98daf56553d6226c55e7d64597015712d972a8b7d2679",
+      "report.py": "3604664a74c81b285a7e3afa8b8923ab7deb2244596e910b1868aed6cf3ee871",
+      "storage.py": "cda8d22444a0e1fe5fc2f1fa86b73cb4e3f9be4e76edb3cf265520b3285143ec",
+      "training.py": "c8f0d6c83587b18c8a527e9d84e222276ee1bd0edc8e69a828dd1ed33a2de773",
+      "util.py": "0a33bb268e7817ddd19b6ae81562c50e1fdd08a9cdb3fa08f8f2dd3fbb252f16"
+    },
+    "git_head": null,
+    "dirty": null,
+    "git_state": "not_checked_in_installed_runtime"
+  },
+  "config": {
+    "schema_version": 1,
+    "mode": "observe_only",
+    "orin": {
+      "source_id": "orin-primary",
+      "base_url": "http://127.0.0.1:62676",
+      "socketio_path": "socket.io",
+      "namespace": "/",
+      "event": "tegrastats_update",
+      "transports": [
+        "websocket"
+      ],
+      "source_sample_interval_ms": 1000,
+      "source_interval_evidence": "loopback_fixture",
+      "headers_file": null,
+      "ca_file": null
+    },
+    "tianshan": {
+      "source_id": "esp32-primary",
+      "base_url": "http://127.0.0.1:62676",
+      "fan_id": 0,
+      "fan_status_path": "/api/v1/fan/status",
+      "temp_status_path": "/api/v1/temp/status",
+      "fan_poll_interval_s": 1.0,
+      "temp_poll_interval_s": 5.0,
+      "headers_file": null,
+      "ca_file": null
+    },
+    "network": {
+      "request_timeout_s": 2.0,
+      "connect_timeout_s": 5.0,
+      "max_inflight_esp32": 1,
+      "follow_redirects": false,
+      "reconnect_initial_s": 1.0,
+      "reconnect_max_s": 30.0,
+      "reconnect_max_attempts": 10,
+      "reconnect_jitter_ratio": 0.2,
+      "max_business_payload_bytes": 65536
+    },
+    "storage": {
+      "data_root": "/Users/massif/Tianshan-thermal-observer/evidence/platform-curve-v2/installed-verification-2/signals/runs",
+      "chunk_bytes": 67108864,
+      "run_max_bytes": 2147483648,
+      "min_free_bytes": 1073741824,
+      "queue_max_items": 256,
+      "queue_max_bytes": 8388608,
+      "overwrite_existing": false
+    },
+    "run": {
+      "default_duration_s": 20.0,
+      "max_duration_s": 14400,
+      "doctor_duration_s": 180,
+      "single_instance": true
+    },
+    "features": {
+      "schema_version": 1,
+      "time_axis": "observer_receive",
+      "history_s": 180,
+      "prediction_stride_s": 5,
+      "fan_max_age_s": 2.5,
+      "optional_train_min_availability": 0.95,
+      "max_feature_columns": 64,
+      "missing_optional_policy": "fallback_tj_or_baseline",
+      "power_current_rails": [
+        "vdd_gpu_soc",
+        "vdd_cpu_cv",
+        "vin_sys_5v0"
+      ]
+    },
+    "model": {
+      "schema_version": 1,
+      "horizons_s": [
+        15,
+        45,
+        90
+      ],
+      "primary_horizon_s": 45,
+      "methods": [
+        "persist",
+        "trend30",
+        "ridge_tj",
+        "ridge_full"
+      ],
+      "ridge_lambda_grid": [
+        0.001,
+        0.01,
+        0.1,
+        1.0
+      ],
+      "train_threads": 1,
+      "train_timeout_s": 600,
+      "online_training": false,
+      "automatic_activation": false
+    },
+    "resources": {
+      "observer_rss_target_mib": 256,
+      "observer_cpu_single_core_target_pct": 5.0,
+      "predict_all_horizons_p99_target_ms": 20.0,
+      "train_rss_limit_mib": 2048
+    },
+    "security": {
+      "business_control_writes": false,
+      "production_discovery": false,
+      "telemetry_upload": false,
+      "system_service_install": false,
+      "default_live_access": false
+    }
+  },
+  "config_sha256": "a513a117fdd997a9138209dc091ea0fddf37abbf41b15bb913e9e1da44704fab",
+  "observer_run_id": "f49362e3-6b56-4904-9932-a0a81268b739",
+  "episode": "synthetic-signal-check",
+  "episode_evidence": "operator_named_process",
+  "simulated": false,
+  "started_at_utc": "2026-10-12T14:48:40.528948+00:00",
+  "time_axis": "observer_receive",
+  "feature_schema": 2,
+  "model_schema": 2,
+  "input_schema": 2,
+  "units": {
+    "temperature": "C",
+    "raw_power": "mW",
+    "features_power": "W",
+    "duty": "logical_percent",
+    "cpu_freq": "MHz",
+    "gpu_gr3d_freq": "busy_percent"
+  },
+  "fan_id": 0,
+  "deployment_status": "deployment_unverified",
+  "ws_final_package_sha256": null,
+  "firmware_identity": null,
+  "source_period_ms": 1000,
+  "source_period_evidence": "loopback_fixture",
+  "network_authorization": {
+    "kind": "explicit_bounded_cli",
+    "endpoints": [
+      "http://127.0.0.1:62676",
+      "http://127.0.0.1:62676"
+    ],
+    "business_writes": false
+  },
+  "operator_environment": "unknown",
+  "control_elapsed_time_available": false,
+  "record_sha256": null,
+  "evidence_source": "not_provided",
+  "processing_contract": "TTO-PLATFORM-CURVE-v2.0",
+  "observer_host": {
+    "system": "Darwin",
+    "machine": "arm64",
+    "processor": null,
+    "processor_source": "unavailable",
+    "scope": "recorded_observer_host_only"
+  }
+}

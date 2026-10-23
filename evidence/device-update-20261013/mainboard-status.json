@@ -1,0 +1,47 @@
+{
+  "/api/v1/fan/status": {
+    "code": 0,
+    "data": {
+      "fans": [
+        {
+          "id": 0,
+          "mode": "auto",
+          "duty_valid": true,
+          "duty": 25,
+          "target_duty": 25,
+          "rpm": 0,
+          "temperature": 46.3,
+          "enabled": true,
+          "running": true,
+          "fault": false,
+          "control_temperature": 46.3,
+          "guard_temperature": 46.3,
+          "predicted_temperature": 46.3,
+          "slope_c_per_min": 0,
+          "controller_gain": 0.75,
+          "cooling_response": 0,
+          "auto_state": "stale",
+          "guard_active": false,
+          "temp_stale": true
+        }
+      ],
+      "temperature": 25,
+      "temp_valid": false,
+      "temp_source": "agx_info.temperature.tj"
+    }
+  },
+  "/api/v1/temp/status": {
+    "code": 0,
+    "data": {
+      "initialized": true,
+      "manual_mode": false,
+      "active_source": "default",
+      "preferred_source": "variable",
+      "bound_variable": "agx_info.temperature.tj",
+      "temperature_01c": 250,
+      "temperature_c": 25,
+      "valid": false,
+      "timestamp_ms": 0
+    }
+  }
+}

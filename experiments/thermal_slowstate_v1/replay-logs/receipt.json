@@ -1,0 +1,31 @@
+{
+  "runtime": "/Users/massif/Tianshan-thermal-observer/.venv310/bin/python",
+  "plot_runtime": "/private/tmp/tto-analysis-20261013-env/bin/python",
+  "stages": [
+    {
+      "stage": "prepare",
+      "exit_code": 0,
+      "wall_seconds": 0.6223180830129422
+    },
+    {
+      "stage": "compute",
+      "exit_code": 0,
+      "wall_seconds": 16.054335208027624
+    },
+    {
+      "stage": "tests",
+      "exit_code": 0,
+      "wall_seconds": 2.480422791966703
+    },
+    {
+      "stage": "plots",
+      "exit_code": 0,
+      "wall_seconds": 20.83724045800045
+    },
+    {
+      "stage": "readback",
+      "exit_code": 0,
+      "wall_seconds": 2.8920486249844544
+    }
+  ]
+}

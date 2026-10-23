@@ -1,0 +1,344 @@
+--- cpu.2/tto_field/__init__.py
++++ cpu.3/tto_field/__init__.py
+@@ -1 +1 @@
+-__version__ = "0.2.4+cpu.2"
++__version__ = "0.2.4+cpu.3"
+--- cpu.2/tto_field/cli.py
++++ cpu.3/tto_field/cli.py
+@@ -29,7 +29,14 @@
+             q.add_argument('--binding',required=True,type=Path);q.add_argument('--output',required=True,type=Path)
+             q.add_argument('--allow-network',action='store_true')
+             if name=='diagnose':q.add_argument('--duration',type=float,default=300)
++    # Both installed field entry points initialize before collector/numeric imports.
++    for parser in sub.choices.values():parser.add_argument('--thread-policy-output',type=Path)
+     a=p.parse_args(argv)
++    from .numeric_policy import initialize
++    receipt=a.thread_policy_output
++    if receipt is None and hasattr(a,'output'):
++        receipt=a.output.with_name(a.output.name+'.startup')/'thread-policy.json'
++    initialize(receipt)
+     from .identity import verify
+     if a.command=='verify-install':
+         print(json.dumps(verify(a.target),ensure_ascii=False,indent=2));return 0
+--- cpu.2/tto_field/cpu_cli.py
++++ cpu.3/tto_field/cpu_cli.py
+@@ -22,7 +22,14 @@
+         if name=='preview':q.add_argument('--mode',choices=('capability','execute'),default='capability')
+         else:
+             q.add_argument('--binding',type=Path,required=True);q.add_argument('--output',type=Path,required=True);q.add_argument('--allow-network',action='store_true')
++    # Both installed field entry points initialize before collector/numeric imports.
++    for parser in sub.choices.values():parser.add_argument('--thread-policy-output',type=Path)
+     a=p.parse_args(argv)
++    from .numeric_policy import initialize
++    receipt=a.thread_policy_output
++    if receipt is None and hasattr(a,'output'):
++        receipt=a.output.with_name(a.output.name+'.startup')/'thread-policy.json'
++    initialize(receipt)
+     from .identity import verify
+     if a.cmd=='verify-install':print(json.dumps(verify(a.target),indent=2));return 0
+     verify()
+--- cpu.2/tto_field/cpu_pilot.py
++++ cpu.3/tto_field/cpu_pilot.py
+@@ -1,6 +1,7 @@
+ """Count-based profile. Reuses native gate, original Requester and bounded stop semantics."""
+ import json
+ from pathlib import Path
++from . import __version__
+ from .scheduler import Scheduler
+ from .gate import readiness
+ from .support import digest_file
+@@ -44,7 +45,7 @@
+         ref=b['capability_receipt'];path=Path(ref['path'])
+         if digest_file(path)!=ref['sha256']:raise ValueError('capability receipt identity mismatch')
+         cap=json.loads(path.read_text())
+-        if cap.get('candidate_version')!='0.2.4+cpu.2' or cap.get('config_sha256')!=b['config_sha256'] or cap.get('sidecar_config_sha256')!=sidecar_identity(side):
++        if cap.get('candidate_version')!=__version__ or cap.get('config_sha256')!=b['config_sha256'] or cap.get('sidecar_config_sha256')!=sidecar_identity(side):
+             raise ValueError('capability identity differs from proposed pilot')
+         if cap.get('qualified') is not True or cap.get('evaluation_scope') not in ('source_potential','arrival_side') or not cap.get('measured_resolution_evidence') or not cap.get('resource_check_evidence'):
+             raise ValueError('capability evidence/meaning not established')
+--- cpu.2/tto_field/identity.py
++++ cpu.3/tto_field/identity.py
+@@ -5,6 +5,8 @@
+ from . import __version__
+ 
+ def verify(target=False):
++    from .numeric_policy import initialize
++    numeric=initialize()
+     import tto
+     root=Path(__file__).resolve().parent;packages=root.parent
+     if Path(tto.__file__).resolve().parent != packages/'tto':raise ValueError('TTO import is outside the isolated candidate')
+@@ -17,5 +19,5 @@
+     from tto.storage import source_identity
+     return dict(candidate_version=__version__,native_version=tto.__version__,native_source_identity=source_identity(),
+                 checked_files=len(manifest['files']),python=sys.version,platform=platform.platform(),machine=platform.machine(),
+-                dependencies={x:importlib.metadata.version(x) for x in ['aiohttp','python-socketio','psutil','numpy','scipy']},
+-                target_environment_checked=target)
++                dependencies={x:importlib.metadata.version(x) for x in ['aiohttp','python-socketio','psutil','numpy','scipy','threadpoolctl']},
++                target_environment_checked=target,numeric_thread_policy=numeric)
+--- cpu.2/tto_field/numeric_policy.py
++++ cpu.3/tto_field/numeric_policy.py
+@@ -0,0 +1,77 @@
++"""Process-local numeric startup contract; no sockets or device access.
++
++Only the pinned NumPy/SciPy OpenBLAS runtime is supported. Unknown backends or
++libraries loaded before this initializer are rejected, never declared verified.
++"""
++import copy,json,os,platform,socket,sys,time
++from datetime import datetime,timezone
++from pathlib import Path
++
++ENV_KEYS=('OPENBLAS_NUM_THREADS','OPENBLAS_DEFAULT_NUM_THREADS','OMP_NUM_THREADS',
++          'MKL_NUM_THREADS','NUMEXPR_NUM_THREADS')
++_receipt=None
++
++def _utc():return datetime.now(timezone.utc).isoformat()
++
++def _save(path,receipt):
++    if path is not None:
++        path=Path(path);path.parent.mkdir(parents=True,exist_ok=True)
++        with path.open('x') as f:json.dump(receipt,f,ensure_ascii=False,indent=2,allow_nan=False);f.write('\n')
++
++def _pool_coverage(pools,libraries):
++    # The locked wheels bundle their backends in PACKAGE/.dylibs or PACKAGE.libs.
++    # A pool for just one library cannot attest the other; shared/unrecognized layouts reject.
++    coverage={}
++    for name,lib in libraries.items():
++        root=Path(lib['module']).resolve().parent
++        roots=(root,root.parent/(name+'.libs'))
++        coverage[name]=[p['filepath'] for p in pools if any(Path(p['filepath']).resolve().is_relative_to(r) for r in roots)]
++    return coverage
++
++def initialize(receipt_path=None):
++    global _receipt
++    from . import __version__
++    from threadpoolctl import threadpool_info,__version__ as threadpoolctl_version
++    started=time.monotonic()
++    if _receipt is not None and _receipt['pid']==os.getpid():
++        r=copy.deepcopy(_receipt)
++        r['checked_at_utc']=_utc();r['checked_at_mono_s']=started
++        r['loaded_pools']=threadpool_info()
++        r['pool_coverage']=_pool_coverage(r['loaded_pools'],r['libraries'])
++        r['verified']=all(r['pool_coverage'].values()) and all(p['num_threads']==1 for p in r['loaded_pools']) and all(os.environ.get(k)=='1' for k in ENV_KEYS)
++        r['error']=None if r['verified'] else 'numeric_policy_changed_after_initialization'
++        _save(receipt_path,r)
++        if not r['verified']:raise RuntimeError(r['error'])
++        return r
++    r=dict(schema='TTO-NUMERIC-THREAD-POLICY-v1',candidate_version=__version__,pid=os.getpid(),host=socket.gethostname(),
++           executable=sys.executable,python=sys.version,platform=platform.platform(),started_at_utc=_utc(),started_at_mono_s=started,
++           inherited_environment={k:os.environ.get(k) for k in ENV_KEYS},policy={k:'1' for k in ENV_KEYS},
++           policy_scope='this candidate process numeric libraries only; not Python threads or other applications',
++           modules_already_loaded=[n for n in ('numpy','scipy') if n in sys.modules],
++           preloaded_versions={n:getattr(sys.modules.get(n),'__version__',None) for n in ('numpy','scipy')},threadpoolctl_version=threadpoolctl_version,verified=False,error=None)
++    try:
++        if r['modules_already_loaded']:raise RuntimeError('numeric_libraries_loaded_before_policy')
++        for key in ENV_KEYS:os.environ[key]='1'
++        r['applied_at_mono_s']=time.monotonic()
++        import numpy as np
++        import scipy
++        import scipy.linalg as la
++        # Force both pinned backends to load, without loading a thermal model.
++        np.dot(np.eye(2),np.eye(2));la.expm(np.zeros((2,2)))
++        r['libraries']=dict(numpy=dict(version=np.__version__,module=np.__file__,blas=np.__config__.CONFIG['Build Dependencies']['blas']),
++                            scipy=dict(version=scipy.__version__,module=scipy.__file__,blas=scipy.__config__.CONFIG['Build Dependencies']['blas']))
++        r['extension_modules']={n:getattr(sys.modules.get(n),'__file__',None) for n in ('numpy._core._multiarray_umath','scipy.linalg._fblas','scipy.linalg._flapack')}
++        r['loaded_pools']=threadpool_info()
++        r['final_environment']={k:os.environ.get(k) for k in ENV_KEYS}
++        supported=all('openblas' in x['blas']['name'].lower() for x in r['libraries'].values())
++        r['pool_coverage']=_pool_coverage(r['loaded_pools'],r['libraries'])
++        if not supported or not all(r['pool_coverage'].values()):raise RuntimeError('numeric_backend_not_verifiable_by_candidate')
++        if any(p['num_threads']!=1 for p in r['loaded_pools']):raise RuntimeError('numeric_thread_pool_is_not_single_threaded')
++        r['verified']=True
++    except Exception as exc:
++        r['error']=str(exc);r['error_class']=type(exc).__name__;r['loaded_pools']=threadpool_info()
++    r['checked_at_utc']=_utc();r['checked_at_mono_s']=time.monotonic()
++    _save(receipt_path,r)
++    if not r['verified']:raise RuntimeError('numeric_policy_failed:'+r['error'])
++    _receipt=copy.deepcopy(r)
++    return r
+--- cpu.2/tto_field/receiver_resources.py
++++ cpu.3/tto_field/receiver_resources.py
+@@ -0,0 +1,30 @@
++"""Pre-sidecar admission of the existing one-second process resource sample."""
++import math
++CPU_LIMIT=8.0
++RSS_LIMIT=128*1024**2
++
++def baseline_admission(sample,now):
++    r=dict(evaluated_mono_s=now,resource_sample=sample,cpu_limit_single_core_percent=CPU_LIMIT,
++           rss_limit_bytes=RSS_LIMIT,allowed=False,reason='baseline_receiver_resources_unavailable',
++           interval_contract='latest actual1s interval; start>=1s, span0.5..2s, age0..1.5s; no averaging or host-core normalization')
++    if sample is None:return r
++    vals=[sample.get(k) for k in ('interval_start_mono_s','mono_s','cpu_pct_single_core','rss_bytes')]
++    if any(type(v) not in (float,int) or not math.isfinite(v) for v in vals):return r
++    start,end,cpu,rss=vals;r['sample_age_s']=now-end
++    if not (start>=1 and .5<=end-start<=2 and 0<=now-end<=1.5 and cpu>=0 and rss>=0):return r
++    if cpu>CPU_LIMIT or rss>RSS_LIMIT:r['reason']='baseline_receiver_resource_budget_exceeded';return r
++    r.update(allowed=True,reason='baseline_receiver_resources_qualified');return r
++
++
++def read_sample(now,previous):
++    """Unknown resource observations revoke the sample; never reuse an older good reading."""
++    import psutil
++    start=previous[0] if previous else None
++    try:
++        process=psutil.Process();ct=process.cpu_times();total=ct.user+ct.system;rss=process.memory_info().rss
++        cpu=None if previous is None else 100*(total-previous[1])/(now-start)
++        if not math.isfinite(total) or rss<0 or (cpu is not None and (not math.isfinite(cpu) or cpu<0)):
++            raise ValueError('invalid_process_resource_counters')
++        return dict(mono_s=now,interval_start_mono_s=start,cpu_pct_single_core=cpu,rss_bytes=rss,cpu_times=ct._asdict(),resource_error=None),(now,total)
++    except (psutil.Error,OSError,ValueError,ZeroDivisionError) as exc:
++        return dict(mono_s=now,interval_start_mono_s=start,cpu_pct_single_core=None,rss_bytes=None,cpu_times=None,resource_error=type(exc).__name__),None
+--- cpu.2/tto_field/runtime.py
++++ cpu.3/tto_field/runtime.py
+@@ -122,6 +122,8 @@
+ 
+ 
+ async def run(config,binding,mode,out,duration=300,probe_profile=None,cpu_pilot=False):
++    from .numeric_policy import initialize
++    numeric_policy=initialize()
+     from tto.collector import collect
+     from tto.storage import InstanceLock,source_identity
+     from tto.config import public_config
+@@ -155,9 +157,11 @@
+         Registry(out.parent/'.tto-command-ledger').claim(binding['command_id'],binding['command_id'])
+         out.mkdir(mode=0o700)
+         ev=Evidence(out);pipeline=Pipeline(out,config,binding,mode,clock,ev)
++        write(out/'thread-policy.json',numeric_policy)
+         stopped_reason=None;scheduler_event_cursor=0;clock_reminder_sent=False;totals={k:0. for k in ['observed_s','measurement_usable_s','model_usable_s','context_ready_s','joint_ready_s','work_paused_s','tj_usable_s','rail_usable_s','PWM_usable_s','temp_context_usable_s']}
+         phase_seconds={};resource_prev=None
+         previous=None;previous_gate=None;previous_work=False;last_resources=0.;protocol_records=[]
++        latest_resources=None;resource_seq=0;baseline_checked=False
+         def emit(name,**details):
+             row=dict(event=name,mono_s=clock.now(),at_utc=utc(),command_id=binding['command_id'],native_run_id=pipeline.run_id,**details)
+             ev.append('protocol.jsonl',row)
+@@ -189,7 +193,27 @@
+                 write(out/'resident-idle-check.json',resident)
+             while True:
+                 now=clock.now();latest=pipeline.get();run_id=pipeline.run_id or 'PENDING-NATIVE-UUID'
+-                if sidecar:await sidecar.tick(now,latest)
++                # Persist the existing1s process sample before the once-only baseline decision.
++                if now-last_resources>=1:
++                    from .receiver_resources import read_sample
++                    latest_resources,resource_prev=read_sample(now,resource_prev);resource_seq+=1
++                    latest_resources.update(resource_seq=resource_seq,field_log_bytes=ev.bytes,
++                        native_log_bytes=sum(f.stat().st_size for f in (out/'native').rglob('*') if f.is_file()))
++                    ev.append('resources.jsonl',latest_resources);last_resources=now
++                    if sidecar and sidecar.process and not sidecar.closed:
++                        if latest_resources['resource_error']:
++                            await sidecar.halt('receiver_resource_measurement_unavailable')
++                        else:await sidecar.resource(latest_resources['cpu_pct_single_core'],latest_resources['rss_bytes'])
++                user_stop=(out/'STOP').exists()
++                budget=duration if mode=='diagnose' else chosen['hard_limit_seconds']-chosen['cleanup_reserve_seconds']
++                if sidecar and not sidecar.closed and not user_stop and now<budget:
++                    if now>=30 and not baseline_checked:
++                        from .receiver_resources import baseline_admission
++                        admission=baseline_admission(latest_resources,now);baseline_checked=True
++                        write(out/'baseline-resource-admission.json',admission)
++                        sidecar.record('baseline_resource_admission',admission=admission)
++                        if not admission['allowed']:await sidecar.halt(admission['reason'])
++                    if not sidecar.closed:await sidecar.tick(now,latest)
+                 gate=readiness(latest,now,run_id,formal=True)
+                 if previous is not None:
+                     dt=now-previous;totals['observed_s']+=dt
+@@ -240,15 +264,6 @@
+                         if scheduler.terminal:stopped_reason=scheduler.reason;break
+                     elif user_stop or native_task.done() or now>=chosen['preparation_reserve_seconds']:
+                         stopped_reason='user_stop' if user_stop else 'collector_exited' if native_task.done() else 'preparation_budget_exhausted';break
+-                if now-last_resources>=1:
+-                    import psutil
+-                    p=psutil.Process();ct=p.cpu_times();cpu_total=ct.user+ct.system
+-                    cpu_pct=None if resource_prev is None else 100*(cpu_total-resource_prev[1])/(now-resource_prev[0])
+-                    resource_prev=(now,cpu_total)
+-                    if sidecar:await sidecar.resource(cpu_pct,p.memory_info().rss)
+-                    ev.append('resources.jsonl',dict(mono_s=now,rss_bytes=p.memory_info().rss,cpu_times=ct._asdict(),cpu_pct_single_core=cpu_pct,
+-                                                field_log_bytes=ev.bytes,native_log_bytes=sum(f.stat().st_size for f in (out/'native').rglob('*') if f.is_file())))
+-                    last_resources=now
+                 await asyncio.sleep(.1)
+         except BaseException as exc:
+             error=exc;stopped_reason='entry_error:'+type(exc).__name__
+--- cpu.2/pyproject.toml
++++ cpu.3/pyproject.toml
+@@ -4,10 +4,10 @@
+ 
+ [project]
+ name = "tto-field-candidate"
+-version = "0.2.4+cpu.2"
++version = "0.2.4+cpu.3"
+ description = "Isolated RM-01 read-only diagnostic and fixed-anchors experiment candidate"
+ requires-python = ">=3.10,<3.13"
+-dependencies = ["aiohttp==3.11.18", "python-socketio==5.13.0", "psutil==7.0.0", "numpy==2.2.6", "scipy==1.15.3"]
++dependencies = ["aiohttp==3.11.18", "python-socketio==5.13.0", "psutil==7.0.0", "numpy==2.2.6", "scipy==1.15.3", "threadpoolctl==3.6.0"]
+ 
+ [project.scripts]
+ tto-field = "tto_field.cli:main"
+--- cpu.2/scripts/inspect_capability.py
++++ cpu.3/scripts/inspect_capability.py
+@@ -1,37 +1,35 @@
+-"""Offline capability receipt from the sole native diagnostic and independent source arrivals.
+-Never authorizes load. Output goes to a fresh file, preserving the run index.
+-"""
++"""Offline cpu.3 receipt; a baseline rejection is an explicit failed capability, not missing success."""
+ import argparse,json,statistics,hashlib
+ from pathlib import Path
+ from tto_field.cpu_pilot import sidecar_identity
+-p=argparse.ArgumentParser(description=__doc__);p.add_argument('--run',type=Path,required=True);p.add_argument('--output',type=Path,required=True);a=p.parse_args()
+-r=a.run;load=lambda n:json.loads((r/n).read_text());s=load('summary.json');launch=load('launch.json')
++p=argparse.ArgumentParser(description=__doc__);p.add_argument('--run',type=Path,required=True);p.add_argument('--output',type=Path,required=True);a=p.parse_args();r=a.run
++load=lambda n:json.loads((r/n).read_text())
++def rows(n):
++    f=r/n;return [json.loads(x) for x in f.read_text().splitlines()] if f.exists() else []
++s=load('summary.json');launch=load('launch.json');policy=load('thread-policy.json')
+ if s['mode']!='diagnose' or s['protocol_requests'] or not 59<=s['elapsed_s']<=90:raise SystemExit('not a complete no-load60s diagnostic')
+-rows=[json.loads(x) for x in (r/'cpu-sidecar-arrivals.jsonl').read_text().splitlines()];sources=[x['source'] for x in rows]
+-resources=[json.loads(x) for x in (r/'resources.jsonl').read_text().splitlines()]
+-q=lambda xs:sorted(xs)[min(len(xs)-1,int(.95*(len(xs)-1)))] if xs else None
+-periods=[b['read_start_mono_s']-a['read_start_mono_s'] for a,b in zip(sources,sources[1:])]
+-read95=q([x['resources']['read_duration_s'] for x in sources]);jitter95=q([x['resources'].get('deadline_jitter_s',0) for x in sources])
+-states=[json.loads(x) for x in (r/'states.jsonl').read_text().splitlines()]
+-lag={'baseline':[],'sidecar':[]}
+-for x in states:
+-    c=x['clock'];t=c['observer_input_mono_s']-c['session_origin_mono_s']
+-    lag['baseline' if t<30 else 'sidecar'].append(c['generated_at_mono_s']-c['observer_input_mono_s'])
+-lag95={k:q(v) for k,v in lag.items()}
+-checks=dict(native_delay_budget=all(x is not None for x in lag95.values()) and lag95['sidecar']<=.25 and lag95['sidecar']-lag95['baseline']<=.1,complete_native=s['native_run_directories']==1 and s['observer_instances_created']==1,
+-            packets=len(rows)>=100,clock_identified=all(x['clock_status']=='source_identified_mapping_unknown' for x in rows),
+-            cpu_measured=all(x.get('cpu',{}).get('complete_online_set') for x in sources[1:]),
+-            read_budget=read95 is not None and read95<=.02,jitter_budget=jitter95 is not None and jitter95<=.1,
+-            no_sidecar_trip=s.get('sidecar_status')=='native_run_ending',
+-            native_fan_gap=s['fan_success_intervals']['max_s']<=2.5)
+-# Qualification is software capacity only. Main-question usefulness remains an explicit review/user decision.
+-receipt=dict(schema='TTO-CPU-CAPABILITY-RECEIPT-v1',candidate_version=launch['version'],config_sha256=launch['config_sha256'],
+-    sidecar_config_sha256=sidecar_identity(launch['binding']['sidecar']),qualified=all(checks.values()),checks=checks,
+-    evaluation_scope='arrival_side',automatic_work_authorization=False,resource_check_evidence=dict(native_callback_lag_p95_s=lag95,read_p95_s=read95,jitter_p95_s=jitter95,
+-      baseline_resource_rows=[x for x in resources if x['mono_s']<30],sidecar_resource_rows=[x for x in resources if x['mono_s']>=30]),
+-    measured_resolution_evidence=dict(cpu_median_read_period_s=statistics.median(periods) if periods else None,
+-       GPU_independent_resolution='unknown unless actual source window/generation evidence provided',rail_independent_resolution='unknown; native coarse baseline retained',
+-       exact_cross_host_source_lead='unknown; receiver receipt order is usable without zero-latency assumption'),
+-    source_run_id=s['native_run_id'],files={n:hashlib.sha256((r/n).read_bytes()).hexdigest() for n in ['launch.json','summary.json','resources.jsonl','cpu-sidecar-arrivals.jsonl']})
+-with a.output.open('x') as f:json.dump(receipt,f,ensure_ascii=False,indent=2)
+-print(json.dumps(dict(qualified=receipt['qualified'],checks=checks,automatic_work_authorization=False),indent=2))
++arr=rows('cpu-sidecar-arrivals.jsonl');src=[x['source'] for x in arr];resources=rows('resources.jsonl');events=rows('sidecar-events.jsonl')
++starts=[x['mono_s'] for x in events if x['event']=='started'];start=starts[0] if starts else None
++stops=[x['mono_s'] for x in events if x['event']=='stop_sidecar_only'];end=stops[0] if stops else s['elapsed_s']
++def phase(t):return 'before' if start is None or t<start else 'during' if t<end else 'after'
++q=lambda xs:sorted(xs)[int(.95*(len(xs)-1))] if xs else None
++periods=[b['read_start_mono_s']-x['read_start_mono_s'] for x,b in zip(src,src[1:])]
++read95=q([x['resources']['read_duration_s'] for x in src]);jitter95=q([x['resources'].get('deadline_jitter_s',0) for x in src]);lags={k:[] for k in ('before','during','after')}
++for x in rows('states.jsonl'):
++    c=x['clock'];t=c['observer_input_mono_s']-c['session_origin_mono_s'];lags[phase(t)].append(c['generated_at_mono_s']-c['observer_input_mono_s'])
++lag95={k:q(v) for k,v in lags.items()};baseline=load('baseline-resource-admission.json') if (r/'baseline-resource-admission.json').exists() else None
++checks=dict(thread_policy=policy['verified'] and policy['pid']==s['clock_end']['pid'],baseline_resources=bool(baseline and baseline['allowed']),
++    native_delay_budget=lag95['before'] is not None and lag95['during'] is not None and lag95['during']<=.25 and lag95['during']-lag95['before']<=.1,
++    complete_native=s['native_run_directories']==1 and s['observer_instances_created']==1,packets=len(arr)>=100,
++    clock_identified=bool(arr) and all(x['clock_status']=='source_identified_mapping_unknown' for x in arr),
++    cpu_measured=len(src)>1 and all((x.get('cpu') or {}).get('complete_online_set') for x in src[1:]),
++    read_budget=read95 is not None and read95<=.02,jitter_budget=jitter95 is not None and jitter95<=.1,
++    no_sidecar_trip=s.get('sidecar_status')=='native_run_ending',native_fan_gap=s['fan_success_intervals']['max_s'] is not None and s['fan_success_intervals']['max_s']<=2.5)
++receipt=dict(schema='TTO-CPU-CAPABILITY-RECEIPT-v2',candidate_version=launch['version'],config_sha256=launch['config_sha256'],
++    sidecar_config_sha256=sidecar_identity(launch['binding']['sidecar']),qualified=all(checks.values()),checks=checks,evaluation_scope='arrival_side',automatic_work_authorization=False,
++    actual_sidecar_interval=dict(start_mono_s=start,stop_mono_s=end if start is not None else None),baseline_admission=baseline,
++    resource_check_evidence=dict(native_callback_lag_p95_s=lag95,read_p95_s=read95,jitter_p95_s=jitter95,resources_by_actual_phase={k:[x for x in resources if phase(x['mono_s'])==k] for k in lags}),
++    measured_resolution_evidence=dict(cpu_median_read_period_s=statistics.median(periods) if periods else None,GPU_independent_resolution='unknown unless source window/generation provided',rail_independent_resolution='unknown; native coarse baseline retained',exact_cross_host_source_lead='unknown'),
++    source_run_id=s['native_run_id'],files={n:hashlib.sha256((r/n).read_bytes()).hexdigest() for n in ['launch.json','summary.json','thread-policy.json','resources.jsonl']})
++with a.output.open('x') as f:json.dump(receipt,f,ensure_ascii=False,indent=2);f.write('\n')
++print(json.dumps(dict(qualified=receipt['qualified'],checks=checks,actual_sidecar_interval=receipt['actual_sidecar_interval']),indent=2))

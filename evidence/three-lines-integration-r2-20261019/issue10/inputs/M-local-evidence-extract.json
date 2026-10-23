@@ -1,0 +1,47 @@
+{
+  "configuration": {
+    "trial_id": "TTO-MIDLOAD-DEV-v1.0",
+    "inference": {
+      "base_url": "http://10.10.99.98:58000",
+      "headers_file": null,
+      "ca_file": null,
+      "model": "RM-01 VLM",
+      "messages": [
+        {
+          "role": "user",
+          "content": "请用中文写一篇连续、详细的科普文章，解释计算机芯片在不同负载下为什么会升温，以及散热器、风扇和环境温度各自怎样影响降温。请按自然段展开，不要输出代码。"
+        }
+      ],
+      "stream": true,
+      "sampling": {}
+    }
+  },
+  "request_summary": [
+    {
+      "request_id": "M20-001",
+      "max_tokens": 256,
+      "status": "completed",
+      "duration_s": 16.277740563000407,
+      "finish_reason": "length",
+      "usage": {
+        "prompt_tokens": 49,
+        "total_tokens": 305,
+        "completion_tokens": 256
+      }
+    },
+    {
+      "request_id": "M20-002",
+      "max_tokens": 256,
+      "status": "completed",
+      "duration_s": 16.382627025000147,
+      "finish_reason": "length",
+      "usage": {
+        "prompt_tokens": 49,
+        "total_tokens": 305,
+        "completion_tokens": 256
+      }
+    }
+  ],
+  "origin_zip_sha256": "afdacbd4495cbbeb6cd00179a582d44bcd650779737df7b6dc6bd29db06096fb",
+  "role": "historical local configuration; no current resident model or capacity guarantee"
+}

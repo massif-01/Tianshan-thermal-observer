@@ -1,0 +1,208 @@
+{
+  "role": "new explanatory addendum; old scores and control policy unchanged",
+  "raw_records": [
+    {
+      "episode": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+      "kind": "fan",
+      "mono_s": 352208.80975273,
+      "observer_run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+      "payload": {
+        "code": 0,
+        "data": {
+          "fans": [
+            {
+              "auto_state": "active",
+              "control_temperature": 64.3,
+              "controller_gain": 0.8267323970794678,
+              "cooling_response": -13.999999046325684,
+              "duty": 66,
+              "duty_valid": true,
+              "enabled": true,
+              "fault": false,
+              "guard_active": false,
+              "guard_temperature": 64.3,
+              "id": 0,
+              "mode": "auto",
+              "predicted_temperature": 67.7,
+              "rpm": 0,
+              "running": true,
+              "slope_c_per_min": 4.599999904632568,
+              "target_duty": 66,
+              "temp_stale": false,
+              "temperature": 64.3
+            }
+          ],
+          "temp_source": "agx_info.temperature.tj",
+          "temp_valid": true,
+          "temperature": 64.3000030517578
+        }
+      },
+      "planned_mono_s": 352208.796910845,
+      "poll_diagnostics": {
+        "events": [
+          {
+            "mono_s": 352208.798125356,
+            "phase": "request_start"
+          },
+          {
+            "mono_s": 352208.798211147,
+            "phase": "connection_reused"
+          },
+          {
+            "mono_s": 352208.798260681,
+            "phase": "request_headers_sent"
+          },
+          {
+            "mono_s": 352208.809643598,
+            "phase": "response_headers_received"
+          }
+        ],
+        "last_phase": "complete",
+        "response_bytes": 513
+      },
+      "received_at_utc": "2026-10-19T10:05:37.513882+00:00",
+      "received_mono_s": 352208.809748401,
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:4679",
+      "round_trip_ms": 11.798495019320399,
+      "sent_mono_s": 352208.797949906
+    },
+    {
+      "episode": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+      "kind": "fan",
+      "mono_s": 352209.831756304,
+      "observer_run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+      "payload": {
+        "code": 0,
+        "data": {
+          "fans": [
+            {
+              "auto_state": "stale",
+              "control_temperature": 64.3,
+              "controller_gain": 0.8267323970794678,
+              "cooling_response": -13.999999046325684,
+              "duty": 25,
+              "duty_valid": true,
+              "enabled": true,
+              "fault": false,
+              "guard_active": false,
+              "guard_temperature": 64.3,
+              "id": 0,
+              "mode": "auto",
+              "predicted_temperature": 64.3,
+              "rpm": 0,
+              "running": true,
+              "slope_c_per_min": 4.599999904632568,
+              "target_duty": 25,
+              "temp_stale": true,
+              "temperature": 64.3
+            }
+          ],
+          "temp_source": "agx_info.temperature.tj",
+          "temp_valid": false,
+          "temperature": 25
+        }
+      },
+      "planned_mono_s": 352209.797949906,
+      "poll_diagnostics": {
+        "events": [
+          {
+            "mono_s": 352209.799492684,
+            "phase": "request_start"
+          },
+          {
+            "mono_s": 352209.799575051,
+            "phase": "connection_reused"
+          },
+          {
+            "mono_s": 352209.799622557,
+            "phase": "request_headers_sent"
+          },
+          {
+            "mono_s": 352209.829338917,
+            "phase": "response_headers_received"
+          }
+        ],
+        "last_phase": "complete",
+        "response_bytes": 498
+      },
+      "received_at_utc": "2026-10-19T10:05:38.535886+00:00",
+      "received_mono_s": 352209.83175134,
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:4682",
+      "round_trip_ms": 32.41869399789721,
+      "sent_mono_s": 352209.799332646
+    },
+    {
+      "episode": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+      "kind": "fan",
+      "mono_s": 352210.812383331,
+      "observer_run_id": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3",
+      "payload": {
+        "code": 0,
+        "data": {
+          "fans": [
+            {
+              "auto_state": "active",
+              "control_temperature": 63.5,
+              "controller_gain": 0.8267323970794678,
+              "cooling_response": -13.999999046325684,
+              "duty": 37,
+              "duty_valid": true,
+              "enabled": true,
+              "fault": false,
+              "guard_active": false,
+              "guard_temperature": 63.5,
+              "id": 0,
+              "mode": "auto",
+              "predicted_temperature": 64.1,
+              "rpm": 0,
+              "running": true,
+              "slope_c_per_min": 0.800000011920929,
+              "target_duty": 37,
+              "temp_stale": false,
+              "temperature": 63.5
+            }
+          ],
+          "temp_source": "agx_info.temperature.tj",
+          "temp_valid": true,
+          "temperature": 63.5
+        }
+      },
+      "planned_mono_s": 352210.799332646,
+      "poll_diagnostics": {
+        "events": [
+          {
+            "mono_s": 352210.800733724,
+            "phase": "request_start"
+          },
+          {
+            "mono_s": 352210.800821829,
+            "phase": "connection_reused"
+          },
+          {
+            "mono_s": 352210.800871346,
+            "phase": "request_headers_sent"
+          },
+          {
+            "mono_s": 352210.812273167,
+            "phase": "response_headers_received"
+          }
+        ],
+        "last_phase": "complete",
+        "response_bytes": 500
+      },
+      "received_at_utc": "2026-10-19T10:05:39.516513+00:00",
+      "received_mono_s": 352210.812378554,
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:4685",
+      "round_trip_ms": 11.813250021077693,
+      "sent_mono_s": 352210.800565304
+    }
+  ],
+  "start_mono_s": 352209.831756304,
+  "recovery_observation_mono_s": 352210.812383331,
+  "observed_stale_feedback": true,
+  "HTTP_returned_success": true,
+  "successful_PWM_percent": 25,
+  "packet_temp_valid": false,
+  "interval_s": 0.9806270269909874,
+  "interpretation": "explicit temp_stale feedback, not merely unknown context; observed recovery does not identify the exact unobserved recovery instant"
+}

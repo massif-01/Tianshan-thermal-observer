@@ -8,6 +8,8 @@
 
 ## 项目路线图与技术决策
 
+[未来功率预测与预测散热专项（DOC0 / WP0—WP5）](docs/roadmap/WORKLOAD-PREDICTION-ROADMAP.md) · [专项 Issue #17](https://github.com/massif-01/Tianshan-thermal-observer/issues/17)
+
 [产品 Roadmap：阶段、状态与验收](docs/roadmap/PRODUCT-ROADMAP.md) · [总路线 Issue #1](https://github.com/massif-01/Tianshan-thermal-observer/issues/1) · [技术路线与决策备忘](docs/roadmap/TTO-roadmap.md)
 
 当前已完成同机G1/G2辨识及快慢状态对照，Ridge与简单滤波继续保留；状态估计不等于参数在线学习，后者及跨硬件适应仍待验证。[研究状态与证据索引](docs/research/TTO-research-status-20261014.md)区分已交研究、当前本地测温记录工具与未完成能力。外部局部表面测温是条件性研发支线，不是软件/建模的全局前置；没有型号或新读数仍可完成软件，物理对应保持未验证。
@@ -105,3 +107,11 @@ R3b旁路报告区分历史保存评分与当前有效成绩，应用生产质�
 见[实机采集报告目录](docs/reports/README.md)：包含工况分析、温度/功耗/GPU/PWM时间线和原始数据与操作记录。
 
 ADD1主参照已确定为YET-610L/K型探头固定表面接触连续CSV，人工/红外为备用；通用软件已离线验证，真实CSV映射待1～2分钟样例，现场测温未执行。已购买不等于物理对应已验证。
+
+## 代码、实验数据与交付归档
+
+三个会话的实验代码、原始数据、模型、失败记录、报告和交付物已按原路径归档；详见[成果与身份索引](docs/repository-results-index.md)。归档不代表所有实验候选均已通过，也不改变设备运行环境或默认后端。同步前原件哈希清单位于 `evidence/repository-sync-20261022/`。
+
+## Web UI 候选 rc6
+
+[Web UI 仓库入口、安装候选与版本身份](docs/webui-rc6.md)。源码、历史产物及 Sonnet 前端源文件保留在 `work/webui-v1/`；本次同步不改 rc6 的运行逻辑或冻结模型。

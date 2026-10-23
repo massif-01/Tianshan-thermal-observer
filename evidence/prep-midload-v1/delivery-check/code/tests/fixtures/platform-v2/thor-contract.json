@@ -1,0 +1,46 @@
+{
+  "cpu": {
+    "cores": []
+  },
+  "gpu": {
+    "age_at_telemetry_receive_ms": 0.16912500723265111,
+    "device_uuid": "GPU-synthetic",
+    "freshness_timeout_ms": 5000,
+    "sample_interval_ms": 1000,
+    "sampled_at_utc": "2026-10-12T14:40:06.371677+00:00",
+    "schema_version": 1,
+    "source": "nvml",
+    "status": "valid",
+    "utilization_pct": 0
+  },
+  "memory": {
+    "ram": {},
+    "swap": {}
+  },
+  "platform": {
+    "compatible": [
+      "nvidia,tegra264"
+    ],
+    "family": "jetson_thor",
+    "gpu_backend": "nvml",
+    "identification_source": "device_tree_compatible",
+    "schema_version": 1,
+    "soc": "tegra264"
+  },
+  "power": {},
+  "telemetry_meta": {
+    "collector_state": "running",
+    "fresh": true,
+    "freshness_timeout_ms": 5000,
+    "received_at": "2026-10-12T14:40:06.371837Z",
+    "sample_age_ms": 2.973041991936043,
+    "sample_seq": 1,
+    "schema_version": 1,
+    "stream_id": "5f53a717-1d21-469b-85fd-023932aa2f64",
+    "time_basis": "collector_receive"
+  },
+  "temperature": {
+    "tj": 46.0
+  },
+  "timestamp": "2026-10-12T14:40:06.374834Z"
+}

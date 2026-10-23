@@ -1,0 +1,18 @@
+
+> tto-web-ui@1.0.0-rc.1 build
+> tsc --noEmit && vite build
+
+vite v6.1.0 building for production...
+transforming...
+✓ 559 modules transformed.
+rendering chunks...
+computing gzip size...
+../src/tto_web/static/index.html                     0.39 kB │ gzip:   0.30 kB
+../src/tto_web/static/assets/index-toRmXa8_.css     10.49 kB │ gzip:   3.16 kB
+../src/tto_web/static/assets/index-DN1IzeGQ.js   1,061.70 kB │ gzip: 354.81 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 1.57s

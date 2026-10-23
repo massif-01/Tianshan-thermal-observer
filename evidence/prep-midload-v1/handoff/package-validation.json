@@ -1,0 +1,48 @@
+{
+  "execution_id": "TTO-PREP-MIDLOAD-v1.0",
+  "validation_scope": "handoff assembly only; not implementation or target tests",
+  "source_archives_crc": "passed",
+  "source_sha_manifests": [
+    {
+      "archive": "references/greybox-v1-evidence.zip",
+      "manifest": "SHA256.json",
+      "entries_matched": 222
+    },
+    {
+      "archive": "references/independent-review-evidence.zip",
+      "manifest": "SHA256.json",
+      "entries_matched": 60
+    },
+    {
+      "archive": "inputs/L-seven-conditions-original.zip",
+      "manifest": "archive-file-hashes.json",
+      "entries_matched": 42
+    },
+    {
+      "archive": "inputs/S-shortqa-original-complete.zip",
+      "manifest": "SHA256.json",
+      "entries_matched": 99
+    },
+    {
+      "archive": "inputs/previous-exploration-evidence.zip",
+      "manifest": "SHA256.json",
+      "entries_matched": 120
+    }
+  ],
+  "input_index": "paths, bytes and sha256 matched",
+  "templates_json": "parsed",
+  "nominal_trial_s": 2480,
+  "with_max_planned_drains_s": 2570,
+  "hard_trial_s": 2700,
+  "live_authorized_in_current_step": false,
+  "new_product_code_implemented_by_document_author": false,
+  "historical_model_training_rerun": false,
+  "required_files": [
+    "README.md",
+    "01-软件修改与测试准备实施方案.md",
+    "02-给Codex的指令.txt",
+    "03-下一轮现场操作卡-待Codex补全.md",
+    "04-离线验收清单.md"
+  ],
+  "status": "handoff ready for implementation"
+}

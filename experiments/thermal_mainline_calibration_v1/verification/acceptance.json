@@ -1,0 +1,33 @@
+{
+  "contract": "TTO-MAINLINE-RETURN-v1.0",
+  "status": "offline_model_line_completed_pending_independent_review",
+  "A1_sealed_and_early_delivered": true,
+  "A1_original_members_still_identical": 15,
+  "frozen_files": {
+    "baseline/g2_runtime/frozen/primary.json": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
+    "baseline/g2_runtime/frozen/observer-spec.json": "2080adcf20773650299def2bb0f3ebdb9f87d8f85281d5b87a99d8b406c83c6b",
+    "baseline/g2_runtime/frozen/observer.py": "599e292a0000697615e76a97596f2f48c7527bc82027bacca5aea0c0fe5d4a47"
+  },
+  "actual_fits": 12,
+  "fixed_starts_per_job": 6,
+  "new_tests_passed": 12,
+  "baseline_tests_passed": 5,
+  "independent_extracted_replay": "passed; same point output SHA",
+  "data_rebuild": "byte identical to registered dataset SHA",
+  "candidate_verdict": "both not_better_on_development; no automatic activation",
+  "registry_final_selected": "G2-FROZEN-RM01-v1",
+  "demo_final_selected": "G2-FROZEN-RM01-v1",
+  "protected_old_files_checked": 3613,
+  "protected_old_files_changed": 0,
+  "source_revision": "UUID lineage only after fits; executed source retained under verification/executed-fit-source",
+  "original_CPU_branch": "paused; no new CPU experiment",
+  "device_access": false,
+  "network_clients": 0,
+  "new_requests": 0,
+  "CUDA_used": false,
+  "production_modules_modified": false,
+  "commits_push_PR": false,
+  "field_runtime_or_install_verified": false,
+  "actual_Accelerate_worker_count_verified": false,
+  "control_permission": false
+}

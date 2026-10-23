@@ -1,0 +1,2249 @@
+{
+  "role": "posthoc root-cause and common-availability accounting; no candidate selection",
+  "fixed_thresholds_in_original_units": {
+    "gpu_pct": {
+      "on": 24.0,
+      "off": 9.600000000000001
+    },
+    "gpu_W": {
+      "on": 8.121,
+      "off": 4.4388000000000005
+    },
+    "cpu_soc_mss_W": {
+      "on": 8.92075,
+      "off": 7.1395
+    },
+    "cpu_mean_pct": {
+      "on": 1.8541666666666667,
+      "off": 1.2916666666666667
+    },
+    "cpu_max_pct": {
+      "on": 14.25,
+      "off": 8.7
+    }
+  },
+  "common_activity": {
+    "INPUT-BASE": {
+      "common_known_s": 2712.3387689590454,
+      "common_background_s": 1240.2407338619232,
+      "common_background_ACTIVE_s": 30.804646968841553,
+      "common_background_ACTIVE_events": 48
+    },
+    "INPUT-MEAN": {
+      "common_known_s": 2712.3387689590454,
+      "common_background_s": 1240.2407338619232,
+      "common_background_ACTIVE_s": 343.82042837142944,
+      "common_background_ACTIVE_events": 109
+    },
+    "INPUT-CORE": {
+      "common_known_s": 2712.3387689590454,
+      "common_background_s": 1240.2407338619232,
+      "common_background_ACTIVE_s": 343.82042837142944,
+      "common_background_ACTIVE_events": 109
+    }
+  },
+  "CPU_mean_active_while_BASE_not_active_frames": 314,
+  "CPU_only_examples": [
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:32",
+      "cpu_mean_pct": 1.9166666666666667,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.2666666666666666,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:34",
+      "cpu_mean_pct": 1.5,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.15555555555555556,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:38",
+      "cpu_mean_pct": 1.3333333333333333,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.11111111111111109,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:41",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:44",
+      "cpu_mean_pct": 1,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.02222222222222223,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:46",
+      "cpu_mean_pct": 1,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.02222222222222223,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:49",
+      "cpu_mean_pct": 0.75,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": -0.04444444444444443,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:94",
+      "cpu_mean_pct": 1.9166666666666667,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.2666666666666666,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:97",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:102",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:106",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 3,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:132",
+      "cpu_mean_pct": 1.9166666666666667,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.2666666666666666,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:135",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:138",
+      "cpu_mean_pct": 0.75,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.04444444444444443,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:141",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:196",
+      "cpu_mean_pct": 1.9166666666666667,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.2666666666666666,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:199",
+      "cpu_mean_pct": 0.5833333333333334,
+      "cpu_max_pct": 3,
+      "CPU_mean_score": -0.08888888888888886,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:202",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:205",
+      "cpu_mean_pct": 0.75,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.04444444444444443,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:208",
+      "cpu_mean_pct": 1.0833333333333333,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.04444444444444443,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:296",
+      "cpu_mean_pct": 2.0833333333333335,
+      "cpu_max_pct": 9,
+      "CPU_mean_score": 0.31111111111111117,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:299",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:302",
+      "cpu_mean_pct": 1,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.02222222222222223,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:305",
+      "cpu_mean_pct": 1.0833333333333333,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.04444444444444443,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:309",
+      "cpu_mean_pct": 0.75,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": -0.04444444444444443,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:328",
+      "cpu_mean_pct": 1.9166666666666667,
+      "cpu_max_pct": 8,
+      "CPU_mean_score": 0.2666666666666666,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:331",
+      "cpu_mean_pct": 1,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.02222222222222223,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:334",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:338",
+      "cpu_mean_pct": 0.5833333333333334,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.08888888888888886,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:427",
+      "cpu_mean_pct": 2.25,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.35555555555555557,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:430",
+      "cpu_mean_pct": 0.75,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.04444444444444443,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:434",
+      "cpu_mean_pct": 0.6666666666666666,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.06666666666666665,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:437",
+      "cpu_mean_pct": 1.1666666666666667,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.0666666666666667,
+      "BASE_score": 0.010416666666666666
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:622",
+      "cpu_mean_pct": 1.9166666666666667,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.2666666666666666,
+      "BASE_score": 0.03125
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:626",
+      "cpu_mean_pct": 1,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.02222222222222223,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:629",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:632",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:654",
+      "cpu_mean_pct": 2,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.2888888888888889,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:658",
+      "cpu_mean_pct": 1.1666666666666667,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.0666666666666667,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:661",
+      "cpu_mean_pct": 1.1666666666666667,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.0666666666666667,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:664",
+      "cpu_mean_pct": 1.1666666666666667,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.0666666666666667,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:686",
+      "cpu_mean_pct": 2.4166666666666665,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.39999999999999997,
+      "BASE_score": 0.041666666666666664
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:690",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:693",
+      "cpu_mean_pct": 0.6666666666666666,
+      "cpu_max_pct": 3,
+      "CPU_mean_score": -0.06666666666666665,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:696",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:722",
+      "cpu_mean_pct": 2.4166666666666665,
+      "cpu_max_pct": 9,
+      "CPU_mean_score": 0.39999999999999997,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:725",
+      "cpu_mean_pct": 0.75,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": -0.04444444444444443,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:728",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 3,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:731",
+      "cpu_mean_pct": 0.75,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.04444444444444443,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:754",
+      "cpu_mean_pct": 2,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.2888888888888889,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:757",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:760",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:763",
+      "cpu_mean_pct": 1,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.02222222222222223,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:786",
+      "cpu_mean_pct": 1.9166666666666667,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.2666666666666666,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:789",
+      "cpu_mean_pct": 1.0833333333333333,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.04444444444444443,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:792",
+      "cpu_mean_pct": 1.0833333333333333,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.04444444444444443,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:795",
+      "cpu_mean_pct": 1.1666666666666667,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.0666666666666667,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:818",
+      "cpu_mean_pct": 2.1666666666666665,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.3333333333333333,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:821",
+      "cpu_mean_pct": 0.6666666666666666,
+      "cpu_max_pct": 3,
+      "CPU_mean_score": -0.06666666666666665,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:824",
+      "cpu_mean_pct": 1.1666666666666667,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.0666666666666667,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:827",
+      "cpu_mean_pct": 1.1666666666666667,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.0666666666666667,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:885",
+      "cpu_mean_pct": 2,
+      "cpu_max_pct": 9,
+      "CPU_mean_score": 0.2888888888888889,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:888",
+      "cpu_mean_pct": 1.5,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.15555555555555556,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:891",
+      "cpu_mean_pct": 0.6666666666666666,
+      "cpu_max_pct": 3,
+      "CPU_mean_score": -0.06666666666666665,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:894",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:898",
+      "cpu_mean_pct": 1.0833333333333333,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.04444444444444443,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:917",
+      "cpu_mean_pct": 2.1666666666666665,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.3333333333333333,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:920",
+      "cpu_mean_pct": 1.0833333333333333,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.04444444444444443,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:923",
+      "cpu_mean_pct": 1.1666666666666667,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.0666666666666667,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:926",
+      "cpu_mean_pct": 0.75,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": -0.04444444444444443,
+      "BASE_score": 0.03125
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:2261",
+      "cpu_mean_pct": 1.9166666666666667,
+      "cpu_max_pct": 8,
+      "CPU_mean_score": 0.2666666666666666,
+      "BASE_score": 0.06677894736842105
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:2264",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.06677894736842105
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:2267",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.06677894736842105
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:2270",
+      "cpu_mean_pct": 0.75,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": -0.04444444444444443,
+      "BASE_score": 0.06677894736842105
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:2360",
+      "cpu_mean_pct": 2.0833333333333335,
+      "cpu_max_pct": 9,
+      "CPU_mean_score": 0.31111111111111117,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:2363",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:2366",
+      "cpu_mean_pct": 1.1666666666666667,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.0666666666666667,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:2370",
+      "cpu_mean_pct": 1,
+      "cpu_max_pct": 3,
+      "CPU_mean_score": 0.02222222222222223,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:2424",
+      "cpu_mean_pct": 2.25,
+      "cpu_max_pct": 13,
+      "CPU_mean_score": 0.35555555555555557,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:2427",
+      "cpu_mean_pct": 1,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.02222222222222223,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:2430",
+      "cpu_mean_pct": 0.6666666666666666,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.06666666666666665,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:2434",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:2456",
+      "cpu_mean_pct": 2,
+      "cpu_max_pct": 11,
+      "CPU_mean_score": 0.2888888888888889,
+      "BASE_score": 0.06677894736842105
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:2459",
+      "cpu_mean_pct": 0.75,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.04444444444444443,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:2462",
+      "cpu_mean_pct": 0.5833333333333334,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.08888888888888886,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:2466",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3368",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.06677894736842105
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3442",
+      "cpu_mean_pct": 2,
+      "cpu_max_pct": 9,
+      "CPU_mean_score": 0.2888888888888889,
+      "BASE_score": 0.06677894736842105
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3445",
+      "cpu_mean_pct": 1.0833333333333333,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.04444444444444443,
+      "BASE_score": 0.06677894736842105
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3448",
+      "cpu_mean_pct": 1,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.02222222222222223,
+      "BASE_score": 0.06677894736842105
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3451",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.06677894736842105
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3474",
+      "cpu_mean_pct": 2,
+      "cpu_max_pct": 8,
+      "CPU_mean_score": 0.2888888888888889,
+      "BASE_score": 0.06677894736842105
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3477",
+      "cpu_mean_pct": 1.0833333333333333,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.04444444444444443,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3480",
+      "cpu_mean_pct": 1,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.02222222222222223,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3483",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3538",
+      "cpu_mean_pct": 1.9166666666666667,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.2666666666666666,
+      "BASE_score": 0.06677894736842105
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3541",
+      "cpu_mean_pct": 0.75,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.04444444444444443,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3544",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3547",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3573",
+      "cpu_mean_pct": 2,
+      "cpu_max_pct": 8,
+      "CPU_mean_score": 0.2888888888888889,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3576",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3579",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 3,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3582",
+      "cpu_mean_pct": 0.75,
+      "cpu_max_pct": 3,
+      "CPU_mean_score": -0.04444444444444443,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3637",
+      "cpu_mean_pct": 2.1666666666666665,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.3333333333333333,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3640",
+      "cpu_mean_pct": 1,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.02222222222222223,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3643",
+      "cpu_mean_pct": 0.75,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.04444444444444443,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3647",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3669",
+      "cpu_mean_pct": 2.25,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.35555555555555557,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3672",
+      "cpu_mean_pct": 0.6666666666666666,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.06666666666666665,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3675",
+      "cpu_mean_pct": 1,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.02222222222222223,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3679",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3704",
+      "cpu_mean_pct": 1.9166666666666667,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.2666666666666666,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3707",
+      "cpu_mean_pct": 1.3333333333333333,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.11111111111111109,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3711",
+      "cpu_mean_pct": 1.1666666666666667,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.0666666666666667,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3714",
+      "cpu_mean_pct": 1,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.02222222222222223,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3717",
+      "cpu_mean_pct": 1.25,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.08888888888888889,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3736",
+      "cpu_mean_pct": 2.3333333333333335,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.3777777777777778,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3739",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3743",
+      "cpu_mean_pct": 1.0833333333333333,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.04444444444444443,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3746",
+      "cpu_mean_pct": 1.25,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.08888888888888889,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3749",
+      "cpu_mean_pct": 1.5833333333333333,
+      "cpu_max_pct": 10,
+      "CPU_mean_score": 0.17777777777777776,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3752",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 3,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3755",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3759",
+      "cpu_mean_pct": 1.4166666666666667,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.13333333333333336,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3762",
+      "cpu_mean_pct": 1,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.02222222222222223,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3765",
+      "cpu_mean_pct": 1,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.02222222222222223,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3768",
+      "cpu_mean_pct": 1.8333333333333333,
+      "cpu_max_pct": 8,
+      "CPU_mean_score": 0.2444444444444444,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3771",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3775",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3778",
+      "cpu_mean_pct": 0.75,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.04444444444444443,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3781",
+      "cpu_mean_pct": 1.1666666666666667,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.0666666666666667,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3832",
+      "cpu_mean_pct": 2.0833333333333335,
+      "cpu_max_pct": 10,
+      "CPU_mean_score": 0.31111111111111117,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3835",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3839",
+      "cpu_mean_pct": 0.75,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": -0.04444444444444443,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3842",
+      "cpu_mean_pct": 0.5833333333333334,
+      "cpu_max_pct": 3,
+      "CPU_mean_score": -0.08888888888888886,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3931",
+      "cpu_mean_pct": 1.9166666666666667,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.2666666666666666,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3935",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3938",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3941",
+      "cpu_mean_pct": 1,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.02222222222222223,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3963",
+      "cpu_mean_pct": 2.0833333333333335,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.31111111111111117,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3967",
+      "cpu_mean_pct": 0.6666666666666666,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": -0.06666666666666665,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3970",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:3973",
+      "cpu_mean_pct": 0.75,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.04444444444444443,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:4031",
+      "cpu_mean_pct": 2.25,
+      "cpu_max_pct": 10,
+      "CPU_mean_score": 0.35555555555555557,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:4034",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:4037",
+      "cpu_mean_pct": 1,
+      "cpu_max_pct": 3,
+      "CPU_mean_score": 0.02222222222222223,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:4040",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:4063",
+      "cpu_mean_pct": 1.9166666666666667,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.2666666666666666,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:4066",
+      "cpu_mean_pct": 1.25,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.08888888888888889,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:4069",
+      "cpu_mean_pct": 1,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.02222222222222223,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:4072",
+      "cpu_mean_pct": 0.5,
+      "cpu_max_pct": 3,
+      "CPU_mean_score": -0.11111111111111109,
+      "BASE_score": 0.020833333333333332
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:4117",
+      "cpu_mean_pct": 2.1666666666666665,
+      "cpu_max_pct": 14,
+      "CPU_mean_score": 0.3333333333333333,
+      "BASE_score": 0.19382434414208896
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5634",
+      "cpu_mean_pct": 1.9166666666666667,
+      "cpu_max_pct": 9,
+      "CPU_mean_score": 0.2666666666666666,
+      "BASE_score": 0.10021052631578949
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5637",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.06677894736842105
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5640",
+      "cpu_mean_pct": 0.5833333333333334,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.08888888888888886,
+      "BASE_score": 0.06677894736842105
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5643",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.06677894736842105
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5733",
+      "cpu_mean_pct": 2,
+      "cpu_max_pct": 10,
+      "CPU_mean_score": 0.2888888888888889,
+      "BASE_score": 0.06677894736842105
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5736",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5739",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5743",
+      "cpu_mean_pct": 0.5,
+      "cpu_max_pct": 3,
+      "CPU_mean_score": -0.11111111111111109,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5765",
+      "cpu_mean_pct": 2.0833333333333335,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.31111111111111117,
+      "BASE_score": 0.06677894736842105
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5768",
+      "cpu_mean_pct": 0.75,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": -0.04444444444444443,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5771",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5775",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5797",
+      "cpu_mean_pct": 2.1666666666666665,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.3333333333333333,
+      "BASE_score": 0.06677894736842105
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5800",
+      "cpu_mean_pct": 1.4166666666666667,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.13333333333333336,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5803",
+      "cpu_mean_pct": 1,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.02222222222222223,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5807",
+      "cpu_mean_pct": 1.25,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.08888888888888889,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5810",
+      "cpu_mean_pct": 1.1666666666666667,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.0666666666666667,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5813",
+      "cpu_mean_pct": 1.0833333333333333,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.04444444444444443,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5816",
+      "cpu_mean_pct": 1.5,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.15555555555555556,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5819",
+      "cpu_mean_pct": 0.6666666666666666,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.06666666666666665,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5823",
+      "cpu_mean_pct": 0.75,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.04444444444444443,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5826",
+      "cpu_mean_pct": 1.25,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.08888888888888889,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5829",
+      "cpu_mean_pct": 1.3333333333333333,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.11111111111111109,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5832",
+      "cpu_mean_pct": 2.0833333333333335,
+      "cpu_max_pct": 9,
+      "CPU_mean_score": 0.31111111111111117,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5835",
+      "cpu_mean_pct": 0.75,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": -0.04444444444444443,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5839",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5842",
+      "cpu_mean_pct": 1,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.02222222222222223,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5845",
+      "cpu_mean_pct": 0.6666666666666666,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": -0.06666666666666665,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5864",
+      "cpu_mean_pct": 2,
+      "cpu_max_pct": 14,
+      "CPU_mean_score": 0.2888888888888889,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5867",
+      "cpu_mean_pct": 1.3333333333333333,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.11111111111111109,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5871",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5874",
+      "cpu_mean_pct": 1,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.02222222222222223,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5877",
+      "cpu_mean_pct": 1,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.02222222222222223,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5928",
+      "cpu_mean_pct": 2.1666666666666665,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.3333333333333333,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5931",
+      "cpu_mean_pct": 1.3333333333333333,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.11111111111111109,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5935",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5938",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5941",
+      "cpu_mean_pct": 0.6666666666666666,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.06666666666666665,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:5944",
+      "cpu_mean_pct": 0.6666666666666666,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.06666666666666665,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7237",
+      "cpu_mean_pct": 2,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.2888888888888889,
+      "BASE_score": 0.06677894736842105
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7240",
+      "cpu_mean_pct": 1.3333333333333333,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.11111111111111109,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7244",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7247",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7250",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7301",
+      "cpu_mean_pct": 1.9166666666666667,
+      "cpu_max_pct": 9,
+      "CPU_mean_score": 0.2666666666666666,
+      "BASE_score": 0.06677894736842105
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7304",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7308",
+      "cpu_mean_pct": 1.5,
+      "cpu_max_pct": 8,
+      "CPU_mean_score": 0.15555555555555556,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7311",
+      "cpu_mean_pct": 1.1666666666666667,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.0666666666666667,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7314",
+      "cpu_mean_pct": 1,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.02222222222222223,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7317",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7400",
+      "cpu_mean_pct": 2.25,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.35555555555555557,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7404",
+      "cpu_mean_pct": 1.0833333333333333,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.04444444444444443,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7407",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7410",
+      "cpu_mean_pct": 0.75,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.04444444444444443,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7470",
+      "cpu_mean_pct": 2,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.2888888888888889,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7473",
+      "cpu_mean_pct": 0.75,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.04444444444444443,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7476",
+      "cpu_mean_pct": 0.6666666666666666,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": -0.06666666666666665,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7479",
+      "cpu_mean_pct": 0.6666666666666666,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.06666666666666665,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7505",
+      "cpu_mean_pct": 2,
+      "cpu_max_pct": 8,
+      "CPU_mean_score": 0.2888888888888889,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7508",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7511",
+      "cpu_mean_pct": 0.75,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.04444444444444443,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7514",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7568",
+      "cpu_mean_pct": 2.4166666666666665,
+      "cpu_max_pct": 13,
+      "CPU_mean_score": 0.39999999999999997,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7571",
+      "cpu_mean_pct": 1.4166666666666667,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.13333333333333336,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7574",
+      "cpu_mean_pct": 1.5,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.15555555555555556,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7577",
+      "cpu_mean_pct": 0.6666666666666666,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": -0.06666666666666665,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7581",
+      "cpu_mean_pct": 0.5833333333333334,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.08888888888888886,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7584",
+      "cpu_mean_pct": 0.5833333333333334,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.08888888888888886,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7586",
+      "cpu_mean_pct": 1.0833333333333333,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.04444444444444443,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7599",
+      "cpu_mean_pct": 1.9166666666666667,
+      "cpu_max_pct": 11,
+      "CPU_mean_score": 0.2666666666666666,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7602",
+      "cpu_mean_pct": 1.25,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.08888888888888889,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7605",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7608",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7612",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7730",
+      "cpu_mean_pct": 1.9166666666666667,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.2666666666666666,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7733",
+      "cpu_mean_pct": 1,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.02222222222222223,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7736",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7740",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7762",
+      "cpu_mean_pct": 2.0833333333333335,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.31111111111111117,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7765",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7768",
+      "cpu_mean_pct": 1,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.02222222222222223,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7772",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7893",
+      "cpu_mean_pct": 2.25,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.35555555555555557,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7896",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7900",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7903",
+      "cpu_mean_pct": 0.75,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.04444444444444443,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7906",
+      "cpu_mean_pct": 0.75,
+      "cpu_max_pct": 3,
+      "CPU_mean_score": -0.04444444444444443,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7960",
+      "cpu_mean_pct": 1.9166666666666667,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.2666666666666666,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7964",
+      "cpu_mean_pct": 0.6666666666666666,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.06666666666666665,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7967",
+      "cpu_mean_pct": 1,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.02222222222222223,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7970",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7992",
+      "cpu_mean_pct": 2.0833333333333335,
+      "cpu_max_pct": 8,
+      "CPU_mean_score": 0.31111111111111117,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7996",
+      "cpu_mean_pct": 0.75,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.04444444444444443,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:7999",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 3,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8002",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8092",
+      "cpu_mean_pct": 1.9166666666666667,
+      "cpu_max_pct": 9,
+      "CPU_mean_score": 0.2666666666666666,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8095",
+      "cpu_mean_pct": 0.6666666666666666,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.06666666666666665,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8098",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8101",
+      "cpu_mean_pct": 0.6666666666666666,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.06666666666666665,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8124",
+      "cpu_mean_pct": 2.0833333333333335,
+      "cpu_max_pct": 9,
+      "CPU_mean_score": 0.31111111111111117,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8127",
+      "cpu_mean_pct": 1,
+      "cpu_max_pct": 3,
+      "CPU_mean_score": 0.02222222222222223,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8130",
+      "cpu_mean_pct": 1,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.02222222222222223,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8133",
+      "cpu_mean_pct": 1.0833333333333333,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.04444444444444443,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8156",
+      "cpu_mean_pct": 2,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.2888888888888889,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8159",
+      "cpu_mean_pct": 0.5,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": -0.11111111111111109,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8162",
+      "cpu_mean_pct": 1.0833333333333333,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.04444444444444443,
+      "BASE_score": 0.010416666666666666
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8165",
+      "cpu_mean_pct": 1.1666666666666667,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.0666666666666667,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8168",
+      "cpu_mean_pct": 2,
+      "cpu_max_pct": 12,
+      "CPU_mean_score": 0.2888888888888889,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8172",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8175",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8178",
+      "cpu_mean_pct": 1,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.02222222222222223,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8220",
+      "cpu_mean_pct": 2.3333333333333335,
+      "cpu_max_pct": 12,
+      "CPU_mean_score": 0.3777777777777778,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8223",
+      "cpu_mean_pct": 1.75,
+      "cpu_max_pct": 8,
+      "CPU_mean_score": 0.2222222222222222,
+      "BASE_score": 0.010416666666666666
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8226",
+      "cpu_mean_pct": 1,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.02222222222222223,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8229",
+      "cpu_mean_pct": 1.25,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.08888888888888889,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8232",
+      "cpu_mean_pct": 1.4166666666666667,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.13333333333333336,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8236",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8239",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8242",
+      "cpu_mean_pct": 1.6666666666666667,
+      "cpu_max_pct": 10,
+      "CPU_mean_score": 0.2,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8245",
+      "cpu_mean_pct": 1.4166666666666667,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.13333333333333336,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8248",
+      "cpu_mean_pct": 1.1666666666666667,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.0666666666666667,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8252",
+      "cpu_mean_pct": 0.75,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.04444444444444443,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8255",
+      "cpu_mean_pct": 1.6666666666666667,
+      "cpu_max_pct": 12,
+      "CPU_mean_score": 0.2,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8258",
+      "cpu_mean_pct": 1.25,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.08888888888888889,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8261",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8264",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8320",
+      "cpu_mean_pct": 2.6666666666666665,
+      "cpu_max_pct": 8,
+      "CPU_mean_score": 0.4666666666666666,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8323",
+      "cpu_mean_pct": 1.3333333333333333,
+      "cpu_max_pct": 8,
+      "CPU_mean_score": 0.11111111111111109,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8326",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8329",
+      "cpu_mean_pct": 0.8333333333333334,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.0222222222222222,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8333",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8387",
+      "cpu_mean_pct": 2.4166666666666665,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.39999999999999997,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8389",
+      "cpu_mean_pct": 1.0833333333333333,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.04444444444444443,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8392",
+      "cpu_mean_pct": 1.5,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.15555555555555556,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8396",
+      "cpu_mean_pct": 1.25,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.08888888888888889,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8399",
+      "cpu_mean_pct": 1.25,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.08888888888888889,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8402",
+      "cpu_mean_pct": 1.0833333333333333,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.04444444444444443,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8405",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8418",
+      "cpu_mean_pct": 2.0833333333333335,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.31111111111111117,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8421",
+      "cpu_mean_pct": 1.1666666666666667,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.0666666666666667,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8424",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8428",
+      "cpu_mean_pct": 0.75,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.04444444444444443,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8431",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8582",
+      "cpu_mean_pct": 2.0833333333333335,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.31111111111111117,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8586",
+      "cpu_mean_pct": 1.1666666666666667,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.0666666666666667,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8589",
+      "cpu_mean_pct": 1.25,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.08888888888888889,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8591",
+      "cpu_mean_pct": 1.0833333333333333,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.04444444444444443,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8595",
+      "cpu_mean_pct": 1,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.02222222222222223,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8613",
+      "cpu_mean_pct": 2.1666666666666665,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.3333333333333333,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8616",
+      "cpu_mean_pct": 1.3333333333333333,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.11111111111111109,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8620",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.03125
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8623",
+      "cpu_mean_pct": 1.1666666666666667,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.0666666666666667,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8626",
+      "cpu_mean_pct": 1.3333333333333333,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.11111111111111109,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8629",
+      "cpu_mean_pct": 1.25,
+      "cpu_max_pct": 6,
+      "CPU_mean_score": 0.08888888888888889,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8632",
+      "cpu_mean_pct": 0.75,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": -0.04444444444444443,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8636",
+      "cpu_mean_pct": 1.1666666666666667,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": 0.0666666666666667,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8639",
+      "cpu_mean_pct": 0.75,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.04444444444444443,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8645",
+      "cpu_mean_pct": 2.0833333333333335,
+      "cpu_max_pct": 7,
+      "CPU_mean_score": 0.31111111111111117,
+      "BASE_score": 0.03334736842105262
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8648",
+      "cpu_mean_pct": 0.75,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": -0.04444444444444443,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8652",
+      "cpu_mean_pct": 0.6666666666666666,
+      "cpu_max_pct": 5,
+      "CPU_mean_score": -0.06666666666666665,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8655",
+      "cpu_mean_pct": 0.6666666666666666,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": -0.06666666666666665,
+      "BASE_score": 0.0
+    },
+    {
+      "ref": "5d5e5a4a-6081-49d8-a9be-5156d9ca2ab3/observation:8658",
+      "cpu_mean_pct": 0.9166666666666666,
+      "cpu_max_pct": 4,
+      "CPU_mean_score": 0.0,
+      "BASE_score": 0.0
+    }
+  ],
+  "cause": "Generic CPU bursts are not specific inference activity. OR plus hysteresis can keep a resident-model active power floor through background CPU activity. No new heat term, numerical retuning or causal-lag search.",
+  "CORE_vs_MEAN_incremental_states": 0,
+  "real_high_frequency_data": false
+}

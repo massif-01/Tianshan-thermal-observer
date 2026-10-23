@@ -1,0 +1,41 @@
+2026-10-19T08:53:07.423772479Z
+lpmu305
+Linux lpmu305 6.8.0-147-generic #147-Ubuntu SMP PREEMPT_DYNAMIC Thu Sep 24 11:33:16 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+Filesystem                            1B-blocks        Used    Available Use% Mounted on
+/dev/mapper/ubuntu--vg-ubuntu--lv 1000033497088 32827518976 916331802624   4% /
+/home/rm01/Downloads
+/home/rm01/TTO
+/home/rm01/TTO-0.2.2-Conda-install-aa37741-20261013.zip
+/home/rm01/TTO-midload-0.2.4
+/home/rm01/TTO-midload-prep-r1-r2
+/home/rm01/TTO-midload-useroverride-20261014
+/home/rm01/TTO-sync-experiments
+/home/rm01/TTO-v1-0.1.2-Conda-install-20261012.zip
+/home/rm01/lpmu-agx-network-setup
+/home/rm01/miniconda3
+/home/rm01/miniconda3/envs/evalscope
+/home/rm01/miniconda3/envs/lpmustatus-api
+/home/rm01/opencode
+/home/rm01/rm01lpmustatus
+/home/rm01/snap
+/home/rm01/start-wukong.sh
+/home/rm01/tto-install-bundle-20261012
+/home/rm01/tto-update-0.2.2-20261013
+/home/rm01/TTO/conda-env/bin/python 3.10.22 (main, Oct  1 2026, 20:14:04) [GCC 14.3.0]
+/home/rm01/.copilot/config.json
+/home/rm01/TTO-midload-0.2.4/conda-env/bin/python3.10
+/home/rm01/TTO-sync-experiments/yet610l-sync-shortqa-retry-20261017T162947Z/configuration/collection-config.json
+/home/rm01/TTO-sync-experiments/yet610l-sync-shortqa-20261017T161226Z/configuration/collection-config.json
+/home/rm01/tto-update-0.2.2-20261013/backup/config/pre-device-config-20261012.json
+/home/rm01/TTO/config/pre-device-config-20261012.json
+/home/rm01/TTO/conda-env/bin/python3.10
+/home/rm01/TTO/collection-sessions/tto-short-qa-v1-20261013-052807/private-current-config.json
+#!/bin/sh
+set -eu
+export CONDA_PIP_INTEROP_ENABLED=false
+install_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+cd "$install_dir"
+exec /home/rm01/miniconda3/bin/conda run --no-capture-output --prefix "$install_dir/conda-env" python -I -m tto "$@"
+1081 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers
+1407 python -m lpmu_status.cli run
+1484 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal

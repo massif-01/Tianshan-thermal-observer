@@ -1,0 +1,169 @@
+{
+  "scope": "synthetic records; real candidate health and scheduler; fake requester and clock; no sockets",
+  "last_accepted_TJ_t": 70,
+  "calls": [
+    {
+      "id": "review-shortened-work-001",
+      "t": 131.1,
+      "last_accepted_TJ_t": 70
+    }
+  ],
+  "schedule_result": {
+    "status": "completed",
+    "stop_reason": "completed",
+    "requests": 1,
+    "completed_requests": 1,
+    "elapsed_schedule_s": 0.39999999999997726,
+    "hard_limit_s": 10,
+    "cleanup_reserved_s": 0.5,
+    "checks": [
+      {
+        "current_ready": true,
+        "continuous_60s": true,
+        "abnormal": false,
+        "gaps_180s": [],
+        "latest": {
+          "t": 131.0,
+          "ref": "synthetic/orin/131",
+          "complete": true,
+          "valid_until": 133.5,
+          "observed_abnormal": false,
+          "control_context_changed": false,
+          "control_mode": "auto",
+          "reasons": [],
+          "TJ": 46,
+          "source_ref": "synthetic/orin/70",
+          "fan_ref": "synthetic/fan/131",
+          "P_g": 2.0,
+          "P_c": 3.0,
+          "fan_age_s": 0.0,
+          "PWM": 19,
+          "gain": 1.1,
+          "source_age_ms": 0.0,
+          "source_period_ms": 1000
+        },
+        "checked_at_mono_s": 131.0,
+        "observed_span_s": 131.0,
+        "input_coverage": {
+          "complete_input_s": 131.0,
+          "unknown_input_s": 0.0,
+          "longest_continuous_s": 131.0,
+          "current_continuous_s": 131.0,
+          "reasons_seconds": {}
+        },
+        "coverage_measured_until_mono_s": 131.0
+      }
+    ],
+    "server_request_completion": "protocol_observed_for_completed_requests_only",
+    "new_model_training": "not_performed",
+    "control_authorization": "none"
+  },
+  "events": [
+    {
+      "event": "phase_start",
+      "phase": "review-shortened-work",
+      "kind": "work",
+      "planned_start_mono_s": 131.0,
+      "actual_start_mono_s": 131.0,
+      "window_deadline_mono_s": 131.15,
+      "duration_s": 0.15
+    },
+    {
+      "event": "work_admission",
+      "phase": "review-shortened-work",
+      "health": {
+        "current_ready": true,
+        "continuous_60s": true,
+        "abnormal": false,
+        "gaps_180s": [],
+        "latest": {
+          "t": 131.0,
+          "ref": "synthetic/orin/131",
+          "complete": true,
+          "valid_until": 133.5,
+          "observed_abnormal": false,
+          "control_context_changed": false,
+          "control_mode": "auto",
+          "reasons": [],
+          "TJ": 46,
+          "source_ref": "synthetic/orin/70",
+          "fan_ref": "synthetic/fan/131",
+          "P_g": 2.0,
+          "P_c": 3.0,
+          "fan_age_s": 0.0,
+          "PWM": 19,
+          "gain": 1.1,
+          "source_age_ms": 0.0,
+          "source_period_ms": 1000
+        },
+        "checked_at_mono_s": 131.0,
+        "observed_span_s": 131.0,
+        "input_coverage": {
+          "complete_input_s": 131.0,
+          "unknown_input_s": 0.0,
+          "longest_continuous_s": 131.0,
+          "current_continuous_s": 131.0,
+          "reasons_seconds": {}
+        },
+        "coverage_measured_until_mono_s": 131.0
+      }
+    },
+    {
+      "event": "work_gap",
+      "phase": "review-shortened-work",
+      "request_id": "review-shortened-work-001",
+      "gap_s": null,
+      "health": {
+        "current_ready": true,
+        "continuous_60s": true,
+        "abnormal": false,
+        "gaps_180s": [],
+        "latest": {
+          "t": 131.0,
+          "ref": "synthetic/orin/131",
+          "complete": true,
+          "valid_until": 133.5,
+          "observed_abnormal": false,
+          "control_context_changed": false,
+          "control_mode": "auto",
+          "reasons": [],
+          "TJ": 46,
+          "source_ref": "synthetic/orin/70",
+          "fan_ref": "synthetic/fan/131",
+          "P_g": 2.0,
+          "P_c": 3.0,
+          "fan_age_s": 0.0,
+          "PWM": 19,
+          "gain": 1.1,
+          "source_age_ms": 0.0,
+          "source_period_ms": 1000
+        },
+        "checked_at_mono_s": 131.0,
+        "observed_span_s": 131.0,
+        "input_coverage": {
+          "complete_input_s": 131.0,
+          "unknown_input_s": 0.0,
+          "longest_continuous_s": 131.0,
+          "current_continuous_s": 131.0,
+          "reasons_seconds": {}
+        },
+        "coverage_measured_until_mono_s": 131.0
+      }
+    },
+    {
+      "event": "phase_end",
+      "phase": "review-shortened-work",
+      "actual_end_mono_s": 131.39999999999998,
+      "planned_end_mono_s": 131.15,
+      "actual_duration_s": 0.39999999999997726,
+      "last_request_end_mono_s": 131.39999999999998
+    },
+    {
+      "event": "schedule_end",
+      "reason": "completed",
+      "requests": 1,
+      "actual_end_mono_s": 131.39999999999998,
+      "hard_deadline_mono_s": 141.0
+    }
+  ]
+}

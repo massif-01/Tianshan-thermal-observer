@@ -1,0 +1,102 @@
+{
+  "candidate_version": "0.2.4+closeout.2",
+  "mode": "execute",
+  "config_sha256": "d175416d71a8d899f05af5481c596216271c6032f7590604229099dfa0d247e1",
+  "collector_source_sha256": "06d17ec5205cea268d4d42eeeb87169d3ca64c91a81acd0b4bdafe2f57e49806",
+  "observer_model_sha256": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
+  "observer_spec_sha256": "2080adcf20773650299def2bb0f3ebdb9f87d8f85281d5b87a99d8b406c83c6b",
+  "old_overrides": false,
+  "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+  "expected_binding": "agx_info.temperature.tj",
+  "firmware_identity": null,
+  "authorization": {
+    "action": "fixed-anchors",
+    "command_id": "fixed-anchors-20261019-658d6dcc-9a5e-4cbe-ab17-7cf70eda7cf7",
+    "explicit_user_start": false,
+    "evidence": null
+  },
+  "note": "Preview creates no network clients and never opens credential headers. No device authorization is implied.",
+  "request_actor_thread": "01a1331a-f937-7d91-aef0-ac4f5e50bd8a",
+  "profile": {
+    "id": "fixed-anchors",
+    "role": "development",
+    "model_profile": "existing-dense-27b-confirm-before-live",
+    "same_model_within_run": true,
+    "stages": [
+      {
+        "kind": "background",
+        "seconds": 300
+      },
+      {
+        "kind": "work",
+        "concurrency": 1,
+        "seconds": 360,
+        "repeat_key": "single-anchor"
+      },
+      {
+        "kind": "recovery",
+        "seconds": 90
+      },
+      {
+        "kind": "work",
+        "concurrency": 2,
+        "seconds": 270
+      },
+      {
+        "kind": "recovery",
+        "seconds": 240
+      },
+      {
+        "kind": "work",
+        "concurrency": 4,
+        "seconds": 450
+      },
+      {
+        "kind": "recovery",
+        "seconds": 120
+      },
+      {
+        "kind": "work",
+        "concurrency": 1,
+        "seconds": 360,
+        "repeat_key": "single-anchor"
+      },
+      {
+        "kind": "final_recovery",
+        "seconds": 480
+      }
+    ],
+    "nominal_seconds": 2670,
+    "hard_limit_seconds": 3600,
+    "preparation_reserve_seconds": 300,
+    "drain_per_work_max_seconds": 90,
+    "cleanup_reserve_seconds": 120,
+    "budget": {
+      "nominal_s": 2670,
+      "work_blocks": 4,
+      "worst_reserved_s": 3450,
+      "remaining_s": 150
+    }
+  },
+  "instrument": {
+    "recording": false,
+    "probe_fixed": false,
+    "clock_start": null
+  },
+  "inference": {
+    "base_url": "http://10.10.99.98:58000",
+    "model": "RM-01 VLM",
+    "messages": [
+      {
+        "role": "user",
+        "content": "请用中文写一篇连续、详细的科普文章，解释计算机芯片在不同负载下为什么会升温，以及散热器、风扇和环境温度各自怎样影响降温。请按自然段展开，不要输出代码。"
+      }
+    ],
+    "max_tokens": 256,
+    "request_timeout_s": 30,
+    "stream": true,
+    "sampling": {},
+    "headers_file": null,
+    "ca_file": null
+  }
+}

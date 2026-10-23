@@ -1,0 +1,7 @@
+{"event": "startup_scheduled", "mono_s": 30.01386371103581, "at_utc": "2026-10-20T14:03:21.816942+00:00", "status": "starting", "stage": "baseline", "startup_budget_s": 3.0}
+{"event": "child_exit", "mono_s": 30.021811592043377, "at_utc": "2026-10-20T14:03:21.824890+00:00", "status": "starting", "stage": "mux_check", "child_stage": "mux_check", "returncode": 0, "child_pid": 901457}
+{"event": "started", "mono_s": 30.02291248901747, "at_utc": "2026-10-20T14:03:21.825990+00:00", "status": "running", "stage": "receive"}
+{"event": "stop_sidecar_only", "mono_s": 35.48711012903368, "at_utc": "2026-10-20T14:03:27.290190+00:00", "status": "receiver_total_resource_budget_exceeded", "stage": "receive"}
+{"event": "child_exit", "mono_s": 60.01750548003474, "at_utc": "2026-10-20T14:03:51.820585+00:00", "status": "receiver_total_resource_budget_exceeded", "stage": "receive", "child_stage": "mux_check", "returncode": 0, "child_pid": 901457}
+{"event": "child_exit", "mono_s": 60.017609673028346, "at_utc": "2026-10-20T14:03:51.820687+00:00", "status": "receiver_total_resource_budget_exceeded", "stage": "receive", "child_stage": "source_start", "returncode": 255, "child_pid": 901459}
+{"event": "cleanup_finished", "mono_s": 60.01804733503377, "at_utc": "2026-10-20T14:03:51.821143+00:00", "status": "receiver_total_resource_budget_exceeded", "stage": "receive", "own_tasks_remaining": 0, "unreaped_children": 0}

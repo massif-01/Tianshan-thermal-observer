@@ -1,0 +1,90 @@
+FF.                                                                      [100%]
+=================================== FAILURES ===================================
+___ test_lifecycle_change_on_unusable_measurement_reaches_report[missing_tj] ___
+
+tmp_path = PosixPath('/private/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/pytest-of-massif/pytest-77/test_lifecycle_change_on_unusa0')
+unusable = 'missing_tj'
+
+    @pytest.mark.parametrize('unusable', ['missing_tj', 'stale_source'])
+    def test_lifecycle_change_on_unusable_measurement_reaches_report(tmp_path, unusable):
+        source = record_demo(tmp_path/'source', count=1, seconds=620,
+                             record_schema=2, family='jetson_thor', scope='curve')[0]
+        c = read_json(source/'manifest.json')['config']
+        c['orin']['source_sample_interval_ms'] = None
+        j = Journal(c, tmp_path/'recorded', simulated=True, run_type='shadow', record_schema=2)
+        e = engine_for(c, record_schema=2)
+        rejected = None
+        for path in sorted(source.glob('observations-*')):
+            for line in path.read_text().splitlines():
+                r = json.loads(line)
+                changed = r['kind'] == 'orin' and r['mono_s'] == 350
+                if changed:
+                    r['payload']['telemetry_meta']['source_sample_interval_ms'] = 3000
+                    if unusable == 'missing_tj':
+                        r['payload']['temperature'].pop('tj')
+                    else:
+                        r['payload']['telemetry_meta'].update(fresh=False, sample_age_ms=5000)
+                saved = j.observation(r)
+                out = e.process(saved)
+                j.processing_output(saved, out)
+                if changed:
+                    rejected = out['quality']
+        for score in e.invalidate('run_end'):
+            j.append('scores', score)
+        j.close({'elapsed_s': 620})
+        before = {p.name: file_hash(p) for p in j.path.iterdir() if p.is_file()}
+        report = run_report(j.path, tmp_path/'report')
+        recorded = report['recorded_results']
+        assert rejected['accepted'] is False
+>       assert rejected.get('lifecycle_violation') is True
+E       AssertionError: assert None is True
+E        +  where None = <built-in method get of dict object at 0x10b5be040>('lifecycle_violation')
+E        +    where <built-in method get of dict object at 0x10b5be040> = {'accepted': False, 'reason': 'stale_or_missing_tj', 'segment': 6}.get
+
+tests/test_review_repair.py:44: AssertionError
+__ test_lifecycle_change_on_unusable_measurement_reaches_report[stale_source] __
+
+tmp_path = PosixPath('/private/var/folders/88/hzsgvlyj5xzghddxy9rk5_5m0000gn/T/pytest-of-massif/pytest-77/test_lifecycle_change_on_unusa1')
+unusable = 'stale_source'
+
+    @pytest.mark.parametrize('unusable', ['missing_tj', 'stale_source'])
+    def test_lifecycle_change_on_unusable_measurement_reaches_report(tmp_path, unusable):
+        source = record_demo(tmp_path/'source', count=1, seconds=620,
+                             record_schema=2, family='jetson_thor', scope='curve')[0]
+        c = read_json(source/'manifest.json')['config']
+        c['orin']['source_sample_interval_ms'] = None
+        j = Journal(c, tmp_path/'recorded', simulated=True, run_type='shadow', record_schema=2)
+        e = engine_for(c, record_schema=2)
+        rejected = None
+        for path in sorted(source.glob('observations-*')):
+            for line in path.read_text().splitlines():
+                r = json.loads(line)
+                changed = r['kind'] == 'orin' and r['mono_s'] == 350
+                if changed:
+                    r['payload']['telemetry_meta']['source_sample_interval_ms'] = 3000
+                    if unusable == 'missing_tj':
+                        r['payload']['temperature'].pop('tj')
+                    else:
+                        r['payload']['telemetry_meta'].update(fresh=False, sample_age_ms=5000)
+                saved = j.observation(r)
+                out = e.process(saved)
+                j.processing_output(saved, out)
+                if changed:
+                    rejected = out['quality']
+        for score in e.invalidate('run_end'):
+            j.append('scores', score)
+        j.close({'elapsed_s': 620})
+        before = {p.name: file_hash(p) for p in j.path.iterdir() if p.is_file()}
+        report = run_report(j.path, tmp_path/'report')
+        recorded = report['recorded_results']
+        assert rejected['accepted'] is False
+>       assert rejected.get('lifecycle_violation') is True
+E       AssertionError: assert None is True
+E        +  where None = <built-in method get of dict object at 0x10bd36040>('lifecycle_violation')
+E        +    where <built-in method get of dict object at 0x10bd36040> = {'accepted': False, 'reason': 'stale_or_missing_tj', 'segment': 6}.get
+
+tests/test_review_repair.py:44: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_review_repair.py::test_lifecycle_change_on_unusable_measurement_reaches_report[missing_tj]
+FAILED tests/test_review_repair.py::test_lifecycle_change_on_unusable_measurement_reaches_report[stale_source]
+2 failed, 1 passed in 2.31s

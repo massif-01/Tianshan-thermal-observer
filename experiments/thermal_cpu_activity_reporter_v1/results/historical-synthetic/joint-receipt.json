@@ -1,0 +1,100 @@
+{
+  "contract": "TTO-CPU-PREP-CLOSE-v1.0-R1",
+  "reporter_version": "cpu-joint-reporter-1.0.1",
+  "reporter_manifest_sha256": "80285a84bdb6fc7972413f64e2b1820d387718113345184172a2d69ead2fe8da",
+  "data_source": {
+    "category": "synthetic",
+    "label_zh": "合成",
+    "synthetic_only": true,
+    "identity_association_verified": true,
+    "physical_source_verified": false,
+    "Thor_N305_verified": false,
+    "source_timing_verified": false,
+    "reasons": [],
+    "metadata_sha256": {
+      "launch.json": "4bbcf4ce352b012c07d804fc89a04e94dff4974fbb8c381afc358604912ea07b",
+      "native-binding.json": "57213ce69236339b1088f816e6d86471dcfbb87d81ccb29752baa40dbc114dd2",
+      "native/run-2026-10-20T122551.073554_0000-b1a4248e/manifest.json": "02674553c96451ed1482f4c40d34626b305a8d9ab0639323af8c1486cb9b40ac",
+      "adapted/registration.json": "f01b4e2b60ba5af76fdc77c03bf147f6320354537e97caabee01f0ea67f6498d",
+      "adapted/sources.json": "7d0e586965d6222d90045abecd62f798b309ea179ed789d2b1d9aa79d2f78f72"
+    },
+    "declarations": [
+      {
+        "source": "launch",
+        "field": "synthetic_loopback_only",
+        "value": true
+      },
+      {
+        "source": "launch.binding",
+        "field": "synthetic_loopback_only",
+        "value": true
+      },
+      {
+        "source": "launch.binding.sidecar",
+        "field": "synthetic",
+        "value": true
+      },
+      {
+        "source": "manifest",
+        "field": "simulated",
+        "value": false
+      },
+      {
+        "source": "registration",
+        "field": "declared_role",
+        "value": "synthetic_actual_sender_receiver_integration"
+      }
+    ],
+    "run_id": "b1a4248e-7274-4991-91ce-d8d61644006b",
+    "command_id": "SYNTHETIC-CPU2-JOINT-20261020",
+    "declared_role": "synthetic_actual_sender_receiver_integration",
+    "saw_new_data_for_parameter_selection": false
+  },
+  "synthetic_only": true,
+  "new_physical_temperature_scores": false,
+  "source_lead_or_control_benefit": false,
+  "evaluate_stream_called": true,
+  "analysis_complete": true,
+  "reporter_execution": {
+    "network_clients": 0,
+    "device_connections": 0,
+    "parameter_search": 0
+  },
+  "status": "analysed",
+  "source_declaration_unresolved": false,
+  "actual_wire_to_source_rows_verified": 150,
+  "frames": 342,
+  "Activity_counts": {
+    "INPUT-BASE": {
+      "UNKNOWN": 28,
+      "ACTIVE": 314
+    },
+    "INPUT-MEAN": {
+      "UNKNOWN": 128,
+      "ACTIVE": 214
+    },
+    "INPUT-CORE": {
+      "UNKNOWN": 128,
+      "ACTIVE": 214
+    }
+  },
+  "variant_has_nonUNKNOWN": {
+    "INPUT-BASE": true,
+    "INPUT-MEAN": true,
+    "INPUT-CORE": true
+  },
+  "activity_comparison_status": "some_available",
+  "actual_sender_receiver_artifacts_used": true,
+  "manual_model_FRAME_used": false,
+  "original_TJ_origins": 56,
+  "revocations": {
+    "native_epoch_changed": 5,
+    "missing_complete_raw_counter_window": 1,
+    "counter_reset_iowait_decrease_or_zero_window": 1,
+    "online_set_changed": 2,
+    "transport_native_run_ending": 1
+  },
+  "candidate_sha256": "89ae53229af3e84b3bae1140a1ce013d6bf16e374cd5d3ffcde6fc7d28b78831",
+  "analysis_spec_sha256": "df26198dd631a45564d88c10b7b30433ab8b272cb4cf5d3726d7be6eacbab716",
+  "actual_and_1s_delivery_conditions_written": true
+}

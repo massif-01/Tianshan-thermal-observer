@@ -1,0 +1,332 @@
+{
+  "role": "post-hoc descriptive summary, not prediction or evidence of physical CPU lead",
+  "same_recorded_episode": true,
+  "new_field_runs": 0,
+  "theta_fits": 0,
+  "lag_or_threshold_searches": 0,
+  "CPU_max_definition": "maximum across numeric cores separately at each sample; not one fixed physical core across time",
+  "RAM_units": "original reported MB; not relabelled MiB/GiB",
+  "GPU_age_meaning": "age of the independent GPU reading at telemetry receive, not measured CPU-to-GPU lag",
+  "phase_used_as_predictor": false,
+  "groups": [
+    {
+      "phase": "all",
+      "n": 2706,
+      "reported_core_counts": [
+        12
+      ],
+      "numeric_core_counts": [
+        12
+      ],
+      "CPU_all_core_mean_time_mean_pct": 3.051120965755112,
+      "CPU_busiest_core_time_median_pct": 37.0,
+      "CPU_busiest_core_observed_max_pct": 76,
+      "RAM_used_reported_MB_range": [
+        53727,
+        53887
+      ],
+      "GPU_age_at_receive_ms": {
+        "n": 2706,
+        "min": 0.153084984049201,
+        "median": 518.3237619930878,
+        "max": 1000.6800320115872
+      },
+      "source_period_ms": [
+        1000
+      ],
+      "GPU_recorded_period_ms": [
+        1000
+      ]
+    },
+    {
+      "phase": "0-background",
+      "n": 298,
+      "reported_core_counts": [
+        12
+      ],
+      "numeric_core_counts": [
+        12
+      ],
+      "CPU_all_core_mean_time_mean_pct": 1.0223713646532437,
+      "CPU_busiest_core_time_median_pct": 5.0,
+      "CPU_busiest_core_observed_max_pct": 14,
+      "RAM_used_reported_MB_range": [
+        53730,
+        53764
+      ],
+      "GPU_age_at_receive_ms": {
+        "n": 298,
+        "min": 0.45922602294012904,
+        "median": 407.14759498951025,
+        "max": 996.8832689919509
+      },
+      "source_period_ms": [
+        1000
+      ],
+      "GPU_recorded_period_ms": [
+        1000
+      ]
+    },
+    {
+      "phase": "1-work",
+      "n": 376,
+      "reported_core_counts": [
+        12
+      ],
+      "numeric_core_counts": [
+        12
+      ],
+      "CPU_all_core_mean_time_mean_pct": 4.792774822695035,
+      "CPU_busiest_core_time_median_pct": 42.0,
+      "CPU_busiest_core_observed_max_pct": 51,
+      "RAM_used_reported_MB_range": [
+        53727,
+        53759
+      ],
+      "GPU_age_at_receive_ms": {
+        "n": 376,
+        "min": 1.7851769807748497,
+        "median": 510.87122049648315,
+        "max": 1000.6800320115872
+      },
+      "source_period_ms": [
+        1000
+      ],
+      "GPU_recorded_period_ms": [
+        1000
+      ]
+    },
+    {
+      "phase": "2-recovery",
+      "n": 89,
+      "reported_core_counts": [
+        12
+      ],
+      "numeric_core_counts": [
+        12
+      ],
+      "CPU_all_core_mean_time_mean_pct": 1.0262172284644195,
+      "CPU_busiest_core_time_median_pct": 4,
+      "CPU_busiest_core_observed_max_pct": 27,
+      "RAM_used_reported_MB_range": [
+        53729,
+        53750
+      ],
+      "GPU_age_at_receive_ms": {
+        "n": 89,
+        "min": 607.2439150302671,
+        "median": 729.4835529755801,
+        "max": 869.9226689641364
+      },
+      "source_period_ms": [
+        1000
+      ],
+      "GPU_recorded_period_ms": [
+        1000
+      ]
+    },
+    {
+      "phase": "3-work",
+      "n": 270,
+      "reported_core_counts": [
+        12
+      ],
+      "numeric_core_counts": [
+        12
+      ],
+      "CPU_all_core_mean_time_mean_pct": 4.778086419753087,
+      "CPU_busiest_core_time_median_pct": 42.0,
+      "CPU_busiest_core_observed_max_pct": 76,
+      "RAM_used_reported_MB_range": [
+        53734,
+        53845
+      ],
+      "GPU_age_at_receive_ms": {
+        "n": 270,
+        "min": 1.9237970118410885,
+        "median": 437.7256139705423,
+        "max": 1000.4501670482568
+      },
+      "source_period_ms": [
+        1000
+      ],
+      "GPU_recorded_period_ms": [
+        1000
+      ]
+    },
+    {
+      "phase": "4-recovery",
+      "n": 240,
+      "reported_core_counts": [
+        12
+      ],
+      "numeric_core_counts": [
+        12
+      ],
+      "CPU_all_core_mean_time_mean_pct": 1.0486111111111112,
+      "CPU_busiest_core_time_median_pct": 4.0,
+      "CPU_busiest_core_observed_max_pct": 41,
+      "RAM_used_reported_MB_range": [
+        53825,
+        53848
+      ],
+      "GPU_age_at_receive_ms": {
+        "n": 240,
+        "min": 0.5821060040034354,
+        "median": 325.9526635229122,
+        "max": 997.3309240303934
+      },
+      "source_period_ms": [
+        1000
+      ],
+      "GPU_recorded_period_ms": [
+        1000
+      ]
+    },
+    {
+      "phase": "5-work",
+      "n": 461,
+      "reported_core_counts": [
+        12
+      ],
+      "numeric_core_counts": [
+        12
+      ],
+      "CPU_all_core_mean_time_mean_pct": 4.6325018076644975,
+      "CPU_busiest_core_time_median_pct": 40,
+      "CPU_busiest_core_observed_max_pct": 63,
+      "RAM_used_reported_MB_range": [
+        53842,
+        53887
+      ],
+      "GPU_age_at_receive_ms": {
+        "n": 461,
+        "min": 2.6583150029182434,
+        "median": 577.1124650491402,
+        "max": 994.8525819927454
+      },
+      "source_period_ms": [
+        1000
+      ],
+      "GPU_recorded_period_ms": [
+        1000
+      ]
+    },
+    {
+      "phase": "6-recovery",
+      "n": 120,
+      "reported_core_counts": [
+        12
+      ],
+      "numeric_core_counts": [
+        12
+      ],
+      "CPU_all_core_mean_time_mean_pct": 1.0145833333333334,
+      "CPU_busiest_core_time_median_pct": 5.0,
+      "CPU_busiest_core_observed_max_pct": 24,
+      "RAM_used_reported_MB_range": [
+        53854,
+        53878
+      ],
+      "GPU_age_at_receive_ms": {
+        "n": 120,
+        "min": 0.153084984049201,
+        "median": 229.32869850774296,
+        "max": 996.5224880143069
+      },
+      "source_period_ms": [
+        1000
+      ],
+      "GPU_recorded_period_ms": [
+        1000
+      ]
+    },
+    {
+      "phase": "7-work",
+      "n": 364,
+      "reported_core_counts": [
+        12
+      ],
+      "numeric_core_counts": [
+        12
+      ],
+      "CPU_all_core_mean_time_mean_pct": 4.812042124542124,
+      "CPU_busiest_core_time_median_pct": 43.0,
+      "CPU_busiest_core_observed_max_pct": 52,
+      "RAM_used_reported_MB_range": [
+        53839,
+        53874
+      ],
+      "GPU_age_at_receive_ms": {
+        "n": 364,
+        "min": 3.0014720396138728,
+        "median": 496.1957979830913,
+        "max": 997.2397940000519
+      },
+      "source_period_ms": [
+        1000
+      ],
+      "GPU_recorded_period_ms": [
+        1000
+      ]
+    },
+    {
+      "phase": "8-final_recovery",
+      "n": 478,
+      "reported_core_counts": [
+        12
+      ],
+      "numeric_core_counts": [
+        12
+      ],
+      "CPU_all_core_mean_time_mean_pct": 1.035739191073919,
+      "CPU_busiest_core_time_median_pct": 5.0,
+      "CPU_busiest_core_observed_max_pct": 23,
+      "RAM_used_reported_MB_range": [
+        53833,
+        53873
+      ],
+      "GPU_age_at_receive_ms": {
+        "n": 478,
+        "min": 0.7473410223610699,
+        "median": 655.7323925080709,
+        "max": 999.4558150065131
+      },
+      "source_period_ms": [
+        1000
+      ],
+      "GPU_recorded_period_ms": [
+        1000
+      ]
+    },
+    {
+      "phase": "preparation_or_tail",
+      "n": 10,
+      "reported_core_counts": [
+        12
+      ],
+      "numeric_core_counts": [
+        12
+      ],
+      "CPU_all_core_mean_time_mean_pct": 1.25,
+      "CPU_busiest_core_time_median_pct": 5.5,
+      "CPU_busiest_core_observed_max_pct": 10,
+      "RAM_used_reported_MB_range": [
+        53731,
+        53740
+      ],
+      "GPU_age_at_receive_ms": {
+        "n": 10,
+        "min": 624.2372909910046,
+        "median": 643.5254785174038,
+        "max": 656.4737749868073
+      },
+      "source_period_ms": [
+        1000
+      ],
+      "GPU_recorded_period_ms": [
+        1000
+      ]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+正在运行review-shortened-work工作段，结束后会继续记录降温过程。
+{
+  "last_accepted_TJ_t": 70,
+  "calls": [
+    {
+      "id": "review-shortened-work-001",
+      "t": 131.1,
+      "last_accepted_TJ_t": 70
+    }
+  ],
+  "status": "completed"
+}
+COUNTEREXAMPLE CONFIRMED: production scheduling admitted work after >60 seconds without valid new TJ.

@@ -1,0 +1,25 @@
+{
+  "evaluated_mono_s": 30.477696672081947,
+  "resource_sample": {
+    "mono_s": 29.646107000298798,
+    "interval_start_mono_s": 28.021449336782098,
+    "cpu_pct_single_core": 0.5008684931131321,
+    "rss_bytes": 135266304,
+    "cpu_times": {
+      "user": 0.00849459835793823,
+      "system": 0,
+      "children_user": 0.0,
+      "children_system": 0.0
+    },
+    "resource_error": null,
+    "resource_seq": 2,
+    "field_log_bytes": 28436,
+    "native_log_bytes": 9361
+  },
+  "cpu_limit_single_core_percent": 8.0,
+  "rss_limit_bytes": 134217728,
+  "allowed": false,
+  "reason": "baseline_receiver_resource_budget_exceeded",
+  "interval_contract": "latest actual1s interval; start>=1s, span0.5..2s, age0..1.5s; no averaging or host-core normalization",
+  "sample_age_s": 0.8315896717831492
+}

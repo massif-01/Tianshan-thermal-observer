@@ -1,0 +1,770 @@
+[
+  {
+    "h": 15,
+    "criterion": "origin_context",
+    "value": "confirmed_normal",
+    "n": 2678,
+    "cohort_SHA256": "cdf47e9580d6213be78547eedb00baa4c239fe253e624e22c87f3f53fa7eef4e",
+    "role": "new descriptive sensitivity, no old score rewritten",
+    "errors": {
+      "B0": {
+        "n": 2678,
+        "MAE_C": 0.8139716206123974,
+        "P95_absolute_C": 3.8168000000000073,
+        "P95_under_C": 1.8430000000000035,
+        "max_under_C": 8.125,
+        "bias_C": -0.007515309932785695,
+        "fraction_under_gt2C": 0.04480955937266617
+      },
+      "B1": {
+        "n": 2678,
+        "MAE_C": 0.749029333612965,
+        "P95_absolute_C": 3.5895969242615102,
+        "P95_under_C": 1.9892040362159966,
+        "max_under_C": 8.618837579678825,
+        "bias_C": -0.0024630962394618216,
+        "fraction_under_gt2C": 0.04929051530993279
+      },
+      "G2-HOLD": {
+        "n": 2678,
+        "MAE_C": 0.5406230267874905,
+        "P95_absolute_C": 2.1263125447880276,
+        "P95_under_C": 1.0367321259040088,
+        "max_under_C": 8.628496444511974,
+        "bias_C": -0.03637144301990728,
+        "fraction_under_gt2C": 0.028005974607916356
+      },
+      "INPUT-BASE": {
+        "n": 2678,
+        "MAE_C": 0.5907055434302371,
+        "P95_absolute_C": 3.8371193350530906,
+        "P95_under_C": 0.6697047680882058,
+        "max_under_C": 8.628496444511974,
+        "bias_C": 0.07674849029157037,
+        "fraction_under_gt2C": 0.022778192681105303
+      },
+      "INPUT-MEAN": {
+        "n": 2678,
+        "MAE_C": 1.5071153616430344,
+        "P95_absolute_C": 8.696727413408397,
+        "P95_under_C": 0.6040908222980802,
+        "max_under_C": 8.628496444511974,
+        "bias_C": 1.070000771953877,
+        "fraction_under_gt2C": 0.017923823749066467
+      },
+      "INPUT-CORE": {
+        "n": 2678,
+        "MAE_C": 1.5071153616430344,
+        "P95_absolute_C": 8.696727413408397,
+        "P95_under_C": 0.6040908222980802,
+        "max_under_C": 8.628496444511974,
+        "bias_C": 1.070000771953877,
+        "fraction_under_gt2C": 0.017923823749066467
+      }
+    }
+  },
+  {
+    "h": 15,
+    "criterion": "origin_context",
+    "value": "observed_abnormal_or_unknown",
+    "n": 1,
+    "cohort_SHA256": "af6cee8ecca4fcdaab9ab0ea79febaee7e1a56f90731f1979a5cbfe4035a0749",
+    "role": "new descriptive sensitivity, no old score rewritten",
+    "errors": {
+      "B0": {
+        "n": 1,
+        "MAE_C": 0.3440000000000083,
+        "P95_absolute_C": 0.3440000000000083,
+        "P95_under_C": 0.3440000000000083,
+        "max_under_C": 0.3440000000000083,
+        "bias_C": -0.3440000000000083,
+        "fraction_under_gt2C": 0.0
+      },
+      "B1": {
+        "n": 1,
+        "MAE_C": 0.20400228112605134,
+        "P95_absolute_C": 0.20400228112605134,
+        "P95_under_C": 0.0,
+        "max_under_C": 0.0,
+        "bias_C": 0.20400228112605134,
+        "fraction_under_gt2C": 0.0
+      },
+      "G2-HOLD": {
+        "n": 1,
+        "MAE_C": 0.28058936167028037,
+        "P95_absolute_C": 0.28058936167028037,
+        "P95_under_C": 0.0,
+        "max_under_C": 0.0,
+        "bias_C": 0.28058936167028037,
+        "fraction_under_gt2C": 0.0
+      },
+      "INPUT-BASE": {
+        "n": 1,
+        "MAE_C": 0.28058936167028037,
+        "P95_absolute_C": 0.28058936167028037,
+        "P95_under_C": 0.0,
+        "max_under_C": 0.0,
+        "bias_C": 0.28058936167028037,
+        "fraction_under_gt2C": 0.0
+      },
+      "INPUT-MEAN": {
+        "n": 1,
+        "MAE_C": 0.28058936167028037,
+        "P95_absolute_C": 0.28058936167028037,
+        "P95_under_C": 0.0,
+        "max_under_C": 0.0,
+        "bias_C": 0.28058936167028037,
+        "fraction_under_gt2C": 0.0
+      },
+      "INPUT-CORE": {
+        "n": 1,
+        "MAE_C": 0.28058936167028037,
+        "P95_absolute_C": 0.28058936167028037,
+        "P95_under_C": 0.0,
+        "max_under_C": 0.0,
+        "bias_C": 0.28058936167028037,
+        "fraction_under_gt2C": 0.0
+      }
+    }
+  },
+  {
+    "h": 15,
+    "criterion": "posthoc_stale_intersection",
+    "value": false,
+    "n": 2663,
+    "cohort_SHA256": "5bda73bb51b29019900039e4fb345ff63f158fee7b265102e954f23dff2543c3",
+    "role": "new descriptive sensitivity, no old score rewritten",
+    "errors": {
+      "B0": {
+        "n": 2663,
+        "MAE_C": 0.817067217423958,
+        "P95_absolute_C": 3.8408000000000047,
+        "P95_under_C": 1.8430000000000035,
+        "max_under_C": 8.125,
+        "bias_C": -0.006302666165978238,
+        "fraction_under_gt2C": 0.045061960195268494
+      },
+      "B1": {
+        "n": 2663,
+        "MAE_C": 0.7514653497593717,
+        "P95_absolute_C": 3.6131886228078685,
+        "P95_under_C": 1.9946423732849274,
+        "max_under_C": 8.618837579678825,
+        "bias_C": -0.0033955865202506983,
+        "fraction_under_gt2C": 0.04956815621479534
+      },
+      "G2-HOLD": {
+        "n": 2663,
+        "MAE_C": 0.541974298341636,
+        "P95_absolute_C": 2.2026622477782754,
+        "P95_under_C": 1.0348409935144147,
+        "max_under_C": 8.628496444511974,
+        "bias_C": -0.03630074839363645,
+        "fraction_under_gt2C": 0.02816372512204281
+      },
+      "INPUT-BASE": {
+        "n": 2663,
+        "MAE_C": 0.5925883057951669,
+        "P95_absolute_C": 3.9420382495795927,
+        "P95_under_C": 0.6696267473266077,
+        "max_under_C": 8.628496444511974,
+        "bias_C": 0.0772069718950079,
+        "fraction_under_gt2C": 0.02290649643259482
+      },
+      "INPUT-MEAN": {
+        "n": 2663,
+        "MAE_C": 1.5141600268518214,
+        "P95_absolute_C": 8.698116729895531,
+        "P95_under_C": 0.6017949639908907,
+        "max_under_C": 8.628496444511974,
+        "bias_C": 1.0760539904048303,
+        "fraction_under_gt2C": 0.018024784078107398
+      },
+      "INPUT-CORE": {
+        "n": 2663,
+        "MAE_C": 1.5141600268518214,
+        "P95_absolute_C": 8.698116729895531,
+        "P95_under_C": 0.6017949639908907,
+        "max_under_C": 8.628496444511974,
+        "bias_C": 1.0760539904048303,
+        "fraction_under_gt2C": 0.018024784078107398
+      }
+    }
+  },
+  {
+    "h": 15,
+    "criterion": "posthoc_stale_intersection",
+    "value": true,
+    "n": 16,
+    "cohort_SHA256": "bee324d70564eb795e9fc026318b3b0231ef113081b462073fa2a52f65d98872",
+    "role": "new descriptive sensitivity, no old score rewritten",
+    "errors": {
+      "B0": {
+        "n": 16,
+        "MAE_C": 0.26937500000000103,
+        "P95_absolute_C": 0.5862500000000015,
+        "P95_under_C": 0.5862500000000015,
+        "max_under_C": 1.0309999999999988,
+        "bias_C": -0.23037500000000133,
+        "fraction_under_gt2C": 0.0
+      },
+      "B1": {
+        "n": 16,
+        "MAE_C": 0.30952070546494825,
+        "P95_absolute_C": 0.8109519825484934,
+        "P95_under_C": 0.3242362594979582,
+        "max_under_C": 0.9505188666956101,
+        "bias_C": 0.1656423409546819,
+        "fraction_under_gt2C": 0.0
+      },
+      "G2-HOLD": {
+        "n": 16,
+        "MAE_C": 0.29946866342457623,
+        "P95_absolute_C": 1.0258610721607813,
+        "P95_under_C": 1.0258610721607813,
+        "max_under_C": 1.3173428491311725,
+        "bias_C": -0.028327629586720082,
+        "fraction_under_gt2C": 0.0
+      },
+      "INPUT-BASE": {
+        "n": 16,
+        "MAE_C": 0.2579610209572518,
+        "P95_absolute_C": 0.7245338127643457,
+        "P95_under_C": 0.7245338127643457,
+        "max_under_C": 0.9287004798373246,
+        "bias_C": 0.013180012880603442,
+        "fraction_under_gt2C": 0.0
+      },
+      "INPUT-MEAN": {
+        "n": 16,
+        "MAE_C": 0.2579610209572518,
+        "P95_absolute_C": 0.7245338127643457,
+        "P95_under_C": 0.7245338127643457,
+        "max_under_C": 0.9287004798373246,
+        "bias_C": 0.013180012880603442,
+        "fraction_under_gt2C": 0.0
+      },
+      "INPUT-CORE": {
+        "n": 16,
+        "MAE_C": 0.2579610209572518,
+        "P95_absolute_C": 0.7245338127643457,
+        "P95_under_C": 0.7245338127643457,
+        "max_under_C": 0.9287004798373246,
+        "bias_C": 0.013180012880603442,
+        "fraction_under_gt2C": 0.0
+      }
+    }
+  },
+  {
+    "h": 45,
+    "criterion": "origin_context",
+    "value": "confirmed_normal",
+    "n": 2648,
+    "cohort_SHA256": "16517f931f67d2c5f4b36f1a6300ef8c78ee382d65fe2f50a1c57766016ddcad",
+    "role": "new descriptive sensitivity, no old score rewritten",
+    "errors": {
+      "B0": {
+        "n": 2648,
+        "MAE_C": 2.2307692598187314,
+        "P95_absolute_C": 9.603300000000006,
+        "P95_under_C": 6.864150000000003,
+        "max_under_C": 11.781999999999996,
+        "bias_C": -0.023439199395770396,
+        "fraction_under_gt2C": 0.1469033232628399
+      },
+      "B1": {
+        "n": 2648,
+        "MAE_C": 2.5648632769830733,
+        "P95_absolute_C": 11.101885377366015,
+        "P95_under_C": 9.721006739505924,
+        "max_under_C": 13.044392381641714,
+        "bias_C": -0.0064720026930454744,
+        "fraction_under_gt2C": 0.15256797583081572
+      },
+      "G2-HOLD": {
+        "n": 2648,
+        "MAE_C": 1.5442506609417994,
+        "P95_absolute_C": 10.265049202859238,
+        "P95_under_C": 7.677171020193373,
+        "max_under_C": 12.711931306656723,
+        "bias_C": -0.07498946478137969,
+        "fraction_under_gt2C": 0.07477341389728097
+      },
+      "INPUT-BASE": {
+        "n": 2648,
+        "MAE_C": 1.6663930237157694,
+        "P95_absolute_C": 10.799508980665111,
+        "P95_under_C": 7.676640191601799,
+        "max_under_C": 12.711931306656702,
+        "bias_C": 0.061012218061885184,
+        "fraction_under_gt2C": 0.06835347432024169
+      },
+      "INPUT-MEAN": {
+        "n": 2648,
+        "MAE_C": 2.76059606735576,
+        "P95_absolute_C": 12.821205386753821,
+        "P95_under_C": 2.929327230630848,
+        "max_under_C": 12.711931306656702,
+        "bias_C": 1.520060977325973,
+        "fraction_under_gt2C": 0.05060422960725076
+      },
+      "INPUT-CORE": {
+        "n": 2648,
+        "MAE_C": 2.76059606735576,
+        "P95_absolute_C": 12.821205386753821,
+        "P95_under_C": 2.929327230630848,
+        "max_under_C": 12.711931306656702,
+        "bias_C": 1.520060977325973,
+        "fraction_under_gt2C": 0.05060422960725076
+      }
+    }
+  },
+  {
+    "h": 45,
+    "criterion": "origin_context",
+    "value": "observed_abnormal_or_unknown",
+    "n": 1,
+    "cohort_SHA256": "27af856523993338badbc4a4e57d72f8357ab11438c05a193b6576188cf5c57a",
+    "role": "new descriptive sensitivity, no old score rewritten",
+    "errors": {
+      "B0": {
+        "n": 1,
+        "MAE_C": 0.6560000000000059,
+        "P95_absolute_C": 0.6560000000000059,
+        "P95_under_C": 0.6560000000000059,
+        "max_under_C": 0.6560000000000059,
+        "bias_C": -0.6560000000000059,
+        "fraction_under_gt2C": 0.0
+      },
+      "B1": {
+        "n": 1,
+        "MAE_C": 0.9880068433781872,
+        "P95_absolute_C": 0.9880068433781872,
+        "P95_under_C": 0.0,
+        "max_under_C": 0.0,
+        "bias_C": 0.9880068433781872,
+        "fraction_under_gt2C": 0.0
+      },
+      "G2-HOLD": {
+        "n": 1,
+        "MAE_C": 1.5737219184411657,
+        "P95_absolute_C": 1.5737219184411657,
+        "P95_under_C": 0.0,
+        "max_under_C": 0.0,
+        "bias_C": 1.5737219184411657,
+        "fraction_under_gt2C": 0.0
+      },
+      "INPUT-BASE": {
+        "n": 1,
+        "MAE_C": 1.5737219184411941,
+        "P95_absolute_C": 1.5737219184411941,
+        "P95_under_C": 0.0,
+        "max_under_C": 0.0,
+        "bias_C": 1.5737219184411941,
+        "fraction_under_gt2C": 0.0
+      },
+      "INPUT-MEAN": {
+        "n": 1,
+        "MAE_C": 1.5737219184411941,
+        "P95_absolute_C": 1.5737219184411941,
+        "P95_under_C": 0.0,
+        "max_under_C": 0.0,
+        "bias_C": 1.5737219184411941,
+        "fraction_under_gt2C": 0.0
+      },
+      "INPUT-CORE": {
+        "n": 1,
+        "MAE_C": 1.5737219184411941,
+        "P95_absolute_C": 1.5737219184411941,
+        "P95_under_C": 0.0,
+        "max_under_C": 0.0,
+        "bias_C": 1.5737219184411941,
+        "fraction_under_gt2C": 0.0
+      }
+    }
+  },
+  {
+    "h": 45,
+    "criterion": "posthoc_stale_intersection",
+    "value": false,
+    "n": 2603,
+    "cohort_SHA256": "0ff2ec9b4f85f0ab1abedd03fa1d0a12637aa97b2a0456a9df2c98bf4cef7b69",
+    "role": "new descriptive sensitivity, no old score rewritten",
+    "errors": {
+      "B0": {
+        "n": 2603,
+        "MAE_C": 2.2509066461774876,
+        "P95_absolute_C": 9.652900000000008,
+        "P95_under_C": 6.965799999999997,
+        "max_under_C": 11.781999999999996,
+        "bias_C": -0.0056573184786783606,
+        "fraction_under_gt2C": 0.14829043411448328
+      },
+      "B1": {
+        "n": 2603,
+        "MAE_C": 2.5911038565160904,
+        "P95_absolute_C": 11.10646616885541,
+        "P95_under_C": 9.755562031379116,
+        "max_under_C": 13.044392381641714,
+        "bias_C": -0.005798502983474539,
+        "fraction_under_gt2C": 0.1536688436419516
+      },
+      "G2-HOLD": {
+        "n": 2603,
+        "MAE_C": 1.5618374982090044,
+        "P95_absolute_C": 10.310129969316602,
+        "P95_under_C": 7.739480951302332,
+        "max_under_C": 12.711931306656723,
+        "bias_C": -0.06993870730956386,
+        "fraction_under_gt2C": 0.07606607760276604
+      },
+      "INPUT-BASE": {
+        "n": 2603,
+        "MAE_C": 1.6878066007650638,
+        "P95_absolute_C": 10.87066453705412,
+        "P95_under_C": 7.762579015388614,
+        "max_under_C": 12.711931306656702,
+        "bias_C": 0.06669896416220555,
+        "fraction_under_gt2C": 0.0695351517479831
+      },
+      "INPUT-MEAN": {
+        "n": 2603,
+        "MAE_C": 2.800925947502941,
+        "P95_absolute_C": 12.823474726894803,
+        "P95_under_C": 3.969434433674941,
+        "max_under_C": 12.711931306656702,
+        "bias_C": 1.5509713861872938,
+        "fraction_under_gt2C": 0.051479062620053785
+      },
+      "INPUT-CORE": {
+        "n": 2603,
+        "MAE_C": 2.800925947502941,
+        "P95_absolute_C": 12.823474726894803,
+        "P95_under_C": 3.969434433674941,
+        "max_under_C": 12.711931306656702,
+        "bias_C": 1.5509713861872938,
+        "fraction_under_gt2C": 0.051479062620053785
+      }
+    }
+  },
+  {
+    "h": 45,
+    "criterion": "posthoc_stale_intersection",
+    "value": true,
+    "n": 46,
+    "cohort_SHA256": "d2bcd6268efc9df1a2d816fc2b821584df005d27d0ee6a61253e12bf016af72e",
+    "role": "new descriptive sensitivity, no old score rewritten",
+    "errors": {
+      "B0": {
+        "n": 46,
+        "MAE_C": 1.0570217391304368,
+        "P95_absolute_C": 2.038499999999999,
+        "P95_under_C": 2.038499999999999,
+        "max_under_C": 2.0940000000000083,
+        "bias_C": -1.043413043478263,
+        "fraction_under_gt2C": 0.06521739130434782
+      },
+      "B1": {
+        "n": 46,
+        "MAE_C": 1.0457092561559571,
+        "P95_absolute_C": 3.018030182557087,
+        "P95_under_C": 2.4738624824673625,
+        "max_under_C": 3.1750147475594304,
+        "bias_C": -0.02296419612656332,
+        "fraction_under_gt2C": 0.08695652173913043
+      },
+      "G2-HOLD": {
+        "n": 46,
+        "MAE_C": 0.5497057446584167,
+        "P95_absolute_C": 1.6147953044808876,
+        "P95_under_C": 1.6101149085625615,
+        "max_under_C": 1.9861888916688315,
+        "bias_C": -0.3249549064316815,
+        "fraction_under_gt2C": 0.0
+      },
+      "INPUT-BASE": {
+        "n": 46,
+        "MAE_C": 0.4526492810073318,
+        "P95_absolute_C": 1.183805542624368,
+        "P95_under_C": 1.1344753817552924,
+        "max_under_C": 1.27371204987449,
+        "bias_C": -0.22789844278060625,
+        "fraction_under_gt2C": 0.0
+      },
+      "INPUT-MEAN": {
+        "n": 46,
+        "MAE_C": 0.4526492810073318,
+        "P95_absolute_C": 1.183805542624368,
+        "P95_under_C": 1.1344753817552924,
+        "max_under_C": 1.27371204987449,
+        "bias_C": -0.22789844278060625,
+        "fraction_under_gt2C": 0.0
+      },
+      "INPUT-CORE": {
+        "n": 46,
+        "MAE_C": 0.4526492810073318,
+        "P95_absolute_C": 1.183805542624368,
+        "P95_under_C": 1.1344753817552924,
+        "max_under_C": 1.27371204987449,
+        "bias_C": -0.22789844278060625,
+        "fraction_under_gt2C": 0.0
+      }
+    }
+  },
+  {
+    "h": 90,
+    "criterion": "origin_context",
+    "value": "confirmed_normal",
+    "n": 2603,
+    "cohort_SHA256": "6cbe45af5c58bb7c675efd32398993f8c3b83386de31bec93aebcb15372ccd9b",
+    "role": "new descriptive sensitivity, no old score rewritten",
+    "errors": {
+      "B0": {
+        "n": 2603,
+        "MAE_C": 4.203411064156742,
+        "P95_absolute_C": 13.343999999999994,
+        "P95_under_C": 10.781899999999997,
+        "max_under_C": 14.125,
+        "bias_C": -0.04700307337687273,
+        "fraction_under_gt2C": 0.29004994237418363
+      },
+      "B1": {
+        "n": 2603,
+        "MAE_C": 6.071567480155025,
+        "P95_absolute_C": 18.74234941688038,
+        "P95_under_C": 16.596050796279606,
+        "max_under_C": 36.0090050956843,
+        "bias_C": -0.006804460104269583,
+        "fraction_under_gt2C": 0.24587014982712255
+      },
+      "G2-HOLD": {
+        "n": 2603,
+        "MAE_C": 3.540681165196557,
+        "P95_absolute_C": 14.093322411768273,
+        "P95_under_C": 12.812020379253237,
+        "max_under_C": 15.316196866651822,
+        "bias_C": -0.13293205648413983,
+        "fraction_under_gt2C": 0.15059546676911256
+      },
+      "INPUT-BASE": {
+        "n": 2603,
+        "MAE_C": 3.7286343080408604,
+        "P95_absolute_C": 14.357707178263752,
+        "P95_under_C": 13.054908602080028,
+        "max_under_C": 15.31619686665178,
+        "bias_C": 0.01846788230355668,
+        "fraction_under_gt2C": 0.1371494429504418
+      },
+      "INPUT-MEAN": {
+        "n": 2603,
+        "MAE_C": 4.620901678962642,
+        "P95_absolute_C": 16.37270042463745,
+        "P95_under_C": 12.27675909012136,
+        "max_under_C": 15.31619686665178,
+        "bias_C": 1.8568949173760465,
+        "fraction_under_gt2C": 0.09988474836726853
+      },
+      "INPUT-CORE": {
+        "n": 2603,
+        "MAE_C": 4.620901678962642,
+        "P95_absolute_C": 16.37270042463745,
+        "P95_under_C": 12.27675909012136,
+        "max_under_C": 15.31619686665178,
+        "bias_C": 1.8568949173760465,
+        "fraction_under_gt2C": 0.09988474836726853
+      }
+    }
+  },
+  {
+    "h": 90,
+    "criterion": "origin_context",
+    "value": "observed_abnormal_or_unknown",
+    "n": 1,
+    "cohort_SHA256": "43de94a3334f4cce9d6fff5a781f7d1c8d612d68758ee356a366e213ad7689fb",
+    "role": "new descriptive sensitivity, no old score rewritten",
+    "errors": {
+      "B0": {
+        "n": 1,
+        "MAE_C": 1.9380000000000024,
+        "P95_absolute_C": 1.9380000000000024,
+        "P95_under_C": 1.9380000000000024,
+        "max_under_C": 1.9380000000000024,
+        "bias_C": -1.9380000000000024,
+        "fraction_under_gt2C": 0.0
+      },
+      "B1": {
+        "n": 1,
+        "MAE_C": 1.3500136867563697,
+        "P95_absolute_C": 1.3500136867563697,
+        "P95_under_C": 0.0,
+        "max_under_C": 0.0,
+        "bias_C": 1.3500136867563697,
+        "fraction_under_gt2C": 0.0
+      },
+      "G2-HOLD": {
+        "n": 1,
+        "MAE_C": 2.276803955660597,
+        "P95_absolute_C": 2.276803955660597,
+        "P95_under_C": 0.0,
+        "max_under_C": 0.0,
+        "bias_C": 2.276803955660597,
+        "fraction_under_gt2C": 0.0
+      },
+      "INPUT-BASE": {
+        "n": 1,
+        "MAE_C": 2.276803955660654,
+        "P95_absolute_C": 2.276803955660654,
+        "P95_under_C": 0.0,
+        "max_under_C": 0.0,
+        "bias_C": 2.276803955660654,
+        "fraction_under_gt2C": 0.0
+      },
+      "INPUT-MEAN": {
+        "n": 1,
+        "MAE_C": 2.276803955660654,
+        "P95_absolute_C": 2.276803955660654,
+        "P95_under_C": 0.0,
+        "max_under_C": 0.0,
+        "bias_C": 2.276803955660654,
+        "fraction_under_gt2C": 0.0
+      },
+      "INPUT-CORE": {
+        "n": 1,
+        "MAE_C": 2.276803955660654,
+        "P95_absolute_C": 2.276803955660654,
+        "P95_under_C": 0.0,
+        "max_under_C": 0.0,
+        "bias_C": 2.276803955660654,
+        "fraction_under_gt2C": 0.0
+      }
+    }
+  },
+  {
+    "h": 90,
+    "criterion": "posthoc_stale_intersection",
+    "value": false,
+    "n": 2513,
+    "cohort_SHA256": "fe16aa098feb197ee3fbb0ffc37f1a5b7fdeefcd9cefa25f0485ebf731b4a8ff",
+    "role": "new descriptive sensitivity, no old score rewritten",
+    "errors": {
+      "B0": {
+        "n": 2513,
+        "MAE_C": 4.281020692399523,
+        "P95_absolute_C": 13.406000000000006,
+        "P95_under_C": 10.906999999999996,
+        "max_under_C": 14.125,
+        "bias_C": 0.024243931555909298,
+        "fraction_under_gt2C": 0.28054118583366494
+      },
+      "B1": {
+        "n": 2513,
+        "MAE_C": 6.233901457648707,
+        "P95_absolute_C": 18.953388958645537,
+        "P95_under_C": 16.795481701178325,
+        "max_under_C": 36.0090050956843,
+        "bias_C": -0.025770044185500593,
+        "fraction_under_gt2C": 0.2514922403501791
+      },
+      "G2-HOLD": {
+        "n": 2513,
+        "MAE_C": 3.643812966044903,
+        "P95_absolute_C": 14.105345062712482,
+        "P95_under_C": 12.873340379825926,
+        "max_under_C": 15.316196866651822,
+        "bias_C": -0.115018629352906,
+        "fraction_under_gt2C": 0.15360127337843216
+      },
+      "INPUT-BASE": {
+        "n": 2513,
+        "MAE_C": 3.8420659284371315,
+        "P95_absolute_C": 14.390967425374544,
+        "P95_under_C": 13.101694480986707,
+        "max_under_C": 15.31619686665178,
+        "bias_C": 0.038116180161150155,
+        "fraction_under_gt2C": 0.14206128133704735
+      },
+      "INPUT-MEAN": {
+        "n": 2513,
+        "MAE_C": 4.766288756335817,
+        "P95_absolute_C": 16.39578866695647,
+        "P95_under_C": 12.424740190522131,
+        "max_under_C": 15.31619686665178,
+        "bias_C": 1.9423842152959256,
+        "fraction_under_gt2C": 0.10346199761241544
+      },
+      "INPUT-CORE": {
+        "n": 2513,
+        "MAE_C": 4.766288756335817,
+        "P95_absolute_C": 16.39578866695647,
+        "P95_under_C": 12.424740190522131,
+        "max_under_C": 15.31619686665178,
+        "bias_C": 1.9423842152959256,
+        "fraction_under_gt2C": 0.10346199761241544
+      }
+    }
+  },
+  {
+    "h": 90,
+    "criterion": "posthoc_stale_intersection",
+    "value": true,
+    "n": 91,
+    "cohort_SHA256": "489f93da700742e2fdaf76238cfc71bf8a095d340010494a8c117198620154a6",
+    "role": "new descriptive sensitivity, no old score rewritten",
+    "errors": {
+      "B0": {
+        "n": 91,
+        "MAE_C": 2.035296703296705,
+        "P95_absolute_C": 2.9530000000000065,
+        "P95_under_C": 2.9530000000000065,
+        "max_under_C": 3.156000000000006,
+        "bias_C": -2.035296703296705,
+        "fraction_under_gt2C": 0.5494505494505495
+      },
+      "B1": {
+        "n": 91,
+        "MAE_C": 1.5367670490009548,
+        "P95_absolute_C": 4.15561648789982,
+        "P95_under_C": 2.946097232170125,
+        "max_under_C": 6.195462960375444,
+        "bias_C": 0.5318475282802791,
+        "fraction_under_gt2C": 0.08791208791208792
+      },
+      "G2-HOLD": {
+        "n": 91,
+        "MAE_C": 0.6787680581478825,
+        "P95_absolute_C": 2.224418086766171,
+        "P95_under_C": 2.117665258534256,
+        "max_under_C": 2.4953470326333047,
+        "bias_C": -0.6011376209747609,
+        "fraction_under_gt2C": 0.06593406593406594
+      },
+      "INPUT-BASE": {
+        "n": 91,
+        "MAE_C": 0.5802223035550528,
+        "P95_absolute_C": 1.3277500195663912,
+        "P95_under_C": 1.2615042932426341,
+        "max_under_C": 1.7242353672845994,
+        "bias_C": -0.49931054014452986,
+        "fraction_under_gt2C": 0.0
+      },
+      "INPUT-MEAN": {
+        "n": 91,
+        "MAE_C": 0.5802223035550528,
+        "P95_absolute_C": 1.3277500195663912,
+        "P95_under_C": 1.2615042932426341,
+        "max_under_C": 1.7242353672845994,
+        "bias_C": -0.49931054014452986,
+        "fraction_under_gt2C": 0.0
+      },
+      "INPUT-CORE": {
+        "n": 91,
+        "MAE_C": 0.5802223035550528,
+        "P95_absolute_C": 1.3277500195663912,
+        "P95_under_C": 1.2615042932426341,
+        "max_under_C": 1.7242353672845994,
+        "bias_C": -0.49931054014452986,
+        "fraction_under_gt2C": 0.0
+      }
+    }
+  }
+]
