@@ -119,6 +119,7 @@ class Publication:
         with InstanceLock(str(directory / 'publisher.lock')):
             server = None
             prediction_server = None
+            clean_exit = False
             try:
                 if self.socket.exists():
                     self.socket.unlink()
@@ -134,6 +135,7 @@ class Publication:
                     self.stats['running'] = True
                 self.ready.set()
                 await self._pump()
+                clean_exit = True
             finally:
                 if prediction_server:
                     prediction_server.close()
@@ -146,17 +148,29 @@ class Publication:
                     await server.wait_closed()
                 if prediction_server:await prediction_server.wait_closed()
                 try:
-                    if self.prediction_view and self.completed:
-                        final=self._prediction_identity(self.prediction_view.final(time.monotonic()))
-                        atomic_json(self.descriptor.parent/'predictions-final.json',final)
-                    failed=bool(self.prediction_view and not self.completed)
-                    atomic_json(self.descriptor, dict(schema='TTO-WEB-ACTIVE-v1', boot_id=self.boot, publisher_id=self.publisher_id,
-                        prediction_final='predictions-final.json' if self.prediction_view and self.completed else None,
-                        publication_failed=failed,ended=not failed))
+                    self._finish_publication(clean_exit and (self.completed or self.prediction_view is None))
                 finally:
                     if self.socket.exists():
                         self.socket.unlink()
                     if self.prediction_socket.exists():self.prediction_socket.unlink()
+
+    def _finish_publication(self, completed):
+        """Commit a terminal file before advertising success; otherwise advertise failure."""
+        identity=dict(schema='TTO-WEB-ACTIVE-v1',boot_id=self.boot,publisher_id=self.publisher_id)
+        if completed:
+            try:
+                if self.prediction_view:
+                    final=self._prediction_identity(self.prediction_view.final(time.monotonic()))
+                    if final['sync_status']!='synced':raise ValueError('terminal prediction view unavailable')
+                    atomic_json(self.descriptor.parent/'predictions-final.json',final)
+                atomic_json(self.descriptor,dict(identity,ended=True,publication_failed=False,
+                    prediction_final='predictions-final.json' if self.prediction_view else None))
+                return
+            except Exception as exc:
+                self.error(exc)
+        # One failure notification attempt. If the filesystem also rejects it,
+        # _run records that error; sockets still close and values lose validity.
+        atomic_json(self.descriptor,dict(identity,ended=False,publication_failed=True,prediction_final=None))
 
     def _prediction_identity(self, page):
         return dict(page, boot_id=self.boot, publisher_id=self.publisher_id)

@@ -37,6 +37,7 @@ class State:
         self.prediction_cursor = 0
         self.prediction_origin = None
         self.prediction_identity = None
+        self.prediction_history_identity = None
         self.prediction_ended = False
         self.prediction_ended_at = None
         self.forecast = None
@@ -69,6 +70,7 @@ class State:
     def empty(self):
         return dict(schema_version='TTO-WEB-SNAPSHOT-v1',snapshot_seq=self.seq,service_epoch=self.epoch,
             run_id=None,source_epoch=None,mode='waiting',server_time_utc=utc(),clock_domain_id=None,run_elapsed_ms=None,
+            publication_status='waiting',prediction_history_identity=None,
             metrics=[],model=dict(model_id=None,spec_id=None,phase='not_loaded',remaining_valid_ms=0.,Tf_C=None,Ts_C=None,E_C=None,
                 calibrated_confidence=None,nodes=copy.deepcopy(TOPOLOGY['nodes']),edges=copy.deepcopy(TOPOLOGY['edges'])),
             forecast=dict(provider='observe-ledger',status='not_connected',stride_s=5,history_window_ms=3600000,
@@ -169,6 +171,7 @@ class State:
             self.predictions.clear();self.forecast=None
             self.prediction_received_ms.clear()
             self.prediction_cursor=0;self.prediction_origin=None;self.prediction_identity=None;self.prediction_failed=False;self.prediction_ended=False;self.prediction_ended_at=None
+            self.prediction_history_identity=None
             self.publisher_id=publisher
             self.prediction_syncing=True
 
@@ -179,10 +182,15 @@ class State:
         identity=page['identity']
         if identity and (identity['model_id']!=SPEC['model_sha256'] or identity['spec_id']!=SPEC_ID):
             raise ValueError('frozen model/spec mismatch')
+        # v1 publishers before rc8 used identity for both purposes.
+        history=page.get('history_identity',identity)
+        if history and (not identity or any(history[k]!=identity[k] for k in ('run_id','model_id','spec_id')) or not page['ended'] and history!=identity):
+            raise ValueError('prediction history identity mismatch')
         if self.packet and page['origin_mono_s']!=self.packet['origin_mono_s']:
             raise ValueError('prediction origin mismatch')
         self.prediction_origin=page['origin_mono_s']
         self.prediction_identity=page['identity'];self.prediction_ended=page['ended']
+        self.prediction_history_identity=history
         if page['ended']:
             self.prediction_ended_at=page['ended_at_mono_s'];self.source_connected=False
         for row in page['records']:
@@ -310,6 +318,9 @@ class State:
             snapshot['model'].update(model_id=identity['model_id'],spec_id=identity['spec_id'])
             snapshot['forecast'].update(status='unavailable' if self.prediction_ended or self.prediction_failed else 'syncing',
                                         synced_through_cursor=self.prediction_cursor)
+        snapshot['publication_status']='failed' if self.prediction_failed else 'ended' if self.prediction_ended or snapshot['mode']=='ended' else 'live' if self.source_connected else 'waiting'
+        snapshot['prediction_history_identity']=(copy.deepcopy(self.prediction_history_identity) if self.prediction_ended else
+            dict(run_id=snapshot['run_id'],source_epoch=snapshot['source_epoch'],model_id=snapshot['model']['model_id'],spec_id=snapshot['model']['spec_id']) if snapshot['run_id'] else None)
         for id,value in self.host_values.items():
             snapshot['metrics'].append(dict(id=id,label='Web进程单核等效CPU' if id=='host.cpu' else 'Web进程RSS',kind='observed',unit='%' if id=='host.cpu' else 'MiB',value=value,status='valid',reason_code=None,source_id='tto-web-process',source_ref='process:'+self.epoch,sample_id=str(self.host_sample_mono),received_at_utc=self.host_sample_utc,source_time_utc=None,as_of_elapsed_ms=snapshot['run_elapsed_ms'],age_lower_bound_ms=max(0.,(now-self.host_sample_mono)*1000),remaining_valid_ms=max(0.,2000-(now-self.host_sample_mono)*1000),time_quality='same_clock',last_observation=None))
         snapshot['event_cursor']=str(self.event_seq) if self.events else None
@@ -321,14 +332,15 @@ class State:
 
     def prediction_view(self, horizon=45, start=0, end=math.inf, records_after=None):
         s=self._snapshot
-        selected=[p for p in self.predictions.values() if p['phase_at_origin'] in ('tracking','degraded') and (p['run_id'],p['source_epoch'],p['model_id'],p['spec_id'],p['horizon_s'])==(s['run_id'],s['source_epoch'],s['model']['model_id'],s['model']['spec_id'],horizon) and start<=p['origin_elapsed_ms']<=end]
+        identity=s['prediction_history_identity']
+        selected=[p for p in self.predictions.values() if identity and p['phase_at_origin'] in ('tracking','degraded') and all(p[k]==identity[k] for k in ('run_id','source_epoch','model_id','spec_id')) and p['horizon_s']==horizon and start<=p['origin_elapsed_ms']<=end]
         matched=[p for p in selected if p['status']=='matched'];errors=[abs(p['error_C']) for p in matched]
         elapsed=s['run_elapsed_ms'] or 0
         ordered=sorted(errors);rank=.95*(len(ordered)-1) if ordered else 0
         p95=(ordered[math.floor(rank)]*(1-(rank%1))+ordered[math.ceil(rank)]*(rank%1)) if ordered else None
         summary=dict(issued_count=len(selected),due_count=sum(p['target_elapsed_ms']<=elapsed and p['status'] not in ('late_publication','not_comparable','unavailable') for p in selected),matched_count=len(matched),missing_label_count=sum(p['status']=='missing_label' for p in selected),unmatched_future_count=sum(p['target_elapsed_ms']>elapsed and p['status']=='pending' for p in selected),late_publication_count=sum(p['status']=='late_publication' for p in selected),not_comparable_count=sum(p['status']=='not_comparable' for p in selected),MAE_C=sum(errors)/len(errors) if errors else None,P95_absolute_C=p95 if errors else None,max_underprediction_C=max((max(-p['error_C'],0) for p in matched),default=None))
         records=[copy.deepcopy(p) for p in selected if records_after is None or p['target_elapsed_ms']>=records_after-2000 or self.prediction_received_ms[p['prediction_id']]>=records_after]
-        return dict(horizon_s=horizon,scenario='HOLD',provider='observe-ledger',sync_status='unavailable' if self.prediction_failed else 'syncing' if self.prediction_syncing else 'synced' if self.forecast else 'not_connected',
+        return dict(horizon_s=horizon,scenario='HOLD',provider='observe-ledger',history_identity=copy.deepcopy(identity),sync_status='unavailable' if self.prediction_failed else 'syncing' if self.prediction_syncing else 'synced' if self.forecast else 'not_connected',
             synced_through_cursor=self.prediction_cursor,records=records,records_complete=records_after is None and self.forecast is not None and not self.prediction_syncing and not self.prediction_failed,
             summary=summary,labels={v['prediction_id']:v['label'] for v in records if 'label' in v})
 

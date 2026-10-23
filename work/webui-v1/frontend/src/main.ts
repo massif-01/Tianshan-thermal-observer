@@ -4,7 +4,7 @@ import {icon,chevron,globe,more,menu as menuIcon,pauseMark,checkMark,brandMark,w
 import {lang,locale,langNames,langShort,setLang,t,be,translateDom} from './i18n';
 import './style.css';
 
-const UI_VERSION='1.0.0-rc.7';
+const UI_VERSION='1.0.0-rc.8';
 const srcName:Record<string,string>={source:t('数据源'),'web-source':t('数据源连接'),observer:t('模型'),board:t('主板'),runner:t('任务'),clock:t('时钟'),web:t('网页服务'),publication:t('显示发布')};
 const root=document.querySelector<HTMLDivElement>('#app')!;
 const chartLabel:Record<string,string>={temperature:t('实测结温与模型估计'),residual:t('估计与实测的差距'),compose:t('热状态构成'),cpugpu:t('CPU 与 GPU 温度'),power:t('GPU 与 CPU·SoC·内存 两路供电功率'),pwm:t('已执行 PWM 与天山OS 目标 PWM')};
@@ -129,6 +129,7 @@ function statuses():string{
  const out:string[]=[];
  const mode=!current?['idle',t('等待数据')]:current.mode==='test_replay'?['warn',t('本地回放样例（非实时设备）')]:current.mode==='live'?['ok',t('实时')]:current.mode==='ended'?['idle',t('观察已结束')]:['idle',t('等待数据')];
  out.push(chip(mode[0] as Dot,mode[1]));
+ if(current?.publication_status==='failed')out.push(chip('danger',t('发布失败 · 最终结果未确认')));
  out.push(!current&&!connected&&!retries?chip('idle',t('正在连接网页服务')):connected?chip('ok',t('网页已连接')):chip('warn',t('网页已断开 · 正在重连')+(retries?t('（第 {n} 次）',{n:retries}):'')));
  if(waiting())out.push(chip('idle',connected?t('设备数据 等待中'):t('设备数据 未知')));
  else if(!connected)out.push(chip('idle',t('设备数据 未知')));
@@ -424,7 +425,7 @@ function rowsHtml(r:[string,string][],mono:boolean){return r.map(([k,v])=>rowHtm
 $('topology').addEventListener('click',e=>{const t=(e.target as HTMLElement).closest<HTMLElement>('[data-node]');if(t){selectedNode=t.dataset.node!;renderModel();}});
 
 /* ---------- 预测对照 ---------- */
-function comparisonKey(){return current?[current.service_epoch,current.run_id,current.source_epoch,current.model.model_id,current.model.spec_id,horizon,range].join(':'):'';}
+function comparisonKey(){const i=current?.prediction_history_identity;return current?[current.service_epoch,i?.run_id,i?.source_epoch,i?.model_id,i?.spec_id,horizon,range].join(':'):'';}
 function invalidateComparison(){
  comparisonGeneration++;predictionRequest++;predictionGroup=comparisonKey();
  predictionCache.clear();predictionLabels={};lastPredictionFetch=null;
@@ -445,7 +446,7 @@ async function renderComparison(){
  const records:Prediction[]=[...predictionCache.values()].sort((a,b)=>a.target_elapsed_ms-b.target_elapsed_ms), matched=records.filter(p=>p.status==='matched');
  const s=data.summary;
  html('score',`<div class="stat-block" style="padding-bottom:6px"><span class="t-label">${t('平均绝对误差')}</span><span class="big"><b class="t-metric">${fmt(s.MAE_C,2)}</b>${unit('°C')}</span></div>`+rowHtml(t('误差 95 分位（绝对值）'),`${fmt(s.P95_absolute_C,2)} °C`,'t-body num')+rowHtml(t('最大低估'),`${fmt(s.max_underprediction_C,2)} °C`,'t-body num')+rowHtml(t('已匹配 / 应到期'),`${s.matched_count} / ${s.due_count}`,'t-body num')+rowHtml(t('无法验证（缺实测）'),String(s.missing_label_count),'t-body num'));
- text('scoreCaption',t('近 {n} 分钟 · 同一次观察、同一模型',{n:range})+(matched.length<30?t(' · 样本较少'):''));
+ text('scoreCaption',(current.publication_status==='ended'&&current.prediction_history_identity?t('已结束 · 历史来源 {n}',{n:current.prediction_history_identity.source_epoch})+' · ':'')+t('近 {n} 分钟 · 同一次观察、同一模型',{n:range})+(matched.length<30?t(' · 样本较少'):''));
  text('compareCaption',t('过去发出的 {h} 秒预测，到了目标时刻，实际结温是多少？',{h:horizon}));text('predName',t('当时发出的 +{h} 秒预测',{h:horizon}));
  const last=matched.at(-1);html('latestMatch',sepHtml(last?t('最近一条 · 目标时刻 {time} · 预测 {p} °C / 实测 {o} °C · 误差 {e} °C（预测{w}）',{time:timeLabel(last.target_elapsed_ms),p:fmt(last.value_C),o:fmt(last.observed_C),e:sgn(last.error_C,2),w:t(last.error_C!>=0?'偏高':'偏低')}):t('等待这条预测对应的实测温度 · 缺标签 {a} · 未到期 {b}',{a:s.missing_label_count,b:s.unmatched_future_count})));
  const done=records.filter(p=>['matched','missing_label'].includes(p.status));

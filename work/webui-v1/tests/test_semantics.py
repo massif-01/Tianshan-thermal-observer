@@ -104,6 +104,24 @@ def test_epoch_does_not_pair_and_delayed_publication_is_excluded():
     s.accept(p.row('boundary',111,None,reason='socketio_disconnected'),now=p.start+111.01)
     assert s.snapshot()['forecast']['latest_prediction_ids']==[]
     assert not s.prediction_view(45)['records']
+    assert s.snapshot()['prediction_history_identity']['source_epoch']==s.snapshot()['source_epoch']
+    # Only the publisher's terminal contract may select the earlier issued group.
+    old={k:packet[k] for k in ('run_id','source_epoch','model_id','spec_id')}
+    identity=dict(old,source_epoch=s.snapshot()['source_epoch'])
+    terminal=dict(schema='TTO-PREDICTION-PAGE-v1',boot_id=packet['boot_id'],publisher_id=s.publisher_id,
+        origin_mono_s=p.start,sync_status='synced',identity=identity,history_identity=old,ended=True,
+        ended_at_mono_s=p.start+111,cursor=s.prediction_cursor,watermark=s.prediction_cursor,
+        has_more=False,retained_from_mono_s=p.start-3600,records=[],forecast={})
+    with pytest.raises(ValueError,match='history identity'):
+        s.accept_predictions(dict(terminal,ended=False),now=p.start+111.01)
+    with pytest.raises(ValueError,match='history identity'):
+        s.accept_predictions(dict(terminal,history_identity=dict(old,run_id='other-run')),now=p.start+111.01)
+    s.accept_predictions(terminal,now=p.start+111.01)
+    assert s.snapshot()['source_epoch']==identity['source_epoch']
+    assert s.snapshot()['prediction_history_identity']==old
+    assert s.prediction_view(45)['records'] and s.snapshot()['publication_status']=='ended'
+    s.begin_publication('next-publisher');s.refresh(p.start+112)
+    assert s.snapshot()['prediction_history_identity'] is None and not s.prediction_view(45)['records']
 
 
 def test_curve_reference_available_withheld_domain_and_identity():

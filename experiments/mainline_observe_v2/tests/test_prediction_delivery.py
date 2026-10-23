@@ -41,7 +41,7 @@ async def until(check):
     raise AssertionError('ledger subscription did not synchronize')
 
 
-@pytest.mark.parametrize('publication_failure',[False,True])
+@pytest.mark.parametrize('publication_failure',[None,'worker','final_build','final_write','descriptor_write'])
 def test_committed_socket_recovery_terminal_scores_and_new_producer(tmp_path,pubdir,publication_failure,monkeypatch):
     async def run():
         origin=time.monotonic()-300
@@ -75,18 +75,53 @@ def test_committed_socket_recovery_terminal_scores_and_new_producer(tmp_path,pub
             assert state.predictions==before
             if publication_failure:
                 def broken_gap():raise RuntimeError('owned publisher failure')
-                p._gap=broken_gap;p.invalidate()
-                await until(lambda:not p.thread.is_alive())
+                if publication_failure=='worker':
+                    p._gap=broken_gap;p.invalidate()
+                    await until(lambda:not p.thread.is_alive())
+                else:
+                    import tto_field.web_publication as module
+                    atomic=module.atomic_json
+                    def fail_write(path,row):
+                        if publication_failure=='final_write' and path.name=='predictions-final.json' or publication_failure=='descriptor_write' and path.name=='active.json' and row.get('ended'):
+                            raise OSError('owned terminal write failure')
+                        return atomic(path,row)
+                    def fail_final(*args):raise ValueError('owned final generation failure')
+                    with monkeypatch.context() as patch:
+                        if publication_failure=='final_build':patch.setattr(view,'final',fail_final)
+                        else:patch.setattr(module,'atomic_json',fail_write)
+                        ledger.finish(time.monotonic())
+                        status=await asyncio.to_thread(p.close,completed=True)
+                    assert status['worker_stopped'] and status['errors']>0
                 meta=json.loads((pubdir/'active.json').read_text())
                 assert meta['publication_failed'] and not meta['ended'] and not meta['prediction_final']
                 await until(lambda:state.prediction_failed)
                 assert not state.prediction_view(45)['records_complete']
+                assert state.snapshot()['publication_status']=='failed'
+                task.cancel();await asyncio.gather(task,return_exceptions=True)
+                state=State(config);task=asyncio.create_task(follow(config,state,stop))
+                await until(lambda:state.prediction_failed)
+                assert state.snapshot()['publication_status']=='failed'
+                assert not state.prediction_view(45)['records_complete'] and not state.snapshot()['forecast']['latest_prediction_ids']
                 # The recorder remains writable after the publication worker has died.
                 previous=view.cursor;tick(time.monotonic()+5)
                 assert view.cursor>previous and (store.root/'predictions.jsonl').stat().st_size>0
                 ledger.finish(time.monotonic()+5)
             else:
-                ledger.finish(time.monotonic());assert p.close(completed=True)['worker_stopped']
+                end=time.monotonic()
+                stop_frame=frame(end,epoch=1)
+                stop_frame['identity'].update(run_id='ledger-run-A',model_sha256=SPEC['model_sha256'],spec_sha256=SPEC_ID)
+                stop_frame['_communication']=dict(measurement=dict(TJ_and_rails=dict(raw_valid=False)))
+                view.update(stop_frame,dict(observer=dict(phase='unavailable')),end)
+                packet=list(bundle(t=origin,run='ledger-run-A'));packet[2]['identity']['source_epoch']=1;packet[2]['source_reset']=True
+                p.submit(*packet)
+                await until(lambda:state.packet is not None and state.packet['source_epoch']==1)
+                assert not state.prediction_view(45)['records']  # Live queries cannot cross epochs.
+                ledger.finish(end,'source_epoch_changed');assert p.close(completed=True)['worker_stopped']
+                await until(lambda:state.prediction_ended and not state.prediction_syncing)
+                assert state.snapshot()['source_epoch']==1
+                assert state.snapshot()['prediction_history_identity']['source_epoch']==0
+                assert state.prediction_view(45)['records']
+
                 task.cancel();await asyncio.gather(task,return_exceptions=True)
                 # Start after producer exit: final scores and API identity must still be available.
                 state=State(config);task=asyncio.create_task(follow(config,state,stop))
@@ -95,6 +130,8 @@ def test_committed_socket_recovery_terminal_scores_and_new_producer(tmp_path,pub
                 response=state.prediction_view(45)
                 assert response['records_complete'] and response['records'] and response['sync_status']=='synced'
                 assert state.snapshot()['forecast']['latest_prediction_ids']==[]
+                assert state.snapshot()['source_epoch']==1 and state.snapshot()['prediction_history_identity']['source_epoch']==0
+                assert state.snapshot()['publication_status']=='ended'
                 final_elapsed=state.snapshot()['run_elapsed_ms']
                 state.refresh(state.prediction_ended_at+7200)
                 assert state.snapshot()['run_elapsed_ms']==final_elapsed
@@ -172,6 +209,7 @@ def test_committed_socket_recovery_terminal_scores_and_new_producer(tmp_path,pub
 def test_retention_revision_paging_and_withdrawal_require_new_prediction(tmp_path):
     origin=100.
     store,view,ledger,tick=journal(tmp_path/'session',origin)
+    assert view.final(origin)['history_identity'] is None  # Nothing issued: no fabricated historical group.
     for n in range(750):f=tick(origin+n*5)
     now=f['t']+.01
     first=view.page(now=now)

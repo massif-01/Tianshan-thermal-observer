@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "tto-field-candidate"
-version = "0.2.4+observe.5"
+version = "0.2.4+observe.6"
 description = "Bounded continuous read-only observation with frozen G2 publication and mature scoring"
 requires-python = ">=3.10,<3.13"
 dependencies = ["aiohttp==3.11.18", "python-socketio==5.13.0", "psutil==7.0.0", "numpy==2.2.6", "scipy==1.15.3", "threadpoolctl==3.6.0"]

@@ -103,8 +103,15 @@ class PredictionView:
                            and all(v['status']=='pending' and v['value_C'] is not None
                                    and self.barrier<self.origin+v['origin_elapsed_ms']/1000<=context['input_mono_s'] for v in batch))
             status='available' if available else 'initializing' if context and context['phase']=='provisional' and now<context['deadline'] and not ended and not self.failure else 'unavailable'
+            # Realtime identity belongs to the last source frame, including a
+            # stop boundary. Terminal history belongs to an actual issued group.
+            history=context
+            if ended:
+                history=next((v for v in reversed(self.rows.values())
+                              if v['phase_at_origin'] in ('tracking','degraded')), context)
             return dict(schema='TTO-PREDICTION-PAGE-v1', origin_mono_s=self.origin, ended=ended,
                 sync_status='unavailable' if self.failure else 'synced',
+                history_identity={k:history[k] for k in ('run_id','source_epoch','model_id','spec_id')} if history else None,
                 identity={k:context[k] for k in ('run_id','source_epoch','model_id','spec_id')} if context else None, cursor=since if self.failure else page[-1]['revision'] if page else self.cursor,
                 watermark=self.cursor, has_more=not self.failure and len(eligible)>PAGE, retained_from_mono_s=now-WINDOW,
                 records=[] if self.failure else copy.deepcopy(page), forecast=dict(provider='observe-ledger',status=status,stride_s=STRIDE,

@@ -351,6 +351,42 @@
           }
         }
       }
+    },
+    "publication_status": {
+      "enum": [
+        "waiting",
+        "live",
+        "ended",
+        "failed"
+      ]
+    },
+    "prediction_history_identity": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "run_id",
+        "source_epoch",
+        "model_id",
+        "spec_id"
+      ],
+      "properties": {
+        "run_id": {
+          "type": "string"
+        },
+        "source_epoch": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "model_id": {
+          "type": "string"
+        },
+        "spec_id": {
+          "type": "string"
+        }
+      }
     }
   },
   "$defs": {

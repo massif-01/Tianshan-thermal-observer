@@ -33,7 +33,7 @@ async (page, fixture) => {
   const r=await read();if(r.future.some(v=>v!=='—')||!r.forecastInactive)throw Error('forecast survived withdrawal '+JSON.stringify(r));return r;
  };
  await emit(available);
- const result={scope:'installed rc7 static; recorded backend DTO; controlled browser transport',available:await expectAvailable()};
+ const result={scope:'installed rc8 static; recorded backend DTO; controlled browser transport',available:await expectAvailable()};
  const titles=await page.locator('#futureValues .row').evaluateAll(rows=>rows.map(e=>e.title));
  if(expected.some((p,i)=>!titles[i].includes(p.prediction_id)))throw Error('displayed IDs differ from backend');
  const targets=await page.locator('#futureValues .t-caption').allTextContents();
@@ -55,6 +55,10 @@ async (page, fixture) => {
  await page.evaluate(()=>window.testStream.onerror());result.disconnected=await expectWithdrawn();
  await emit(available);result.reconnected=await expectAvailable();
  await page.reload();await page.waitForFunction(()=>window.testStream);await emit(available);result.reloaded=await expectAvailable();
+ const failed=structuredClone(available);failed.publication_status='failed';failed.forecast.status='unavailable';failed.forecast.latest_prediction_ids=[];
+ await emit(failed);result.publicationFailed=await expectWithdrawn();
+ if(!(await page.locator('#stripSt').textContent()).includes('发布失败 · 最终结果未确认'))throw Error('publication failure hidden');
+ await emit(available);await expectAvailable();
  await page.screenshot({path:'output/playwright/forecast-qualified.png',fullPage:true});
  if(errors.length)throw Error(errors.join('\n'));result.pageErrors=errors;
  return result;

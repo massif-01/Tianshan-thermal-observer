@@ -360,7 +360,7 @@ def test_collector_socket_values_and_publication_faults_do_not_stop_recording(tm
             config['orin'].update(base_url=source.url,source_sample_interval_ms=1000,source_interval_evidence='owned local fixture')
             config['tianshan']['base_url']=source.url
             reg=dict(device_id='synthetic',thermal_config_id='synthetic',observer_host_id=socket.gethostname(),session_id=str(uuid.uuid4()))
-            task=asyncio.create_task(runtime.run_observe(config,reg,tmp_path/'session',4,local_loopback=True,storage_options={'min_free':0},publication_descriptor=pubdir/'active.json'))
+            task=asyncio.create_task(runtime.run_observe(config,reg,tmp_path/'session',12 if fault=='none' else 4,local_loopback=True,storage_options={'min_free':0},publication_descriptor=pubdir/'active.json'))
             async def collect_public():
                 while not (pubdir/'publication.sock').exists() and not task.done():await asyncio.sleep(.01)
                 if task.done():return
@@ -392,12 +392,31 @@ def test_collector_socket_values_and_publication_faults_do_not_stop_recording(tm
                 if tj:assert tj['value']==native['measurement']['tj']['value_C']
             assert result['publication']['errors']==result['publication_callback_errors']==0
             assert checks and all(checks)
+            from tto_web.state import State
+            from tto_web.source import follow
+            import tto_web.state as web_state
+            import tto_web.source as web_source
+            monkeypatch.setattr(web_state,'boot_id',lambda:boot);monkeypatch.setattr(web_source,'boot_id',lambda:boot)
+            state=State({'source':{'active_descriptor':str(pubdir/'active.json')},'advisory':{}})
+            stop=asyncio.Event();subscriber=asyncio.create_task(follow(state.config,state,stop))
+            try:
+                for _ in range(100):
+                    if state.prediction_ended and not state.prediction_syncing:break
+                    await asyncio.sleep(.01)
+                formal=[r for r in state.predictions.values() if r['phase_at_origin'] in ('tracking','degraded')]
+                assert formal, result
+                scope=state.snapshot()['prediction_history_identity']
+                assert scope['source_epoch']<state.snapshot()['source_epoch']
+                assert {r['prediction_id'] for h in (15,45,90) for r in state.prediction_view(h)['records']}=={r['prediction_id'] for r in formal}
+                assert state.snapshot()['publication_status']=='ended' and not state.snapshot()['forecast']['latest_prediction_ids']
+            finally:stop.set();subscriber.cancel();await asyncio.gather(subscriber,return_exceptions=True)
+
         elif fault=='view':
             assert result['publication']['prediction_view_failure']=='ValueError'
             assert result['model_errors']==0 and not result['error']
             assert (tmp_path/'session/predictions.jsonl').stat().st_size and (tmp_path/'session/scores.jsonl').stat().st_size
-            final=json.loads((pubdir/'predictions-final.json').read_text())
-            assert final['sync_status']=='unavailable' and final['forecast']['latest_prediction_ids']==[]
+            meta=json.loads((pubdir/'active.json').read_text())
+            assert meta['publication_failed'] and not meta['ended'] and meta['prediction_final'] is None
         elif fault=='submit':assert result['publication_callback_errors']>0
         elif fault=='thread_start':
             assert result['publication'] is None and result['publication_callback_errors']==0
