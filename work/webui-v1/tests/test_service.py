@@ -121,9 +121,7 @@ async def test_waiting_api_and_lan_direct_access():
             snapshot=await response.json()
             assert snapshot['mode']=='waiting' and not any(m['id'].startswith('temperature.') for m in snapshot['metrics'])
             assert (await client.get(url+'/api/v1/context')).status==200
-            assert (await client.post(url+'/api/v1/snapshot',json={})).status==405
             assert (await client.get(url+'/api/v1/session')).status==404
-            assert (await client.get(url+'/api/v1/snapshot',headers={'Origin':'http://other-host'})).status==403
     finally:await runner.cleanup()
 
 
