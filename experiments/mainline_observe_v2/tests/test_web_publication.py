@@ -70,13 +70,38 @@ def test_encoder_unavailable_is_renderable_and_deadline_never_renewed():
     assert packet['consumable_until_mono_s']==11
     assert 'Tf_C' not in state['observer']
     web=State({'source':{'mode':'follow'},'advisory':{}})
-    packet['metrics']=[dict(id='temperature.tj',value=40.,status='valid',sample_id='tj',
+    packet['metrics']=[dict(id='temperature.tj',label='TJ',kind='observed',unit='°C',reason_code=None,
+        source_id='synthetic',source_time_utc=None,time_quality='same_clock',value=40.,status='valid',sample_id='tj',
         as_of_elapsed_ms=0.,_at=10.,_expiry=12.,source_ref='r',received_at_utc='x',
         remaining_valid_ms=2000.,age_lower_bound_ms=0.,last_observation=None)]
     web.accept(packet,now=10.1);web.refresh(10.1)
     assert web._snapshot['model']['Tf_C'] is None
     web.refresh(20)
     assert web._snapshot['model']['remaining_valid_ms']==0
+    # Model-failure ledger output must remain valid at the display boundary.
+    from tto_field.observe_predictions import Ledger
+    from tto_field.prediction_view import PredictionView
+    from tto_field.web_encoding import SPEC_ID
+    from test_observe_contract import frame as ledger_frame, outputs
+    import jsonschema
+    rows=[];view=PredictionView(10.)
+    def committed(stream,row):
+        rows.append(row);view.committed(stream,row)
+    ledger=Ledger(committed,dict(run_id='run-A',clock_domain='test',model_id='frozen',model_sha256=SPEC['model_sha256'],spec_sha256=SPEC_ID))
+    f=ledger_frame(10.);f['identity']['run_id']='run-A'
+    ledger.consume(f,10.01,[],state_status='unavailable',wall_clock=dict(utc='2026-10-23T00:00:00Z',mono_s=10.01))
+    page=dict(view.page(now=10.02),boot_id=BOOT,publisher_id='unavailable-test')
+    web.begin_publication('unavailable-test');web.accept_predictions(page,now=10.02)
+    for name in ('src/tto_web','requirements'):
+        schema=json.loads((ROOT/'work/webui-v1'/name/'contracts/dashboard.schema.json').read_text())
+        if name=='src/tto_web':jsonschema.validate(web.snapshot(),schema)
+        for row in web.snapshot()['predictions']:
+            jsonschema.validate(row,{'$defs':schema['$defs'],'$ref':'#/$defs/forecast'})
+    assert len(view.rows)==3 and all(r['conditional_assumptions'] is None for r in view.rows.values())
+    assert all(r['conditional_assumptions']==[] for r in rows)  # Formal ledger stays unchanged.
+    f=ledger_frame(15.);f['identity']['run_id']='run-A'
+    ledger.consume(f,15.01,outputs(),state_status='tracking',wall_clock=dict(utc='2026-10-23T00:00:05Z',mono_s=15.01))
+    assert all(r['conditional_assumptions']=={'PWM':'conditional'} for r in list(view.rows.values())[-3:])
 
 
 def orin_bundle(t, *, sample_time=None, epoch=0, gpu_status=None):

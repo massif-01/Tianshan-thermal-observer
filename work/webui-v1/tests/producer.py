@@ -113,5 +113,5 @@ def seed_predictions(state, packet, origins=None):
         cursor=len(rows),watermark=len(rows),has_more=False,retained_from_mono_s=origin-3600,records=rows,
         forecast=dict(provider='observe-ledger',status='available',stride_s=5,history_window_ms=3600000,
             remaining_valid_ms=2500,consumable_until_mono_s=packet['consumable_until_mono_s'],latest_prediction_ids=[r['prediction_id'] for r in rows[-3:]]))
-    state.begin_predictions(page['publisher_id']);state.accept_predictions(page,now=packet['input_mono_s']+.01)
+    state.begin_publication(page['publisher_id']);state.accept_predictions(page,now=packet['input_mono_s']+.01)
     return page

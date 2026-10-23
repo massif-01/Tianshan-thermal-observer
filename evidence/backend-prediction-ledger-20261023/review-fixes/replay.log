@@ -1,0 +1,33 @@
+{
+  "scope": "offline recorded replay; virtual receive clock; no Web service/device",
+  "source_run": "evidence/formal-collection-20261013/run-2026-10-13T022246.369032_0000-c1a1bd6a",
+  "records": 5572,
+  "recorded_states": 5572,
+  "encoded_packets": 5572,
+  "stateful_observers": 1,
+  "publication_callback_errors": 0,
+  "established_encoder_packets_equal": 5572,
+  "public_model_equal_to_recorded_state": 5572,
+  "G2_records_equal_by_id": 1065,
+  "G2_scores_equal_by_id": 1065,
+  "formal_page_records": 1059,
+  "backend_G2_origins": 355,
+  "web_G2_origins": 355,
+  "formal_page_scores": {
+    "15": {
+      "n": 350,
+      "MAE_C": 0.5557825473607602
+    },
+    "45": {
+      "n": 344,
+      "MAE_C": 1.3925883516482214
+    },
+    "90": {
+      "n": 336,
+      "MAE_C": 2.769418423556401
+    }
+  },
+  "differences": [
+    "No independent Web forecasts or label matching; provisional origins remain archived and are excluded from formal page statistics."
+  ]
+}

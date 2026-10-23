@@ -28,7 +28,7 @@ for n in range(721):
     view.committed('context',(frame,dict(observer=dict(phase='tracking')),t+2.5))
 
 web_state.boot_id=lambda:'test:window-cost'
-state=State({'source':{'mode':'follow'},'advisory':{}});state.begin_predictions('window-cost')
+state=State({'source':{'mode':'follow'},'advisory':{}});state.begin_publication('window-cost')
 tracemalloc.start();begin=time.perf_counter();pages=0;max_bytes=0
 while True:
     page=view.page(state.prediction_cursor)
@@ -51,5 +51,5 @@ terminal=dict(view.final(time.monotonic()),boot_id='test:window-cost',publisher_
 terminal_bytes=len(json.dumps(terminal,allow_nan=False).encode())
 print(json.dumps(dict(terminal_json_bytes=terminal_bytes,source_condition='largest condition metadata in supplied real replay ledger',scope='local Python components only; no numeric observer/collector/Web HTTP; excludes pre-existing histories and process RSS',
     retained_predictions=len(state.predictions),pages=pages,max_page_bytes=max_bytes,
-    view_and_web_prediction_heap_bytes=retained_size((view.rows,state.predictions)),
+    view_and_web_prediction_heap_bytes=retained_size((view.rows,state.predictions,state.prediction_received_ms)),
     backfill_peak_traced_bytes=peak,backfill_json_and_cache_ms=elapsed),indent=2))

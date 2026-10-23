@@ -167,7 +167,7 @@ def test_frozen_mismatch_stays_rejected(factory,key):
     for ended in (False,True):
         incoming=copy.deepcopy(page);incoming['identity'][key]='test-alternate'
         incoming.update(ended=ended,ended_at_mono_s=1001.)
-        fresh=State(web_config());fresh.begin_predictions(incoming['publisher_id'])
+        fresh=State(web_config());fresh.begin_publication(incoming['publisher_id'])
         with pytest.raises(ValueError,match='frozen model/spec'):
             fresh.accept_predictions(incoming,now=1001.)
         assert fresh.predictions=={} and fresh.prediction_identity is None

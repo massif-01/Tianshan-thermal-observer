@@ -196,22 +196,24 @@ async def follow_publication(config, state, stop):
     path=Path(descriptor)
     while not stop.is_set():
         writer=None
+        publisher=None
         try:
             meta=load(path)
             if meta.get('schema')!='TTO-WEB-ACTIVE-v1' or meta.get('boot_id')!=boot_id():raise ValueError('descriptor identity')
+            publisher=meta['publisher_id'];state.begin_publication(publisher)
             if meta.get('publication_failed'):
-                state.disconnect('发布异常结束；后台观察状态未知');await asyncio.sleep(.5);continue
+                state.disconnect('发布异常结束；后台观察状态未知',publisher=publisher);await asyncio.sleep(.5);continue
             if meta.get('ended'):
-                state.disconnect('已结束，等待生产者注册',ended=True);await asyncio.sleep(1);continue
+                state.disconnect('已结束，等待生产者注册',ended=True,publisher=publisher);await asyncio.sleep(1);continue
             if meta.get('socket')!='publication.sock':raise ValueError('descriptor socket must be local fixed basename')
             reader,writer=await asyncio.open_unix_connection(str(path.parent/'publication.sock'),limit=512*1024)
             while not stop.is_set():
                 line=await asyncio.wait_for(reader.readline(),3.)
                 if not line:raise ConnectionError('producer closed')
                 if len(line)>512*1024:raise ValueError('publication exceeds budget')
-                state.accept(json.loads(line))
+                state.accept(json.loads(line),publisher=publisher)
         except (OSError,ValueError,asyncio.TimeoutError):
-            state.disconnect('等待已注册的TTO生产者或发布流暂断')
+            state.disconnect('等待已注册的TTO生产者或发布流暂断',publisher=publisher)
         finally:
             if writer:
                 writer.close()

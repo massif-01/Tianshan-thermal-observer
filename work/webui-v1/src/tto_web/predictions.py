@@ -19,19 +19,20 @@ async def follow_predictions(config, state, stop):
     path=Path(descriptor)
     while not stop.is_set():
         writer=None
+        publisher=None
         try:
             meta=load(path)
             if meta.get('schema')!='TTO-WEB-ACTIVE-v1' or meta.get('boot_id')!=boot_id():
                 raise ValueError('prediction descriptor identity')
+            publisher=meta['publisher_id'];state.begin_publication(publisher)
             if meta.get('publication_failed'):
                 state.prediction_failed=True;state.prediction_syncing=False;state.forecast=None
                 state.refresh();await asyncio.sleep(.5);continue
             if not meta.get('prediction_socket') and not meta.get('prediction_final'):
                 state.forecast=None;state.prediction_syncing=False;state.prediction_failed=False
                 await asyncio.sleep(.5);continue
-            if meta['ended'] and state.prediction_publisher==meta['publisher_id'] and state.prediction_ended and not state.prediction_syncing:
+            if meta['ended'] and state.prediction_ended and not state.prediction_syncing:
                 await asyncio.sleep(.5);continue
-            state.begin_predictions(meta['publisher_id'])
             if meta['ended']:
                 if meta.get('prediction_final')!='predictions-final.json':raise ValueError('terminal prediction filename')
                 page=await asyncio.to_thread(final_page,path.parent/'predictions-final.json')
@@ -46,8 +47,9 @@ async def follow_predictions(config, state, stop):
                 state.accept_predictions(page)
                 if page['has_more']:continue
         except (OSError,ValueError,asyncio.TimeoutError):
-            state.prediction_syncing=True
-            state.refresh()
+            if publisher is None or publisher==state.publisher_id:
+                state.prediction_syncing=True
+                state.refresh()
         finally:
             if writer:
                 writer.close()

@@ -32,7 +32,8 @@ class State:
         self.model_history_sample = None
         self.model_gap_t = -math.inf
         self.predictions = {}
-        self.prediction_publisher = None
+        self.prediction_received_ms = {}
+        self.publisher_id = None
         self.prediction_cursor = 0
         self.prediction_origin = None
         self.prediction_identity = None
@@ -91,7 +92,17 @@ class State:
         p=self.packet
         return [e for e in self.events if e['run_id'] is None or p and (e['run_id'],e['source_epoch'])==(p['run_id'],p['source_epoch'])]
 
-    def accept(self, packet, now=None):
+    def clear_source(self):
+        self.packet=None;self.source_connected=False
+        self.source_status='观察过程已切换，等待新数据'
+        self.history.clear();self.history_seen.clear();self.task_event_seq=0
+        self.model_history.clear();self.model_history_sample=None;self.model_gap_t=-math.inf
+        self.last_signature=None;self.last_advisory_basis=None
+        self.events=deque((e for e in self.events if e['run_id'] is None),maxlen=1000)
+
+    def accept(self, packet, now=None, *, publisher=None):
+        if publisher is not None and publisher!=self.publisher_id:
+            raise ValueError('display publisher identity mismatch')
         now = time.monotonic() if now is None else now
         if packet.get('schema')=='TTO-WEB-DISPLAY-GAP-v1':
             if packet.get('boot_id')!=boot_id() or packet.get('clock_domain_id')!='host-monotonic:'+boot_id():
@@ -109,13 +120,9 @@ class State:
         old=self.packet
         signature=(packet['run_id'],packet['source_epoch'],packet['model_id'],packet['spec_id'])
         old_signature=None if not old else (old['run_id'],old['source_epoch'],old['model_id'],old['spec_id'])
-        if old_signature!=signature:
-            self.history.clear(); self.history_seen.clear();self.task_event_seq=0
-            self.model_history.clear(); self.model_history_sample=None
-            self.model_gap_t=-math.inf
-            self.last_signature=None
-            self.events=deque((e for e in self.events if e['run_id'] is None),maxlen=1000)
-        elif packet['input_mono_s']<old['input_mono_s']:
+        if old and old_signature!=signature:
+            self.clear_source()
+        elif old_signature==signature and packet['input_mono_s']<old['input_mono_s']:
             raise ValueError('producer time regression')
         if old_signature==signature:
             self.expire_model_history(now)
@@ -158,15 +165,20 @@ class State:
             self.event('source',packet['event_reason'],elapsed,'warning')
         self.refresh(now)
 
-    def begin_predictions(self, publisher):
-        if publisher!=self.prediction_publisher:
+    def begin_publication(self, publisher):
+        if publisher!=self.publisher_id:
+            replacing=self.publisher_id is not None
+            if replacing:self.clear_source()
             self.predictions.clear();self.forecast=None
+            self.prediction_received_ms.clear()
             self.prediction_cursor=0;self.prediction_origin=None;self.prediction_identity=None;self.prediction_failed=False;self.prediction_ended=False;self.prediction_ended_at=None
-            self.prediction_publisher=publisher
+            self.publisher_id=publisher
             self.prediction_syncing=True
+            if replacing:self.refresh()
 
     def accept_predictions(self, page, now=None):
-        if page['schema']!='TTO-PREDICTION-PAGE-v1' or page['boot_id']!=boot_id() or page['publisher_id']!=self.prediction_publisher:
+        now=time.monotonic() if now is None else now
+        if page['schema']!='TTO-PREDICTION-PAGE-v1' or page['boot_id']!=boot_id() or page['publisher_id']!=self.publisher_id:
             raise ValueError('prediction publisher identity mismatch')
         identity=page['identity']
         if identity and (identity['model_id']!=SPEC['model_sha256'] or identity['spec_id']!=SPEC_ID):
@@ -178,16 +190,23 @@ class State:
         if page['ended']:
             self.prediction_ended_at=page['ended_at_mono_s'];self.source_connected=False
         for row in page['records']:
+            previous=self.predictions.get(row['prediction_id'])
+            if previous is not None and row['revision']<=previous['revision']:continue
             self.predictions[row['prediction_id']]=copy.deepcopy(row)
+            # API deltas describe when Web received a revision, not when the
+            # backend settled it. Original ledger times remain untouched.
+            self.prediction_received_ms[row['prediction_id']]=(now-page['origin_mono_s'])*1000
         cutoff=(page['retained_from_mono_s']-page['origin_mono_s'])*1000
         self.predictions={k:v for k,v in self.predictions.items() if v['origin_elapsed_ms']>=cutoff}
+        self.prediction_received_ms={k:self.prediction_received_ms[k] for k in self.predictions}
         self.prediction_cursor=page['cursor']
         self.prediction_syncing=page['has_more']
         self.prediction_failed=page['sync_status']=='unavailable'
         if not page['has_more']:self.forecast=copy.deepcopy(page['forecast'])
         self.refresh(now)
 
-    def disconnect(self, reason='数据暂断', ended=False):
+    def disconnect(self, reason='数据暂断', ended=False, *, publisher=None):
+        if publisher is not None and publisher!=self.publisher_id:return
         if self.source_connected:self.event('web-source',reason,severity='warning')
         if self.packet:
             self.model_gap('source_ended' if ended else 'source_disconnected',
@@ -313,7 +332,7 @@ class State:
         ordered=sorted(errors);rank=.95*(len(ordered)-1) if ordered else 0
         p95=(ordered[math.floor(rank)]*(1-(rank%1))+ordered[math.ceil(rank)]*(rank%1)) if ordered else None
         summary=dict(issued_count=len(selected),due_count=sum(p['target_elapsed_ms']<=elapsed and p['status'] not in ('late_publication','not_comparable','unavailable') for p in selected),matched_count=len(matched),missing_label_count=sum(p['status']=='missing_label' for p in selected),unmatched_future_count=sum(p['target_elapsed_ms']>elapsed and p['status']=='pending' for p in selected),late_publication_count=sum(p['status']=='late_publication' for p in selected),not_comparable_count=sum(p['status']=='not_comparable' for p in selected),MAE_C=sum(errors)/len(errors) if errors else None,P95_absolute_C=p95 if errors else None,max_underprediction_C=max((max(-p['error_C'],0) for p in matched),default=None))
-        records=[copy.deepcopy(p) for p in selected if records_after is None or p['target_elapsed_ms']>=records_after-2000 or p.get('settled_elapsed_ms',-math.inf)>=records_after]
+        records=[copy.deepcopy(p) for p in selected if records_after is None or p['target_elapsed_ms']>=records_after-2000 or self.prediction_received_ms[p['prediction_id']]>=records_after]
         return dict(horizon_s=horizon,scenario='HOLD',provider='observe-ledger',sync_status='unavailable' if self.prediction_failed else 'syncing' if self.prediction_syncing else 'synced' if self.forecast else 'not_connected',
             synced_through_cursor=self.prediction_cursor,records=records,records_complete=records_after is None and self.forecast is not None and not self.prediction_syncing and not self.prediction_failed,
             summary=summary,labels={v['prediction_id']:v['label'] for v in records if 'label' in v})

@@ -4,6 +4,7 @@ import json
 import os
 import time
 from pathlib import Path
+from types import SimpleNamespace
 import pytest
 from aiohttp import web
 from tto_web.server import app_for
@@ -54,17 +55,34 @@ def test_publication_path_error_is_explicit(tmp_path):
     asyncio.run(check())
 
 
-def test_prediction_delta_preserves_whole_window_denominator_and_recent_label_updates():
-    p=Producer(time.monotonic()-120);s=State(web_config())
-    for t in range(121):s.accept(p.step(t),now=p.start+t+.01)
-    seed_predictions(s,p.step(121),range(0,120001,5000))
-    complete=s.prediction_view(45,0,120010)
-    delta=s.prediction_view(45,0,120010,records_after=119000)
-    assert delta['summary']==complete['summary']
-    assert len(delta['records'])<len(complete['records'])
-    assert all(v['target_elapsed_ms']>=117000 for v in delta['records'])
+@pytest.mark.asyncio
+async def test_prediction_delta_preserves_whole_window_denominator_and_recent_label_updates():
+    p=Producer(1000.);p.step(0);s=State(web_config());packet=p.step(110)
+    s.accept(packet,now=p.start+110.01)
+    page=seed_predictions(s,packet,[0,110000])
+    cached={r['prediction_id']:r for r in s.prediction_view(45)['records']}
+    revised=copy.deepcopy(page);score=revised['records'][1]
+    score.update(status='matched',observed_C=47.,error_C=1.,settled_elapsed_ms=45000,revision=7)
+    backfill=copy.deepcopy(score)
+    backfill.update(prediction_id='BACKFILLED-45',origin_elapsed_ms=5000,issued_elapsed_ms=5000.01,
+                    input_cutoff_elapsed_ms=5000,target_elapsed_ms=50000,settled_elapsed_ms=52001,
+                    status='missing_label',reason_code='missing_qualified_label_within_2s',observed_C=None,error_C=None,revision=8)
+    revised.update(records=[score,backfill],cursor=8,watermark=8)
+    s.accept_predictions(revised,now=p.start+111.01)
+    app=app_for(web_config(),start_source=False,state=s)
+    handler=next(r.handler for r in app.router.routes() if r.method=='GET' and r.resource.canonical=='/api/v1/predictions')
+    delta=json.loads((await handler(SimpleNamespace(query={'horizon_s':'45','from':'0','records_after':'110010'}))).text)
+    complete=s.prediction_view(45,0,111010)
+    cached.update({r['prediction_id']:r for r in delta['records']})
+    assert cached=={r['prediction_id']:r for r in complete['records']}
+    assert cached[score['prediction_id']]['settled_elapsed_ms']==45000
+    assert delta['summary']==complete['summary'] and delta['summary']['matched_count']==1
     assert delta['records_complete'] is False
     assert complete['records_complete'] is True
+    # Re-delivering the same revision cannot make it a new change again.
+    s.accept_predictions(revised,now=p.start+112.01)
+    later=s.prediction_view(45,0,112010,records_after=111011)
+    assert not {score['prediction_id'],backfill['prediction_id']} & {r['prediction_id'] for r in later['records']}
 
 
 def test_lost_publication_does_not_call_next_available_tj_the_first_label():
@@ -89,11 +107,19 @@ def test_unconfigured_waiting_service_does_not_load_numerical_libraries():
 
 
 def test_prediction_window_eviction_removes_inline_label_metadata():
-    p=Producer(time.monotonic()-20);s=State(web_config());packet=p.step(15)
-    s.accept(packet,now=p.start+15.01)
+    p=Producer(1000.);p.step(0);s=State(web_config());packet=p.step(115)
+    s.accept(packet,now=p.start+115.01)
     page=seed_predictions(s,packet,[0,5000,10000,15000])
     removed=[r['prediction_id'] for r in page['records'] if r['origin_elapsed_ms']<10000]
-    for row in page['records']:row['label']={'source_ref':'SYNTHETIC-LABEL'}
+    for row in page['records']:
+        row.update(status='matched',observed_C=row['value_C'],error_C=0.,revision=row['revision']+len(page['records']),
+                   label={'label_elapsed_ms':row['target_elapsed_ms'],'source_ref':'SYNTHETIC-LABEL','received_at_utc':None})
+    page.update(cursor=24,watermark=24)
+    s.accept_predictions(page,now=p.start+115.01)
+    assert set(s.prediction_view(45)['labels'])=={r['prediction_id'] for r in page['records'] if r['horizon_s']==45}
     page.update(retained_from_mono_s=packet['origin_mono_s']+10,records=[])
-    s.accept_predictions(page,now=p.start+15.01)
+    s.accept_predictions(page,now=p.start+115.01)
     assert len(s.predictions)==6 and all(id not in s.predictions for id in removed)
+    result=s.prediction_view(45)
+    assert set(result['labels'])=={r['prediction_id'] for r in result['records']}
+    assert len(result['labels'])==2 and not set(removed)&set(result['labels'])

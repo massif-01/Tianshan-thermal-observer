@@ -53,7 +53,7 @@ class PredictionView:
                     value_C=row['value_C'], phase_at_origin=row['origin_state_status'],
                     evidence_mode='issued_online' if row['publication_mode']=='live' else 'test_replay',
                     status='late_publication' if row['late'] else 'pending' if row['value_C'] is not None else 'unavailable',
-                    reason_code=row['reason'], conditional_assumptions=copy.deepcopy(row['conditional_assumptions']),observed_C=None, error_C=None)
+                    reason_code=row['reason'], conditional_assumptions=None if row['conditional_assumptions']==[] else copy.deepcopy(row['conditional_assumptions']),observed_C=None, error_C=None)
                 self.rows[row['prediction_id']] = value
             else:
                 value = self.rows.get(row['prediction_id'])

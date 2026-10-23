@@ -36,7 +36,7 @@ class Capture:
         # Dummy owners prevent Adapter's legacy constructor from creating any processor.
         self.reference=Adapter(manifest,None,test_replay=True,owner=SimpleNamespace(projection=SimpleNamespace(),communication=None,observer=None))
         self.web=State({'source':{'mode':'follow'},'advisory':{}})
-        self.web.begin_predictions('replay')
+        self.web.begin_publication('replay')
         self.packet_count=0;self.native_models={}
     def invalidate(self):raise AssertionError('unexpected replay model/publication gap')
     def submit(self,raw,processed,frame,state,deadline):

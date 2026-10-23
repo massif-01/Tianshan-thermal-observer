@@ -13,9 +13,9 @@ from tto_field.prediction_view import PredictionView, PAGE
 from tto_field.web_encoding import SPEC_ID, SPEC
 from tto_field.web_publication import Publication
 from test_observe_contract import frame, outputs
-from test_web_publication import BOOT, web_clock, pubdir
+from test_web_publication import BOOT, web_clock, pubdir, bundle
 from tto_web.state import State
-from tto_web.predictions import follow_predictions
+from tto_web.source import follow
 
 
 def journal(root, origin, run='ledger-run-A'):
@@ -49,11 +49,12 @@ def test_committed_socket_recovery_terminal_scores_and_new_producer(tmp_path,pub
         for n in range(61):tick(origin+n*5)
         p=Publication(pubdir/'active.json',BOOT,test_replay=True,prediction_view=view).start()
         assert await asyncio.to_thread(p.ready.wait,3)
+        p.submit(*bundle(t=origin,run='ledger-run-A'))
         config={'source':{'active_descriptor':str(pubdir/'active.json')},'advisory':{}}
         state=State(config);stop=asyncio.Event()
-        task=asyncio.create_task(follow_predictions(config,state,stop))
+        task=asyncio.create_task(follow(config,state,stop))
         try:
-            await until(lambda:state.prediction_cursor==view.cursor and not state.prediction_syncing)
+            await until(lambda:state.packet is not None and state.prediction_cursor==view.cursor and not state.prediction_syncing)
             assert len(state.predictions)==183  # Requires more than one real 128-row page.
             logged=[json.loads(x) for x in (store.root/'predictions.jsonl').read_text().splitlines()]
             g2={x['prediction_id']:x for x in logged if x['method']=='G2-HOLD'}
@@ -62,9 +63,15 @@ def test_committed_socket_recovery_terminal_scores_and_new_producer(tmp_path,pub
             before=copy.deepcopy(state.predictions)
             state.disconnect();assert state.predictions==before  # Web loss cannot rewrite scoring.
             task.cancel();await asyncio.gather(task,return_exceptions=True)
+            # Same publisher reconnect preserves the accumulated raw and ledger context.
+            old_packet=copy.deepcopy(state.packet)
+            task=asyncio.create_task(follow(config,state,stop))
+            await until(lambda:state.source_connected and not state.prediction_syncing)
+            assert state.packet==old_packet and state.predictions==before
+            task.cancel();await asyncio.gather(task,return_exceptions=True)
             # A completely fresh Web state recovers all records, not just the latest three.
-            state=State(config);task=asyncio.create_task(follow_predictions(config,state,stop))
-            await until(lambda:state.prediction_cursor==view.cursor and not state.prediction_syncing)
+            state=State(config);task=asyncio.create_task(follow(config,state,stop))
+            await until(lambda:state.packet is not None and state.prediction_cursor==view.cursor and not state.prediction_syncing)
             assert state.predictions==before
             if publication_failure:
                 def broken_gap():raise RuntimeError('owned publisher failure')
@@ -82,7 +89,7 @@ def test_committed_socket_recovery_terminal_scores_and_new_producer(tmp_path,pub
                 ledger.finish(time.monotonic());assert p.close(completed=True)['worker_stopped']
                 task.cancel();await asyncio.gather(task,return_exceptions=True)
                 # Start after producer exit: final scores and API identity must still be available.
-                state=State(config);task=asyncio.create_task(follow_predictions(config,state,stop))
+                state=State(config);task=asyncio.create_task(follow(config,state,stop))
                 await until(lambda:state.prediction_ended and state.prediction_cursor==view.cursor)
                 assert not any(r['status']=='pending' for r in state.predictions.values())
                 response=state.prediction_view(45)
@@ -102,13 +109,46 @@ def test_committed_socket_recovery_terminal_scores_and_new_producer(tmp_path,pub
                     if r['method']=='G2-HOLD' and r['status']=='scored':
                         actual=state.predictions[r['prediction_id']]
                         assert actual['error_C']==r['error_C'] and actual['observed_C']==r['label_value_C']
+            stale_packet=copy.deepcopy(state.packet or old_packet)
+            old_publisher=p.publisher_id
+            old_page=dict(view.page(now=time.monotonic()),boot_id=BOOT,publisher_id=old_publisher)
             other,new_view,new_ledger,new_tick=journal(tmp_path/'next',time.monotonic(),'ledger-run-B')
             new_tick(new_view.origin)
             p=Publication(pubdir/'active.json',BOOT,test_replay=True,prediction_view=new_view).start()
             assert await asyncio.to_thread(p.ready.wait,3)
-            await until(lambda:state.prediction_publisher==p.publisher_id and state.prediction_cursor==new_view.cursor and not state.prediction_syncing)
+            p.submit(*bundle(t=new_view.origin,run='ledger-run-B'))
+            await until(lambda:state.packet is not None and state.packet['origin_mono_s']==new_view.origin and state.prediction_cursor==new_view.cursor and not state.prediction_syncing)
             assert len(state.predictions)==3 and all(r['ledger_run_id']=='ledger-run-B' for r in state.predictions.values())
+            # Responses from the old connection cannot overwrite or disconnect the new owner.
+            with pytest.raises(ValueError,match='publisher'):
+                state.accept(stale_packet,publisher=old_publisher)
+            with pytest.raises(ValueError,match='publisher'):
+                state.accept_predictions(old_page)
+            state.disconnect(publisher=old_publisher)
+            assert state.source_connected and state.packet['origin_mono_s']==new_view.origin
+            # Web misses an entire subsequent run, including its live stream.
+            task.cancel();await asyncio.gather(task,return_exceptions=True)
             new_ledger.finish(time.monotonic());p.close(completed=True);other.close()
+            other,new_view,new_ledger,new_tick=journal(tmp_path/'terminal',time.monotonic(),'ledger-run-C')
+            try:
+                new_tick(new_view.origin)
+                p=Publication(pubdir/'active.json',BOOT,test_replay=True,prediction_view=new_view).start()
+                assert await asyncio.to_thread(p.ready.wait,3)
+                new_ledger.finish(time.monotonic());p.close(completed=True)
+                fresh=State(config);fresh_task=asyncio.create_task(follow(config,fresh,stop))
+                task=asyncio.create_task(follow(config,state,stop))
+                try:
+                    await until(lambda:state.prediction_ended and fresh.prediction_ended and not state.prediction_syncing)
+                    assert len(state.predictions)==3 and state.predictions==fresh.predictions
+                    assert state.packet is None and not state.history and not state.model_history
+                    assert state.snapshot()['mode']=='ended' and not state.source_connected
+                    assert state.snapshot()['forecast']['latest_prediction_ids']==[]
+                    restored=state.prediction_view(45)
+                    assert restored['records'] and restored['records_complete']
+                    assert restored==fresh.prediction_view(45)
+                finally:
+                    fresh_task.cancel();await asyncio.gather(fresh_task,return_exceptions=True)
+            finally:other.close()
         finally:
             stop.set();task.cancel();await asyncio.gather(task,return_exceptions=True)
             p.close();store.close()
