@@ -81,9 +81,9 @@ def test_thirty_day_history_expires_whole_days_across_restart(tmp_path,monkeypat
     from tto.recordio import read_records
     blocked=session('space-to-reclaim',date(2000,1,1),device='fixture',host=socket.gethostname())
     finished=[]
-    def reclaim(*args):
+    def reclaim(*args,**kwargs):
         time.sleep(1.1)  # Longer than the monitor tick: no writes may race initialization.
-        expired=expire_history(*args);finished.append(time.monotonic());return expired
+        expired=expire_history(*args,**kwargs);finished.append(time.monotonic());return expired
     monkeypatch.setattr(runtime,'expire_history',reclaim)
     disk_usage=storage.shutil.disk_usage
     monkeypatch.setattr(storage.shutil,'disk_usage',lambda path:type('Disk',(),{'free':0})() if blocked.exists() else disk_usage(path))
@@ -143,8 +143,9 @@ def test_continuous_days_cross_midnight_prune_and_archive(tmp_path,monkeypatch):
     for n in range(2,33):
         day[0]=date(2026,10,1)+timedelta(days=n)
         store.append(root,'observations',dict(n=n))
-        store.seal_days(set(store.days)-{str(day[0])});expire_history(root,'one','host',day[0])
+        store.seal_days(set(store.days)-{str(day[0])});expire_history(root,'one','host',day[0],active_store=store)
     assert len(list((root/'days').iterdir()))==30 and not (root/'days/2026-10-01').exists()
+    assert set(store.recorded_days)=={p.name for p in (root/'days').iterdir()}
     # Recent startup failures have metadata but no daily records yet; retain their evidence.
     for name,age in [('recent-failed',0),('expired-failed',31)]:
         failed=tmp_path/name;failed.mkdir()
@@ -166,7 +167,67 @@ def test_continuous_days_cross_midnight_prune_and_archive(tmp_path,monkeypatch):
     with monkeypatch.context() as patch:
         patch.setattr(storage,'file_hash',hash_open_only);store.close()
     assert file_hash(old)==before
+    inventory=json.loads((root/'files.json').read_text())
+    assert {name for name in inventory if name.startswith('days/')}=={
+        f'days/{day}/files.json' for day in store.recorded_days}
     assert archive(root,tmp_path/'retained.zip')['files_verified']>30
-    before=old.read_bytes();old.write_bytes(before+b'bad')
     import pytest
-    with pytest.raises(ValueError,match='SHA mismatch'):archive(root,tmp_path/'invalid.zip')
+    for damaged in (old,old.parent/'files.json'):
+        before=damaged.read_bytes();damaged.write_bytes(before[:-1]+b' ')
+        with pytest.raises(ValueError,match='SHA mismatch'):archive(root,tmp_path/'invalid.zip')
+        assert not (tmp_path/'invalid.zip').exists()
+        damaged.write_bytes(before)
+
+    # Whole-day loss, including loss of every daily directory, must not become
+    # a successful metadata-only archive or be mistaken for normal retention.
+    import zipfile
+    next_run=tmp_path/'next-run';next_run.mkdir()
+    for missing in (old.parent/'files.json',old.parent,root/'days'):
+        saved=tmp_path/'missing-history';missing.rename(saved)
+        destination=tmp_path/'missing.zip'
+        try:
+            with pytest.raises(FileNotFoundError):archive(root,destination)
+            assert not destination.exists()
+            if missing==root/'days':
+                expire_history(next_run,'one','host',date(2026,11,3))
+                assert (root/'summary.json').exists()
+        finally:saved.rename(missing)
+
+    # After restart the persisted inventory, not the old writer's memory, owns
+    # retention. Commit expiry before deleting; an interrupted delete may leave
+    # old extras, but those unverified extras must not enter the ZIP.
+    def failed_delete(path):raise OSError('injected retention deletion failure')
+    with monkeypatch.context() as patch:
+        patch.setattr(storage.shutil,'rmtree',failed_delete)
+        with pytest.raises(OSError,match='retention deletion failure'):
+            expire_history(next_run,'one','host',date(2026,11,3))
+    assert old.exists() and 'days/2026-10-04/files.json' not in json.loads((root/'files.json').read_text())
+    archive(root,tmp_path/'pruned.zip')
+    with zipfile.ZipFile(tmp_path/'pruned.zip') as zipped:
+        assert not any(name.startswith('days/2026-10-04/') for name in zipped.namelist())
+        actual=[json.loads(line) for name in sorted(zipped.namelist()) if Path(name).name.startswith('observations-')
+                for line in gzip.decompress(zipped.read(name)).splitlines()]
+        assert actual==rows('observations') and all(row['n']!=3 for row in actual)
+    assert expire_history(next_run,'one','host',date(2026,11,3))==['2026-10-04']
+    assert not old.parent.exists()
+    archive(root,tmp_path/'after-pruning.zip')
+    index_path=root/'stream-index.json';index_raw=index_path.read_bytes()
+    index=dict(json.loads(index_raw),contract='TTO-OBSERVE-DAYS-v1');index_path.write_text(json.dumps(index))
+    with pytest.raises(ValueError,match='requires retained-day inventory'):archive(root,tmp_path/'old-layout.zip')
+    index_path.write_bytes(index_raw)
+    # Missing retained days remain an error until they leave the 30-day window;
+    # once every expected date expires, the closed session can be fully reclaimed.
+    (root/'days').rename(tmp_path/'gone-days')
+    expire_history(next_run,'one','host',date(2026,12,3))
+    assert not root.exists()
+
+    # The seal-time receipt must survive until root finalization: neither a
+    # vanished day nor a valid-JSON replacement index can be adopted as truth.
+    for missing in (True,False):
+        lost=DailyStore(tmp_path/f'lost-before-close-{missing}',today=lambda:date(2026,11,3),min_free=0)
+        lost.append(lost.root,'observations',dict(n=1));lost.seal_days({'2026-11-03'})
+        if missing:(lost.root/'days/2026-11-03').rename(tmp_path/'lost-day')
+        else:
+            index=lost.root/'days/2026-11-03/files.json'
+            index.write_bytes(b'{}'+b' '*(index.stat().st_size-2))
+        with pytest.raises(FileNotFoundError if missing else ValueError):lost.close()

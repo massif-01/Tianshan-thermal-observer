@@ -53,16 +53,21 @@ def archive(root,destination):
     from tto.util import file_hash
     if not (root/'summary.json').exists():raise ValueError('normal final summary required; preserve a crashed session separately')
     if json.loads((root/'status.json').read_text()).get('running'):raise ValueError('stop own observe before archive')
-    indexes=[root/'files.json',*[day/'files.json' for day in sorted((root/'days').iterdir())]] if (root/'days').exists() else [root/'files.json']
-    verified=0
+    layout=json.loads((root/'stream-index.json').read_text())
+    if layout.get('layout')=='utc-days' and layout['contract']!='TTO-OBSERVE-DAYS-v2':
+        raise ValueError('daily archive requires retained-day inventory; old daily layout cannot prove completeness')
+    inventory_raw=(root/'files.json').read_bytes();inventory=json.loads(inventory_raw)
+    indexes=[root/'files.json',*[root/name for name in sorted(inventory) if name.startswith('days/')]]
+    verified=0;files=set()
     for index_path in indexes:
-        for name,v in json.loads(index_path.read_text()).items():
+        entries=inventory if index_path==root/'files.json' else json.loads(index_path.read_text())
+        for name,v in entries.items():
             p=index_path.parent/name
             if p.stat().st_size!=v['bytes'] or file_hash(p)!=v['sha256']:raise ValueError('session file SHA mismatch:'+name)
-            verified+=1
+            verified+=1;files.add(p)
     with zipfile.ZipFile(destination,'x',zipfile.ZIP_DEFLATED) as z:
-        for p in sorted(root.rglob('*')):
-            if p.is_file():z.write(p,str(p.relative_to(root)))
+        z.writestr('files.json',inventory_raw)
+        for p in sorted(files):z.write(p,str(p.relative_to(root)))
     return dict(archive=str(destination),sha256=file_hash(destination),bytes=destination.stat().st_size,files_verified=verified)
 
 def stop_owned(root):

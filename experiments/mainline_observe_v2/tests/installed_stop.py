@@ -54,6 +54,16 @@ async def main(prefix,out,continuous=False):
             assert len({r['session'] for r in receipts})==len({r['native_run_id'] for r in receipts})==2
             from tto_field.observe_cli import archive
             assert archive(output/receipts[0]['session'],out/'first-after-restart.zip')['files_verified']==receipts[0]['archive']['files_verified']
+            first=output/receipts[0]['session'];day=next((first/'days').iterdir());saved=out/'saved-day'
+            day.rename(saved)
+            try:
+                destination=out/'missing-day.zip'
+                p=await asyncio.create_subprocess_exec(*base,'archive','--session',str(first),'--output',str(destination),
+                    stdout=asyncio.subprocess.PIPE,stderr=asyncio.subprocess.PIPE)
+                _,stderr=await p.communicate()
+                assert p.returncode!=0 and b'FileNotFoundError' in stderr and not destination.exists()
+                receipts[0]['missing_day_archive_rejected']=True
+            finally:saved.rename(day)
     result=dict(scope='actual installed CLI, owned loopback; not N305',continuous=continuous,runs=receipts)
     (out/'receipt.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result,indent=2))
 

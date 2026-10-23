@@ -212,7 +212,7 @@ async def run_observe(config,registration,out,duration=None,*,local_loopback=Fal
     def prepare_recording():
         nonlocal retention_day,start,last_status
         retention_day=datetime.now(timezone.utc).date()
-        expired=expire_history(store.root,registration['device_id'],socket.gethostname(),retention_day)
+        expired=expire_history(store.root,registration['device_id'],socket.gethostname(),retention_day,active_store=store if duration is None else None)
         store.metadata(store.root/'history-retention.json',dict(contract='TTO-OBSERVE-RETENTION-v1',retention_days=30,
             day=retention_day.isoformat(),layout='utc-days' if duration is None else 'session',device_id=registration['device_id'],host=socket.gethostname()))
         store.metadata(store.root/'thread-policy.json',policy)
@@ -249,7 +249,7 @@ async def run_observe(config,registration,out,duration=None,*,local_loopback=Fal
             today=datetime.now(timezone.utc).date()
             # Only after the native collector has acquired its exclusive lock.
             if consumer.native_run_id and today!=retention_day:
-                expired=await asyncio.to_thread(expire_history,store.root,registration['device_id'],socket.gethostname(),today)
+                expired=await asyncio.to_thread(expire_history,store.root,registration['device_id'],socket.gethostname(),today,active_store=store if duration is None else None)
                 if expired:consumer.event('history_days_expired',days=expired,retention_days=30)
                 retention_day=today
             if duration is not None and not checkpoint and now-start>=7200:
