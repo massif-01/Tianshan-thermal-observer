@@ -13,7 +13,7 @@ from tto_field.prediction_view import PredictionView, PAGE
 from tto_field.web_encoding import SPEC_ID, SPEC
 from tto_field.web_publication import Publication
 from test_observe_contract import frame, outputs
-from test_web_publication import BOOT, web_clock, pubdir, bundle
+from test_web_publication import BOOT, web_clock, pubdir, bundle  # web_clock registers the autouse clock fixture.
 from tto_web.state import State
 from tto_web.source import follow
 

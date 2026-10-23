@@ -4,8 +4,6 @@ import time
 from pathlib import Path
 import pytest
 from tto_web.state import State
-from tto_web.adapter import SPEC, SPEC_PATH
-from tto_web.common import boot_id
 from producer import Producer,web_config,seed_predictions
 
 

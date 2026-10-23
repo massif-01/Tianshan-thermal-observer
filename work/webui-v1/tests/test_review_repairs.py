@@ -3,7 +3,6 @@ import asyncio
 import copy
 import json
 import time
-from pathlib import Path
 import pytest
 from producer import Producer,web_config,native_config
 from tto_web.state import State
@@ -76,7 +75,7 @@ def test_gpu_native_age_and_same_source_metric_ages(outer):
 
 @pytest.mark.asyncio
 async def test_legacy_publication_does_not_invent_unrecorded_predictions(publication_dir):
-    from tto_web.common import atomic_json,boot_id
+    from tto_web.common import atomic_json
     p=Producer(time.monotonic()-20);s=State(web_config())
     config=web_config();descriptor=publication_dir/'active.json';config['source']['active_descriptor']=str(descriptor)
     stop=asyncio.Event()

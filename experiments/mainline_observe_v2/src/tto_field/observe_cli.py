@@ -1,6 +1,6 @@
 """Explicit bounded observe, offline status/history/archive, and owned-process STOP."""
 import re
-import argparse, asyncio, json, os, socket, sys, time, uuid, zipfile, hashlib
+import argparse, asyncio, json, os, socket, time, uuid, zipfile, hashlib
 from datetime import datetime,timezone
 from pathlib import Path
 from collections import deque

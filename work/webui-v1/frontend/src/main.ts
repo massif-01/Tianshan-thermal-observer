@@ -4,7 +4,7 @@ import {icon,chevron,globe,more,menu as menuIcon,pauseMark,checkMark,brandMark,w
 import {lang,locale,langNames,langShort,setLang,t,be,translateDom} from './i18n';
 import './style.css';
 
-const UI_VERSION='1.0.0-rc.8';
+const UI_VERSION='1.0.0-rc.9';
 const srcName:Record<string,string>={source:t('数据源'),'web-source':t('数据源连接'),observer:t('模型'),board:t('主板'),runner:t('任务'),clock:t('时钟'),web:t('网页服务'),publication:t('显示发布')};
 const root=document.querySelector<HTMLDivElement>('#app')!;
 const chartLabel:Record<string,string>={temperature:t('实测结温与模型估计'),residual:t('估计与实测的差距'),compose:t('热状态构成'),cpugpu:t('CPU 与 GPU 温度'),power:t('GPU 与 CPU·SoC·内存 两路供电功率'),pwm:t('已执行 PWM 与天山OS 目标 PWM')};

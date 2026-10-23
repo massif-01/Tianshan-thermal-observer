@@ -1,12 +1,10 @@
 """Same-origin read-only HTTP and bounded SSE. Service health is not device health."""
 import asyncio
-import contextlib
 import copy
 import hashlib
 import hmac
 import ipaddress
 import json
-import logging
 import math
 import os
 import psutil

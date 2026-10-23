@@ -8,7 +8,6 @@ import tempfile
 import threading
 import time
 from pathlib import Path
-from types import SimpleNamespace
 
 import pytest
 from tto_field.web_encoding import WebEncoder, SPEC
@@ -18,7 +17,6 @@ ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT/'work/webui-v1/src'))
 from tto_web.state import State
 from tto_web.source import follow
-from tto_web.adapter import Adapter
 import tto_web.common as web_common
 
 BOOT = 'test:observe-publication-local'
@@ -288,35 +286,13 @@ def test_actual_follow_disconnect_subscriber_restart_producer_restart_and_expiry
     asyncio.run(go())
 
 
-def test_local_collector_publication_failure_keeps_native_and_states(tmp_path,pubdir,monkeypatch):
-    from fake_source import FakeSource
-    from tto.config import load_config
-    from tto_field.observe_runtime import run_observe
-    import tto_field.observe_runtime as runtime
-    monkeypatch.setattr(runtime,'boot_identity',lambda:BOOT)
-    # A live-style registration cannot opt into the replay boot; startup fails only the publication.
-    async def go():
-        async with FakeSource() as source:
-            config=load_config(environ={})
-            config['orin'].update(base_url=source.url,source_sample_interval_ms=1000,source_interval_evidence='local fixture')
-            config['tianshan']['base_url']=source.url
-            import uuid
-            reg=dict(device_id='synthetic',thermal_config_id='synthetic',observer_host_id=socket.gethostname(),session_id=str(uuid.uuid4()))
-            result=await run_observe(config,reg,tmp_path/'session',4,local_loopback=True,storage_options={'min_free':0},publication_descriptor=pubdir/'active.json')
-            assert result['reason']=='duration' and result['native_summary']['orin_event_count']>=2
-            assert result['publication']['errors']==1 and result['stateful_observer_count']==1
-            assert source.posts==source.model_gets==0
-            assert (tmp_path/'session/states.jsonl').stat().st_size>0
-    asyncio.run(go())
-
-
-@pytest.mark.parametrize('fault',['none','encode','submit','close','thread_start','view'])
+@pytest.mark.parametrize('fault',['none','encode','submit','close','thread_start','view','boot'])
 def test_collector_socket_values_and_publication_faults_do_not_stop_recording(tmp_path,pubdir,monkeypatch,fault):
     from fake_source import FakeSource
     from tto.config import load_config
     import tto_field.observe_runtime as runtime
     from tto_field.web_encoding import short
-    boot='owned-local-fixture-boot'
+    boot=BOOT if fault=='boot' else 'owned-local-fixture-boot'
     monkeypatch.setattr(runtime,'boot_identity',lambda:boot)
     if fault=='encode':
         def fail(*args):raise ValueError('owned encoding failure')
@@ -417,6 +393,9 @@ def test_collector_socket_values_and_publication_faults_do_not_stop_recording(tm
             assert (tmp_path/'session/predictions.jsonl').stat().st_size and (tmp_path/'session/scores.jsonl').stat().st_size
             meta=json.loads((pubdir/'active.json').read_text())
             assert meta['publication_failed'] and not meta['ended'] and meta['prediction_final'] is None
+        elif fault=='boot':
+            assert result['publication']['errors']==1 and result['publication']['worker_stopped']
+            assert not packets and not (pubdir/'publication.sock').exists()
         elif fault=='submit':assert result['publication_callback_errors']>0
         elif fault=='thread_start':
             assert result['publication'] is None and result['publication_callback_errors']==0

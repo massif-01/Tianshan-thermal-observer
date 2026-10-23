@@ -1,9 +1,6 @@
 import asyncio
-import copy
 import json
-import os
 import time
-from pathlib import Path
 import aiohttp
 from aiohttp import web
 import pytest

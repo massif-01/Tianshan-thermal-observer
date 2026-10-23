@@ -33,7 +33,7 @@ async (page, fixture) => {
   const r=await read();if(r.future.some(v=>v!=='—')||!r.forecastInactive)throw Error('forecast survived withdrawal '+JSON.stringify(r));return r;
  };
  await emit(available);
- const result={scope:'installed rc8 static; recorded backend DTO; controlled browser transport',available:await expectAvailable()};
+ const result={scope:'installed rc9 static; recorded backend DTO; controlled browser transport',available:await expectAvailable()};
  const titles=await page.locator('#futureValues .row').evaluateAll(rows=>rows.map(e=>e.title));
  if(expected.some((p,i)=>!titles[i].includes(p.prediction_id)))throw Error('displayed IDs differ from backend');
  const targets=await page.locator('#futureValues .t-caption').allTextContents();

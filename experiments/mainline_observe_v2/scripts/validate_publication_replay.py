@@ -20,7 +20,7 @@ from tto_field.observe_runtime import Consumer
 import tto_field.observe_runtime as runtime
 from tto_field.observe_storage import SessionStore
 from tto_field.prediction_view import PredictionView
-from tto_field.web_encoding import WebEncoder,short
+from tto_field.web_encoding import WebEncoder
 from tto_web.adapter import Adapter
 from tto_web.state import State
 import tto_web.adapter as web_adapter

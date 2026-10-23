@@ -1,8 +1,8 @@
 """One native collector; raw quality and bounded pure model consumption are independent."""
-import asyncio, copy, json, os, queue, signal, socket, threading, time, subprocess
+import asyncio, copy, json, os, queue, socket, threading, time, subprocess
 from collections import deque
 from pathlib import Path
-from .support import Clock, utc, digest_file
+from .support import Clock, utc
 from .observe_storage import SessionStore
 from .observe_predictions import Ledger
 from .receiver_resources import read_sample

@@ -1,11 +1,9 @@
 """Bounded local publication and explicit single-owner observation. No Requester import."""
 import asyncio
 import contextlib
-import copy
 import json
 import os
 import threading
-import time
 import uuid
 from collections import deque
 from pathlib import Path
@@ -15,7 +13,7 @@ from tto.config import public_config, load_config, headers, require_live
 from tto.util import digest
 from .adapter import Adapter
 from .display import DisplayPublisher
-from .common import atomic_json, boot_id, load, utc
+from .common import atomic_json, boot_id, load
 
 
 class Publication:

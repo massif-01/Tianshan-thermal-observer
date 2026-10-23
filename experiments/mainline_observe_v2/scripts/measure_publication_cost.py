@@ -6,7 +6,6 @@ ledger-client uses the full publication + ledger follower, including lifecycle o
 import argparse
 import asyncio
 import json
-import os
 import socket
 import statistics
 import subprocess
