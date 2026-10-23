@@ -4,7 +4,7 @@ import {icon,chevron,globe,more,menu as menuIcon,pauseMark,checkMark,brandMark,w
 import {lang,locale,langNames,langShort,setLang,t,be,translateDom} from './i18n';
 import './style.css';
 
-const UI_VERSION='1.0.0-rc.6-ui.1';
+const UI_VERSION='1.0.0-rc.7';
 const srcName:Record<string,string>={source:t('数据源'),'web-source':t('数据源连接'),observer:t('模型'),board:t('主板'),runner:t('任务'),clock:t('时钟'),web:t('网页服务'),publication:t('显示发布')};
 const root=document.querySelector<HTMLDivElement>('#app')!;
 const chartLabel:Record<string,string>={temperature:t('实测结温与模型估计'),residual:t('估计与实测的差距'),compose:t('热状态构成'),cpugpu:t('CPU 与 GPU 温度'),power:t('GPU 与 CPU·SoC·内存 两路供电功率'),pwm:t('已执行 PWM 与天山OS 目标 PWM')};
@@ -374,11 +374,13 @@ const nodeText:Record<string,string>={pg:t('GPU 供电功率，模型的输入�
 const nodeTitle:Record<string,string>={pg:t('GPU 功率'),pc:t('CPU·SoC·内存 功率'),u:t('风扇输出（已执行）'),tj:t('结温（实测）'),est:t('热状态估计'),fc:t('结温预测')};
 const nodeMetric:Record<string,string>={pg:'power.gpu',pc:'power.cpu_soc_mss',u:'fan.pwm.actual',tj:'temperature.tj'};
 const edgeOn=(from:string,to:string)=>!!current&&connected&&!paused&&current.model.edges.some(e=>e.from===from&&e.to===to&&e.animate_allowed);
+/* 后台决定当前参考的 ID 和期限；浏览器只在接收后继续扣减期限。 */
 function currentForecast(h:number):Prediction|undefined{
- if(!current||!['tracking','degraded'].includes(current.model.phase)||lineValue(metric('temperature.tj'))===null)return undefined;
- const origin=metric('temperature.tj')?.as_of_elapsed_ms;
- return current.predictions.filter(p=>p.horizon_s===h&&p.status==='pending'&&p.origin_elapsed_ms===origin).at(-1);
+ if(!current||!connected||current.forecast.status!=='available'||current.forecast.remaining_valid_ms<=performance.now()-received)return undefined;
+ return current.predictions.find(p=>p.horizon_s===h&&current!.forecast.latest_prediction_ids.includes(p.prediction_id));
 }
+const leadForecast=()=>currentForecast(45)||currentForecast(15)||currentForecast(90);
+const forecastAge=(p:Prediction)=>Math.max(0,Math.round((current!.run_elapsed_ms!+(paused?0:performance.now()-received)-p.issued_elapsed_ms)/1000));
 function renderModel(){
  if(!current)return;
  const inNode=(id:string,top:number,color:string,label:string,u:string,d:number)=>{const m=metric(nodeMetric[id]),v=lineValue(m);return `<button type="button" class="node in${v===null?' inactive':''}${selectedNode===id?' sel':''}" data-node="${id}" style="left:0;top:${top}px" aria-label="${label}"><span class="t-caption"><i class="key" style="background:${color}"></i>${label}</span><span class="v">${v===null?'—':fmt(v,d)+' <span class="t-unit">'+u+'</span>'}</span></button>`;};
@@ -395,7 +397,7 @@ function renderModel(){
  html('topoNodes',`<span class="t-caption col" style="left:0">${t('测量输入')}</span><span class="t-caption col" style="left:250px">${t('热状态估计')}</span><span class="t-caption col" style="left:580px">${t('预测')}</span>
  <span class="t-caption col" style="left:200px;top:304px">${t('实测结温用于校正（不是功耗）')}</span>${inNode('pg',28,C.gpu,nodeTitle.pg,'W',2)}${inNode('pc',104,C.cpu,nodeTitle.pc,'W',2)}${inNode('u',180,C.pwm,nodeTitle.u,'%',0)}${inNode('tj',268,C.tj,nodeTitle.tj,'°C',1)}
  <button type="button" class="node est${estOn?'':' inactive'}${selectedNode==='est'?' sel':''}" data-node="est" aria-label="${nodeTitle.est}"><div><span class="t-caption">${t('快热状态 Tf · 估计')}</span><div class="t-metric">${estOn?fmt(Tf):'—'} ${unit('°C')}</div></div><div class="sep"></div><div><span class="t-caption">${t('慢热状态 Ts · 模型内部 · 估计')}</span><div class="t-metric">${estOn?fmt(Ts):'—'} ${unit('°C')}</div></div><span class="t-caption">${t('等效边界 E {v} °C · 模型内部',{v:estOn?neg(E):'—'})}${estOn&&current.model.phase==='degraded'?t(' · 条件不完整'):''}</span></button>
- <button type="button" class="node fc${estOn?'':' inactive'}${selectedNode==='fc'?' sel':''}" data-node="fc" aria-label="${nodeTitle.fc}"><span class="t-caption">${t('结温预测 · 假设负载保持')}</span><div class="fr"><span class="t-label">${t('+{n} 秒',{n:15})}</span><span class="t-value">${fmt(f(15))} °C</span></div><div class="fr mid"><span class="t-label" style="color:var(--ink)">${t('+{n} 秒',{n:45})}</span><span class="t-metric">${fmt(f(45))} ${unit('°C')}</span></div><div class="fr"><span class="t-label">${t('+{n} 秒',{n:90})}</span><span class="t-value">${fmt(f(90))} °C</span></div></button>`);
+ <button type="button" class="node fc${leadForecast()?'':' inactive'}${selectedNode==='fc'?' sel':''}" data-node="fc" aria-label="${nodeTitle.fc}"><span class="t-caption">${t('结温预测 · 假设负载保持')}</span><div class="fr"><span class="t-label">${t('+{n} 秒',{n:15})}</span><span class="t-value">${fmt(f(15))} °C</span></div><div class="fr mid"><span class="t-label" style="color:var(--ink)">${t('+{n} 秒',{n:45})}</span><span class="t-metric">${fmt(f(45))} ${unit('°C')}</span></div><div class="fr"><span class="t-label">${t('+{n} 秒',{n:90})}</span><span class="t-value">${fmt(f(90))} °C</span></div></button>`);
  if(focused)document.querySelector<HTMLElement>(`#topoNodes [data-node="${focused}"]`)?.focus();
  text('protect',({unknown:t('保护上下文未知'),active:t('明确保护 / 失温'),no_reported_protection:t('未报告保护')} as Record<string,string>)[current.health.protection_status]||t('保护上下文未知'));
  text('advice',current.advisory.value_percent==null?t('暂无可用的建议依据'):t('{v}% · 观察参考',{v:fmt(current.advisory.value_percent)}));
@@ -411,7 +413,7 @@ function renderAside(){
   const r=resNow();
   rows=rowsHtml([[K_STATE,!connected&&!waiting()?t('未知'):({tracking:t('跟踪中'),degraded:t('降级 · 条件不完整'),unavailable:t('暂不可用'),provisional:t('初始化中')} as Record<string,string>)[phase]||t('未开始')],[t('数据更新到'),connected&&current.run_elapsed_ms!=null?timeLabel(current.run_elapsed_ms):t('未知')],[t('估计与实测的差距'),r===null?'—':sgn(r,2)+' °C'],[t('模型版本'),current.model.model_id?current.model.model_id.slice(0,12):t('尚未加载')]],true);
  }else if(id==='fc'){
-  rows=rowsHtml([[t('+{n} 秒',{n:15}),fmt(currentForecast(15)?.value_C)+' °C'],[t('+{n} 秒',{n:45}),fmt(currentForecast(45)?.value_C)+' °C'],[t('+{n} 秒',{n:90}),fmt(currentForecast(90)?.value_C)+' °C'],[t('场景'),t('假设负载保持')]],true);
+  rows=rowsHtml([[t('+{n} 秒',{n:15}),fmt(currentForecast(15)?.value_C)+' °C'],[t('+{n} 秒',{n:45}),fmt(currentForecast(45)?.value_C)+' °C'],[t('+{n} 秒',{n:90}),fmt(currentForecast(90)?.value_C)+' °C'],[t('预测发出'),(()=>{const p=leadForecast();return p?t('{n} 秒前',{n:forecastAge(p)}):'—';})()],[t('场景'),t('假设负载保持')]],true);
  }else{
   const m=metric(nodeMetric[id]),v=lineValue(m);
   rows=rowsHtml([[t('当前读数'),v===null?t('暂无有效读数'):fmt(v,id==='u'?0:id==='tj'?1:2)+' '+(m?.unit||'')],[t('状态'),m?statusLabels[m.status]||m.status:t('未提供')],[t('来源'),m?.source_ref||'—'],[t('接收时刻'),m?dateLabel(m.received_at_utc):t('未知')]],true);
@@ -442,7 +444,7 @@ async function renderComparison(){
  lastPredictionFetch=end;data.labels=predictionLabels;
  const records:Prediction[]=[...predictionCache.values()].sort((a,b)=>a.target_elapsed_ms-b.target_elapsed_ms), matched=records.filter(p=>p.status==='matched');
  const s=data.summary;
- html('score',`<div class="stat-block" style="padding-bottom:6px"><span class="t-label">${t('平均绝对误差')}</span><span class="big"><b class="t-metric">${fmt(s.MAE_C,2)}</b>${unit('°C')}</span></div>`+rowHtml(t('误差 95 分位（绝对值）'),`${fmt(s.P95_absolute_C,2)} °C`,'t-body num')+rowHtml(t('最大低估'),`${fmt(s.max_underprediction_C,2)} °C`,'t-body num')+rowHtml(t('已匹配 / 应到期'),`${s.matched_count} / ${s.due_count}`,'t-body num'));
+ html('score',`<div class="stat-block" style="padding-bottom:6px"><span class="t-label">${t('平均绝对误差')}</span><span class="big"><b class="t-metric">${fmt(s.MAE_C,2)}</b>${unit('°C')}</span></div>`+rowHtml(t('误差 95 分位（绝对值）'),`${fmt(s.P95_absolute_C,2)} °C`,'t-body num')+rowHtml(t('最大低估'),`${fmt(s.max_underprediction_C,2)} °C`,'t-body num')+rowHtml(t('已匹配 / 应到期'),`${s.matched_count} / ${s.due_count}`,'t-body num')+rowHtml(t('无法验证（缺实测）'),String(s.missing_label_count),'t-body num'));
  text('scoreCaption',t('近 {n} 分钟 · 同一次观察、同一模型',{n:range})+(matched.length<30?t(' · 样本较少'):''));
  text('compareCaption',t('过去发出的 {h} 秒预测，到了目标时刻，实际结温是多少？',{h:horizon}));text('predName',t('当时发出的 +{h} 秒预测',{h:horizon}));
  const last=matched.at(-1);html('latestMatch',sepHtml(last?t('最近一条 · 目标时刻 {time} · 预测 {p} °C / 实测 {o} °C · 误差 {e} °C（预测{w}）',{time:timeLabel(last.target_elapsed_ms),p:fmt(last.value_C),o:fmt(last.observed_C),e:sgn(last.error_C,2),w:t(last.error_C!>=0?'偏高':'偏低')}):t('等待这条预测对应的实测温度 · 缺标签 {a} · 未到期 {b}',{a:s.missing_label_count,b:s.unmatched_future_count})));
@@ -457,9 +459,10 @@ async function renderComparison(){
 function renderFuture(){
  if(!current)return;
  clean($('futureValues'));
- for(const h of [15,45,90]){const p=currentForecast(h),v=document.createElement('div');v.className='row';const label=document.createElement('span'),b=document.createElement('span');label.className='t-label';b.className='t-body num';if(h===45)b.style.fontWeight='600';label.textContent=t('+{n} 秒',{n:h});b.textContent=p?fmt(p.value_C)+' °C':'—';v.title=p?`origin ${timeLabel(p.origin_elapsed_ms)}\nissued ${timeLabel(p.issued_elapsed_ms)}\ntarget ${timeLabel(p.target_elapsed_ms)}\ncutoff ${timeLabel(p.input_cutoff_elapsed_ms)}\n${p.prediction_id}`:t('没有当前已发布预测');v.append(label,b);$('futureValues').append(v);}
+ for(const h of [15,45,90]){const p=currentForecast(h),v=document.createElement('div');v.className='row';const label=document.createElement('span'),b=document.createElement('span');label.className='t-label';b.className='t-body num';if(h===45)b.style.fontWeight='600';label.textContent=t('+{n} 秒',{n:h});if(p){const cap=document.createElement('span');cap.className='t-caption';cap.textContent=' · '+t('目标 {time}',{time:dateLabel(p.target_at_utc)});label.append(cap);}b.textContent=p?fmt(p.value_C)+' °C':'—';v.title=p?`origin ${dateLabel(p.origin_at_utc)}\nissued ${dateLabel(p.issued_at_utc)}\ntarget ${dateLabel(p.target_at_utc)}\ncutoff ${timeLabel(p.input_cutoff_elapsed_ms)}\n${p.prediction_id}`:t('没有当前已发布预测');v.append(label,b);$('futureValues').append(v);}
  const ph=current.model.phase;
- text('futureNote',ph==='unavailable'&&deviceOk()?t('模型暂不可用，未来参考已撤回。'):ph==='degraded'?t('估计可用，条件不完整。')+t('假设负载保持不变，三个时点分别计算，不是连续轨迹，也不是控制指令。'):t('假设负载保持不变，三个时点分别计算，不是连续轨迹，也不是控制指令。'));
+ const lead=leadForecast();const issued=lead?t('最近一次预测 {n} 秒前发出，目标时刻固定。',{n:forecastAge(lead)})+' ':'';
+ text('futureNote',issued+(ph==='unavailable'&&deviceOk()?t('模型暂不可用，未来参考已撤回。'):ph==='degraded'?t('估计可用，条件不完整。')+t('假设负载保持不变，三个时点分别计算，不是连续轨迹，也不是控制指令。'):t('假设负载保持不变，三个时点分别计算，不是连续轨迹，也不是控制指令。')));
 }
 
 /* ---------- 运行信息 ---------- */
@@ -553,13 +556,16 @@ function expireCurrent(disconnected=false){
   if(current.model.phase!=='unavailable'||current.predictions.length)changed=true;
   current.model.Tf_C=current.model.Ts_C=current.model.E_C=null;current.model.phase='unavailable';current.predictions=[];
  }
- if(disconnected||current.advisory.remaining_valid_ms<=elapsed||current.model.phase==='unavailable'||current.health.protection_status==='unknown'){
+ if(current.forecast.status==='available'&&(disconnected||current.forecast.remaining_valid_ms<=elapsed||current.model.phase==='unavailable')){
+  current.forecast.status=disconnected?'disconnected':'unavailable';current.forecast.latest_prediction_ids=[];changed=true;
+ }
+ if(disconnected||current.advisory.remaining_valid_ms<=elapsed||current.forecast.status!=='available'||current.model.phase==='unavailable'||current.health.protection_status==='unknown'){
   if(current.advisory.value_percent!==null)changed=true;
   current.advisory.value_percent=null;
   if(current.advisory.status==='available'){current.advisory.status='withheld';current.advisory.reason=t('当前数据资格已撤销');}
  }
  for(const n of current.model.nodes){
-  const status=n.metric_id?metric(n.metric_id)?.status||'unknown':n.role==='estimate'||n.id==='forecast'?current.model.phase==='unavailable'?'unknown':n.status:n.id==='risk'?current.health.protection_status==='unknown'?'unknown':n.status:n.status;
+  const status=n.metric_id?metric(n.metric_id)?.status||'unknown':n.id==='forecast'?current.forecast.status==='available'?n.status:'unknown':n.role==='estimate'?current.model.phase==='unavailable'?'unknown':n.status:n.id==='risk'?current.health.protection_status==='unknown'?'unknown':n.status:n.status;
   if(n.status!==status){n.status=status;changed=true;}
  }
  const valid=new Set(current.model.nodes.filter(n=>n.status==='valid').map(n=>n.id));

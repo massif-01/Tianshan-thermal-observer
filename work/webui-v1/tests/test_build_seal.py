@@ -4,19 +4,23 @@ from pathlib import Path
 import pytest
 
 
-@pytest.mark.parametrize('occupied',['stage','wheel'])
-def test_existing_candidate_is_read_only_on_rebuild(tmp_path,monkeypatch,occupied):
-    script=Path(__file__).parents[1]/'tools/build_history_candidate.py'
+@pytest.mark.parametrize('builder_name',['history','unified'])
+@pytest.mark.parametrize('occupied',['stage','artifact'])
+def test_existing_candidate_is_read_only_on_rebuild(tmp_path,monkeypatch,occupied,builder_name):
+    root=Path(__file__).parents[1]
+    script=root/'tools/build_history_candidate.py' if builder_name=='history' else root.parents[1]/'tools/build_unified_candidate.py'
     spec=importlib.util.spec_from_file_location('build_seal_test',script)
     builder=importlib.util.module_from_spec(spec);spec.loader.exec_module(builder)
     monkeypatch.setattr(builder,'ROOT',tmp_path)
-    monkeypatch.setattr(builder,'STAGE',tmp_path/'candidate')
+    stage=tmp_path/'candidate'
+    if builder_name=='history':monkeypatch.setattr(builder,'STAGE',stage)
+    else:monkeypatch.setattr(__import__('sys'),'argv',[str(script),'--output',str(stage)])
     manifest=tmp_path/'src/tto_web/web-candidate-files.json';manifest.parent.mkdir(parents=True)
     manifest.write_bytes(b'previous sealed identity')
-    wheel=tmp_path/f'dist/tto_web_ui-{builder.VERSION}-py3-none-any.whl'
-    if occupied=='stage':builder.STAGE.mkdir()
-    else:wheel.parent.mkdir();wheel.write_bytes(b'previous wheel')
-    with pytest.raises(SystemExit,match='already exists'):
+    artifact=tmp_path/f'dist/tto_web_ui-{builder.VERSION}-py3-none-any.whl' if builder_name=='history' else Path(str(stage)+'.zip')
+    if occupied=='stage':stage.mkdir()
+    else:artifact.parent.mkdir(exist_ok=True);artifact.write_bytes(b'previous artifact')
+    with pytest.raises(SystemExit,match='already exists|fresh output'):
         builder.main()
     assert manifest.read_bytes()==b'previous sealed identity'
-    if occupied=='wheel':assert wheel.read_bytes()==b'previous wheel'
+    if occupied=='artifact':assert artifact.read_bytes()==b'previous artifact'

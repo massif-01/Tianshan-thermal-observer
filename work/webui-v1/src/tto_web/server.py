@@ -147,22 +147,24 @@ def app_for(config, *, start_source=True, state=None):
         if len(sse_clients)>=4:raise web.HTTPServiceUnavailable(text='display client budget reached')
         queue=asyncio.Queue(maxsize=8);sse_clients.add(queue)
         resp=web.StreamResponse(headers={'Content-Type':'text/event-stream','Cache-Control':'no-store','X-Accel-Buffering':'no'})
-        await resp.prepare(r)
-        last=r.headers.get('Last-Event-ID');current=state.snapshot()
-        event='snapshot'
-        if last:
-            ids=[v[0] for v in sent]
-            if last in ids:
-                missed=list(sent)[ids.index(last)+1:]
-                if len(missed)>8:event='resync'
-                else:
-                    for item in missed:queue.put_nowait(item)
-            else:event='resync'
-        if queue.empty():queue.put_nowait((f'{state.epoch}:{current["snapshot_seq"]}',event,current))
         try:
+            await resp.prepare(r)
+            last=r.headers.get('Last-Event-ID');current=state.snapshot()
+            event='snapshot'
+            if last:
+                ids=[v[0] for v in sent]
+                if last in ids:
+                    missed=list(sent)[ids.index(last)+1:]
+                    if len(missed)>8:event='resync'
+                    else:
+                        for item in missed:queue.put_nowait(item)
+                else:event='resync'
+            if queue.empty():queue.put_nowait((f'{state.epoch}:{current["snapshot_seq"]}',event,current))
             while True:
                 try:
-                    id,event,data=await asyncio.wait_for(queue.get(),5.)
+                    item=await asyncio.wait_for(queue.get(),5.)
+                    if item is None:break
+                    id,event,data=item
                     wire=f'id: {id}\nevent: {event}\nretry: 1000\ndata: {json.dumps(data,ensure_ascii=False,allow_nan=False)}\n\n'
                 except asyncio.TimeoutError:wire='event: heartbeat\ndata: {}\n\n'
                 await asyncio.wait_for(resp.write(wire.encode()),2.)
@@ -211,6 +213,10 @@ def app_for(config, *, start_source=True, state=None):
             source_task=asyncio.create_task(source_run())
     async def shutdown(app):
         stop.set()
+        # End long-lived display requests before aiohttp waits for HTTP handlers.
+        for queue in tuple(sse_clients):
+            while not queue.empty():queue.get_nowait()
+            queue.put_nowait(None)
         if source_task:
             if config['source']['mode']=='follow':source_task.cancel()
             await asyncio.gather(source_task,return_exceptions=True)

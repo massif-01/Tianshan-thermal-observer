@@ -83,11 +83,20 @@ async def test_follow_registration_and_lifecycle_never_owns_producer(publication
 
 
 @pytest.mark.asyncio
-async def test_sse_resync_no_ttl_renewal_and_get_only_routes():
+async def test_sse_resync_no_ttl_renewal_and_get_only_routes(monkeypatch):
     config=web_config();state=State(config);p=Producer(time.monotonic()-1);state.accept(p.step(0))
-    runner,url=await start(app_for(config,start_source=False,state=state))
+    app=app_for(config,start_source=False,state=state)
+    runner,url=await start(app)
     try:
         async with aiohttp.ClientSession(headers={'Host':'127.0.0.1:59009'}) as client:
+            prepare=web.StreamResponse.prepare
+            async def failed_prepare(response,request):
+                if request.path=='/api/v1/stream':raise ConnectionResetError('owned SSE handshake failure')
+                return await prepare(response,request)
+            with monkeypatch.context() as patch:
+                patch.setattr(web.StreamResponse,'prepare',failed_prepare)
+                with pytest.raises(aiohttp.ServerDisconnectedError):await client.get(url+'/api/v1/stream')
+            assert not app['sse_clients']  # A failed handshake must release the client slot.
             first=await (await client.get(url+'/api/v1/snapshot')).json();sample=next(m for m in first['metrics'] if m['id']=='temperature.tj')
             response=await client.get(url+'/api/v1/stream',headers={'Last-Event-ID':'obsolete:1'})
             firstevent=await asyncio.wait_for(response.content.readuntil(b'\n\n'),2)

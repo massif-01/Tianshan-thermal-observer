@@ -102,7 +102,9 @@ def test_lost_publication_does_not_call_next_available_tj_the_first_label():
 
 def test_unconfigured_waiting_service_does_not_load_numerical_libraries():
     import subprocess,sys
-    code="import sys,json;sys.path[:0]=['src','vendor'];from tto_web.server import app_for;from tto_web.state import State;State(json.load(open('config/web.json')));assert 'numpy' not in sys.modules and 'scipy' not in sys.modules"
+    root=Path(__file__).parents[1]
+    paths='' if os.environ.get('TTO_WEB_TEST_INSTALLED') else 'sys.path[:0]='+repr([str(root/'src'),str(root/'vendor')])+';'
+    code="import sys,json;"+paths+"from tto_web.server import app_for;from tto_web.state import State;State(json.load(open("+repr(str(root/'config/web.json'))+")));assert 'numpy' not in sys.modules and 'scipy' not in sys.modules"
     subprocess.run([sys.executable,'-c',code],check=True)
 
 

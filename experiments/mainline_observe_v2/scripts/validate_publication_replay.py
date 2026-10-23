@@ -37,7 +37,7 @@ class Capture:
         self.reference=Adapter(manifest,None,test_replay=True,owner=SimpleNamespace(projection=SimpleNamespace(),communication=None,observer=None))
         self.web=State({'source':{'mode':'follow'},'advisory':{}})
         self.web.begin_publication('replay')
-        self.packet_count=0;self.native_models={}
+        self.packet_count=0;self.native_models={};self.browser_available=None
     def invalidate(self):raise AssertionError('unexpected replay model/publication gap')
     def submit(self,raw,processed,frame,state,deadline):
         p=self.encoder.encode(raw,processed,frame,frame['_communication'],state,deadline)
@@ -61,6 +61,9 @@ class Capture:
         self.native_models[raw['ref']]=p['model']
         self.web.accept(p,now=frame['t']+.002)
         self.sync(frame['t']+.002)
+        snapshot=self.web.snapshot()
+        if self.browser_available is None and snapshot['forecast']['status']=='available':
+            self.browser_available=copy.deepcopy(snapshot)
 
     def sync(self,now):
         while True:
@@ -122,6 +125,9 @@ def validate(run,output):
             assert w['status']=='matched' and w['observed_C']==r['label_value_C'] and w['error_C']==r['error_C']
         else:assert w['reason_code']==r['reason'] and w['status'] in ('missing_label','not_comparable')
     formal=[w for w in web_by.values() if w['phase_at_origin'] in ('tracking','degraded')]
+    assert capture.browser_available is not None
+    (output/'browser-available.json').write_text(json.dumps(capture.browser_available,indent=2)+'\n')
+    (output/'browser-ended.json').write_text(json.dumps(capture.web.snapshot(),indent=2)+'\n')
     report=dict(scope='offline recorded replay; virtual receive clock; no Web service/device',
         source_run=str(run),records=len(rows),recorded_states=len(states),encoded_packets=capture.packet_count,
         stateful_observers=consumer.stateful_observers,publication_callback_errors=consumer.publication_errors,
