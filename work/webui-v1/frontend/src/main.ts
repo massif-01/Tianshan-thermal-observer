@@ -4,7 +4,7 @@ import {icon,chevron,globe,more,menu as menuIcon,pauseMark,checkMark,brandMark,w
 import {lang,locale,langNames,langShort,setLang,t,be,translateDom} from './i18n';
 import './style.css';
 
-const UI_VERSION='1.0.0-rc.9';
+const UI_VERSION='1.0.0-rc.10';
 const srcName:Record<string,string>={source:t('数据源'),'web-source':t('数据源连接'),observer:t('模型'),board:t('主板'),runner:t('任务'),clock:t('时钟'),web:t('网页服务'),publication:t('显示发布')};
 const root=document.querySelector<HTMLDivElement>('#app')!;
 const chartLabel:Record<string,string>={temperature:t('实测结温与模型估计'),residual:t('估计与实测的差距'),compose:t('热状态构成'),cpugpu:t('CPU 与 GPU 温度'),power:t('GPU 与 CPU·SoC·内存 两路供电功率'),pwm:t('已执行 PWM 与天山OS 目标 PWM')};
@@ -52,8 +52,7 @@ root.innerHTML=`
 <details id="events"><summary>${icon('bell')}<span class="t-section">事件与告警</span><span class="sp"></span><span class="t-caption" id="eventCount">0条</span>${chevron}</summary><div class="body"><div class="filters"><select id="eventSource" aria-label="事件来源"><option value="">全部来源</option>${Object.entries(srcName).map(([k,v])=>`<option value="${k}">${v}${lang==='en'?` (${k})`:`（${k}）`}</option>`).join('')}</select><select id="eventLevel" aria-label="事件级别"><option value="">全部级别</option><option value="warning">重要异常</option><option value="info">信息</option></select></div><div id="eventList"></div></div></details>
 <details id="fields"><summary>${icon('list')}<span class="t-section">全部已接字段</span><span class="sp"></span><span class="t-caption" id="fieldCount">0项</span>${chevron}</summary><div class="body"><div class="filters"><input id="search" type="search" placeholder="搜索名称或字段ID" aria-label="字段搜索"><select id="group" aria-label="字段分类"><option value="">全部分类</option><option value="temperature.">温度</option><option value="cpu.">逐核CPU</option><option value="usage.">利用率</option><option value="memory.">内存</option><option value="power.">功率</option><option value="fan.">风扇</option><option value="control.">主板温源</option><option value="host.">Web主机进程</option></select></div><div class="table-scroll"><table><thead><tr><th>名称 / ID</th><th>数值 / 原精度</th><th>单位</th><th>类型 / 质量</th><th>来源引用</th></tr></thead><tbody id="fieldRows"></tbody></table></div></div></details></div>
 </main>
-<footer>${t('Tianshan Thermal Observer · 只读观察 · 研究状态与条件预测不构成风扇控制指令 · 界面')} ${UI_VERSION}</footer></div>
-<dialog id="login"><form id="loginForm"><h2 class="t-title">只读访问</h2><input type="hidden" name="username" value="tto-readonly" autocomplete="username"><p>输入安装时生成的本地访问口令。</p><input id="password" type="password" autocomplete="current-password" required aria-label="只读访问口令"><button type="submit">登录</button><p id="loginMessage"></p></form></dialog>`;
+<footer>${t('Tianshan Thermal Observer · 只读观察 · 研究状态与条件预测不构成风扇控制指令 · 界面')} ${UI_VERSION}</footer></div>`;
 
 translateDom(root);
 const $=<T extends HTMLElement=HTMLElement>(id:string)=>document.getElementById(id) as T;
@@ -109,7 +108,7 @@ function cell(tr:HTMLTableRowElement,value:unknown){const td=document.createElem
 const sepHtml=(v:string)=>esc(v).replace(/ · /g,'<span class="sep">·</span>');
 const rowHtml=(k:string,v:unknown,cls='t-body')=>`<div class="row"><span class="t-label">${esc(k)}</span><span class="${cls}">${v==null||v===''?t('未知'):v}</span></div>`;
 
-async function api(path:string){const r=await fetch('/api/v1/'+path,{credentials:'same-origin'});if(r.status===401){if(!$<HTMLDialogElement>('login').open)$<HTMLDialogElement>('login').showModal();throw Error('login');}if(!r.ok)throw Error('read');return r.json();}
+async function api(path:string){const r=await fetch('/api/v1/'+path);if(!r.ok)throw Error('read');return r.json();}
 
 const runKey=(s:Snapshot|null=current)=>s?[s.service_epoch,s.run_id,s.source_epoch].join(':'):'';
 const modelKey=(s:Snapshot|null=current)=>s?[s.service_epoch,s.run_id,s.source_epoch,s.model.model_id,s.model.spec_id].join(':'):'';
@@ -613,7 +612,6 @@ const navLinks=Array.from(document.querySelectorAll<HTMLAnchorElement>('#nav a')
 new IntersectionObserver(es=>{for(const e of es)if(e.isIntersecting)navLinks.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id));},{rootMargin:'-30% 0px -60% 0px'}).observe($('trends'));
 ['model','compare','context'].forEach(id=>new IntersectionObserver(es=>{for(const e of es)if(e.isIntersecting)navLinks.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+id));},{rootMargin:'-30% 0px -60% 0px'}).observe($(id)));
 document.addEventListener('visibilitychange',()=>document.body.classList.toggle('background',document.hidden));
-$('loginForm').onsubmit=async e=>{e.preventDefault();const r=await fetch('/api/v1/session',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:$<HTMLInputElement>('password').value}),credentials:'same-origin'});if(r.ok){$<HTMLInputElement>('password').value='';$<HTMLDialogElement>('login').close();location.reload();}else text('loginMessage',t('口令不匹配或请求过于频繁。'));};
 setInterval(()=>{if(!current)return;if(paused){renderHeader();return;}if(expireCurrent(!connected)){renderCurrent();renderCharts();}},200);
 setInterval(()=>{if(current&&!paused&&(!connected||current.health.measurement_status!=='valid')){renderHeader();renderCharts();}},1000);
 renderHeader();renderLeft();renderGapSummary();renderCharts();

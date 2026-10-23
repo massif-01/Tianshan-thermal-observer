@@ -5,7 +5,7 @@ import aiohttp
 from aiohttp import web
 import pytest
 from tto.storage import InstanceLock
-from tto_web.server import app_for,password_hash,configuration
+from tto_web.server import app_for,configuration
 from tto_web.state import State
 from tto_web.source import observe,follow,Publication
 from tto_web.common import atomic_json
@@ -111,26 +111,29 @@ async def test_sse_resync_no_ttl_renewal_and_get_only_routes(monkeypatch):
 
 
 @pytest.mark.asyncio
-async def test_waiting_api_and_lan_session_access_and_logout():
-    config=web_config();config['web'].update(access_mode='lan',allowed_origins=['http://127.0.0.1:59009'],password_hash=password_hash('synthetic-local-only'))
+async def test_waiting_api_and_lan_direct_access():
+    config=web_config();config['web'].update(access_mode='lan',allowed_origins=['http://127.0.0.1:59009'])
     runner,url=await start(app_for(config,start_source=False))
     try:
-        async with aiohttp.ClientSession(headers={'Host':'127.0.0.1:59009'},cookie_jar=aiohttp.CookieJar(unsafe=True)) as client:
-            assert (await client.get(url+'/api/v1/snapshot')).status==401
-            assert (await client.post(url+'/api/v1/session',json={'password':'wrong'})).status==401
-            r=await client.post(url+'/api/v1/session',json={'password':'synthetic-local-only'});assert r.status==200
-            assert r.cookies['tto_session']['httponly'] and r.cookies['tto_session']['samesite']=='Strict'
-            snapshot=await (await client.get(url+'/api/v1/snapshot')).json();assert snapshot['mode']=='waiting' and not any(m['id'].startswith('temperature.') for m in snapshot['metrics'])
-            assert (await client.delete(url+'/api/v1/session')).status==200
-            assert (await client.get(url+'/api/v1/snapshot')).status==401
+        async with aiohttp.ClientSession(headers={'Host':'127.0.0.1:59009'}) as client:
+            response=await client.get(url+'/api/v1/snapshot')
+            assert response.status==200 and not response.cookies
+            snapshot=await response.json()
+            assert snapshot['mode']=='waiting' and not any(m['id'].startswith('temperature.') for m in snapshot['metrics'])
+            assert (await client.get(url+'/api/v1/context')).status==200
+            assert (await client.post(url+'/api/v1/snapshot',json={})).status==405
+            assert (await client.get(url+'/api/v1/session')).status==404
+            assert (await client.get(url+'/api/v1/snapshot',headers={'Origin':'http://other-host'})).status==403
     finally:await runner.cleanup()
 
 
-def test_lan_anonymous_or_local_external_bind_rejected(tmp_path):
+def test_lan_requires_origin_and_local_requires_loopback(tmp_path):
     config=web_config();config['web'].update(bind='0.0.0.0');path=tmp_path/'config.json';atomic_json(path,config)
     with pytest.raises(ValueError):configuration(path)
     config['web'].update(access_mode='lan');atomic_json(path,config)
     with pytest.raises(ValueError):configuration(path)
+    config['web']['allowed_origins']=['http://10.10.99.99:59009'];atomic_json(path,config)
+    assert configuration(path)['web']['access_mode']=='lan'
 
 
 @pytest.mark.asyncio

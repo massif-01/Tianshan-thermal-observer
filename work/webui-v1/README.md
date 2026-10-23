@@ -41,7 +41,7 @@ python3 tools/install.py --python /absolute/path/to/python3.10 --prefix "$HOME/T
 python3 tools/install.py --python /absolute/path/to/python3.10 --prefix "$HOME/TTO-Web" --access lan --bind ACTUAL_N305_LAN_IP --allowed-origin http://ACTUAL_N305_LAN_IP:59009
 ```
 
-在首次安装时选择；已存在配置需人工调整`web.json`后重启。LAN口令由安装器生成至`prefix/readonly-password.txt`（600），配置只存加盐PBKDF2摘要；访问页面后登录。不要将口令放URL。来源/Host显式核实，无任意代理，无自动防火墙或公网发布。LAN HTTP属于可信本地网络访问，HTTPS终结/公网不是本候选部署范围。
+在首次安装时选择；已存在配置需人工调整`web.json`后重启。LAN直接打开，无登录页、口令或会话接口。来源/Host显式核实，无任意代理，无自动防火墙或公网发布。LAN HTTP属于可信本地网络访问，HTTPS终结/公网不是本候选部署范围。
 
 ## 语义与资源
 

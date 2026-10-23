@@ -8,7 +8,6 @@ import hashlib
 import json
 import os
 from pathlib import Path
-import secrets
 import shutil
 import subprocess
 import sys
@@ -24,11 +23,6 @@ urlopen=build_opener(ProxyHandler({})).open
 
 
 def run(*args):subprocess.run([str(a) for a in args],check=True)
-
-def hash_password(password):
-    salt=secrets.token_hex(16)
-    return salt+':'+hashlib.pbkdf2_hmac('sha256',password.encode(),salt.encode(),200000).hex()
-
 
 def wait_ready(config, systemctl, timeout_s=15):
     """Type=simple active is not readiness. Never accept another listener's health."""
@@ -105,10 +99,6 @@ def main():
         config_data=json.loads((ROOT/'config/web.json').read_text())
         config_data['web'].update(access_mode=args.access,bind=args.bind or '127.0.0.1',allowed_origins=args.allowed_origin)
         config_data['source'].update(mode=args.mode,active_descriptor=str(args.active_descriptor.resolve()) if args.active_descriptor else None,observation_config=str(args.observation_config.resolve()) if args.observation_config else None,observed_device=args.observed_device)
-        if args.access=='lan':
-            password=secrets.token_urlsafe(24);config_data['web']['password_hash']=hash_password(password)
-            credential=prefix/'readonly-password.txt';credential.write_text(password+'\n');credential.chmod(0o600)
-            print('只读口令保存在prefix/readonly-password.txt（600），不进入URL或日志。')
         config.write_text(json.dumps(config_data,ensure_ascii=False,indent=2)+'\n');config.chmod(0o600)
     run(python,'-c','from tto_web.server import configuration; import sys; configuration(sys.argv[1]); from tto_web.server import STATIC; assert (STATIC/"index.html").is_file(); from tto_web.identity import verify; print(verify())',config)
     current=prefix/'current';previous=prefix/'previous'
