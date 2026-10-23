@@ -42,7 +42,7 @@ async def until(check):
 
 
 @pytest.mark.parametrize('publication_failure',[False,True])
-def test_committed_socket_recovery_terminal_scores_and_new_producer(tmp_path,pubdir,publication_failure):
+def test_committed_socket_recovery_terminal_scores_and_new_producer(tmp_path,pubdir,publication_failure,monkeypatch):
     async def run():
         origin=time.monotonic()-300
         store,view,ledger,tick=journal(tmp_path/'session',origin)
@@ -109,7 +109,6 @@ def test_committed_socket_recovery_terminal_scores_and_new_producer(tmp_path,pub
                     if r['method']=='G2-HOLD' and r['status']=='scored':
                         actual=state.predictions[r['prediction_id']]
                         assert actual['error_C']==r['error_C'] and actual['observed_C']==r['label_value_C']
-            stale_packet=copy.deepcopy(state.packet or old_packet)
             old_publisher=p.publisher_id
             old_page=dict(view.page(now=time.monotonic()),boot_id=BOOT,publisher_id=old_publisher)
             other,new_view,new_ledger,new_tick=journal(tmp_path/'next',time.monotonic(),'ledger-run-B')
@@ -119,15 +118,27 @@ def test_committed_socket_recovery_terminal_scores_and_new_producer(tmp_path,pub
             p.submit(*bundle(t=new_view.origin,run='ledger-run-B'))
             await until(lambda:state.packet is not None and state.packet['origin_mono_s']==new_view.origin and state.prediction_cursor==new_view.cursor and not state.prediction_syncing)
             assert len(state.predictions)==3 and all(r['ledger_run_id']=='ledger-run-B' for r in state.predictions.values())
-            # Responses from the old connection cannot overwrite or disconnect the new owner.
-            with pytest.raises(ValueError,match='publisher'):
-                state.accept(stale_packet,publisher=old_publisher)
             with pytest.raises(ValueError,match='publisher'):
                 state.accept_predictions(old_page)
-            state.disconnect(publisher=old_publisher)
-            assert state.source_connected and state.packet['origin_mono_s']==new_view.origin
-            # Web misses an entire subsequent run, including its live stream.
-            task.cancel();await asyncio.gather(task,return_exceptions=True)
+            # Hold a real query reply in flight. Its receiver must retire before
+            # the sole lifecycle owner changes State to the next publisher.
+            import tto_web.predictions as receiver
+            query=receiver.prediction_page;entered=asyncio.Event();retired=asyncio.Event();release=asyncio.Event()
+            previous_publisher=p.publisher_id
+            async def delayed(directory,cursor,*,ended):
+                page=await query(directory,cursor,ended=ended)
+                if page['publisher_id']==previous_publisher and not ended:
+                    entered.set()
+                    try:await release.wait()
+                    finally:retired.set()
+                return page
+            monkeypatch.setattr(receiver,'prediction_page',delayed)
+            await until(entered.is_set)
+            begin=state.begin_publication
+            def ordered_begin(publisher):
+                if publisher!=previous_publisher:assert retired.is_set()
+                begin(publisher)
+            monkeypatch.setattr(state,'begin_publication',ordered_begin)
             new_ledger.finish(time.monotonic());p.close(completed=True);other.close()
             other,new_view,new_ledger,new_tick=journal(tmp_path/'terminal',time.monotonic(),'ledger-run-C')
             try:
@@ -136,9 +147,10 @@ def test_committed_socket_recovery_terminal_scores_and_new_producer(tmp_path,pub
                 assert await asyncio.to_thread(p.ready.wait,3)
                 new_ledger.finish(time.monotonic());p.close(completed=True)
                 fresh=State(config);fresh_task=asyncio.create_task(follow(config,fresh,stop))
-                task=asyncio.create_task(follow(config,state,stop))
+                # The existing owner follows B -> C; only the comparison state is new.
                 try:
-                    await until(lambda:state.prediction_ended and fresh.prediction_ended and not state.prediction_syncing)
+                    await until(lambda:state.publisher_id==p.publisher_id and fresh.publisher_id==p.publisher_id
+                                and state.prediction_ended and fresh.prediction_ended and not state.prediction_syncing)
                     assert len(state.predictions)==3 and state.predictions==fresh.predictions
                     assert state.packet is None and not state.history and not state.model_history
                     assert state.snapshot()['mode']=='ended' and not state.source_connected
@@ -146,6 +158,8 @@ def test_committed_socket_recovery_terminal_scores_and_new_producer(tmp_path,pub
                     restored=state.prediction_view(45)
                     assert restored['records'] and restored['records_complete']
                     assert restored==fresh.prediction_view(45)
+                    assert retired.is_set() and not release.is_set()
+                    release.set()
                 finally:
                     fresh_task.cancel();await asyncio.gather(fresh_task,return_exceptions=True)
             finally:other.close()

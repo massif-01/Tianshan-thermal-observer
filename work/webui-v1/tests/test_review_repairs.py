@@ -76,19 +76,56 @@ def test_gpu_native_age_and_same_source_metric_ages(outer):
 
 @pytest.mark.asyncio
 async def test_legacy_publication_does_not_invent_unrecorded_predictions(publication_dir):
+    from tto_web.common import atomic_json,boot_id
     p=Producer(time.monotonic()-20);s=State(web_config())
     config=web_config();descriptor=publication_dir/'active.json';config['source']['active_descriptor']=str(descriptor)
     stop=asyncio.Event()
-    async with Publication(descriptor) as pub:
-        task=asyncio.create_task(follow(config,s,stop))
-        try:
+    task=asyncio.create_task(follow(config,s,stop));fresh_task=None
+    async def until(check):
+        for _ in range(300):
+            assert not task.done(),repr(task.exception())
+            if check():return
+            await asyncio.sleep(.01)
+        raise AssertionError('legacy lifecycle did not recover')
+    try:
+        await until(lambda:'描述文件不可用' in s.source_status)
+        async with Publication(descriptor) as pub:
             pub.put(p.step(20))
-            for _ in range(100):
-                if s.packet:break
-                await asyncio.sleep(.01)
+            await until(lambda:s.source_connected)
             assert s.packet and s.predictions=={}
             assert s.snapshot()['forecast']['status']=='not_connected'
-        finally:task.cancel();await asyncio.gather(task,return_exceptions=True)
+            old=s.packet['run_id']
+            registration=json.loads(descriptor.read_text());descriptor.unlink()
+            await until(lambda:not s.source_connected and '描述文件不可用' in s.source_status)
+            atomic_json(descriptor,registration)
+            await until(lambda:s.source_connected)
+            assert s.packet['run_id']==old
+        # Keep the follower alive across the actual legacy writer's anonymous terminal.
+        terminal=json.loads(descriptor.read_text());assert terminal['ended'] and 'publisher_id' not in terminal
+        await until(lambda:not s.source_connected and '结束' in s.source_status)
+        assert not s.prediction_ended and not s.prediction_view()['records_complete']
+        # Starting at that same terminal must also keep waiting for the next owner.
+        fresh=State(config);fresh_task=asyncio.create_task(follow(config,fresh,stop))
+        await until(lambda:'结束' in fresh.source_status)
+        for invalid in ([],dict(terminal,ended=False),dict(terminal,boot_id='other-boot'),
+                        dict(terminal,ended='yes'),dict(terminal,prediction_final='predictions-final.json')):
+            atomic_json(descriptor,invalid)
+            await until(lambda:'描述文件不可用' in s.source_status)
+            await asyncio.sleep(.55)
+            assert not task.done() and not fresh_task.done()
+            assert '描述文件不可用' in s.source_status and '描述文件不可用' in fresh.source_status
+            assert not s.source_connected and s.snapshot()['forecast']['latest_prediction_ids']==[]
+        async with Publication(descriptor) as pub:
+            other=Producer(time.monotonic()-1);pub.put(other.step(1))
+            await until(lambda:s.source_connected and fresh.source_connected and s.packet['run_id']!=old)
+            assert s.packet['run_id']==fresh.packet['run_id'] and not s.predictions and not fresh.predictions
+            assert s.snapshot()['forecast']['status']=='not_connected'
+        await until(lambda:not s.source_connected and not fresh.source_connected)
+        assert not fresh_task.done()
+    finally:
+        stop.set();task.cancel()
+        if fresh_task:fresh_task.cancel()
+        await asyncio.gather(*([task,fresh_task] if fresh_task else [task]),return_exceptions=True)
 
 
 def test_events_are_scoped_to_current_run_and_epoch():

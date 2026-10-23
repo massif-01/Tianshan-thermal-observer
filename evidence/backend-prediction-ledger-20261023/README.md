@@ -1,6 +1,6 @@
 # 后台统一预测：本地验收
 
-最新审查返修见 [review-fixes/README.md](review-fixes/README.md)：修复晚到评分增量遗漏、发布者切换后的终态恢复、空假设编码和标签清理测试。当前软件身份为 observe.5 / ledger.2；下文保留初版 observe.4 / ledger.1 的验证与成本记录，当前结果以返修报告为准。
+最新状态见 [生命周期收敛验证](lifecycle/README.md)：修复 11def662 引入的旧版结束 P1，发布生命周期只有一个负责人，当前软件身份为 observe.5 / ledger.3。此前四项返修见 [review-fixes/README.md](review-fixes/README.md)，该版就绪结论已被 P1 撤销。下文保留初版 observe.4 / ledger.1 的历史验证与成本记录，当前结果以最新报告为准。
 
 范围：后续分支 feat/backend-prediction-ledger 基于 PR #16 修复头 8f577a67。PR #16 仍未合并；本 PR 以它的分支为 base，单独交付。已读取最新 origin/main 59d9f827（新增路线图文档），未改动主目录未提交工作或 Cloud 的前端工作树。
 

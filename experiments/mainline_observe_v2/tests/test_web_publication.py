@@ -28,7 +28,6 @@ def web_clock(monkeypatch):
     monkeypatch.setattr(web_common, 'boot_id', lambda: BOOT)
     monkeypatch.setattr('tto_web.state.boot_id', lambda: BOOT)
     monkeypatch.setattr('tto_web.source.boot_id', lambda: BOOT)
-    monkeypatch.setattr('tto_web.predictions.boot_id', lambda: BOOT)
     monkeypatch.setattr('tto_web.adapter.boot_id', lambda: BOOT)
 
 @pytest.fixture
@@ -248,7 +247,7 @@ def test_slow_socket_disconnects_but_producer_keeps_publishing(pubdir,monkeypatc
         result=p.close();sock.close();assert result['worker_stopped']
 
 
-def test_actual_follow_disconnect_subscriber_restart_producer_restart_and_expiry(pubdir):
+def test_actual_follow_disconnect_subscriber_restart_producer_restart_and_expiry(pubdir,monkeypatch):
     async def go():
         config={'source':{'mode':'follow','active_descriptor':str(pubdir/'active.json')},'advisory':{}}
         p=Publication(pubdir/'active.json',BOOT,test_replay=True).start()
@@ -276,6 +275,14 @@ def test_actual_follow_disconnect_subscriber_restart_producer_restart_and_expiry
             assert state.packet['source_epoch']==0
             state.refresh(state.packet['input_mono_s']+10)
             assert state._snapshot['model']['remaining_valid_ms']==0
+            # Programming failures in a receiver must be observed by the owner,
+            # which retires siblings and withdraws current values before exiting.
+            def broken_accept(*args,**kwargs):raise RuntimeError('owned receiver failure')
+            monkeypatch.setattr(state,'accept',broken_accept)
+            p.submit(*bundle(run='run-B'))
+            await until(task.done)
+            assert isinstance(task.exception(),RuntimeError) and not state.source_connected
+            assert state.forecast is None
         finally:
             stop.set();task.cancel();await asyncio.gather(task,return_exceptions=True);await asyncio.to_thread(p.close)
     asyncio.run(go())

@@ -1,6 +1,7 @@
 """Local synthetic-source cost comparison in separate, sequential processes.
 
 Includes the owned fixture's cost; not an N305 budget or device result.
+ledger-client uses the full publication + ledger follower, including lifecycle ownership.
 """
 import argparse
 import asyncio
@@ -53,13 +54,12 @@ def sample(mode,duration):
                 ledger_stop=asyncio.Event()
                 if mode=='ledger-client':
                     from tto_web.state import State
-                    from tto_web.predictions import follow_predictions
-                    import tto_web.predictions as subscription
+                    import tto_web.source as subscription
                     import tto_web.state as web_state
                     subscription.boot_id=web_state.boot_id=lambda:'owned-local-cost-fixture'
                     web_config={'source':{'active_descriptor':str(descriptor)},'advisory':{}}
                     ledger_state=State(web_config)
-                    task=asyncio.create_task(follow_predictions(web_config,ledger_state,ledger_stop))
+                    task=asyncio.create_task(subscription.follow(web_config,ledger_state,ledger_stop))
                 proc=psutil.Process();cpu0=sum(proc.cpu_times()[:2]);start=time.perf_counter()
                 try:
                     result=await run_observe(config,reg,root/'session',duration,local_loopback=True,

@@ -1,9 +1,7 @@
-"""Read the producer's committed prediction ledger; never compute a forecast."""
+"""Read committed predictions for the registration owned by source.follow."""
 import asyncio
 import contextlib
 import json
-from pathlib import Path
-from .common import boot_id, load
 
 
 def final_page(path):
@@ -13,45 +11,30 @@ def final_page(path):
     return json.loads(data)
 
 
-async def follow_predictions(config, state, stop):
-    descriptor=config['source'].get('active_descriptor')
-    if not descriptor:return
-    path=Path(descriptor)
+async def prediction_page(directory, cursor, *, ended):
+    if ended:return await asyncio.to_thread(final_page,directory/'predictions-final.json')
+    writer=None
+    try:
+        reader,writer=await asyncio.open_unix_connection(str(directory/'predictions.sock'),limit=512*1024)
+        writer.write(json.dumps(dict(cursor=cursor)).encode()+b'\n')
+        await asyncio.wait_for(writer.drain(),.5)
+        return json.loads(await asyncio.wait_for(reader.readline(),1.))
+    finally:
+        if writer:
+            writer.close()
+            with contextlib.suppress(OSError):await writer.wait_closed()
+
+
+async def follow_predictions(directory, state, stop, *, ended=False):
     while not stop.is_set():
-        writer=None
-        publisher=None
         try:
-            meta=load(path)
-            if meta.get('schema')!='TTO-WEB-ACTIVE-v1' or meta.get('boot_id')!=boot_id():
-                raise ValueError('prediction descriptor identity')
-            publisher=meta['publisher_id'];state.begin_publication(publisher)
-            if meta.get('publication_failed'):
-                state.prediction_failed=True;state.prediction_syncing=False;state.forecast=None
-                state.refresh();await asyncio.sleep(.5);continue
-            if not meta.get('prediction_socket') and not meta.get('prediction_final'):
-                state.forecast=None;state.prediction_syncing=False;state.prediction_failed=False
-                await asyncio.sleep(.5);continue
-            if meta['ended'] and state.prediction_ended and not state.prediction_syncing:
-                await asyncio.sleep(.5);continue
-            if meta['ended']:
-                if meta.get('prediction_final')!='predictions-final.json':raise ValueError('terminal prediction filename')
-                page=await asyncio.to_thread(final_page,path.parent/'predictions-final.json')
-                state.accept_predictions(page)
-            else:
-                if meta.get('prediction_socket')!='predictions.sock' or meta.get('prediction_protocol')!='TTO-PREDICTION-PAGE-v1':
-                    raise ValueError('prediction protocol')
-                reader,writer=await asyncio.open_unix_connection(str(path.parent/'predictions.sock'),limit=512*1024)
-                writer.write(json.dumps(dict(cursor=state.prediction_cursor)).encode()+b'\n')
-                await asyncio.wait_for(writer.drain(),.5)
-                page=json.loads(await asyncio.wait_for(reader.readline(),1.))
-                state.accept_predictions(page)
-                if page['has_more']:continue
+            page=await prediction_page(directory,state.prediction_cursor,ended=ended)
+            if not isinstance(page,dict) or page.get('ended') is not ended:
+                raise ValueError('prediction lifecycle mismatch')
+            state.accept_predictions(page)
+            if ended:return
+            if page['has_more']:continue
         except (OSError,ValueError,asyncio.TimeoutError):
-            if publisher is None or publisher==state.publisher_id:
-                state.prediction_syncing=True
-                state.refresh()
-        finally:
-            if writer:
-                writer.close()
-                with contextlib.suppress(OSError):await writer.wait_closed()
+            state.prediction_syncing=True
+            state.refresh()
         await asyncio.sleep(.5)

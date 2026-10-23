@@ -100,9 +100,7 @@ class State:
         self.last_signature=None;self.last_advisory_basis=None
         self.events=deque((e for e in self.events if e['run_id'] is None),maxlen=1000)
 
-    def accept(self, packet, now=None, *, publisher=None):
-        if publisher is not None and publisher!=self.publisher_id:
-            raise ValueError('display publisher identity mismatch')
+    def accept(self, packet, now=None):
         now = time.monotonic() if now is None else now
         if packet.get('schema')=='TTO-WEB-DISPLAY-GAP-v1':
             if packet.get('boot_id')!=boot_id() or packet.get('clock_domain_id')!='host-monotonic:'+boot_id():
@@ -167,14 +165,12 @@ class State:
 
     def begin_publication(self, publisher):
         if publisher!=self.publisher_id:
-            replacing=self.publisher_id is not None
-            if replacing:self.clear_source()
+            if self.publisher_id is not None:self.clear_source()
             self.predictions.clear();self.forecast=None
             self.prediction_received_ms.clear()
             self.prediction_cursor=0;self.prediction_origin=None;self.prediction_identity=None;self.prediction_failed=False;self.prediction_ended=False;self.prediction_ended_at=None
             self.publisher_id=publisher
             self.prediction_syncing=True
-            if replacing:self.refresh()
 
     def accept_predictions(self, page, now=None):
         now=time.monotonic() if now is None else now
@@ -205,8 +201,7 @@ class State:
         if not page['has_more']:self.forecast=copy.deepcopy(page['forecast'])
         self.refresh(now)
 
-    def disconnect(self, reason='数据暂断', ended=False, *, publisher=None):
-        if publisher is not None and publisher!=self.publisher_id:return
+    def disconnect(self, reason='数据暂断', ended=False):
         if self.source_connected:self.event('web-source',reason,severity='warning')
         if self.packet:
             self.model_gap('source_ended' if ended else 'source_disconnected',
