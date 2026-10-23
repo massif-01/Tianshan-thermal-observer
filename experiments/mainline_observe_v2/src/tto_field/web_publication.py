@@ -54,12 +54,8 @@ class Publication:
             self.stats['last_error'] = type(exc).__name__
 
     def start(self):
-        try:
-            self.thread = threading.Thread(target=self._run, name='web-publication', daemon=True)
-            self.thread.start()
-        except Exception as exc:
-            self.error(exc)
-            self.ready.set()
+        self.thread = threading.Thread(target=self._run, name='web-publication', daemon=True)
+        self.thread.start()
         return self
 
     def submit(self, raw, processed, frame, state, deadline):
@@ -177,7 +173,6 @@ class Publication:
                         self.encoder = WebEncoder(frame['identity']['run_id'], frame['identity']['config_sha256'],
                                                   self.boot, self.observed_device, self.test_replay)
                     if frame['source_reset']:
-                        self.encoder.reset()
                         self.gap_next = True
                     packet = self.encoder.encode(raw, processed, frame, frame['_communication'], state, deadline)
                     if self.process_clock_domain is not None:

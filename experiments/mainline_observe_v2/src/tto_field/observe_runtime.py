@@ -88,7 +88,7 @@ class Consumer:
                 communication=comm,raw_quality=processed['quality'],experiment_authorization=False,control_permission=False))
             queued=copy.deepcopy(frame)
             if self.publication:
-                try:queued['_web_input']=copy.deepcopy((raw,processed))
+                try:queued['_web_input']=copy.deepcopy((raw,dict(quality=processed['quality'])))
                 except Exception:
                     self.publication_errors+=1;self.publication_gap()
             try:self.queue.put_nowait(queued)

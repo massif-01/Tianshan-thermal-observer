@@ -38,6 +38,11 @@ class Capture:
     def invalidate(self):raise AssertionError('unexpected replay model/publication gap')
     def submit(self,raw,processed,frame,state,deadline):
         p=self.encoder.encode(raw,processed,frame,frame['_communication'],state,deadline)
+        # The producer clears display context on source_reset. Apply that same
+        # lifecycle to the standalone legacy reference, which has no reset API.
+        if frame['source_reset']:
+            self.reference.metrics.clear();self.reference.source_health.clear()
+            self.reference.platform=self.reference.tj_sample=None
         reference=self.reference.encode(raw,processed,frame,frame['_communication'],state)
         for key in ('generated_mono_s','consumable_until_mono_s','software_version'):
             reference.pop(key,None)

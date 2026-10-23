@@ -29,9 +29,12 @@ class WebEncoder:
         self.observed_device = observed_device
         self.test_replay = test_replay
         self.origin = None
+        # One independent sample latch; display gaps cannot renew or revive it.
+        self.gpu_sample = None
         self.reset()
 
     def reset(self):
+        """Clear display context, retaining the independent sample lifetime."""
         self.metrics = {}
         self.tj_sample = None
         self.platform = None
@@ -43,8 +46,7 @@ class WebEncoder:
             self.origin = t
         epoch = frame['identity']['source_epoch']
         if frame['source_reset']:
-            self.metrics.clear()
-            self.tj_sample = None
+            self.reset()
         elapsed = (t - self.origin) * 1000
         payload = raw.get('payload') or {}
         quality = processed['quality'] or {}
@@ -118,13 +120,18 @@ class WebEncoder:
             age = gq.get('age_lower_bound_ms')
             gexpiry = gq.get('valid_until') if finite(gq.get('valid_until')) else t
             gvalid = valid and gq.get('reason') is None and finite(gq.get('value'))
-            old = self.metrics.get('usage.gpu')
+            old = self.gpu_sample
             if old and old['sample_id']==gpuid:
                 gexpiry = min(gexpiry, old['_expiry'])
                 gvalid = gvalid and old['status']=='valid'
             metric('usage.gpu','GPU利用率（NVML独立期限）',gq.get('value'),'%',gvalid,gexpiry,
                 age=age if finite(age) else 0,reason=gq.get('reason') or (old or {}).get('reason_code'),
                 source='nvml',sample_id=gpuid,source_time=gpu.get('sampled_at_utc'))
+            if gq.get('contract_valid') and gpu.get('sampled_at_utc') is not None:
+                self.gpu_sample = {k:self.metrics['usage.gpu'][k] for k in ('sample_id','_expiry','status','reason_code')}
+            elif self.gpu_sample is not None:
+                # An error/malformed report withdraws A; it is not a new sample B.
+                self.gpu_sample.update(status='invalid',reason_code=gq.get('reason'))
             self.platform = {k:(payload.get('platform') or {}).get(k) for k in ('family','soc','gpu_backend')}
             if frame['new_TJ']:
                 self.tj_sample = sample
@@ -149,6 +156,9 @@ class WebEncoder:
                 expiry = t + SPEC['input_policy']['temp_raw_TTL_s']
                 for key in ('temperature_c','valid','manual_mode','active_source','initialized'):
                     metric('control.'+key,'主板 '+key,data.get(key),'°C' if key=='temperature_c' else None,valid,expiry)
+        # I-02 withdrawal also survives a display gap without a GPU metric.
+        if self.gpu_sample is not None and not comm['measurement']['TJ_and_rails']['raw_valid']:
+            self.gpu_sample.update(status='invalid',reason_code='I02_source_withdrawn')
         # I-02 has precedence, even if a previous accepted raw sample is cached.
         for id, m in self.metrics.items():
             if id.startswith(('temperature.','power.','usage.','cpu.','memory.')) and not comm['measurement']['TJ_and_rails']['raw_valid']:

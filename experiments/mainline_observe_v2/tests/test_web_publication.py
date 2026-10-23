@@ -5,6 +5,7 @@ import json
 import socket
 import sys
 import tempfile
+import threading
 import time
 from pathlib import Path
 from types import SimpleNamespace
@@ -77,18 +78,93 @@ def test_encoder_unavailable_is_renderable_and_deadline_never_renewed():
     assert web._snapshot['model']['remaining_valid_ms']==0
 
 
-def test_queue_overrun_is_bounded_and_recovery_clears_cache(pubdir):
-    p=Publication(pubdir/'active.json',BOOT,test_replay=True)
-    for n in range(30):p.submit(*bundle(t=float(n)))
-    assert p.snapshot()['pending']<=CAPACITY and p.snapshot()['dropped']>0
-    p.start();assert p.ready.wait(3)
+def orin_bundle(t, *, sample_time=None, epoch=0, gpu_status=None):
+    from tto.profiles import uniform_gpu
+    raw,processed,frame,state,deadline=bundle(t=t,kind='orin')
+    payload=json.loads((Path(__file__).parent/'fixtures/orin.json').read_text())
+    if sample_time:payload['gpu']['sampled_at_utc']=sample_time
+    if gpu_status in ('error','unavailable'):
+        payload['gpu'].update(status=gpu_status,utilization_pct=None,sampled_at_utc=None,age_at_telemetry_receive_ms=None)
+        if gpu_status=='unavailable':payload['gpu']['source']='unavailable'
+    raw['payload']=payload
+    processed['quality']=dict(accepted=True,age_lower_bound_ms=0,
+        gpu=uniform_gpu(payload,payload['platform']['family'],t))
+    frame.update(new_TJ=True,measurement=dict(tj=dict(raw_valid=True)))
+    frame['identity']['source_epoch']=epoch
+    frame['_communication']['measurement']['TJ_and_rails']['raw_valid']=True
+    return raw,processed,frame,state,deadline
+
+
+@pytest.mark.parametrize('withdrawn',[False,True])
+def test_queue_overrun_is_bounded_and_recovery_clears_cache(pubdir,monkeypatch,withdrawn):
+    # Seed real display state before blocking encoding and dropping a fan withdrawal.
+    entered=threading.Event();release=threading.Event()
+    original=WebEncoder.encode
+    def gated(self,raw,*args):
+        if raw['ref']=='blocked':
+            entered.set();assert release.wait(3)
+        return original(self,raw,*args)
+    monkeypatch.setattr(WebEncoder,'encode',gated)
+    p=Publication(pubdir/'active.json',BOOT,test_replay=True).start();assert p.ready.wait(3)
+    sock=socket.socket(socket.AF_UNIX);sock.settimeout(3);sock.connect(str(pubdir/'publication.sock'))
+    stream=sock.makefile('rb');web=State({'source':{'mode':'follow'},'advisory':{}})
+    def read():
+        row=json.loads(stream.readline())
+        web.accept(row,now=row.get('input_mono_s',200))
+        return row
+    def metrics(row):return {m['id']:m for m in row['metrics']}
     try:
-        wait_for(lambda:p.snapshot()['published']>0)
-        row=receive(pubdir)[0]
-        assert row['schema']=='TTO-WEB-PUBLICATION-v1'
-        # Last packet can follow the marked first recovery; exercise exact cache withdrawal below.
+        raw,processed,frame,state,deadline=bundle(t=100,kind='fan')
+        raw['payload']={'data':{'fans':[{'id':0,'target_duty':30}]}}
+        frame['measurement']['last_successful_pwm']=dict(raw_valid=True,source_ref=raw['ref'],value_percent=30)
+        p.submit(raw,processed,frame,state,deadline)
+        assert metrics(read())['fan.pwm.actual']['value']==30
+        p.submit(*orin_bundle(100.1));first=metrics(read())['usage.gpu']
+        assert first['status']=='valid'
+        blocked=list(bundle(t=101));blocked[0]['ref']='blocked'
+        blocked[2]['_communication']['measurement']['TJ_and_rails']['raw_valid']=not withdrawn
+        p.submit(*blocked);assert entered.wait(3)
+        # This invalidating event must be lost, so recovery cannot rely on seeing it.
+        p.submit(*bundle(t=101.1,kind='fan'))
+        base=102 if withdrawn else 104
+        for n in range(30):p.submit(*orin_bundle(base+n*.001))
+        assert p.snapshot()['pending']<=CAPACITY and p.snapshot()['dropped']>=24
+        release.set();rows=[]
+        while True:
+            row=read();rows.append(row)
+            if row.get('input_mono_s')==base+.029:break
+        assert any(r['schema']=='TTO-WEB-DISPLAY-GAP-v1' for r in rows)
+        recovered=[r for r in rows if r.get('publication_gap')]
+        assert recovered and 'fan.pwm.actual' not in metrics(recovered[0])
+        last=metrics(rows[-1])['usage.gpu']
+        assert last['sample_id']==first['sample_id'] and last['_expiry']==first['_expiry']
+        visible=next(m for m in web.snapshot()['metrics'] if m['id']=='usage.gpu')
+        assert visible['value'] is None and visible['status']==('invalid' if withdrawn else 'stale')
+        # A model-only reset cannot renew that sample either.
+        reset=list(orin_bundle(base+.1));reset[2]['source_reset']=True
+        p.submit(*reset);assert metrics(read())['usage.gpu']['_expiry']==first['_expiry']
+        # New sample and new source epoch are allowed to recover; no permanent latch.
+        p.submit(*orin_bundle(base+.2,sample_time='2026-10-23T00:00:01Z'))
+        assert metrics(read())['usage.gpu']['status']=='valid'
+        p.submit(*orin_bundle(base+.3,epoch=1));changed=read()
+        assert changed['source_epoch']==1 and metrics(changed)['usage.gpu']['status']=='valid'
         assert p.snapshot()['max_pending']==CAPACITY
-    finally:assert p.close()['worker_stopped']
+        if not withdrawn:
+            # No-sample/error or untrusted identity cannot replace the last real A.
+            for n,bad in enumerate(('error','unavailable','malformed')):
+                t=base+1+n;stamp=f'2026-10-23T00:00:{10+n:02d}Z'
+                p.submit(*orin_bundle(t,sample_time=stamp,epoch=1));trusted=metrics(read())['usage.gpu']
+                assert trusted['status']=='valid'
+                rejected=orin_bundle(t+.1,sample_time='invalid-time' if bad=='malformed' else stamp,epoch=1,gpu_status=bad)
+                assert rejected[1]['quality']['gpu']['contract_valid']==(bad!='malformed')
+                p.submit(*rejected);assert metrics(read())['usage.gpu']['status']=='invalid'
+                p.invalidate();p.submit(*orin_bundle(t+.2,sample_time=stamp,epoch=1))
+                assert read()['schema']=='TTO-WEB-DISPLAY-GAP-v1'
+                restored=metrics(read())['usage.gpu']
+                assert restored['sample_id']==trusted['sample_id'] and restored['_expiry']==trusted['_expiry']
+                assert restored['status']=='invalid'
+    finally:
+        release.set();stream.close();sock.close();assert p.close()['worker_stopped']
     assert json.loads((pubdir/'active.json').read_text())['ended'] is True
 
 
@@ -201,7 +277,7 @@ def test_local_collector_publication_failure_keeps_native_and_states(tmp_path,pu
     asyncio.run(go())
 
 
-@pytest.mark.parametrize('fault',['none','encode','submit','close','initialize'])
+@pytest.mark.parametrize('fault',['none','encode','submit','close','thread_start'])
 def test_collector_socket_values_and_publication_faults_do_not_stop_recording(tmp_path,pubdir,monkeypatch,fault):
     from fake_source import FakeSource
     from tto.config import load_config
@@ -219,9 +295,26 @@ def test_collector_socket_values_and_publication_faults_do_not_stop_recording(tm
         close=Publication.close
         def fail(self):close(self);raise OSError('owned close failure')
         monkeypatch.setattr(Publication,'close',fail)
-    if fault=='initialize':
-        def fail(*args,**kwargs):raise ValueError('owned initialization failure')
-        monkeypatch.setattr(Publication,'__init__',fail)
+    if fault=='thread_start':
+        start=threading.Thread.start
+        def fail(self):
+            if self.name=='web-publication':raise RuntimeError('owned thread start failure')
+            return start(self)
+        monkeypatch.setattr(threading.Thread,'start',fail)
+    if fault=='none':
+        # Unused processing outputs must never be copied for publication.
+        class Unused:
+            def __deepcopy__(self,memo):raise AssertionError('unused output copied')
+        original=runtime.Consumer.on_record;submit=Publication.submit;qualities={};checks=[]
+        def record(self,raw,processed,engine):
+            selected=dict(processed,quality=copy.deepcopy(processed['quality']),unused=Unused())
+            qualities[raw['ref']]=selected['quality']
+            original(self,raw,selected,engine)
+        def selected_submit(self,raw,processed,*args):
+            checks.append(set(processed)=={'quality'} and (processed['quality'] is None or processed['quality'] is not qualities[raw['ref']]))
+            return submit(self,raw,processed,*args)
+        monkeypatch.setattr(runtime.Consumer,'on_record',record)
+        monkeypatch.setattr(Publication,'submit',selected_submit)
     async def go():
         import uuid
         packets=[]
@@ -261,8 +354,12 @@ def test_collector_socket_values_and_publication_faults_do_not_stop_recording(tm
                 tj=next((m for m in packet['metrics'] if m['id']=='temperature.tj' and m['status']=='valid'),None)
                 if tj:assert tj['value']==native['measurement']['tj']['value_C']
             assert result['publication']['errors']==result['publication_callback_errors']==0
+            assert checks and all(checks)
         elif fault=='submit':assert result['publication_callback_errors']>0
-        elif fault in ('initialize','close'):assert result['publication_lifecycle_error']['error_class'] in ('ValueError','OSError')
+        elif fault=='thread_start':
+            assert result['publication'] is None and result['publication_callback_errors']==0
+            assert result['publication_lifecycle_error']==dict(phase='initialization',error_class='RuntimeError')
+        elif fault=='close':assert result['publication_lifecycle_error']==dict(phase='close',error_class='OSError')
         else:assert result['publication']['errors']>0
     asyncio.run(go())
 
