@@ -93,3 +93,25 @@ class FakeSource:
         pings=[t for t in asyncio.all_tasks() if t is not asyncio.current_task() and getattr(t.get_coro(),'__qualname__','').endswith('AsyncSocket._send_ping')]
         for task in pings:task.cancel()
         await asyncio.gather(*pings,return_exceptions=True)
+
+
+def seed_predictions(state, packet, origins=None):
+    """Synthetic committed ledger protocol fixture; it does not run a predictor."""
+    origin=packet['origin_mono_s']
+    at=(packet['input_mono_s']-origin)*1000
+    origins=[at] if origins is None else origins
+    rows=[]
+    for t in origins:
+        for h,value in ((15,46.),(45,48.),(90,50.)):
+            rows.append(dict(prediction_id=f'SYNTHETIC-LEDGER-{t}-{h}',run_id=packet['run_id'],ledger_run_id='SYNTHETIC-RAW-RUN',
+                source_epoch=packet['source_epoch'],model_id=packet['model_id'],spec_id=packet['spec_id'],backend_model_id='SYNTHETIC-G2',
+                scenario='HOLD',horizon_s=h,origin_elapsed_ms=t,issued_elapsed_ms=t+.01,target_elapsed_ms=t+h*1000,
+                input_cutoff_elapsed_ms=t,value_C=value,phase_at_origin='tracking',evidence_mode='test_replay',status='pending',
+                observed_C=None,error_C=None,reason_code=None,revision=len(rows)+1))
+    page=dict(schema='TTO-PREDICTION-PAGE-v1',boot_id=packet['boot_id'],publisher_id='SYNTHETIC-PUBLISHER',
+        origin_mono_s=origin,sync_status='synced',identity={k:packet[k] for k in ('run_id','source_epoch','model_id','spec_id')},ended=False,
+        cursor=len(rows),watermark=len(rows),has_more=False,retained_from_mono_s=origin-3600,records=rows,
+        forecast=dict(provider='observe-ledger',status='available',stride_s=5,history_window_ms=3600000,
+            remaining_valid_ms=2500,consumable_until_mono_s=packet['consumable_until_mono_s'],latest_prediction_ids=[r['prediction_id'] for r in rows[-3:]]))
+    state.begin_predictions(page['publisher_id']);state.accept_predictions(page,now=packet['input_mono_s']+.01)
+    return page

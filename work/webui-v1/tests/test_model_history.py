@@ -9,7 +9,7 @@ import aiohttp
 import jsonschema
 import pytest
 from aiohttp import web
-from producer import Producer,web_config
+from producer import Producer,web_config,seed_predictions
 from tto_web.state import State,ModelRow,MODEL_GROUP,MODEL_IDS
 from tto_web.source import Publication,follow
 from tto_web.server import app_for
@@ -163,6 +163,14 @@ def test_frozen_mismatch_stays_rejected(factory,key):
     s=State(web_config());put(s,factory(0));p=factory(1);p[key]='test-alternate'
     with pytest.raises(ValueError,match='frozen model/spec'):put(s,p)
     assert len(s.model_history)==1
+    page=seed_predictions(s,factory(0))
+    for ended in (False,True):
+        incoming=copy.deepcopy(page);incoming['identity'][key]='test-alternate'
+        incoming.update(ended=ended,ended_at_mono_s=1001.)
+        fresh=State(web_config());fresh.begin_predictions(incoming['publisher_id'])
+        with pytest.raises(ValueError,match='frozen model/spec'):
+            fresh.accept_predictions(incoming,now=1001.)
+        assert fresh.predictions=={} and fresh.prediction_identity is None
 
 
 def test_common_extrema_signed_differences_and_gap_segment_edges():

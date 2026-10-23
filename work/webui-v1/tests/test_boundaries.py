@@ -9,7 +9,7 @@ from aiohttp import web
 from tto_web.server import app_for
 from tto_web.state import State
 from tto_web.source import Publication
-from producer import Producer,web_config
+from producer import Producer,web_config,seed_predictions
 
 
 @pytest.mark.asyncio
@@ -29,22 +29,20 @@ async def test_slow_display_queue_resync_is_bounded_without_source_backpressure(
 def test_snapshot_cost_does_not_copy_all_prediction_history():
     p=Producer(time.monotonic()-120);s=State(web_config())
     for t in range(121):s.accept(p.step(t),now=p.start+t+.01)
-    template=copy.deepcopy(s.predictions[-1])
-    for i in range(10000):
-        row=copy.deepcopy(template);row['prediction_id']='synthetic-'+str(i);s.predictions.append(row)
+    seed_predictions(s,p.step(121),range(0,120001,5000))
     # Count traversal copies directly: the snapshot must contain only six forecast summaries.
     snapshot=s.refresh(p.start+120.01)
     assert len(snapshot['predictions'])==6
-    assert len(s.predictions)<=11070
-    assert s.predictions.maxlen==11070 and s.events.maxlen==1000
+    assert len(s.predictions)==75 and s.events.maxlen==1000
 
 
 def test_late_and_cross_epoch_not_error_denominators():
     p=Producer(time.monotonic()-120);s=State(web_config())
     for t in range(121):s.accept(p.step(t),now=p.start+t+.01)
-    current=s.predictions[-2]
+    seed_predictions(s,p.step(121))
+    current=list(s.predictions.values())[-2]
     late=copy.deepcopy(current);late.update(prediction_id='late',origin_elapsed_ms=0,target_elapsed_ms=45000,status='late_publication')
-    before=s.prediction_view(45)['summary'];s.predictions.append(late);after=s.prediction_view(45)['summary']
+    before=s.prediction_view(45)['summary'];s.predictions[late['prediction_id']]=late;after=s.prediction_view(45)['summary']
     assert after['late_publication_count']==before['late_publication_count']+1
     assert after['due_count']==before['due_count'] and after['matched_count']==before['matched_count']
 
@@ -59,6 +57,7 @@ def test_publication_path_error_is_explicit(tmp_path):
 def test_prediction_delta_preserves_whole_window_denominator_and_recent_label_updates():
     p=Producer(time.monotonic()-120);s=State(web_config())
     for t in range(121):s.accept(p.step(t),now=p.start+t+.01)
+    seed_predictions(s,p.step(121),range(0,120001,5000))
     complete=s.prediction_view(45,0,120010)
     delta=s.prediction_view(45,0,120010,records_after=119000)
     assert delta['summary']==complete['summary']
@@ -71,15 +70,16 @@ def test_prediction_delta_preserves_whole_window_denominator_and_recent_label_up
 def test_lost_publication_does_not_call_next_available_tj_the_first_label():
     p=Producer(time.monotonic()-20);s=State(web_config())
     for t in range(13):s.accept(p.step(t),now=p.start+t+.01)
-    earlier=list(s.predictions)
+    seed_predictions(s,p.step(13))
+    earlier=copy.deepcopy(s.predictions)
     packet=p.step(15);packet['publication_gap']=True;s.accept(packet,now=p.start+15.01)
-    assert all(v['status']=='not_comparable' for v in earlier if v['target_elapsed_ms']>=15000)
+    assert s.predictions==earlier
     assert any(e['source']=='publication' for e in s.events)
     assert any(point['value'] is None for point in s.history['temperature.tj'])
-    values=[(v['prediction_id'],v['value_C']) for v in s.predictions]
+    values=copy.deepcopy(s.predictions)
     s.disconnect()
-    assert not any(v['status']=='pending' for v in s.predictions)
-    assert values==[(v['prediction_id'],v['value_C']) for v in s.predictions]
+    assert s.predictions==values
+    assert s.snapshot()['forecast']['latest_prediction_ids']==[]
 
 
 def test_unconfigured_waiting_service_does_not_load_numerical_libraries():
@@ -88,13 +88,12 @@ def test_unconfigured_waiting_service_does_not_load_numerical_libraries():
     subprocess.run([sys.executable,'-c',code],check=True)
 
 
-def test_prediction_ring_eviction_also_removes_label_metadata():
-    from collections import deque
-    p=Producer(time.monotonic()-20);s=State(web_config())
-    for t in range(13):s.accept(p.step(t),now=p.start+t+.01)
-    s.predictions=deque(list(s.predictions)[-3:],maxlen=3)
-    old=list(s.predictions)
-    s.prediction_labels={v['prediction_id']:{'synthetic':True} for v in old}
-    s.accept(p.step(14),now=p.start+14.01)
-    assert len(s.predictions)==3
-    assert not any(v['prediction_id'] in s.prediction_labels for v in old)
+def test_prediction_window_eviction_removes_inline_label_metadata():
+    p=Producer(time.monotonic()-20);s=State(web_config());packet=p.step(15)
+    s.accept(packet,now=p.start+15.01)
+    page=seed_predictions(s,packet,[0,5000,10000,15000])
+    removed=[r['prediction_id'] for r in page['records'] if r['origin_elapsed_ms']<10000]
+    for row in page['records']:row['label']={'source_ref':'SYNTHETIC-LABEL'}
+    page.update(retained_from_mono_s=packet['origin_mono_s']+10,records=[])
+    s.accept_predictions(page,now=p.start+15.01)
+    assert len(s.predictions)==6 and all(id not in s.predictions for id in removed)

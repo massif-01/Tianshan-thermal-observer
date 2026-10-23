@@ -147,7 +147,6 @@ async def observe(config, state, stop, publication=None):
             publisher.publish(encode)
         async def drain():
             with lock:rows=list(queue);queue.clear()
-            if rows:await asyncio.to_thread(state.prepare_model)
             for row in rows:state.accept(row)
         round_stop=asyncio.Event()
         task=asyncio.create_task(collect(native,native['run']['max_duration_s'],stop_event=round_stop,on_record=record,journal_factory=factory,continuous=True,manage_signals=False,run_type='web-observe'))
@@ -181,6 +180,16 @@ async def observe(config, state, stop, publication=None):
 
 
 async def follow(config, state, stop):
+    from .predictions import follow_predictions
+    predictions=asyncio.create_task(follow_predictions(config,state,stop))
+    try:
+        await follow_publication(config,state,stop)
+    finally:
+        predictions.cancel()
+        await asyncio.gather(predictions,return_exceptions=True)
+
+
+async def follow_publication(config, state, stop):
     descriptor=config['source'].get('active_descriptor')
     if not descriptor:
         state.source_status='尚未配置观察来源';await stop.wait();return
@@ -190,11 +199,12 @@ async def follow(config, state, stop):
         try:
             meta=load(path)
             if meta.get('schema')!='TTO-WEB-ACTIVE-v1' or meta.get('boot_id')!=boot_id():raise ValueError('descriptor identity')
+            if meta.get('publication_failed'):
+                state.disconnect('发布异常结束；后台观察状态未知');await asyncio.sleep(.5);continue
             if meta.get('ended'):
                 state.disconnect('已结束，等待生产者注册',ended=True);await asyncio.sleep(1);continue
             if meta.get('socket')!='publication.sock':raise ValueError('descriptor socket must be local fixed basename')
             reader,writer=await asyncio.open_unix_connection(str(path.parent/'publication.sock'),limit=512*1024)
-            await asyncio.to_thread(state.prepare_model)
             while not stop.is_set():
                 line=await asyncio.wait_for(reader.readline(),3.)
                 if not line:raise ConnectionError('producer closed')

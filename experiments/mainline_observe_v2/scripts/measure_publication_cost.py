@@ -15,7 +15,7 @@ import time
 import uuid
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[3]
-sys.path[:0]=[str(ROOT/'experiments/mainline_observe_v2/src'),str(ROOT/'experiments/mainline_observe_v2/tests')]
+sys.path[:0]=[str(ROOT/'experiments/mainline_observe_v2/src'),str(ROOT/'experiments/mainline_observe_v2/tests'),str(ROOT/'work/webui-v1/src')]
 
 
 def sample(mode,duration):
@@ -50,6 +50,16 @@ def sample(mode,duration):
                     while not descriptor.exists():await asyncio.sleep(.01)
                     slow=socket.socket(socket.AF_UNIX);slow.setsockopt(socket.SOL_SOCKET,socket.SO_RCVBUF,1024);slow.connect(str(descriptor.parent/'publication.sock'))
                 task=asyncio.create_task(connect()) if mode=='unread' else None
+                ledger_stop=asyncio.Event()
+                if mode=='ledger-client':
+                    from tto_web.state import State
+                    from tto_web.predictions import follow_predictions
+                    import tto_web.predictions as subscription
+                    import tto_web.state as web_state
+                    subscription.boot_id=web_state.boot_id=lambda:'owned-local-cost-fixture'
+                    web_config={'source':{'active_descriptor':str(descriptor)},'advisory':{}}
+                    ledger_state=State(web_config)
+                    task=asyncio.create_task(follow_predictions(web_config,ledger_state,ledger_stop))
                 proc=psutil.Process();cpu0=sum(proc.cpu_times()[:2]);start=time.perf_counter()
                 try:
                     result=await run_observe(config,reg,root/'session',duration,local_loopback=True,
@@ -62,6 +72,7 @@ def sample(mode,duration):
                 assert result['reason']=='duration' and result['model_dropped_frames']==0 and result['model_errors']==0
                 assert result['native_summary']['dropped']==0 and source.posts==source.model_gets==0
                 if mode!='off':assert result['publication']['errors']==0 and result['publication']['worker_stopped'], result['publication']
+                if mode=='ledger-client':assert ledger_state.prediction_cursor>0
                 ordered=sorted(times)
                 return dict(mode=mode,wall_s=wall,cpu_s=cpu,cpu_single_core_pct=100*cpu/wall,
                     peak_sampled_rss_bytes=max(x['rss_bytes'] for x in resources),callbacks=len(times),
@@ -71,13 +82,13 @@ def sample(mode,duration):
     return asyncio.run(go())
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--mode',choices=('off','unread','no-client'))
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--mode',choices=('off','unread','no-client','ledger-client'))
     p.add_argument('--duration',type=float,default=10);p.add_argument('--output',type=Path);p.add_argument('--repetitions',type=int,default=3);a=p.parse_args()
     if a.mode:print(json.dumps(sample(a.mode,a.duration)))
     else:
         rows=[]
         for n in range(a.repetitions):
-            for mode in ('off','no-client','unread'):
+            for mode in ('off','no-client','unread','ledger-client'):
                 command=[sys.executable,__file__,'--mode',mode,'--duration',str(a.duration)]
                 row=json.loads(subprocess.check_output(command,text=True).splitlines()[-1]);rows.append(row)
                 print(json.dumps(dict(repetition=n,**row)),flush=True)
@@ -85,5 +96,5 @@ if __name__=='__main__':
             duration_s=a.duration,repetitions=a.repetitions,python=sys.version,samples=rows,
             medians={mode:{k:statistics.median(x[k] for x in rows if x['mode']==mode)
                 for k in ('cpu_single_core_pct','peak_sampled_rss_bytes','callback_mean_ms','callback_p95_ms')}
-                for mode in ('off','no-client','unread')})
+                for mode in ('off','no-client','unread','ledger-client')})
         a.output.write_text(json.dumps(result,indent=2)+'\n')

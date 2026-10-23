@@ -299,6 +299,46 @@
         "string",
         "null"
       ]
+    },
+    "forecast": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "provider": {
+          "const": "observe-ledger"
+        },
+        "status": {
+          "enum": [
+            "available",
+            "initializing",
+            "unavailable",
+            "disconnected",
+            "syncing",
+            "not_connected"
+          ]
+        },
+        "stride_s": {
+          "const": 5
+        },
+        "history_window_ms": {
+          "const": 3600000
+        },
+        "synced_through_cursor": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "remaining_valid_ms": {
+          "type": "number",
+          "minimum": 0
+        },
+        "latest_prediction_ids": {
+          "type": "array",
+          "maxItems": 3,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
     }
   },
   "$defs": {
@@ -556,12 +596,17 @@
           "minimum": 0
         },
         "value_C": {
-          "type": "number"
+          "type": [
+            "number",
+            "null"
+          ]
         },
         "phase_at_origin": {
           "enum": [
             "tracking",
-            "degraded"
+            "degraded",
+            "provisional",
+            "unavailable"
           ]
         },
         "evidence_mode": {
@@ -576,7 +621,8 @@
             "matched",
             "missing_label",
             "late_publication",
-            "not_comparable"
+            "not_comparable",
+            "unavailable"
           ]
         },
         "observed_C": {
@@ -590,6 +636,49 @@
             "number",
             "null"
           ]
+        },
+        "ledger_run_id": {
+          "type": "string"
+        },
+        "backend_model_id": {
+          "type": "string"
+        },
+        "origin_at_utc": {
+          "type": "string"
+        },
+        "issued_at_utc": {
+          "type": "string"
+        },
+        "target_at_utc": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reason_code": {},
+        "label": {
+          "type": "object",
+          "properties": {
+            "label_elapsed_ms": {
+              "type": "number"
+            },
+            "source_ref": {
+              "type": "string"
+            },
+            "received_at_utc": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "conditional_assumptions": {
+          "type": [
+            "object",
+            "null"
+          ]
         }
       },
       "allOf": [
@@ -601,7 +690,8 @@
                   "pending",
                   "missing_label",
                   "late_publication",
-                  "not_comparable"
+                  "not_comparable",
+                  "unavailable"
                 ]
               }
             }

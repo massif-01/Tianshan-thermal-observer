@@ -33,14 +33,14 @@ class Ledger:
         label=bool(frame['new_TJ'] and tj and tj['raw_valid'] and t<tj['valid_until_mono_s'])
         for batch in list(self.pending):
             target=batch['target'];expired=t>target+2
-            if expired:self._missing(batch,'missing_qualified_label_within_2s');self.pending.remove(batch)
+            if expired:self._missing(batch,'missing_qualified_label_within_2s',t);self.pending.remove(batch)
             elif label and t>=target:
                 for p in batch['items']:
                     error=p['value_C']-tj['value_C']
                     row=dict(prediction_id=p['prediction_id'],**self.identity,publication_mode=self.mode,
                         horizon_s=p['horizon_s'],method=p['method'],status='scored',target_mono_s=target,
-                        label_ref=tj['source_ref'],label_received_mono_s=tj['observed_mono_s'],label_value_C=tj['value_C'],
-                        error_C=error,underestimate_C=max(-error,0.),source_epoch=epoch)
+                        label_ref=tj['source_ref'],label_received_mono_s=tj['observed_mono_s'],label_received_utc=tj.get('observed_utc'),label_value_C=tj['value_C'],
+                        error_C=error,underestimate_C=max(-error,0.),source_epoch=epoch,settled_mono_s=t)
                     self.emit('scores',row);self._metric(self.stats,f"{p['method']}/{p['horizon_s']}",error);self.counts['scored']+=1
                 methods={p['method']:p for p in batch['items']}
                 if 'G2-HOLD' in methods and 'B0' in methods:
@@ -73,12 +73,12 @@ class Ledger:
                 self.emit('predictions',p);self.counts[f'issued/{method}/{horizon}']+=1
                 if value is not None:items.append(p);self.counts[f'valid_predictions/{method}/{horizon}']+=1
             if items:self.pending.append(dict(target=t+horizon,items=items))
-    def _missing(self,batch,reason):
+    def _missing(self,batch,reason,t):
         for p in batch['items']:
-            self.emit('scores',dict(**self.identity,prediction_id=p['prediction_id'],method=p['method'],horizon_s=p['horizon_s'],status='unscored',reason=reason,publication_mode=self.mode))
+            self.emit('scores',dict(**self.identity,prediction_id=p['prediction_id'],method=p['method'],horizon_s=p['horizon_s'],status='unscored',reason=reason,publication_mode=self.mode,settled_mono_s=t))
             self.counts['unscored/'+reason]+=1
     def finish(self,t,reason='session_end'):
-        for batch in self.pending:self._missing(batch,'target_not_mature_at_end' if t<batch['target'] and reason=='session_end' else reason)
+        for batch in self.pending:self._missing(batch,'target_not_mature_at_end' if t<batch['target'] and reason=='session_end' else reason,t)
         self.pending.clear()
     def summary(self):
         return dict(contract='TTO-OBSERVE-SCORING-v1',publication_mode=self.mode,stride_s=self.stride,

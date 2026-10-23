@@ -28,6 +28,7 @@ def web_clock(monkeypatch):
     monkeypatch.setattr(web_common, 'boot_id', lambda: BOOT)
     monkeypatch.setattr('tto_web.state.boot_id', lambda: BOOT)
     monkeypatch.setattr('tto_web.source.boot_id', lambda: BOOT)
+    monkeypatch.setattr('tto_web.predictions.boot_id', lambda: BOOT)
     monkeypatch.setattr('tto_web.adapter.boot_id', lambda: BOOT)
 
 @pytest.fixture
@@ -277,7 +278,7 @@ def test_local_collector_publication_failure_keeps_native_and_states(tmp_path,pu
     asyncio.run(go())
 
 
-@pytest.mark.parametrize('fault',['none','encode','submit','close','thread_start'])
+@pytest.mark.parametrize('fault',['none','encode','submit','close','thread_start','view'])
 def test_collector_socket_values_and_publication_faults_do_not_stop_recording(tmp_path,pubdir,monkeypatch,fault):
     from fake_source import FakeSource
     from tto.config import load_config
@@ -291,9 +292,13 @@ def test_collector_socket_values_and_publication_faults_do_not_stop_recording(tm
     if fault=='submit':
         def fail(*args):raise OSError('owned enqueue failure')
         monkeypatch.setattr(Publication,'submit',fail)
+    if fault=='view':
+        from tto_field.prediction_view import PredictionView
+        def fail(*args):raise ValueError('owned read projection failure')
+        monkeypatch.setattr(PredictionView,'apply',fail)
     if fault=='close':
         close=Publication.close
-        def fail(self):close(self);raise OSError('owned close failure')
+        def fail(self,**kwargs):close(self,**kwargs);raise OSError('owned close failure')
         monkeypatch.setattr(Publication,'close',fail)
     if fault=='thread_start':
         start=threading.Thread.start
@@ -355,6 +360,12 @@ def test_collector_socket_values_and_publication_faults_do_not_stop_recording(tm
                 if tj:assert tj['value']==native['measurement']['tj']['value_C']
             assert result['publication']['errors']==result['publication_callback_errors']==0
             assert checks and all(checks)
+        elif fault=='view':
+            assert result['publication']['prediction_view_failure']=='ValueError'
+            assert result['model_errors']==0 and not result['error']
+            assert (tmp_path/'session/predictions.jsonl').stat().st_size and (tmp_path/'session/scores.jsonl').stat().st_size
+            final=json.loads((pubdir/'predictions-final.json').read_text())
+            assert final['sync_status']=='unavailable' and final['forecast']['latest_prediction_ids']==[]
         elif fault=='submit':assert result['publication_callback_errors']>0
         elif fault=='thread_start':
             assert result['publication'] is None and result['publication_callback_errors']==0

@@ -8,6 +8,7 @@ import contextlib
 import json
 import os
 import threading
+import time
 import uuid
 from collections import deque
 from pathlib import Path
@@ -27,7 +28,11 @@ def atomic_json(path, row):
 
 
 class Publication:
-    def __init__(self, descriptor, boot, observed_device=None, *, test_replay=False, process_clock_domain=None):
+    def __init__(self, descriptor, boot, observed_device=None, *, test_replay=False, process_clock_domain=None, prediction_view=None):
+        self.prediction_view = prediction_view
+        self.completed = False
+        self.publisher_id = str(uuid.uuid4())
+        self.prediction_socket = Path(descriptor).parent / 'predictions.sock'
         self.descriptor = Path(descriptor)
         self.socket = self.descriptor.parent / 'publication.sock'
         self.process_clock_domain = process_clock_domain
@@ -77,9 +82,11 @@ class Publication:
 
     def snapshot(self):
         with self.lock:
-            return dict(self.stats, pending=len(self.pending), worker_stopped=not self.thread or not self.thread.is_alive())
+            return dict(self.stats, pending=len(self.pending), worker_stopped=not self.thread or not self.thread.is_alive(),
+                        prediction_view_failure=self.prediction_view.failure if self.prediction_view else None)
 
-    def close(self):
+    def close(self, *, completed=False):
+        if completed:self.completed=True
         self.stopping.set()
         if self.thread:
             self.thread.join(timeout=2)
@@ -102,7 +109,7 @@ class Publication:
             raise ValueError('publication needs a real boot identity')
         if len(os.fsencode(self.socket)) >= 100:
             raise ValueError('publication directory too long')
-        if self.descriptor.name in ('publication.sock', 'publisher.lock'):
+        if self.descriptor.name in ('publication.sock', 'predictions.sock', 'predictions-final.json', 'publisher.lock'):
             raise ValueError('descriptor conflicts with publication resources')
         directory = self.descriptor.parent
         directory.mkdir(parents=True, exist_ok=True, mode=0o700)
@@ -111,18 +118,25 @@ class Publication:
             raise ValueError('publication directory must be private and owned')
         with InstanceLock(str(directory / 'publisher.lock')):
             server = None
+            prediction_server = None
             try:
                 if self.socket.exists():
                     self.socket.unlink()
+                if self.prediction_view:
+                    if self.prediction_socket.exists():self.prediction_socket.unlink()
+                    prediction_server = await asyncio.start_unix_server(self._prediction_client,path=str(self.prediction_socket),limit=4096)
+                    os.chmod(self.prediction_socket,0o600)
                 server = await asyncio.start_unix_server(self._client, path=str(self.socket), limit=MAX_PACKET+1)
                 os.chmod(self.socket, 0o600)
                 atomic_json(self.descriptor, dict(schema='TTO-WEB-ACTIVE-v1', socket='publication.sock',
-                    boot_id=self.boot, publisher_id=str(uuid.uuid4()), ended=False))
+                    boot_id=self.boot, publisher_id=self.publisher_id, prediction_socket='predictions.sock' if self.prediction_view else None, prediction_protocol='TTO-PREDICTION-PAGE-v1' if self.prediction_view else None, ended=False))
                 with self.lock:
                     self.stats['running'] = True
                 self.ready.set()
                 await self._pump()
             finally:
+                if prediction_server:
+                    prediction_server.close()
                 if server:
                     server.close()
                 for task in tuple(self.handlers):
@@ -130,11 +144,44 @@ class Publication:
                 await asyncio.gather(*tuple(self.handlers), return_exceptions=True)
                 if server:
                     await server.wait_closed()
+                if prediction_server:await prediction_server.wait_closed()
                 try:
-                    atomic_json(self.descriptor, dict(schema='TTO-WEB-ACTIVE-v1', boot_id=self.boot, ended=True))
+                    if self.prediction_view and self.completed:
+                        final=self._prediction_identity(self.prediction_view.final(time.monotonic()))
+                        atomic_json(self.descriptor.parent/'predictions-final.json',final)
+                    failed=bool(self.prediction_view and not self.completed)
+                    atomic_json(self.descriptor, dict(schema='TTO-WEB-ACTIVE-v1', boot_id=self.boot, publisher_id=self.publisher_id,
+                        prediction_final='predictions-final.json' if self.prediction_view and self.completed else None,
+                        publication_failed=failed,ended=not failed))
                 finally:
                     if self.socket.exists():
                         self.socket.unlink()
+                    if self.prediction_socket.exists():self.prediction_socket.unlink()
+
+    def _prediction_identity(self, page):
+        return dict(page, boot_id=self.boot, publisher_id=self.publisher_id)
+
+    async def _prediction_client(self, reader, writer):
+        if len(self.handlers)>=8:
+            writer.transport.abort();return
+        handler=asyncio.current_task();self.handlers.add(handler)
+        try:
+            request=json.loads(await asyncio.wait_for(reader.readline(),1.))
+            cursor=request.get('cursor')
+            if type(cursor) is not int or not 0<=cursor<=self.prediction_view.cursor:
+                raise ValueError('invalid prediction cursor')
+            page=self._prediction_identity(self.prediction_view.page(cursor))
+            data=json.dumps(page,allow_nan=False,separators=(',',':')).encode()+b'\n'
+            if len(data)>MAX_PACKET:raise ValueError('prediction page exceeds budget')
+            writer.write(data)
+            await asyncio.wait_for(writer.drain(),.2)
+        except (ValueError,OSError,asyncio.TimeoutError) as exc:
+            self.error(exc)
+        finally:
+            self.handlers.discard(handler)
+            writer.close()
+            try:await asyncio.wait_for(writer.wait_closed(),.2)
+            except (OSError,asyncio.TimeoutError):writer.transport.abort()
 
     def _broadcast(self, row):
         data = json.dumps(row, allow_nan=False, separators=(',', ':')).encode() + b'\n'
@@ -172,6 +219,7 @@ class Publication:
                     if self.encoder is None:
                         self.encoder = WebEncoder(frame['identity']['run_id'], frame['identity']['config_sha256'],
                                                   self.boot, self.observed_device, self.test_replay)
+                        if self.prediction_view:self.encoder.origin=self.prediction_view.origin
                     if frame['source_reset']:
                         self.gap_next = True
                     packet = self.encoder.encode(raw, processed, frame, frame['_communication'], state, deadline)

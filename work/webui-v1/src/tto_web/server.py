@@ -83,7 +83,9 @@ def app_for(config, *, start_source=True, state=None):
     async def snapshot(r):return response(state.refresh())
     async def model(r):
         s=state.snapshot();p=state.packet
-        return response(dict(**s['model'],provider=dict(method_id='frozen_g2_hold',horizons_s=[15,45,90],assumption_codes=(p or {}).get('model',{}).get('unknown_input_assumptions',[]),TJ_anchor='current accepted TJ',state_cutoff_elapsed_ms=(p['input_mono_s']-p['origin_mono_s'])*1000 if p else None),uncertainty=(p or {}).get('model',{}).get('uncertainty'),innovation_C=(p or {}).get('model',{}).get('latest_innovation_C'),reasons=(p or {}).get('model',{}).get('reasons',[]),advisory=dict(**s['advisory'],basis=state.last_advisory_basis),demand=dict(status='not_available',value=None,unit='index',reason='本轮未计算：没有当前合法provider和固定参考')))
+        latest=[v for v in s['predictions'] if v['prediction_id'] in s['forecast']['latest_prediction_ids']]
+        condition=(latest[-1].get('conditional_assumptions') or {}) if latest else {}
+        return response(dict(**s['model'],provider=dict(method_id='frozen_g2_hold',provider_id='observe-ledger',horizons_s=[15,45,90],stride_s=5,assumption_codes=condition.get('assumptions',[]),TJ_anchor='recorded_prediction_origin',state_cutoff_elapsed_ms=latest[-1]['input_cutoff_elapsed_ms'] if latest else None),uncertainty=(p or {}).get('model',{}).get('uncertainty'),innovation_C=(p or {}).get('model',{}).get('latest_innovation_C'),reasons=(p or {}).get('model',{}).get('reasons',[]),advisory=dict(**s['advisory'],basis=state.last_advisory_basis),demand=dict(status='not_available',value=None,unit='index',reason='本轮未计算：没有当前合法provider和固定参考')))
     def bounded_number(r,key,default,lo,hi):
         try:v=float(r.query.get(key,default))
         except ValueError:raise web.HTTPBadRequest(text='invalid number')
