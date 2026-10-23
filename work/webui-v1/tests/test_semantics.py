@@ -33,6 +33,7 @@ def test_units_zero_raw_rpm_and_no_secret_disclosure():
     assert m['memory.swap']['value']==0
     assert m['fan.rpm']['value'] is None and m['fan.rpm']['last_observation']['value']==0
     assert m['fan.rpm']['status']=='unverified'
+    assert m['fan.pwm.target']['label']=='TianshanOS 目标 PWM'
     encoded=json.dumps(s.snapshot())
     assert 'Authorization' not in encoded and '/Users/' not in encoded and 'bound_variable' not in encoded
     assert s.snapshot()['model']['calibrated_confidence'] is None
@@ -136,6 +137,7 @@ def test_curve_reference_available_withheld_domain_and_identity():
     assert s.snapshot()['advisory']['value_percent'] is None
     packet=p.row('fan',121,p.fan(guard_active=True));s.accept(packet,now=p.start+121.01)
     assert s.snapshot()['advisory']['value_percent'] is None
+    assert s.snapshot()['advisory']['reason']=='数据/模式/保护上下文不满足'
     p,s,packet=ready();s.curve=curve;curve['points']=[[1,10],[2,20]];s.refresh(p.start+120.01)
     assert s.snapshot()['advisory']['status']=='out_of_domain'
     curve['device_id']='other';s.refresh(p.start+120.01);assert s.snapshot()['advisory']['value_percent'] is None

@@ -224,7 +224,7 @@ class State:
         result=dict(status='not_configured',provider_id=None,value_percent=None,reason='暂无可用建议映射',device_write_permitted=False)
         self.last_advisory_basis=None
         if not self.curve:return result
-        result.update(provider_id='CURVE-REFERENCE-v1',status='withheld',reason='数据/模式/保护上下文不满足；天山OS继续负责保护')
+        result.update(provider_id='CURVE-REFERENCE-v1',status='withheld',reason='数据/模式/保护上下文不满足')
         p=self.packet
         if not p:return result
         s=p['safety'];metrics={m['id']:m for m in snapshot['metrics']}

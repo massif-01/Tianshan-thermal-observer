@@ -42,9 +42,9 @@ def main():
                 if p.is_file() and '__pycache__' not in p.parts
                 and p.suffix in ('.py', '.json', '.js', '.css', '.html', '.md')
                 and p.name != 'web-candidate-files.json'}
-    manifest = dict(version=version, baseline='observe.8: compact compressed history',
+    manifest = dict(version=version, baseline=backend_version+': continuous read-only observation',
                     frozen_model_sha256=sha(WEB / 'vendor/tto_field/research/models/primary.json'),
-                    frontend='rc10: direct LAN access; login removed', files=packages)
+                    frontend=version+': TianshanOS copy; direct LAN access', files=packages)
     (WEB / 'src/tto_web/web-candidate-files.json').write_text(json.dumps(manifest, indent=2) + '\n')
     # Build in a disposable source tree so setuptools cannot retain old static assets.
     output.mkdir(parents=True)

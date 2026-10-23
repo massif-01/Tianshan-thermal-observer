@@ -22,7 +22,7 @@ export const BE_EXACT:Record<string,string>={
  '观察配置不可用；等待本地配置或生产者注册':'Observation config unavailable; waiting for local config or producer registration',
  // 建议说明（state.py）
  '暂无可用建议映射':'No suggestion mapping available',
- '数据/模式/保护上下文不满足；天山OS继续负责保护':'Data / mode / protection context not satisfied; TianshanOS remains in charge of protection',
+ '数据/模式/保护上下文不满足':'Data / mode / protection context not satisfied; TianshanOS remains in charge of protection',
  '温度超出核实曲线取值域，禁止外推':'Temperature is outside the verified curve domain; extrapolation is not allowed',
  '实验观察参考，无设备写权限':'Experimental observation reference; no device write permission',
  '暂无经过核对的建议映射':'No verified suggestion mapping available',
@@ -44,7 +44,7 @@ export const BE_EXACT:Record<string,string>={
  '客户端事实；不代表服务器执行或GPU停止':'Client fact; does not imply server execution or GPU stop',
  // 指标名称（adapter.py / state.py）
  '成功PWM':'Successful PWM',
- '天山OS目标PWM':'TianshanOS target PWM',
+ 'TianshanOS 目标 PWM':'TianshanOS target PWM',
  '风扇RPM':'Fan RPM',
  '控制模式':'Control mode',
  '风扇启用':'Fan enabled',
@@ -64,7 +64,7 @@ export const BE_EXACT:Record<string,string>={
  '慢热状态估计':'Slow state estimate',
  '等效边界估计':'Equivalent boundary estimate',
  '实测结温（模型采样对齐）':'Measured junction temperature (aligned to model samples)',
- // 风扇模式取值（天山OS 模式名）
+ // 风扇模式取值（TianshanOS 模式名）
  '自动':'Auto','手动':'Manual','关闭':'Off','曲线':'Curve','智能':'Smart',
 };
 

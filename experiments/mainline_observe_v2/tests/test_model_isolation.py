@@ -1,5 +1,6 @@
 from tto.recordio import read_records
 import asyncio,json,socket,time,uuid
+import pytest
 from pathlib import Path
 from fake_source import FakeSource
 from tto.config import load_config
@@ -74,7 +75,8 @@ def test_device_identity_change_stops_own_recording(tmp_path):
             assert s['reason']=='device_gpu_identity_conflict' and s['elapsed_s']<7 and s['consumer_stopped']
     asyncio.run(go())
 
-def test_existing_native_lock_is_a_blocker_not_killed(tmp_path):
+@pytest.mark.parametrize('duration',[2,None])
+def test_existing_native_lock_is_a_blocker_not_killed(tmp_path,duration):
     from tto.storage import InstanceLock
     old=tmp_path/'expired';old.mkdir()
     (old/'history-retention.json').write_text(json.dumps(dict(device_id='fixture',host=socket.gethostname(),day='2000-01-01')))
@@ -82,9 +84,17 @@ def test_existing_native_lock_is_a_blocker_not_killed(tmp_path):
         c=load_config(environ={});c['orin'].update(base_url='http://127.0.0.1:9',source_sample_interval_ms=1000,source_interval_evidence='fixture');c['tianshan']['base_url']='http://127.0.0.1:9'
         reg=dict(device_id='fixture',thermal_config_id='fixture',observer_host_id=socket.gethostname(),session_id=str(uuid.uuid4()))
         with InstanceLock():
-            s=await run_observe(c,reg,tmp_path/'blocked',2,local_loopback=True,storage_options=dict(min_free=0))
+            s=await run_observe(c,reg,tmp_path/'blocked',duration,local_loopback=True,storage_options=dict(min_free=0))
             assert s['collector_count']==0 and s['native_run_id'] is None and s['reason']=='observe_software_error'
             assert old.exists()
+            if duration is None:
+                from tto_field.observe_storage import history_files
+                from tto_field.observe_cli import archive
+                assert not list(history_files(tmp_path/'blocked','observations'))
+                assert archive(tmp_path/'blocked',tmp_path/'blocked.zip')['files_verified']>0
+                import zipfile
+                with zipfile.ZipFile(tmp_path/'blocked.zip') as zipped:zipped.extractall(tmp_path/'restored')
+                assert not list(history_files(tmp_path/'restored','observations'))
     asyncio.run(go())
 
 def test_projection_exception_disables_model_not_raw(tmp_path,monkeypatch):

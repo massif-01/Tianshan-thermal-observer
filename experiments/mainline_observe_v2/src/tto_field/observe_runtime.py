@@ -4,7 +4,7 @@ from collections import deque
 from pathlib import Path
 from datetime import datetime, timezone
 from .support import Clock, utc
-from .observe_storage import SessionStore, expire_history
+from .observe_storage import SessionStore, DailyStore, expire_history
 from .observe_predictions import Ledger
 from .receiver_resources import read_sample
 from . import __version__
@@ -27,7 +27,7 @@ class Consumer:
         self.queue=queue.Queue(maxsize=64);self.lag_limit=lag_limit;self.closed=threading.Event()
         self.projection=self.communication=None;self.latest_ref=None;self.engine_id=None;self.native_run_id=None;self.device_uuid=registration.get('expected_gpu_uuid')
         self.callbacks=0;self.valid_TJ=0;self.projection_disabled=False;self.dropped=0;self.seen_dropped=0;self.fatal=None;self.model_errors=0;self.history=deque(maxlen=181)
-        self.stateful_observers=0;self.ledger=None;self.observer=None;self.predictor=None;self.model_reinitialize=False
+        self.ready_days=set();self.stateful_observers=0;self.ledger=None;self.observer=None;self.predictor=None;self.model_reinitialize=False
         self.thread=threading.Thread(target=self._work,name='frozen-model-consumer',daemon=True);self.thread.start()
     def emit(self,name,row):
         self.store.append(self.store.root,name,row)
@@ -113,13 +113,20 @@ class Consumer:
         self.history.clear()
         if self.observer is not None:self.observer.x=self.observer.P=None
         frame['source_reset']=True;frame['reset_reason']=reason
+    def maintain_days(self):
+        if isinstance(self.store,DailyStore):
+            if self.ledger:self.ledger.advance(time.monotonic(),self.store.recording_day(),receive_lag=self.lag_limit)
+            pending={p['origin_day'] for b in self.ledger.pending for p in b['items']} if self.ledger else set()
+            with self.store.lock:
+                self.ready_days={day for day in self.store.days if day<self.store.recording_day() and day not in pending}
     def _work(self):
         try:
             try:self._model_import()
             except Exception as exc:self.model_errors+=1;self.event('model_initialization_failed_raw_continues',error=type(exc).__name__)
             while not self.closed.is_set() or not self.queue.empty():
                 try:frame=self.queue.get(timeout=.1)
-                except queue.Empty:continue
+                except queue.Empty:
+                    self.maintain_days();continue
                 try:
                     inputs=frame.pop('_web_input',None)
                     if self.projection_disabled:
@@ -128,7 +135,7 @@ class Consumer:
                     if self.ledger is None:
                         ident=dict(self.registration,session_id=self.registration['session_id'],run_id=frame['identity']['run_id'],
                             model_id=self.predictor.manifest['model_id'] if self.predictor else None,software_version=__version__,model_sha256=frame['identity']['model_sha256'],spec_sha256=frame['identity']['spec_sha256'],clock_domain=self.clock.domain)
-                        self.ledger=Ledger(self.emit,ident)
+                        self.ledger=Ledger(self.emit,ident,daily=isinstance(self.store,DailyStore))
                     dropped=self.dropped
                     if dropped!=self.seen_dropped:self._reset(frame,'model_consumer_gap_raw_preserved');self.seen_dropped=dropped
                     if time.monotonic()-frame['t']>self.lag_limit:
@@ -165,11 +172,12 @@ class Consumer:
                     issued=time.monotonic()
                     if issued-frame['t']>self.lag_limit:
                         self._reset(frame,'model_computation_late');outputs=[];state['observer']=dict(phase='unavailable',available=False,reasons=['computation_late'])
-                    self.ledger.consume(frame,issued,outputs,state_status=state['observer']['phase'],wall_clock=dict(utc=utc(),mono_s=issued))
+                    self.ledger.consume(frame,issued,outputs,state_status=state['observer']['phase'],wall_clock=dict(utc=utc(),mono_s=issued,recording_day=self.store.recording_day()) if isinstance(self.store,DailyStore) else dict(utc=utc(),mono_s=issued))
                     deadline=min(issued+2.5,frame['t']+2.5)
                     self.latest_ref=frame['ref']
                     if self.prediction_view:self.prediction_view.committed('context',(frame,state,deadline))
                     self.publish(inputs,frame,state,deadline)
+                    self.maintain_days()
                 except (OSError,ValueError) as exc:self.block('derived_recorder_error:'+type(exc).__name__)
                 except Exception as exc:
                     self.model_errors+=1;self.event('model_consumer_error_raw_continues',error=type(exc).__name__)
@@ -177,7 +185,7 @@ class Consumer:
         except Exception as exc:self.block('consumer_worker_failure:'+type(exc).__name__)
     def close(self):self.closed.set();self.thread.join(timeout=2);return not self.thread.is_alive()
 
-async def run_observe(config,registration,out,duration,*,local_loopback=False,storage_options=None,grant=None,publication_descriptor=None):
+async def run_observe(config,registration,out,duration=None,*,local_loopback=False,storage_options=None,grant=None,publication_descriptor=None):
     from .numeric_policy import initialize
     from tto.collector import collect
     from tto.config import public_config
@@ -189,7 +197,7 @@ async def run_observe(config,registration,out,duration,*,local_loopback=False,st
     from .scheduler import Registry
     Path(out).parent.mkdir(parents=True,exist_ok=True)
     Registry(Path(out).parent/'.tto-observe-ledger').claim(registration['session_id'],registration['session_id'])
-    store=SessionStore(out,**(storage_options or {}))
+    store=(DailyStore if duration is None else SessionStore)(out,**(storage_options or {}))
     publication=None;publication_error=None
     from .prediction_view import PredictionView
     prediction_view=PredictionView(clock.origin) if publication_descriptor is not None else None
@@ -206,18 +214,19 @@ async def run_observe(config,registration,out,duration,*,local_loopback=False,st
         retention_day=datetime.now(timezone.utc).date()
         expired=expire_history(store.root,registration['device_id'],socket.gethostname(),retention_day)
         store.metadata(store.root/'history-retention.json',dict(contract='TTO-OBSERVE-RETENTION-v1',retention_days=30,
-            day=retention_day.isoformat(),device_id=registration['device_id'],host=socket.gethostname()))
+            day=retention_day.isoformat(),layout='utc-days' if duration is None else 'session',device_id=registration['device_id'],host=socket.gethostname()))
         store.metadata(store.root/'thread-policy.json',policy)
         store.metadata(store.root/'launch.json',dict(version=__version__,publication_requested=publication_descriptor is not None,mode='observe',registration=registration,clock_start=clock.bracket(),
-            authorization=grant,duration_s=duration,session_max_s=86400,storage_budget=dict(total_bytes=store.budget,segment_bytes=store.segment_bytes,chunk_bytes=store.chunk_bytes),
-            recording=dict(contract='TTO-OBSERVE-HISTORY-v2',encoding='gzip-jsonl-level1-sync-flush',
+            authorization=grant,duration_s=duration,session_max_s=None if duration is None else 86400,storage_budget=dict(total_bytes=store.budget,segment_bytes=store.segment_bytes,chunk_bytes=store.chunk_bytes),
+            recording=dict(contract='TTO-OBSERVE-HISTORY-v3' if duration is None else 'TTO-OBSERVE-HISTORY-v2',encoding='gzip-jsonl-level1-sync-flush',
                 observations='measurements, validity and source references; full native input retained',states_persisted=False),
             legacy_native_config=public_config(config),config_sha256=digest(public_config(config)),local_loopback=local_loopback,
             Requester_count=0,sidecar_count=0,experiment_authorization=False,control_permission=False,process_created=creation))
         if expired:consumer.event('history_days_expired',days=expired,retention_days=30)
         start=time.monotonic();last_status=start-10
     task=asyncio.create_task(collect(config,duration,data_root=store.root/'native',episode=registration['session_id'],run_type='observe',
-        deployment=dict(observe_contract='TTO-OBSERVE-v1',device_registration=registration,simulated=local_loopback,synthetic_loopback_only=local_loopback),stop_event=stop,on_record=consumer.on_record,observe_store=store,on_locked=prepare_recording))
+        deployment=dict(observe_contract='TTO-OBSERVE-v1',recording_layout='utc-days' if duration is None else 'session',
+        network_authorization=dict(kind='explicit_continuous_readonly' if duration is None else 'explicit_bounded_cli',endpoints=[config[s]['base_url'] for s in ('orin','tianshan')],business_writes=False),device_registration=registration,simulated=local_loopback,synthetic_loopback_only=local_loopback),stop_event=stop,on_record=consumer.on_record,observe_store=store,on_locked=prepare_recording))
     workload=None
     if registration.get('workload_event_source'):
         from .observe_workload import EventTail
@@ -232,17 +241,18 @@ async def run_observe(config,registration,out,duration,*,local_loopback=False,st
             now=time.monotonic();sample,prev=read_sample(now-start,prev)
             sample.update(sampled_at_mono_s=now,clock_domain=clock.domain,interval_origin_mono_s=start)
             store.append(store.root,'resources',sample)
-            budget_reason=budget.sample(sample,now-start)
-            resource_state=dict(cpu_single_core_rolling10s=budget.mean,mean_target_pct=5,hard_mean_pct=8,hard_sustain_s=30,rss_limit_bytes=128*1024**2)
+            budget_reason=budget.sample(sample,now-start,enforce=duration is not None)
+            resource_state=dict(cpu_single_core_rolling10s=budget.mean,mean_target_pct=5,hard_mean_pct=8 if duration is not None else None,hard_sustain_s=30 if duration is not None else None,rss_limit_bytes=128*1024**2 if duration is not None else None)
             if budget_reason:reason=budget_reason;stop.set()
             if workload:workload.tick()
+            if duration is None:await asyncio.to_thread(store.seal_days,consumer.ready_days)
             today=datetime.now(timezone.utc).date()
             # Only after the native collector has acquired its exclusive lock.
             if consumer.native_run_id and today!=retention_day:
                 expired=await asyncio.to_thread(expire_history,store.root,registration['device_id'],socket.gethostname(),today)
                 if expired:consumer.event('history_days_expired',days=expired,retention_days=30)
                 retention_day=today
-            if not checkpoint and now-start>=7200:
+            if duration is not None and not checkpoint and now-start>=7200:
                 store.metadata(store.root/'two-hour-checkpoint.json',dict(elapsed_s=now-start,blocking_reason=consumer.fatal,valid_TJ_observed=consumer.valid_TJ,
                     model_trial='insufficient_observations_diagnostic_only' if not consumer.valid_TJ else 'conditional_observation',continue_within_same_authorized_window=not stop.is_set()))
                 checkpoint=True
@@ -266,6 +276,7 @@ async def run_observe(config,registration,out,duration,*,local_loopback=False,st
         if not closed:reason='model_cleanup_unconfirmed'
         end=time.monotonic()
         if consumer.ledger and closed:consumer.ledger.finish(end,'projection_disabled' if consumer.projection_disabled else 'session_end')
+        if consumer.ledger and closed and duration is None:consumer.ledger.advance(end,None)
         scores=consumer.ledger.summary() if consumer.ledger and closed else dict(reason='model_consumer_not_available_or_not_closed')
         scores['all_native_valid_TJ_denominator']=consumer.valid_TJ
         publication_status=None

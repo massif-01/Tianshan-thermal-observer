@@ -19,7 +19,7 @@ from tto.engine import engine_for
 from tto.recordio import log_paths, read_records
 from tto_field.observe_runtime import Consumer
 import tto_field.observe_runtime as runtime
-from tto_field.observe_storage import SessionStore
+from tto_field.observe_storage import DailyStore, history_files
 from tto_field.prediction_view import PredictionView
 from tto_field.web_encoding import WebEncoder
 from tto_web.adapter import Adapter
@@ -73,14 +73,13 @@ class Capture:
 
 
 def read_stream(root,name):
-    index=json.loads((root/'stream-index.json').read_text())
-    return [row for filename in index['streams'].get('./'+name,[]) for row in read_records(root/filename)]
+    return [row for path,live in history_files(root,name) for row in read_records(path,live=live)]
 
 
 def validate(run,output):
     manifest=json.loads((run/'manifest.json').read_text())
     rows=[row for file in log_paths(run,'observations') for row in read_records(file)]
-    store=SessionStore(output/'session',budget=256*1024**2,min_free=0)
+    store=DailyStore(output/'session',min_free=0)
     native=store.root/'native'/'run-replay';native.mkdir(parents=True)
     (native/'manifest.json').write_text(json.dumps(manifest))
     now=[rows[0]['mono_s']]
@@ -101,7 +100,7 @@ def validate(run,output):
         assert consumer.close() and consumer.fatal is None
         assert consumer.model_errors==consumer.publication_errors==consumer.dropped==0
         assert consumer.stateful_observers==1
-        consumer.ledger.finish(now[0]);capture.sync(now[0]+.002);store.close()
+        consumer.ledger.finish(now[0]);consumer.ledger.advance(now[0],None);capture.sync(now[0]+.002);store.close()
     finally:runtime.time=real_time
     assert not read_stream(store.root,'states')
     assert capture.packet_count==len(rows)

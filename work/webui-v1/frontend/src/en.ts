@@ -1,5 +1,5 @@
 // 英文词条：键是界面里的中文原文（含 {name} 占位符）。后端直接给出的中文见 backend-map.ts。
-// 译法对齐天山 OS 已有的英文术语（Fan / Temperature / Power / Event / Pause / Connected / Disconnected / Unknown / Valid / Protection）。
+// 译法对齐 TianshanOS 已有的英文术语（Fan / Temperature / Power / Event / Pause / Connected / Disconnected / Unknown / Valid / Protection）。
 export const EN:Record<string,string>={
  "发布失败 · 最终结果未确认":"Publication failed · final results unconfirmed",
  "已结束 · 历史来源 {n}":"Ended · history source {n}",
@@ -122,7 +122,7 @@ export const EN:Record<string,string>={
  "GPU 温度": "GPU temperature",
  "GPU 供电功率，模型的输入之一，与 CPU·SoC·内存供电互相独立。": "GPU rail power, one of the model inputs, independent of the CPU·SoC·memory rail.",
  "CPU、SoC 与内存的供电功率，模型的输入之一，不是整机总功耗。": "Power of the CPU, SoC and memory rail, one of the model inputs; not total system power.",
- "天山 OS 已执行的风扇输出（PWM），模型的散热输入。TTO 只读。": "Fan output (PWM) applied by TianshanOS, the cooling input of the model. TTO is read-only.",
+ "TianshanOS 已执行的风扇输出（PWM），模型的散热输入。TTO 只读。": "Fan output (PWM) applied by TianshanOS, the cooling input of the model. TTO is read-only.",
  "实测结温。模型用它校正自己的估计，不是功耗，也不是预测。": "Measured junction temperature. The model uses it to correct its own estimate; it is neither power nor a forecast.",
  "Tf、Ts 是 G2 热模型对热状态的估计，不是传感器读数。Ts 是模型内部的慢变量，E 是等效边界，都不代表结构或环境温度。": "Tf and Ts are the G2 thermal model’s estimates of the thermal state, not sensor readings. Ts is a slow internal variable and E is the equivalent boundary; none of them represents a structure or ambient temperature.",
  "假设当前负载保持不变，分别算出 +15 / +45 / +90 秒后的结温参考；三点分别实算，不是连续轨迹，也不是控制指令。": "Assuming the current load is held, junction temperature references at +15 / +45 / +90 s are computed separately; they are three separate calculations, not a continuous trajectory and not a control command.",
@@ -146,8 +146,7 @@ export const EN:Record<string,string>={
  "未报告保护": "No protection reported",
  "暂无可用的建议依据": "No basis for a suggestion",
  "{v}% · 观察参考": "{v}% · observation reference",
- "风扇观察建议已暂停（主板保护中）；天山OS继续负责保护。": "Fan suggestion paused (board protection active); TianshanOS remains in charge of protection.",
- "；天山OS继续负责保护。": "; TianshanOS remains in charge of protection.",
+ "风扇观察建议已暂停（主板保护中）。": "Fan suggestion paused (board protection active).",
  "模型状态": "Model state",
  "跟踪中": "Tracking",
  "降级 · 条件不完整": "Degraded · incomplete conditions",
@@ -194,7 +193,7 @@ export const EN:Record<string,string>={
  "设备数据资格已到期或不可用": "Device data validity expired or unavailable",
  "已观察时长": "Observed for",
  "风扇控制": "Fan control",
- "天山OS：{v}": "TianshanOS: {v}",
+ "TianshanOS：{v}": "TianshanOS: {v}",
  "本系统角色": "Role of this system",
  "只读，给出参考": "Read-only, gives references",
  "热模型": "Thermal model",
@@ -242,7 +241,7 @@ export const EN:Record<string,string>={
  "实测结温与模型估计": "Measured junction temp and model estimate",
  "CPU 与 GPU 温度": "CPU and GPU temperature",
  "GPU 与 CPU·SoC·内存 两路供电功率": "GPU and CPU·SoC·memory rail power",
- "已执行 PWM 与天山OS 目标 PWM": "Applied PWM and TianshanOS target PWM",
+ "已执行 PWM 与 TianshanOS 目标 PWM": "Applied PWM and TianshanOS target PWM",
  "{name}，最近时间范围": "{name}, recent time range",
  "Tianshan Thermal Observer · 只读观察 · 研究状态与条件预测不构成风扇控制指令 · 界面": "Tianshan Thermal Observer · read-only observation · research state and conditional forecasts are not fan control commands · UI",
  "+15 秒": "+15 s",

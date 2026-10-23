@@ -95,3 +95,78 @@ def test_thirty_day_history_expires_whole_days_across_restart(tmp_path,monkeypat
             assert result['reason']=='duration' and result['native_callbacks']>0 and not blocked.exists()
             assert all(row['interval_origin_mono_s']>=finished[0] for row in read_records(tmp_path/'restarted/resources.jsonl.gz'))
     asyncio.run(start())
+
+
+def test_continuous_days_cross_midnight_prune_and_archive(tmp_path,monkeypatch):
+    from datetime import date,timedelta
+    from tto_field.observe_storage import DailyStore,expire_history,history_files
+    from tto_field.observe_predictions import Ledger
+    from tto_field.observe_cli import archive
+    from test_observe_contract import frame,outputs
+    from tto.util import file_hash
+    from tto.recordio import read_records
+    day=[date(2026,10,1)];root=tmp_path/'continuous'
+    store=DailyStore(root,today=lambda:day[0],min_free=0,chunk_bytes=20000)
+    store.metadata(root/'history-retention.json',dict(layout='utc-days',device_id='one',host='host',day=str(day[0])))
+    ledger=Ledger(lambda name,row:store.append(root,name,row),dict(run_id='r',clock_domain='d'),daily=True)
+    def rows(stream):return [row for p,live in history_files(root,stream) for row in read_records(p,live=live)]
+    def consume(t):ledger.consume(frame(t),t+.01,outputs(),state_status='tracking',wall_clock=dict(utc=str(day[0])+'T23:59:30Z',mono_s=t+.01))
+    consume(0);day[0]+=timedelta(days=1);consume(35);consume(50);consume(90)
+    ledger.advance(90,str(day[0]))
+    # A slow seal must release the current writer, not cause model lag at midnight.
+    import threading
+    started=threading.Event();release=threading.Event();written=threading.Event()
+    close=SessionStore.close
+    def slow_close(journal):
+        started.set();assert release.wait(5);close(journal)
+    ready=set(store.days)-{p['origin_day'] for b in ledger.pending for p in b['items']}-{str(day[0])}
+    with monkeypatch.context() as patch:
+        patch.setattr(SessionStore,'close',slow_close)
+        seal=threading.Thread(target=store.seal_days,args=(ready,));seal.start()
+        assert started.wait(2)
+        writer=threading.Thread(target=lambda:(store.append(root,'events',dict(reason='during_seal')),written.set()))
+        writer.start()
+        try:assert written.wait(2)
+        finally:release.set();seal.join(2);writer.join(2)
+        assert not seal.is_alive() and not writer.is_alive()
+    assert (root/'days/2026-10-01/files.json').exists()
+    scored=[r for r in rows('scores') if r['status']=='scored' and r['horizon_s']==90]
+    assert len(scored)==3 and {r['origin_day'] for r in scored}=={'2026-10-01'}
+    assert json.loads((root/'days/2026-10-01/scoring.json').read_text())['per_method']['G2-HOLD/90']['n']==1
+    # Missing sources still settle their existing targets and release old day statistics.
+    ledger.advance(183,str(day[0]));assert not ledger.pending
+    assert ledger.last_anchor==90 and ledger.identity['run_id']=='r'
+    cli=Path(sys.executable).with_name('tto-observe')
+    result=subprocess.run([str(cli),'history','--session',str(root),'--stream','scores','--last','1000'],capture_output=True,text=True,check=True)
+    settled=[row['settled_mono_s'] for row in json.loads(result.stdout)]
+    assert settled==sorted(settled) and settled[-1]==183
+    for n in range(2,33):
+        day[0]=date(2026,10,1)+timedelta(days=n)
+        store.append(root,'observations',dict(n=n))
+        store.seal_days(set(store.days)-{str(day[0])});expire_history(root,'one','host',day[0])
+    assert len(list((root/'days').iterdir()))==30 and not (root/'days/2026-10-01').exists()
+    # Recent startup failures have metadata but no daily records yet; retain their evidence.
+    for name,age in [('recent-failed',0),('expired-failed',31)]:
+        failed=tmp_path/name;failed.mkdir()
+        (failed/'history-retention.json').write_text(json.dumps(dict(layout='utc-days',device_id='one',host='host',day=str(day[0]-timedelta(days=age)))))
+        (failed/'failure.json').write_text('{"reason":"startup_write_failed"}')
+    expire_history(root,'one','host',day[0])
+    assert (tmp_path/'recent-failed/failure.json').is_file() and not (tmp_path/'expired-failed').exists()
+    # Active history remains readable; a small clock correction cannot reopen a sealed day.
+    last=store.recording_day();day[0]-=timedelta(days=1)
+    store.append(root,'observations',dict(n=33));assert store.recording_day()==last
+    assert rows('observations')[-1]['n']==33
+    store.metadata(root/'status.json',dict(running=False));store.metadata(root/'summary.json',dict(scope='synthetic retained window'))
+    # Closing only seals the open day, never re-reads already sealed raw data.
+    old=(root/'days/2026-10-04/observations-0001.jsonl.gz');before=file_hash(old)
+    import tto_field.observe_storage as storage
+    def hash_open_only(path):
+        assert Path(path)!=old, 'sealed raw file re-hashed on shutdown'
+        return file_hash(path)
+    with monkeypatch.context() as patch:
+        patch.setattr(storage,'file_hash',hash_open_only);store.close()
+    assert file_hash(old)==before
+    assert archive(root,tmp_path/'retained.zip')['files_verified']>30
+    before=old.read_bytes();old.write_bytes(before+b'bad')
+    import pytest
+    with pytest.raises(ValueError,match='SHA mismatch'):archive(root,tmp_path/'invalid.zip')
