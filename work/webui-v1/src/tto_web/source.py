@@ -147,7 +147,6 @@ async def observe(config, state, stop, publication=None):
             publisher.publish(encode)
         async def drain():
             with lock:rows=list(queue);queue.clear()
-            if rows:await asyncio.to_thread(state.prepare_model)
             for row in rows:state.accept(row)
         round_stop=asyncio.Event()
         task=asyncio.create_task(collect(native,native['run']['max_duration_s'],stop_event=round_stop,on_record=record,journal_factory=factory,continuous=True,manage_signals=False,run_type='web-observe'))
@@ -180,21 +179,87 @@ async def observe(config, state, stop, publication=None):
         delay=min(OBSERVE_RETRY_MAX_S,delay*2)
 
 
+def publication_descriptor(path):
+    """The supported descriptor states; anonymous identity is legacy terminal only."""
+    meta=load(path)
+    if not isinstance(meta,dict) or meta.get('schema')!='TTO-WEB-ACTIVE-v1' or meta.get('boot_id')!=boot_id():
+        raise ValueError('descriptor identity')
+    ended=meta.get('ended');failed=meta.get('publication_failed',False)
+    if type(ended) is not bool or type(failed) is not bool or ended and failed:
+        raise ValueError('descriptor lifecycle')
+    publisher=meta.get('publisher_id')
+    if publisher is not None and (not isinstance(publisher,str) or not publisher):
+        raise ValueError('descriptor publisher identity')
+    final=meta.get('prediction_final')
+    if ended:
+        if final is not None and (final!='predictions-final.json' or publisher is None):
+            raise ValueError('terminal prediction identity/filename')
+        return publisher,'ended',final is not None
+    if publisher is None:raise ValueError('active descriptor requires publisher identity')
+    if final is not None:raise ValueError('prediction final requires ended descriptor')
+    if failed:return publisher,'failed',False
+    if meta.get('socket')!='publication.sock':raise ValueError('descriptor socket must be local fixed basename')
+    ledger=meta.get('prediction_socket') is not None
+    if ledger or meta.get('prediction_protocol') is not None:
+        if meta.get('prediction_socket')!='predictions.sock' or meta.get('prediction_protocol')!='TTO-PREDICTION-PAGE-v1':
+            raise ValueError('prediction protocol')
+    return publisher,'live',ledger
+
+
+async def cancel_receivers(receivers):
+    for task in receivers:task.cancel()
+    await asyncio.gather(*receivers,return_exceptions=True)
+    receivers.clear()
+
+
 async def follow(config, state, stop):
+    """Sole lifecycle owner: retire old receivers before changing display identity."""
+    from .predictions import follow_predictions
     descriptor=config['source'].get('active_descriptor')
     if not descriptor:
         state.source_status='尚未配置观察来源';await stop.wait();return
-    path=Path(descriptor)
+    path=Path(descriptor);registration=object();receivers=set()
+    try:
+        while not stop.is_set():
+            # A failed child is observed by its owner, never silently abandoned.
+            for task in tuple(receivers):
+                if task.done():
+                    receivers.remove(task);task.result()
+            try:current=publication_descriptor(path)
+            except (OSError,ValueError):current=None
+            if current!=registration:
+                await cancel_receivers(receivers)
+                registration=current
+                state.forecast=None
+                if current is None:
+                    state.prediction_syncing=True
+                    state.disconnect('发布描述文件不可用，等待有效注册')
+                else:
+                    publisher,phase,ledger=current
+                    if publisher is not None:state.begin_publication(publisher)
+                    state.prediction_syncing=ledger;state.prediction_failed=phase=='failed'
+                    if phase=='live':
+                        receivers.add(asyncio.create_task(follow_publication(path.parent,state,stop)))
+                        state.refresh()
+                    else:
+                        reason='发布异常结束；后台观察状态未知' if phase=='failed' else '来源已结束，等待生产者注册'
+                        # An anonymous old terminal cannot settle any ledger or name a new run.
+                        state.disconnect(reason,ended=phase=='ended' and publisher is not None)
+                    if ledger:
+                        receivers.add(asyncio.create_task(follow_predictions(path.parent,state,stop,ended=phase=='ended')))
+            await asyncio.sleep(.5)
+    finally:
+        await cancel_receivers(receivers)
+        state.forecast=None
+        state.disconnect('发布接收已停止')
+
+
+async def follow_publication(directory, state, stop):
+    """Receive frames for the registration owned by follow; never read active.json."""
     while not stop.is_set():
         writer=None
         try:
-            meta=load(path)
-            if meta.get('schema')!='TTO-WEB-ACTIVE-v1' or meta.get('boot_id')!=boot_id():raise ValueError('descriptor identity')
-            if meta.get('ended'):
-                state.disconnect('已结束，等待生产者注册',ended=True);await asyncio.sleep(1);continue
-            if meta.get('socket')!='publication.sock':raise ValueError('descriptor socket must be local fixed basename')
-            reader,writer=await asyncio.open_unix_connection(str(path.parent/'publication.sock'),limit=512*1024)
-            await asyncio.to_thread(state.prepare_model)
+            reader,writer=await asyncio.open_unix_connection(str(directory/'publication.sock'),limit=512*1024)
             while not stop.is_set():
                 line=await asyncio.wait_for(reader.readline(),3.)
                 if not line:raise ConnectionError('producer closed')

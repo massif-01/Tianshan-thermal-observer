@@ -69,13 +69,38 @@ def test_encoder_unavailable_is_renderable_and_deadline_never_renewed():
     assert packet['consumable_until_mono_s']==11
     assert 'Tf_C' not in state['observer']
     web=State({'source':{'mode':'follow'},'advisory':{}})
-    packet['metrics']=[dict(id='temperature.tj',value=40.,status='valid',sample_id='tj',
+    packet['metrics']=[dict(id='temperature.tj',label='TJ',kind='observed',unit='°C',reason_code=None,
+        source_id='synthetic',source_time_utc=None,time_quality='same_clock',value=40.,status='valid',sample_id='tj',
         as_of_elapsed_ms=0.,_at=10.,_expiry=12.,source_ref='r',received_at_utc='x',
         remaining_valid_ms=2000.,age_lower_bound_ms=0.,last_observation=None)]
     web.accept(packet,now=10.1);web.refresh(10.1)
     assert web._snapshot['model']['Tf_C'] is None
     web.refresh(20)
     assert web._snapshot['model']['remaining_valid_ms']==0
+    # Model-failure ledger output must remain valid at the display boundary.
+    from tto_field.observe_predictions import Ledger
+    from tto_field.prediction_view import PredictionView
+    from tto_field.web_encoding import SPEC_ID
+    from test_observe_contract import frame as ledger_frame, outputs
+    import jsonschema
+    rows=[];view=PredictionView(10.)
+    def committed(stream,row):
+        rows.append(row);view.committed(stream,row)
+    ledger=Ledger(committed,dict(run_id='run-A',clock_domain='test',model_id='frozen',model_sha256=SPEC['model_sha256'],spec_sha256=SPEC_ID))
+    f=ledger_frame(10.);f['identity']['run_id']='run-A'
+    ledger.consume(f,10.01,[],state_status='unavailable',wall_clock=dict(utc='2026-10-23T00:00:00Z',mono_s=10.01))
+    page=dict(view.page(now=10.02),boot_id=BOOT,publisher_id='unavailable-test')
+    web.begin_publication('unavailable-test');web.accept_predictions(page,now=10.02)
+    for name in ('src/tto_web','requirements'):
+        schema=json.loads((ROOT/'work/webui-v1'/name/'contracts/dashboard.schema.json').read_text())
+        if name=='src/tto_web':jsonschema.validate(web.snapshot(),schema)
+        for row in web.snapshot()['predictions']:
+            jsonschema.validate(row,{'$defs':schema['$defs'],'$ref':'#/$defs/forecast'})
+    assert len(view.rows)==3 and all(r['conditional_assumptions'] is None for r in view.rows.values())
+    assert all(r['conditional_assumptions']==[] for r in rows)  # Formal ledger stays unchanged.
+    f=ledger_frame(15.);f['identity']['run_id']='run-A'
+    ledger.consume(f,15.01,outputs(),state_status='tracking',wall_clock=dict(utc='2026-10-23T00:00:05Z',mono_s=15.01))
+    assert all(r['conditional_assumptions']=={'PWM':'conditional'} for r in list(view.rows.values())[-3:])
 
 
 def orin_bundle(t, *, sample_time=None, epoch=0, gpu_status=None):
@@ -222,7 +247,7 @@ def test_slow_socket_disconnects_but_producer_keeps_publishing(pubdir,monkeypatc
         result=p.close();sock.close();assert result['worker_stopped']
 
 
-def test_actual_follow_disconnect_subscriber_restart_producer_restart_and_expiry(pubdir):
+def test_actual_follow_disconnect_subscriber_restart_producer_restart_and_expiry(pubdir,monkeypatch):
     async def go():
         config={'source':{'mode':'follow','active_descriptor':str(pubdir/'active.json')},'advisory':{}}
         p=Publication(pubdir/'active.json',BOOT,test_replay=True).start()
@@ -250,6 +275,14 @@ def test_actual_follow_disconnect_subscriber_restart_producer_restart_and_expiry
             assert state.packet['source_epoch']==0
             state.refresh(state.packet['input_mono_s']+10)
             assert state._snapshot['model']['remaining_valid_ms']==0
+            # Programming failures in a receiver must be observed by the owner,
+            # which retires siblings and withdraws current values before exiting.
+            def broken_accept(*args,**kwargs):raise RuntimeError('owned receiver failure')
+            monkeypatch.setattr(state,'accept',broken_accept)
+            p.submit(*bundle(run='run-B'))
+            await until(task.done)
+            assert isinstance(task.exception(),RuntimeError) and not state.source_connected
+            assert state.forecast is None
         finally:
             stop.set();task.cancel();await asyncio.gather(task,return_exceptions=True);await asyncio.to_thread(p.close)
     asyncio.run(go())
@@ -277,7 +310,7 @@ def test_local_collector_publication_failure_keeps_native_and_states(tmp_path,pu
     asyncio.run(go())
 
 
-@pytest.mark.parametrize('fault',['none','encode','submit','close','thread_start'])
+@pytest.mark.parametrize('fault',['none','encode','submit','close','thread_start','view'])
 def test_collector_socket_values_and_publication_faults_do_not_stop_recording(tmp_path,pubdir,monkeypatch,fault):
     from fake_source import FakeSource
     from tto.config import load_config
@@ -291,9 +324,13 @@ def test_collector_socket_values_and_publication_faults_do_not_stop_recording(tm
     if fault=='submit':
         def fail(*args):raise OSError('owned enqueue failure')
         monkeypatch.setattr(Publication,'submit',fail)
+    if fault=='view':
+        from tto_field.prediction_view import PredictionView
+        def fail(*args):raise ValueError('owned read projection failure')
+        monkeypatch.setattr(PredictionView,'apply',fail)
     if fault=='close':
         close=Publication.close
-        def fail(self):close(self);raise OSError('owned close failure')
+        def fail(self,**kwargs):close(self,**kwargs);raise OSError('owned close failure')
         monkeypatch.setattr(Publication,'close',fail)
     if fault=='thread_start':
         start=threading.Thread.start
@@ -355,6 +392,12 @@ def test_collector_socket_values_and_publication_faults_do_not_stop_recording(tm
                 if tj:assert tj['value']==native['measurement']['tj']['value_C']
             assert result['publication']['errors']==result['publication_callback_errors']==0
             assert checks and all(checks)
+        elif fault=='view':
+            assert result['publication']['prediction_view_failure']=='ValueError'
+            assert result['model_errors']==0 and not result['error']
+            assert (tmp_path/'session/predictions.jsonl').stat().st_size and (tmp_path/'session/scores.jsonl').stat().st_size
+            final=json.loads((pubdir/'predictions-final.json').read_text())
+            assert final['sync_status']=='unavailable' and final['forecast']['latest_prediction_ids']==[]
         elif fault=='submit':assert result['publication_callback_errors']>0
         elif fault=='thread_start':
             assert result['publication'] is None and result['publication_callback_errors']==0

@@ -75,36 +75,57 @@ def test_gpu_native_age_and_same_source_metric_ages(outer):
 
 
 @pytest.mark.asyncio
-async def test_source_time_label_settlement_through_publication_receive(publication_dir):
-    p=Producer(time.monotonic()-120);s=State(web_config())
-    # Explicit receive-clock substitute: UDS Publication/follow/State.accept remain real.
-    receive=[p.start+.01];accept=s.accept
-    s.accept=lambda packet:accept(packet,now=receive[0])
+async def test_legacy_publication_does_not_invent_unrecorded_predictions(publication_dir):
+    from tto_web.common import atomic_json,boot_id
+    p=Producer(time.monotonic()-20);s=State(web_config())
     config=web_config();descriptor=publication_dir/'active.json';config['source']['active_descriptor']=str(descriptor)
     stop=asyncio.Event()
-    async with Publication(descriptor) as pub:
-        task=asyncio.create_task(follow(config,s,stop))
-        async def deliver(packet,at):
-            receive[0]=p.start+at;pub.put(packet)
-            for _ in range(100):
-                if s.packet and s.packet['input_mono_s']==packet['input_mono_s']:return
-                await asyncio.sleep(.01)
-            raise AssertionError('publication not consumed')
-        try:
-            for t in range(24):await deliver(p.step(t),t+.01)
-            pred=next(v for v in s.predictions if v['origin_elapsed_ms']==9000 and v['horizon_s']==15)
-            original=pred['value_C'];await deliver(p.row('fan',24.5,p.fan()),24.51)
-            s.refresh(p.start+26.1);assert pred['status']=='pending'
-            await deliver(p.step(25,tj=48),26.2)
-            assert pred['status']=='matched' and pred['observed_C']==48 and pred['value_C']==original
-            view=s.prediction_view(15,records_after=26100)
-            assert any(v['prediction_id']==pred['prediction_id'] and v['status']=='matched' for v in view['records'])
-            assert view['summary']['matched_count']==sum(v['status']=='matched' for v in s.predictions if v['horizon_s']==15)
-            assert view['summary']['due_count']==sum(v['target_elapsed_ms']<=26200 and v['horizon_s']==15 for v in s.predictions)
-            await deliver(p.step(29),29.01)
-            late=next(v for v in s.predictions if v['origin_elapsed_ms']==11000 and v['horizon_s']==15)
-            assert late['status']=='missing_label'
-        finally:task.cancel();await asyncio.gather(task,return_exceptions=True)
+    task=asyncio.create_task(follow(config,s,stop));fresh_task=None
+    async def until(check):
+        for _ in range(300):
+            assert not task.done(),repr(task.exception())
+            if check():return
+            await asyncio.sleep(.01)
+        raise AssertionError('legacy lifecycle did not recover')
+    try:
+        await until(lambda:'描述文件不可用' in s.source_status)
+        async with Publication(descriptor) as pub:
+            pub.put(p.step(20))
+            await until(lambda:s.source_connected)
+            assert s.packet and s.predictions=={}
+            assert s.snapshot()['forecast']['status']=='not_connected'
+            old=s.packet['run_id']
+            registration=json.loads(descriptor.read_text());descriptor.unlink()
+            await until(lambda:not s.source_connected and '描述文件不可用' in s.source_status)
+            atomic_json(descriptor,registration)
+            await until(lambda:s.source_connected)
+            assert s.packet['run_id']==old
+        # Keep the follower alive across the actual legacy writer's anonymous terminal.
+        terminal=json.loads(descriptor.read_text());assert terminal['ended'] and 'publisher_id' not in terminal
+        await until(lambda:not s.source_connected and '结束' in s.source_status)
+        assert not s.prediction_ended and not s.prediction_view()['records_complete']
+        # Starting at that same terminal must also keep waiting for the next owner.
+        fresh=State(config);fresh_task=asyncio.create_task(follow(config,fresh,stop))
+        await until(lambda:'结束' in fresh.source_status)
+        for invalid in ([],dict(terminal,ended=False),dict(terminal,boot_id='other-boot'),
+                        dict(terminal,ended='yes'),dict(terminal,prediction_final='predictions-final.json')):
+            atomic_json(descriptor,invalid)
+            await until(lambda:'描述文件不可用' in s.source_status)
+            await asyncio.sleep(.55)
+            assert not task.done() and not fresh_task.done()
+            assert '描述文件不可用' in s.source_status and '描述文件不可用' in fresh.source_status
+            assert not s.source_connected and s.snapshot()['forecast']['latest_prediction_ids']==[]
+        async with Publication(descriptor) as pub:
+            other=Producer(time.monotonic()-1);pub.put(other.step(1))
+            await until(lambda:s.source_connected and fresh.source_connected and s.packet['run_id']!=old)
+            assert s.packet['run_id']==fresh.packet['run_id'] and not s.predictions and not fresh.predictions
+            assert s.snapshot()['forecast']['status']=='not_connected'
+        await until(lambda:not s.source_connected and not fresh.source_connected)
+        assert not fresh_task.done()
+    finally:
+        stop.set();task.cancel()
+        if fresh_task:fresh_task.cancel()
+        await asyncio.gather(*([task,fresh_task] if fresh_task else [task]),return_exceptions=True)
 
 
 def test_events_are_scoped_to_current_run_and_epoch():

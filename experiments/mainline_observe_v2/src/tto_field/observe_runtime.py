@@ -20,15 +20,17 @@ class StopObservation(RuntimeError):
     """Identity or native recording loss; stop only this program."""
 
 class Consumer:
-    def __init__(self,store,registration,clock,stop,loop,*,lag_limit=.25,publication=None):
-        self.publication=publication;self.publication_errors=0
+    def __init__(self,store,registration,clock,stop,loop,*,lag_limit=.25,publication=None,prediction_view=None):
+        self.publication=publication;self.publication_errors=0;self.prediction_view=prediction_view
         self.store=store;self.registration=registration;self.clock=clock;self.stop=stop;self.loop=loop
         self.queue=queue.Queue(maxsize=64);self.lag_limit=lag_limit;self.closed=threading.Event()
         self.projection=self.communication=None;self.latest=None;self.engine_id=None;self.native_run_id=None;self.device_uuid=registration.get('expected_gpu_uuid')
         self.callbacks=0;self.valid_TJ=0;self.projection_disabled=False;self.dropped=0;self.seen_dropped=0;self.fatal=None;self.model_errors=0;self.history=deque(maxlen=181)
         self.stateful_observers=0;self.ledger=None;self.observer=None;self.predictor=None;self.model_reinitialize=False
         self.thread=threading.Thread(target=self._work,name='frozen-model-consumer',daemon=True);self.thread.start()
-    def emit(self,name,row):self.store.append(self.store.root,name,row)
+    def emit(self,name,row):
+        self.store.append(self.store.root,name,row)
+        if self.prediction_view and name in ('predictions','scores'):self.prediction_view.committed(name,row)
     def event(self,reason,**extra):self.emit('events',dict(reason=reason,mono_s=time.monotonic(),utc=utc(),**extra))
     def block(self,reason):
         self.fatal=reason;self.loop.call_soon_threadsafe(self.stop.set)
@@ -174,6 +176,7 @@ class Consumer:
                         experiment_authorization=False,start_allowed=False,control_permission=False,
                         raw_recording_independent=True,model_lag_s=issued-frame['t'],business_events='unknown')
                     self.emit('states',env);self.latest=env
+                    if self.prediction_view:self.prediction_view.committed('context',(frame,state,env['clock']['model_consumable_until_mono_s']))
                     self.publish(inputs,frame,state,env['clock']['model_consumable_until_mono_s'])
                 except (OSError,ValueError) as exc:self.block('derived_recorder_error:'+type(exc).__name__)
                 except Exception as exc:
@@ -196,12 +199,14 @@ async def run_observe(config,registration,out,duration,*,local_loopback=False,st
     Registry(Path(out).parent/'.tto-observe-ledger').claim(registration['session_id'],registration['session_id'])
     store=SessionStore(out,**(storage_options or {}))
     publication=None;publication_error=None
+    from .prediction_view import PredictionView
+    prediction_view=PredictionView(clock.origin) if publication_descriptor is not None else None
     if publication_descriptor is not None:
         try:
             from .web_publication import Publication
-            publication=Publication(publication_descriptor,registration['boot_id'],registration['device_id'],process_clock_domain=clock.domain).start()
+            publication=Publication(publication_descriptor,registration['boot_id'],registration['device_id'],process_clock_domain=clock.domain,prediction_view=prediction_view).start()
         except Exception as exc:publication_error=dict(phase='initialization',error_class=type(exc).__name__)
-    consumer=Consumer(store,registration,clock,stop,loop,publication=publication)
+    consumer=Consumer(store,registration,clock,stop,loop,publication=publication,prediction_view=prediction_view)
     store.metadata(store.root/'thread-policy.json',policy)
     proc=psutil.Process();creation=proc.create_time();reason='duration';native=None;error=None
     store.metadata(store.root/'launch.json',dict(version=__version__,publication_requested=publication_descriptor is not None,mode='observe',registration=registration,clock_start=clock.bracket(),
@@ -252,7 +257,7 @@ async def run_observe(config,registration,out,duration,*,local_loopback=False,st
         scores['all_native_valid_TJ_denominator']=consumer.valid_TJ
         publication_status=None
         if publication:
-            try:publication_status=await asyncio.to_thread(publication.close)
+            try:publication_status=await asyncio.to_thread(publication.close,completed=closed and consumer.ledger is not None)
             except Exception as exc:publication_error=dict(phase='close',error_class=type(exc).__name__)
         summary=dict(version=__version__,publication=publication_status,publication_lifecycle_error=publication_error,publication_callback_errors=consumer.publication_errors,reason=reason,error=error,elapsed_s=end-clock.origin,clock_end=clock.bracket(),pid=os.getpid(),
             native_run_id=consumer.native_run_id,collector_invocation_count=1,collector_count=len(list((store.root/'native').glob('run-*/manifest.json'))),stateful_observer_count=consumer.stateful_observers,
