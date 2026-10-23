@@ -1,13 +1,27 @@
 {
-  "stage": "ssh-host-key-verification",
-  "authenticated": false,
-  "remote_commands_executed": false,
-  "installed": false,
-  "web_started": false,
-  "short_test_ran": false,
-  "host": "10.10.99.99",
-  "advertised_ed25519": "SHA256:HQvcud5hAnBLTowvo3M4QQKO6ZIdK429gL56eu0VJq0",
-  "existing_host_identity_matches": false,
+  "stage": "installed-and-short-tested",
+  "authenticated": true,
+  "remote_commands_executed": true,
+  "installed": true,
+  "web_started": true,
+  "short_test_ran": true,
+  "field_acceptance_passed": false,
+  "prefix": "/home/rm01/TTO-unified-rc7-20261024",
+  "issue": "normal stop selects empty source_epoch2 while retained predictions belong to epoch1",
   "known_hosts_unchanged": true,
-  "action": "wait for trusted host identity confirmation; no StrictHostKeyChecking bypass"
+  "host_key_method": "per-task pinned ED25519 key after explicit user instruction to log in",
+  "owned_test_processes_stopped": true,
+  "previous_blocked_attempt": {
+    "stage": "ssh-host-key-verification",
+    "authenticated": false,
+    "remote_commands_executed": false,
+    "installed": false,
+    "web_started": false,
+    "short_test_ran": false,
+    "host": "10.10.99.99",
+    "advertised_ed25519": "SHA256:HQvcud5hAnBLTowvo3M4QQKO6ZIdK429gL56eu0VJq0",
+    "existing_host_identity_matches": false,
+    "known_hosts_unchanged": true,
+    "action": "wait for trusted host identity confirmation; no StrictHostKeyChecking bypass"
+  }
 }

@@ -1,0 +1,94 @@
+{
+  "scope": "N305 installed real readonly observe + Web, 180s; no inference or control writes",
+  "prefix": "/home/rm01/TTO-unified-rc7-20261024",
+  "duration_s": 180,
+  "pre_restart_records": 21,
+  "web_stop_with_sse_s": 0.11371429299470037,
+  "recording_grew_without_web": {
+    "before_bytes": [
+      1639347,
+      162288
+    ],
+    "after_bytes": [
+      2005604,
+      198476
+    ]
+  },
+  "restored_same_ids": 21,
+  "new_web_epoch": "03950691-b86e-4950-96bb-80b827481c57",
+  "observer_returncode": 0,
+  "passed": false,
+  "error": "AssertionError",
+  "detail": "(0, 0)",
+  "owned_web_processes_stopped": true,
+  "owned_observer_stopped": true,
+  "backend_final_records_equal": 108,
+  "backend_final_scores_equal": 108,
+  "formal_records": 102,
+  "formal_matched_by_horizon": {
+    "15": 31,
+    "45": 25,
+    "90": 16
+  },
+  "terminal_identity": {
+    "run_id": "aff5987dc2ac390a",
+    "source_epoch": 2,
+    "model_id": "dff52c3e641d54bd07f0b5543909166e11a5d935c92474ab9f7b4a08c5396ff0",
+    "spec_id": "2080adcf20773650299def2bb0f3ebdb9f87d8f85281d5b87a99d8b406c83c6b"
+  },
+  "record_epochs": [
+    1
+  ],
+  "session_index_verified_files": 21,
+  "resource_samples": 179,
+  "backend_peak_sampled_rss_bytes": 80904192,
+  "summary": {
+    "version": "0.2.4+observe.5",
+    "reason": "duration",
+    "error": null,
+    "elapsed_s": 180.25173720199382,
+    "collector_count": 1,
+    "stateful_observer_count": 1,
+    "valid_TJ_observed": 180,
+    "model_errors": 0,
+    "model_dropped_frames": 0,
+    "native_callbacks": 575,
+    "publication": {
+      "submitted": 575,
+      "published": 575,
+      "dropped": 0,
+      "errors": 0,
+      "last_error": null,
+      "slow_clients": 0,
+      "connected": 2,
+      "max_pending": 2,
+      "running": false,
+      "pending": 0,
+      "worker_stopped": true,
+      "prediction_view_failure": null
+    },
+    "Requester_count": 0,
+    "control_permission": false
+  },
+  "backend_cpu_single_core_mean": 6.980117575100455,
+  "backend_cpu_single_core_peak_sample": 9.950641533995524,
+  "native_summary_selected": {
+    "stop_reason": "duration",
+    "observations": null,
+    "dropped": 0,
+    "poll_missed": 0,
+    "duration_s": null
+  },
+  "host": {
+    "hostname": "lpmu305",
+    "platform": "Linux-6.8.0-147-generic-x86_64-with-glibc2.39",
+    "python": "3.10.22",
+    "cpu": "Intel Core i3-N305"
+  },
+  "old_configuration_unchanged": true,
+  "test_pids_absent": {
+    "310861": true,
+    "310862": true,
+    "310955": true
+  }
+}
