@@ -30,6 +30,7 @@ async (page) => {
   await page.locator('[data-node="est"]').click();
   await page.waitForFunction(()=>document.querySelector('#nodeAside')?.textContent?.includes('模型内部的慢变量'));
   checks.nodeDetail=true;
+  checks.forecastTargets=await page.evaluate(()=>{const r=[...document.querySelectorAll('#futureValues .row')];return r.length===3&&r.every(x=>/\d{2}:\d{2}:\d{2}/.test(x.textContent||''))&&/秒前发出/.test(document.querySelector('#futureNote')?.textContent||'');});
   await page.locator('#fields summary').click();await page.getByLabel('字段搜索').fill('cpu.cores.0');
   checks.coreFields=await page.locator('#fieldRows tr').count();
   if(checks.coreFields!==2)throw new Error('core field search failed');
