@@ -166,12 +166,14 @@ def sessions(c, section, socketio=False):
 
 
 async def collect(config, duration, model=None, data_root=None, episode=None, deployment=None, run_type=None,
-                  stop_event=None, on_record=None, observe_store=None):
+                  stop_event=None, on_record=None, observe_store=None, on_locked=None):
     if observe_store is not None and run_type != "observe":
         raise ValueError("observe store requires explicit observe mode")
     require_live(config, duration, observe=observe_store is not None)
     # No networking is constructed until this explicitly live function is called.
     with InstanceLock():
+        # Finish recording initialization before any collection/monitor I/O can run.
+        if on_locked is not None:on_locked()
         recorded_deployment = dict(deployment or {})
         recorded_deployment['polling_contract'] = {'version': 'TTO-POLL-INDEPENDENT-v1',
             'max_inflight_per_endpoint': 1, 'max_total_inflight': 2,

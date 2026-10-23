@@ -23,6 +23,7 @@ def sample(mode,duration):
     initialize()
     from tto_field.g2_model.g2_runtime import Predictor
     Predictor()  # Same numerical import warmup, outside all measurement windows.
+    from tto.recordio import log_paths,read_records
     import psutil
     from fake_source import FakeSource
     from tto.config import load_config
@@ -67,7 +68,7 @@ def sample(mode,duration):
                     if task:task.cancel();await asyncio.gather(task,return_exceptions=True)
                     if slow:slow.close()
                 wall=time.perf_counter()-start;cpu=sum(proc.cpu_times()[:2])-cpu0
-                resources=[json.loads(line) for file in sorted((root/'session').glob('resources*.jsonl')) for line in file.read_text().splitlines()]
+                resources=[row for file in log_paths(root/'session','resources') for row in read_records(file)]
                 assert result['reason']=='duration' and result['model_dropped_frames']==0 and result['model_errors']==0
                 assert result['native_summary']['dropped']==0 and source.posts==source.model_gets==0
                 if mode!='off':assert result['publication']['errors']==0 and result['publication']['worker_stopped'], result['publication']

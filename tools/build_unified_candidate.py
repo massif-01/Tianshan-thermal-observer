@@ -42,7 +42,7 @@ def main():
                 if p.is_file() and '__pycache__' not in p.parts
                 and p.suffix in ('.py', '.json', '.js', '.css', '.html', '.md')
                 and p.name != 'web-candidate-files.json'}
-    manifest = dict(version=version, baseline='observe.7: consolidated lifecycle state',
+    manifest = dict(version=version, baseline='observe.8: compact compressed history',
                     frozen_model_sha256=sha(WEB / 'vendor/tto_field/research/models/primary.json'),
                     frontend='rc10: direct LAN access; login removed', files=packages)
     (WEB / 'src/tto_web/web-candidate-files.json').write_text(json.dumps(manifest, indent=2) + '\n')

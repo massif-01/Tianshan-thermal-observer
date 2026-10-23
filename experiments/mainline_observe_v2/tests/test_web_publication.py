@@ -328,6 +328,10 @@ def test_collector_socket_values_and_publication_faults_do_not_stop_recording(tm
             return submit(self,raw,processed,*args)
         monkeypatch.setattr(runtime.Consumer,'on_record',record)
         monkeypatch.setattr(Publication,'submit',selected_submit)
+    states=[];publish=runtime.Consumer.publish
+    def capture_state(self,*args):
+        states.append(copy.deepcopy(args[1:]));return publish(self,*args)
+    monkeypatch.setattr(runtime.Consumer,'publish',capture_state)
     async def go():
         import uuid
         packets=[]
@@ -349,21 +353,21 @@ def test_collector_socket_values_and_publication_faults_do_not_stop_recording(tm
             assert result['reason']=='duration' and result['native_summary']['orin_event_count']>=2
             assert result['stateful_observer_count']==1 and result['consumer_stopped']
             assert source.posts==source.model_gets==0 and result['native_summary']['dropped']==0
-        states=[json.loads(line) for line in (tmp_path/'session/states.jsonl').read_text().splitlines()]
+        assert not list((tmp_path/'session').glob('states*'))
         assert states
         if fault=='none':
-            by_time={x['observed_through_mono_s']:x for x in states}
+            by_time={f['t']:(f,s,deadline) for f,s,deadline in states}
             data=[x for x in packets if x['schema']=='TTO-WEB-PUBLICATION-v1']
             assert len(data)>3, (result,packets[:1])
             for packet in data:
-                native=by_time[packet['input_mono_s']]
-                assert packet['boot_id']==boot and packet['run_id']==short(native['native_run_id'])
-                assert packet['source_epoch']==native['expected_identity']['source_epoch']
-                assert packet['process_clock_domain']==native['process_clock_domain']
-                assert packet['model_id']==native['expected_identity']['model_sha256']
-                assert packet['spec_id']==native['expected_identity']['spec_sha256']
-                assert packet['model']==native['model']
-                assert packet['consumable_until_mono_s']==native['clock']['model_consumable_until_mono_s']
+                native,model,deadline=by_time[packet['input_mono_s']]
+                assert packet['boot_id']==boot and packet['run_id']==short(native['identity']['run_id'])
+                assert packet['source_epoch']==native['identity']['source_epoch']
+                assert packet['process_clock_domain']==result['clock_end']['domain']
+                assert packet['model_id']==native['identity']['model_sha256']
+                assert packet['spec_id']==native['identity']['spec_sha256']
+                assert packet['model']==model['observer']
+                assert packet['consumable_until_mono_s']==deadline
                 tj=next((m for m in packet['metrics'] if m['id']=='temperature.tj' and m['status']=='valid'),None)
                 if tj:assert tj['value']==native['measurement']['tj']['value_C']
             assert result['publication']['errors']==result['publication_callback_errors']==0
@@ -390,7 +394,7 @@ def test_collector_socket_values_and_publication_faults_do_not_stop_recording(tm
         elif fault=='view':
             assert result['publication']['prediction_view_failure']=='ValueError'
             assert result['model_errors']==0 and not result['error']
-            assert (tmp_path/'session/predictions.jsonl').stat().st_size and (tmp_path/'session/scores.jsonl').stat().st_size
+            assert (tmp_path/'session/predictions.jsonl.gz').stat().st_size and (tmp_path/'session/scores.jsonl.gz').stat().st_size
             meta=json.loads((pubdir/'active.json').read_text())
             assert meta['publication_failed'] and not meta['ended'] and meta['prediction_final'] is None
         elif fault=='boot':

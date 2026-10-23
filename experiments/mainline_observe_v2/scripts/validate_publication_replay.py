@@ -16,6 +16,7 @@ sys.path[:0]=[str(ROOT/'experiments/mainline_observe_v2/src'),str(ROOT/'work/web
 from tto_field.numeric_policy import initialize
 initialize()
 from tto.engine import engine_for
+from tto.recordio import log_paths, read_records
 from tto_field.observe_runtime import Consumer
 import tto_field.observe_runtime as runtime
 from tto_field.observe_storage import SessionStore
@@ -37,7 +38,7 @@ class Capture:
         self.reference=Adapter(manifest,None,test_replay=True,owner=SimpleNamespace(projection=SimpleNamespace(),communication=None,observer=None))
         self.web=State({'source':{'mode':'follow'},'advisory':{}})
         self.web.begin_publication('replay')
-        self.packet_count=0;self.native_models={};self.browser_available=None
+        self.packet_count=0;self.browser_available=None
     def invalidate(self):raise AssertionError('unexpected replay model/publication gap')
     def submit(self,raw,processed,frame,state,deadline):
         p=self.encoder.encode(raw,processed,frame,frame['_communication'],state,deadline)
@@ -58,7 +59,6 @@ class Capture:
         assert p['model']==state['observer']
         assert p['model_id']==frame['identity']['model_sha256'] and p['spec_id']==frame['identity']['spec_sha256']
         assert p['input_mono_s']==frame['t'] and p['source_epoch']==frame['identity']['source_epoch']
-        self.native_models[raw['ref']]=p['model']
         self.web.accept(p,now=frame['t']+.002)
         self.sync(frame['t']+.002)
         snapshot=self.web.snapshot()
@@ -74,12 +74,12 @@ class Capture:
 
 def read_stream(root,name):
     index=json.loads((root/'stream-index.json').read_text())
-    return [json.loads(line) for filename in index['streams'].get('./'+name,[]) for line in (root/filename).read_text().splitlines()]
+    return [row for filename in index['streams'].get('./'+name,[]) for row in read_records(root/filename)]
 
 
 def validate(run,output):
     manifest=json.loads((run/'manifest.json').read_text())
-    rows=[json.loads(line) for file in sorted(run.glob('observations-*.jsonl')) for line in file.read_text().splitlines()]
+    rows=[row for file in log_paths(run,'observations') for row in read_records(file)]
     store=SessionStore(output/'session',budget=256*1024**2,min_free=0)
     native=store.root/'native'/'run-replay';native.mkdir(parents=True)
     (native/'manifest.json').write_text(json.dumps(manifest))
@@ -103,9 +103,8 @@ def validate(run,output):
         assert consumer.stateful_observers==1
         consumer.ledger.finish(now[0]);capture.sync(now[0]+.002);store.close()
     finally:runtime.time=real_time
-    states=read_stream(store.root,'states')
-    assert len(states)==capture.packet_count==len(rows)
-    for row in states:assert capture.native_models[row['native_ref']]==row['model']
+    assert not read_stream(store.root,'states')
+    assert capture.packet_count==len(rows)
     predictions=read_stream(store.root,'predictions')
     scores=read_stream(store.root,'scores')
     web_by=capture.web.predictions
@@ -129,9 +128,9 @@ def validate(run,output):
     (output/'browser-available.json').write_text(json.dumps(capture.browser_available,indent=2)+'\n')
     (output/'browser-ended.json').write_text(json.dumps(capture.web.snapshot(),indent=2)+'\n')
     report=dict(scope='offline recorded replay; virtual receive clock; no Web service/device',
-        source_run=str(run),records=len(rows),recorded_states=len(states),encoded_packets=capture.packet_count,
+        source_run=str(run),records=len(rows),full_states_persisted=False,encoded_packets=capture.packet_count,
         stateful_observers=consumer.stateful_observers,publication_callback_errors=consumer.publication_errors,
-        established_encoder_packets_equal=capture.packet_count,public_model_equal_to_recorded_state=len(states),
+        established_encoder_packets_equal=capture.packet_count,public_model_equal_to_computed_state=capture.packet_count,
         G2_records_equal_by_id=len(g2),G2_scores_equal_by_id=len(g2scores),formal_page_records=len(formal),
         backend_G2_origins=len([p for p in g2 if p['horizon_s']==15]),
         web_G2_origins=len([p for p in web_by.values() if p['horizon_s']==15]),

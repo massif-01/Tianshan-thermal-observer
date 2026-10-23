@@ -1,5 +1,4 @@
 """Explicit bounded observe, offline status/history/archive, and owned-process STOP."""
-import re
 import argparse, asyncio, json, os, socket, time, uuid, zipfile, hashlib
 from datetime import datetime,timezone
 from pathlib import Path
@@ -87,7 +86,7 @@ def main(argv=None):
             q.add_argument('--grant',type=Path,required=True);q.add_argument('--output',type=Path,required=True);q.add_argument('--allow-network',action='store_true');q.add_argument('--local-loopback',action='store_true');q.add_argument('--publication-descriptor',type=Path,help='optional local read-only Web publication descriptor; private directory required')
     for name in ('status','stop','history','archive'):
         q=sub.add_parser(name);q.add_argument('--session',type=Path,required=True)
-        if name=='history':q.add_argument('--stream',choices=('observations','states','predictions','scores','events','resources','workload-events'),default='states');q.add_argument('--last',type=int,default=20)
+        if name=='history':q.add_argument('--stream',choices=('observations','states','predictions','scores','events','resources','workload-events'),default='observations');q.add_argument('--last',type=int,default=20)
         if name=='archive':q.add_argument('--output',type=Path,required=True)
     a=p.parse_args(argv)
     if a.cmd in ('status','history','stop','archive'):
@@ -96,19 +95,16 @@ def main(argv=None):
         elif a.cmd=='archive':result=archive(a.session,a.output)
         else:
             if not 0<a.last<=1000:raise ValueError('history limit1..1000')
+            from tto.recordio import log_paths,read_records
             index=json.loads((a.session/'stream-index.json').read_text()) if (a.session/'stream-index.json').exists() else None
             if index:
                 files=[a.session/n for n in index['streams'].get('./'+a.stream,[])]
             else:
-                pattern=re.compile(re.escape(a.stream)+r'(?:-(\d+))?\.jsonl')
-                fragments=[(int(m.group(1) or 1),p) for p in a.session.glob(a.stream+'*.jsonl') if (m:=pattern.fullmatch(p.name))]
-                files=[p for _,p in sorted(fragments)]
-            if index and not files:files=[a.session/n for k,ns in index['streams'].items() if k in ('./'+a.stream,a.stream) for n in ns]
+                files=log_paths(a.session,a.stream)
             records=[]
             for f in reversed(files):
                 tail=deque(maxlen=a.last)
-                with f.open() as stream:
-                    for line in stream:tail.append(json.loads(line))
+                for row in read_records(f,live=index is None):tail.append(row)
                 records=list(tail)+records
                 if len(records)>=a.last:break
             result=records[-a.last:]

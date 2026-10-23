@@ -173,7 +173,7 @@ def run_report(run, output, diagnostic_input_v2=False):
              'next_step': '保留原始文件并核对合同声明；不退回旧规则，不重算冒充历史预测。',
              'missing_required_logs': [], 'recorded_results': {'issued_prediction_origins': None},
              'error_metrics': None, 'contract_error': str(error),
-             'source_files_sha256': {p.name: file_hash(p) for p in sorted(Path(run).iterdir()) if p.is_file() and (p.name in ('manifest.json','predictions.jsonl','scores.jsonl','input-profile.json') or p.name.startswith('observations-'))}}
+             'source_files_sha256': {p.name: file_hash(p) for p in sorted(Path(run).iterdir()) if p.is_file() and (p.name in ('manifest.json','input-profile.json') or p.name.startswith(('observations-','predictions.','predictions-','scores.','scores-')))}}
         write_json(out/'report.json', r)
         (out/'report.md').write_text('# TTO记录合同诊断\n\n'+r['conclusion']+'\n\n'+r['next_step']+'\n', encoding='utf-8')
         (out/'report.html').write_text(html_page('TTO记录合同诊断', '<p class="notice">'+html.escape(r['conclusion'])+'</p><p>'+html.escape(r['next_step'])+'</p>'), encoding='utf-8')
@@ -203,7 +203,7 @@ def run_report(run, output, diagnostic_input_v2=False):
     if shadow:
         headers = ['当时模型SHA/基线','时距s','实际输出方法','计划起点','已发','历史评分','质量排除','输入证据排除','当前有效','有效/计划起点','MAE C','RMSE C','绝对误差P95 C','偏差 C','欠预测P95 C','欠预测最大 C','过预测P95 C','过预测最大 C']
         rows = shadow_table_rows(r['recorded_results'])
-        message = '数值来自本run的predictions.jsonl与scores.jsonl，按预测身份/时距/方法/模型关联；未加载当前模型重算。每方法覆盖单列，不拿不同集合的MAE判断优劣。有效评分使用生产质量回放的既有段隔离；覆盖率分子为当前有效评分，分母为当时计划起点（包含隔离段），已发预测分母另见JSON。'
+        message = '数值来自本run的predictions与scores记录流，按预测身份/时距/方法/模型关联；未加载当前模型重算。每方法覆盖单列，不拿不同集合的MAE判断优劣。有效评分使用生产质量回放的既有段隔离；覆盖率分子为当前有效评分，分母为当时计划起点（包含隔离段），已发预测分母另见JSON。'
         body += '<h2>当时实际发出的预测与评分</h2><p>'+html.escape(message)+'</p>'+table(headers,rows)
         md += '## 当时实际发出的预测与评分\n\n'+message+'\n\n'+markdown_table(headers,rows)+'\n'
         eligibility_summary = {k:r['recorded_results'][k] for k in ('issued_prediction_origins','terminal_score_records','historical_scored_method_horizon_records','scored_method_horizon_records','quality_excluded_method_horizon_records','log_evidence_complete','quality_isolations')}
@@ -288,5 +288,5 @@ def evaluation_report(result, points, out):
 
     body += '<h2>45秒片段：预测按目标时刻对齐</h2>'+plot_predictions(points)+'<p>局部片段只展示预测，正式优劣使用上方分层共同集合。</p><details><summary>过程、阶段、覆盖、缺项与完整证据</summary><pre>'+html.escape(json.dumps(result,ensure_ascii=False,indent=2))+'</pre></details><p>预测准确性不证明能够降低PWM；没有控制输出。</p>'
     (out/'report.html').write_text(html_page(title,body),encoding='utf-8')
-    md += '每层的过程/阶段明细、全量方法覆盖与不可用原因见evaluation.json；逐次原始引用见predictions.jsonl。固件趋势仅作诊断。相邻行不是独立实验，没有置信百分比或调速结论。\n'
+    md += '每层的过程/阶段明细、全量方法覆盖与不可用原因见evaluation.json；逐次原始引用见predictions记录流。固件趋势仅作诊断。相邻行不是独立实验，没有置信百分比或调速结论。\n'
     (out/'report.md').write_text(md,encoding='utf-8')

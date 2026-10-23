@@ -7,7 +7,7 @@ sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest();m=json.loads((a.accepted
 expected=json.loads((Path(__file__).resolve().parents[1]/'docs/dependency-lock.json').read_text())
 if {n:h for n,h in m.items() if not n.startswith('tto_field_candidate-')}!=expected:raise SystemExit('not the frozen21 dependency identities')
 with zipfile.ZipFile(a.candidate) as z:
- if json.loads(z.read('tto_field/candidate-files.json'))['version']!='0.2.4+observe.7':raise SystemExit('observe.7 candidate required')
+ if json.loads(z.read('tto_field/candidate-files.json'))['version']!='0.2.4+observe.8':raise SystemExit('observe.8 candidate required')
 if len(m)!=22:raise SystemExit('exact cpu.3 wheelhouse of22 expected')
 for name,h in m.items():
  if sha(a.accepted_wheelhouse/name)!=h:raise SystemExit('dependency identity mismatch:'+name)
@@ -16,4 +16,4 @@ for name in m:
  if not name.startswith('tto_field_candidate-'):shutil.copy2(a.accepted_wheelhouse/name,a.output/name)
 shutil.copy2(a.candidate,a.output/a.candidate.name)
 (a.output/'SHA256.json').write_text(json.dumps({f.name:sha(f) for f in sorted(a.output.glob('*.whl'))},indent=2)+'\n')
-print('one observe.7 candidate +21 unchanged locked dependencies')
+print('one observe.8 candidate +21 unchanged locked dependencies')

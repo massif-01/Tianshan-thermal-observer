@@ -1,3 +1,4 @@
+from tto.recordio import read_records
 import asyncio,json,socket,time,uuid
 from pathlib import Path
 from fake_source import FakeSource
@@ -29,6 +30,10 @@ class Burst(FakeSource):
 def run_case(tmp_path,monkeypatch,kind):
     def init(self):self.predictor=Predictor();self.observer=kind(self.predictor.spec);self.stateful_observers=1
     monkeypatch.setattr(Consumer,'_model_import',init)
+    states=[];publish=Consumer.publish
+    def capture(self,*args):
+        states.append(args[2]);return publish(self,*args)
+    monkeypatch.setattr(Consumer,'publish',capture)
     async def go():
         async with (Burst() if kind is BlockOnce else FakeSource()) as server:
             c=load_config(environ={});c['orin'].update(base_url=server.url,source_sample_interval_ms=1000,source_interval_evidence='own fixture');c['tianshan']['base_url']=server.url
@@ -36,21 +41,21 @@ def run_case(tmp_path,monkeypatch,kind):
             s=await run_observe(c,reg,tmp_path/'session',5,local_loopback=True,storage_options=dict(min_free=0))
             assert server.posts==server.model_gets==0
             return s
-    return asyncio.run(go())
+    return asyncio.run(go()),states
 
 def test_model_exception_keeps_native_raw_and_later_recovers(tmp_path,monkeypatch):
-    s=run_case(tmp_path,monkeypatch,FaultObserver)
+    s,states=run_case(tmp_path,monkeypatch,FaultObserver)
     assert s['model_errors']>=1 and s['native_summary']['orin_event_count']>=3 and s['consumer_stopped']
     assert s['native_summary']['stop_reason']=='duration' and s['reason']=='duration'
-    states=[json.loads(x) for x in (tmp_path/'session/states.jsonl').read_text().splitlines()]
-    assert any(x['model'].get('reasons')==['model_error'] for x in states)
-    assert any(x['model']['available'] for x in states)
+    assert not list((tmp_path/'session').glob('states*'))
+    assert any(x['observer'].get('reasons')==['model_error'] for x in states)
+    assert any(x['observer']['available'] for x in states)
 
 def test_queue_overrun_and_lag_keep_raw_with_explicit_loss_marker(tmp_path,monkeypatch):
-    s=run_case(tmp_path,monkeypatch,BlockOnce)
+    s,states=run_case(tmp_path,monkeypatch,BlockOnce)
     assert s['model_dropped_frames']>0 and s['native_summary']['orin_event_count']>=120
     assert s['native_summary']['dropped']==0 and s['consumer_stopped'] and s['reason']=='duration'
-    events=[json.loads(x) for x in (tmp_path/'session/events.jsonl').read_text().splitlines()]
+    events=list(read_records(tmp_path/'session/events.jsonl.gz'))
     assert any(x['reason']=='model_queue_full_raw_preserved' for x in events)
     assert any(x['reason']=='model_consumer_late_raw_preserved' for x in events)
 
@@ -71,20 +76,23 @@ def test_device_identity_change_stops_own_recording(tmp_path):
 
 def test_existing_native_lock_is_a_blocker_not_killed(tmp_path):
     from tto.storage import InstanceLock
+    old=tmp_path/'expired';old.mkdir()
+    (old/'history-retention.json').write_text(json.dumps(dict(device_id='fixture',host=socket.gethostname(),day='2000-01-01')))
     async def go():
         c=load_config(environ={});c['orin'].update(base_url='http://127.0.0.1:9',source_sample_interval_ms=1000,source_interval_evidence='fixture');c['tianshan']['base_url']='http://127.0.0.1:9'
         reg=dict(device_id='fixture',thermal_config_id='fixture',observer_host_id=socket.gethostname(),session_id=str(uuid.uuid4()))
         with InstanceLock():
             s=await run_observe(c,reg,tmp_path/'blocked',2,local_loopback=True,storage_options=dict(min_free=0))
             assert s['collector_count']==0 and s['native_run_id'] is None and s['reason']=='observe_software_error'
+            assert old.exists()
     asyncio.run(go())
 
 def test_projection_exception_disables_model_not_raw(tmp_path,monkeypatch):
     from tto_field.projection import SavedStream
     def fail(*args):raise ValueError('owned projection injection')
     monkeypatch.setattr(SavedStream,'feed',fail)
-    s=run_case(tmp_path,monkeypatch,FaultObserver)
+    s,states=run_case(tmp_path,monkeypatch,FaultObserver)
     assert s['projection_disabled'] and s['reason']=='duration' and s['native_summary']['orin_event_count']>=3 and s['valid_TJ_observed']>=3
     index=json.loads((tmp_path/'session/stream-index.json').read_text())
-    rows=[json.loads(x) for name in index['streams']['./observations'] for x in (tmp_path/'session'/name).read_text().splitlines()]
-    assert any(x['communication']['measurement']['TJ_and_rails']['raw_valid'] for x in rows if x['kind']=='orin')
+    rows=[x for name in index['streams']['./observations'] for x in read_records(tmp_path/'session'/name)]
+    assert any(x['raw_quality']['accepted'] for x in rows if x['kind']=='orin')
