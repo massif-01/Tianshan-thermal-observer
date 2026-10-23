@@ -4,9 +4,11 @@ import importlib.util
 import json
 from pathlib import Path
 import sys
+import pytest
 
 
-def test_install_system_unit_enables_and_restarts_new_release_without_touching_old_tto(tmp_path,monkeypatch):
+@pytest.mark.parametrize('access',['local','lan'])
+def test_install_system_unit_enables_and_restarts_new_release_without_touching_old_tto(tmp_path,monkeypatch,access):
     source=Path(__file__).parents[1]/'tools/install.py'
     spec=importlib.util.spec_from_file_location('web_installer_test',source);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
     root=tmp_path/'bundle';(root/'config').mkdir(parents=True);(root/'wheelhouse').mkdir()
@@ -19,7 +21,9 @@ def test_install_system_unit_enables_and_restarts_new_release_without_touching_o
     monkeypatch.setattr(m,'wait_ready',lambda *args:commands.append(['ready-check']))
     monkeypatch.setattr(m,'ROOT',root);monkeypatch.setattr(m,'run',lambda *args:commands.append([str(a) for a in args]))
     monkeypatch.setattr(m.getpass,'getuser',lambda:'synthetic-user');monkeypatch.setattr(m.sys,'platform','linux');monkeypatch.setattr(m.os,'getuid',lambda:501)
-    monkeypatch.setattr(sys,'argv',['install.py','--prefix',str(prefix),'--service','system'])
+    args=['install.py','--prefix',str(prefix),'--service','system','--access',access]
+    if access=='lan':args+=['--bind','10.10.99.99','--allowed-origin','http://10.10.99.99:59009']
+    monkeypatch.setattr(sys,'argv',args)
     m.main()
     assert any(command[-2:]==['enable','tto-web.service'] for command in commands)
     assert any(command[-2:]==['restart','tto-web.service'] for command in commands)
@@ -28,6 +32,9 @@ def test_install_system_unit_enables_and_restarts_new_release_without_touching_o
     assert 'WantedBy=multi-user.target' in unit and 'User=' in unit
     assert '59009' in unit and 'ExecStart="'+str(prefix/'tto-web')+'"' in unit
     assert (prefix/'current').is_symlink() and (prefix/'web.json').exists()
+    config=json.loads((prefix/'web.json').read_text())
+    assert config['web']['access_mode']==access and 'password_hash' not in config['web']
+    assert not (prefix/'readonly-password.txt').exists()
 
 
 def test_service_ready_check_rejects_other_listener_pid(tmp_path,monkeypatch):

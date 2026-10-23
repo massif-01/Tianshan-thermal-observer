@@ -1,14 +1,11 @@
 """Same-origin read-only HTTP and bounded SSE. Service health is not device health."""
 import asyncio
 import copy
-import hashlib
-import hmac
 import ipaddress
 import json
 import math
 import os
 import psutil
-import secrets
 import time
 from collections import deque
 from pathlib import Path
@@ -22,11 +19,6 @@ from .source import follow, observe
 STATIC=Path(__file__).parent/'static'
 
 
-def password_hash(password, salt=None):
-    salt=salt or secrets.token_hex(16)
-    return salt+':'+hashlib.pbkdf2_hmac('sha256',password.encode(),salt.encode(),200000).hex()
-
-
 def configuration(path):
     c=load(path)
     w=c['web'];s=c['source']
@@ -37,7 +29,7 @@ def configuration(path):
     if w.get('access_mode')=='local':
         if w['bind'] not in ('127.0.0.1','::1'):raise ValueError('local mode requires loopback bind')
     elif w.get('access_mode')=='lan':
-        if not w.get('password_hash') or not w.get('allowed_origins'):raise ValueError('LAN requires credential and explicit allowed origins')
+        if not w.get('allowed_origins'):raise ValueError('LAN requires explicit allowed origins')
         for origin in w['allowed_origins']:
             parsed=urlsplit(origin)
             if parsed.scheme not in ('http','https') or parsed.path or parsed.query or parsed.username:raise ValueError('invalid allowed origin')
@@ -46,7 +38,7 @@ def configuration(path):
 
 
 def app_for(config, *, start_source=True, state=None):
-    state=state or State(config);sessions={};failures=deque(maxlen=100)
+    state=state or State(config)
     stop=asyncio.Event();source_task=None;timer_task=None
     process=psutil.Process();process.cpu_percent(None);host_sample=0.
     clock_previous=(time.monotonic(),time.time())
@@ -62,10 +54,7 @@ def app_for(config, *, start_source=True, state=None):
         allowed_hosts={urlsplit(o).netloc.lower() for o in allowed}
         if host not in allowed_hosts:raise web.HTTPForbidden(text='Host is not configured')
         if request.path.startswith('/api/'):
-            if request.method not in ('GET','HEAD') and request.path!='/api/v1/session':raise web.HTTPMethodNotAllowed(request.method,['GET'])
-            if config['web']['access_mode']=='lan' and request.path!='/api/v1/session':
-                token=request.cookies.get('tto_session');expiry=sessions.get(token,0)
-                if expiry<time.monotonic():raise web.HTTPUnauthorized(text='只读访问需要登录')
+            if request.method not in ('GET','HEAD'):raise web.HTTPMethodNotAllowed(request.method,['GET','HEAD'])
         response=await handler(request)
         response.headers.update({'X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer','Cache-Control':'no-store','Content-Security-Policy':"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'"})
         return response
@@ -122,25 +111,6 @@ def app_for(config, *, start_source=True, state=None):
     async def context(r):
         s=state.snapshot()
         return response(dict(**s['context'],observation_status=state.source_status,mode=s['mode'],run_id=s['run_id'],source_epoch=s['source_epoch'],run_elapsed_ms=s['run_elapsed_ms'],thermal_model=s['model']['model_id'],platform=(state.packet or {}).get('platform'),task_model=(state.packet or {}).get('task',{}).get('context',{}).get('task_model'),client_slots=(state.packet or {}).get('task',{}).get('context',{}).get('client_slots'),planned_slots=(state.packet or {}).get('task',{}).get('context',{}).get('planned_slots'),task_phase=(state.packet or {}).get('task',{}).get('context',{}).get('phase'),server_running=None,server_queued=None,source_health=(state.packet or {}).get('source_health',{}),display_resync_count=state.dropped,task_reason=('任务信息来自runner登记' if s['context']['task_metadata_available'] else '未接入任务记录')+'；客户端完成不代表服务端停止',source_instances_owned=int(config['source']['mode']=='observe' and state.source_connected)))
-    async def session(r):
-        if r.method=='DELETE':
-            sessions.pop(r.cookies.get('tto_session'),None);resp=response({'logged_in':False});resp.del_cookie('tto_session');return resp
-        if r.method!='POST':raise web.HTTPMethodNotAllowed(r.method,['POST','DELETE'])
-        if config['web']['access_mode']!='lan':raise web.HTTPBadRequest(text='LAN session is not configured')
-        now=time.monotonic()
-        while failures and failures[0]<now-60:failures.popleft()
-        if len(failures)>=10:raise web.HTTPTooManyRequests(text='稍后重试')
-        data=await r.json();password=data.get('password','')
-        if not isinstance(password,str) or len(password)>512:raise web.HTTPBadRequest()
-        stored=config['web']['password_hash'];salt=stored.split(':')[0]
-        calculated=await asyncio.to_thread(password_hash,password,salt)
-        if not hmac.compare_digest(calculated,stored):failures.append(now);raise web.HTTPUnauthorized(text='只读口令不匹配')
-        for token,expiry in list(sessions.items()):
-            if expiry<now:del sessions[token]
-        if len(sessions)>=32:raise web.HTTPTooManyRequests()
-        token=secrets.token_urlsafe(32);sessions[token]=now+12*3600
-        resp=response({'logged_in':True});resp.set_cookie('tto_session',token,httponly=True,samesite='Strict',max_age=43200,secure=r.secure);return resp
-
     async def stream(r):
         if len(sse_clients)>=4:raise web.HTTPServiceUnavailable(text='display client budget reached')
         queue=asyncio.Queue(maxsize=8);sse_clients.add(queue)
@@ -222,7 +192,6 @@ def app_for(config, *, start_source=True, state=None):
     app.on_startup.append(startup);app.on_shutdown.append(shutdown)
     routes={'bootstrap':bootstrap,'snapshot':snapshot,'stream':stream,'series':series,'model':model,'predictions':predictions,'events':events,'metrics':metrics,'context':context}
     for name,handler in routes.items():app.router.add_get('/api/v1/'+name,handler)
-    app.router.add_route('*','/api/v1/session',session)
     app.router.add_get('/healthz',health)
     async def favicon(r):return web.Response(status=204)
     app.router.add_get('/favicon.ico',favicon)
