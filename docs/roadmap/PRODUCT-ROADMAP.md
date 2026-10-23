@@ -1,6 +1,6 @@
 # TTO 产品路线图｜从 RM-01 热观察器到通用自适应热建模平台
 
-> 更新：2026-10-18｜产品路线（PM视角）｜[总路线 Issue #1](https://github.com/massif-01/Tianshan-thermal-observer/issues/1)｜[技术决策及原理](TTO-roadmap.md)
+> 更新：2026-10-23（DOC0增量核对）｜产品路线（PM视角）｜[总路线 Issue #1](https://github.com/massif-01/Tianshan-thermal-observer/issues/1)｜[技术决策及原理](TTO-roadmap.md)
 >
 > **这份文档回答“为谁提供什么价值、当前做到哪一步、下一步何时算完成”。** 不替代详细研究合同、设备安全规则或已封存的证据。状态按当前可核对交付物标记，不能把离线计算标成现场控制效果。
 
@@ -17,9 +17,9 @@
 | P0 可信热数据底座：不用猜机器当时发生什么 | **已完成核心能力；持续维护** | 0.1.2基础、Orin/Thor与0.2.4本机采集；L/S/M及YET实测，保留异常/身份/哈希 | 可靠性见P3 |
 | P1 首个可生成的热模型：不再只靠人工画曲线 | **研究候选已做成；未产品化** | Ridge、G1/G2实际拟合，36+42次有界尝试；G2能描述部分已知输入下热响应 | 独立新过程、短峰与迁移检验 |
 | P2 理解快慢储热：短尖峰不等于整个结构骤热 | **离线研究已完成；物理对应待验证** | 因果Ts、QS/LP30/LP120、平稳需求原型；YET局部鳍片温度2027条已取得，但该轮模型状态0 | P3恢复可用状态后同步复核 |
-| P3 真实场景连续可用：短暂掉数据不能让模型全程罢工 | **正在准备** | YET轮fan/status 227/1256超时；严格段最长26.013秒、60秒初始化导致0合法G2状态 | [#8](https://github.com/massif-01/Tianshan-thermal-observer/issues/8)＋[#9](https://github.com/massif-01/Tianshan-thermal-observer/issues/9) |
-| P4 覆盖真实负载谱：规律/不规律、稠密/MoE、长/短任务都能检验 | **设计中，未实测** | 已有L长任务、S短问答、M中等块、YET短问答；缺带表面温度的长负载、打散热前史 | [#10](https://github.com/massif-01/Tianshan-thermal-observer/issues/10) |
-| P5 自动校准：新硬件少人工重新建立模型 | **未开始实现** | 只有固定参数状态估计；尚无受约束在线参数更新、候选验收、回退 | P3/P4证据后启动独立方案 |
+| P3 真实场景连续可用：短暂掉数据不能让模型全程罢工 | **已有后续候选归档；现场可靠性分项待验** | 冻结因果观察器、I-02撤销/恢复与observe.2已有源码/合同；旧Y的0状态和HTTP超时保留，不称根因已修 | [#8](https://github.com/massif-01/Tianshan-thermal-observer/issues/8)＋[#9](https://github.com/massif-01/Tianshan-thermal-observer/issues/9) |
+| P4 覆盖真实负载谱：规律/不规律、稠密/MoE、长/短任务都能检验 | **已有真实记录；专项正式比较进行中** | L/S/M/Y与fixed-anchors等资料保留；本地五候选已有单过程时间外推，RELAX30/B1及资格/分母对齐、新过程确认仍缺 | [#10](https://github.com/massif-01/Tianshan-thermal-observer/issues/10)、[专项WP0/WP1](WORKLOAD-PREDICTION-ROADMAP.md) |
+| P5 自动校准：新硬件少人工重新建立模型 | **生成/校准/比较与版本工具已归档；在线学习待实现** | generate/calibrate/compare、人工登记/选择/新会话pin/回退存在；不等于生产热切或参数在线学习 | [工具合同](../../experiments/thermal_mainline_calibration_v1/数据合同与工具用法.md)、[专项WP1/WP3](WORKLOAD-PREDICTION-ROADMAP.md) |
 | P6 跨散热材料/几何/模组复用：从RM-01到其他设备 | **长期目标，未验证** | 用户确认1060铝约2mm鳍片；未来包括不同厚度、铜、不同有效热容、Jetson及其他SoC | 新硬件对照与少样本校准 |
 | P7 可交付产品与开源复现 | **底座已有；面向外部交付未完成** | 公开仓库、采集报告、技术文档与研究索引；暂无独立外部复现及受认可通用模型 | 至少一套外部可复验流程 |
 | 可选后续：用热状态辅助平稳风扇控制 | **未授权、未实现** | 仅离线无量纲需求指数，非PWM；无温度/噪声/性能闭环收益 | 另行安全评审、实机验证、独立批准 |
@@ -31,9 +31,11 @@
 - **可信采集与修复（P0）：** 历史基础0.1.2；0.2.4同机记录与中等负载，M有超过38分钟的主要严格连续段。源异常、观察时间、新鲜度、成功PWM与请求协议均留原证据。[研究状态索引](../research/TTO-research-status-20261014.md) · [历史报告目录](../reports/README.md)。
 - **实际模型生成（P1）：** 单状态G1、双状态G2、紧凑Ridge；G2旧LS-fit在此前未参与拟合的M记录上，已知真实功率/PWM的自由响应MAE约0.369°C。**这不是提前知道未来请求的预测成绩**；短TJ峰、未来负载变化仍有明显失败。
 - **慢态研究（P2）：** G2与LP30对照在L/S的45秒已知输入预测中有增量信息，M差距很小；简单滤波也可生成平稳信号，不能直接换算PWM。固定表面YET接触测温真正取得2027条，但当前对照失败原因是资格不足而非模型负分。
-- **GitHub管理：** [#1 长期主路线](https://github.com/massif-01/Tianshan-thermal-observer/issues/1)保持开放；已建立[#8](https://github.com/massif-01/Tianshan-thermal-observer/issues/8)、[#9](https://github.com/massif-01/Tianshan-thermal-observer/issues/9)、[#10](https://github.com/massif-01/Tianshan-thermal-observer/issues/10)。[历史文档PR #2](https://github.com/massif-01/Tianshan-thermal-observer/pull/2)、[研究状态文档PR #6](https://github.com/massif-01/Tianshan-thermal-observer/pull/6)已合并；[增量文档PR #7](https://github.com/massif-01/Tianshan-thermal-observer/pull/7)的状态应在合并前重新核对。
+- **GitHub管理：** [#1 长期主路线](https://github.com/massif-01/Tianshan-thermal-observer/issues/1)保持开放；已建立[#8](https://github.com/massif-01/Tianshan-thermal-observer/issues/8)、[#9](https://github.com/massif-01/Tianshan-thermal-observer/issues/9)、[#10](https://github.com/massif-01/Tianshan-thermal-observer/issues/10)。[历史文档PR #2](https://github.com/massif-01/Tianshan-thermal-observer/pull/2)、[研究状态文档PR #6](https://github.com/massif-01/Tianshan-thermal-observer/pull/6)已合并；[增量文档PR #7](https://github.com/massif-01/Tianshan-thermal-observer/pull/7)已合并；后续归档/当前源码身份见[成果索引](../repository-results-index.md)。
 
-## 当前三个进行中的产品工作包
+## 既有三个产品工作包与后续专项
+
+2026-10-23核对：#8/#9/#10仍开放，以下保留原任务的用户价值，不把旧文字“正在准备”当作当前源码不存在。已有冻结状态、I-02、observe.2及实验工具见[成果索引](../repository-results-index.md)；它们不自动关闭原Issue或证明通讯现场根因已修。当前未来输入预测的详细任务统一转到[#17专项 Roadmap](WORKLOAD-PREDICTION-ROADMAP.md)，不在本页复制任务状态表。
 
 ### P3a｜让热模型在缺测下继续诚实工作 — [#8](https://github.com/massif-01/Tianshan-thermal-observer/issues/8)
 
@@ -47,7 +49,7 @@
 
 **用户收益：** 数据链不再成为模型适用性的主要瓶颈，也使后续实验可靠。
 
-**交付：** 本轮227次超时与M轮0次HTTP错误的可重复差分；代码/网络/服务端等候选根因的证据分级；如证实则最小修复与本地对照。**验收：**不是“代码提交了”，而是有明确反例和解决证据；需要触碰固件或真实设备时单独授权。严禁靠扩大有效期掩盖错误。
+**交付：** 本轮227次超时与M轮0次HTTP错误的可重复差分；代码/网络/服务端等候选根因的证据分级；如证实则最小修复与本地对照。**验收：**不是“代码提交了”，而是有明确反例和解决证据；相关固件源码候选可按#9的R2合同在隔离副本离线修改/构建；真实刷机、部署和设备操作仍另行授权。严禁靠扩大有效期掩盖错误。
 
 **执行：** 新独立ESP32通讯专项对话，避免与模型代码互相污染。
 
@@ -67,7 +69,7 @@
 
 ### P5a｜校准生成器（前置：可用的辨识/评价闭环）
 
-给一套有身份的热记录→自动选择有限候选结构（不能永远锁死G2）→输出参数、可用工况、数据量、校准耗时与无法确定的部分。校准用多少数据、需多少人工、N305 CPU耗时都要实测。
+已有[generate/calibrate/compare工具](../../experiments/thermal_mainline_calibration_v1/数据合同与工具用法.md)和人工选择/新会话pin/回退；后续产品化给一套有身份的热记录→有限候选结构（不能永远锁死G2）→参数、可用工况、数据量、校准耗时与无法确定的部分。校准用多少数据、需多少人工、N305 CPU耗时都要实测。
 
 ### P5b｜自适应模型（前置：P5a＋变化后确认场景）
 
@@ -75,7 +77,7 @@
 
 ### P6｜跨散热硬件可移植（前置：至少两种经过记录的物理配置）
 
-按成本递增验证：同机不同热前史→厚/薄铝鳍片→铜或不同有效热容量→风扇/风道→另一Jetson模组→其他SoC/第三方整机。每类比较直接使用、少量校准、重新训练、自适应，并如实登记模组/TTP/测点/传感器语义。**不假定所有硬件同一模型阶数**，也不假定每次变化都必须从零训练。
+候选比较维度包括同机热前史、鳍片厚薄/材料/热容、风扇/风道、另一Jetson模组及第三方整机；材料与模组分支不强制串行，也不等待在线学习成品。每类比较直接使用、少量校准、重新训练、自适应，并如实登记模组/TTP/测点/传感器语义。**不假定所有硬件同一模型阶数**，也不假定每次变化都必须从零训练。
 
 ### P7｜外部开发者产品化
 
@@ -97,3 +99,9 @@
 - 状态只用：`已完成（明确范围）`、`进行中`、`待开始`、`被阻断`。已分析数据不会因为新增研究再次被称为“新盲测”。
 - 主Issue #1维护唯一当前阶段与跨任务顺序；本文记录产品阶段及验收；[技术文档](TTO-roadmap.md)记录数学、时间与字段合同。三者不要复制相互竞争的大段规范。
 - 已完成项链接到真实报告/PR/Issue；仅在聊天或私人归档的证据注明由负责人保存，**不要编造公开下载链接**。需要对外上传时须先筛除任务文本、私有设备地址和凭据。
+
+## 未来功率预测到预测散热：#17 专项
+
+详细任务、输入/复用/缺口/验收与当前状态统一见 [WORKLOAD-PREDICTION-ROADMAP.md](WORKLOAD-PREDICTION-ROADMAP.md)，保留 DOC0 / WP0—WP5：WP0核实数据与合同，WP1正式比较功率HOLD、一个树、GRU、TCN、紧凑Transformer并保留RELAX30/B0/B1，WP2补必要服务/事件信号，WP3只读实时评价，WP4独立实际控制对照，WP5对应P6/P7复现和适配。第一轮冻结G2，未来功率轨迹需要独立适配，不把当前恒定接口写成已支持任意轨迹。
+
+已有本地比较建议保留HOLD，不等于全部WP1验收；现场/跨配置/控制收益仍待对应证据。#13仍是开放的R2文档修订，本增量与其两份总Roadmap有重叠：第二个合并者须保留双方事实/入口及DEC；#16只发布既有observe状态，不等于学习型模型已接入。本次不合并这些PR，不改变其他工作授权，不为看板建立另一套WP逐任务状态。

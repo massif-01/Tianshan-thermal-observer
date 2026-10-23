@@ -22,3 +22,7 @@
 - 这次同步不连接设备、不部署、不运行真实负载、不重训模型，也不重跑实验生成新的数据。
 
 历史报告中“待复审”“尚未提交”等文字反映封包时状态，原件保持不变；当前 Git 同步状态以本次提交历史及同步回执为准。
+
+## 未来功率预测专项入口（2026-10-23）
+
+[专项 Roadmap：DOC0 / WP0—WP5](roadmap/WORKLOAD-PREDICTION-ROADMAP.md) 对齐 [#17](https://github.com/massif-01/Tianshan-thermal-observer/issues/17) 和现有产品/技术路线。main 的 generate/calibrate/compare、冻结 G2、observe.2、事件与版本工具可复用；“多模型对比评估”本地 v1 已有真实比较及五包，但尚无公开提交，身份摘要、差距和保管边界见专项 §2.3。这里不为本地未提交文件创建虚假的 main 下载入口，也不把归档或同数据复现称为新盲测、目标机或控制通过。
