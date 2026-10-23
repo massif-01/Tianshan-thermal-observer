@@ -15,7 +15,7 @@ def test_real_cli_rapid_restart_preserves_port_conflict_and_waiting_semantics(tm
     opener=build_opener(ProxyHandler({}))
     for iteration in range(2):
         child=subprocess.Popen([sys.executable,'-m','tto_web.cli','serve','--config',str(config)],env=env,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
-        connection=None
+        connection=None;stream=None
         try:
             deadline=time.monotonic()+10
             while True:
@@ -31,7 +31,13 @@ def test_real_cli_rapid_restart_preserves_port_conflict_and_waiting_semantics(tm
             connection=http.client.HTTPConnection('127.0.0.1',59009,timeout=2)
             connection.request('GET','/api/v1/snapshot');response=connection.getresponse();snapshot=json.loads(response.read())
             assert snapshot['mode']=='waiting' and snapshot['model']['phase']=='not_loaded'
+            stream=http.client.HTTPConnection('127.0.0.1',59009,timeout=2)
+            stream.request('GET','/api/v1/stream');subscription=stream.getresponse()
+            assert subscription.status==200
+            while subscription.readline().strip():pass
+            # Keep the live subscription open through shutdown, as a browser does.
             child.terminate();assert child.wait(timeout=10)==0
         finally:
             if connection:connection.close()
+            if stream:stream.close()
             if child.poll() is None:child.terminate();child.wait(timeout=10)

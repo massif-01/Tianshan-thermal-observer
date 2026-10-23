@@ -1,6 +1,6 @@
 """Explicit bounded observe, offline status/history/archive, and owned-process STOP."""
 import re
-import argparse, asyncio, json, os, socket, sys, time, uuid, zipfile, hashlib
+import argparse, asyncio, json, os, socket, time, uuid, zipfile, hashlib
 from datetime import datetime,timezone
 from pathlib import Path
 from collections import deque
@@ -84,7 +84,7 @@ def main(argv=None):
     for name in ('preview','observe'):
         q=sub.add_parser(name);q.add_argument('--config',type=Path,required=True);q.add_argument('--registration',type=Path,required=True);q.add_argument('--duration',type=float,required=True)
         if name=='observe':
-            q.add_argument('--grant',type=Path,required=True);q.add_argument('--output',type=Path,required=True);q.add_argument('--allow-network',action='store_true');q.add_argument('--local-loopback',action='store_true')
+            q.add_argument('--grant',type=Path,required=True);q.add_argument('--output',type=Path,required=True);q.add_argument('--allow-network',action='store_true');q.add_argument('--local-loopback',action='store_true');q.add_argument('--publication-descriptor',type=Path,help='optional local read-only Web publication descriptor; private directory required')
     for name in ('status','stop','history','archive'):
         q=sub.add_parser(name);q.add_argument('--session',type=Path,required=True)
         if name=='history':q.add_argument('--stream',choices=('observations','states','predictions','scores','events','resources','workload-events'),default='states');q.add_argument('--last',type=int,default=20)
@@ -133,7 +133,7 @@ def main(argv=None):
     grant=json.loads(a.grant.read_text());validate_start(c,reg,grant,a.duration,a.local_loopback)
     verify(target=not a.local_loopback)
     from .observe_runtime import run_observe
-    result=asyncio.run(run_observe(c,reg,a.output,a.duration,local_loopback=a.local_loopback,grant=grant,storage_options=dict(budget=grant['session_max_bytes'],segment_bytes=min(2*1024**3,grant['session_max_bytes']))))
+    result=asyncio.run(run_observe(c,reg,a.output,a.duration,local_loopback=a.local_loopback,grant=grant,publication_descriptor=a.publication_descriptor,storage_options=dict(budget=grant['session_max_bytes'],segment_bytes=min(2*1024**3,grant['session_max_bytes']))))
     print(json.dumps(result,ensure_ascii=False,indent=2))
     return 0 if result['reason'] in ('duration','SIGINT','SIGTERM','external_stop') and not result['error'] else 2
 if __name__=='__main__':raise SystemExit(main())

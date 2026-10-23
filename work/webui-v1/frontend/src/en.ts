@@ -1,6 +1,8 @@
 // 英文词条：键是界面里的中文原文（含 {name} 占位符）。后端直接给出的中文见 backend-map.ts。
 // 译法对齐天山 OS 已有的英文术语（Fan / Temperature / Power / Event / Pause / Connected / Disconnected / Unknown / Valid / Protection）。
 export const EN:Record<string,string>={
+ "发布失败 · 最终结果未确认":"Publication failed · final results unconfirmed",
+ "已结束 · 历史来源 {n}":"Ended · history source {n}",
  "降级 · 估计可用，条件不完整": "Degraded · estimate available, incomplete conditions",
  "实时": "Live",
  "本地回放样例（非实时设备）": "Local replay sample (not a live device)",

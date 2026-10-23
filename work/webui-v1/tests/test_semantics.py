@@ -2,38 +2,26 @@ import copy
 import json
 import time
 from pathlib import Path
-import numpy as np
 import pytest
-from scipy.integrate import solve_ivp
 from tto_web.state import State
-from tto_web.adapter import SPEC, SPEC_PATH
-from tto_web.common import boot_id
-from producer import Producer,web_config
+from producer import Producer,web_config,seed_predictions
 
 
 def ready(seconds=120):
     p=Producer(time.monotonic()-seconds);s=State(web_config())
     for t in range(seconds+1):
         packet=p.step(t);s.accept(packet,now=p.start+t+.01)
+    seed_predictions(s,packet)
     return p,s,packet
 
 
-def test_frozen_sha_no_training_and_exact_forecast_against_independent_ode():
+def test_forecast_uses_committed_values_and_is_not_recomputed_on_new_measurement():
     p,s,packet=ready()
-    assert packet['model']['phase']=='tracking'
-    assert packet['model']['dynamic_parameter_updates']==0
-    assert {p['horizon_s'] for p in s.predictions}=={15,45,90}
-    inputs=packet['model']['conditional_inputs_rails_W_PWM'];x=[44.3,packet['model']['Ts_C'],packet['model']['E_C']]
-    d=SPEC['dynamic'];a,c=d['a'],d['c'];cool=d['d0']+d['d1']*inputs[2]
-    def rhs(t,y):return [a*(y[1]-y[0])+d['b_g']*inputs[0]+d['b_c']*inputs[1],c*(y[0]-y[1])-cool*(y[1]-y[2]),0]
-    for pred in list(s.predictions)[-3:]:
-        independent=solve_ivp(rhs,[0,pred['horizon_s']],x,rtol=1e-11,atol=1e-12).y[0,-1]
-        assert abs(pred['value_C']-independent)<1e-8
-        assert pred['target_elapsed_ms']==pred['origin_elapsed_ms']+1000*pred['horizon_s']
-        assert pred['issued_elapsed_ms']>=pred['origin_elapsed_ms']
-    old=[(v['prediction_id'],v['value_C']) for v in s.predictions]
-    s.accept(p.step(121,tj=70),now=p.start+121+.01)
-    assert old==[(v['prediction_id'],v['value_C']) for v in list(s.predictions)[:len(old)]]
+    old=copy.deepcopy(s.predictions)
+    assert [v['value_C'] for v in old.values()]==[46.,48.,50.]
+    s.accept(p.step(121,tj=70),now=p.start+121.01)
+    assert s.predictions==old
+    assert s.snapshot()['forecast']['latest_prediction_ids']==list(old)
 
 
 def test_units_zero_raw_rpm_and_no_secret_disclosure():
@@ -92,26 +80,46 @@ def test_model_and_measurement_expiry_without_messages_and_disconnect():
     assert all(m['value'] is None for m in s.snapshot()['metrics'])
 
 
-def test_first_valid_label_plus2_window_sign_and_missing():
+def test_web_waits_for_backend_score_and_does_not_match_measurement_itself():
     p,s,packet=ready(12)
-    pred=copy.deepcopy(s.predictions[-2]);pred.update(prediction_id='target',target_elapsed_ms=15000,status='pending',value_C=45)
-    s.predictions.clear();s.predictions.append(pred)
-    s.accept(p.step(14,tj=40),now=p.start+14.01);assert pred['status']=='pending'
-    s.accept(p.step(15,tj=46),now=p.start+15.01)
-    assert pred['status']=='matched' and pred['observed_C']==46 and pred['error_C']==-1
-    s.accept(p.step(16,tj=90),now=p.start+16.01);assert pred['observed_C']==46
-    missing=copy.deepcopy(pred);missing.update(prediction_id='missing',status='pending',target_elapsed_ms=18000,observed_C=None,error_C=None)
-    s.predictions.append(missing);s.accept(p.step(21,tj=40),now=p.start+21.01);assert missing['status']=='missing_label'
-    view=s.prediction_view(45)['summary'];assert view['matched_count']==1 and view['MAE_C']==1 and view['max_underprediction_C']==1
+    page=seed_predictions(s,packet,[0])
+    pred_id=page['records'][0]['prediction_id']
+    s.accept(p.step(15,tj=47),now=p.start+15.01)
+    assert s.predictions[pred_id]['status']=='pending'
+    revised=copy.deepcopy(page);revised['cursor']+=1
+    revised['records'][0].update(status='matched',observed_C=47.,error_C=-1.,settled_elapsed_ms=15000,revision=revised['cursor'])
+    s.accept_predictions(revised,now=p.start+15.01)
+    s.accept(p.step(16,tj=90),now=p.start+16.01)
+    assert s.predictions[pred_id]['observed_C']==47 and s.predictions[pred_id]['error_C']==-1
+    view=s.prediction_view(15)['summary'];assert view['matched_count']==1 and view['MAE_C']==1
 
 
 def test_epoch_does_not_pair_and_delayed_publication_is_excluded():
     p,s,packet=ready(12)
     late=p.step(13);s.accept(late,now=p.start+110)
     # Expired observer state cannot issue a newly computed future forecast.
-    assert all(v['origin_elapsed_ms']!=13000 for v in s.predictions)
+    assert all(v['origin_elapsed_ms']!=13000 for v in s.predictions.values())
     s.accept(p.row('boundary',111,None,reason='socketio_disconnected'),now=p.start+111.01)
-    assert all(v['status']!='pending' for v in s.predictions)
+    assert s.snapshot()['forecast']['latest_prediction_ids']==[]
+    assert not s.prediction_view(45)['records']
+    assert s.snapshot()['prediction_history_identity']['source_epoch']==s.snapshot()['source_epoch']
+    # Only the publisher's terminal contract may select the earlier issued group.
+    old={k:packet[k] for k in ('run_id','source_epoch','model_id','spec_id')}
+    identity=dict(old,source_epoch=s.snapshot()['source_epoch'])
+    terminal=dict(schema='TTO-PREDICTION-PAGE-v1',boot_id=packet['boot_id'],publisher_id=s.publisher_id,
+        origin_mono_s=p.start,sync_status='synced',identity=identity,history_identity=old,ended=True,
+        ended_at_mono_s=p.start+111,cursor=s.prediction_cursor,watermark=s.prediction_cursor,
+        has_more=False,retained_from_mono_s=p.start-3600,records=[],forecast={})
+    with pytest.raises(ValueError,match='history identity'):
+        s.accept_predictions(dict(terminal,ended=False),now=p.start+111.01)
+    with pytest.raises(ValueError,match='history identity'):
+        s.accept_predictions(dict(terminal,history_identity=dict(old,run_id='other-run')),now=p.start+111.01)
+    s.accept_predictions(terminal,now=p.start+111.01)
+    assert s.snapshot()['source_epoch']==identity['source_epoch']
+    assert s.snapshot()['prediction_history_identity']==old
+    assert s.prediction_view(45)['records'] and s.snapshot()['publication_status']=='ended'
+    s.begin_publication('next-publisher');s.refresh(p.start+112)
+    assert s.snapshot()['prediction_history_identity'] is None and not s.prediction_view(45)['records']
 
 
 def test_curve_reference_available_withheld_domain_and_identity():
@@ -121,6 +129,11 @@ def test_curve_reference_available_withheld_domain_and_identity():
     assert s.snapshot()['advisory']['status']=='available'
     assert 10<=s.snapshot()['advisory']['value_percent']<=70
     assert s.last_advisory_basis['T_ref_C']>=44.3 and s.last_advisory_basis['device_write_permitted'] is False
+    s.forecast['consumable_until_mono_s']=p.start+120.5
+    s.refresh(p.start+120.01)
+    assert s.snapshot()['advisory']['remaining_valid_ms']==pytest.approx(490)
+    s.refresh(p.start+120.6)
+    assert s.snapshot()['advisory']['value_percent'] is None
     packet=p.row('fan',121,p.fan(guard_active=True));s.accept(packet,now=p.start+121.01)
     assert s.snapshot()['advisory']['value_percent'] is None
     p,s,packet=ready();s.curve=curve;curve['points']=[[1,10],[2,20]];s.refresh(p.start+120.01)

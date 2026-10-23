@@ -1,11 +1,12 @@
 """One native collector; raw quality and bounded pure model consumption are independent."""
-import asyncio, copy, json, os, queue, signal, socket, threading, time, subprocess
+import asyncio, copy, json, os, queue, socket, threading, time, subprocess
 from collections import deque
 from pathlib import Path
-from .support import Clock, utc, digest_file
+from .support import Clock, utc
 from .observe_storage import SessionStore
 from .observe_predictions import Ledger
 from .receiver_resources import read_sample
+from . import __version__
 
 def boot_identity():
     p=Path('/proc/sys/kernel/random/boot_id')
@@ -19,17 +20,29 @@ class StopObservation(RuntimeError):
     """Identity or native recording loss; stop only this program."""
 
 class Consumer:
-    def __init__(self,store,registration,clock,stop,loop,*,lag_limit=.25):
+    def __init__(self,store,registration,clock,stop,loop,*,lag_limit=.25,publication=None,prediction_view=None):
+        self.publication=publication;self.publication_errors=0;self.prediction_view=prediction_view
         self.store=store;self.registration=registration;self.clock=clock;self.stop=stop;self.loop=loop
         self.queue=queue.Queue(maxsize=64);self.lag_limit=lag_limit;self.closed=threading.Event()
         self.projection=self.communication=None;self.latest=None;self.engine_id=None;self.native_run_id=None;self.device_uuid=registration.get('expected_gpu_uuid')
         self.callbacks=0;self.valid_TJ=0;self.projection_disabled=False;self.dropped=0;self.seen_dropped=0;self.fatal=None;self.model_errors=0;self.history=deque(maxlen=181)
         self.stateful_observers=0;self.ledger=None;self.observer=None;self.predictor=None;self.model_reinitialize=False
         self.thread=threading.Thread(target=self._work,name='frozen-model-consumer',daemon=True);self.thread.start()
-    def emit(self,name,row):self.store.append(self.store.root,name,row)
+    def emit(self,name,row):
+        self.store.append(self.store.root,name,row)
+        if self.prediction_view and name in ('predictions','scores'):self.prediction_view.committed(name,row)
     def event(self,reason,**extra):self.emit('events',dict(reason=reason,mono_s=time.monotonic(),utc=utc(),**extra))
     def block(self,reason):
         self.fatal=reason;self.loop.call_soon_threadsafe(self.stop.set)
+    def publication_gap(self):
+        if self.publication:
+            try:self.publication.invalidate()
+            except Exception:self.publication_errors+=1
+    def publish(self, inputs, frame, state, deadline):
+        if self.publication and inputs is not None:
+            try:self.publication.submit(*inputs,frame,state,deadline)
+            except Exception:
+                self.publication_errors+=1;self.publication_gap()
     def on_record(self,raw,processed,engine):
         from .projection import SavedStream
         from .comm_bridge import CommunicationBridge
@@ -63,6 +76,7 @@ class Consumer:
             if self.projection_disabled:
                 self.emit('observations',dict(ref=raw['ref'],native_run_id=self.native_run_id,mono_s=raw['mono_s'],received_at_utc=raw['received_at_utc'],kind=raw['kind'],
                     measurement=None,communication=comm,raw_quality=processed['quality'],model_component='projection_disabled',experiment_authorization=False,control_permission=False))
+                self.publication_gap()
                 return
             frame=self.projection.feed(raw,processed)
             if not comm['measurement']['TJ_and_rails']['raw_valid']:
@@ -74,14 +88,20 @@ class Consumer:
             self.emit('observations',dict(ref=raw['ref'],native_run_id=self.native_run_id,mono_s=raw['mono_s'],
                 received_at_utc=raw['received_at_utc'],kind=raw['kind'],measurement=frame['measurement'],safety=frame['safety'],
                 communication=comm,raw_quality=processed['quality'],experiment_authorization=False,control_permission=False))
-            try:self.queue.put_nowait(copy.deepcopy(frame))
+            queued=copy.deepcopy(frame)
+            if self.publication:
+                try:queued['_web_input']=copy.deepcopy((raw,dict(quality=processed['quality'])))
+                except Exception:
+                    self.publication_errors+=1;self.publication_gap()
+            try:self.queue.put_nowait(queued)
             except queue.Full:
-                self.dropped+=1;self.event('model_queue_full_raw_preserved',ref=raw['ref'],dropped_frames=self.dropped)
+                self.dropped+=1;self.event('model_queue_full_raw_preserved',ref=raw['ref'],dropped_frames=self.dropped);self.publication_gap()
         except StopObservation as exc:self.event(str(exc),ref=raw['ref']);self.block(str(exc))
         except OSError as exc:self.block('recorder_error:'+type(exc).__name__)
         except Exception as exc:
             from tto.storage import LimitReached
             if isinstance(exc,LimitReached):self.block('recorder_limit:'+str(exc));return
+            self.publication_gap()
             self.projection_disabled=True;self.model_errors+=1
             self.event('projection_error_model_disabled_raw_continues',error=type(exc).__name__,ref=raw['ref'])
     def _model_import(self):
@@ -100,17 +120,18 @@ class Consumer:
                 try:frame=self.queue.get(timeout=.1)
                 except queue.Empty:continue
                 try:
+                    inputs=frame.pop('_web_input',None)
                     if self.projection_disabled:
                         if self.ledger:self.ledger.finish(frame['t'],'projection_disabled')
                         continue
                     if self.ledger is None:
                         ident=dict(self.registration,session_id=self.registration['session_id'],run_id=frame['identity']['run_id'],
-                            model_id=self.predictor.manifest['model_id'] if self.predictor else None,software_version='0.2.4+observe.2',model_sha256=frame['identity']['model_sha256'],spec_sha256=frame['identity']['spec_sha256'],clock_domain=self.clock.domain)
+                            model_id=self.predictor.manifest['model_id'] if self.predictor else None,software_version=__version__,model_sha256=frame['identity']['model_sha256'],spec_sha256=frame['identity']['spec_sha256'],clock_domain=self.clock.domain)
                         self.ledger=Ledger(self.emit,ident)
                     dropped=self.dropped
                     if dropped!=self.seen_dropped:self._reset(frame,'model_consumer_gap_raw_preserved');self.seen_dropped=dropped
                     if time.monotonic()-frame['t']>self.lag_limit:
-                        self.event('model_consumer_late_raw_preserved',ref=frame['ref']);self._reset(frame,'model_consumer_lag');continue
+                        self.event('model_consumer_late_raw_preserved',ref=frame['ref']);self._reset(frame,'model_consumer_lag');self.publication_gap();continue
                     try:
                         if self.observer is None:raise ValueError('model_not_initialized')
                         state=self.observer.step(frame)
@@ -155,6 +176,8 @@ class Consumer:
                         experiment_authorization=False,start_allowed=False,control_permission=False,
                         raw_recording_independent=True,model_lag_s=issued-frame['t'],business_events='unknown')
                     self.emit('states',env);self.latest=env
+                    if self.prediction_view:self.prediction_view.committed('context',(frame,state,env['clock']['model_consumable_until_mono_s']))
+                    self.publish(inputs,frame,state,env['clock']['model_consumable_until_mono_s'])
                 except (OSError,ValueError) as exc:self.block('derived_recorder_error:'+type(exc).__name__)
                 except Exception as exc:
                     self.model_errors+=1;self.event('model_consumer_error_raw_continues',error=type(exc).__name__)
@@ -162,7 +185,7 @@ class Consumer:
         except Exception as exc:self.block('consumer_worker_failure:'+type(exc).__name__)
     def close(self):self.closed.set();self.thread.join(timeout=2);return not self.thread.is_alive()
 
-async def run_observe(config,registration,out,duration,*,local_loopback=False,storage_options=None,grant=None):
+async def run_observe(config,registration,out,duration,*,local_loopback=False,storage_options=None,grant=None,publication_descriptor=None):
     from .numeric_policy import initialize
     from tto.collector import collect
     from tto.config import public_config
@@ -174,10 +197,19 @@ async def run_observe(config,registration,out,duration,*,local_loopback=False,st
     from .scheduler import Registry
     Path(out).parent.mkdir(parents=True,exist_ok=True)
     Registry(Path(out).parent/'.tto-observe-ledger').claim(registration['session_id'],registration['session_id'])
-    store=SessionStore(out,**(storage_options or {}));consumer=Consumer(store,registration,clock,stop,loop)
+    store=SessionStore(out,**(storage_options or {}))
+    publication=None;publication_error=None
+    from .prediction_view import PredictionView
+    prediction_view=PredictionView(clock.origin) if publication_descriptor is not None else None
+    if publication_descriptor is not None:
+        try:
+            from .web_publication import Publication
+            publication=Publication(publication_descriptor,registration['boot_id'],registration['device_id'],process_clock_domain=clock.domain,prediction_view=prediction_view).start()
+        except Exception as exc:publication_error=dict(phase='initialization',error_class=type(exc).__name__)
+    consumer=Consumer(store,registration,clock,stop,loop,publication=publication,prediction_view=prediction_view)
     store.metadata(store.root/'thread-policy.json',policy)
     proc=psutil.Process();creation=proc.create_time();reason='duration';native=None;error=None
-    store.metadata(store.root/'launch.json',dict(version='0.2.4+observe.2',mode='observe',registration=registration,clock_start=clock.bracket(),
+    store.metadata(store.root/'launch.json',dict(version=__version__,publication_requested=publication_descriptor is not None,mode='observe',registration=registration,clock_start=clock.bracket(),
         authorization=grant,duration_s=duration,session_max_s=86400,storage_budget=dict(total_bytes=store.budget,segment_bytes=store.segment_bytes,chunk_bytes=store.chunk_bytes),
         legacy_native_config=public_config(config),config_sha256=digest(public_config(config)),local_loopback=local_loopback,
         Requester_count=0,sidecar_count=0,experiment_authorization=False,control_permission=False,process_created=creation))
@@ -223,7 +255,11 @@ async def run_observe(config,registration,out,duration,*,local_loopback=False,st
         if consumer.ledger and closed:consumer.ledger.finish(end,'projection_disabled' if consumer.projection_disabled else 'session_end')
         scores=consumer.ledger.summary() if consumer.ledger and closed else dict(reason='model_consumer_not_available_or_not_closed')
         scores['all_native_valid_TJ_denominator']=consumer.valid_TJ
-        summary=dict(reason=reason,error=error,elapsed_s=end-clock.origin,clock_end=clock.bracket(),pid=os.getpid(),
+        publication_status=None
+        if publication:
+            try:publication_status=await asyncio.to_thread(publication.close,completed=closed and consumer.ledger is not None)
+            except Exception as exc:publication_error=dict(phase='close',error_class=type(exc).__name__)
+        summary=dict(version=__version__,publication=publication_status,publication_lifecycle_error=publication_error,publication_callback_errors=consumer.publication_errors,reason=reason,error=error,elapsed_s=end-clock.origin,clock_end=clock.bracket(),pid=os.getpid(),
             native_run_id=consumer.native_run_id,collector_invocation_count=1,collector_count=len(list((store.root/'native').glob('run-*/manifest.json'))),stateful_observer_count=consumer.stateful_observers,
             valid_TJ_observed=consumer.valid_TJ,model_trial='insufficient_observations_diagnostic_only' if not consumer.valid_TJ else 'conditional_observation',
             native_callbacks=consumer.callbacks,I02_processed_views=consumer.communication.view.process_calls if consumer.communication else 0,

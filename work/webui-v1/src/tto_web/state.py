@@ -1,15 +1,13 @@
-"""Atomic display snapshots and causal, immutable G2-HOLD issuance, independent of clients."""
+"""Display snapshots and committed backend prediction history, independent of clients."""
 import copy
 import math
 import socket
 import time
 import uuid
-from itertools import islice
 from collections import deque, namedtuple
 from .adapter import SPEC, SPEC_ID, TOPOLOGY
-from .common import utc, finite, boot_id, load, short
+from .common import utc, finite, boot_id, load
 
-HORIZONS = (15,45,90)
 MODEL_IDS = ('model.Tf_C', 'model.Ts_C', 'model.E_C')
 MODEL_LABELS = ('快热状态估计', '慢热状态估计', '等效边界估计')
 MODEL_GROUP = ('temperature.tj',) + MODEL_IDS
@@ -33,15 +31,12 @@ class State:
         self.model_history = deque(maxlen=18002)
         self.model_history_sample = None
         self.model_gap_t = -math.inf
-        self.predictions = deque(maxlen=11070)
-        self.prediction_labels={}
+        self.publisher_id = None
+        self.reset_predictions()
         self.events = deque(maxlen=1000)
         self.event_seq = 0
         self.task_event_seq=0
         self.last_signature = None
-        self.last_origin = -math.inf
-        self.last_tj = None
-        self.solver = None
         self.clients = set()
         self.dropped = 0
         self.last_advisory_basis = None
@@ -49,11 +44,6 @@ class State:
         if self.curve:
             self.validate_curve(self.curve)
         self._snapshot = self.empty()
-
-    def prepare_model(self):
-        if self.solver is None:
-            from tto_field.research.observer import ThermalObserver
-            self.solver = ThermalObserver(SPEC)
 
     @staticmethod
     def validate_curve(c):
@@ -70,8 +60,11 @@ class State:
     def empty(self):
         return dict(schema_version='TTO-WEB-SNAPSHOT-v1',snapshot_seq=self.seq,service_epoch=self.epoch,
             run_id=None,source_epoch=None,mode='waiting',server_time_utc=utc(),clock_domain_id=None,run_elapsed_ms=None,
+            publication_status='waiting',prediction_history_identity=None,
             metrics=[],model=dict(model_id=None,spec_id=None,phase='not_loaded',remaining_valid_ms=0.,Tf_C=None,Ts_C=None,E_C=None,
                 calibrated_confidence=None,nodes=copy.deepcopy(TOPOLOGY['nodes']),edges=copy.deepcopy(TOPOLOGY['edges'])),
+            forecast=dict(provider='observe-ledger',status='not_connected',stride_s=5,history_window_ms=3600000,
+                          synced_through_cursor=0,remaining_valid_ms=0.,latest_prediction_ids=[]),
             predictions=[],advisory=dict(status='not_configured',remaining_valid_ms=0.,provider_id=None,value_percent=None,reason='暂无可用建议映射',device_write_permitted=False),
             context=dict(observed_device=None,tto_host=socket.gethostname(),task_metadata_available=False,active_requests=None,control_owner='TianshanOS',tto_role='read_only'),
             health=dict(web_connected=True,measurement_status='waiting',protection_status='unknown',protection_remaining_valid_ms=0.),event_cursor=None)
@@ -91,8 +84,15 @@ class State:
         p=self.packet
         return [e for e in self.events if e['run_id'] is None or p and (e['run_id'],e['source_epoch'])==(p['run_id'],p['source_epoch'])]
 
+    def clear_source(self):
+        self.packet=None;self.source_connected=False
+        self.source_status='观察过程已切换，等待新数据'
+        self.history.clear();self.history_seen.clear();self.task_event_seq=0
+        self.model_history.clear();self.model_history_sample=None;self.model_gap_t=-math.inf
+        self.last_signature=None;self.last_advisory_basis=None
+        self.events=deque((e for e in self.events if e['run_id'] is None),maxlen=1000)
+
     def accept(self, packet, now=None):
-        accepted_at = time.perf_counter()
         now = time.monotonic() if now is None else now
         if packet.get('schema')=='TTO-WEB-DISPLAY-GAP-v1':
             if packet.get('boot_id')!=boot_id() or packet.get('clock_domain_id')!='host-monotonic:'+boot_id():
@@ -110,15 +110,9 @@ class State:
         old=self.packet
         signature=(packet['run_id'],packet['source_epoch'],packet['model_id'],packet['spec_id'])
         old_signature=None if not old else (old['run_id'],old['source_epoch'],old['model_id'],old['spec_id'])
-        if old_signature!=signature:
-            self.history.clear(); self.history_seen.clear(); self.last_origin=-math.inf; self.last_tj=None;self.task_event_seq=0
-            self.model_history.clear(); self.model_history_sample=None
-            self.model_gap_t=-math.inf
-            self.last_signature=None
-            self.events=deque((e for e in self.events if e['run_id'] is None),maxlen=1000)
-            for p in self.predictions:
-                if p['status']=='pending':p['status']='not_comparable'
-        elif packet['input_mono_s']<old['input_mono_s']:
+        if old and old_signature!=signature:
+            self.clear_source()
+        elif old_signature==signature and packet['input_mono_s']<old['input_mono_s']:
             raise ValueError('producer time regression')
         if old_signature==signature:
             self.expire_model_history(now)
@@ -127,48 +121,12 @@ class State:
         self.source_connected=True;self.source_status='正在观察'
         elapsed=(packet['input_mono_s']-packet['origin_mono_s'])*1000
         if packet.get('publication_gap'):
-            self.event('publication','显示发布流丢帧，未跨缺口匹配预测',elapsed,'warning')
-            for pred in self.predictions:
-                if pred['status']=='pending':pred['status']='not_comparable'
+            self.event('publication','显示发布流丢帧；预测记录由后台补取',elapsed,'warning')
             for series in self.history.values():
                 series.append(dict(t=elapsed,value=None,sample_id=None,received_at_utc=None,status='unknown',source_ref=None))
         metrics={m['id']:m for m in packet['metrics']}
         tj=metrics.get('temperature.tj')
         self.record_model_history(packet, tj, now, elapsed)
-        fresh_tj=bool(packet['new_tj'] and packet['tj_sample_id']!=self.last_tj and tj and tj['status']=='valid' and tj['value'] is not None)
-        if fresh_tj:
-            self.last_tj=packet['tj_sample_id']
-            label_time=tj['as_of_elapsed_ms']
-            for p in self.predictions:
-                if p['status']!='pending' or (p['run_id'],p['source_epoch'],p['model_id'],p['spec_id'])!=signature:
-                    continue
-                if p['target_elapsed_ms']<=label_time<=p['target_elapsed_ms']+2000:
-                    p.update(status='matched',observed_C=tj['value'],error_C=p['value_C']-tj['value'],settled_elapsed_ms=(now-packet['origin_mono_s'])*1000)
-                    self.prediction_labels[p['prediction_id']]={'label_elapsed_ms':label_time,'received_at_utc':tj['received_at_utc'],'sample_id':tj['sample_id'],'source_ref':tj['source_ref']}
-            observer=packet['model']
-            inputs=observer.get('conditional_inputs_rails_W_PWM')
-            eligible=observer['phase'] in ('tracking','degraded') and packet['consumable_until_mono_s']>now and inputs and all(finite(v) for v in inputs) and packet['input_mono_s']-self.last_origin>=1.
-            if eligible:
-                # The frozen comparison anchors Tf to real TJ, retaining causal Ts/E.
-                start=[tj['value'],observer['Ts_C'],observer['E_C']]
-                self.prepare_model()
-                values=[float(self.solver.mean_step(start,inputs,h)[0]) for h in HORIZONS]
-                issued=(now+time.perf_counter()-accepted_at-packet['origin_mono_s'])*1000
-                for horizon,value in zip(HORIZONS,values):
-                    if len(self.predictions)==self.predictions.maxlen:
-                        removed=self.predictions.popleft();self.prediction_labels.pop(removed['prediction_id'],None)
-                    target=label_time+horizon*1000
-                    self.predictions.append(dict(prediction_id=str(uuid.uuid4()),run_id=packet['run_id'],source_epoch=packet['source_epoch'],
-                        model_id=packet['model_id'],spec_id=packet['spec_id'],scenario='HOLD',horizon_s=horizon,
-                        origin_elapsed_ms=label_time,issued_elapsed_ms=issued,target_elapsed_ms=target,input_cutoff_elapsed_ms=label_time,
-                        value_C=value,phase_at_origin=observer['phase'],evidence_mode='test_replay' if packet['mode']=='test_replay' else 'issued_online',
-                        status='late_publication' if issued>=target else 'pending',observed_C=None,error_C=None))
-                self.last_origin=packet['input_mono_s']
-        # Input timestamps advance only after consuming the ordered source stream.
-        # Web wall time cannot seal a window ahead of a delayed legal source label.
-        for pred in self.predictions:
-            if pred['status']=='pending' and (pred['run_id'],pred['source_epoch'],pred['model_id'],pred['spec_id'])==signature and elapsed>pred['target_elapsed_ms']+2000:
-                pred.update(status='missing_label',settled_elapsed_ms=(now-packet['origin_mono_s'])*1000)
         for m in packet['metrics']:
             id=m['id']
             if not id.startswith(('temperature.','power.','fan.pwm.','fan.rpm')):
@@ -197,15 +155,68 @@ class State:
             self.event('source',packet['event_reason'],elapsed,'warning')
         self.refresh(now)
 
+    def reset_predictions(self):
+        self.predictions = {}
+        self.prediction_received_ms = {}
+        self.prediction_cursor = 0
+        self.prediction_origin = None
+        self.prediction_identity = None
+        self.prediction_history_identity = None
+        self.prediction_ended = False
+        self.prediction_ended_at = None
+        self.forecast = None
+        self.prediction_syncing = False
+        self.prediction_failed = False
+
+    def begin_publication(self, publisher):
+        if publisher == self.publisher_id:
+            return
+        if self.publisher_id is not None:
+            self.clear_source()
+        self.reset_predictions()
+        self.publisher_id = publisher
+        self.prediction_syncing = True
+
+    def accept_predictions(self, page, now=None):
+        now=time.monotonic() if now is None else now
+        if page['schema']!='TTO-PREDICTION-PAGE-v1' or page['boot_id']!=boot_id() or page['publisher_id']!=self.publisher_id:
+            raise ValueError('prediction publisher identity mismatch')
+        identity=page['identity']
+        if identity and (identity['model_id']!=SPEC['model_sha256'] or identity['spec_id']!=SPEC_ID):
+            raise ValueError('frozen model/spec mismatch')
+        # v1 publishers before rc8 used identity for both purposes.
+        history=page.get('history_identity',identity)
+        if history and (not identity or any(history[k]!=identity[k] for k in ('run_id','model_id','spec_id')) or not page['ended'] and history!=identity):
+            raise ValueError('prediction history identity mismatch')
+        if self.packet and page['origin_mono_s']!=self.packet['origin_mono_s']:
+            raise ValueError('prediction origin mismatch')
+        self.prediction_origin=page['origin_mono_s']
+        self.prediction_identity=page['identity'];self.prediction_ended=page['ended']
+        self.prediction_history_identity=history
+        if page['ended']:
+            self.prediction_ended_at=page['ended_at_mono_s'];self.source_connected=False
+        for row in page['records']:
+            previous=self.predictions.get(row['prediction_id'])
+            if previous is not None and row['revision']<=previous['revision']:continue
+            self.predictions[row['prediction_id']]=copy.deepcopy(row)
+            # API deltas describe when Web received a revision, not when the
+            # backend settled it. Original ledger times remain untouched.
+            self.prediction_received_ms[row['prediction_id']]=(now-page['origin_mono_s'])*1000
+        cutoff=(page['retained_from_mono_s']-page['origin_mono_s'])*1000
+        self.predictions={k:v for k,v in self.predictions.items() if v['origin_elapsed_ms']>=cutoff}
+        self.prediction_received_ms={k:self.prediction_received_ms[k] for k in self.predictions}
+        self.prediction_cursor=page['cursor']
+        self.prediction_syncing=page['has_more']
+        self.prediction_failed=page['sync_status']=='unavailable'
+        if not page['has_more']:self.forecast=copy.deepcopy(page['forecast'])
+        self.refresh(now)
+
     def disconnect(self, reason='数据暂断', ended=False):
         if self.source_connected:self.event('web-source',reason,severity='warning')
         if self.packet:
             self.model_gap('source_ended' if ended else 'source_disconnected',
                            (time.monotonic()-self.packet['origin_mono_s'])*1000)
         self.source_connected=False;self.source_status=reason
-        if not ended:
-            for pred in self.predictions:
-                if pred['status']=='pending':pred['status']='not_comparable'
         if ended and self.packet and self.packet['mode']!='test_replay':self.packet["mode"]="ended"
         self.refresh()
 
@@ -218,7 +229,7 @@ class State:
         if not p:return result
         s=p['safety'];metrics={m['id']:m for m in snapshot['metrics']}
         tj=metrics.get('temperature.tj',{})
-        preds=[v for v in snapshot['predictions'] if v['horizon_s']==45 and v['status']=='pending' and v['origin_elapsed_ms']==(tj.get('as_of_elapsed_ms'))]
+        preds=[v for v in snapshot['predictions'] if v['horizon_s']==45 and v['prediction_id'] in snapshot['forecast']['latest_prediction_ids']]
         good=all(s.get(k) is False for k in ('guard','fault','temp_stale','manual_mode')) and s.get('mode')=='auto' and s.get('enabled') is True and s.get('normalized_valid') is True and s.get('fan_fresh') and s.get('binding_fresh') and s.get('confirmed_normal_now')
         if self.curve['device_id']!=p['observed_device'] or self.curve['source_config_sha256']!=p.get('config_id') or not good or tj.get('value') is None or not preds or snapshot['health']['protection_status']!='no_reported_protection' or snapshot['model']['phase'] not in ('tracking','degraded') or metrics.get('fan.pwm.actual',{}).get('value') is None:
             return result
@@ -236,7 +247,8 @@ class State:
         snapshot=self.empty();self.seq+=1;snapshot['snapshot_seq']=self.seq
         if self.packet:
             p=self.packet
-            elapsed=max(0.,(now-p['origin_mono_s'])*1000)
+            display_now=min(now,self.prediction_ended_at) if self.prediction_ended else now
+            elapsed=max(0.,(display_now-p['origin_mono_s'])*1000)
             snapshot.update(run_id=p['run_id'],source_epoch=p['source_epoch'],mode=p['mode'],clock_domain_id=p['clock_domain_id'],run_elapsed_ms=elapsed)
             snapshot['context']['observed_device']=p['observed_device']
             task=p.get('task',{}).get('context',{})
@@ -254,14 +266,12 @@ class State:
                 if m['value'] is None and m['id'] in self.history and self.history[m['id']] and self.history[m['id']][-1]['value'] is not None:
                     self.history[m['id']].append(dict(t=min(elapsed,(raw['_expiry']-p['origin_mono_s'])*1000),value=None,sample_id=None,received_at_utc=None,status=m['status'],source_ref=m['source_ref']))
             metrics={m['id']:m for m in snapshot['metrics']}
-            tj=next((m for m in p['metrics'] if m['id']=='temperature.tj'),{})
             model_until=self.model_until(p, now)
             self.expire_model_history(now)
             current=now<model_until and self.source_connected and metrics.get('temperature.tj',{}).get('status')=='valid'
             o=p['model'];model=snapshot['model'];model.update(model_id=p['model_id'],spec_id=p['spec_id'],phase=o['phase'] if current else 'unavailable')
             model['remaining_valid_ms']=max(0.,(model_until-now)*1000) if current else 0.
             for key in ('Tf_C','Ts_C','E_C'):model[key]=o[key] if current else None
-            metrics={m['id']:m for m in snapshot['metrics']}
             safety=p['safety'];fans=metrics.get('fan.pwm.actual',{});control=metrics.get('control.valid',{})
             protection='unknown'
             if fans.get('status')=='valid' and control.get('status')=='valid':
@@ -272,13 +282,22 @@ class State:
             protection_until=min((m['_expiry'] for m in p['metrics'] if m['id'] in ('fan.pwm.actual','control.valid')),default=now)
             snapshot['health']['protection_remaining_valid_ms']=max(0.,(protection_until-now)*1000) if protection!='unknown' else 0.
             signature=(p['run_id'],p['source_epoch'],p['model_id'],p['spec_id'])
-            while self.predictions and (self.predictions[0]['run_id']!=p['run_id'] or self.predictions[0]['origin_elapsed_ms']<elapsed-3690000):
-                removed=self.predictions.popleft();self.prediction_labels.pop(removed['prediction_id'],None)
-            snapshot['predictions']=list(reversed([copy.deepcopy(v) for v in islice((v for v in reversed(self.predictions) if (v['run_id'],v['source_epoch'],v['model_id'],v['spec_id'])==signature),6)]))
+            rows=[v for v in self.predictions.values() if (v['run_id'],v['source_epoch'],v['model_id'],v['spec_id'])==signature]
+            snapshot['predictions']=copy.deepcopy(sorted(rows,key=lambda v:(v['origin_elapsed_ms'],v['horizon_s']))[-6:])
+            forecast=snapshot['forecast']
+            forecast.update(status='unavailable' if self.prediction_failed else 'not_connected',synced_through_cursor=self.prediction_cursor)
+            if self.forecast:
+                forecast.update({k:copy.deepcopy(v) for k,v in self.forecast.items() if k!='consumable_until_mono_s'})
+                left=max(0.,(self.forecast['consumable_until_mono_s']-now)*1000)
+                forecast['synced_through_cursor']=self.prediction_cursor
+                forecast['remaining_valid_ms']=left
+                if not self.source_connected or self.prediction_syncing or (forecast['status']=='available' and (not left or not current or not set(forecast['latest_prediction_ids']).issubset({v['prediction_id'] for v in rows}))):
+                    forecast.update(status='disconnected' if not self.source_connected else 'syncing' if self.prediction_syncing else 'unavailable',
+                                    remaining_valid_ms=0.,latest_prediction_ids=[])
             for node in model['nodes']:
                 if 'metric_id' in node:node['status']=metrics.get(node['metric_id'],{}).get('status','unknown')
                 elif node['role']=='estimate':node['status']='valid' if model.get(node['state_path']) is not None and current else 'unknown'
-                elif node['id']=='forecast':node['status']='valid' if current and any(v['status']=='pending' for v in snapshot['predictions']) else 'unknown'
+                elif node['id']=='forecast':node['status']='valid' if current and snapshot['forecast']['status']=='available' else 'unknown'
                 elif node['id']=='risk':node['status']='valid' if protection!='unknown' else 'unknown'
                 else:node['status']='unknown'
             by_id={n['id']:n for n in model['nodes']}
@@ -289,7 +308,21 @@ class State:
             while self.model_history and self.model_history[0].t<elapsed-3600000:
                 self.model_history.popleft()
             snapshot['advisory']=self.advisory(snapshot)
-            snapshot['advisory']['remaining_valid_ms']=min(model['remaining_valid_ms'],snapshot['health']['protection_remaining_valid_ms']) if snapshot['advisory']['value_percent'] is not None else 0.
+            snapshot['advisory']['remaining_valid_ms']=min(model['remaining_valid_ms'],snapshot['health']['protection_remaining_valid_ms'],snapshot['forecast']['remaining_valid_ms']) if snapshot['advisory']['value_percent'] is not None else 0.
+        elif self.prediction_identity:
+            identity=self.prediction_identity
+            snapshot.update(run_id=identity['run_id'],source_epoch=identity['source_epoch'],
+                            mode='ended' if self.prediction_ended else 'waiting',
+                            run_elapsed_ms=max(0.,((self.prediction_ended_at if self.prediction_ended else now)-self.prediction_origin)*1000))
+            snapshot['model'].update(model_id=identity['model_id'],spec_id=identity['spec_id'])
+            snapshot['forecast'].update(status='unavailable' if self.prediction_ended or self.prediction_failed else 'syncing',
+                                        synced_through_cursor=self.prediction_cursor)
+        snapshot['publication_status']='failed' if self.prediction_failed else 'ended' if self.prediction_ended or snapshot['mode']=='ended' else 'live' if self.source_connected else 'waiting'
+        if self.prediction_ended:
+            snapshot['prediction_history_identity']=dict(self.prediction_history_identity) if self.prediction_history_identity else None
+        elif snapshot['run_id']:
+            snapshot['prediction_history_identity']=dict(run_id=snapshot['run_id'],source_epoch=snapshot['source_epoch'],
+                model_id=snapshot['model']['model_id'],spec_id=snapshot['model']['spec_id'])
         for id,value in self.host_values.items():
             snapshot['metrics'].append(dict(id=id,label='Web进程单核等效CPU' if id=='host.cpu' else 'Web进程RSS',kind='observed',unit='%' if id=='host.cpu' else 'MiB',value=value,status='valid',reason_code=None,source_id='tto-web-process',source_ref='process:'+self.epoch,sample_id=str(self.host_sample_mono),received_at_utc=self.host_sample_utc,source_time_utc=None,as_of_elapsed_ms=snapshot['run_elapsed_ms'],age_lower_bound_ms=max(0.,(now-self.host_sample_mono)*1000),remaining_valid_ms=max(0.,2000-(now-self.host_sample_mono)*1000),time_quality='same_clock',last_observation=None))
         snapshot['event_cursor']=str(self.event_seq) if self.events else None
@@ -301,14 +334,17 @@ class State:
 
     def prediction_view(self, horizon=45, start=0, end=math.inf, records_after=None):
         s=self._snapshot
-        selected=[p for p in self.predictions if (p['run_id'],p['source_epoch'],p['model_id'],p['spec_id'],p['horizon_s'])==(s['run_id'],s['source_epoch'],s['model']['model_id'],s['model']['spec_id'],horizon) and start<=p['origin_elapsed_ms']<=end]
+        identity=s['prediction_history_identity']
+        selected=[p for p in self.predictions.values() if identity and p['phase_at_origin'] in ('tracking','degraded') and all(p[k]==identity[k] for k in ('run_id','source_epoch','model_id','spec_id')) and p['horizon_s']==horizon and start<=p['origin_elapsed_ms']<=end]
         matched=[p for p in selected if p['status']=='matched'];errors=[abs(p['error_C']) for p in matched]
         elapsed=s['run_elapsed_ms'] or 0
         ordered=sorted(errors);rank=.95*(len(ordered)-1) if ordered else 0
         p95=(ordered[math.floor(rank)]*(1-(rank%1))+ordered[math.ceil(rank)]*(rank%1)) if ordered else None
-        summary=dict(issued_count=len(selected),due_count=sum(p['target_elapsed_ms']<=elapsed and p['status'] not in ('late_publication','not_comparable') for p in selected),matched_count=len(matched),missing_label_count=sum(p['status']=='missing_label' for p in selected),unmatched_future_count=sum(p['target_elapsed_ms']>elapsed and p['status']=='pending' for p in selected),late_publication_count=sum(p['status']=='late_publication' for p in selected),not_comparable_count=sum(p['status']=='not_comparable' for p in selected),MAE_C=sum(errors)/len(errors) if errors else None,P95_absolute_C=p95 if errors else None,max_underprediction_C=max((max(-p['error_C'],0) for p in matched),default=None))
-        records=[copy.deepcopy(p) for p in selected if records_after is None or p['target_elapsed_ms']>=records_after-2000 or p.get('settled_elapsed_ms',-math.inf)>=records_after]
-        return dict(horizon_s=horizon,scenario='HOLD',records=records,records_complete=records_after is None,summary=summary,labels={v['prediction_id']:self.prediction_labels[v['prediction_id']] for v in records if v['prediction_id'] in self.prediction_labels})
+        summary=dict(issued_count=len(selected),due_count=sum(p['target_elapsed_ms']<=elapsed and p['status'] not in ('late_publication','not_comparable','unavailable') for p in selected),matched_count=len(matched),missing_label_count=sum(p['status']=='missing_label' for p in selected),unmatched_future_count=sum(p['target_elapsed_ms']>elapsed and p['status']=='pending' for p in selected),late_publication_count=sum(p['status']=='late_publication' for p in selected),not_comparable_count=sum(p['status']=='not_comparable' for p in selected),MAE_C=sum(errors)/len(errors) if errors else None,P95_absolute_C=p95 if errors else None,max_underprediction_C=max((max(-p['error_C'],0) for p in matched),default=None))
+        records=[copy.deepcopy(p) for p in selected if records_after is None or p['target_elapsed_ms']>=records_after-2000 or self.prediction_received_ms[p['prediction_id']]>=records_after]
+        return dict(horizon_s=horizon,scenario='HOLD',provider='observe-ledger',history_identity=copy.deepcopy(identity),sync_status='unavailable' if self.prediction_failed else 'syncing' if self.prediction_syncing else 'synced' if self.forecast else 'not_connected',
+            synced_through_cursor=self.prediction_cursor,records=records,records_complete=records_after is None and self.forecast is not None and not self.prediction_syncing and not self.prediction_failed,
+            summary=summary,labels={v['prediction_id']:v['label'] for v in records if 'label' in v})
 
     @staticmethod
     def model_until(packet, now):

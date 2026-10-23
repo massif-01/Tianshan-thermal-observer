@@ -1,12 +1,10 @@
 """Same-origin read-only HTTP and bounded SSE. Service health is not device health."""
 import asyncio
-import contextlib
 import copy
 import hashlib
 import hmac
 import ipaddress
 import json
-import logging
 import math
 import os
 import psutil
@@ -83,7 +81,9 @@ def app_for(config, *, start_source=True, state=None):
     async def snapshot(r):return response(state.refresh())
     async def model(r):
         s=state.snapshot();p=state.packet
-        return response(dict(**s['model'],provider=dict(method_id='frozen_g2_hold',horizons_s=[15,45,90],assumption_codes=(p or {}).get('model',{}).get('unknown_input_assumptions',[]),TJ_anchor='current accepted TJ',state_cutoff_elapsed_ms=(p['input_mono_s']-p['origin_mono_s'])*1000 if p else None),uncertainty=(p or {}).get('model',{}).get('uncertainty'),innovation_C=(p or {}).get('model',{}).get('latest_innovation_C'),reasons=(p or {}).get('model',{}).get('reasons',[]),advisory=dict(**s['advisory'],basis=state.last_advisory_basis),demand=dict(status='not_available',value=None,unit='index',reason='本轮未计算：没有当前合法provider和固定参考')))
+        latest=[v for v in s['predictions'] if v['prediction_id'] in s['forecast']['latest_prediction_ids']]
+        condition=(latest[-1].get('conditional_assumptions') or {}) if latest else {}
+        return response(dict(**s['model'],provider=dict(method_id='frozen_g2_hold',provider_id='observe-ledger',horizons_s=[15,45,90],stride_s=5,assumption_codes=condition.get('assumptions',[]),TJ_anchor='recorded_prediction_origin',state_cutoff_elapsed_ms=latest[-1]['input_cutoff_elapsed_ms'] if latest else None),uncertainty=(p or {}).get('model',{}).get('uncertainty'),innovation_C=(p or {}).get('model',{}).get('latest_innovation_C'),reasons=(p or {}).get('model',{}).get('reasons',[]),advisory=dict(**s['advisory'],basis=state.last_advisory_basis),demand=dict(status='not_available',value=None,unit='index',reason='本轮未计算：没有当前合法provider和固定参考')))
     def bounded_number(r,key,default,lo,hi):
         try:v=float(r.query.get(key,default))
         except ValueError:raise web.HTTPBadRequest(text='invalid number')
@@ -145,22 +145,24 @@ def app_for(config, *, start_source=True, state=None):
         if len(sse_clients)>=4:raise web.HTTPServiceUnavailable(text='display client budget reached')
         queue=asyncio.Queue(maxsize=8);sse_clients.add(queue)
         resp=web.StreamResponse(headers={'Content-Type':'text/event-stream','Cache-Control':'no-store','X-Accel-Buffering':'no'})
-        await resp.prepare(r)
-        last=r.headers.get('Last-Event-ID');current=state.snapshot()
-        event='snapshot'
-        if last:
-            ids=[v[0] for v in sent]
-            if last in ids:
-                missed=list(sent)[ids.index(last)+1:]
-                if len(missed)>8:event='resync'
-                else:
-                    for item in missed:queue.put_nowait(item)
-            else:event='resync'
-        if queue.empty():queue.put_nowait((f'{state.epoch}:{current["snapshot_seq"]}',event,current))
         try:
+            await resp.prepare(r)
+            last=r.headers.get('Last-Event-ID');current=state.snapshot()
+            event='snapshot'
+            if last:
+                ids=[v[0] for v in sent]
+                if last in ids:
+                    missed=list(sent)[ids.index(last)+1:]
+                    if len(missed)>8:event='resync'
+                    else:
+                        for item in missed:queue.put_nowait(item)
+                else:event='resync'
+            if queue.empty():queue.put_nowait((f'{state.epoch}:{current["snapshot_seq"]}',event,current))
             while True:
                 try:
-                    id,event,data=await asyncio.wait_for(queue.get(),5.)
+                    item=await asyncio.wait_for(queue.get(),5.)
+                    if item is None:break
+                    id,event,data=item
                     wire=f'id: {id}\nevent: {event}\nretry: 1000\ndata: {json.dumps(data,ensure_ascii=False,allow_nan=False)}\n\n'
                 except asyncio.TimeoutError:wire='event: heartbeat\ndata: {}\n\n'
                 await asyncio.wait_for(resp.write(wire.encode()),2.)
@@ -209,6 +211,10 @@ def app_for(config, *, start_source=True, state=None):
             source_task=asyncio.create_task(source_run())
     async def shutdown(app):
         stop.set()
+        # End long-lived display requests before aiohttp waits for HTTP handlers.
+        for queue in tuple(sse_clients):
+            while not queue.empty():queue.get_nowait()
+            queue.put_nowait(None)
         if source_task:
             if config['source']['mode']=='follow':source_task.cancel()
             await asyncio.gather(source_task,return_exceptions=True)
