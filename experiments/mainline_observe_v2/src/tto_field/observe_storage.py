@@ -1,5 +1,5 @@
 """One bounded session journal; rotation changes files, never engine/model state."""
-import json, os, shutil, threading, time, zlib
+import json, os, shutil, tempfile, threading, time, zlib
 from pathlib import Path
 from datetime import date, timedelta, datetime, timezone
 from tto.storage import Journal, LimitReached
@@ -9,10 +9,12 @@ from tto.util import canonical, file_hash, write_json
 GZIP_FINISH_BYTES=10
 
 def replace_json(path, raw):
-    temporary=path.with_name(path.name+'.next')
-    fd=os.open(temporary,os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600)
-    with os.fdopen(fd,'wb') as f:f.write(raw);f.flush();os.fsync(f.fileno())
-    os.replace(temporary,path)
+    fd,name=tempfile.mkstemp(prefix=path.name+'.',suffix='.next',dir=path.parent)
+    temporary=Path(name)
+    try:
+        with os.fdopen(fd,'wb') as f:f.write(raw);f.flush();os.fsync(f.fileno())
+        os.replace(temporary,path)
+    finally:temporary.unlink(missing_ok=True)
 
 class SessionStore:
     def __init__(self, root, *, budget=8*1024**3, segment_bytes=2*1024**3,
@@ -75,7 +77,7 @@ class SessionStore:
                 compressor,b=encode()
             if len(b)+GZIP_FINISH_BYTES>self.chunk_bytes: raise LimitReached('record_exceeds_chunk')
             if self.budget is not None and self.total+len(b)>self.budget-self.reserve: raise LimitReached('session_max_bytes')
-            if shutil.disk_usage(self.root).free<self.min_free+len(b): raise LimitReached('min_free_bytes')
+            if shutil.disk_usage(self.root).free<len(b)+(0 if self.finalizing else self.min_free): raise LimitReached('min_free_bytes')
             if key not in self.handles:
                 self.counts[key]=self.counts.get(key,0)+1;n=self.counts[key]
                 name=(f'{stream}-{n:04d}' if stream=='observations' or n>1 else stream)+'.jsonl.gz'
@@ -92,10 +94,12 @@ class SessionStore:
             prefix=str(Path(base).relative_to(self.root))
             for key in list(self.handles):
                 if key[0]==prefix: self._finish_file(key)
+    def begin_finalization(self):
+        with self.lock:self.finalizing=True
     def close(self):
         with self.lock:
             if self.closed:return
-            self.finalizing=True;self._seal_segment();self.closed=True
+            self.begin_finalization();self._seal_segment();self.closed=True
             self.metadata(self.root/'stream-index.json',dict(contract='TTO-OBSERVE-SEGMENTS-v2',encoding='gzip-jsonl-level1-sync-flush',streams=self.streams,
                 segments=len(self.segments),rotations=self.rotation_count,session_max_bytes=self.budget,
                 segment_max_bytes=self.segment_bytes,file_chunk_max_bytes=self.chunk_bytes,
@@ -138,6 +142,7 @@ class DailyStore(SessionStore):
             path=self.root/'days'/day
             path.parent.mkdir(exist_ok=True)
             self.days[day]=SessionStore(path,**self.options)
+            self.days[day].finalizing=self.finalizing
             self.recorded_days[day]=None
         return self.days[day]
     def append(self,base,stream,row):
@@ -145,7 +150,7 @@ class DailyStore(SessionStore):
             if self.closed:raise OSError('session store is closed')
             day=row['origin_day'] if Path(base)==self.root and stream in ('scores','predictions','daily-summary') else self.recording_day()
             store=self._day(day)
-            if stream=='daily-summary':store.metadata(store.root/'scoring.json',row)
+            if stream=='daily-summary':store.metadata(store.root/'scoring.json',row,final=True)
             else:store.append(store.root/Path(base).relative_to(self.root),stream,row)
     def seal_days(self,ready_days):
         with self.lock:
@@ -161,10 +166,14 @@ class DailyStore(SessionStore):
         with self.lock:
             relative=Path(base).relative_to(self.root)
             for store in self.days.values():store.close_prefix(store.root/relative)
+    def begin_finalization(self):
+        with self.lock:
+            self.finalizing=True
+            for store in self.days.values():store.begin_finalization()
     def close(self):
         with self.lock:
             if self.closed:return
-            self.finalizing=True
+            self.begin_finalization()
             for store in self.days.values():self._seal_day(store)
             self.days.clear();self.closed=True
             self.metadata(self.root/'stream-index.json',dict(contract='TTO-OBSERVE-DAYS-v2',layout='utc-days',

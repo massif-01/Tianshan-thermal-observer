@@ -220,13 +220,49 @@ def test_invalid_business_row_becomes_unknown(tmp_path):
     with f.open('a') as stream:stream.write('[]\n')
     tail.tick();assert tail.current['event']=='source_unknown' and tail.current['client_inflight'] is None
 
-def test_low_disk_stops_data_but_uses_reserved_final_metadata(tmp_path,monkeypatch):
+@pytest.mark.parametrize('pending',[False,True])
+def test_low_disk_stops_data_but_uses_reserved_final_metadata(tmp_path,monkeypatch,pending):
+    import asyncio,time
+    from types import SimpleNamespace
+    from fake_source import FakeSource
+    from tto_field.observe_cli import archive
+    from tto_field.observe_runtime import Consumer,run_observe
+    from tto_field.observe_storage import history_files
     import tto_field.observe_storage as module
-    s=SessionStore(tmp_path/'s',min_free=1024*1024)
-    monkeypatch.setattr(module.shutil,'disk_usage',lambda p:type('D',(),{'free':8192})())
-    with pytest.raises(LimitReached):s.append(s.root,'raw',{'x':1})
-    s.metadata(s.root/'summary.json',dict(reason='min_free_bytes'),final=True);s.close()
-    assert json.loads((s.root/'summary.json').read_text())['reason']=='min_free_bytes' and (s.root/'files.json').exists()
+    free=[2*1024**3];stores=[];expected=set()
+    monkeypatch.setattr(module.shutil,'disk_usage',lambda p:SimpleNamespace(free=free[0]))
+    on_record=Consumer.on_record;close=Consumer.close
+    def stop_after_samples(self,*args):
+        on_record(self,*args)
+        if self.valid_TJ>=2:self.loop.call_soon_threadsafe(self.stop.set)
+    def close_with_low_space(self):
+        stopped=close(self);assert stopped and self.ledger and self.ledger.day_stats
+        expected.update(p['prediction_id'] for b in self.ledger.pending for p in b['items'])
+        assert expected
+        if not pending:self.ledger.finish(time.monotonic())
+        free[0]=256*1024
+        with pytest.raises(LimitReached):self.store.append(self.store.root,'observations',dict(unexpected=True))
+        stores.append(self.store);return stopped
+    monkeypatch.setattr(Consumer,'on_record',stop_after_samples)
+    monkeypatch.setattr(Consumer,'close',close_with_low_space)
+    async def run():
+        async with FakeSource() as source:
+            config=load_config(environ={})
+            config['orin'].update(base_url=source.url,source_sample_interval_ms=1000,source_interval_evidence='owned fixture')
+            config['tianshan']['base_url']=source.url
+            registration=dict(device_id='fixture',thermal_config_id='fixture',observer_host_id=socket.gethostname(),session_id=str(uuid.uuid4()))
+            summary=await run_observe(config,registration,tmp_path/'s',None,local_loopback=True,storage_options=dict(min_free=1024**2))
+            assert summary['reason']=='external_stop' and summary['consumer_stopped']
+    asyncio.run(run())
+    root=tmp_path/'s';status=json.loads((root/'status.json').read_text())
+    assert status['running'] is False and (root/'summary.json').exists()
+    scores=[row for path,live in history_files(root,'scores') for row in read_records(path,live=live)]
+    assert {row['prediction_id'] for row in scores}==expected and len(scores)==len(expected)
+    assert all((path/'scoring.json').exists() for path in (root/'days').iterdir())
+    assert archive(root,tmp_path/'s.zip')['files_verified']>0
+    free[0]=0
+    with pytest.raises(LimitReached):stores[0].metadata(root/'no-space.json',{},final=True)
+    assert not (root/'no-space.json').exists()
 
 
 def test_continuous_ledger_outlives_test_origin_budget_without_error_growth():

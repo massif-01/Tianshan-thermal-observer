@@ -5,6 +5,7 @@ from pathlib import Path
 from datetime import datetime, timezone
 from .support import Clock, utc
 from .observe_storage import SessionStore, DailyStore, expire_history
+from tto.storage import LimitReached
 from .observe_predictions import Ledger
 from .receiver_resources import read_sample
 from . import __version__
@@ -100,7 +101,6 @@ class Consumer:
         except StopObservation as exc:self.event(str(exc),ref=raw['ref']);self.block(str(exc))
         except OSError as exc:self.block('recorder_error:'+type(exc).__name__)
         except Exception as exc:
-            from tto.storage import LimitReached
             if isinstance(exc,LimitReached):self.block('recorder_limit:'+str(exc));return
             self.publication_gap()
             self.projection_disabled=True;self.model_errors+=1
@@ -115,10 +115,11 @@ class Consumer:
         frame['source_reset']=True;frame['reset_reason']=reason
     def maintain_days(self):
         if isinstance(self.store,DailyStore):
-            if self.ledger:self.ledger.advance(time.monotonic(),self.store.recording_day(),receive_lag=self.lag_limit)
+            recording_day=self.store.recording_day()
+            if self.ledger:self.ledger.advance(time.monotonic(),recording_day,receive_lag=self.lag_limit)
             pending={p['origin_day'] for b in self.ledger.pending for p in b['items']} if self.ledger else set()
             with self.store.lock:
-                self.ready_days={day for day in self.store.days if day<self.store.recording_day() and day not in pending}
+                self.ready_days={day for day in self.store.days if day<recording_day and day not in pending}
     def _work(self):
         try:
             try:self._model_import()
@@ -275,26 +276,27 @@ async def run_observe(config,registration,out,duration=None,*,local_loopback=Fal
         closed=await asyncio.to_thread(consumer.close)
         if not closed:reason='model_cleanup_unconfirmed'
         end=time.monotonic()
-        if consumer.ledger and closed:consumer.ledger.finish(end,'projection_disabled' if consumer.projection_disabled else 'session_end')
-        if consumer.ledger and closed and duration is None:consumer.ledger.advance(end,None)
-        scores=consumer.ledger.summary() if consumer.ledger and closed else dict(reason='model_consumer_not_available_or_not_closed')
-        scores['all_native_valid_TJ_denominator']=consumer.valid_TJ
-        publication_status=None
-        if publication:
-            try:publication_status=await asyncio.to_thread(publication.close,completed=closed and consumer.ledger is not None)
-            except Exception as exc:publication_error=dict(phase='close',error_class=type(exc).__name__)
-        summary=dict(version=__version__,publication=publication_status,publication_lifecycle_error=publication_error,publication_callback_errors=consumer.publication_errors,reason=reason,error=error,elapsed_s=end-clock.origin,clock_end=clock.bracket(),pid=os.getpid(),
-            native_run_id=consumer.native_run_id,collector_invocation_count=1,collector_count=len(list((store.root/'native').glob('run-*/manifest.json'))),stateful_observer_count=consumer.stateful_observers,
-            valid_TJ_observed=consumer.valid_TJ,model_trial='insufficient_observations_diagnostic_only' if not consumer.valid_TJ else 'conditional_observation',
-            native_callbacks=consumer.callbacks,I02_processed_views=consumer.communication.view.process_calls if consumer.communication else 0,
-            projection_diagnostics=dict(retain_history=False,retained=len(consumer.projection.quality) if consumer.projection else 0,quality_seen=consumer.projection.quality_seen if consumer.projection else 0,complete_quality_stream='observations'),
-            shared_native_engine_id=consumer.engine_id,projection_disabled=consumer.projection_disabled,model_errors=consumer.model_errors,model_dropped_frames=consumer.dropped,consumer_stopped=closed,
-            Requester_count=0,sidecar_count=0,control_permission=False,experiment_authorization=False,scoring=scores,
-            native_summary=native[1] if native else None,thread_policy_same_pid=policy['pid']==os.getpid())
         try:
+            if closed and task.done():store.begin_finalization()
+            if consumer.ledger and closed:consumer.ledger.finish(end,'projection_disabled' if consumer.projection_disabled else 'session_end')
+            if consumer.ledger and closed and duration is None:consumer.ledger.advance(end,None)
+            scores=consumer.ledger.summary() if consumer.ledger and closed else dict(reason='model_consumer_not_available_or_not_closed')
+            scores['all_native_valid_TJ_denominator']=consumer.valid_TJ
+            publication_status=None
+            if publication:
+                try:publication_status=await asyncio.to_thread(publication.close,completed=closed and consumer.ledger is not None)
+                except Exception as exc:publication_error=dict(phase='close',error_class=type(exc).__name__)
+            summary=dict(version=__version__,publication=publication_status,publication_lifecycle_error=publication_error,publication_callback_errors=consumer.publication_errors,reason=reason,error=error,elapsed_s=end-clock.origin,clock_end=clock.bracket(),pid=os.getpid(),
+                native_run_id=consumer.native_run_id,collector_invocation_count=1,collector_count=len(list((store.root/'native').glob('run-*/manifest.json'))),stateful_observer_count=consumer.stateful_observers,
+                valid_TJ_observed=consumer.valid_TJ,model_trial='insufficient_observations_diagnostic_only' if not consumer.valid_TJ else 'conditional_observation',
+                native_callbacks=consumer.callbacks,I02_processed_views=consumer.communication.view.process_calls if consumer.communication else 0,
+                projection_diagnostics=dict(retain_history=False,retained=len(consumer.projection.quality) if consumer.projection else 0,quality_seen=consumer.projection.quality_seen if consumer.projection else 0,complete_quality_stream='observations'),
+                shared_native_engine_id=consumer.engine_id,projection_disabled=consumer.projection_disabled,model_errors=consumer.model_errors,model_dropped_frames=consumer.dropped,consumer_stopped=closed,
+                Requester_count=0,sidecar_count=0,control_permission=False,experiment_authorization=False,scoring=scores,
+                native_summary=native[1] if native else None,thread_policy_same_pid=policy['pid']==os.getpid())
             store.metadata(store.root/'summary.json',summary,final=True)
             store.metadata(store.root/'status.json',dict(running=False,pid=os.getpid(),reason=reason,summary='summary.json',native_run_id=consumer.native_run_id),final=True)
             store.close()
-        except (OSError,ValueError) as exc:
+        except (OSError,ValueError,LimitReached) as exc:
             raise RuntimeError('recording_finalize_failed:'+type(exc).__name__) from exc
     return summary

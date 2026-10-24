@@ -140,6 +140,20 @@ def test_continuous_days_cross_midnight_prune_and_archive(tmp_path,monkeypatch):
     result=subprocess.run([str(cli),'history','--session',str(root),'--stream','scores','--last','1000'],capture_output=True,text=True,check=True)
     settled=[row['settled_mono_s'] for row in json.loads(result.stdout)]
     assert settled==sorted(settled) and settled[-1]==183
+    # Midnight between date reads must not publish an uncommitted day for sealing.
+    from types import SimpleNamespace
+    from tto_field.observe_runtime import Consumer
+    consumer=SimpleNamespace(store=store,ledger=ledger,lag_limit=.25,ready_days=set())
+    def midnight():
+        previous=day[0];day[0]=date(2026,10,3);return previous
+    with monkeypatch.context() as patch:
+        patch.setattr(store,'today',midnight)
+        Consumer.maintain_days(consumer)
+        assert '2026-10-02' not in consumer.ready_days
+        store.seal_days(consumer.ready_days)
+        Consumer.maintain_days(consumer)
+        assert (root/'days/2026-10-02/scoring.json').exists()
+        store.seal_days(consumer.ready_days)
     for n in range(2,33):
         day[0]=date(2026,10,1)+timedelta(days=n)
         store.append(root,'observations',dict(n=n))
@@ -211,6 +225,19 @@ def test_continuous_days_cross_midnight_prune_and_archive(tmp_path,monkeypatch):
     assert expire_history(next_run,'one','host',date(2026,11,3))==['2026-10-04']
     assert not old.parent.exists()
     archive(root,tmp_path/'after-pruning.zip')
+    # Each atomic replacement owns its temporary file. A dead process's old
+    # temporary path cannot block a new startup, nor should it be overwritten.
+    inventory_path=root/'files.json';inventory_raw=inventory_path.read_bytes()
+    orphan=root/'files.json.next';orphan.write_bytes(b'interrupted previous process')
+    def interrupted_replace(source,destination):raise OSError('injected inventory replacement failure')
+    with monkeypatch.context() as patch:
+        patch.setattr(storage.os,'replace',interrupted_replace)
+        with pytest.raises(OSError,match='inventory replacement failure'):
+            expire_history(next_run,'one','host',date(2026,11,4))
+    assert inventory_path.read_bytes()==inventory_raw and not list(root.glob('files.json.*.next'))
+    assert orphan.read_bytes()==b'interrupted previous process'
+    assert expire_history(next_run,'one','host',date(2026,11,4))==['2026-10-05']
+    archive(root,tmp_path/'after-interrupted-replacement.zip')
     index_path=root/'stream-index.json';index_raw=index_path.read_bytes()
     index=dict(json.loads(index_raw),contract='TTO-OBSERVE-DAYS-v1');index_path.write_text(json.dumps(index))
     with pytest.raises(ValueError,match='requires retained-day inventory'):archive(root,tmp_path/'old-layout.zip')
