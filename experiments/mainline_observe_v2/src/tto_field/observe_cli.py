@@ -1,4 +1,4 @@
-"""Explicit bounded observe, offline status/history/archive, and owned-process STOP."""
+"""Continuous read-only observe, optional timed tests, offline status/history/archive, and owned-process STOP."""
 import argparse, asyncio, json, os, socket, time, uuid, zipfile, hashlib
 from datetime import datetime,timezone
 from pathlib import Path
@@ -10,13 +10,13 @@ def validate_start(config,reg,grant,duration,local_loopback=False):
     from tto.util import digest
     from urllib.parse import urlsplit
     import ipaddress
-    if not 0<duration<=86400:raise ValueError('observe duration is explicitly bounded by24h')
-    for key in ('device_id','thermal_config_id','observer_host_id','session_id'):
+    if duration is not None and not 0<duration<=86400:raise ValueError('timed observe duration1..86400s')
+    for key in ('device_id','thermal_config_id','observer_host_id') + (('session_id',) if duration is not None else ()):
         if not isinstance(reg.get(key),str) or not reg[key]:raise ValueError('missing registration '+key)
-    uuid.UUID(reg['session_id'])
+    if duration is not None:uuid.UUID(reg['session_id'])
     if grant.get('action')!='readonly-observe' or grant.get('explicit_user_start') is not True or not grant.get('evidence'):
-        raise ValueError('current observation-window permission required')
-    for key in ('device_id','thermal_config_id','session_id'):
+        raise ValueError('explicit read-only observation consent required')
+    for key in ('device_id','thermal_config_id') + (('session_id',) if duration is not None else ()):
         if grant.get(key)!=reg[key]:raise ValueError('permission identity mismatch:'+key)
     if reg['observer_host_id']!=socket.gethostname():raise ValueError('observer host identity mismatch')
     if grant.get('candidate_version')!=__version__ or grant.get('config_sha256')!=digest(public_config(config)):
@@ -25,12 +25,15 @@ def validate_start(config,reg,grant,duration,local_loopback=False):
     package=Path(__file__).parent
     if grant.get('candidate_manifest_sha256')!=digest_file(package/'candidate-files.json') or grant.get('model_manifest_sha256')!=digest_file(package/'g2_model/frozen-model-manifest.json'):
         raise ValueError('permission code/model manifest mismatch')
-    if grant.get('max_duration_s',0)<duration:raise ValueError('window does not cover duration')
-    begin=datetime.fromisoformat(grant['not_before_utc']);end=datetime.fromisoformat(grant['expires_at_utc'])
-    if begin.tzinfo is None or end.tzinfo is None:raise ValueError('window UTC needs timezone')
-    now=datetime.now(timezone.utc)
-    if not begin<=now or (end-now).total_seconds()<duration+10:raise ValueError('current window cannot contain run and cleanup')
-    if not 64*1024**2<=grant.get('session_max_bytes',0)<=8*1024**3:raise ValueError('explicit session byte budget64MiB..8GiB required')
+    if duration is None:
+        if grant.get('continuous') is not True:raise ValueError('continuous read-only observation must be explicit')
+    else:
+        if grant.get('max_duration_s') is None or grant['max_duration_s']<duration:raise ValueError('window does not cover duration')
+        begin=datetime.fromisoformat(grant['not_before_utc']);end=datetime.fromisoformat(grant['expires_at_utc'])
+        if begin.tzinfo is None or end.tzinfo is None:raise ValueError('window UTC needs timezone')
+        now=datetime.now(timezone.utc)
+        if not begin<=now or (end-now).total_seconds()<duration+10:raise ValueError('current window cannot contain run and cleanup')
+        if not 64*1024**2<=grant.get('session_max_bytes',0)<=8*1024**3:raise ValueError('explicit session byte budget64MiB..8GiB required')
     expected=reg.get('expected_platform')
     if expected is not None and not isinstance(expected,dict):raise ValueError('expected_platform must be object or null')
     events=reg.get('workload_event_source')
@@ -50,14 +53,22 @@ def archive(root,destination):
     from tto.util import file_hash
     if not (root/'summary.json').exists():raise ValueError('normal final summary required; preserve a crashed session separately')
     if json.loads((root/'status.json').read_text()).get('running'):raise ValueError('stop own observe before archive')
-    index=json.loads((root/'files.json').read_text())
-    for name,v in index.items():
-        p=root/name
-        if p.stat().st_size!=v['bytes'] or file_hash(p)!=v['sha256']:raise ValueError('session file SHA mismatch:'+name)
+    layout=json.loads((root/'stream-index.json').read_text())
+    if layout.get('layout')=='utc-days' and layout['contract']!='TTO-OBSERVE-DAYS-v2':
+        raise ValueError('daily archive requires retained-day inventory; old daily layout cannot prove completeness')
+    inventory_raw=(root/'files.json').read_bytes();inventory=json.loads(inventory_raw)
+    indexes=[root/'files.json',*[root/name for name in sorted(inventory) if name.startswith('days/')]]
+    verified=0;files=set()
+    for index_path in indexes:
+        entries=inventory if index_path==root/'files.json' else json.loads(index_path.read_text())
+        for name,v in entries.items():
+            p=index_path.parent/name
+            if p.stat().st_size!=v['bytes'] or file_hash(p)!=v['sha256']:raise ValueError('session file SHA mismatch:'+name)
+            verified+=1;files.add(p)
     with zipfile.ZipFile(destination,'x',zipfile.ZIP_DEFLATED) as z:
-        for p in sorted(root.rglob('*')):
-            if p.is_file():z.write(p,str(p.relative_to(root)))
-    return dict(archive=str(destination),sha256=file_hash(destination),bytes=destination.stat().st_size,files_verified=len(index))
+        z.writestr('files.json',inventory_raw)
+        for p in sorted(files):z.write(p,str(p.relative_to(root)))
+    return dict(archive=str(destination),sha256=file_hash(destination),bytes=destination.stat().st_size,files_verified=verified)
 
 def stop_owned(root):
     import psutil,signal
@@ -81,7 +92,7 @@ def main(argv=None):
     sub=p.add_subparsers(dest='cmd',required=True)
     v=sub.add_parser('verify-install');v.add_argument('--target',action='store_true');v.add_argument('--thread-policy-output',type=Path)
     for name in ('preview','observe'):
-        q=sub.add_parser(name);q.add_argument('--config',type=Path,required=True);q.add_argument('--registration',type=Path,required=True);q.add_argument('--duration',type=float,required=True)
+        q=sub.add_parser(name);q.add_argument('--config',type=Path,required=True);q.add_argument('--registration',type=Path,required=True);q.add_argument('--duration',type=float,help='optional timed test in seconds; omitted means continuous read-only operation')
         if name=='observe':
             q.add_argument('--grant',type=Path,required=True);q.add_argument('--output',type=Path,required=True);q.add_argument('--allow-network',action='store_true');q.add_argument('--local-loopback',action='store_true');q.add_argument('--publication-descriptor',type=Path,help='optional local read-only Web publication descriptor; private directory required')
     for name in ('status','stop','history','archive'):
@@ -95,23 +106,20 @@ def main(argv=None):
         elif a.cmd=='archive':result=archive(a.session,a.output)
         else:
             if not 0<a.last<=1000:raise ValueError('history limit1..1000')
-            from tto.recordio import log_paths,read_records
-            index=json.loads((a.session/'stream-index.json').read_text()) if (a.session/'stream-index.json').exists() else None
-            if index:
-                files=[a.session/n for n in index['streams'].get('./'+a.stream,[])]
-            else:
-                files=log_paths(a.session,a.stream)
-            records=[]
-            for f in reversed(files):
+            from tto.recordio import read_records
+            from .observe_storage import history_files
+            records=[];daily_scores=a.stream=='scores' and (a.session/'days').is_dir()
+            for f,live in reversed(list(history_files(a.session,a.stream))):
                 tail=deque(maxlen=a.last)
-                for row in read_records(f,live=index is None):tail.append(row)
+                for row in read_records(f,live=live):tail.append(row)
                 records=list(tail)+records
-                if len(records)>=a.last:break
+                if daily_scores:records=sorted(records,key=lambda row:row['settled_mono_s'])[-a.last:]
+                elif len(records)>=a.last:break
             result=records[-a.last:]
         print(json.dumps(result,ensure_ascii=False,indent=2));return 0
     from .numeric_policy import initialize
     receipt=getattr(a,'thread_policy_output',None)
-    if a.cmd=='observe':receipt=a.output.with_name(a.output.name+'.startup')/'thread-policy.json'
+    if a.cmd=='observe' and a.duration is not None:receipt=a.output.with_name(a.output.name+'.startup')/'thread-policy.json'
     initialize(receipt)
     from .identity import verify
     if a.cmd=='verify-install':print(json.dumps(verify(a.target),indent=2));return 0
@@ -119,17 +127,20 @@ def main(argv=None):
     from tto.util import digest
     c=load_config(a.config,environ={});reg=json.loads(a.registration.read_text())
     if a.cmd=='preview':
-        if not 0<a.duration<=86400:raise ValueError('duration1..86400s')
+        if a.duration is not None and not 0<a.duration<=86400:raise ValueError('duration1..86400s')
         result=dict(candidate_version=__version__,action='readonly-observe',registration=reg,duration_s=a.duration,
             config_sha256=digest(public_config(c)),permission_required=True,network_clients_created=0,Requester_count=0,CPU_sidecar=False,
             prediction_mode='G2-HOLD/B0/B1; real receive-anchor, actual publication',control_permission=False,
-            grant_template=dict(action='readonly-observe',candidate_version=__version__,candidate_manifest_sha256=hashlib.sha256((Path(__file__).parent/'candidate-files.json').read_bytes()).hexdigest(),model_manifest_sha256=hashlib.sha256((Path(__file__).parent/'g2_model/frozen-model-manifest.json').read_bytes()).hexdigest(),device_id=reg.get('device_id'),thermal_config_id=reg.get('thermal_config_id'),session_id=reg.get('session_id'),config_sha256=digest(public_config(c)),max_duration_s=a.duration,session_max_bytes=8*1024**3,explicit_user_start=False,evidence=None,not_before_utc=None,expires_at_utc=None))
+            grant_template=dict(action='readonly-observe',candidate_version=__version__,candidate_manifest_sha256=hashlib.sha256((Path(__file__).parent/'candidate-files.json').read_bytes()).hexdigest(),model_manifest_sha256=hashlib.sha256((Path(__file__).parent/'g2_model/frozen-model-manifest.json').read_bytes()).hexdigest(),device_id=reg.get('device_id'),thermal_config_id=reg.get('thermal_config_id'),session_id=None if a.duration is None else reg.get('session_id'),config_sha256=digest(public_config(c)),continuous=a.duration is None,max_duration_s=a.duration,session_max_bytes=None if a.duration is None else 8*1024**3,explicit_user_start=False,evidence=None,not_before_utc=None,expires_at_utc=None))
         print(json.dumps(result,ensure_ascii=False,indent=2));return 0
     if not a.allow_network:p.error('explicit current grant plus --allow-network required')
     grant=json.loads(a.grant.read_text());validate_start(c,reg,grant,a.duration,a.local_loopback)
+    if a.duration is None:
+        reg=dict(reg,session_id=str(uuid.uuid4()))
+        a.output=a.output/reg['session_id']
     verify(target=not a.local_loopback)
     from .observe_runtime import run_observe
-    result=asyncio.run(run_observe(c,reg,a.output,a.duration,local_loopback=a.local_loopback,grant=grant,publication_descriptor=a.publication_descriptor,storage_options=dict(budget=grant['session_max_bytes'],segment_bytes=min(2*1024**3,grant['session_max_bytes']))))
+    result=asyncio.run(run_observe(c,reg,a.output,a.duration,local_loopback=a.local_loopback,grant=grant,publication_descriptor=a.publication_descriptor,storage_options={} if a.duration is None else dict(budget=grant['session_max_bytes'],segment_bytes=min(2*1024**3,grant['session_max_bytes']))))
     print(json.dumps(result,ensure_ascii=False,indent=2))
     return 0 if result['reason'] in ('duration','SIGINT','SIGTERM','external_stop') and not result['error'] else 2
 if __name__=='__main__':raise SystemExit(main())

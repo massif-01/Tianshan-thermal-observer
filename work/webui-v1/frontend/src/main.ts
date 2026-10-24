@@ -4,10 +4,10 @@ import {icon,chevron,globe,more,menu as menuIcon,pauseMark,checkMark,brandMark,w
 import {lang,locale,langNames,langShort,setLang,t,be,translateDom} from './i18n';
 import './style.css';
 
-const UI_VERSION='1.0.0-rc.10';
+const UI_VERSION='1.0.0-rc.11';
 const srcName:Record<string,string>={source:t('数据源'),'web-source':t('数据源连接'),observer:t('模型'),board:t('主板'),runner:t('任务'),clock:t('时钟'),web:t('网页服务'),publication:t('显示发布')};
 const root=document.querySelector<HTMLDivElement>('#app')!;
-const chartLabel:Record<string,string>={temperature:t('实测结温与模型估计'),residual:t('估计与实测的差距'),compose:t('热状态构成'),cpugpu:t('CPU 与 GPU 温度'),power:t('GPU 与 CPU·SoC·内存 两路供电功率'),pwm:t('已执行 PWM 与天山OS 目标 PWM')};
+const chartLabel:Record<string,string>={temperature:t('实测结温与模型估计'),residual:t('估计与实测的差距'),compose:t('热状态构成'),cpugpu:t('CPU 与 GPU 温度'),power:t('GPU 与 CPU·SoC·内存 两路供电功率'),pwm:t('已执行 PWM 与 TianshanOS 目标 PWM')};
 const laneChart=(id:string,h:number,ph?:string)=>`<div class="lane-chart"><div id="${id}" class="chart" role="img" aria-label="${t('{name}，最近时间范围',{name:chartLabel[id]||''})}" style="height:${h}px"></div>${ph?`<div id="${ph}" class="ph" hidden></div>`:''}</div>`;
 const tile=(label:string)=>`<div class="stat-block"><span class="t-caption">${label}</span>`;
 root.innerHTML=`
@@ -370,7 +370,7 @@ function renderCharts(){
 }
 
 /* ---------- 热模型图 ---------- */
-const nodeText:Record<string,string>={pg:t('GPU 供电功率，模型的输入之一，与 CPU·SoC·内存供电互相独立。'),pc:t('CPU、SoC 与内存的供电功率，模型的输入之一，不是整机总功耗。'),u:t('天山 OS 已执行的风扇输出（PWM），模型的散热输入。TTO 只读。'),tj:t('实测结温。模型用它校正自己的估计，不是功耗，也不是预测。'),est:t('Tf、Ts 是 G2 热模型对热状态的估计，不是传感器读数。Ts 是模型内部的慢变量，E 是等效边界，都不代表结构或环境温度。'),fc:t('假设当前负载保持不变，分别算出 +15 / +45 / +90 秒后的结温参考；三点分别实算，不是连续轨迹，也不是控制指令。')};
+const nodeText:Record<string,string>={pg:t('GPU 供电功率，模型的输入之一，与 CPU·SoC·内存供电互相独立。'),pc:t('CPU、SoC 与内存的供电功率，模型的输入之一，不是整机总功耗。'),u:t('TianshanOS 已执行的风扇输出（PWM），模型的散热输入。TTO 只读。'),tj:t('实测结温。模型用它校正自己的估计，不是功耗，也不是预测。'),est:t('Tf、Ts 是 G2 热模型对热状态的估计，不是传感器读数。Ts 是模型内部的慢变量，E 是等效边界，都不代表结构或环境温度。'),fc:t('假设当前负载保持不变，分别算出 +15 / +45 / +90 秒后的结温参考；三点分别实算，不是连续轨迹，也不是控制指令。')};
 const nodeTitle:Record<string,string>={pg:t('GPU 功率'),pc:t('CPU·SoC·内存 功率'),u:t('风扇输出（已执行）'),tj:t('结温（实测）'),est:t('热状态估计'),fc:t('结温预测')};
 const nodeMetric:Record<string,string>={pg:'power.gpu',pc:'power.cpu_soc_mss',u:'fan.pwm.actual',tj:'temperature.tj'};
 const edgeOn=(from:string,to:string)=>!!current&&connected&&!paused&&current.model.edges.some(e=>e.from===from&&e.to===to&&e.animate_allowed);
@@ -401,7 +401,7 @@ function renderModel(){
  if(focused)document.querySelector<HTMLElement>(`#topoNodes [data-node="${focused}"]`)?.focus();
  text('protect',({unknown:t('保护上下文未知'),active:t('明确保护 / 失温'),no_reported_protection:t('未报告保护')} as Record<string,string>)[current.health.protection_status]||t('保护上下文未知'));
  text('advice',current.advisory.value_percent==null?t('暂无可用的建议依据'):t('{v}% · 观察参考',{v:fmt(current.advisory.value_percent)}));
- text('adviceReason',current.health.protection_status==='active'&&connected?t('风扇观察建议已暂停（主板保护中）；天山OS继续负责保护。'):be(current.advisory.reason)+t('；天山OS继续负责保护。'));
+ text('adviceReason',current.health.protection_status==='active'&&connected?t('风扇观察建议已暂停（主板保护中）。'):be(current.advisory.reason));
  renderAside();
 }
 const K_STATE=t('模型状态');
@@ -476,7 +476,7 @@ function renderContextRows(){
  const run=current.run_id?`${current.run_id.slice(0,8)} · ${t('源 #{n}',{n:current.source_epoch??'—'})}`:'—';
  html('ctxObs',rowHtml(t('观察对象 / 平台'),esc(`${ctx?.observed_device||current.context.observed_device||t('未知')} / ${ctx?.platform?.soc||t('未知')}`))+rowHtml(t('观察主机'),esc(ctx?.tto_host||current.context.tto_host))+rowHtml(t('观察状态'),esc(!connected?t('Web数据断开，来源状态未知'):current.health.measurement_status==='valid'?be(ctx?.observation_status||'正在观察'):t('设备数据资格已到期或不可用')))+rowHtml(t('本次观察'),esc(run),'t-body mono')+rowHtml(t('已观察时长'),esc(duration(current.run_elapsed_ms||0))));
  const active=ctx?.task_metadata_available&&connected;
- html('ctxCtl',rowHtml(t('风扇控制'),esc(t('天山OS：{v}',{v:be(String(lineValue(metric('fan.mode'))??t('未知')))})))+rowHtml(t('本系统角色'),t('只读，给出参考'))+rowHtml(t('热模型'),current.model.model_id?`G2 · <span class="mono">${esc(current.model.model_id.slice(0,12))}</span>`:t('尚未加载'))+rowHtml(t('当前负载'),active?esc(t('进行中 {a} / 并发上限 {b}',{a:ctx.active_requests??t('未知'),b:ctx.client_slots??t('未知')})):t('未接入任务记录'))+rowHtml(t('风扇观察建议'),current.health.protection_status==='active'&&connected?t('已暂停（主板保护中）'):t('暂未接入')));
+ html('ctxCtl',rowHtml(t('风扇控制'),esc(t('TianshanOS：{v}',{v:be(String(lineValue(metric('fan.mode'))??t('未知')))})))+rowHtml(t('本系统角色'),t('只读，给出参考'))+rowHtml(t('热模型'),current.model.model_id?`G2 · <span class="mono">${esc(current.model.model_id.slice(0,12))}</span>`:t('尚未加载'))+rowHtml(t('当前负载'),active?esc(t('进行中 {a} / 并发上限 {b}',{a:ctx.active_requests??t('未知'),b:ctx.client_slots??t('未知')})):t('未接入任务记录'))+rowHtml(t('风扇观察建议'),current.health.protection_status==='active'&&connected?t('已暂停（主板保护中）'):t('暂未接入')));
  html('ctxRun',rowHtml(t('GPU 利用率'),dash(fmt(lineValue(metric('usage.gpu')),0),'%'),'t-body num')+rowHtml(t('CPU 平均利用率'),dash(fmt(lineValue(metric('usage.cpu.mean'))),'%'),'t-body num')+rowHtml(t('设备内存'),`${fmt(lineValue(ram),0)} / ${fmt(lineValue(metric('memory.ram.total')),0)} ${esc(ram?.unit||'MB')}`,'t-body num')+rowHtml(t('网页服务开销'),t('{c} % 单核 · {r} MiB',{c:fmt(lineValue(metric('host.cpu'))),r:fmt(lineValue(metric('host.rss')),0)}),'t-body num'));
  if(ctx){
   text('sourceDiagnostics',t('显示链重新同步 {n} 次',{n:ctx.display_resync_count||0})+' | '+Object.values(ctx.source_health||{}).map((s:any)=>`${s.source}: ${s.quality_reason||s.error_class||t('已接收')} ${s.timeout_phase||''} · RTT ${fmt(s.round_trip_ms)}ms · ${dateLabel(s.last_received_at_utc)}`).join(' | '));

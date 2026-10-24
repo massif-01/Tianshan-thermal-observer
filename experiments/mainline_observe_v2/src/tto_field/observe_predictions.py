@@ -18,12 +18,38 @@ class Metrics:
                     P95_absolute_C=q(self.abs),P95_underestimate_C=q(self.under),max_underestimate_C=max(self.under,default=None))
 
 class Ledger:
-    def __init__(self,emit,identity,*,publication_mode='live',stride=5):
+    def __init__(self,emit,identity,*,publication_mode='live',stride=5,daily=False):
+        self.daily=daily;self.day=None;self.day_stats={}
         self.emit=emit;self.identity=identity;self.mode=publication_mode;self.stride=stride
         self.last_time=None;self.pending=[];self.last_anchor=None;self.last_epoch=None;self.counts=Counter();self.stats={};self.common={}
-    def _metric(self,where,key,error):where.setdefault(key,Metrics()).add(error)
+    def _day(self,day):
+        return self.day_stats.setdefault(day,dict(per_method={},same_set_G2_B0={},counts=Counter()))
+    def _count(self,key,day):
+        self.counts[key]+=1
+        if self.daily:self._day(day)['counts'][key]+=1
+    def _day_summary(self,day):
+        stats=self.day_stats[day]
+        return dict(**self.identity,contract='TTO-OBSERVE-SCORING-v1',publication_mode=self.mode,origin_day=day,counts=dict(stats['counts']),
+            **{name:{k:v.result() for k,v in stats[name].items()} for name in ('per_method','same_set_G2_B0')},
+            percentile='linear interpolation at (n-1)*.95; this UTC origin day only')
+    def _metric(self,where,key,error,day):
+        if self.daily:where=self._day(day)['per_method' if where is self.stats else 'same_set_G2_B0']
+        where.setdefault(key,Metrics()).add(error)
+    def advance(self,t,day,*,receive_lag=0):
+        """Settle silence after the accepted delivery lag; label eligibility stays target+2s."""
+        for batch in list(self.pending):
+            if t-receive_lag>batch['target']+2:
+                self._missing(batch,'missing_qualified_label_within_2s',t);self.pending.remove(batch)
+        if self.daily:
+            pending_days={p['origin_day'] for b in self.pending for p in b['items']}
+            for previous in sorted(self.day_stats):
+                if (day is None or previous<day) and previous not in pending_days:
+                    self.emit('daily-summary',self._day_summary(previous))
+                    del self.day_stats[previous]
+
     def consume(self,frame,issued,outputs,*,state_status,wall_clock):
         t=frame['t']
+        self.day=wall_clock.get('recording_day',wall_clock['utc'][:10])
         if frame['identity']['run_id']!=self.identity['run_id']:raise ValueError('prediction_session_identity_conflict')
         if self.last_time is not None and t<self.last_time:raise ValueError('prediction_clock_regression')
         self.last_time=t
@@ -40,19 +66,19 @@ class Ledger:
                     row=dict(prediction_id=p['prediction_id'],**self.identity,publication_mode=self.mode,
                         horizon_s=p['horizon_s'],method=p['method'],status='scored',target_mono_s=target,
                         label_ref=tj['source_ref'],label_received_mono_s=tj['observed_mono_s'],label_received_utc=tj.get('observed_utc'),label_value_C=tj['value_C'],
-                        error_C=error,underestimate_C=max(-error,0.),source_epoch=epoch,settled_mono_s=t)
-                    self.emit('scores',row);self._metric(self.stats,f"{p['method']}/{p['horizon_s']}",error);self.counts['scored']+=1
+                        origin_day=p['origin_day'],error_C=error,underestimate_C=max(-error,0.),source_epoch=epoch,settled_mono_s=t)
+                    self.emit('scores',row);self._metric(self.stats,f"{p['method']}/{p['horizon_s']}",error,p['origin_day']);self._count('scored',p['origin_day'])
                 methods={p['method']:p for p in batch['items']}
                 if 'G2-HOLD' in methods and 'B0' in methods:
                     for name in ('G2-HOLD','B0'):
-                        p=methods[name];self._metric(self.common,f"{name}/{p['horizon_s']}",p['value_C']-tj['value_C'])
+                        p=methods[name];self._metric(self.common,f"{name}/{p['horizon_s']}",p['value_C']-tj['value_C'],p['origin_day'])
                 self.pending.remove(batch)
         if not label:return
-        self.counts['all_valid_TJ']+=1
+        self._count('all_valid_TJ',self.day)
         if self.last_anchor is not None and t-self.last_anchor<self.stride:return
-        self.last_anchor=t;self.counts['scheduled_TJ_origins']+=1
+        self.last_anchor=t;self._count('scheduled_TJ_origins',self.day)
         # Bound by session hard24h and stride>=5, independent of offered source frequency.
-        if self.counts['scheduled_TJ_origins']>17281:raise ValueError('prediction_origin_budget')
+        if not self.daily and self.counts['scheduled_TJ_origins']>17281:raise ValueError('prediction_origin_budget')
         by={(x['method'],x['horizon_s']):x for x in outputs}
         for horizon in HORIZONS:
             items=[]
@@ -61,7 +87,7 @@ class Ledger:
                 value=x.get('value_C');late=issued>=t+horizon
                 if value is not None and not math.isfinite(value):value=None;x=dict(x,reason='nonfinite_prediction')
                 if late:value=None;x=dict(x,reason='issued_at_or_after_target')
-                p=dict(**self.identity,prediction_id=str(uuid.uuid4()),horizon_s=horizon,method=method,value_C=value,
+                p=dict(**self.identity,origin_day=self.day,prediction_id=str(uuid.uuid4()),horizon_s=horizon,method=method,value_C=value,
                     computation_id=x.get('computation_id'),calculation_started_at=x.get('calculation_started_at'),state_used=x.get('state_used'),history_refs=x.get('history_refs'),
                     reason=x.get('reason') if value is None else None,conditional_assumptions=x.get('assumptions',[]),
                     measurement_ref=tj['source_ref'],measurement_received_mono_s=tj['observed_mono_s'],measurement_utc=tj.get('observed_utc'),
@@ -70,17 +96,21 @@ class Ledger:
                     target_anchor='accepted_TJ_receiver_mono',target_mono_s=t+horizon,publication_mode=self.mode,
                     control_permission=False,device_actions=False,dynamic_parameter_updates=0,
                     late=late,effective_lead_s=t+horizon-issued,origin_state_status=state_status)
-                self.emit('predictions',p);self.counts[f'issued/{method}/{horizon}']+=1
-                if value is not None:items.append(p);self.counts[f'valid_predictions/{method}/{horizon}']+=1
+                self.emit('predictions',p);self._count(f'issued/{method}/{horizon}',self.day)
+                if value is not None:items.append(p);self._count(f'valid_predictions/{method}/{horizon}',self.day)
             if items:self.pending.append(dict(target=t+horizon,items=items))
     def _missing(self,batch,reason,t):
         for p in batch['items']:
-            self.emit('scores',dict(**self.identity,prediction_id=p['prediction_id'],method=p['method'],horizon_s=p['horizon_s'],status='unscored',reason=reason,publication_mode=self.mode,settled_mono_s=t))
-            self.counts['unscored/'+reason]+=1
+            self.emit('scores',dict(**self.identity,prediction_id=p['prediction_id'],method=p['method'],horizon_s=p['horizon_s'],origin_day=p['origin_day'],status='unscored',reason=reason,publication_mode=self.mode,settled_mono_s=t))
+            self._count('unscored/'+reason,p['origin_day'])
     def finish(self,t,reason='session_end'):
         for batch in self.pending:self._missing(batch,'target_not_mature_at_end' if t<batch['target'] and reason=='session_end' else reason,t)
         self.pending.clear()
     def summary(self):
+        if self.daily:
+            return dict(contract='TTO-OBSERVE-SCORING-DAYS-v1',publication_mode=self.mode,stride_s=self.stride,
+                counts=dict(self.counts),scope='per UTC origin day; see days/*/scoring.json',
+                open_days={day:self._day_summary(day) for day in self.day_stats})
         return dict(contract='TTO-OBSERVE-SCORING-v1',publication_mode=self.mode,stride_s=self.stride,
             valid_TJ_denominator=self.counts['all_valid_TJ'],scheduled_origin_denominator=self.counts['scheduled_TJ_origins'],counts=dict(self.counts),
             per_method={k:v.result() for k,v in self.stats.items()},same_set_G2_B0={k:v.result() for k,v in self.common.items()},

@@ -148,7 +148,7 @@ class Adapter:
                 valid = bool(fm and fm['raw_valid'] and fm['source_ref']==raw['ref'])
                 expiry = t + SPEC['input_policy']['fan_raw_TTL_s']
                 metric('fan.pwm.actual','成功PWM',fm['value_percent'] if fm else None,'%',valid,expiry)
-                metric('fan.pwm.target','天山OS目标PWM',fan.get('target_duty'),'%',valid,expiry)
+                metric('fan.pwm.target','TianshanOS 目标 PWM',fan.get('target_duty'),'%',valid,expiry)
                 metric('fan.rpm','风扇RPM',None,'RPM',False,expiry,reason='tachometer_validity_not_confirmed')
                 self.metrics['fan.rpm'].update(status='unverified', last_observation={'value':fan['rpm'],'observed_at_utc':raw['received_at_utc']} if finite(fan.get('rpm')) else None)
                 for key, label, unit in [('mode','控制模式',None),('enabled','风扇启用',None),('running','主板running',None),('auto_state','自动状态',None),('controller_gain','主板gain',None),('slope_c_per_min','主板温度斜率','°C/min'),('predicted_temperature','主板预测诊断','°C'),('cooling_response','主板cooling_response（单位未核实）',None),('control_temperature','主板控制温度','°C'),('guard_active','主板guard',None),('fault','主板fault',None),('temp_stale','主板失温',None)]:

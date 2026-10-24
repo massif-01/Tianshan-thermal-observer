@@ -15,6 +15,8 @@ class RecordContractError(ValueError):
 def replay(run, model=None):
     run = Path(run)
     manifest = read_json(run / 'manifest.json')
+    if manifest.get('recording_layout')=='utc-days':
+        raise RecordContractError('continuous recording is a retained window, not a complete replay run; use tto-observe history')
     version = manifest.get('record_schema')
     if type(version) is not int or version not in (1, 2) or any(type(manifest.get(k)) is not int or manifest[k] != version for k in ('input_schema', 'feature_schema', 'model_schema')):
         raise RecordContractError('unsupported or conflicting record contract; scoring refused')

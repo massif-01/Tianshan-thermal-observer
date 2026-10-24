@@ -18,8 +18,10 @@ def consume(l,t,**kw):l.consume(frame(t,**kw),t+.01,outputs(),state_status='degr
 
 def test_maturity_first_qualified_and_missing_not_zero():
     l,rows=make();consume(l,0);consume(l,14,value=99);assert not [x for k,x in rows if k=='scores']
-    consume(l,15,value=45,valid=False);consume(l,16,value=42)
-    scored=[x for k,x in rows if k=='scores' and x['status']=='scored'];assert len(scored)==3 and all(x['label_ref']=='r/16' and x['error_C']==-2 for x in scored)
+    consume(l,15,value=45,valid=False)
+    l.advance(17.1,'2026-10-21',receive_lag=.25)
+    l.consume(frame(17,value=42),17.2,outputs(),state_status='degraded',wall_clock=dict(utc='2026-10-21T00:00:17Z',mono_s=17.2))
+    scored=[x for k,x in rows if k=='scores' and x['status']=='scored'];assert len(scored)==3 and all(x['label_ref']=='r/17' and x['error_C']==-2 for x in scored)
     l.finish(20);assert any(x.get('reason')=='target_not_mature_at_end' for k,x in rows if k=='scores')
 
 def test_late_publication_all_methods_same_real_issue():
@@ -75,6 +77,8 @@ def test_legacy_four_hour_guard_unchanged():
     c=load_config(environ={});c['orin']['base_url']='http://127.0.0.1:1';c['tianshan']['base_url']='http://127.0.0.1:2'
     with pytest.raises(ValueError):require_live(c,86400)
     require_live(c,86400,observe=True)
+    require_live(c,None,observe=True)
+    with pytest.raises(ValueError):require_live(c,None)
     with pytest.raises(ValueError):require_live(c,86401,observe=True)
 
 def test_native_single_instance_lock_not_deleted(tmp_path):
@@ -108,6 +112,7 @@ def test_resource_policy_sustained_and_unknown_not_single_peak():
     assert b.sample(row(99),1) is None
     for n in range(2,50):assert b.sample(row(1),n) is None
     assert b.sample(row(1,129*1024**2),50)=='receiver_RSS_budget'
+    assert b.sample(row(99,129*1024**2),51,enforce=False) is None and b.mean is not None
     b=ReceiverBudget()
     for n in range(3,13):assert b.sample(row(None),n) is None
     assert b.sample(row(None),13)=='resource_unavailable'
@@ -124,6 +129,10 @@ def test_foreground_requires_current_window_and_no_old_cpu_permission():
     package=Path(tto_field.__file__).parent
     g.update(candidate_manifest_sha256=hashlib.sha256((package/'candidate-files.json').read_bytes()).hexdigest(),model_manifest_sha256=hashlib.sha256((package/'g2_model/frozen-model-manifest.json').read_bytes()).hexdigest())
     validate_start(c,reg,g,60,True)
+    with pytest.raises(ValueError,match='continuous'):validate_start(c,reg,g,None,True)
+    continuous=dict(g,continuous=True,expires_at_utc=None,max_duration_s=None)
+    validate_start(c,reg,continuous,None,True)
+    with pytest.raises(ValueError,match='window does not cover'):validate_start(c,reg,continuous,60,True)
     for key,value in [('candidate_version','0.2.4+cpu.3'),('action','cpu-sidecar-readonly'),('expires_at_utc',(now-timedelta(seconds=1)).isoformat())]:
         bad=dict(g,**{key:value})
         with pytest.raises(ValueError):validate_start(c,reg,bad,60,True)
@@ -163,20 +172,47 @@ def test_future_TJ_cannot_change_frozen_prediction():
     case['history']=list(case.get('history',[]))+[later];after=api.predict(state,**case)
     assert [(x['value_C'],x['history_refs']) for x in before]==[(x['value_C'],x['history_refs']) for x in after]
 
-def test_io_rotation_does_not_cold_start_real_frozen_observer(tmp_path):
-    from tto_field.g2_model.g2_runtime import Predictor,ThermalObserver
-    root=Path(__file__).resolve().parents[3]/'evidence/mainline-observe-20261021/integration/model-golden/cases.json'
-    source=json.loads(root.read_text())['cases'][0]['input']['state'];api=Predictor();a=ThermalObserver(api.spec);b=ThermalObserver(api.spec)
-    io_clock=[0.];store=SessionStore(tmp_path/'s',budget=500000,chunk_bytes=64000,segment_seconds=14400,min_free=0,clock=lambda:io_clock[0]);start=source['generated_at_mono_s']
-    for n in range(6):
-        t=start+n;m=copy.deepcopy(source['measurement'])
-        for name,v in m.items():
-            if v is not None:v.update(observed_mono_s=t,valid_until_mono_s=t+({'last_successful_pwm':2.5,'control_context':7.5}.get(name,5)),raw_valid=True,source_ref=f'rotation-fixture/{n}')
-        m['tj']['value_C']+=n*.01
-        f=dict(t=t,utc=source['generated_at_utc'],ref=f'rotation-fixture/{n}',stream_started_mono_s=start,identity=source['identity'],source_reset=False,new_TJ=True,reset_reason=None,measurement=m,safety=source['safety'])
-        left=a.step(copy.deepcopy(f));right=b.step(copy.deepcopy(f));assert left==right
-        store.append(store.root,'states',left);io_clock[0]+=15000
-    store.close();assert store.rotation_count==5 and a.starts==b.starts==1
+@pytest.mark.parametrize('daily',[False,True])
+def test_io_rotation_does_not_cold_start_real_frozen_observer(tmp_path,monkeypatch,daily):
+    from datetime import datetime,timedelta,timezone
+    from types import SimpleNamespace
+    import threading
+    from fake_source import FakeSource
+    from tto.engine import engine_for
+    from tto_field.observe_storage import DailyStore
+    from tto_field.observe_runtime import Consumer
+    import tto_field.observe_runtime as runtime
+    now=[1000.];begin=datetime(2026,10,1,23,59,30,tzinfo=timezone.utc)
+    wall=lambda:begin+timedelta(seconds=now[0]-1000)
+    monkeypatch.setattr(runtime,'time',SimpleNamespace(monotonic=lambda:now[0]+.001))
+    monkeypatch.setattr(runtime,'utc',lambda:wall().isoformat())
+    options=dict(today=lambda:wall().date()) if daily else {}
+    store=(DailyStore if daily else SessionStore)(tmp_path/'s',**options,budget=10000000,segment_seconds=30,min_free=0,clock=lambda:now[0])
+    native=store.root/'native/run-fixture';native.mkdir(parents=True)
+    config=load_config(environ={});config['orin'].update(source_sample_interval_ms=1000,source_interval_evidence='owned synthetic')
+    manifest=dict(observer_run_id='r',config=config,config_sha256='synthetic',source_identity={'sha256':'synthetic'})
+    (native/'manifest.json').write_text(json.dumps(manifest))
+    engine=engine_for(config,record_schema=2);source=FakeSource();phases=[]
+    monkeypatch.setattr(Consumer,'publish',lambda self,inputs,frame,state,deadline:phases.append((frame['t'],state['observer']['phase'])))
+    consumer=Consumer(store,dict(session_id='fixture',device_id='synthetic',thermal_config_id='synthetic',observer_host_id='offline'),SimpleNamespace(domain='fixture'),threading.Event(),SimpleNamespace(call_soon_threadsafe=lambda f:f()))
+    try:
+        ordinal=0
+        for n in range(180):
+            now[0]=1000.+n;stamp=wall().isoformat()
+            packet=source.packet();packet['timestamp']=packet['telemetry_meta']['received_at']=packet['gpu']['sampled_at_utc']=stamp
+            for kind,payload in [('fan',source.payload('fan')),('temp',source.payload('temp')),('orin',packet)]:
+                ordinal+=1;raw=dict(kind=kind,payload=payload,mono_s=now[0],received_at_utc=stamp,observer_run_id='r',ref=f'r/observation:{ordinal}',connection_epoch=1)
+                store.append(native,'observations',raw);consumer.on_record(raw,engine.process(raw),engine);consumer.queue.join()
+            if daily:store.seal_days(consumer.ready_days)
+    finally:
+        closed=consumer.close();store.close()
+    assert closed and consumer.fatal is None and consumer.model_errors==0
+    assert consumer.stateful_observers==consumer.observer.starts==1
+    assert consumer.engine_id==id(engine) and consumer.ledger.identity['run_id']=='r'
+    assert any(t<1030 and phase=='tracking' for t,phase in phases)
+    assert all(phase=='tracking' for t,phase in phases if t>=1030)
+    if daily:assert (store.root/'days/2026-10-01/files.json').exists()
+    else:assert store.rotation_count>=5
 
 def test_invalid_business_row_becomes_unknown(tmp_path):
     from tto_field.observe_workload import EventTail
@@ -184,10 +220,71 @@ def test_invalid_business_row_becomes_unknown(tmp_path):
     with f.open('a') as stream:stream.write('[]\n')
     tail.tick();assert tail.current['event']=='source_unknown' and tail.current['client_inflight'] is None
 
-def test_low_disk_stops_data_but_uses_reserved_final_metadata(tmp_path,monkeypatch):
+@pytest.mark.parametrize('pending',[False,True])
+def test_low_disk_stops_data_but_uses_reserved_final_metadata(tmp_path,monkeypatch,pending):
+    import asyncio,time
+    from types import SimpleNamespace
+    from fake_source import FakeSource
+    from tto_field.observe_cli import archive
+    from tto_field.observe_runtime import Consumer,run_observe
+    from tto_field.observe_storage import history_files
     import tto_field.observe_storage as module
-    s=SessionStore(tmp_path/'s',min_free=1024*1024)
-    monkeypatch.setattr(module.shutil,'disk_usage',lambda p:type('D',(),{'free':8192})())
-    with pytest.raises(LimitReached):s.append(s.root,'raw',{'x':1})
-    s.metadata(s.root/'summary.json',dict(reason='min_free_bytes'),final=True);s.close()
-    assert json.loads((s.root/'summary.json').read_text())['reason']=='min_free_bytes' and (s.root/'files.json').exists()
+    free=[2*1024**3];stores=[];expected=set()
+    monkeypatch.setattr(module.shutil,'disk_usage',lambda p:SimpleNamespace(free=free[0]))
+    on_record=Consumer.on_record;close=Consumer.close
+    def stop_after_samples(self,*args):
+        on_record(self,*args)
+        if self.valid_TJ>=2:self.loop.call_soon_threadsafe(self.stop.set)
+    def close_with_low_space(self):
+        stopped=close(self);assert stopped and self.ledger and self.ledger.day_stats
+        expected.update(p['prediction_id'] for b in self.ledger.pending for p in b['items'])
+        assert expected
+        if not pending:self.ledger.finish(time.monotonic())
+        free[0]=256*1024
+        with pytest.raises(LimitReached):self.store.append(self.store.root,'observations',dict(unexpected=True))
+        stores.append(self.store);return stopped
+    monkeypatch.setattr(Consumer,'on_record',stop_after_samples)
+    monkeypatch.setattr(Consumer,'close',close_with_low_space)
+    async def run():
+        async with FakeSource() as source:
+            config=load_config(environ={})
+            config['orin'].update(base_url=source.url,source_sample_interval_ms=1000,source_interval_evidence='owned fixture')
+            config['tianshan']['base_url']=source.url
+            registration=dict(device_id='fixture',thermal_config_id='fixture',observer_host_id=socket.gethostname(),session_id=str(uuid.uuid4()))
+            summary=await run_observe(config,registration,tmp_path/'s',None,local_loopback=True,storage_options=dict(min_free=1024**2))
+            assert summary['reason']=='external_stop' and summary['consumer_stopped']
+    asyncio.run(run())
+    root=tmp_path/'s';status=json.loads((root/'status.json').read_text())
+    assert status['running'] is False and (root/'summary.json').exists()
+    scores=[row for path,live in history_files(root,'scores') for row in read_records(path,live=live)]
+    assert {row['prediction_id'] for row in scores}==expected and len(scores)==len(expected)
+    assert all((path/'scoring.json').exists() for path in (root/'days').iterdir())
+    assert archive(root,tmp_path/'s.zip')['files_verified']>0
+    free[0]=0
+    with pytest.raises(LimitReached):stores[0].metadata(root/'no-space.json',{},final=True)
+    assert not (root/'no-space.json').exists()
+
+
+def test_continuous_ledger_outlives_test_origin_budget_without_error_growth():
+    l,rows=make();l.daily=True
+    for n in range(17285):
+        day=f'2026-10-{1+n//8640:02d}'
+        t=n*10
+        l.consume(frame(t),t+.01,outputs(),state_status='tracking',wall_clock=dict(utc=day+'T00:00:00Z',mono_s=t+.01))
+        l.advance(t,day);rows.clear()
+    assert l.counts['scheduled_TJ_origins']==17285 and l.last_anchor>86400
+    assert len(l.pending)<=18 and len(l.day_stats)<=2 and not l.stats and not l.common
+    assert max(v.n for stats in l.day_stats.values() for name in ('per_method','same_set_G2_B0') for v in stats[name].values())<=8640
+
+
+def test_rendered_service_separates_continuous_from_timed_test():
+    import runpy
+    from types import SimpleNamespace
+    script=Path(__file__).resolve().parents[1]/'scripts/install_observe.py'
+    render=runpy.run_path(str(script))['render_unit']
+    a=SimpleNamespace(prefix=Path('/local/prefix'),config=Path('/local/config'),registration=Path('/local/registration'),grant=Path('/local/grant'),session_output=Path('/local/history'),publication_descriptor=Path('/local/pub/active.json'),duration=None)
+    permanent=render(a)
+    assert 'RuntimeMaxSec' not in permanent and '--duration' not in permanent and 'Restart=on-failure' in permanent
+    assert '--publication-descriptor' in permanent and 'WantedBy=default.target' in permanent
+    a.duration=60;timed=render(a)
+    assert 'RuntimeMaxSec=70' in timed and 'Restart=no' in timed and '--duration' in timed

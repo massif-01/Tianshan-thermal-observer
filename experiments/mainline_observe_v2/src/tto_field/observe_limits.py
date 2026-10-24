@@ -8,11 +8,12 @@ class Samples(deque):
 class ReceiverBudget:
     """Predeclared observe policy: 5% target, rolling10s >8% for30s, RSS128MiB, unknown10s."""
     def __init__(self):self.samples=deque();self.over=None;self.unknown=None;self.mean=None
-    def sample(self,row,t):
+    def sample(self,row,t,*,enforce=True):
         cpu=row['cpu_pct_single_core'];rss=row['rss_bytes']
         if cpu is not None:self.samples.append((t,cpu))
         while self.samples and t-self.samples[0][0]>10:self.samples.popleft()
         self.mean=sum(v for _,v in self.samples)/len(self.samples) if self.samples else None
+        if not enforce:return None
         if rss is None or (cpu is None and t>2):
             if self.unknown is None:self.unknown=t
         else:self.unknown=None

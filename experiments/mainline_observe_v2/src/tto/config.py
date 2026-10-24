@@ -159,7 +159,7 @@ def headers(c, section):
 
 def require_live(c, duration, *, observe=False):
     maximum = 86400 if observe else c['run']['max_duration_s']
-    if not finite(duration) or not 0 < duration <= maximum:
+    if not (observe and duration is None) and (not finite(duration) or not 0 < duration <= maximum):
         raise ValueError('duration must be bounded by configured maximum')
     if not all(c[s]['base_url'] for s in ('orin', 'tianshan')):
         raise ValueError('请先在本机配置两路明确端点；没有默认设备地址。')
